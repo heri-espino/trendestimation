@@ -19,8 +19,10 @@ autodoc_member_order = "bysource"
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 
-# Render real Jupyter notebooks without running code in CI or site builds.
-nb_execution_mode = "off"
+# Execute the three small, deterministic tutorial notebooks during site builds.
+# Their plots and numerical outputs are embedded in the published HTML.
+nb_execution_mode = "auto"
+nb_execution_timeout = 90
 
 # Numpy-style parameter descriptors are not importable Python classes.
 # Keep strict reference checks on real API objects while exempting prose types.
