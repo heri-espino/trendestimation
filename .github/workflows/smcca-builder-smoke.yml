@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'paper/build.py'
+      - 'paper/figures/render_awesomefigures.py'
+      - 'paper/requirements.txt'
       - 'paper/tests/**'
       - 'paper/Makefile'
       - 'paper/README.md'
