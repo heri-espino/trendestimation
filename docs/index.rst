@@ -78,14 +78,13 @@ trendestimation
          <pre class="te-code"><code><span class="te-code-keyword">import</span> numpy <span class="te-code-keyword">as</span> np
    <span class="te-code-keyword">from</span> trendestimation <span class="te-code-keyword">import</span> TrendSmoother, select_lambda
 
-   rng = np.random.default_rng(<span class="te-code-number">42</span>)
-   y = np.linspace(<span class="te-code-number">0</span>, <span class="te-code-number">3</span>, <span class="te-code-number">100</span>) + rng.normal(<span class="te-code-number">0</span>, <span class="te-code-number">0.3</span>, <span class="te-code-number">100</span>)
+   rng = np.random.default_rng(<span class="te-code-number">7</span>)
+   t = np.arange(<span class="te-code-number">120</span>)
+   y = np.sin(t / <span class="te-code-number">14</span>) + rng.normal(<span class="te-code-number">0</span>, <span class="te-code-number">.25</span>, len(t))
 
-   smoother = TrendSmoother(len(y), order=<span class="te-code-number">2</span>)
-   choice = select_lambda(smoother, y, criterion=<span class="te-code-string">"gcv"</span>)
-   fit = smoother.fit(y, lambda_=choice.lambda_)
-
-   trend = fit.trend</code></pre>
+   solver = TrendSmoother(len(y), order=<span class="te-code-number">2</span>)
+   best = select_lambda(solver, y, criterion=<span class="te-code-string">"gcv"</span>)
+   trend = solver.fit(y, lambda_=best.lambda_).trend</code></pre>
        </div>
      </section>
 
@@ -109,23 +108,3 @@ trendestimation
    references
    api
 
-Additional reproducible tutorials
----------------------------------
-
-The :doc:`forecasting` guide illustrates conditional fixed-smoothness
-trend extrapolation and diagnostic visualizations. It is not a validated
-time-series forecasting method.
-
-
-The :doc:`gallery` contains nine longer scientific notebooks covering
-simulation scenarios, spectral diagnostics, numerical benchmarks, and
-applied examples. The :doc:`notebooks` section offers three introductory
-tutorials. Both collections are preserved as executable source notebooks.
-
-Research foundations
---------------------
-
-The mathematical foundations follow
-Guerrero (2007), Cortés-Toto, Guerrero and Reyes (2017),
-and Weinert (2007). See :doc:`mathematics` for the formulation,
-limits, and computational costs.
