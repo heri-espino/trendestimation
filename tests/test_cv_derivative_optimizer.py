@@ -6,7 +6,8 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy.optimize import brentq
 
-from trendestimation import TrendSmoother, cv_derivative, score_lambda, select_lambda
+from trendestimation import TrendSmoother, score_lambda, select_lambda
+from trendestimation.criteria import cv_derivative
 
 
 def _five_point_derivative(f, x, h):
