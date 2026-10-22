@@ -98,7 +98,11 @@ def test_furo_sidebar_motion_and_muted_links():
     assert "submenu.animate(" in js
     assert "prefers-reduced-motion: reduce" in js
     assert "location.href" not in js
-    assert "preventDefault" not in js
+    # Only keyboard disclosure handling may prevent a default action;
+    # page links and browser navigation are never intercepted.
+    assert 'sidebar.addEventListener("click"' not in js
+    assert 'if (event.key !== "Enter" && event.key !== " ") return;' in js
+    assert "event.preventDefault();" in js
 
 
 def test_right_toc_matches_left_sidebar_in_light_and_dark():
