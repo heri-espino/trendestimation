@@ -1033,3 +1033,14 @@ div.cell_input div.highlight pre {
 @media (prefers-reduced-motion: reduce) {
   .toc-tree a.reference { transition: none !important; }
 }
+
+/* Keyboard controls for Furo's sidebar groups; existing motion stays native. */
+.sidebar-tree li.has-children > label:focus-visible {
+  outline: 2px solid var(--te-focus);
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-tree li.has-children > label:focus-visible {
+    transition: none !important;
+  }
+}

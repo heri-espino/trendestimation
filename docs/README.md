@@ -131,6 +131,12 @@ A short CSS entrance transition applies after each regular page load.
 Both effects respect `prefers-reduced-motion`; pages remain functional
 without JavaScript.
 
+
+The disclosure labels also support Tab, Enter and Space, expose
+``aria-expanded`` state, and show a visible keyboard focus outline.
+This enhancement works even when the Web Animations API is unavailable;
+the existing ``sidebar.js`` remains the only animation controller.
+
 The `docs/api.rst` landing page links to independent
 `docs/api/{core,selection,variances,forecasting,simulation,visualization}.rst`
 pages, each containing **Sphinx autodoc directives**. Public signatures

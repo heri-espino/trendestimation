@@ -6,8 +6,34 @@
 
   const setup = () => {
     const sidebar = document.querySelector(".sidebar-tree");
-    if (!sidebar || !Element.prototype.animate) return;
+    if (!sidebar) return;
 
+    // Enhance the native Furo label/checkbox controls for keyboard users.
+    // This enhancement works even when the Web Animations API is unavailable.
+    sidebar.querySelectorAll("li.has-children").forEach((group) => {
+      const checkbox = group.querySelector(":scope > input.toctree-checkbox");
+      const label = group.querySelector(":scope > label");
+      if (!checkbox || !label) return;
+
+      label.tabIndex = 0;
+      label.setAttribute("role", "button");
+      label.setAttribute(
+        "aria-label",
+        checkbox.getAttribute("aria-label") || "Toggle navigation section"
+      );
+      const syncExpanded = () => {
+        label.setAttribute("aria-expanded", String(checkbox.checked));
+      };
+      syncExpanded();
+      checkbox.addEventListener("change", syncExpanded);
+      label.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        checkbox.click();  // Preserve Furo's own checkbox navigation state.
+      });
+    });
+
+    if (!Element.prototype.animate) return;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const running = new WeakMap();
 

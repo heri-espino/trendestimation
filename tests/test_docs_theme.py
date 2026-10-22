@@ -98,7 +98,11 @@ def test_furo_sidebar_motion_and_muted_links():
     assert "submenu.animate(" in js
     assert "prefers-reduced-motion: reduce" in js
     assert "location.href" not in js
-    assert "preventDefault" not in js
+    # Only keyboard disclosure handling may prevent a default action;
+    # page links and browser navigation are never intercepted.
+    assert 'sidebar.addEventListener("click"' not in js
+    assert 'if (event.key !== "Enter" && event.key !== " ") return;' in js
+    assert "event.preventDefault();" in js
 
 
 def test_right_toc_matches_left_sidebar_in_light_and_dark():
@@ -112,3 +116,24 @@ def test_right_toc_matches_left_sidebar_in_light_and_dark():
     assert "background: var(--te-nav-current)" in css
     assert ':root,\n[data-theme="dark"] {' in css
     assert ".toc-tree a.reference { transition: none !important; }" in css
+
+
+def test_sidebar_expanders_are_keyboard_accessible_without_motion_support():
+    """Checkbox labels expose button semantics, expansion state and focus."""
+    script = (DOCS / "_static" / "js" / "sidebar.js").read_text(
+        encoding="utf-8"
+    )
+    css = CSS.read_text(encoding="utf-8")
+    assert "label.tabIndex = 0" in script
+    assert 'label.setAttribute("role", "button")' in script
+    assert 'label.setAttribute("aria-expanded", String(checkbox.checked))' in script
+    assert 'checkbox.addEventListener("change", syncExpanded)' in script
+    assert 'label.addEventListener("keydown"' in script
+    assert "checkbox.click()" in script
+    assert 'if (!Element.prototype.animate) return;' in script
+    assert ".sidebar-tree li.has-children > label:focus-visible" in css
+    assert "prefers-reduced-motion: reduce" in css
+    # Never load duplicate WAAPI controllers for the same checkbox.
+    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in (
+        DOCS / "conf.py"
+    ).read_text(encoding="utf-8")
