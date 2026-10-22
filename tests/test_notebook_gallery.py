@@ -29,3 +29,26 @@ def test_manual_only_heavy_workflow():
     workflow = (ROOT / ".github" / "workflows" / "docs.yml").read_text()
     assert "workflow_dispatch:" in workflow
     assert "push:" not in workflow
+
+
+def test_forecast_notebook_documents_complete_pipeline():
+    """Structural checks only: heavy figures execute in manual notebook workflow."""
+    path = ROOT / "docs" / "notebooks" / "09-forecast-pipeline.ipynb"
+    notebook = nbformat.read(path, as_version=4)
+    nbformat.validate(notebook)
+    narrative = "\n".join(c.source for c in notebook.cells if c.cell_type == "markdown")
+    code = "\n".join(c.source for c in notebook.cells if c.cell_type == "code")
+    for api in (
+        "forecast_trend", "plot_forecast", "plot_smoothness_comparison",
+        "plot_smoothness_path", "plot_forecast_methods",
+        "plot_residual_diagnostics", "plot_forecast_dashboard",
+    ):
+        assert api in code, api
+    assert "SMOOTHNESS = 0.80" in code
+    assert "history = all_observed[:-holdout_length]" in code
+    assert "test = all_observed[-holdout_length:]" in code
+    assert "forecast_trend(\n    history" in code
+    assert "last_observation_baseline" in code
+    assert "MAE" in code and "RMSE" in code
+    assert "SAVE_PNG" in code
+    assert "prediction interval" in narrative.lower()
