@@ -58,6 +58,15 @@ remain distinct. The homepage's dark inline example uses a separate
 readable multicolor palette. Do not add `.highlight span[class]` or
 similar rules that tint every code token navy.
 
+The left Furo sidebar uses the same restrained motion: its hover/selected
+states and disclosure chevrons transition smoothly, while a short
+`docs/_static/js/sidebar-motion.js` enhancement animates expansion and
+collapse of the native checkbox-controlled navigation groups. Expand
+controls remain keyboard-operable (Enter/Space). Furo's unmodified
+show/hide behavior remains the fallback if JavaScript or the Web Animations
+API is unavailable. Reduced-motion preferences bypass the animation
+entirely. Sidebar motion must not hide links or change page navigation.
+
 The design uses sharp **90-degree corners** via `--te-radius: 0px`
 and restrained editorial typography. Hover and opening transitions are
 slower, while `docs/_static/js/reveal.js` adds one-time section reveals
