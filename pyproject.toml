@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trendestimation"
+version = "0.1.0a0"
+description = "Spectral finite-difference penalized least-squares trend estimation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Heriberto Espino Montelongo"}]
+keywords = ["trend-estimation", "penalized-least-squares", "Whittaker-Henderson", "Hodrick-Prescott", "smoothing"]
+dependencies = ["numpy>=1.23", "scipy>=1.9"]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.6"]
+docs = ["sphinx>=8", "furo>=2024.8.6", "matplotlib>=3.6"]
+dev = ["pytest>=7", "build>=1.0", "matplotlib>=3.6"]
+
+[project.urls]
+Repository = "https://github.com/heri-espino/Trend-Estimation"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
