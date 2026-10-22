@@ -25,8 +25,11 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
   This is a marginal statistical likelihood, not minimization of the PLS
   objective over lambda; it relies on Gaussian variance-component assumptions.
 - Reproducible synthetic linear/nonlinear examples and optional Matplotlib plots.
+- Fixed-smoothness conditional historical-trend extrapolation with three transparent
+  rules and six blue-and-white visualization helpers (not validated forecasts).
 
-**Not included:** forecast-optimal smoothing, horizon-specific/rolling
+**Not included:** forecast-optimal smoothing, statistically calibrated forecast intervals,
+horizon-specific/rolling
 time-series cross-validation (TSCV), dynamic local-minimum tracking, Sturm
 methods for forecast losses, or prototype estimation of forecast-optimal means.
 
@@ -90,6 +93,35 @@ ml = select_lambda(solver, y, criterion="mle", mu="data")
 ml_fit = solver.fit(y, lambda_=ml.lambda_, mu="data")
 print("MLE lambda:", ml.lambda_, "plug-in mu:", ml_fit.mu)
 ```
+
+## Fixed-smoothness trend extrapolation and plots
+
+The package provides a deliberately simple conditional extrapolation of an
+**estimated historical trend**. It is not a model selected for forecasting accuracy.
+
+```python
+import numpy as np
+from trendestimation import forecast_trend, plot_forecast, plot_forecast_dashboard
+
+history = np.arange(100) * .04 + np.random.default_rng(7).normal(0, .3, 100)
+result = forecast_trend(history, horizon=12, smoothness=.8, window=20)
+print(result.lambda_, result.smoothness, result.forecast)
+plot_forecast(result)
+figure = plot_forecast_dashboard(result)
+figure.savefig("trend-dashboard.png", dpi=160)
+```
+
+Other plots compare smoothing targets, forecast extrapolation assumptions, the
+penalty/smoothness curve and in-sample residual diagnostics. Generate six
+reproducible synthetic PNGs **manually** with:
+
+```bash
+python examples/forecast_gallery.py --output-dir build/forecast-gallery
+```
+
+See [forecasting and visualization documentation](docs/forecasting.rst).
+The future region is a visual demarcation, not a prediction interval.
+An 80% normalized smoothness level **does not imply 80% accuracy**.
 
 ## Reproducible notebook gallery
 

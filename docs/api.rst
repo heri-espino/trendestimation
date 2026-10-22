@@ -42,3 +42,26 @@ Optional visualization
 .. autofunction:: trendestimation.plot_trend
 
 .. autofunction:: trendestimation.plot_selection
+
+Conditional trend extrapolation
+-------------------------------
+
+.. autofunction:: trendestimation.forecast_trend
+
+.. autoclass:: trendestimation.TrendForecast
+   :members:
+
+Additional optional plots
+-------------------------
+
+.. autofunction:: trendestimation.plot_forecast
+
+.. autofunction:: trendestimation.plot_forecast_dashboard
+
+.. autofunction:: trendestimation.plot_forecast_methods
+
+.. autofunction:: trendestimation.plot_smoothness_comparison
+
+.. autofunction:: trendestimation.plot_smoothness_path
+
+.. autofunction:: trendestimation.plot_residual_diagnostics
