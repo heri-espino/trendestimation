@@ -1,7 +1,7 @@
 Executable notebook gallery
 ===========================
 
-Eight **real Jupyter notebooks** drive both the standalone tutorial experience
+Nine **real Jupyter notebooks** drive both the standalone tutorial experience
 and this Sphinx website. Every notebook includes mathematical exposition,
 deterministic source code, plots, and interpretation. The data are simulated:
 the gallery does not make claims of real-time forecasting performance.
@@ -21,6 +21,7 @@ Notebook chapters
    notebooks/06-spectral-diagnostics
    notebooks/07-computational-benchmarks
    notebooks/08-applied-workflows
+   notebooks/09-gaussian-mle-and-guerrero-smoothness
 
 Run the entire gallery in one command
 -------------------------------------
