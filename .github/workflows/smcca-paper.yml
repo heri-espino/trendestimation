@@ -23,6 +23,7 @@ jobs:
         run: |
           python paper/figures/make_figures.py
           python paper/figures/make_extended_figures.py
+          python paper/figures/benchmark_orders.py
       - name: Compile SMCCA LaTeX
         uses: xu-cheng/latex-action@v3
         with:
