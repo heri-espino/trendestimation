@@ -126,8 +126,12 @@ The first code cell in each notebook calls
 ``set_matplotlib_formats("svg")`` from ``matplotlib_inline.backend_inline``.
 When executed inside Jupyter, the produced ``image/svg+xml`` output is
 stored in the notebook and embedded as SVG in Sphinx, without storing PNG
-screenshots. The automatic PR checks execute only one small notebook.
-Full notebook execution and GitHub Pages deployment remain manual.
+screenshots. The automatic PR preview executes only the **three short introduction**
+notebooks, saving SVG outputs in its ephemeral checkout for HTML preview;
+its 10 longer computational research notebooks remain unexecuted.
+The manual GitHub Pages workflow executes the 10 extended notebooks in
+place and Sphinx ``auto`` execution fills in the three introductory ones.
+Full gallery execution and deployment remain manual.
 
 To render the complete site with new SVG plots, run from the repository root:
 
