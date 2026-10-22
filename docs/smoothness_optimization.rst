@@ -173,3 +173,183 @@ has squared units and RMSE has the data's units.
    given date and scores forecasts at horizon :math:`h`.
    The package's `criterion="cv"` is ordinary in-sample LOO,
    not forecast-horizon selection.
+
+Analytical derivatives of classical CV
+--------------------------------------
+
+For fixed numeric :math:`\mu`, put :math:`z=y-p` and
+:math:`Q=D_d^\top D_d`. Differentiating
+:math:`(I+\lambda Q)H_\lambda=I` gives
+
+.. math::
+   :label: derivative-hat
+
+   H_\lambda'=-H_\lambda QH_\lambda.
+
+Because :math:`r=(I-H_\lambda)z` and
+:math:`h_i=(H_\lambda)_{ii}`, it follows that
+
+.. math::
+
+   r'=H_\lambda QH_\lambda z,\qquad
+   h_i'=-(H_\lambda QH_\lambda)_{ii}.
+
+The quotient rule applied to :eq:`loo` gives
+
+.. math::
+   :label: derivative-loo
+
+   \frac{d e_i^{(-i)}}{d\lambda}
+    =\frac{r_i'(1-h_i)+r_i h_i'}{(1-h_i)^2},
+   \qquad
+   \frac{d\,\mathrm{CV}}{d\lambda}
+    =\frac2n\sum_{i=1}^n e_i^{(-i)}
+         \frac{d e_i^{(-i)}}{d\lambda}.
+
+For log-penalty :math:`u=\log\lambda`,
+:math:`d\mathrm{CV}(e^u)/du=\lambda\,\mathrm{CV}'(\lambda)`.
+An interior differentiable minimum has zero derivative,
+but a stationary point may be a local maximum or a
+non-global minimum. **Analytical score evaluation or
+differentiation is not an analytical minimizer.**
+
+.. note::
+
+   These equations describe the mathematical basis of Agent 1's
+   pending work. On the inspected `main` branch of
+   22 October 2026, `select_lambda` remains a **grid**
+   optimizer. No derivative-selector keyword or default is
+   documented here as implemented before its API is verified.
+
+Competing selection criteria
+----------------------------
+
+Let :math:`\mathrm{RSS}=\|r\|_2^2` and
+:math:`k=\operatorname{tr}(H_\lambda)`.
+The implemented scores use **smaller is better**.
+AICc and BIC have alternative conventions in the literature;
+the table records the library's current formulas.
+
+.. list-table:: Supported classical selectors and Gaussian MLE
+   :header-rows: 1
+   :widths: 15 40 45
+
+   * - Criterion
+     - Score
+     - Statistical meaning
+   * - `cv`
+     - :math:`n^{-1}\sum_i(r_i/(1-h_i))^2`
+     - Exact classical LOO for fixed numeric :math:`\mu`
+   * - `gcv`
+     - :math:`(\mathrm{RSS}/n)/(1-k/n)^2`
+     - Substitutes average leverage for pointwise leverage
+   * - `aicc`
+     - :math:`\log(\mathrm{RSS}/n)+(2k+1)/(n-k-2)`
+     - Small-sample correction; undefined if :math:`n-k-2\le0`
+   * - `bic`
+     - :math:`\log(\mathrm{RSS}/n)+k\log(n)/n`
+     - Complexity penalty increasing with sample size
+   * - `mle`
+     - Profiled Gaussian marginal negative log-likelihood
+     - Uses latent Gaussian differences, not CV or direct
+       minimization of the penalized least-squares loss
+
+In the Gaussian **marginal MLE**, let :math:`w_j` denote
+the coordinates of :math:`y-p` in the positive-penalty
+eigenvectors, and define :math:`c_j(\lambda)=
+1+1/(\lambda\delta_j)`. With independent Gaussian
+observation errors of variance :math:`\sigma_\varepsilon^2`,
+Gaussian latent differences of variance
+:math:`\sigma_\eta^2`, and
+:math:`\lambda=\sigma_\varepsilon^2/\sigma_\eta^2`,
+the profiled score (up to constants) is
+
+.. math::
+
+   L_{\mathrm{profile}}(\lambda)
+    =r\log\left(\frac1r\sum_{j=1}^r
+                 \frac{w_j^2}{c_j(\lambda)}\right)
+     +\sum_{j=1}^r\log c_j(\lambda).
+
+The unpenalized polynomial coordinates are treated as
+nuisance components (REML-style). MLE rejects
+:math:`\lambda=0` (improper latent prior) and structurally
+unidentified cases :math:`d=0` or :math:`r<2`.
+Unlike the classical criteria, it accepts `mu="data"`,
+but **conditions** on the observed-difference mean:
+this is not joint maximum likelihood over :math:`\mu`.
+See :doc:`mathematics` and :doc:`api/variances`.
+
+Numerical optimization and global minima
+----------------------------------------
+
+Currently, `select_lambda(..., grid=None)` evaluates
+**121 geometric candidate penalties**, scaled by the
+median positive eigenvalue, and also the exact
+:math:`\lambda=\infty` limit. A user may provide
+an explicit array via `grid=`. This is a finite
+search, not a guarantee about an unexamined continuum.
+
+.. list-table:: Methods and trade-offs
+   :header-rows: 1
+   :widths: 27 35 38
+
+   * - Method
+     - Benefit
+     - Risk
+   * - Logarithmic penalty grid
+     - Spans many penalty orders of magnitude
+     - Can miss a narrow minimum; add :math:`0,\infty`
+   * - Uniform smoothness grid
+     - Uniformly covers the bounded :math:`S` coordinate
+     - Uneven penalty-space resolution
+   * - Analytical CV derivative
+     - Finds candidate stationary points efficiently
+     - Roots are not necessarily global minima
+   * - Local numerical refinement
+     - Increases precision near a promising candidate
+     - Only local unless extra assumptions hold
+   * - Multiple candidate basins
+     - Compare objective values after refining each basin
+     - A finite scan cannot rigorously exclude missed basins
+   * - Boundary evaluation
+     - Considers exact :math:`\lambda=0,\infty` limits
+     - Some criteria are undefined there
+
+A defensible workflow scans a broad log-penalty range,
+locates low-score basins and derivative sign changes,
+refines multiple candidates, evaluates **objective values**
+at refined points and admissible boundaries, and repeats
+after enlarging the interval. Report the numerical tolerance.
+Simply solving :math:`\mathrm{CV}'(\lambda)=0` does
+**not** establish a global minimum.
+
+Smoothness inversion: Brent, Newton, secant
+------------------------------------------
+
+Given :math:`s\in(0,1)`, define
+:math:`F(\lambda)=S(\lambda)-s`. Equation
+:eq:`s-derivative` proves the root is unique.
+The shipped `TrendSmoother.lambda_for_smoothness(s)`
+repeatedly doubles a bracket's upper endpoint and
+calls SciPy's bracketed **Brent `brentq`** algorithm.
+
+* **Newton–Raphson:** :math:`\lambda_{k+1}=
+  \lambda_k-F(\lambda_k)/S'(\lambda_k)`.
+  It converges locally quickly but may step negative.
+* **Secant:** approximate the derivative from the preceding
+  two iterates; no derivative is required, but the step need
+  not stay in the domain.
+* **Bracket-preserving fallback:** if an open iteration fails,
+  retain an interval with a sign change and use a validated
+  bracketed solver. The specific future fallback policy is
+  not yet part of the confirmed public API.
+
+Endpoint inversion is exact:
+:math:`s=0\mapsto\lambda=0` and
+:math:`s=1\mapsto\lambda=\infty`.
+With `normalized=False`, the upper valid target is
+:math:`(n-d)/n`. Only **Brent** is currently confirmed as a
+library method; Newton and secant below are demonstrated by
+calling **SciPy**, rather than inventing Agent 2 method names.
+
