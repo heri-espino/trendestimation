@@ -1,4 +1,5 @@
 """Lightweight reproducibility and notebook-gallery structure checks."""
+import ast
 from pathlib import Path
 
 import nbformat
@@ -52,3 +53,39 @@ def test_forecast_notebook_documents_full_pipeline():
     assert "MAE" in code and "RMSE" in code
     assert "SAVE_PNG" in code
     assert "prediction interval" in narrative.lower()
+
+
+def test_gaussian_variance_component_notebooks():
+    """Check that both variance estimates are covered by executable examples."""
+    notebook_paths = (
+        "docs/notebooks/03-classical-criteria.ipynb",
+        "docs/notebooks/04-nonzero-mean.ipynb",
+        "docs/notebooks/06-spectral-diagnostics.ipynb",
+        "docs/notebooks/08-applied-workflows.ipynb",
+        "docs/notebooks/09-gaussian-mle-and-guerrero-smoothness.ipynb",
+        "docs/notebooks/10-forecast-pipeline.ipynb",
+        "docs/examples/02_select_smoothness.ipynb",
+    )
+    for relative in notebook_paths:
+        notebook = nbformat.read(ROOT / relative, as_version=4)
+        nbformat.validate(notebook)
+        code_cells = [c.source for c in notebook.cells if c.cell_type == "code"]
+        code = "\n".join(code_cells)
+        assert "estimate_variance_components(" in code, relative
+        assert 'criterion="mle"' in code, relative
+        assert "observation_variance" in code, relative
+        assert "difference_variance" in code, relative
+        for cell in code_cells:
+            ast.parse(cell, filename=relative)
+
+
+def test_forecast_variance_diagnostic_never_uses_holdout_test():
+    """Variance-component comparison must use historical values, not test."""
+    path = ROOT / "docs/notebooks/10-forecast-pipeline.ipynb"
+    notebook = nbformat.read(path, as_version=4)
+    variance_cell = next(c for c in notebook.cells if c.get("id") == "fp090-variance-code")
+    identifiers = {node.id for node in ast.walk(ast.parse(variance_cell.source))
+                   if isinstance(node, ast.Name)}
+    assert "history" in identifiers
+    assert "test" not in identifiers
+    assert "estimate_variance_components" in identifiers
