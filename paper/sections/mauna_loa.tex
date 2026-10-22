@@ -1,0 +1,90 @@
+\section{Observed-data illustration: atmospheric carbon dioxide}
+A practical use for trend estimation is the Mauna Loa atmospheric
+$\mathrm{CO}_2$ record. These are physical observations, not a
+synthetic series. We use the historical weekly concentrations
+distributed by \texttt{statsmodels.datasets.co2}
+\cite{keeling2004co2,statsmodels2010}, aggregate weekly data
+to calendar-month means for 1990--1999, and obtain $n=120$
+equally spaced monthly values. No monthly values are missing
+within this window. The original monthly sequence mixes an
+increasing long-run component with strong seasonal variation;
+the latter must not be interpreted solely as instrument noise.
+
+We estimate descriptive low-frequency curves for $d=2,3,4,5$.
+Because a conventional GCV grid can select a nearly
+interpolating solution in this seasonally varying case,
+we instead prescribe the clearly defined normalized
+trace-based index $S=0.86$ and solve Eq.~\eqref{eq:normalized-scale}
+for $\lambda$ at each order. The resulting penalties are,
+respectively, $37.03$, $134.01$, $488.32$, and $1702.30$.
+Even at the same normalized $S$, distinct $d$ values
+preserve different polynomial directions and may have
+different endpoint behavior.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=.98\linewidth,height=5.1cm,
+ xlabel={Year}, ylabel={$\mathrm{CO}_2$ (parts per million)},
+ grid=both, grid style={gray!12},
+ xticklabel style={/pgf/number format/1000 sep=},
+ legend style={font=\scriptsize,at={(.5,-.26)},anchor=north,legend columns=4},
+ tick label style={font=\small}]
+\addplot[gray!55,very thin]
+table[x=year,y=observed]{figures/mauna_loa_1990_1999.dat};
+\addlegendentry{Monthly observed}
+\addplot[blue!70!black,thick]
+table[x=year,y=d2]{figures/mauna_loa_1990_1999.dat};
+\addlegendentry{$d=2$}
+\addplot[red!60!black,thick,dashed]
+table[x=year,y=d3]{figures/mauna_loa_1990_1999.dat};
+\addlegendentry{$d=3$}
+\addplot[green!45!black,thick,dashdotted]
+table[x=year,y=d4]{figures/mauna_loa_1990_1999.dat};
+\addlegendentry{$d=4$}
+\end{axis}
+\end{tikzpicture}
+\caption{Historical Mauna Loa atmospheric carbon dioxide,
+monthly aggregates of weekly measurements from 1990--1999,
+and two-sided PLS fits with common normalized smoothness
+$S=0.86$. These are descriptive trends, not forecasts.}
+\label{fig:real-co2}
+\end{figure}
+
+For $d=2$ at the corresponding $\lambda=37.03$,
+the observed-difference plug-in is
+$\overline{D_2y}=0.002119$ ppm/month$^2$,
+while the likelihood-profile formula gives
+$\widehat\mu(\lambda)=-0.003092$ in the same units.
+This illustrates that a positive-penalty profile estimate
+is not generally the raw observed-difference mean.
+Profiling $\lambda$ jointly over the declared positive
+search interval selected a very small value (approximately
+$6.14\times10^{-6}$) in this particular dataset; seasonal
+structure is an important modeling limitation and
+such boundary behavior should not be interpreted as
+evidence of superior estimation. The figure therefore uses
+the separate controlled-smoothness choice.
+
+\begin{table}[H]
+\centering
+\caption{Direct joint normal-equation versus spectral
+profile-$\mu$ numerical check; independent Gaussian test series,
+$n=50$, $\lambda=27$. The values are maximum absolute
+floating-point differences, not inferential errors.}
+\label{tab:mu-check}
+\begin{tabular}{rrr}\toprule
+$d$ & $|\Delta\mu|$ & $\|\Delta\tau\|_\infty$\\\midrule
+1 & $1.02\times10^{-16}$ & $1.17\times10^{-15}$\\
+2 & $1.49\times10^{-16}$ & $7.61\times10^{-15}$\\
+3 & $2.65\times10^{-14}$ & $8.04\times10^{-14}$\\
+5 & $2.21\times10^{-12}$ & $2.64\times10^{-11}$\\\bottomrule
+\end{tabular}
+\end{table}
+
+A full atmospheric analysis would explicitly model annual
+seasonality, measurement uncertainty, and revisions to the
+underlying data. The present package smooths the complete
+observed series; it does not estimate predictive skill from
+future held-out years.
