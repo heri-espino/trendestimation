@@ -134,11 +134,11 @@ LOOCV formulas omit plug-in-mean re-estimation.
 Computational costs
 -------------------
 
-Full SVD requires :math:`\\mathcal{O}(n^3)` time and
-:math:`\\mathcal{O}(n^2)` memory. With projections precomputed,
+Full SVD requires :math:`\mathcal{O}(n^3)` time and
+:math:`\mathcal{O}(n^2)` memory. With projections precomputed,
 EDF, smoothness, and GCV/AICc/BIC scores take
-:math:`\\mathcal{O}(n)` operations per candidate penalty.
+:math:`\mathcal{O}(n)` operations per candidate penalty.
 Full trend reconstruction and exact diagonal-leverage CV scoring take
-:math:`\\mathcal{O}(n^2)`. Compare fairly with structured banded
+:math:`\mathcal{O}(n^2)`. Compare fairly with structured banded
 Cholesky algorithms rather than only naive dense inverses. Numerical
 conditioning becomes delicate for high difference orders.
