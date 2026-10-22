@@ -26,9 +26,19 @@ def git_blob_sha(data: bytes) -> str:
 
 
 class SmccaTemplateTest(unittest.TestCase):
-    def test_official_class_matches_uploaded_zip(self):
-        digest = git_blob_sha((HERE / "smcca.cls").read_bytes())
-        self.assertEqual(digest, "8f2642cbe1c9553e43f82f3c1e4e708b1a33d618")
+    def test_official_springer_class_and_bst_match_uploaded_zip(self):
+        self.assertEqual(
+            git_blob_sha((HERE / "sn-jnl.cls").read_bytes()),
+            "d25f07cb51c685e90a4ab97e95479826289486d4",
+        )
+        self.assertEqual(
+            git_blob_sha((HERE / "sn-mathphys-ay.bst").read_bytes()),
+            "35533152b3a21c47815f2fe194fef46285c4ccd8",
+        )
+        self.assertIn(
+            r"\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}",
+            (HERE / "main.tex").read_text(encoding="utf-8"),
+        )
 
     def test_figures_are_external_pdf_files_not_inline_tikz(self):
         for source, pdf in (
@@ -65,7 +75,7 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
         self.benchmarks.mkdir()
         # The tested figure generator probes the true SMCCA preamble.
         (self.folder / "main.tex").write_bytes((HERE / "main.tex").read_bytes())
-        (self.folder / "smcca.cls").write_bytes((HERE / "smcca.cls").read_bytes())
+        (self.folder / "sn-jnl.cls").write_bytes((HERE / "sn-jnl.cls").read_bytes())
         self.patcher = patch.multiple(
             module, PAPER=self.folder, FIGURES=self.figures,
             BENCHMARKS=self.benchmarks,
@@ -109,10 +119,10 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
                 with self.renderer.publication_context():
                     pass
 
-    def test_publication_context_configures_exact_solid_latin_modern(self):
+    def test_publication_context_uses_springer_font_stack(self):
         layout = SimpleNamespace(
             textwidth_pt=400.0, fontsize_pt=10.0,
-            font_family="lmr", font_name="ec-lmr10",
+            font_family="cmr", font_name="cmr10",
         )
         fake = MagicMock()
         fake.__enter__.return_value = SimpleNamespace(layout=layout)
@@ -124,8 +134,8 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
                                  "pdflatex")
                 self.assertEqual(self.renderer.matplotlib.rcParams["pgf.rcfonts"],
                                  False)
-                self.assertIn(r"\usepackage{lmodern}",
-                              self.renderer.matplotlib.rcParams["pgf.preamble"])
+                self.assertNotIn("lmodern",
+                                 self.renderer.matplotlib.rcParams["pgf.preamble"])
             self.assertEqual(ctor.call_args.kwargs["width"], "text")
             self.assertEqual(ctor.call_args.kwargs["font"], "auto")
 
@@ -157,7 +167,7 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
                 ["pdffonts", str(self.figures / "cortes_toto_synthetic.pdf")],
                 capture_output=True, text=True, check=True,
             ).stdout
-            self.assertIn("LMRoman", info)
+            self.assertIn("CMR", info)
             self.assertNotIn("DejaVu", info)
         import awesomefigures as af
         af.verify_latex_placement(
