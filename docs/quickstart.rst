@@ -1,50 +1,47 @@
-Quickstart and source illustrations
-===================================
+Quickstart
+==========
 
-Install from source
--------------------
+Installation
+------------
 
-The PyPI release is not published. From the repository root::
+Clone the repository, then install from its root directory.
 
-   python -m pip install -e "packages/trendestimation[plot,docs]"
+.. code-block:: console
 
-Published Cortés-Toto et al. (2017) simulation
-----------------------------------------------
+   python -m pip install -e ".[docs,plot]"
+   python -m pytest -q
+   python scripts/run_notebooks.py --list
 
-The following reproduces **simulated** linear/nonlinear scenarios from
-Section 3 of the cited paper, not a newly collected empirical dataset.
-Try n=50 or n=200, linear/nonlinear shapes, noise standard deviations
-0.5 or 2.0, and seasonal/nonseasonal variants.
+Your first smoothed trend
+-------------------------
 
 .. code-block:: python
 
-   from trendestimation import (
-       TrendSmoother, plot_selection, plot_trend,
-       select_lambda, simulate_cortes_toto,
-   )
+   import numpy as np
+   from trendestimation import TrendSmoother, select_lambda, plot_trend
 
-   case = simulate_cortes_toto(n=200, shape="nonlinear", seasonal=True, seed=7)
-   y = case.observed
-   solver = TrendSmoother(len(y), order=2)
-   chosen = select_lambda(solver, y, criterion="gcv", mu=0.0)
-   fit = solver.fit(y, lambda_=chosen.lambda_, mu=0.0)
-   print("Smoothness:", chosen.smoothness)
-   print("Conditional EDF:", fit.edf_conditional)
+   rng = np.random.default_rng(42)
+   t = np.arange(80)
+   y = .04*t + .2*np.sin(t/8) + rng.normal(0,.4,len(t))
+
+   smoother = TrendSmoother(len(y), order=2)
+   choice = select_lambda(smoother, y, criterion="gcv", mu=0.)
+   fit = smoother.fit(y, lambda_=choice.lambda_, mu=0.)
+   print("Penalty:", choice.lambda_)
+   print("Normalized smoothness:", choice.smoothness)
    plot_trend(y, fit)
-   plot_selection(chosen)
 
-Try differencing orders 1, 2 and 3 and fixed nonzero mu.
+The full :doc:`gallery` shows multiple values of `d`,
+different selection criteria, fixed/nonzero means, diagnostics,
+simulations from Cortés-Toto et al. (2017), and timing comparisons.
 
-Guerrero (2007) nonzero mean
-----------------------------
+Publish the visualizations
+--------------------------
 
-.. code-block:: python
+.. code-block:: console
 
-   solver = TrendSmoother(len(y), order=1)
-   fit = solver.fit(y, lambda_=10.0, mu="data")
-   print("Observed-difference plug-in mean:", fit.mu)
+   python scripts/run_notebooks.py --fast --in-place --fail-fast
+   python -m sphinx -b html docs build/site
 
-The observed-difference plug-in mean is computed using all supplied
-observations. For this mode the classical selection formulas are NOT
-claimed to be exact leave-one-out refits of the mean. Their package
-entry points require fixed numeric mu.
+The finished HTML site is available at `build/site/index.html`.
+Only a manually dispatched GitHub Actions workflow deploys the site.
