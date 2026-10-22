@@ -49,12 +49,23 @@ artifacts include:
 - trace_timings.csv — independently measured repeated EDF profiles;
 - environment.json — software versions, host, threadpools, CPU count, Git
   revision when available, conditions and complexity models;
-- full_fit_plot.dat and trace_plot.dat — optional PGFplots-ready figures.
+- full_fit_plot.dat and trace_plot.dat — optional PGFplots-ready figures;
+- full_fit_table.tex and trace_table.tex — generated LaTeX tables of actual
+  host measurements in milliseconds;
+- benchmark_environment.tex — machine and software provenance for the paper;
+- paper_result_manifest.json — numerical deviations and input file provenance.
 
 The run intentionally uses one BLAS thread by default (via threadpoolctl).
 This minimizes oversubscription noise, but is not a universal performance
 configuration. Document the number of threads you choose and measure
 multiple repetitions on an idle host.
+
+The runner automatically generates LaTeX tables from measured CSV outputs:
+the paper includes these via conditional \input directives. A manuscript
+compiled without raw measurements explicitly says results are pending; it
+does not silently substitute pilot timings from a different machine.
+The smoke preset is a correctness check, **not** publication-grade timing.
+The quick and full presets should be repeated and inspected before publishing.
 
 ## Presets
 
@@ -92,8 +103,8 @@ measured. Wall time is not a platform-independent cost.
 
 ## Paper integration
 
-The paper includes a methodology, interpretation, and optional PGFplots
-figures in sections/benchmark_comparison.tex. Run the suite before manual
+The paper includes its benchmark methodology, automated result tables,
+hardware provenance and optional PGFplots figures in sections/timing_experiments.tex. Run the suite before manual
 LaTeX compilation to populate the figures. To publish quantitative claims,
 run on the actual source checkout/tag and machine, document the commit SHA,
 software/BLAS versions and raw CSV files, and review all tolerances.
