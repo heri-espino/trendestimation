@@ -101,6 +101,7 @@ trendestimation
    :caption: Documentation
 
    quickstart
+   forecasting
    notebooks
    gallery
    mathematics
@@ -110,6 +111,9 @@ trendestimation
 
 Additional reproducible tutorials
 ---------------------------------
+
+The :doc:`forecasting` guide demonstrates fixed-smoothness trend extrapolation,
+point plots, multiple visual diagnostics, and a manually generated PNG gallery.
 
 The :doc:`gallery` contains eight longer scientific notebooks covering
 simulation scenarios, spectral diagnostics, numerical benchmarks, and
