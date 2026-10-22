@@ -181,6 +181,13 @@ def save(folder, rows, settings):
         json.dumps(settings, indent=2), encoding="utf-8"
     )
     # One file per observation for native PGFplots rendering.
+    with (folder / "full_fit_at_M64.dat").open("w", encoding="utf-8") as f:
+        f.write("n densefresh densecached spectral banded\n")
+        for (n, d, m, mu), group in sorted(groups.items()):
+            if d == 2 and mu == 0. and m == 64:
+                f.write(f"{n} " + " ".join(
+                    f"{group[name]['total_median_s']:.10g}" for name in METHODS
+                ) + "\n")
     with (folder / "full_fit_plot.dat").open("w", encoding="utf-8") as f:
         f.write("n M densefresh densecached spectral banded\n")
         for (n, d, m, mu), group in sorted(groups.items()):
