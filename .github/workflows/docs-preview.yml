@@ -24,6 +24,10 @@ jobs:
           cache: pip
       - name: Install project and docs dependencies
         run: python -m pip install -e ".[docs]"
+      - name: Smoke test SVG rendering from the pinned GitHub library
+        run: |
+          python -m pip install -r docs/requirements-figures.txt
+          python scripts/check_svg_notebook.py
       - name: Check Sphinx HTML and references without re-executing notebooks
         env:
           TRENDESTIMATION_DOCS_EXECUTION: "off"
