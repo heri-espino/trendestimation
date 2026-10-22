@@ -32,8 +32,30 @@ Your first smoothed trend
    print("Normalized smoothness:", choice.smoothness)
    plot_trend(y, fit)
 
-For a fitted mean of ``mu='data'``, classical selection scores are not
-claimed to represent exact leave-one-out refits of that mean.
+Guerrero's original smoothness and Gaussian marginal MLE
+-------------------------------------------------------
+
+.. code-block:: python
+
+   # Denominator n (original), rather than n-d (normalized):
+   original = smoother.smoothness(choice.lambda_, normalized=False)
+   restored_lambda = smoother.lambda_for_smoothness(
+       original, normalized=False,
+   )
+   print("Guerrero original smoothness:", original)
+
+   # Gaussian marginal MLE with observed-difference plug-in mu:
+   ml = select_lambda(smoother, y, criterion="mle", mu="data")
+   result = smoother.fit(y, lambda_=ml.lambda_, mu="data")
+   print("Empirical mean of d-th differences:", result.mu)
+   print("MLE smoothness (original):", result.guerrero_smoothness)
+
+Here mu="data" means mean(D_d @ y), the mean of the observed d-th
+differences. It is not generally the mean of the raw series. The MLE
+criterion profiles Gaussian observation variance and treats the polynomial
+nullspace as unpenalized; with plug-in mu, it does not claim *joint* maximum
+likelihood for the reference mean and penalty. The classical CV/GCV/AICc/BIC
+formulas still require fixed numeric mu.
 
 The full :doc:`gallery` shows multiple values of `d`,
 different selection criteria, fixed/nonzero means, diagnostics,
