@@ -1,6 +1,9 @@
 Scientific references and methodological boundaries
 ===================================================
 
+For a mathematical synthesis and reproducible optimization examples, see
+:doc:`smoothness_optimization`.
+
 Established statistical methodology
 -----------------------------------
 
