@@ -1,8 +1,12 @@
-name: SMCCA paper builder smoke checks
+name: Springer Computational Statistics paper smoke checks
 on:
   pull_request:
     paths:
       - 'paper/build.py'
+      - 'paper/main.tex'
+      - 'paper/sn-jnl.cls'
+      - 'paper/sn-mathphys-ay.bst'
+      - 'paper/package_submission.py'
       - 'paper/bibliografia.bib'
       - 'paper/figures/render_awesomefigures.py'
       - 'paper/requirements.txt'
@@ -35,4 +39,5 @@ jobs:
           python paper/build.py --dry-run
           python paper/build.py --dry-run --all --benchmark-preset full --repeats 7
           python paper/build.py --dry-run --tables
+          python paper/build.py --dry-run --pdf --package
           python paper/build.py --dry-run --clean
