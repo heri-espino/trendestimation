@@ -93,8 +93,16 @@ for estimating that mean. Classical parameter-selection formulas in this
 package **cannot** be called with ``mu="data"`` as if they represented exact
 leave-one-out refits of a data-dependent mean.
 
+Notebook tutorials
+------------------
+
+The :doc:`notebooks` page provides runnable Jupyter examples for a first
+trend, selection criteria, and comparisons between differencing orders.
+These notebooks are the canonical worked examples, while the API reference
+is generated from Python docstrings.
+
 Next steps
 ----------
 
-Read :doc:`mathematics` for the estimator and its assumptions, then
+Read :doc:`notebooks` for examples, :doc:`mathematics` for the estimator and its assumptions, then
 :doc:`api` for the callable Python interface.
