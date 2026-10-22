@@ -31,7 +31,8 @@ jobs:
         run: python scripts/run_notebooks.py --fast --in-place --fail-fast
       - name: Build Sphinx site strictly
         env:
-          TRENDESTIMATION_DOCS_EXECUTION: "off"
+          # Auto executes only notebook sources without cached outputs (three intros).
+          TRENDESTIMATION_DOCS_EXECUTION: "auto"
         run: python -m sphinx -b html -W --keep-going docs build/site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
