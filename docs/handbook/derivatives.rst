@@ -71,7 +71,7 @@ is used in the production derivative.
    slope = cv_derivative(smoother, y, lambda_=lam, mu=0.0)
 
 Derivatives of GCV, AICc and BIC
--------------------------------
+--------------------------------
 
 For :math:`R>0` and admissible denominators, differentiate
 the **exact score conventions used in the package**:
