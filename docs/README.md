@@ -48,3 +48,18 @@ To preview the complete site with a warning-strict build, set
 `docs-preview.yml` workflow uploads HTML for inspection but does not deploy
 it. The separate manual Pages workflow executes the longer notebooks
 when explicitly requested.
+
+
+## Gaussian MLE variance-component examples
+
+The public ``estimate_variance_components`` API reports likelihood-based
+observation-noise and latent-difference variances (and their standard
+deviations). These are not the fitted-trend variance, residual MSE, or
+forecast prediction intervals. The short selection notebook introduces
+the method; longer criteria, nonzero-mean, spectral, applied, MLE and
+forecast-pipeline notebooks demonstrate the same API in context.
+
+Notebook execution and publication remain separate: run selected notebooks
+manually with ``python scripts/run_notebooks.py --fast --only
+09-gaussian-mle-and-guerrero-smoothness --fail-fast`` before an explicit
+Sphinx build. The forecasting chapter profiles historical data only.
