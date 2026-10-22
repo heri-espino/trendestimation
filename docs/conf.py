@@ -19,17 +19,17 @@ extensions = [
     "myst_nb",
 ]
 html_theme = "furo"
-html_title = "trendestimation — scientific trend smoothing"
+html_title = "trendestimation"
 html_short_title = "trendestimation"
 html_show_sphinx = False
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
+html_js_files = ["js/reveal.js"]
 html_favicon = "_static/favicon.svg"
 html_theme_options = {
     "source_repository": "https://github.com/heri-espino/trendestimation/",
     "source_branch": "main",
     "source_directory": "docs/",
-
 }
 exclude_patterns = ["_build", ".DS_Store", "Thumbs.db", "README.md"]
 autodoc_typehints = "description"

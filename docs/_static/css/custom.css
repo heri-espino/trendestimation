@@ -4,6 +4,7 @@
  */
 :root {
   --te-brand: #003A70;
+  --te-radius: 0px;  /* square geometry: cards, buttons, notebooks, callouts */
   --te-accent: var(--te-brand);
   --te-accent-strong: color-mix(in srgb, var(--te-brand) 78%, black);
   --te-accent-muted: color-mix(in srgb, var(--te-brand) 60%, white);
@@ -12,13 +13,6 @@
   --te-chart-observed: color-mix(in srgb, var(--te-brand) 35%, #b7bdc6);
   --te-focus: color-mix(in srgb, var(--te-brand) 75%, white);
   --te-surface: #fff;
-  --te-code-text: #202936;
-  --te-code-on-dark: color-mix(in srgb, var(--te-brand) 28%, white);
-  --te-code-string-on-dark: color-mix(in srgb, var(--te-brand) 15%, white);
-  --te-code-keyword: var(--te-brand);
-  --te-code-string: color-mix(in srgb, var(--te-brand) 75%, #465466);
-  --te-code-number: color-mix(in srgb, var(--te-brand) 60%, #58616c);
-  --te-code-comment: #6a7480;
 
   /* Furo and Sphinx Design: brand links, nav, active states and buttons. */
   --color-brand-primary: var(--te-accent);
@@ -39,17 +33,12 @@
   --te-chart-observed: color-mix(in srgb, var(--te-brand) 36%, #b9c8d9);
   --te-focus: color-mix(in srgb, var(--te-brand) 32%, white);
   --te-surface: #1b2531;
-  --te-code-text: #e2e9f1;
-  --te-code-keyword: var(--te-accent);
-  --te-code-string: color-mix(in srgb, var(--te-accent) 55%, #dce2eb);
-  --te-code-number: color-mix(in srgb, var(--te-accent) 60%, #dce2eb);
-  --te-code-comment: #aab6c6;
 }
 
 /*
  * trendestimation documentation design system.
- * Scoped to the landing page and conservative global refinements.
- * No JavaScript or animation framework required.
+ * Restrained square-corner editorial design.
+ * Syntax colors are owned by Furo/Pygments, not by the brand palette.
  */
 
 :root {
@@ -72,13 +61,13 @@ body {
 .sidebar-tree a,
 .sidebar-brand,
 .headerlink {
-  transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+  transition: color .55s ease, background-color .55s ease, border-color .55s ease;
 }
 
 :focus-visible {
   outline: 3px solid var(--te-focus);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: var(--te-radius);
 }
 
 body:has(.te-landing) {
@@ -136,10 +125,10 @@ body:has(.te-landing) .content > article > h1 {
 .te-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: clamp(1.8rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
   align-items: center;
-  padding: clamp(2.4rem, 6vw, 5.2rem) 0 clamp(3.9rem, 7vw, 6.5rem);
+  padding: clamp(1.9rem, 4vw, 3.5rem) 0 clamp(3rem, 5vw, 4.2rem);
 }
 
 .te-hero::before {
@@ -172,7 +161,7 @@ body:has(.te-landing) .content > article > h1 {
   gap: .72rem;
   flex-wrap: wrap;
   text-transform: uppercase;
-  animation: te-arrive .65s ease both;
+  animation: te-arrive 1.3s ease-out both;
 }
 
 .te-status-dot {
@@ -190,13 +179,13 @@ body:has(.te-landing) .content > article > h1 {
 }
 
 .te-hero h2 {
-  font-size: clamp(2.55rem, 4.6vw, 5.25rem);
-  line-height: 1.075;
-  letter-spacing: -.063em;
-  font-weight: 760;
-  margin: 1.65rem 0 1.5rem;
+  font-size: clamp(2.45rem, 3.8vw, 4.25rem);
+  line-height: 1.09;
+  letter-spacing: -.042em;
+  font-weight: 700;
+  margin: 1.4rem 0 1.35rem;
   text-wrap: balance;
-  animation: te-arrive .7s .08s ease both;
+  animation: te-arrive 1.45s .14s ease-out both;
 }
 
 .te-hero h2 span {
@@ -208,7 +197,7 @@ body:has(.te-landing) .content > article > h1 {
   font-size: clamp(1.02rem, 1.35vw, 1.16rem);
   line-height: 1.82;
   color: var(--te-muted) !important;
-  animation: te-arrive .7s .16s ease both;
+  animation: te-arrive 1.55s .24s ease-out both;
 }
 
 .te-actions {
@@ -217,7 +206,7 @@ body:has(.te-landing) .content > article > h1 {
   align-items: center;
   flex-wrap: wrap;
   margin-top: 2rem;
-  animation: te-arrive .7s .24s ease both;
+  animation: te-arrive 1.6s .32s ease-out both;
 }
 
 .te-button {
@@ -228,16 +217,16 @@ body:has(.te-landing) .content > article > h1 {
   min-height: 3.05rem;
   padding: .78rem 1.15rem;
   border: 1px solid transparent;
-  border-radius: .72rem;
+  border-radius: var(--te-radius);
   font-size: .9rem;
   font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
+  transition: transform .7s ease, background-color .7s ease, border-color .7s ease;
 }
 
 .te-button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .te-button-primary {
@@ -273,18 +262,18 @@ body:has(.te-landing) .content > article > h1 {
 
 .te-hero-visual {
   min-width: 0;
-  animation: te-arrive .9s .22s ease both;
+  animation: te-arrive 1.6s .3s ease-out both;
 }
 
 .te-chart-panel {
   position: relative;
   overflow: hidden;
-  border-radius: .85rem;
+  border-radius: var(--te-radius);
   border: 1px solid var(--te-border);
   background: var(--te-surface);
   box-shadow: 0 8px 30px -24px rgba(18, 35, 54, .16);
   padding: 1.25rem 1.25rem 1.15rem;
-  transition: box-shadow .35s ease, transform .35s ease;
+  transition: box-shadow .8s ease, transform .8s ease;
 }
 
 .te-chart-panel:hover {
@@ -353,7 +342,7 @@ body:has(.te-landing) .content > article > h1 {
   stroke-linecap: round;
   stroke-dasharray: 650;
   stroke-dashoffset: 650;
-  animation: te-draw 1.8s .45s ease-out forwards;
+  animation: te-draw 3.2s .8s ease-out forwards;
 }
 
 .te-endpoint {
@@ -438,11 +427,11 @@ body:has(.te-landing) .content > article > h1 {
   min-height: 19.5rem;
   padding: clamp(1.2rem, 2.1vw, 1.8rem);
   border: 1px solid var(--te-border);
-  border-radius: .75rem;
+  border-radius: var(--te-radius);
   background: var(--te-white);
   color: var(--te-ink) !important;
   box-shadow: none;
-  transition: transform .25s ease, border-color .25s ease, background-color .25s ease, box-shadow .25s ease;
+  transition: transform .85s ease, border-color .7s ease, background-color .7s ease, box-shadow .8s ease;
 }
 
 .te-feature:hover {
@@ -465,7 +454,7 @@ body:has(.te-landing) .content > article > h1 {
   margin-bottom: 1.05rem;
   width: 2.55rem;
   height: 2.55rem;
-  border-radius: .7rem;
+  border-radius: var(--te-radius);
   background: var(--te-blue-soft);
   color: var(--te-blue);
   font-size: 1.3rem;
@@ -500,18 +489,18 @@ body:has(.te-landing) .content > article > h1 {
 .te-feature-link span,
 .te-text-link span,
 .te-button span {
-  transition: transform .2s ease;
+  transition: transform .7s ease;
 }
 
 .te-feature:hover .te-feature-link span,
 .te-text-link:hover span,
 .te-button:hover span {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 .te-demo {
   display: grid;
-  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  grid-template-columns: minmax(0, .68fr) minmax(0, 1.32fr);
   align-items: center;
   gap: clamp(1.5rem, 4vw, 4.5rem);
   padding: clamp(2rem, 4vw, 3.3rem);
@@ -540,7 +529,7 @@ body:has(.te-landing) .content > article > h1 {
 .te-code-window {
   min-width: 0;
   overflow: hidden;
-  border-radius: .95rem;
+  border-radius: var(--te-radius);
   background: #162232;
   border: 1px solid #354355;
   box-shadow: none;
@@ -573,7 +562,7 @@ body:has(.te-landing) .content > article > h1 {
   overflow-x: auto;
   padding: 1.3rem;
   margin: 0;
-  font-size: clamp(.66rem, 1vw, .79rem);
+  font-size: clamp(.71rem, 1.03vw, .83rem);
   line-height: 1.84;
   color: #e6ecf5;
   font-family: var(--te-mono);
@@ -589,9 +578,11 @@ body:has(.te-landing) .content > article > h1 {
   font-size: inherit;
 }
 
-.te-code-keyword { color: var(--te-code-on-dark); }
-.te-code-number { color: #cad3e1; }
-.te-code-string { color: var(--te-code-string-on-dark); }
+/* The homepage example uses conventional multihue syntax on its dark panel.
+   Branding affects borders/navigation, never Python semantics. */
+.te-code-keyword { color: #c792ea; }
+.te-code-number { color: #f7bc7d; }
+.te-code-string { color: #a8d8a0; }
 
 .te-footer-panel {
   display: flex;
@@ -657,7 +648,7 @@ body:has(.te-landing) .content > article > h1 {
 }
 
 @keyframes te-arrive {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -667,7 +658,7 @@ body:has(.te-landing) .content > article > h1 {
 
 @media (max-width: 1100px) {
   .te-hero { gap: 1.9rem; }
-  .te-hero h2 { font-size: clamp(2.45rem, 4vw, 3.7rem); }
+  .te-hero h2 { font-size: clamp(2.4rem, 3.8vw, 3.5rem); }
 }
 
 @media (max-width: 900px) {
@@ -681,7 +672,7 @@ body:has(.te-landing) .content > article > h1 {
 
 @media (max-width: 650px) {
   .te-hero { padding: 1.5rem 0 3.1rem; }
-  .te-hero h2 { font-size: clamp(2.45rem, 9vw, 3.6rem); }
+  .te-hero h2 { font-size: clamp(2.1rem, 8vw, 3.1rem); }
   .te-feature-grid { grid-template-columns: 1fr; }
   .te-feature { min-height: 15.5rem; }
   .te-demo { padding: 1.35rem; }
@@ -728,8 +719,9 @@ a:focus-visible, button:focus-visible {
   text-decoration-color: color-mix(in srgb, var(--te-accent) 37%, transparent);
 }
 
-/* MyST-NB/Sphinx input cells and regular highlighted blocks:
-   eliminate the default green accent, including nested input areas. */
+/* Decorations ONLY: notebook input and ordinary code block framing.
+   Pygments/Furo own syntax token colors (keywords, strings, operators,
+   comments, numbers); do not override .highlight span token classes. */
 .cell_input,
 .cell_input .highlight,
 .cell_input .highlight-ipython3,
@@ -743,43 +735,19 @@ div.highlight-ipython3 {
 }
 .cell_input,
 .nbinput,
-div.highlight:not(.te-code-window) {
+div.highlight {
   border-left-style: solid;
-  border-left-width: 3px;
-  border-radius: .45rem;
+  border-left-width: 2px;
+  border-radius: var(--te-radius);
 }
-.cell_input,
-.nbinput,
-.highlight,
-.highlight pre,
+.cell_input, .nbinput,
+.highlight, .highlight pre,
 .nbinput .input_area {
-  background-color: var(--te-accent-subtle);
+  background-color: var(--color-background-secondary);
 }
-.cell_output, .nboutput { border-left-color: #cbd2dc !important; }
-
-/* Sphinx/Pygments highlight styles are separate from Furo.
-   One navy-derived syntax family, with gray comments/punctuation.
-   The scoped !important wins over the generated Pygments stylesheet. */
-.highlight span[class] { color: var(--te-code-text) !important; }
-.highlight span:is(.k,.kc,.kd,.kn,.kp,.kr,.kt,.ow) {
-  color: var(--te-code-keyword) !important;
-  font-weight: 600;
+.cell_output, .nboutput {
+  border-left-color: var(--color-background-border) !important;
 }
-.highlight span:is(.nf,.fm,.nc,.nn,.na,.nb,.ne) {
-  color: var(--te-accent) !important;
-}
-.highlight span:is(.s,.s1,.s2,.sa,.sb,.sc,.sd,.se,.sh,.si,.sr,.ss,.sx) {
-  color: var(--te-code-string) !important;
-}
-.highlight span:is(.m,.mi,.mf,.mh,.mo,.il) {
-  color: var(--te-code-number) !important;
-}
-.highlight span:is(.c,.c1,.cm,.cp,.ch,.cs) {
-  color: var(--te-code-comment) !important;
-  font-style: italic;
-}
-.highlight span:is(.o,.p,.n,.nx,.w) { color: var(--te-code-text) !important; }
-.highlight pre { color: var(--te-code-text); }
 
 /* Links, cards and Sphinx Design affordances share the same accent. */
 .sd-btn-primary, .sd-bg-primary {
@@ -792,3 +760,83 @@ div.highlight:not(.te-code-window) {
   border-color: var(--te-accent-strong) !important;
 }
 .sd-card:focus-within { border-color: var(--te-accent-border); }
+
+
+/* Square 90-degree geometry across Furo, Sphinx Design and notebook cells.
+   Keep circles on data-point markers and site illustrations only. */
+.te-landing :is(.te-button,.te-feature,.te-feature-icon,.te-chart-panel,
+                .te-code-window,.te-demo,.te-chart-dots i,.te-code-dots i,
+                .te-status-dot,.te-legend-observed,.te-legend-trend),
+.content :is(.highlight,.highlight pre,.cell_input,.cell_output,.nbinput,
+             .nboutput,.admonition,.admonition-title,.sd-card,.sd-card-header,
+             .sd-card-footer,.sd-btn,.sd-tab-label,.sd-summary-title,
+             .sphinx-tabs-tab,.sphinx-tabs-panel,.dropdown,.toggle),
+.content .highlight > .highlight,
+.sidebar-search-container :is(input,button),
+.search-container :is(input,button),
+input[type="search"], button.copybtn {
+  border-radius: var(--te-radius) !important;
+}
+.te-landing .te-status-dot { box-shadow: none; }
+.te-landing .te-chart-dots i, .te-landing .te-code-dots i {
+  border-radius: var(--te-radius);
+}
+
+/* Notebook explanatory notes use the same restrained interface accent.
+   Keep warning/error admonition semantic colors unchanged. */
+.content :is(.admonition.note,.admonition.seealso) {
+  border-left-color: var(--te-accent);
+}
+.content :is(.admonition.note,.admonition.seealso) > .admonition-title {
+  background: var(--te-accent-subtle);
+  color: var(--te-accent);
+}
+.content :is(.admonition.note,.admonition.seealso) > .admonition-title::before {
+  color: var(--te-accent);
+}
+
+/* Link accents, not code token colors. Prefer native Furo typography. */
+.content a:not(.te-button):not(.te-feature):visited,
+.content a:not(.te-button):not(.te-feature):link,
+.sidebar-tree a:visited, .sidebar-tree a:link,
+.toc-tree a:visited, .toc-tree a:link,
+.related-pages a:visited, .related-pages a:link,
+.footer a:visited, .footer a:link {
+  color: var(--te-accent);
+}
+.content .te-feature:visited { color: var(--te-ink) !important; }
+.content .te-feature-link { color: var(--te-accent); }
+
+/* Consistent low-key animation timing, without forced scroll behavior. */
+html { scroll-behavior: smooth; }
+.te-landing :is(.te-feature,.te-chart-panel,.te-button,.te-text-link),
+.content a, .sidebar-tree a, .toc-tree a {
+  transition-duration: .7s;
+  transition-timing-function: ease-in-out;
+}
+
+/* Scroll reveal is opt-in and progressive: elements remain visible when
+   JavaScript is disabled, IntersectionObserver is missing or reduced
+   motion is requested. The script adds data-te-reveal-ready only after
+   creating an observer. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-te-reveal-ready="true"] .te-reveal:not(.te-visible) {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  html[data-te-reveal-ready="true"] .te-reveal {
+    transition: opacity 1.45s ease-out, transform 1.45s ease-out;
+  }
+  html[data-te-reveal-ready="true"] .te-reveal.te-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .te-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

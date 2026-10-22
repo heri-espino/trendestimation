@@ -7,13 +7,13 @@ trendestimation
      <section class="te-hero" aria-labelledby="te-hero-title">
        <div class="te-hero-copy">
          <div class="te-eyebrow"><span class="te-status-dot" aria-hidden="true"></span> Scientific Python <span class="te-eyebrow-divider" aria-hidden="true"></span> Pre-release 0.1</div>
-         <h2 id="te-hero-title">Discover the signal.<br><span>Keep the clarity.</span></h2>
-         <p class="te-hero-description">A precise, research-grounded toolkit for smooth trend estimation in time series. Finite-difference regularization, classical parameter selection, and reproducible analysis &mdash; in one Python library.</p>
+         <h2 id="te-hero-title">Finite-difference<br><span>trend estimation.</span></h2>
+         <p class="te-hero-description">Penalized least-squares smoothing for equally spaced time series. Choose a difference order, select a penalty, and examine the fitted trend through documented Python methods and executable notebooks.</p>
          <div class="te-actions">
            <a class="te-button te-button-primary" href="notebooks.html">Explore notebooks <span aria-hidden="true">&rarr;</span></a>
            <a class="te-button te-button-secondary" href="api.html">Explore the API <span aria-hidden="true">&nearr;</span></a>
          </div>
-         <p class="te-hero-footnote">Based on established statistical methods. Designed for transparent computation.</p>
+         <p class="te-hero-footnote">In-sample estimation &middot; Explicit assumptions &middot; Reproducible examples</p>
        </div>
        <div class="te-hero-visual">
          <div class="te-chart-panel">
@@ -38,8 +38,8 @@ trendestimation
 
      <section class="te-section" aria-labelledby="te-capabilities-heading">
        <div class="te-section-heading">
-         <div><p class="te-overline">THE TOOLKIT</p><h2 id="te-capabilities-heading">Rigorous methods.<br>Thoughtfully implemented.</h2></div>
-         <p>Explore established statistical estimators with explicit assumptions, interpretable outputs, and a compact API.</p>
+         <div><p class="te-overline">THE TOOLKIT</p><h2 id="te-capabilities-heading">Methods and documentation</h2></div>
+         <p>Implementation details, parameter selection, and the reference API.</p>
        </div>
        <div class="te-feature-grid">
          <a class="te-feature" href="mathematics.html">
@@ -53,7 +53,7 @@ trendestimation
            <span class="te-feature-number">02 / SELECTION</span>
            <span class="te-feature-icon" aria-hidden="true">&#955;</span>
            <h3>Choose the smoothing</h3>
-           <p>Compare classical in-sample CV, GCV, AICc, and BIC criteria for a fixed reference mean, or request a target smoothness.</p>
+           <p>Compare CV, GCV, AICc, BIC, and Gaussian marginal MLE; alternatively specify a target smoothness.</p>
            <span class="te-feature-link">See the workflow <span aria-hidden="true">&rarr;</span></span>
          </a>
          <a class="te-feature" href="api.html">
@@ -69,8 +69,8 @@ trendestimation
      <section class="te-demo" aria-labelledby="te-demo-heading">
        <div class="te-demo-copy">
          <p class="te-overline">START WITH PYTHON</p>
-         <h2 id="te-demo-heading">A clear path from observations to trend.</h2>
-         <p>Build a reusable smoother, choose a smoothing parameter with generalized cross-validation, and estimate the trend. The example uses generated data, never future observations.</p>
+         <h2 id="te-demo-heading">A concise Python workflow</h2>
+         <p>Construct a smoother, select the penalty with GCV, and obtain a fitted trend from a seeded synthetic series.</p>
          <a class="te-text-link" href="notebooks.html">Explore the Jupyter notebooks <span aria-hidden="true">&rarr;</span></a>
        </div>
        <div class="te-code-window">
@@ -78,19 +78,18 @@ trendestimation
          <pre class="te-code"><code><span class="te-code-keyword">import</span> numpy <span class="te-code-keyword">as</span> np
    <span class="te-code-keyword">from</span> trendestimation <span class="te-code-keyword">import</span> TrendSmoother, select_lambda
 
-   rng = np.random.default_rng(<span class="te-code-number">42</span>)
-   y = np.linspace(<span class="te-code-number">0</span>, <span class="te-code-number">3</span>, <span class="te-code-number">100</span>) + rng.normal(<span class="te-code-number">0</span>, <span class="te-code-number">0.3</span>, <span class="te-code-number">100</span>)
+   rng = np.random.default_rng(<span class="te-code-number">7</span>)
+   t = np.arange(<span class="te-code-number">120</span>)
+   y = np.sin(t / <span class="te-code-number">14</span>) + rng.normal(<span class="te-code-number">0</span>, <span class="te-code-number">.25</span>, len(t))
 
-   smoother = TrendSmoother(len(y), order=<span class="te-code-number">2</span>)
-   choice = select_lambda(smoother, y, criterion=<span class="te-code-string">"gcv"</span>)
-   fit = smoother.fit(y, lambda_=choice.lambda_)
-
-   trend = fit.trend</code></pre>
+   solver = TrendSmoother(len(y), order=<span class="te-code-number">2</span>)
+   best = select_lambda(solver, y, criterion=<span class="te-code-string">"gcv"</span>)
+   trend = solver.fit(y, lambda_=best.lambda_).trend</code></pre>
        </div>
      </section>
 
      <section class="te-footer-panel" aria-labelledby="te-scope-heading">
-       <div><p class="te-overline">SCIENTIFIC SCOPE</p><h2 id="te-scope-heading">Transparent by design.</h2><p>The current package implements published in-sample smoothing methods. It does not claim forecast-optimal tuning, rolling time-series cross-validation, or new forecasting estimators.</p></div>
+       <div><p class="te-overline">SCIENTIFIC SCOPE</p><h2 id="te-scope-heading">Scope and assumptions</h2><p>The current package implements published in-sample smoothing methods. It does not claim forecast-optimal tuning, rolling time-series cross-validation, or new forecasting estimators.</p></div>
        <a class="te-button te-button-outline" href="mathematics.html">Methods and assumptions <span aria-hidden="true">&rarr;</span></a>
      </section>
    </div>
@@ -109,23 +108,3 @@ trendestimation
    references
    api
 
-Additional reproducible tutorials
----------------------------------
-
-The :doc:`forecasting` guide illustrates conditional fixed-smoothness
-trend extrapolation and diagnostic visualizations. It is not a validated
-time-series forecasting method.
-
-
-The :doc:`gallery` contains nine longer scientific notebooks covering
-simulation scenarios, spectral diagnostics, numerical benchmarks, and
-applied examples. The :doc:`notebooks` section offers three introductory
-tutorials. Both collections are preserved as executable source notebooks.
-
-Research foundations
---------------------
-
-The mathematical foundations follow
-Guerrero (2007), Cortés-Toto, Guerrero and Reyes (2017),
-and Weinert (2007). See :doc:`mathematics` for the formulation,
-limits, and computational costs.
