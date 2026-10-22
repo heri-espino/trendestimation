@@ -947,3 +947,12 @@ html { scroll-behavior: smooth; }
     transition: none !important;
   }
 }
+
+/* Scalable vector plots, independent from the site's single navy UI color. */
+.content :is(.cell_output,.nboutput,.output_area) svg,
+.content :is(.cell_output,.nboutput,.output_area) img[src$=".svg"],
+.content img[src*=".svg"] {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
