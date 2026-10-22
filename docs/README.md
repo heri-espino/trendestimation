@@ -19,9 +19,10 @@ Run from the repository root:
     python -m pip install -e ".[docs]"
     python -m sphinx -n -W --keep-going -b html docs docs/_build/html
 
-View docs/_build/html/index.html. Notebooks are not executed by Sphinx
-(nb_execution_mode = "off"). Open each .ipynb file in Jupyter and
-run its cells locally for figures and numerical outputs.
+View docs/_build/html/index.html. The three small deterministic notebooks
+are executed during Sphinx builds (nb_execution_mode = "auto"); their
+figures and numerical outputs are embedded in the generated HTML.
+Open the .ipynb files in Jupyter to modify and rerun the examples.
 
 ## Release policy
 
