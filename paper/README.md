@@ -1,77 +1,59 @@
-# SMCCA manuscript — trendestimation
+# SMCCA scientific-computing manuscript
 
-**Status: research-software submission draft, not yet author-approved.**
+**Draft, not approved for journal submission.**
 
-- Manuscript: main.tex
-- Journal class: smcca.cls (copied unchanged from the already-used SMCCA
-  numerical paper template in heri-espino/Trend-Estimation)
-- Bibliography: bibliografia.bib
-- Numerical illustration: figures/make_figures.py
-- Reproducible outputs (generated, not necessary to version): figures/cortes_toto_synthetic.dat,
-  criteria_table.tex, results_summary.json
-- First author: Heriberto Espino-Montelongo
-- Second author: Daniela Cortés-Toto
-- Affiliation for the second author: **requires confirmation by coauthor**.
-  Her 2017 affiliation is not assumed to remain current.
+- First author: **Heriberto Espino-Montelongo**.
+- Second author: **Daniela Cortés-Toto**.
+- Affiliation for **both**: Universidad de las Américas Puebla (UDLAP).
+- Officially styled with the available SMCCA `smcca.cls` class already used in the research repo.
+- Main document: `main.tex`; sections of the extended mathematical derivation are in `sections/`.
+- Bibliography: `bibliografia.bib`, including the two other SMCCA articles previously identified.
+- Synthetic replication: `figures/make_figures.py` (Cortés-Toto et al. scenario).
+- **Observed-data example:** `figures/make_extended_figures.py` uses the historical Mauna Loa weekly CO2 measurements bundled with `statsmodels.datasets.co2`; aggregates the 1990–1999 measurements to 120 monthly averages, compares d=2,3,4,5 at normalized smoothness 0.86, and exports the plot data.
+- Independent mathematical test: the same script computes the closed-form conditional GLS/likelihood profile estimator of `mu`, then checks it against a direct joint normal-equation solver for d=1,2,3,5.
 
-## Scientific position
+## Reproduce (manual)
 
-This is a short computational/scientific-software article implementing
-**published** finite-difference penalized least squares (Guerrero 2007;
-Cortés-Toto, Guerrero, Reyes 2017), not a new smoothing estimator. It
-supports orders 1<=d<n (the package also defines d=0), fixed difference
-means, Guerrero's observed-difference plug-in for fitting, fixed-mu
-CV/GCV/AICc/BIC, an SVD-based solver and exact infinite-penalty limits.
+From the repository root:
 
-The two articles from this same journal used as contextual examples are:
-
-- R. Balam, L. Valencia, M. Zapata, R. Balam (2025),
-  *A Simple Overview of Least Squares*:
-  https://www.scipedia.com/public/Balam_et_al_2025a
-- D. Azofeifa, M. Moreles (2025),
-  *Hybrid Discontinuous Galerkin method for perturbations of the modified
-  Helmholtz equation*:
-  https://www.scipedia.com/public/Azofeifa_Moreles_2025a
-
-The manuscript adopts their compact motivation/method/numerical-results/
-conclusions progression without implying that their mathematical problems
-are the same.
-
-## Build instructions
-
-From the **repository root**:
-
-\`\`\`bash
-python -m pip install -e ".[plot]"
+```sh
+python -m pip install -e .
+python -m pip install statsmodels pandas
 python paper/figures/make_figures.py
+python paper/figures/make_extended_figures.py
 cd paper
-latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
-\`\`\`
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+```
 
-A complete TeX distribution with BibTeX and pgfplots is needed.
-Alternatively, run \`make -C paper pdf\` after Python installation.
-Heavy figure and PDF builds remain **manual**; they must not be run
-automatically on each push or PR.
+If a local TeX distribution has `bibtex8` but lacks the `bibtex` command,
+use `pdflatex main.tex`, `bibtex8 main.aux`, then run `pdflatex main.tex` twice.
+A manual-only workflow can compile the paper with a full LaTeX environment.
 
-Outputs are deterministic for the declared seeds. Selected-lambda values
-depend on the current software's finite candidate grid, and the BIC near-zero
-boundary requires explicit interpretation. The numerical parity experiment
-is not a universal stability result.
+## Scientific boundaries
 
-**Runtime measurements on the user's own computer have not been added.**
-Any end-to-end speedup statement would require warm-up protocol, repeated
-runs, hardware and thread information, and a banded-solver comparator.
-The paper therefore reports algorithmic complexity, not invented speedups.
+The long-known PLS estimator, arbitrary finite-difference order and polynomial
+nullspace, nonzero reference-difference mean, spectral decomposition,
+smoothing splines, and Gaussian marginal likelihood are not claimed as novel.
+The package integrates these methods with an illustrative gallery.
 
-## Before submission
+- The correction maps Guerrero's index `[0, 1-d/n]` to `[0,1]`. Do not
+  write `1-n/d`.
+- The reviewed base package uses **SciPy/NumPy on CPU**, not a verified GPU
+  backend. No runtime/GPU speedup has been measured for the paper.
+- The other agent's MLE branch implements Gaussian marginal likelihood with
+  fixed or plugged-in `mu`. The new analytical **joint profile formula for mu**
+  is research code under `figures/make_extended_figures.py`; it is **not**
+  yet a public package API and must not be presented as one.
+- The real CO2 observations include seasonality, not merely measurement error.
+  The visualization is two-sided descriptive smoothing, not future forecasting.
+- Large difference orders may be poorly conditioned.
+- All coauthor approvals, affiliation presentation, author contribution statements,
+  manuscript novelty review and release tagging remain to be completed.
 
-- Confirm the second author's affiliation and any desired contact email,
-  authorship approval, and institutional information.
-- Review the article's novelty and suitability for SMCCA with both authors.
-- Check current SMCCA requirements and the exact LaTeX class before final
-  submission. The class here is copied from the existing project template.
-- Verify simulation/metrics against the released \`trendestimation\` version,
-  and reproduce figures and numerical checks in the tagged release.
-- Benchmark on the actual reference machine if making runtime claims.
-- Inspect the compiled PDF, line breaks, bibliography and page count.
-- Cite the release and archive its DOI when available.
+## Context in this journal
+
+The prior SMCCA articles cited are Balam et al. (2025),
+*A Simple Overview of Least Squares*, and Azofeifa and Moreles (2025),
+*Hybrid Discontinuous Galerkin Method for Perturbations of the Modified
+Helmholtz Equation*. The exposition mirrors their compact numerical-analysis
+structure without claiming a directly shared mathematical method.
