@@ -93,8 +93,8 @@ print("MLE lambda:", ml.lambda_, "plug-in mu:", ml_fit.mu)
 
 ## Reproducible notebook gallery
 
-The [eight Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
-finite-difference matrices, CV/GCV/AICc/BIC, fixed and plug-in difference means,
+The [nine Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
+finite-difference matrices, CV/GCV/AICc/BIC, fixed and plug-in difference means, Gaussian MLE and Guerrero smoothness,
 published-style simulations, spectral diagnostics, numerical benchmarks, and
 illustrative economic, actuarial, and engineering use cases. The notebooks use
 seeded synthetic data; they are not evidence of future forecasting accuracy.
