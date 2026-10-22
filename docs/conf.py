@@ -24,7 +24,7 @@ html_short_title = "trendestimation"
 html_show_sphinx = False
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/reveal.js"]
+html_js_files = ["js/reveal.js", "js/sidebar.js"]
 html_favicon = "_static/favicon.svg"
 html_theme_options = {
     "source_repository": "https://github.com/heri-espino/trendestimation/",

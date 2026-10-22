@@ -70,10 +70,32 @@ def test_square_corners_and_scroll_reveal_are_progressive():
     assert "prefers-reduced-motion: reduce" in stylesheet
     assert "IntersectionObserver" in script
     assert 'root.dataset.teRevealReady = "true"' in script
-    assert 'html_js_files = ["js/reveal.js"]' in conf
+    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in conf
 
 
 def test_site_title_is_only_the_project_name():
     conf = (DOCS / "conf.py").read_text(encoding="utf-8")
     assert 'html_title = "trendestimation"' in conf
     assert 'html_short_title = "trendestimation"' in conf
+
+
+
+def test_furo_sidebar_motion_and_muted_links():
+    """Keep Furo checkbox navigation usable while smoothing its appearance."""
+    css = CSS.read_text(encoding="utf-8")
+    js = (DOCS / "_static" / "js" / "sidebar.js").read_text(encoding="utf-8")
+    conf = (DOCS / "conf.py").read_text(encoding="utf-8")
+
+    assert "--color-brand-visited: var(--te-link)" in css
+    assert "--color-sidebar-link-text--top-level: var(--te-sidebar-text)" in css
+    assert ".sidebar-tree li.current-page > a.reference" in css
+    assert ".sidebar-tree .toctree-checkbox:checked ~ label .icon svg" in css
+    assert "@keyframes te-document-enter" in css
+    assert "prefers-reduced-motion: reduce" in css
+    assert "js/sidebar.js" in conf
+    assert "toctree-checkbox" in js
+    assert 'sidebar.addEventListener("change"' in js
+    assert "submenu.animate(" in js
+    assert "prefers-reduced-motion: reduce" in js
+    assert "location.href" not in js
+    assert "preventDefault" not in js
