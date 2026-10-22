@@ -72,6 +72,8 @@ def score_lambda(
         raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
     if isinstance(mu, str) and (mu != "data" or name != "mle"):
         raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
+    if name == "mle" and (smoother.order == 0 or smoother.n - smoother.order < 2):
+        raise ValueError("mle requires order >= 1 and at least two penalized coordinates.")
     _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     return _score_from_coordinates(smoother, coord, lambda_=lambda_, name=name)
 
@@ -97,6 +99,8 @@ def select_lambda(
         raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
     if isinstance(mu, str) and (mu != "data" or name != "mle"):
         raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
+    if name == "mle" and (smoother.order == 0 or smoother.n - smoother.order < 2):
+        raise ValueError("mle requires order >= 1 and at least two penalized coordinates.")
     if grid is None:
         scale = 1.0 / smoother._median_positive_eigenvalue
         grid = np.r_[scale * np.geomspace(1e-6, 1e6, 121), np.inf]
