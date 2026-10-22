@@ -77,3 +77,31 @@ def test_site_title_is_only_the_project_name():
     conf = (DOCS / "conf.py").read_text(encoding="utf-8")
     assert 'html_title = "trendestimation"' in conf
     assert 'html_short_title = "trendestimation"' in conf
+
+
+def test_native_sidebar_motion_is_accessible_and_progressive():
+    """Furo's checkbox navigation must work with or without our animation."""
+    conf = (DOCS / "conf.py").read_text(encoding="utf-8")
+    script = (DOCS / "_static" / "js" / "sidebar-motion.js").read_text(
+        encoding="utf-8"
+    )
+    stylesheet = CSS.read_text(encoding="utf-8")
+    assert '"js/sidebar-motion.js"' in conf
+    assert "li.has-children" in script
+    assert "input.toctree-checkbox" in script
+    assert "checkbox.addEventListener(\"change\"" in script
+    assert "checkbox.click()" in script
+    assert 'label.setAttribute("aria-expanded"' in script
+    assert "prefers-reduced-motion: reduce" in script
+    assert "typeof subtree.animate" in script
+    assert "previous.cancel()" in script
+    assert "active.get(group) !== animation" in script
+    assert ".sidebar-tree li.te-nav-animating > ul" in stylesheet
+    assert "display: block !important;" in stylesheet
+    assert ".sidebar-tree li.current > .reference::before" in stylesheet
+    assert ".sidebar-tree li.has-children > label .icon svg" in stylesheet
+    assert ".sidebar-tree li > .reference:focus-visible" in stylesheet
+    assert "@media (prefers-reduced-motion: reduce)" in stylesheet
+    # We do not globally replace the display or positioning of all ULs:
+    # the native tree remains functional with JavaScript unavailable.
+    assert ".sidebar-tree .toctree-checkbox ~ ul" not in stylesheet
