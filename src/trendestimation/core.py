@@ -95,31 +95,60 @@ class TrendSmoother:
         return float(np.sum(self._attenuation(lambda_)))
 
     def smoothness(self, lambda_: float, *, normalized: bool = True) -> float:
-        """Normalized [0,1] index or Guerrero's original [0,1-d/n] index."""
+        """Compute either normalized or original Guerrero smoothness.
+
+        The default uses (n-tr(H))/(n-d), with range [0,1].
+        normalized=False uses Guerrero's original (n-tr(H))/n,
+        whose maximum is (n-d)/n. Here EDF = tr(H) conditions on
+        the supplied difference-reference mean mu.
+        """
         numerator = self.n - self.degrees_of_freedom(lambda_)
         return float(numerator / (self.n - self.order if normalized else self.n))
 
-    def lambda_for_smoothness(self, smoothness: float) -> float:
-        """Invert the monotone smoothness map, with exact limiting endpoints."""
+    def lambda_for_smoothness(
+        self, smoothness: float, *, normalized: bool = True,
+    ) -> float:
+        """Invert either smoothness convention, including exact endpoints.
+
+        Parameters
+        ----------
+        smoothness : float
+            Desired smoothness in [0, 1] if normalized=True, or
+            [0, (n-d)/n] for Guerrero's original n-denominator index.
+        normalized : bool, default True
+            True: (n - tr(H))/(n-d). False: (n - tr(H))/n.
+
+        Returns
+        -------
+        float
+            Nonnegative penalty parameter, possibly infinity at the
+            smoothest limiting value.
+        """
         target = float(smoothness)
-        if not np.isfinite(target) or not 0 <= target <= 1:
-            raise ValueError("smoothness must belong to [0,1].")
+        maximum = 1.0 if normalized else (self.n - self.order) / self.n
+        if not np.isfinite(target) or not 0 <= target <= maximum:
+            raise ValueError(f"smoothness must belong to [0, {maximum}].")
         if target == 0:
             return 0.0
-        if target == 1:
+        if target == maximum:
             return float("inf")
         upper = 1.0 / self._median_positive_eigenvalue
-        while self.smoothness(upper) < target:
+        while self.smoothness(upper, normalized=normalized) < target:
             upper *= 2.0
             if not np.isfinite(upper):
                 raise ArithmeticError("Could not bracket the requested smoothness.")
-        return float(brentq(lambda lam: self.smoothness(lam) - target, 0.0, upper))
+        return float(brentq(
+            lambda lam: self.smoothness(lam, normalized=normalized) - target,
+            0.0, upper,
+        ))
 
     def fit(self, y, *, lambda_: float, mu: MeanMode = 0.0) -> FitResult:
         """Fit ||y-tau||^2 + lambda ||D_d tau - mu 1||^2.
 
-        mu='data' is Guerrero's observed-difference plug-in.
-        EDF then conditions on mu, not on the procedure selecting mu.
+        mu='data' sets mu to the arithmetic mean of D_d @ y
+        (the observed order-d differences), not the raw-series mean
+        except when d=0. mu=0.0 is the zero-reference convention.
+        EDF conditions on mu; it does not count estimating the plug-in.
         """
         observed, value, reference, coords = self._prepare(y, mu)
         alpha = self._attenuation(lambda_)
