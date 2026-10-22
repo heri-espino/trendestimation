@@ -10,7 +10,7 @@ trendestimation
          <h2 id="te-hero-title">Discover the signal.<br><span>Keep the clarity.</span></h2>
          <p class="te-hero-description">A precise, research-grounded toolkit for smooth trend estimation in time series. Finite-difference regularization, classical parameter selection, and reproducible analysis &mdash; in one Python library.</p>
          <div class="te-actions">
-           <a class="te-button te-button-primary" href="quickstart.html">Get started <span aria-hidden="true">&rarr;</span></a>
+           <a class="te-button te-button-primary" href="notebooks.html">Explore notebooks <span aria-hidden="true">&rarr;</span></a>
            <a class="te-button te-button-secondary" href="api.html">Explore the API <span aria-hidden="true">&nearr;</span></a>
          </div>
          <p class="te-hero-footnote">Based on established statistical methods. Designed for transparent computation.</p>
@@ -71,7 +71,7 @@ trendestimation
          <p class="te-overline">START WITH PYTHON</p>
          <h2 id="te-demo-heading">A clear path from observations to trend.</h2>
          <p>Build a reusable smoother, choose a smoothing parameter with generalized cross-validation, and estimate the trend. The example uses generated data, never future observations.</p>
-         <a class="te-text-link" href="quickstart.html">Continue to the quickstart <span aria-hidden="true">&rarr;</span></a>
+         <a class="te-text-link" href="notebooks.html">Explore the Jupyter notebooks <span aria-hidden="true">&rarr;</span></a>
        </div>
        <div class="te-code-window">
          <div class="te-code-header"><span class="te-code-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>example.py</span><span>PYTHON</span></div>
@@ -101,6 +101,7 @@ trendestimation
    :caption: Documentation
 
    quickstart
+   notebooks
    mathematics
    api
 
