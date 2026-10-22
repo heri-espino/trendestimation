@@ -77,7 +77,7 @@ class FlatSubmissionTest(unittest.TestCase):
             self.assertTrue(all("/" not in filename for filename in entries))
             main = zf.read("main.tex").decode("utf-8")
             section = zf.read("model.tex").decode("utf-8")
-            self.assertIn(r"\input{model}", main)
+            self.assertIn(r"\input{model.tex}", main)
             self.assertIn(r"\includegraphics{testplot.pdf}", section)
             self.assertIn(
                 r"\IfFileExists{missing_optional.pdf}", main,
