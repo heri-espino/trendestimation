@@ -21,7 +21,8 @@ def test_derivative_against_independent_five_point_difference(order, lam, mu):
     n = 17
     y = np.random.default_rng(1050 + order).normal(size=n)
     smoother = TrendSmoother(n, order)
-    f = lambda z: score_lambda(smoother, y, lambda_=z, criterion="cv", mu=mu)
+    def f(z):
+        return score_lambda(smoother, y, lambda_=z, criterion="cv", mu=mu)
     h = lam * 2e-4
     finite_difference = _five_point_derivative(f, lam, h)
     analytic = cv_derivative(smoother, y, lambda_=lam, mu=mu)
@@ -80,13 +81,14 @@ def test_multiple_local_minima_are_compared_not_just_first_root():
     y = np.random.default_rng(31).normal(size=n)
     smoother = TrendSmoother(n, order)
     probe = np.geomspace(1e-4, 1e4, 401)
-    d = np.array([cv_derivative(smoother, y, lambda_=float(l), mu=mu) for l in probe])
+    d = np.array([cv_derivative(smoother, y, lambda_=float(penalty), mu=mu) for penalty in probe])
     brackets = np.where(d[:-1] * d[1:] < 0)[0]
     assert len(brackets) >= 3
-    roots = [brentq(lambda l: cv_derivative(smoother, y, lambda_=l, mu=mu),
+    roots = [brentq(lambda penalty: cv_derivative(smoother, y, lambda_=penalty, mu=mu),
                     probe[i], probe[i + 1]) for i in brackets]
     candidate_scores = [
-        score_lambda(smoother, y, lambda_=l, criterion="cv", mu=mu) for l in roots
+        score_lambda(smoother, y, lambda_=penalty, criterion="cv", mu=mu)
+        for penalty in roots
     ]
     candidate_scores.append(
         score_lambda(smoother, y, lambda_=np.inf, criterion="cv", mu=mu)
