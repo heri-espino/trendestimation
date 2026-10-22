@@ -1,0 +1,10 @@
+# Generated notebook outputs, site builds and local environments
+build/
+docs/_build/
+.ipynb_checkpoints/
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+*.egg-info/
+.DS_Store
