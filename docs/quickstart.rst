@@ -28,6 +28,9 @@ Your first trend
 
 For the precise distinction between grid CV, analytical derivatives and
 smoothness inversion, consult :doc:`smoothness_optimization`.
+For a concise, section-by-section formula reference (PLS, CV, GCV,
+AICc, BIC, derivatives, Guerrero smoothness, and root solvers), see
+:doc:`handbook/index`.
 
 Use the order-2 finite-difference penalty and choose its smoothing parameter
 using generalized cross-validation (GCV). This is **in-sample** smoothing
