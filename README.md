@@ -125,16 +125,22 @@ An 80% normalized smoothness level **does not imply 80% accuracy**.
 
 ## Reproducible notebook gallery
 
-The [nine Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
+The [ten Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
 finite-difference matrices, CV/GCV/AICc/BIC, fixed and plug-in difference means, Gaussian MLE and Guerrero smoothness,
 published-style simulations, spectral diagnostics, numerical benchmarks, and
 illustrative economic, actuarial, and engineering use cases. The notebooks use
 seeded synthetic data; they are not evidence of future forecasting accuracy.
 
+The [full trend-forecast pipeline](docs/notebooks/10-forecast-pipeline.ipynb)
+combines smoothness 0.8, an optional numeric CSV, plotting the observed
+points, multiple extrapolation assumptions, six visualization functions,
+and genuine chronological holdout MAE/RMSE against a naive baseline.
+
 Run notebook examples and record timings using:
 
 ```bash
 python scripts/run_notebooks.py --list
+python scripts/run_notebooks.py --fast --only 10-forecast-pipeline --fail-fast
 python scripts/run_notebooks.py --fast --fail-fast
 ```
 
