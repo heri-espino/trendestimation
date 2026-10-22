@@ -55,6 +55,17 @@ def package(output: Path, *, require_pdf: bool = True) -> list[str]:
             "Missing files for submission package: " + ", ".join(missing)
         )
 
+    if require_pdf:
+        pdf_mtime = (PAPER / "main.pdf").stat().st_mtime
+        for name in SOURCE_FILES:
+            path = PAPER / name
+            if path.stat().st_mtime > pdf_mtime + 1.0:
+                raise ValueError(
+                    f"The compiled main.pdf is older than {name}; "
+                    "run 'python paper/build.py --pdf --package' to rebuild "
+                    "the manuscript before preparing the submission archive."
+                )
+
     # Avoid a stale old ZIP being accidentally treated as current output.
     output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
