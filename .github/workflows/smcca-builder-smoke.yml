@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'paper/build.py'
+      - 'paper/figures/render_awesomefigures.py'
+      - 'paper/requirements.txt'
       - 'paper/tests/**'
       - 'paper/Makefile'
       - 'paper/README.md'
@@ -20,7 +22,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Unit-test paper builder (no heavy numerical runs)
+      - name: Install pinned GitHub AwesomeFigures for vector PDF tests
+        run: python -m pip install -r paper/requirements.txt
+      - name: Unit-test paper builder and tiny vector-PDF exports
+        env:
+          MPLBACKEND: Agg
         run: python -m unittest discover -s paper/tests -p 'test_*.py' -v
       - name: Validate all builder flag combinations without side effects
         run: |

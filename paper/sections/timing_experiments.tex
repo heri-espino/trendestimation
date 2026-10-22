@@ -116,72 +116,28 @@ counts and source revision will appear here after the benchmarks
 are run and saved on the reference host.}\par
 }
 
-\IfFileExists{benchmarks/results/full_fit_at_M64.dat}{%
+\IfFileExists{figures/full_fit_at_M64.pdf}{%
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
- width=.92\linewidth,height=5cm,
- xlabel={Series length $n$ ($d=2$, $M=64$)},
- ylabel={End-to-end wall time (seconds)},
- ymode=log,grid=both,
- legend style={font=\scriptsize,at={(.5,-.25)},
- anchor=north,legend columns=2}]
-\addplot[gray!75!black,mark=o] table[x=n,y=densefresh]
- {benchmarks/results/full_fit_at_M64.dat};
-\addlegendentry{Fresh dense}
-\addplot[red!70!black,mark=triangle*] table[x=n,y=densecached]
- {benchmarks/results/full_fit_at_M64.dat};
-\addlegendentry{Cached dense}
-\addplot[blue!75!black,mark=*] table[x=n,y=spectral]
- {benchmarks/results/full_fit_at_M64.dat};
-\addlegendentry{Spectral SVD}
-\addplot[green!45!black,mark=square*] table[x=n,y=banded]
- {benchmarks/results/full_fit_at_M64.dat};
-\addlegendentry{Banded solve}
-\end{axis}
-\end{tikzpicture}
-\caption{End-to-end median wall-clock times generated
-on the executing host (source file:
-\texttt{paper/benchmarks/results/full\_fit\_at\_M64.dat}).
-The same number of full fitted trends is produced by
-each method. The figure is present only when benchmark
-measurements have been generated locally.}
+\includegraphics[width=.97\linewidth]{figures/full_fit_at_M64.pdf}
+\caption{End-to-end median times for $M=64$ fitted curves, including setup,
+generated on the executing host from the raw CSV files.
+These are hardware-specific measurements, not an assumption that
+spectral reconstruction is the universally fastest method.}
 \label{fig:timing-full}
 \end{figure}
 }{%
-\noindent\emph{The full-fit timing figure is generated locally
-after running \texttt{python paper/benchmarks/run\_all.py}.
-No hardware-dependent runtime plot is supplied by default.}\par}
+\noindent\emph{The full-fit timing figure is generated after a manually
+requested benchmark run with $M=64$.}\par
+}
 
-\IfFileExists{benchmarks/results/trace_at_M32.dat}{%
+\IfFileExists{figures/trace_at_M32.pdf}{%
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
- width=.92\linewidth,height=4.7cm,
- xlabel={Series length $n$ ($d=2$, $M=32$)},
- ylabel={EDF sweep wall time (seconds)},
- ymode=log,grid=both,
- legend style={font=\scriptsize,at={(.5,-.25)},
- anchor=north,legend columns=2}]
-\addplot[gray!75!black,mark=o] table[x=n,y=densefresh]
- {benchmarks/results/trace_at_M32.dat};
-\addlegendentry{Fresh dense trace}
-\addplot[red!70!black,mark=triangle*] table[x=n,y=densecached]
- {benchmarks/results/trace_at_M32.dat};
-\addlegendentry{Cached dense trace}
-\addplot[blue!75!black,mark=*] table[x=n,y=spectral]
- {benchmarks/results/trace_at_M32.dat};
-\addlegendentry{Spectral sum}
-\addplot[green!45!black,mark=square*] table[x=n,y=banded]
- {benchmarks/results/trace_at_M32.dat};
-\addlegendentry{Banded trace}
-\end{axis}
-\end{tikzpicture}
-\caption{Repeated EDF/trace evaluations, including
-preprocessing, on the executing host. This workload
-differs from reconstructing full fitted trends.}
+\includegraphics[width=.97\linewidth]{figures/trace_at_M32.pdf}
+\caption{Repeated effective-degrees-of-freedom trace evaluations
+($M=32$), including preprocessing. The quantity is scalar
+$\operatorname{tr}(H_\lambda)$, not a full trend reconstruction.}
 \label{fig:timing-trace}
 \end{figure}
 }{}

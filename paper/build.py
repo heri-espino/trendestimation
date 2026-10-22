@@ -12,8 +12,8 @@ Examples (from any working directory):
     python paper/build.py --dry-run --all
     python paper/build.py --clean
 
-Default: regenerate manuscript figures and the criteria table, then compile
-the PDF. Heavy timing benchmarks are opt-in; --all explicitly enables them.
+Default: regenerate numerical data, export AwesomeFigures vector PDFs,
+and compile the SMCCA paper. Heavy timing benchmarks remain opt-in.
 
 All outputs remain in paper/. No library source file is modified.
 """
@@ -39,11 +39,12 @@ FIGURE_GENERATORS = (
     "paper/figures/make_extended_figures.py",
     "paper/figures/benchmark_orders.py",
 )
+FIGURE_RENDERER = "paper/figures/render_awesomefigures.py"
 REQUIRED_PDF_INPUTS = (
-    PAPER / "figures" / "cortes_toto_synthetic.dat",
+    PAPER / "figures" / "cortes_toto_synthetic.pdf",
     PAPER / "criteria_table.tex",
-    PAPER / "figures" / "mauna_loa_1990_1999.dat",
-    PAPER / "figures" / "high_order_numerics.dat",
+    PAPER / "figures" / "mauna_loa_1990_1999.pdf",
+    PAPER / "figures" / "high_order_numerics.pdf",
 )
 BENCHMARK_CSVS = (
     BENCHMARK_RESULTS / "full_fit_timings.csv",
@@ -65,7 +66,7 @@ def make_parser() -> argparse.ArgumentParser:
     actions = parser.add_argument_group("steps")
     actions.add_argument(
         "--figures", action="store_true",
-        help="Run all three deterministic figure generators, including the criteria table.",
+        help="Run numerical figure generators, render AwesomeFigures vector PDFs, and create the criteria table.",
     )
     actions.add_argument(
         "--benchmarks", action="store_true",
@@ -202,7 +203,7 @@ def run(argv: list[str] | None = None) -> int:
                 _verify_required(
                     REQUIRED_PDF_INPUTS,
                     "--pdf needs prior generated figures and criteria_table.tex. "
-                    "Run --figures --pdf (or omit flags for a default build).",
+                    "Run --figures --pdf (or omit flags for a default build)." ,
                 )
         except ValueError as exc:
             parser.error(str(exc))
@@ -231,6 +232,9 @@ def run(argv: list[str] | None = None) -> int:
             for script in FIGURE_GENERATORS:
                 step("generate:" + Path(script).name,
                      [sys.executable, script], REPOSITORY)
+            step("render:awesomefigures",
+                 [sys.executable, FIGURE_RENDERER, "--figures-only"],
+                 REPOSITORY)
         if benchmarks:
             step(
                 "benchmark:fits-and-traces",
@@ -242,12 +246,18 @@ def run(argv: list[str] | None = None) -> int:
                 ],
                 REPOSITORY,
             )
+            step("render:benchmark-figures",
+                 [sys.executable, FIGURE_RENDERER, "--benchmarks-only"],
+                 REPOSITORY)
         elif tables:
             step(
                 "tables:existing-benchmark-CSV",
                 [sys.executable, "paper/benchmarks/write_paper_results.py"],
                 REPOSITORY,
             )
+            step("render:benchmark-figures",
+                 [sys.executable, FIGURE_RENDERER, "--benchmarks-only"],
+                 REPOSITORY)
         if pdf:
             if not args.dry_run:
                 _verify_required(
