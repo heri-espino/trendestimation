@@ -5,7 +5,7 @@ Stochastic interpretation of the penalty
 ----------------------------------------
 
 The MLE criterion uses **additional Gaussian assumptions**.
-For fixed :math:\`\mu\`, consider the independent latent and
+For fixed :math:`\mu`, consider the independent latent and
 observation noise components:
 
 .. math::
@@ -27,9 +27,9 @@ PLS fit; it is used for the Gaussian likelihood estimates.
 Marginal spectral likelihood
 ----------------------------
 
-Let :math:\`r=n-d\`, :math:\`z_j\` be coordinates of
-:math:\`y-p_\mu\` in the positive-penalty eigenspace, and
-:math:\`\delta_j>0\` its eigenvalues. After eliminating
+Let :math:`r=n-d`, :math:`z_j` be coordinates of
+:math:`y-p_\mu` in the positive-penalty eigenspace, and
+:math:`\delta_j>0` its eigenvalues. After eliminating
 unpenalized polynomial coordinates as nuisance effects,
 the marginal variances are
 
@@ -39,7 +39,7 @@ the marginal variances are
     =\sigma_\varepsilon^2 c_j(\lambda),\qquad
    c_j(\lambda)=1+\frac{1}{\lambda\delta_j}.
 
-For fixed positive :math:\`\lambda\`, profile the observation variance:
+For fixed positive :math:`\lambda`, profile the observation variance:
 
 .. math::
 
@@ -59,7 +59,7 @@ log-likelihood**, up to constants independent of the penalty:
    }.
 
 It is this **MLE score**, rather than residual MSE, that is minimized.
-See :doc:\`derivatives\` for its analytical derivative.
+See :doc:`derivatives` for its analytical derivative.
 
 Variance components
 -------------------
@@ -71,7 +71,7 @@ The estimated latent difference variance is
    \widehat\sigma_\eta^2(\lambda)
      =\frac{\widehat\sigma_\varepsilon^2(\lambda)}{\lambda}.
 
-At :math:\`\lambda=\infty\` the implementation uses the
+At :math:`\lambda=\infty` the implementation uses the
 limiting zero latent-difference variance. These are not the
 empirical variance of the fitted trend, forecast-error
 variance, or prediction intervals.
@@ -90,15 +90,15 @@ Assumptions and identifiability
 -------------------------------
 
 - The nullspace is an unpenalized nuisance (REML-style elimination).
-- The penalty prior is improper at :math:\`\lambda=0\`,
+- The penalty prior is improper at :math:`\lambda=0`,
   which the implemented MLE score rejects.
-- The implementation requires :math:\`d\ge1\`, :math:\`r\ge2\`
+- The implementation requires :math:`d\ge1`, :math:`r\ge2`
   and positive weighted spectral energy.
-- The option \`\`mu="data"\`\` means
-  :math:\`\mu=\overline{D_dy}\` as a **conditional plug-in**,
-  not a joint MLE of :math:\`\mu\` and :math:\`\lambda\`.
+- The option ``mu="data"`` means
+  :math:`\mu=\overline{D_dy}` as a **conditional plug-in**,
+  not a joint MLE of :math:`\mu` and :math:`\lambda`.
 - The current public MLE selector uses a candidate grid, not
   analytical derivative-based optimization.
 
-See :doc:\`../mathematics\`, :doc:\`../api/variances\`,
-and Biessy (2026) in :doc:\`../references\`.
+See :doc:`../mathematics`, :doc:`../api/variances`,
+and Biessy (2026) in :doc:`../references`.
