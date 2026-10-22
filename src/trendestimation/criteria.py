@@ -7,8 +7,9 @@ from typing import Literal
 import numpy as np
 
 from .core import TrendSmoother
+from .likelihood import _score_profile_mle
 
-Criterion = Literal["cv", "gcv", "aicc", "bic"]
+Criterion = Literal["cv", "gcv", "aicc", "bic", "mle"]
 
 
 @dataclass(frozen=True)
@@ -25,6 +26,8 @@ def _score_from_coordinates(
     smoother: TrendSmoother, coord: np.ndarray, *,
     lambda_: float, name: Criterion,
 ) -> float:
+    if name == "mle":
+        return _score_profile_mle(smoother, coord, lambda_=lambda_)
     alpha = smoother._attenuation(lambda_)
     edf = float(np.sum(alpha))
     residual_coordinates = (1.0 - alpha) * coord
@@ -54,17 +57,22 @@ def score_lambda(
     smoother: TrendSmoother, y, *, lambda_: float,
     criterion: Criterion = "gcv", mu: float = 0.0,
 ) -> float:
-    """Evaluate a published in-sample score for fixed numeric mu.
+    """Evaluate an in-sample score or profiled Gaussian likelihood.
 
-    A standalone call includes the spectral projection; select_lambda
-    projects once and reuses those coordinates over its candidate grid.
+    Supported criteria are cv, gcv, aicc, bic, and mle. The mle score
+    is twice negative profiled Gaussian marginal log-likelihood, up
+    to an additive constant (smaller is better). For mle only,
+    mu='data' uses the mean of the observed d-th differences as a
+    conditional plug-in; this is not joint estimation of mu.
+    All classical criteria require fixed numeric mu, because their
+    usual degrees-of-freedom and CV formulas do not refit the mean.
     """
     name = str(criterion).lower()
-    if name not in {"cv", "gcv", "aicc", "bic"}:
-        raise ValueError("criterion must be cv, gcv, aicc, or bic.")
-    if isinstance(mu, str):
-        raise ValueError("Criteria require fixed numeric mu.")
-    _, _, _, coord = smoother._prepare(y, float(mu))
+    if name not in {"cv", "gcv", "aicc", "bic", "mle"}:
+        raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
+    if isinstance(mu, str) and (mu != "data" or name != "mle"):
+        raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
+    _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     return _score_from_coordinates(smoother, coord, lambda_=lambda_, name=name)
 
 
@@ -72,23 +80,30 @@ def select_lambda(
     smoother: TrendSmoother, y, *, criterion: Criterion = "gcv",
     mu: float = 0.0, grid=None,
 ) -> SelectionResult:
-    """Choose lambda on a grid with one projection, NOT future TSCV.
+    """Choose lambda on a grid using CV/GCV/AICc/BIC or Gaussian MLE.
 
-    Default: 121 geometric lambdas centered on inverse median positive
-    penalty eigenvalue and the exact infinite-penalty candidate.
+    mle maximizes profiled Gaussian marginal likelihood, removing
+    the d-dimensional unpenalized difference nullspace and profiling
+    observation variance. Its mu='data' option uses a conditional
+    observed-difference plug-in, not joint estimation of the mean.
+    Only mle accepts mu='data'; classic criteria need numeric mu.
+    lambda=0 has no proper Gaussian latent prior and receives
+    infinite MLE score; lambda=infinity is evaluated exactly.
+    Default grid: 121 geometric lambdas and the infinite endpoint.
+    This is not forecast-horizon TSCV or a forecasting estimator.
     """
-    if isinstance(mu, str):
-        raise ValueError("select_lambda requires fixed numeric mu.")
     name = str(criterion).lower()
-    if name not in {"cv", "gcv", "aicc", "bic"}:
-        raise ValueError("criterion must be cv, gcv, aicc, or bic.")
+    if name not in {"cv", "gcv", "aicc", "bic", "mle"}:
+        raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
+    if isinstance(mu, str) and (mu != "data" or name != "mle"):
+        raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
     if grid is None:
         scale = 1.0 / smoother._median_positive_eigenvalue
         grid = np.r_[scale * np.geomspace(1e-6, 1e6, 121), np.inf]
     grid = np.asarray(grid, dtype=float)
     if grid.ndim != 1 or grid.size == 0 or np.any(np.isnan(grid)) or np.any(grid < 0):
         raise ValueError("grid must contain nonnegative lambda values.")
-    _, _, _, coord = smoother._prepare(y, float(mu))
+    _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     scores = np.asarray([
         _score_from_coordinates(smoother, coord, lambda_=lam, name=name)
         for lam in grid
