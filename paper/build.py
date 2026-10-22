@@ -213,7 +213,7 @@ def _latex_source_identity(source: str) -> dict[str, str]:
 def _prepare_latex_transition(paper: Path) -> list[str]:
     """Discard obsolete LaTeX auxiliaries when journal or .bst changes.
 
-    The legacy SMCCA .aux contains \NAT@force@numbers and abbrv citations.
+    The legacy SMCCA .aux contains \\NAT@force@numbers and abbrv citations.
     Springer sn-mathphys-ay reads .aux *before* BibTeX can rebuild it, so
     the class switch otherwise errors out immediately. Never delete figures,
     benchmark CSVs, source files, or manuscript data.
