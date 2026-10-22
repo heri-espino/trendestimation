@@ -27,7 +27,8 @@ def _style(ax):
         ax.spines[side].set_visible(False)
     for side in ("bottom", "left"):
         ax.spines[side].set_color("#c7d6e0")
-    ax.tick_params(colors=OTHER, labelsize=9, length=3)
+    # Respect the configured plotting theme's tick font sizes.
+    ax.tick_params(colors=OTHER, length=3)
     ax.grid(axis="y", color="#e6eff5", lw=.7, zorder=0)
     ax.set_axisbelow(True)
     ax.title.set_color(INK)
@@ -68,7 +69,7 @@ def plot_forecast(result: TrendForecast, *, ax=None, title=None, show_points=Tru
     ax.scatter(result.future_index, result.forecast, color=TEAL, s=18, zorder=4)
     ax.set(xlabel="Time step", ylabel="Value",
            title=title or "Observed points, estimated trend and future extrapolation")
-    ax.legend(frameon=False, fontsize=8)
+    ax.legend(frameon=False)
     return ax
 
 
@@ -97,7 +98,7 @@ def plot_smoothness_comparison(
                 label=f"Smoothness {fit.smoothness:.2f}")
     ax.set(xlabel="Time step", ylabel="Value",
            title="How fixed smoothness changes the estimated trend")
-    ax.legend(frameon=False, fontsize=8, ncol=2)
+    ax.legend(frameon=False, ncol=2)
     return ax
 
 
@@ -123,7 +124,7 @@ def plot_forecast_methods(result: TrendForecast, *, ax=None, damping=.85):
                 color=color, lw=2, ls="--", label=name)
     ax.set(xlabel="Time step", ylabel="Value",
            title="Alternative extrapolation assumptions (not forecast accuracy)")
-    ax.legend(frameon=False, fontsize=8, ncol=2)
+    ax.legend(frameon=False, ncol=2)
     return ax
 
 
@@ -146,7 +147,7 @@ def plot_smoothness_path(result: TrendForecast, *, ax=None, points=100):
                    label="Chosen endpoint")
     ax.set(xlabel="Penalty λ (log scale)", ylabel="Normalized smoothness",
            title="Smoothness controlled by the penalty", ylim=(-.02, 1.02))
-    ax.legend(frameon=False, fontsize=8)
+    ax.legend(frameon=False)
     return ax
 
 
@@ -191,7 +192,7 @@ def plot_residual_diagnostics(result: TrendForecast):
     ax.set(title="Residual autocorrelation (descriptive)",
            xlabel="Lag", ylabel="Sample ACF")
     fig.suptitle("Diagnostics of the in-sample trend fit — not forecast validation",
-                 color=INK, fontsize=13)
+                 color=INK)
     return fig
 
 
@@ -216,8 +217,8 @@ def plot_forecast_dashboard(result: TrendForecast):
                label=f"Local slope {result.slope:.3g}")
     ax.set(title="Changes in the estimated trend", xlabel="Time step",
            ylabel="First difference")
-    ax.legend(frameon=False, fontsize=8)
+    ax.legend(frameon=False)
     plot_smoothness_path(result, ax=axes[2, 1])
     fig.suptitle("Trend and extrapolation | illustrative assumptions, not prediction intervals",
-                 color=INK, fontsize=14)
+                 color=INK)
     return fig
