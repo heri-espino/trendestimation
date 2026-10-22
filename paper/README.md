@@ -21,6 +21,7 @@ python -m pip install -e .
 python -m pip install statsmodels pandas
 python paper/figures/make_figures.py
 python paper/figures/make_extended_figures.py
+python paper/figures/benchmark_orders.py
 cd paper
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
@@ -46,7 +47,7 @@ The package integrates these methods with an illustrative gallery.
   yet a public package API and must not be presented as one.
 - The real CO2 observations include seasonality, not merely measurement error.
   The visualization is two-sided descriptive smoothing, not future forecasting.
-- Large difference orders may be poorly conditioned.
+- Large difference orders may be poorly conditioned. The independent d=1..10 experiment reports the condition ratio of the positive spectrum and direct-versus-spectral disagreement, not a claim of novel high-order theory.
 - All coauthor approvals, affiliation presentation, author contribution statements,
   manuscript novelty review and release tagging remain to be completed.
 
