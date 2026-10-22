@@ -1,73 +1,144 @@
-Quickstart
-==========
+Getting started
+===============
 
-Installation
-------------
+Install from source
+-------------------
 
-This alpha candidate is not yet published on PyPI. Clone the standalone
-repository, then install from its root directory.
+``trendestimation`` is currently a pre-release candidate, not an announced
+PyPI release. Clone the `GitHub repository
+<https://github.com/heri-espino/trendestimation>`_ and run these commands
+**from the repository root**:
 
 .. code-block:: console
 
-   python -m pip install -e ".[docs,plot]"
-   python -m pytest -q
-   python scripts/run_notebooks.py --list
+   python -m pip install -e ".[plot,docs]"
+   python -m pytest tests -q
 
-Your first smoothed trend
--------------------------
+For a documentation-only environment, ``python -m pip install -e ".[docs]"``
+is sufficient. Build the website locally with:
+
+.. code-block:: console
+
+   python -m sphinx -n -W --keep-going -b html docs docs/_build/html
+
+Open ``docs/_build/html/index.html`` in a browser.
+
+Your first trend
+----------------
+
+Use the order-2 finite-difference penalty and choose its smoothing parameter
+using generalized cross-validation (GCV). This is **in-sample** smoothing
+parameter selection, not an evaluation of future forecast accuracy.
 
 .. code-block:: python
 
    import numpy as np
-   from trendestimation import TrendSmoother, select_lambda, plot_trend
+   from trendestimation import TrendSmoother, select_lambda
 
    rng = np.random.default_rng(42)
-   t = np.arange(80)
-   y = .04*t + .2*np.sin(t/8) + rng.normal(0,.4,len(t))
+   y = np.linspace(0, 3, 100) + rng.normal(0, 0.3, 100)
 
    smoother = TrendSmoother(len(y), order=2)
-   choice = select_lambda(smoother, y, criterion="gcv", mu=0.)
-   fit = smoother.fit(y, lambda_=choice.lambda_, mu=0.)
-   print("Penalty:", choice.lambda_)
-   print("Normalized smoothness:", choice.smoothness)
-   plot_trend(y, fit)
+   choice = select_lambda(smoother, y, criterion="gcv", mu=0.0)
+   fit = smoother.fit(y, lambda_=choice.lambda_, mu=0.0)
 
-Guerrero's original smoothness and Gaussian marginal MLE
--------------------------------------------------------
+   print("Selected lambda:", choice.lambda_)
+   print("Normalized smoothness:", fit.smoothness)
+   print("Conditional EDF:", fit.edf_conditional)
+   trend = fit.trend
+
+The solver can be reused for the same series length and differencing order.
+Available classical criteria are ``cv``, ``gcv``, ``aicc``, and ``bic``;
+they require a **fixed numeric reference mean**. Gaussian marginal MLE
+is also available with criterion="mle" (numeric or plug-in mu).
+
+Guerrero's original smoothness and Gaussian MLE
+-------------------------------------------------
+
+Guerrero's original index uses denominator :math:`n` rather than
+:math:`n-d` and has upper limit :math:`1-d/n`.
 
 .. code-block:: python
 
-   # Denominator n (original), rather than n-d (normalized):
    original = smoother.smoothness(choice.lambda_, normalized=False)
-   restored_lambda = smoother.lambda_for_smoothness(
-       original, normalized=False,
+   restored = smoother.lambda_for_smoothness(original, normalized=False)
+   mle = select_lambda(smoother, y, criterion="mle", mu="data")
+   fit_ml = smoother.fit(y, lambda_=mle.lambda_, mu="data")
+   print("MLE lambda:", mle.lambda_)
+   print("Observed difference mean:", fit_ml.mu)
+   print("Original smoothness:", fit_ml.guerrero_smoothness)
+
+The data-derived reference mu is mean(D_d @ y), i.e., the average of
+the observed order-d differences. MLE uses a Gaussian marginal likelihood
+with observation variance profiled out and the polynomial nullspace
+unpenalized. A data-derived mu is only a conditional plug-in; this is not
+joint optimization over mu and lambda. The classical four criteria
+continue to require a fixed numeric mu.
+
+Reproduce published simulation settings
+---------------------------------------
+
+The library includes a synthetic data generator following the linear and
+nonlinear configurations examined by Cortés-Toto et al. (2017). These are
+simulations, not newly collected empirical observations.
+
+.. code-block:: python
+
+   from trendestimation import (
+       TrendSmoother, plot_selection, plot_trend,
+       select_lambda, simulate_cortes_toto,
    )
-   print("Guerrero original smoothness:", original)
 
-   # Gaussian marginal MLE with observed-difference plug-in mu:
-   ml = select_lambda(smoother, y, criterion="mle", mu="data")
-   result = smoother.fit(y, lambda_=ml.lambda_, mu="data")
-   print("Empirical mean of d-th differences:", result.mu)
-   print("MLE smoothness (original):", result.guerrero_smoothness)
+   case = simulate_cortes_toto(n=200, shape="nonlinear", seasonal=True, seed=7)
+   y = case.observed
+   solver = TrendSmoother(len(y), order=2)
+   chosen = select_lambda(solver, y, criterion="gcv", mu=0.0)
+   fit = solver.fit(y, lambda_=chosen.lambda_, mu=0.0)
 
-Here mu="data" means mean(D_d @ y), the mean of the observed d-th
-differences. It is not generally the mean of the raw series. The MLE
-criterion profiles Gaussian observation variance and treats the polynomial
-nullspace as unpenalized; with plug-in mu, it does not claim *joint* maximum
-likelihood for the reference mean and penalty. The classical CV/GCV/AICc/BIC
-formulas still require fixed numeric mu.
+   plot_trend(y, fit)
+   plot_selection(chosen)
 
-The full :doc:`gallery` shows multiple values of `d`,
-different selection criteria, fixed/nonzero means, diagnostics,
-simulations from Cortés-Toto et al. (2017), and timing comparisons.
+Try ``n=50`` or ``n=200``, linear/nonlinear shapes, noise standard deviations
+of ``0.5`` or ``2.0``, and seasonal/nonseasonal variants. Plots require the
+``plot`` optional dependency group.
 
-Publish the visualizations
---------------------------
+Guerrero's observed-difference mean
+-----------------------------------
 
-.. code-block:: console
+.. code-block:: python
 
-   python scripts/run_notebooks.py --fast --in-place --fail-fast
-   python -m sphinx -b html docs build/site
+   solver = TrendSmoother(len(y), order=1)
+   fit = solver.fit(y, lambda_=10.0, mu="data")
+   print("Observed-difference reference mean:", fit.mu)
 
-The finished HTML site is available at `build/site/index.html`.
-Only a manually dispatched GitHub Actions workflow deploys the site.
+For ``mu="data"``, the mean is estimated from the supplied observations.
+The conditional effective degrees of freedom do not automatically account
+for estimating that mean. Classical parameter-selection formulas in this
+package **cannot** be called with ``mu="data"`` as if they represented exact
+leave-one-out refits of a data-dependent mean.
+
+Reproducibility gallery
+-----------------------
+
+The nine longer :doc:`gallery` notebooks provide published-style simulation
+scenarios, spectral diagnostics and computational benchmarks. To execute
+and record their results manually, use::
+
+   python scripts/run_notebooks.py --fast --fail-fast
+
+To prepare cached figures before publishing a site, explicitly add
+``--in-place``. Only the manual Pages workflow deploys a public site.
+
+Notebook tutorials
+------------------
+
+The :doc:`notebooks` page provides runnable Jupyter examples for a first
+trend, selection criteria, and comparisons between differencing orders.
+These notebooks are the canonical worked examples, while the API reference
+is generated from Python docstrings.
+
+Next steps
+----------
+
+Read :doc:`notebooks` for examples, :doc:`mathematics` for the estimator and its assumptions, then
+:doc:`api` for the callable Python interface.

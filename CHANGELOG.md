@@ -6,6 +6,9 @@ Candidate versions in the source tree are not necessarily published releases.
 ## [Unreleased]
 
 ### Added
+- Blue-and-white responsive Sphinx landing page and source-derived API reference.
+- Three introductory Jupyter tutorials alongside the eight-notebook research gallery.
+- Preview-only Sphinx HTML workflow, with no automatic deployment.
 - Eight executable scientific notebooks, a reproducibility runner, and Sphinx gallery.
 - Manually triggered GitHub Pages documentation workflow and notebook-validation CI.
 - MIT license and ORCID-aware software citation metadata.

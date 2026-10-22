@@ -1,14 +1,44 @@
 API reference
 =============
 
-.. automodule:: trendestimation.core
-   :members: TrendSmoother, FitResult, difference_matrix, fit_trend
+This reference is **generated from the Python source docstrings** using
+Sphinx autodoc and Napoleon. It is not a hand-maintained copy of function
+signatures. For reproducible worked examples, see :doc:`notebooks`.
 
-.. automodule:: trendestimation.criteria
-   :members: SelectionResult, score_lambda, select_lambda
+Trend estimation
+----------------
 
-.. automodule:: trendestimation.examples
-   :members: SimulatedSeries, simulate_cortes_toto
+.. autoclass:: trendestimation.TrendSmoother
+   :members: fit, smoothness, lambda_for_smoothness, degrees_of_freedom
 
-.. automodule:: trendestimation.plotting
-   :members: plot_trend, plot_selection
+.. autofunction:: trendestimation.fit_trend
+
+.. autofunction:: trendestimation.difference_matrix
+
+.. autoclass:: trendestimation.FitResult
+   :members:
+
+Classical selection criteria
+----------------------------
+
+.. autofunction:: trendestimation.select_lambda
+
+.. autofunction:: trendestimation.score_lambda
+
+.. autoclass:: trendestimation.SelectionResult
+   :members:
+
+Reproducible synthetic data
+---------------------------
+
+.. autofunction:: trendestimation.simulate_cortes_toto
+
+.. autoclass:: trendestimation.SimulatedSeries
+   :members:
+
+Optional visualization
+----------------------
+
+.. autofunction:: trendestimation.plot_trend
+
+.. autofunction:: trendestimation.plot_selection

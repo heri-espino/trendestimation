@@ -18,7 +18,25 @@ MeanMode = float | Literal["data"]
 
 
 def difference_matrix(n: int, order: int) -> np.ndarray:
-    """Forward-difference matrix, including the order-zero identity."""
+    """Build the order-d forward-difference matrix.
+
+    Parameters
+    ----------
+    n : int
+        Number of equally spaced observations; must be positive.
+    order : int
+        Nonnegative difference order strictly less than n.
+
+    Returns
+    -------
+    numpy.ndarray
+        Array with shape (n - order, n). The order-zero matrix is
+        the n-by-n identity.
+
+    Notes
+    -----
+    For order two, each row contains the stencil [1, -2, 1].
+    """
     if int(n) != n or int(order) != order or not 0 <= order < n:
         raise ValueError("Require integer n >= 1 and 0 <= order < n.")
     n, order = int(n), int(order)
@@ -33,6 +51,28 @@ def difference_matrix(n: int, order: int) -> np.ndarray:
 
 @dataclass(frozen=True)
 class FitResult:
+    """Output of a finite-difference penalized least-squares fit.
+
+    Attributes
+    ----------
+    trend : numpy.ndarray
+        Estimated in-sample trend.
+    residual : numpy.ndarray
+        Observed values minus the fitted trend.
+    lambda_ : float
+        Penalty parameter, possibly positive infinity.
+    order : int
+        Finite-difference order.
+    mu : float
+        Fixed or observed-difference plug-in reference mean.
+    edf_conditional : float
+        Trace of the smoothing operator, conditional on fixed mu.
+    smoothness : float
+        Normalized trace-based smoothness on [0, 1].
+    guerrero_smoothness : float
+        Original Guerrero trace-based smoothness index.
+    """
+
     trend: np.ndarray
     residual: np.ndarray
     lambda_: float
@@ -44,12 +84,33 @@ class FitResult:
 
 
 class TrendSmoother:
-    """Reusable full SVD of the finite-difference operator.
+    """Reusable spectral solver for penalized trend estimation.
 
-    Full SVD costs O(n^3) preprocessing and O(n^2) memory. For
-    repeated lambda evaluation, spectral summaries cost O(n);
-    a reconstructed fitted curve costs O(n^2). Banded solvers can
-    be faster for a single fit on a very long time series.
+    Parameters
+    ----------
+    n : int
+        Number of equally spaced observations.
+    order : int, default=2
+        Nonnegative difference order strictly smaller than n.
+
+    Notes
+    -----
+    Fits minimize the sum of squared residuals plus lambda times the
+    sum of squared deviations of order-d differences from reference
+    mu. The reusable full SVD costs O(n^3) time and O(n^2) memory;
+    repeated spectral summaries take O(n) operations and full trend
+    reconstruction takes O(n^2). A banded solver may be faster for
+    a single fit or very long series.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from trendestimation import TrendSmoother
+    >>> y = np.array([1., 1.5, 1.2, 2., 2.2, 2.5])
+    >>> solver = TrendSmoother(len(y), order=2)
+    >>> result = solver.fit(y, lambda_=10, mu=0.0)
+    >>> result.trend.shape
+    (6,)
     """
 
     def __init__(self, n: int, order: int = 2):
@@ -91,16 +152,35 @@ class TrendSmoother:
         return y, value, reference, coordinates
 
     def degrees_of_freedom(self, lambda_: float) -> float:
-        """Trace of H_lambda conditional on a fixed mean mu."""
+        """Return conditional effective degrees of freedom.
+
+        Parameters
+        ----------
+        lambda_ : float
+            Nonnegative penalty, including positive infinity.
+
+        Returns
+        -------
+        float
+            Trace of the linear smoothing matrix for fixed mu.
+        """
         return float(np.sum(self._attenuation(lambda_)))
 
     def smoothness(self, lambda_: float, *, normalized: bool = True) -> float:
-        """Compute either normalized or original Guerrero smoothness.
+        """Compute trace-based trend smoothness.
 
-        The default uses (n-tr(H))/(n-d), with range [0,1].
-        normalized=False uses Guerrero's original (n-tr(H))/n,
-        whose maximum is (n-d)/n. Here EDF = tr(H) conditions on
-        the supplied difference-reference mean mu.
+        Parameters
+        ----------
+        lambda_ : float
+            Nonnegative penalty, including positive infinity.
+        normalized : bool, default=True
+            If True, scale the index to [0, 1]. If False, use
+            Guerrero's original index with upper limit 1 - d/n.
+
+        Returns
+        -------
+        float
+            The requested smoothness index.
         """
         numerator = self.n - self.degrees_of_freedom(lambda_)
         return float(numerator / (self.n - self.order if normalized else self.n))
@@ -143,12 +223,31 @@ class TrendSmoother:
         ))
 
     def fit(self, y, *, lambda_: float, mu: MeanMode = 0.0) -> FitResult:
-        """Fit ||y-tau||^2 + lambda ||D_d tau - mu 1||^2.
+        """Fit a finite-difference penalized least-squares trend.
 
-        mu='data' sets mu to the arithmetic mean of D_d @ y
-        (the observed order-d differences), not the raw-series mean
-        except when d=0. mu=0.0 is the zero-reference convention.
-        EDF conditions on mu; it does not count estimating the plug-in.
+        Parameters
+        ----------
+        y : array_like
+            Finite one-dimensional sequence of n observations.
+        lambda_ : float
+            Nonnegative smoothing penalty; positive infinity selects
+            the exact limiting nullspace projection.
+        mu : float or {"data"}, default=0.0
+            Target mean of order-d differences. Passing "data"
+            uses the mean of D_d @ y (observed d-th differences).
+
+        Returns
+        -------
+        FitResult
+            Trend, residuals, effective degrees of freedom, and
+            normalized/original smoothness indices.
+
+        Notes
+        -----
+        Effective degrees of freedom are conditional on a fixed mu.
+        When mu="data", they do not include the extra dependence
+        introduced by estimating the reference from the observations.
+        This method is an in-sample trend estimator, not a forecaster.
         """
         observed, value, reference, coords = self._prepare(y, mu)
         alpha = self._attenuation(lambda_)
@@ -166,7 +265,29 @@ class TrendSmoother:
 
 
 def fit_trend(y, *, order: int = 2, lambda_: float = 1600.0, mu: MeanMode = 0.0) -> FitResult:
-    """One-shot fit. Reuse TrendSmoother across lambda sweeps."""
+    """Fit one trend without explicitly constructing a reusable solver.
+
+    Parameters
+    ----------
+    y : array_like
+        One-dimensional series of observations.
+    order : int, default=2
+        Difference order.
+    lambda_ : float, default=1600
+        Nonnegative smoothing penalty, possibly positive infinity.
+    mu : float or {"data"}, default=0.0
+        Fixed reference-difference mean or observed-difference plug-in.
+
+    Returns
+    -------
+    FitResult
+        Fitted trend and diagnostics.
+
+    Notes
+    -----
+    For repeated penalty values with fixed n and order, reuse a
+    TrendSmoother instance to amortize the SVD preprocessing cost.
+    """
     values = np.asarray(y)
     if values.ndim != 1:
         raise ValueError("y must be one-dimensional.")

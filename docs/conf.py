@@ -19,10 +19,16 @@ extensions = [
     "myst_nb",
 ]
 html_theme = "furo"
-html_title = "trendestimation | Scientific Python trend smoothing"
+html_title = "trendestimation — scientific trend smoothing"
+html_short_title = "trendestimation"
+html_show_sphinx = False
 html_static_path = ["_static"]
-html_css_files = ["custom.css"]
+html_css_files = ["custom.css", "css/custom.css"]
+html_favicon = "_static/favicon.svg"
 html_theme_options = {
+    "source_repository": "https://github.com/heri-espino/trendestimation/",
+    "source_branch": "main",
+    "source_directory": "docs/",
     "light_css_variables": {
         "color-brand-primary": "#1e4265",
         "color-brand-content": "#135b83",
@@ -32,8 +38,14 @@ html_theme_options = {
         "color-brand-content": "#78bfeb",
     },
 }
-exclude_patterns = ["_build", ".DS_Store", "README.md"]
+exclude_patterns = ["_build", ".DS_Store", "Thumbs.db", "README.md"]
 autodoc_typehints = "description"
+autodoc_member_order = "bysource"
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+nitpick_ignore_regex = [
+    ("py:class", r"^(?:array_like|numpy\.ndarray|matplotlib\.axes\.Axes|optional|default=.*|\{.*|\".*)$"),
+]
 nb_execution_mode = os.environ.get("TRENDESTIMATION_DOCS_EXECUTION", "auto")
 nb_execution_timeout = 600
 nb_execution_allow_errors = False

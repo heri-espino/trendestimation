@@ -25,3 +25,26 @@ the PR, configure Pages in GitHub Settings, then dispatch the workflow.
 For user-machine cost reporting, use the `--watts` and
 `--mxn-per-kwh` options only when measured or documented assumptions
 are available.
+
+## Design and API maintenance
+
+The blue-and-white landing page uses a Furo design system in
+`docs/_static/css/custom.css`; existing shared styles remain in
+`docs/_static/custom.css`. The home page supports accessible keyboard
+focus, reduced motion, and responsive layouts.
+
+Public API reference pages are generated from NumPy-style source docstrings
+through Sphinx autodoc and Napoleon. Edit docstrings in
+`src/trendestimation/` when signatures or behavior change; update
+`docs/api.rst` when adding a public API object. Source docstring examples
+are shown as text/code by Sphinx and are not automatically doctested.
+
+There are two complementary tutorial collections:
+- `docs/examples/`: three small introductory notebooks.
+- `docs/notebooks/`: eight detailed research and benchmark notebooks.
+
+To preview the complete site with a warning-strict build, set
+`TRENDESTIMATION_DOCS_EXECUTION=off` and build Sphinx. The
+`docs-preview.yml` workflow uploads HTML for inspection but does not deploy
+it. The separate manual Pages workflow executes the longer notebooks
+when explicitly requested.
