@@ -18,8 +18,8 @@ Model and notation
 
 Let :math:`y\in\mathbb R^n` be observations at equally spaced times;
 :math:`D_d\in\mathbb R^{(n-d)\times n}` is the forward difference
-operator of order :math:`0\le d<n``, :math:``\mu` is a reference
-mean for order-:math:`d`` differences, and :math:``\lambda\ge0`
+operator of order :math:`0\le d<n`, :math:`\mu` is a reference
+mean for order-:math:`d` differences, and :math:`\lambda\ge0`
 is the penalization strength. The fitted trend minimizes
 
 .. math::
@@ -33,14 +33,14 @@ is the penalization strength. The fitted trend minimizes
 For example, :math:`(D_2\tau)_t=\tau_{t+2}-2\tau_{t+1}+\tau_t`.
 At :math:`\lambda=0` the trend equals the observations. Increasing
 :math:`\lambda` penalizes deviations of differences from
-:math:`\mu``. At the exact :math:``\lambda=\infty` limit, the
+:math:`\mu`. At the exact :math:`\lambda=\infty` limit, the
 trend is the least-squares projection onto the affine constraint
-:math:`D_d\tau=\mu\mathbf1``. For :math:``d\ge1`, this is a
+:math:`D_d\tau=\mu\mathbf1`. For :math:`d\ge1`, this is a
 degree-at-most-:math:`d` polynomial, with the leading difference
-controlled by :math:`\mu`` (degree at most :math:``d-1` if
+controlled by :math:`\mu` (degree at most :math:`d-1` if
 :math:`\mu=0`).
 
-For **fixed numeric** :math:`\mu``, choose a vector :math:``p`
+For **fixed numeric** :math:`\mu`, choose a vector :math:`p`
 satisfying :math:`D_dp=\mu\mathbf1`, and let
 :math:`Q=D_d^\top D_d`. Differentiating the objective gives
 
@@ -52,25 +52,25 @@ satisfying :math:`D_dp=\mu\mathbf1`, and let
 The symmetric matrix :math:`H_\lambda` is the **hat matrix** or
 **linear smoothing matrix**. Its trace is the conditional
 **effective degrees of freedom (EDF)**. For :math:`d\ge1`,
-the matrix :math:`D_d`` has rank :math:``n-d` and nullity
-:math:`d``, so :math:``Q`` has exactly :math:``d` zero eigenvalues
+the matrix :math:`D_d` has rank :math:`n-d` and nullity
+:math:`d`, so :math:`Q` has exactly :math:`d` zero eigenvalues
 and :math:`n-d` positive ones. No spectral shrinkage is applied
 in the polynomial nullspace.
 
 .. important::
 
-   The package interprets ``mu="data"`` as
+   The package interprets `mu="data"` as
    :math:`\mu=\operatorname{mean}(D_dy)`, not generally
    :math:`\operatorname{mean}(y)`. Ordinary CV, GCV, AICc and
-   BIC in the public selector require **fixed numeric** ``mu``.
-   With estimated ``mu``, the usual hat-matrix formula is not
+   BIC in the public selector require **fixed numeric** `mu`.
+   With estimated `mu`, the usual hat-matrix formula is not
    exact leave-one-out re-estimation. The displayed EDF also
-   conditions on ``mu``.
+   conditions on `mu`.
 
 Normalized smoothness and Guerrero's index
 ------------------------------------------
 
-Let :math:`r=n-d`` and :math:``\delta_1,\ldots,\delta_r>0`
+Let :math:`r=n-d` and :math:`\delta_1,\ldots,\delta_r>0`
 be the positive eigenvalues of :math:`Q`. The normalized
 smoothness index is
 
@@ -92,7 +92,7 @@ Its exact derivative is
 
 Every term is positive at finite :math:`\lambda\ge0`.
 Consequently, :math:`S` is continuous and strictly increasing,
-with :math:`S(0)=0`` and :math:``S(\infty)=1`.
+with :math:`S(0)=0` and :math:`S(\infty)=1`.
 The ranges differ: :math:`S\in[0,1]` is an interpretable
 **coordinate**, whereas :math:`\lambda\in[0,\infty]` is the
 actual penalty. A target of :math:`S=0.8` is **not**
@@ -106,8 +106,8 @@ Guerrero's (2007) original index instead divides by :math:`n`:
    =\frac{n-d}{n}S(\lambda)
    \in[0,(n-d)/n].
 
-Use ``smoother.smoothness(lambda_)`` for normalized
-smoothness and ``smoother.smoothness(lambda_, normalized=False)``
+Use `smoother.smoothness(lambda_)` for normalized
+smoothness and `smoother.smoothness(lambda_, normalized=False)`
 for the original denominator. For :math:`d>0`, the original
 index cannot reach 1.
 
@@ -171,13 +171,13 @@ has squared units and RMSE has the data's units.
    Rolling-origin or expanding-window **time-series
    cross-validation** trains only on information available at a
    given date and scores forecasts at horizon :math:`h`.
-   The package's ``criterion="cv"`` is ordinary in-sample LOO,
+   The package's `criterion="cv"` is ordinary in-sample LOO,
    not forecast-horizon selection.
 
 Analytical derivatives of classical CV
 --------------------------------------
 
-For fixed numeric :math:`\mu``, put :math:``z=y-p` and
+For fixed numeric :math:`\mu`, put :math:`z=y-p` and
 :math:`Q=D_d^\top D_d`. Differentiating
 :math:`(I+\lambda Q)H_\lambda=I` gives
 
@@ -216,8 +216,8 @@ differentiation is not an analytical minimizer.**
 .. note::
 
    These equations describe the mathematical basis of Agent 1's
-   pending work. On the inspected ``main`` branch of
-   22 October 2026, ``select_lambda`` remains a **grid**
+   pending work. On the inspected `main` branch of
+   22 October 2026, `select_lambda` remains a **grid**
    optimizer. No derivative-selector keyword or default is
    documented here as implemented before its API is verified.
 
@@ -237,19 +237,19 @@ the table records the library's current formulas.
    * - Criterion
      - Score
      - Statistical meaning
-   * - ``cv``
+   * - `cv`
      - :math:`n^{-1}\sum_i(r_i/(1-h_i))^2`
      - Exact classical LOO for fixed numeric :math:`\mu`
-   * - ``gcv``
+   * - `gcv`
      - :math:`(\mathrm{RSS}/n)/(1-k/n)^2`
      - Substitutes average leverage for pointwise leverage
-   * - ``aicc``
+   * - `aicc`
      - :math:`\log(\mathrm{RSS}/n)+(2k+1)/(n-k-2)`
      - Small-sample correction; undefined if :math:`n-k-2\le0`
-   * - ``bic``
+   * - `bic`
      - :math:`\log(\mathrm{RSS}/n)+k\log(n)/n`
      - Complexity penalty increasing with sample size
-   * - ``mle``
+   * - `mle`
      - Profiled Gaussian marginal negative log-likelihood
      - Uses latent Gaussian differences, not CV or direct
        minimization of the penalized least-squares loss
@@ -273,20 +273,20 @@ the profiled score (up to constants) is
 The unpenalized polynomial coordinates are treated as
 nuisance components (REML-style). MLE rejects
 :math:`\lambda=0` (improper latent prior) and structurally
-unidentified cases :math:`d=0`` or :math:``r<2`.
-Unlike the classical criteria, it accepts ``mu="data"``,
+unidentified cases :math:`d=0` or :math:`r<2`.
+Unlike the classical criteria, it accepts `mu="data"`,
 but **conditions** on the observed-difference mean:
 this is not joint maximum likelihood over :math:`\mu`.
-See :doc:`mathematics`` and :doc:``api/variances`.
+See :doc:`mathematics` and :doc:`api/variances`.
 
 Numerical optimization and global minima
 ----------------------------------------
 
-Currently, ``select_lambda(..., grid=None)`` evaluates
+Currently, `select_lambda(..., grid=None)` evaluates
 **121 geometric candidate penalties**, scaled by the
 median positive eigenvalue, and also the exact
 :math:`\lambda=\infty` limit. A user may provide
-an explicit array via ``grid=``. This is a finite
+an explicit array via `grid=`. This is a finite
 search, not a guarantee about an unexamined continuum.
 
 .. list-table:: Methods and trade-offs
@@ -329,9 +329,9 @@ Smoothness inversion: Brent, Newton, secant
 Given :math:`s\in(0,1)`, define
 :math:`F(\lambda)=S(\lambda)-s`. Equation
 :eq:`s-derivative` proves the root is unique.
-The shipped ``TrendSmoother.lambda_for_smoothness(s)``
+The shipped `TrendSmoother.lambda_for_smoothness(s)`
 repeatedly doubles a bracket's upper endpoint and
-calls SciPy's bracketed **Brent ``brentq``** algorithm.
+calls SciPy's bracketed **Brent `brentq`** algorithm.
 
 * **Newton–Raphson:** :math:`\lambda_{k+1}=\lambda_k-F(\lambda_k)/S'(\lambda_k)`.
   It converges locally quickly but may step negative.
@@ -346,7 +346,7 @@ calls SciPy's bracketed **Brent ``brentq``** algorithm.
 Endpoint inversion is exact:
 :math:`s=0\mapsto\lambda=0` and
 :math:`s=1\mapsto\lambda=\infty`.
-With ``normalized=False``, the upper valid target is
+With `normalized=False`, the upper valid target is
 :math:`(n-d)/n`. Only **Brent** is currently confirmed as a
 library method; Newton and secant below are demonstrated by
 calling **SciPy**, rather than inventing Agent 2 method names.
@@ -357,7 +357,7 @@ Runnable Python: default CV, legacy grid, GCV
 
 All snippets use seeded synthetic values and the **confirmed**
 interface on the inspected main branch. To install the source and
-documentation dependencies, run ``python -m pip install -e ".[docs,plot]"``.
+documentation dependencies, run `python -m pip install -e ".[docs,plot]"`.
 The present default is **grid CV**; a planned derivative-based
 default must be documented after Agent 1's merge.
 
@@ -391,18 +391,18 @@ default must be documented after Agent 1's merge.
        y, lambda_=default_cv.lambda_, mu=0.0
    ).trend
 
-Notice that ``select_lambda`` returns the selected penalty
-in ``lambda_`` and its score in ``score``, while ``scores``
-and ``grid`` contain the evaluated candidates. The
+Notice that `select_lambda` returns the selected penalty
+in `lambda_` and its score in `score`, while `scores`
+and `grid` contain the evaluated candidates. The
 explicit grid reproduces the existing grid-search API;
-it does **not** guess a new future ``optimizer=`` option.
+it does **not** guess a new future `optimizer=` option.
 
 Runnable Python: numerical root-finder comparison
 --------------------------------------------------
 
 The package's root inversion is shown first. The additional
 methods are **SciPy** public algorithms, **not** hypothetical
-options to ``lambda_for_smoothness``.
+options to `lambda_for_smoothness`.
 
 .. code-block:: python
 
@@ -454,7 +454,7 @@ Visual demonstration: smoothness versus CV MSE
 -----------------------------------------------
 
 The following figure uses 60 synthetic observations, difference
-order 2, fixed ``mu=0`` and seed 2026. The graph shows 49
+order 2, fixed `mu=0` and seed 2026. The graph shows 49
 normalized smoothness candidates and highlights five of them.
 **Smaller CV MSE is better** for this in-sample score.
 
@@ -468,10 +468,10 @@ normalized smoothness candidates and highlights five of them.
    Minimum displayed MSE occurs near :math:`S=0.90`.
    The shape is data-dependent and not a forecast result.
 
-Run ``python docs/examples/smoothness_optimization.py`` to
+Run `python docs/examples/smoothness_optimization.py` to
 regenerate the figure, inspect the selected penalty values,
 compare default CV with GCV and review the candidate table.
-The script writes only to ``docs/_static/figures/`` when
+The script writes only to `docs/_static/figures/` when
 explicitly invoked (not as part of automatic documentation builds).
 
 .. literalinclude:: examples/smoothness_optimization.py
