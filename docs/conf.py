@@ -31,7 +31,7 @@ html_theme_options = {
         "color-brand-content": "#78bfeb",
     },
 }
-exclude_patterns = ["_build", ".DS_Store"]
+exclude_patterns = ["_build", ".DS_Store", "README.md"]
 autodoc_typehints = "description"
 nb_execution_mode = os.environ.get("TRENDESTIMATION_DOCS_EXECUTION", "auto")
 nb_execution_timeout = 600
