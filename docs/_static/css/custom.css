@@ -840,3 +840,110 @@ html { scroll-behavior: smooth; }
     transition: none !important;
   }
 }
+
+
+/* ==========================================================================
+   Muted links + Furo sidebar motion, independent of Pygments syntax colors.
+   Furo uses distinct --color-sidebar-link-text--top-level and
+   --color-brand-visited tokens, which must be overridden explicitly.
+   ========================================================================== */
+:root {
+  --te-link: color-mix(in srgb, var(--te-brand) 72%, #465160);
+  --te-sidebar-text: #354353;
+  --te-nav-hover: color-mix(in srgb, var(--te-brand) 5%, #fff);
+  --te-nav-current: color-mix(in srgb, var(--te-brand) 9%, #fff);
+  --color-brand-primary: var(--te-link);
+  --color-brand-content: var(--te-link);
+  --color-brand-visited: var(--te-link);
+  --color-sidebar-link-text: var(--te-sidebar-text);
+  --color-sidebar-link-text--top-level: var(--te-sidebar-text);
+  --color-sidebar-item-background--current: var(--te-nav-current);
+  --color-sidebar-item-background--hover: var(--te-nav-hover);
+  --color-sidebar-item-expander-background--hover: var(--te-nav-hover);
+  --color-toc-item-text--active: var(--te-link);
+  --color-link: var(--te-link);
+  --color-link--visited: var(--te-link);
+  --color-link--hover: var(--te-brand);
+  --color-link--visited--hover: var(--te-brand);
+}
+[data-theme="dark"] {
+  --te-link: color-mix(in srgb, var(--te-brand) 35%, #e0e7ef);
+  --te-sidebar-text: #c0c9d3;
+  --te-nav-hover: color-mix(in srgb, var(--te-brand) 14%, #20242b);
+  --te-nav-current: color-mix(in srgb, var(--te-brand) 19%, #20242b);
+  --color-link--hover: color-mix(in srgb, var(--te-link) 82%, white);
+  --color-link--visited--hover: var(--color-link--hover);
+}
+
+/* Body links, including previously visited references, have one restrained
+   tone. Avoid tinting <code> contents or syntax token elements. */
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):link,
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):visited,
+.related-pages a:link, .related-pages a:visited,
+.footer a:link, .footer a:visited {
+  color: var(--te-link);
+}
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):hover {
+  color: var(--color-link--hover);
+}
+.sidebar-tree li > a.reference:link,
+.sidebar-tree li > a.reference:visited {
+  color: var(--te-sidebar-text);
+  transition: color .65s ease, background-color .65s ease,
+              transform .65s ease, box-shadow .65s ease;
+}
+.sidebar-tree li > a.reference:hover,
+.sidebar-tree li > a.reference:focus-visible {
+  color: var(--te-link);
+  background: var(--te-nav-hover);
+}
+.sidebar-tree li.current-page > a.reference,
+.sidebar-tree li.current > a.reference {
+  color: var(--te-link);
+  background: var(--te-nav-current);
+  box-shadow: inset 2px 0 0 var(--te-link);
+  font-weight: 650;
+}
+.sidebar-tree label {
+  transition: background-color .65s ease;
+}
+.sidebar-tree label .icon svg,
+.sidebar-tree .toctree-checkbox ~ label .icon svg {
+  transition: transform .65s cubic-bezier(.22, 1, .36, 1),
+              color .65s ease;
+}
+.sidebar-tree .toctree-checkbox:checked ~ label .icon svg {
+  transform: rotate(-90deg);
+}
+.sidebar-tree .toctree-checkbox:not(:checked) ~ label .icon svg {
+  transform: rotate(90deg);
+}
+
+/* Navigation is never hidden without JavaScript. Animate only where supported.
+   Furo controls the checked state; sidebar.js merely animates the <ul>
+   height/opacity after that state changes. */
+.sidebar-tree li.has-children > ul { transform-origin: top; }
+.sidebar-tree .toctree-l1 > .reference { font-weight: 500; }
+.sidebar-tree .current-page > .reference { font-weight: 650; }
+
+/* True page-to-page navigation keeps ordinary anchors and browser history.
+   A subtle arrival animation runs on the freshly loaded Sphinx article. */
+@keyframes te-document-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .content > article {
+    animation: te-document-enter .85s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .sidebar-tree {
+    animation: te-document-enter 1s cubic-bezier(.22, 1, .36, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .content > article, .sidebar-tree { animation: none !important; }
+  .sidebar-tree li > a.reference,
+  .sidebar-tree label, .sidebar-tree label .icon svg {
+    transition: none !important;
+  }
+}
