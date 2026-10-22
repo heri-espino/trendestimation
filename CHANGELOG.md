@@ -6,6 +6,8 @@ Candidate versions in the source tree are not necessarily published releases.
 ## [Unreleased]
 
 ### Added
+- Eight executable scientific notebooks, a reproducibility runner, and Sphinx gallery.
+- Manually triggered GitHub Pages documentation workflow and notebook-validation CI.
 - MIT license and ORCID-aware software citation metadata.
 - Pip and Conda development environments, repository hygiene, and contributor and security policies.
 - Lightweight tests/lint CI and manually triggered package validation.

@@ -1,0 +1,7 @@
+:root { --content-width: 920px; }
+.content { line-height: 1.6; }
+article h1 { letter-spacing: -.025em; }
+article h2 { margin-top: 2rem; }
+pre { border-radius: .45rem; }
+.sd-card { border-radius: .65rem; }
+.cell_output .output_png img { max-width: 100%; height: auto; }

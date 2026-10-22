@@ -1,50 +1,51 @@
-Quickstart and source illustrations
-===================================
+Quickstart
+==========
 
-Install from source
--------------------
+Installation
+------------
 
-The pre-release candidate is not published on PyPI.
-From the standalone repository root::
+This alpha candidate is not yet published on PyPI. Clone the standalone
+repository, then install from its root directory.
 
-   python -m pip install -e '.[plot,docs]'
+.. code-block:: console
 
-Published Cortés-Toto et al. (2017) simulation
-----------------------------------------------
+   python -m pip install -e ".[docs,plot]"
+   python -m pytest -q
+   python scripts/run_notebooks.py --list
 
-The following uses **simulated** series from the publication rather than
-newly collected empirical observations. The published settings include
-n=50 and n=200, linear/nonlinear trends, Gaussian noise standard
-deviations 0.5 or 2.0, and optional quarterly seasonality.
+Your first smoothed trend
+-------------------------
 
 .. code-block:: python
 
-   from trendestimation import (
-       TrendSmoother, plot_selection, plot_trend,
-       select_lambda, simulate_cortes_toto,
-   )
+   import numpy as np
+   from trendestimation import TrendSmoother, select_lambda, plot_trend
 
-   case = simulate_cortes_toto(n=200, shape="nonlinear", seasonal=True, seed=7)
-   y = case.observed
-   solver = TrendSmoother(len(y), order=2)
-   chosen = select_lambda(solver, y, criterion="gcv", mu=0.0)
-   fit = solver.fit(y, lambda_=chosen.lambda_, mu=0.0)
-   print("Smoothness:", chosen.smoothness)
-   print("Conditional EDF:", fit.edf_conditional)
+   rng = np.random.default_rng(42)
+   t = np.arange(80)
+   y = .04*t + .2*np.sin(t/8) + rng.normal(0,.4,len(t))
+
+   smoother = TrendSmoother(len(y), order=2)
+   choice = select_lambda(smoother, y, criterion="gcv", mu=0.)
+   fit = smoother.fit(y, lambda_=choice.lambda_, mu=0.)
+   print("Penalty:", choice.lambda_)
+   print("Normalized smoothness:", choice.smoothness)
    plot_trend(y, fit)
-   plot_selection(chosen)
 
-Try difference orders 1, 2 and 3, and fixed nonzero mu.
+For a fitted mean of ``mu='data'``, classical selection scores are not
+claimed to represent exact leave-one-out refits of that mean.
 
-Guerrero (2007) nonzero mean
-----------------------------
+The full :doc:`gallery` shows multiple values of `d`,
+different selection criteria, fixed/nonzero means, diagnostics,
+simulations from Cortés-Toto et al. (2017), and timing comparisons.
 
-.. code-block:: python
+Publish the visualizations
+--------------------------
 
-   solver = TrendSmoother(len(y), order=1)
-   fit = solver.fit(y, lambda_=10.0, mu="data")
-   print("Observed-difference plug-in mean:", fit.mu)
+.. code-block:: console
 
-The observed-difference plug-in mean uses the supplied data; the standard
-classical selection formulas are not claimed to be exact leave-one-out
-scores for a refitted plug-in mean. Their API requires fixed numeric mu.
+   python scripts/run_notebooks.py --fast --in-place --fail-fast
+   python -m sphinx -b html docs build/site
+
+The finished HTML site is available at `build/site/index.html`.
+Only a manually dispatched GitHub Actions workflow deploys the site.

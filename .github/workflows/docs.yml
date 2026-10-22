@@ -1,0 +1,40 @@
+name: Build and deploy executable documentation (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: notebook-pages
+  cancel-in-progress: false
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install documented extra dependencies
+        run: python -m pip install -e ".[docs,plot]"
+      - name: Execute notebooks for static illustrations
+        run: python scripts/run_notebooks.py --fast --in-place --fail-fast
+      - name: Build Sphinx site strictly
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: "off"
+        run: python -m sphinx -b html -W --keep-going docs build/site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

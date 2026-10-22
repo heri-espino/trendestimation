@@ -73,6 +73,27 @@ plot_trend(y, fit)
 fit_with_mean = solver.fit(y, lambda_=choice.lambda_, mu="data")
 ```
 
+## Reproducible notebook gallery
+
+The [eight Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
+finite-difference matrices, CV/GCV/AICc/BIC, fixed and plug-in difference means,
+published-style simulations, spectral diagnostics, numerical benchmarks, and
+illustrative economic, actuarial, and engineering use cases. The notebooks use
+seeded synthetic data; they are not evidence of future forecasting accuracy.
+
+Run notebook examples and record timings using:
+
+```bash
+python scripts/run_notebooks.py --list
+python scripts/run_notebooks.py --fast --fail-fast
+```
+
+To write executed notebook output for the documentation build, explicitly pass
+`--in-place`. Timing logs and machine metadata are saved under
+`build/notebook-runs/`; illustrative electricity costs require explicit
+watts and tariff inputs in MXN/kWh. The GitHub Pages workflow is manual and
+does not automatically deploy on pushes.
+
 ## Statistical and numerical scope
 
 For the order-`d` forward difference operator `D_d`, the fitted
@@ -97,7 +118,7 @@ the full series is not an out-of-sample forecast evaluation.
 ```bash
 python -m pytest -q
 python -m ruff check src tests benchmarks
-python -m sphinx -b html docs docs/_build/html
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -b html -W docs build/site
 python -m build
 python -m twine check dist/*
 ```

@@ -1,31 +1,58 @@
 trendestimation
 ===============
 
-A Python package for finite-difference penalized least-squares trend
-estimation grounded in published statistical methodology.
+**A reproducible Python toolkit for penalized least-squares trend smoothing.**
+
+Estimate trends using finite-difference penalties of arbitrary admissible
+order, Guerrero's nonzero difference mean, and established smoothing selection
+criteria. The **same executable Jupyter notebooks** drive the tutorials and
+the documentation site.
+
+.. grid:: 2
+   :gutter: 2
+
+   .. grid-item-card:: Quickstart
+      :link: quickstart
+      :link-type: doc
+
+      Installation and your first penalized trend.
+
+   .. grid-item-card:: Illustrated notebook gallery
+      :link: gallery
+      :link-type: doc
+
+      Eight executable mathematical and computational walkthroughs.
+
+   .. grid-item-card:: Mathematics
+      :link: mathematics
+      :link-type: doc
+
+      Difference matrices, spectral diagonalization, and smoothness.
+
+   .. grid-item-card:: Computing performance
+      :link: benchmarks
+      :link-type: doc
+
+      Banded-versus-spectral timing and cost assumptions.
 
 .. note::
 
-   Candidate pre-release. No forecast-based smoothness selection, TSCV,
-   tracked minima, or speculative estimators are shipped.
+   This pre-release implements **published in-sample methods** only.
+   Experimental future-horizon TSCV, dynamic branch tracking, and
+   forecast-optimal smoothing are intentionally excluded.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :caption: Learn
 
    quickstart
+   gallery
    mathematics
+   benchmarks
+   references
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
    api
-
-References
-----------
-
-- Guerrero, V. M. (2007). Time series smoothing by penalized least
-  squares. Statistics & Probability Letters 77, 1225-1234.
-- Cortés-Toto, D., Guerrero, V. M., and Reyes, H. J. (2017).
-  Trend smoothness achieved by penalized least squares with the smoothing
-  parameter chosen by optimality criteria. Communications in Statistics -
-  Simulation and Computation 46(2), 1492-1507.
-  DOI: 10.1080/03610918.2015.1005236.
-- Weinert, H. L. (2007). Efficient computation for Whittaker-Henderson
-  smoothing. Computational Statistics & Data Analysis 52, 959-974.
