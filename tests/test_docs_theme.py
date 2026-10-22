@@ -70,7 +70,7 @@ def test_square_corners_and_scroll_reveal_are_progressive():
     assert "prefers-reduced-motion: reduce" in stylesheet
     assert "IntersectionObserver" in script
     assert 'root.dataset.teRevealReady = "true"' in script
-    assert 'html_js_files = ["js/reveal.js"]' in conf
+    assert 'html_js_files = ["js/reveal.js", "js/sidebar-motion.js"]' in conf
 
 
 def test_site_title_is_only_the_project_name():
