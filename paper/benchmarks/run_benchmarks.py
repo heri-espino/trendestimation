@@ -90,8 +90,11 @@ def make_fitter(method, y, d, mu):
         return lambda lam: model.fit(y, lambda_=lam, mu=mu).trend
     if method == "banded":
         ab = directly_banded_penalty(n, d)
-        D = forward_differences(n, d)
-        shift = mu*(D.T @ np.ones(n-d))
+        # Accumulate D.T @ (mu * ones) without materializing a dense D.
+        shift = np.zeros(n)
+        for start in range(n-d):
+            for k in range(d+1):
+                shift[start+k] += mu * (-1)**(d-k) * comb(d,k)
         return lambda lam: banded_fit(y, ab, shift, lam, d)
     raise ValueError(f"Unknown method: {method}")
 
