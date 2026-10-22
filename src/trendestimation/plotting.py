@@ -5,7 +5,28 @@ import numpy as np
 
 
 def plot_trend(y, fit, *, ax=None, title: str | None = None):
-    """Plot observations and a fitted PLS trend; return Matplotlib axes."""
+    """Visualize observations alongside an estimated in-sample trend.
+
+    Parameters
+    ----------
+    y : array_like
+        Original observation vector.
+    fit : FitResult
+        Result of a finite-difference PLS fit.
+    ax : matplotlib.axes.Axes, optional
+        Existing axes; if omitted, create a Matplotlib figure.
+    title : str, optional
+        Custom plot title.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        Axes with observations and the fitted trend.
+
+    Notes
+    -----
+    Matplotlib is an optional dependency, imported on demand.
+    """
     import matplotlib.pyplot as plt
 
     if ax is None:
@@ -20,7 +41,26 @@ def plot_trend(y, fit, *, ax=None, title: str | None = None):
 
 
 def plot_selection(selection, *, ax=None):
-    """Plot a classical in-sample smoothing-parameter selection curve."""
+    """Plot candidate penalties and their classical selection scores.
+
+    Parameters
+    ----------
+    selection : SelectionResult
+        Result of select_lambda on a candidate grid.
+    ax : matplotlib.axes.Axes, optional
+        Axes to reuse, or None to create a Matplotlib figure.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        Semi-log penalty plot with the selected lambda indicated.
+
+    Notes
+    -----
+    This figure depicts an **in-sample smoothing criterion**,
+    not out-of-sample forecast error. Infinite and nonpositive
+    penalty candidates are excluded from the log-x plot.
+    """
     import matplotlib.pyplot as plt
 
     if ax is None:
