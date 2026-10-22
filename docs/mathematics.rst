@@ -1,6 +1,9 @@
 Mathematics and computational scope
 ===================================
 
+For a concise, sectioned reference of PLS, smoothness, selection scores,
+analytical derivatives and numerical solvers, see :doc:`handbook/index`.
+
 Let :math:`y\in\mathbb R^n`, :math:`0\le d<n`,
 :math:`D_d\in\mathbb R^{(n-d)\times n}` denote order-d forward
 differences and :math:`\lambda\ge 0`. For scalar :math:`\mu`,

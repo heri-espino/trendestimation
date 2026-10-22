@@ -39,7 +39,7 @@ trendestimation
      <section class="te-section" aria-labelledby="te-capabilities-heading">
        <div class="te-section-heading">
          <div><p class="te-overline">THE TOOLKIT</p><h2 id="te-capabilities-heading">Methods and documentation</h2></div>
-         <p>Implementation details, parameter selection, and the reference API.</p>
+         <p>Implementation details, parameter selection, and the <a href="handbook/index.html">mathematical handbook</a>.</p>
        </div>
        <div class="te-feature-grid">
          <a class="te-feature" href="mathematics.html">
@@ -105,6 +105,7 @@ trendestimation
    gallery
    mathematics
    smoothness_optimization
+   handbook/index
    benchmarks
    references
    api
