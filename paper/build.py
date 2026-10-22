@@ -149,7 +149,7 @@ def check_bibliography(path: Path) -> int:
     if not path.is_file():
         raise ValueError(f"Missing bibliography file: {path}")
     entries = re.compile(
-        r"^[ \\t]*@[A-Za-z]+[ \\t]*\\{[ \\t]*([^,\\s]+)[ \\t]*,",
+        r"^[ \t]*@[A-Za-z]+[ \t]*\{[ \t]*([^,\s]+)[ \t]*,",
         re.MULTILINE,
     )
     seen: dict[str, int] = {}
@@ -157,7 +157,7 @@ def check_bibliography(path: Path) -> int:
     text = path.read_text(encoding="utf-8")
     for match in entries.finditer(text):
         key = match.group(1)
-        line_number = text.count("\\n", 0, match.start()) + 1
+        line_number = text.count("\n", 0, match.start()) + 1
         normal_key = key.casefold()
         if normal_key in seen:
             duplicates.append(
