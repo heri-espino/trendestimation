@@ -102,8 +102,19 @@ trendestimation
 
    quickstart
    notebooks
+   gallery
    mathematics
+   benchmarks
+   references
    api
+
+Additional reproducible tutorials
+---------------------------------
+
+The :doc:`gallery` contains eight longer scientific notebooks covering
+simulation scenarios, spectral diagnostics, numerical benchmarks, and
+applied examples. The :doc:`notebooks` section offers three introductory
+tutorials. Both collections are preserved as executable source notebooks.
 
 Research foundations
 --------------------

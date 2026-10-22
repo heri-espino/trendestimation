@@ -93,6 +93,18 @@ for estimating that mean. Classical parameter-selection formulas in this
 package **cannot** be called with ``mu="data"`` as if they represented exact
 leave-one-out refits of a data-dependent mean.
 
+Reproducibility gallery
+-----------------------
+
+The eight longer :doc:`gallery` notebooks provide published-style simulation
+scenarios, spectral diagnostics and computational benchmarks. To execute
+and record their results manually, use::
+
+   python scripts/run_notebooks.py --fast --fail-fast
+
+To prepare cached figures before publishing a site, explicitly add
+``--in-place``. Only the manual Pages workflow deploys a public site.
+
 Notebook tutorials
 ------------------
 

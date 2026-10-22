@@ -5,12 +5,16 @@ The notebooks are the **executable examples** for this library. They use
 fixed random seeds and synthetic data, so they can be reproduced without
 external data downloads.
 
+These three short introduction tutorials complement the eight longer notebooks
+in the :doc:`gallery`.
+
 Start with the first notebook to fit a penalized trend, then explore
 classical smoothing-parameter selection and the role of differencing order.
 
 .. note::
 
-   The site build runs these small, deterministic notebooks and embeds
+   When documentation execution is enabled, the site build runs these
+   small, deterministic notebooks and embeds
    their figures and outputs. Download the .ipynb files from the repository
    to explore the examples interactively in Jupyter.
 

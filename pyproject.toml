@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,22 +8,55 @@ version = "0.1.0a0"
 description = "Spectral finite-difference penalized least-squares trend estimation"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [{name = "Heriberto Espino Montelongo"}]
-keywords = ["trend-estimation", "penalized-least-squares", "Whittaker-Henderson", "Hodrick-Prescott", "smoothing"]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Heriberto Espino-Montelongo", email = "heriberto.espinomo@udlap.mx"}]
+keywords = [
+    "trend estimation", "penalized least squares", "Whittaker-Henderson",
+    "Hodrick-Prescott", "smoothing", "time series",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
 dependencies = ["numpy>=1.23", "scipy>=1.9"]
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.6"]
-docs = ["sphinx>=8,<9", "furo>=2024.8.6", "myst-nb>=1.2,<2", "ipykernel>=6", "matplotlib>=3.6"]
-notebooks = ["jupyterlab>=4", "matplotlib>=3.6"]
-dev = ["pytest>=7", "build>=1.0", "matplotlib>=3.6"]
+docs = [
+    "sphinx>=8", "furo>=2024.8.6", "matplotlib>=3.6",
+    "myst-nb>=1.2", "sphinx-design>=0.6", "sphinx-copybutton>=0.5",
+    "nbformat>=5.9", "nbclient>=0.10", "ipykernel>=6",
+]
+notebooks = ["jupyterlab>=4", "matplotlib>=3.6", "ipykernel>=6"]
+dev = [
+    "pytest>=7", "build>=1.0", "twine>=5.0", "ruff>=0.6",
+    "matplotlib>=3.6", "nbformat>=5.9", "nbclient>=0.10", "ipykernel>=6",
+]
 
 [project.urls]
-Repository = "https://github.com/heri-espino/Trend-Estimation"
+Repository = "https://github.com/trendestimation/trendestimation"
+Issues = "https://github.com/trendestimation/trendestimation/issues"
+Changelog = "https://github.com/trendestimation/trendestimation/blob/main/CHANGELOG.md"
+Documentation = "https://trendestimation.github.io/trendestimation/"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

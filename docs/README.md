@@ -1,93 +1,50 @@
-# Documentation development
+# Building the documentation
 
-The documentation is a Sphinx + Furo + MyST-NB site.
+This is the source for the Sphinx site, using Furo, sphinx-design,
+sphinx-copybutton, and MyST-NB. Jupyter notebooks are the canonical
+worked examples; the site embeds the **same files**.
 
-- The API reference is generated from Python docstrings via Sphinx autodoc
-  (with Napoleon for NumPy-style docstrings). Update the source docstrings
-  when an API signature or parameter meaning changes.
-- Tutorials are real Jupyter notebooks under docs/examples. Keep examples
-  deterministic and small; avoid remote downloads and large computations.
-- The home page is a simple visual entry point; implementation details
-  should live in docstrings and worked notebooks.
-- The design system lives in docs/_static/css/custom.css and supports
-  responsive layouts, dark mode, keyboard navigation and reduced motion.
+At the repository root:
 
-## Build locally
+```bash
+python -m pip install -e '.[docs,plot]'
+python -m pytest tests/test_notebook_gallery.py -q
+python scripts/run_notebooks.py --list
+python scripts/run_notebooks.py --fast --in-place --fail-fast
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -b html -W docs build/site
+```
 
-Run from the repository root:
+Open `build/site/index.html`. The command `--in-place` is intentionally
+explicit: without it, executed notebooks and timing logs stay under `build/`
+and are not part of tracked sources.
 
-    python -m pip install -e ".[docs]"
-    python -m sphinx -n -W --keep-going -b html docs docs/_build/html
+The GitHub Pages workflow runs only through `workflow_dispatch`, not
+on each push, because notebook execution/plots can be costly. Review
+the PR, configure Pages in GitHub Settings, then dispatch the workflow.
 
-View docs/_build/html/index.html. The three small deterministic notebooks
-are executed during Sphinx builds (nb_execution_mode = "auto"); their
-figures and numerical outputs are embedded in the generated HTML.
-Open the .ipynb files in Jupyter to modify and rerun the examples.
+For user-machine cost reporting, use the `--watts` and
+`--mxn-per-kwh` options only when measured or documented assumptions
+are available.
 
-## Release policy
+## Design and API maintenance
 
-This PR's workflow only validates the HTML build. It does not
-publish GitHub Pages, Read the Docs or PyPI.
+The blue-and-white landing page uses a Furo design system in
+`docs/_static/css/custom.css`; existing shared styles remain in
+`docs/_static/custom.css`. The home page supports accessible keyboard
+focus, reduced motion, and responsive layouts.
 
+Public API reference pages are generated from NumPy-style source docstrings
+through Sphinx autodoc and Napoleon. Edit docstrings in
+`src/trendestimation/` when signatures or behavior change; update
+`docs/api.rst` when adding a public API object. Source docstring examples
+are shown as text/code by Sphinx and are not automatically doctested.
 
-## Updating the API from docstrings
+There are two complementary tutorial collections:
+- `docs/examples/`: three small introductory notebooks.
+- `docs/notebooks/`: eight detailed research and benchmark notebooks.
 
-The source of truth for public API documentation is the Python docstring
-next to its class, method, or function in `src/trendestimation/`. The
-Sphinx reference page `docs/api.rst` uses `autoclass` and `autofunction`
-directives; `sphinx.ext.autodoc` imports the package and reads those
-docstrings whenever Sphinx builds the site.
-
-**For an existing documented API item:**
-
-1. Edit its NumPy-style source docstring, not a duplicate description in
-   `docs/api.rst`. Include an accurate short summary, `Parameters`,
-   `Returns` (or `Yields`), and, when appropriate, `Raises`, `Notes`,
-   and a minimal `Examples` section.
-2. Keep the written behavior synchronized with the function signature
-   and implementation. In particular, distinguish in-sample smoothing
-   and classical selection from forecasting or out-of-sample validation.
-3. Run `python -m sphinx -n -W --keep-going -b html docs docs/_build/html`.
-   Rebuilding automatically incorporates changes to **already referenced**
-   classes, functions, and methods.
-4. Examine `docs/_build/html/api.html` and inspect the rendered arguments,
-   mathematics, and cross-references.
-
-**For a new public function/class/method:** update `docs/api.rst` as well.
-It currently lists public symbols and selected methods **explicitly**, so
-new Python objects do not all appear in the website automatically. Link
-new API items from the appropriate tutorial or notebook when helpful.
-
-## Updating the Jupyter examples
-
-The canonical executable tutorials are the three notebooks in
-`docs/examples/`. Use seeded synthetic series and keep figures and
-explanations matched to the current Python API. MyST-NB uses
-`nb_execution_mode = "auto"` during a Sphinx build, so it executes
-notebooks when needed and embeds generated outputs in the HTML.
-Examples written **only inside a Python docstring** are rendered as
-code/text; the standard HTML build does not independently run them as
-doctests. Use the notebook tutorials or separate tests for executable
-verification.
-
-## Build vs deployment
-
-- A change to an existing documented docstring updates the **generated
-  API page on the next Sphinx build**, not instantly on GitHub.
-- Pull requests modifying `src/**`, `docs/**`, or `pyproject.toml`
-  trigger the Sphinx-check workflow. Passing CI means HTML was built;
-  it does **not** mean a live documentation website was updated.
-- The PR workflow uploads a downloadable HTML **preview artifact**.
-- No public-site deployment is configured in this PR. To update a hosted
-  website automatically after merging to `main`, a separate
-  GitHub Pages or Read the Docs deployment must be approved and set up.
-- Updating homepage copy, notebook instructions, styling, and navigation
-  still requires editing their corresponding `docs/` source files.
-
-## Review checklist
-
-When changing an API, verify: (1) the source docstring describes actual
-behavior, (2) `docs/api.rst` includes any new public symbol,
-(3) associated notebooks still execute, (4) strict Sphinx build passes,
-and (5) the preview looks correct on mobile and desktop. Do not infer
-that a successful build has deployed the website.
+To preview the complete site with a warning-strict build, set
+`TRENDESTIMATION_DOCS_EXECUTION=off` and build Sphinx. The
+`docs-preview.yml` workflow uploads HTML for inspection but does not deploy
+it. The separate manual Pages workflow executes the longer notebooks
+when explicitly requested.
