@@ -15,6 +15,15 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+      # This job is manual only. Its Python figure generator now uses
+      # af.latex_style() and pdflatex-backed PGF/PDF export, so TeX must be
+      # available on the host BEFORE the separate LaTeX compilation action.
+      - name: Install LaTeX tools and Latin Modern fonts for exact figure glyphs
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \\
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \\
+            texlive-fonts-recommended texlive-pictures lmodern
       - name: Install scientific dependencies and historical observation loader
         run: |
           python -m pip install -e .
