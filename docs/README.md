@@ -67,7 +67,11 @@ all content stays visible; users who request reduced motion see content
 without scroll reveals or forced smooth scrolling.
 
 The browser page title is exactly **trendestimation**, not a longer
-marketing tagline. The landing page keeps a compact Python example and
+marketing tagline. The main document element, `#furo-main-content`, now
+fades into view on navigation, while the sidebar stays visually stationary.
+Sidebar groups still animate when explicitly expanded or collapsed.
+Notebook input boxes have no enclosing gray borders; standard non-notebook
+code blocks retain their usual styling. The landing page keeps a compact Python example and
 omits duplicate tutorial prose below its navigation cards.
 
 The home page retains keyboard focus, accessible reduced-motion support,
@@ -140,8 +144,14 @@ Complexity formulas in mathematical/benchmark pages use MathJax
 Every executable notebook configures the GitHub-only
 [AwesomeFigures](https://github.com/awesomefigures/awesomefigures) package
 as a Matplotlib style (``elegante``, Okabe–Ito categorical palette, DejaVu
-Sans, no LaTeX, no deliberate artist rasterization). This affects how
-figures look, **not** the trend estimation algorithms or statistical scores.
+Sans, no LaTeX, no deliberate artist rasterization). The Sphinx site
+uses the **same first-choice DejaVu Sans font**. After loading AwesomeFigures,
+all 13 notebooks call ``apply_documentation_figure_style()`` from
+``trendestimation._docs_style`` to enlarge typography consistently:
+16 pt body, 19 pt axes titles, 17 pt labels, 14 pt ticks, 15 pt legends
+and 21 pt figure titles. The forecasting plot utilities now respect these
+values rather than forcing 8-9 pt labels. The statistical algorithms,
+data, selection criteria, and numerical outputs are unchanged.
 
 Its full Git commit is pinned in ``docs/requirements-figures.txt``. Install
 it separately from ``.[docs,plot]``: keeping the VCS URL out of published
@@ -174,3 +184,23 @@ The SVG container is scalable, but ``imshow``/image artists can embed
 raster pixel data inside an SVG. Matplotlib text remains editable where
 supported (``svg.fonttype='none'``). Generated figures are not committed
 or deployed automatically.
+
+### Rebuilding figures after typography changes
+
+SVG plots are generated from notebook execution, not re-styled afterward
+like HTML text. An older deployed SVG remains unchanged until the
+corresponding notebook has been executed again and Sphinx HTML rebuilt.
+The PR preview automatically executes the three introductory notebooks,
+but the ten longer notebooks and Pages deployment remain manual-only:
+
+```bash
+python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
+python scripts/run_notebooks.py --fast --in-place --fail-fast
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
+```
+
+The font change is reproducible on Matplotlib installations because
+DejaVu Sans is bundled with Matplotlib. The website requests DejaVu Sans
+first and falls back to standard sans-serif fonts in browsers without it.
+No fonts are bundled in the repository.
