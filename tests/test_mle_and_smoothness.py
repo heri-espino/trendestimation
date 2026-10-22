@@ -52,7 +52,7 @@ def test_data_mean_is_mean_of_order_d_observed_differences(order):
         assert solver.fit(y, lambda_=1, mu="data").mu == pytest.approx(y.mean())
 
 
-@pytest.mark.parametrize("order", [0, 1, 2])
+@pytest.mark.parametrize("order", [1, 2, 3])
 def test_profile_mle_matches_independent_spectral_covariance(order):
     rng = np.random.default_rng(2026)
     y = rng.normal(size=14) + np.linspace(0, 2, 14)
@@ -116,6 +116,8 @@ def test_mle_boundary_and_validation():
         select_lambda(solver, y, criterion="gcv", mu="data")
     with pytest.raises(ValueError):
         score_lambda(solver, y, lambda_=1, criterion="aicc", mu="data")
+    with pytest.raises(ValueError):
+        select_lambda(TrendSmoother(len(y), order=0), y, criterion="mle")
     with pytest.raises(ValueError):
         select_lambda(solver, y, criterion="mle", mu="incorrect")
     with pytest.raises(ValueError):
