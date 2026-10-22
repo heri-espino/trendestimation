@@ -1,10 +1,12 @@
 Executable notebook gallery
 ===========================
 
-Nine **real Jupyter notebooks** drive both the standalone tutorial experience
+Ten **real Jupyter notebooks** drive both the standalone tutorial experience
 and this Sphinx website. Every notebook includes mathematical exposition,
-deterministic source code, plots, and interpretation. The data are simulated:
-the gallery does not make claims of real-time forecasting performance.
+deterministic source code, plots, and interpretation. The default inputs are simulated. The final chapter can also read an equally
+spaced local CSV and illustrates chronological holdout evaluation of a
+conditional trend-extrapolation baseline. A single holdout cannot establish
+reliable future forecasting performance.
 
 Notebook chapters
 -----------------
@@ -22,8 +24,9 @@ Notebook chapters
    notebooks/07-computational-benchmarks
    notebooks/08-applied-workflows
    notebooks/09-gaussian-mle-and-guerrero-smoothness
+   notebooks/10-forecast-pipeline
 
-Run the entire gallery in one command
+Run the entire gallery or only the forecast pipeline
 -------------------------------------
 
 From the repository root::
@@ -31,6 +34,7 @@ From the repository root::
    python -m pip install -e ".[docs,plot]"
    python scripts/run_notebooks.py --list
    python scripts/run_notebooks.py --fast --fail-fast
+   python scripts/run_notebooks.py --fast --only 10-forecast-pipeline --fail-fast
 
 The batch runner writes executed copies, ``timings.csv`` and
 ``manifest.json`` under ``build/notebook-runs/`` by default. The
