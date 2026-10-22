@@ -5,3 +5,8 @@
 *.yaml text eol=lf
 *.md text eol=lf
 *.rst text eol=lf
+
+# Preserve byte-identical official Springer Nature December 2024 template.
+# The .bst is LF in the archive; the .cls uses CR-only separators.
+paper/sn-mathphys-ay.bst text eol=lf
+paper/sn-jnl.cls -text

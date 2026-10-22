@@ -69,6 +69,52 @@ class FlatSubmissionTest(unittest.TestCase):
             package_mod.BST_GIT_SHA,
         )
 
+    def test_windows_crlf_checkout_preserves_official_zip_bytes(self):
+        """Git autocrlf changes disk bytes, not the actual official .bst."""
+        bst = self.root / "sn-mathphys-ay.bst"
+        canonical = bst.read_bytes()
+        self.assertIn(b"\n", canonical)
+        self.assertNotIn(b"\r\n", canonical)
+        win_bytes = canonical.replace(b"\n", b"\r\n")
+        bst.write_bytes(win_bytes)
+        self.assertNotEqual(
+            package_mod.git_blob_sha(win_bytes), package_mod.BST_GIT_SHA,
+        )
+        self.assertEqual(
+            package_mod.verified_template_bytes(bst, package_mod.BST_GIT_SHA),
+            canonical,
+        )
+        target = self.root / "windows.zip"
+        package_mod.package(target)
+        with zipfile.ZipFile(target) as archive:
+            self.assertEqual(archive.read("sn-mathphys-ay.bst"), canonical)
+            self.assertEqual(
+                package_mod.git_blob_sha(archive.read("sn-jnl.cls")),
+                package_mod.CLASS_GIT_SHA,
+            )
+
+    def test_rejects_tampered_bst_even_with_windows_line_endings(self):
+        bst = self.root / "sn-mathphys-ay.bst"
+        original = bst.read_bytes()
+        altered = original.replace(b"FUNCTION", b"FUNCTIOX", 1)
+        self.assertNotEqual(altered, original)
+        bst.write_bytes(altered.replace(b"\n", b"\r\n"))
+        with self.assertRaisesRegex(ValueError, "differs from the official"):
+            package_mod.package(self.root / "tampered.zip")
+        self.assertFalse((self.root / "tampered.zip").exists())
+
+    def test_class_preserves_original_cr_only_line_endings(self):
+        cls = self.root / "sn-jnl.cls"
+        original = cls.read_bytes()
+        self.assertIn(b"\r", original)
+        self.assertEqual(
+            package_mod.verified_template_bytes(cls, package_mod.CLASS_GIT_SHA),
+            original,
+        )
+        package_mod.package(self.root / "exact-class.zip")
+        with zipfile.ZipFile(self.root / "exact-class.zip") as archive:
+            self.assertEqual(archive.read("sn-jnl.cls"), original)
+
     def test_flat_zip_rewrites_sections_and_image_paths(self):
         target = self.root / "output.zip"
         entries = package_mod.package(target)

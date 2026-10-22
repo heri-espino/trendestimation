@@ -35,17 +35,44 @@ def git_blob_sha(content: bytes) -> str:
     return hashlib.sha1(prefix + content).hexdigest()
 
 
+def verified_template_bytes(path: Path, expected_git_sha: str) -> bytes:
+    """Verify the official template despite Git's Windows CRLF conversion.
+
+    The December 2024 .bst archive stores LF line endings. Git may check it
+    out as CRLF on Windows (core.autocrlf=true). Git blob hashes describe the
+    repository's canonical bytes rather than those workstation bytes.
+    Return the original verified LF stream so the submission ZIP contains
+    the exact official template bytes on every operating system.
+
+    This is intentionally *not* a relaxed checksum: changes to any character
+    other than CRLF line-ending representation still fail verification.
+    """
+    data = path.read_bytes()
+    if git_blob_sha(data) == expected_git_sha:
+        return data
+    if b"\r\n" in data:
+        canonical = data.replace(b"\r\n", b"\n")
+        if git_blob_sha(canonical) == expected_git_sha:
+            return canonical
+    raise ValueError(
+        f"{path.name} differs from the official December 2024 Springer Nature "
+        "archive beyond permitted CRLF/LF line-ending conversion; "
+        "restore the unmodified template before packaging"
+    )
+
+
 def package(output: Path, *, require_pdf: bool = True) -> list[str]:
+    template_bytes: dict[str, bytes] = {}
     for filename, expected in (
         ("sn-jnl.cls", CLASS_GIT_SHA),
         ("sn-mathphys-ay.bst", BST_GIT_SHA),
     ):
         path = PAPER / filename
-        if not path.is_file() or git_blob_sha(path.read_bytes()) != expected:
-            raise ValueError(
-                f"{filename} differs from the user's official December 2024 "
-                "Springer Nature archive; restore the exact template before packaging"
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"Missing official Springer Nature template: {path}"
             )
+        template_bytes[filename] = verified_template_bytes(path, expected)
     required = [PAPER / name for name in SOURCE_FILES]
     if require_pdf:
         required.append(PAPER / "main.pdf")
@@ -128,7 +155,7 @@ def package(output: Path, *, require_pdf: bool = True) -> list[str]:
     add_tex(PAPER / "main.tex")
     for name in SOURCE_FILES[1:]:
         path = PAPER / name
-        add_file(path, name, path.read_bytes())
+        add_file(path, name, template_bytes[name] if name in template_bytes else path.read_bytes())
     if require_pdf:
         path = PAPER / "main.pdf"
         add_file(path, path.name, path.read_bytes())
