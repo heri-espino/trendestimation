@@ -107,3 +107,29 @@ python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoot
 
 The forecast chapter only estimates variance components from historical
 observations, without incorporating the held-out future values.
+
+
+## Sidebar navigation, page transitions, and API sections
+
+Furo uses separate colors for ordinary content links, visited links, and
+**top-level sidebar links**. These are all mapped to the single restrained
+navy-derived `--te-link` token in
+`docs/_static/css/custom.css`; the other controls still derive from
+`--te-brand`. Regular sidebar labels are neutral; selected navigation
+and content links use muted navy. The code syntax palette remains
+independent of the brand colors.
+
+`docs/_static/js/sidebar.js` uses Furo's existing checkbox state and a
+short height/opacity animation to expand and collapse subtrees. It does
+not intercept navigation, modify URLs, or disrupt browser history.
+A short CSS entrance transition applies after each regular page load.
+Both effects respect `prefers-reduced-motion`; pages remain functional
+without JavaScript.
+
+The `docs/api.rst` landing page links to independent
+`docs/api/{core,selection,variances,forecasting,simulation,visualization}.rst`
+pages, each containing **Sphinx autodoc directives**. Public signatures
+and behavior stay sourced from Python docstrings. Update
+`docs/api.rst` and one of the section files when the public API changes.
+Complexity formulas in mathematical/benchmark pages use MathJax
+`:math:\`\\mathcal{O}(n)\`` rather than raw `O(n)` text.
