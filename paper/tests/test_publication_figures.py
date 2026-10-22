@@ -7,13 +7,18 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import MagicMock
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parents[1]
 HAS_AWESOME = importlib.util.find_spec("awesomefigures") is not None
+HAS_LATEX = shutil.which("pdflatex") is not None
 
 
 def git_blob_sha(data: bytes) -> str:
@@ -35,6 +40,8 @@ class SmccaTemplateTest(unittest.TestCase):
             content = (HERE / source).read_text(encoding="utf-8")
             self.assertNotIn(r"\begin{tikzpicture}", content)
             self.assertIn(pdf, content)
+            self.assertIn(r"\includegraphics{" + pdf + "}", content)
+            self.assertNotIn(r"\includegraphics[width=", content)
 
 
 @unittest.skipUnless(HAS_AWESOME, "Install paper/requirements.txt for figure smoke checks")
@@ -56,6 +63,9 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
         self.benchmarks = self.folder / "benchmarks"
         self.figures.mkdir()
         self.benchmarks.mkdir()
+        # The tested figure generator probes the true SMCCA preamble.
+        (self.folder / "main.tex").write_bytes((HERE / "main.tex").read_bytes())
+        (self.folder / "smcca.cls").write_bytes((HERE / "smcca.cls").read_bytes())
         self.patcher = patch.multiple(
             module, PAPER=self.folder, FIGURES=self.figures,
             BENCHMARKS=self.benchmarks,
@@ -93,12 +103,69 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
         self.assertGreater(len(data), 1000)
         self.assertTrue(data.startswith(b"%PDF-"), path)
 
+    @unittest.skipUnless(HAS_LATEX, "Exact TeX-backed figures need pdflatex")
+    def test_renderer_never_silently_falls_back_to_dejavu(self):
+        with patch.object(self.renderer.shutil, "which", return_value=None):
+            with self.assertRaisesRegex(RuntimeError, "pdflatex on PATH"):
+                with self.renderer.publication_context():
+                    pass
+
+    def test_publication_context_configures_exact_solid_latin_modern(self):
+        layout = SimpleNamespace(
+            textwidth_pt=400.0, fontsize_pt=10.0,
+            font_family="lmr", font_name="ec-lmr10",
+        )
+        fake = MagicMock()
+        fake.__enter__.return_value = SimpleNamespace(layout=layout)
+        with patch.object(self.renderer.shutil, "which",
+                          return_value="/usr/bin/pdflatex"), \
+             patch.object(self.renderer.af, "latex_style", return_value=fake) as ctor:
+            with self.renderer.publication_context():
+                self.assertEqual(self.renderer.matplotlib.rcParams["pgf.texsystem"],
+                                 "pdflatex")
+                self.assertEqual(self.renderer.matplotlib.rcParams["pgf.rcfonts"],
+                                 False)
+                self.assertIn(r"\usepackage{lmodern}",
+                              self.renderer.matplotlib.rcParams["pgf.preamble"])
+            self.assertEqual(ctor.call_args.kwargs["width"], "text")
+            self.assertEqual(ctor.call_args.kwargs["font"], "auto")
+
+    def test_save_requests_pgf_backend_not_matplotlib_pdf_fonts(self):
+        import matplotlib.pyplot as plt
+
+        fig, _ = plt.subplots()
+        publisher = SimpleNamespace(
+            audit=lambda fig: SimpleNamespace(
+                output_width_pt=400.0, expected_width_pt=400.0,
+                smallest_text_pt=8.0,
+            ),
+            savefig=MagicMock(),
+        )
+        target = self.figures / "mock.pdf"
+        self.renderer._save(publisher, fig, target)
+        publisher.savefig.assert_called_once()
+        self.assertEqual(publisher.savefig.call_args.kwargs["backend"], "pgf")
+        self.assertTrue(publisher.savefig.call_args.kwargs["audit"])
+
     def test_core_vector_pdfs(self):
         self.renderer.main(["--figures-only"])
         for name in ("cortes_toto_synthetic", "mauna_loa_1990_1999",
                      "high_order_numerics"):
             self._assert_pdf(self.figures / f"{name}.pdf")
+        if shutil.which("pdffonts"):
+            info = subprocess.run(
+                ["pdffonts", str(self.figures / "cortes_toto_synthetic.pdf")],
+                capture_output=True, text=True, check=True,
+            ).stdout
+            self.assertIn("LMRoman", info)
+            self.assertNotIn("DejaVu", info)
+        import awesomefigures as af
+        af.verify_latex_placement(
+            self.folder / "main.tex",
+            self.figures / "cortes_toto_synthetic.pdf",
+        )
 
+    @unittest.skipUnless(HAS_LATEX, "Exact TeX-backed figures need pdflatex")
     def test_benchmark_figures_do_not_invent_data(self):
         self.renderer.main(["--benchmarks-only"])
         self.assertFalse((self.figures / "full_fit_at_M64.pdf").exists())
