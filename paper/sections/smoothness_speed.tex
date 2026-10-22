@@ -1,0 +1,70 @@
+\subsection{Smoothing correction, inversion, and exact endpoints}
+With the full orthogonal eigenbasis of the penalty,
+$Q_d=V\operatorname{diag}(\delta_1,\ldots,\delta_n)V^\top$,
+the $n-d$ positive eigenvalues are $\delta_j=\sigma_j(D_d)^2$,
+and the remaining $d$ are zero. Consequently, the spectral
+eigenvalues of $H_\lambda=(I+\lambda Q_d)^{-1}$ are
+\begin{equation}\label{eq:h-alpha}
+\alpha_j(\lambda)=
+\begin{cases}(1+\lambda\delta_j)^{-1},&1\le j\le n-d,\\
+1,&n-d<j\le n.\end{cases}
+\end{equation}
+This exposes both the exact limiting polynomial directions and
+the scalar attenuation of the penalized directions. If
+$\nu(\lambda)=\operatorname{tr}(H_\lambda)
+=d+\sum_{j=1}^{n-d}\alpha_j(\lambda)$, the original
+trace-based Guerrero index
+\begin{equation}\label{eq:original-scale}
+S_G(\lambda)=1-\frac{\nu(\lambda)}n
+\quad\text{ranges from }0\text{ to }1-\frac dn.
+\end{equation}
+The upper bound is $1-d/n$, \emph{not} $1-n/d$.
+The library also uses a normalized correction:
+\begin{equation}\label{eq:normalized-scale}
+S(\lambda)=\frac{S_G(\lambda)}{1-d/n}
+=\frac{n-\nu(\lambda)}{n-d}\in[0,1].
+\end{equation}
+The map is strictly increasing for $\lambda\in[0,\infty)$
+because
+\begin{equation}\label{eq:s-derivative}
+S'(\lambda)=\frac{1}{n-d}\sum_{j=1}^{n-d}
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.
+\end{equation}
+The exact endpoints are $S(0)=0$ and $S(\infty)=1$;
+for any interior target, a one-dimensional bracketed solver
+inverts this map. Equal normalized smoothness makes trace scales
+comparable across $d$; it does not make the underlying trend
+geometries or roughness penalties identical.
+
+\subsection{Where the computational acceleration comes from}
+For fixed $\mu$ put $p_t=\mu\binom td$ and
+$c=V^\top(y-p)$. One common projection computes $c$; after
+that, for each candidate $\lambda$,
+\begin{align}\label{eq:fast-profiles}
+\operatorname{tr}(H_\lambda)&=d+\sum_{j=1}^{n-d}\alpha_j(\lambda),\\
+\|y-\widehat{\tau}_{\lambda,\mu}\|^2
+&=\sum_{j=1}^{n-d}(1-\alpha_j(\lambda))^2c_j^2.
+\end{align}
+Thus a sweep of $M$ values can obtain trace, normalized smoothness,
+GCV, AICc, BIC and related scalar profiles in $O(Mn)$
+\emph{after} the shared eigendecomposition and $O(n^2)$
+projection. A full reconstructed trend remains $O(n^2)$ per
+penalty, and exact ordinary CV leverage diagnostics also involve
+the spectral basis. The full dense SVD has $O(n^3)$
+preprocessing time and $O(n^2)$ storage. This decomposition/reuse
+trade-off explains the potential responsiveness of repeated-criteria
+explorations without claiming unconditional superiority to
+banded linear solvers \cite{weinert2007wh,biessy2026wh}.
+
+Large batches of spectral attenuation operations are naturally
+vectorizable. Dense linear algebra can also benefit from optimized
+multithreaded BLAS on CPUs. In principle, a GPU backend could
+parallelize matrix decompositions and batched matrix operations,
+but host/device transfer, synchronization, and initialization
+costs may negate a benefit for short series. We found
+\texttt{numpy} and \texttt{scipy.linalg.svd} in the package
+currently reviewed, not a released GPU solver; therefore no GPU
+speedup, power saving, or measured device execution is reported.
+A future benchmark should record CPU and GPU models, precision,
+BLAS and accelerator versions, transfer time, warmups, memory, and
+the number of candidate penalties.
