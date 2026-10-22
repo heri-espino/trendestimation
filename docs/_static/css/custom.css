@@ -1000,3 +1000,36 @@ div.cell_input div.highlight pre {
   outline: none !important;
   box-shadow: none !important;
 }
+
+
+/* Keep the right-hand "On this page" navigation visually identical to
+   the left tree. Furo uses .toc-tree a.reference and a more specific
+   li.scroll-current selector: generic .toc-tree a rules are not enough.
+   Both palettes (light/dark) inherit the existing left-sidebar tokens. */
+:root,
+[data-theme="dark"] {
+  --color-toc-item-text: var(--te-sidebar-text);
+  --color-toc-item-text--hover: var(--te-link);
+  --color-toc-item-text--active: var(--te-link);
+}
+.toc-tree a.reference:link,
+.toc-tree a.reference:visited {
+  color: var(--te-sidebar-text);
+  font-weight: 500;
+  transition: color .65s ease, background-color .65s ease;
+}
+.toc-tree a.reference:hover,
+.toc-tree a.reference:focus-visible {
+  color: var(--te-link);
+  background: var(--te-nav-hover);
+}
+.toc-tree li.scroll-current > a.reference,
+.toc-tree li.scroll-current > a.reference:link,
+.toc-tree li.scroll-current > a.reference:visited {
+  color: var(--te-link);
+  background: var(--te-nav-current);
+  font-weight: 650;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc-tree a.reference { transition: none !important; }
+}
