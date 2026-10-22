@@ -6,6 +6,7 @@ release = "0.1.0a0"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "myst_nb",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
@@ -14,6 +15,12 @@ extensions = [
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 autodoc_typehints = "description"
+autodoc_member_order = "bysource"
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+
+# Render real Jupyter notebooks without running code in CI or site builds.
+nb_execution_mode = "off"
 html_theme = "furo"
 html_title = "trendestimation — scientific trend smoothing"
 html_short_title = "trendestimation"
