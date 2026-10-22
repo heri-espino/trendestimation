@@ -4,8 +4,8 @@ Effective degrees of freedom and smoothness
 Spectral attenuation and EDF
 ----------------------------
 
-Let the :math:\`r=n-d\` strictly positive penalty eigenvalues
-be :math:\`\delta_j\`. For :math:\`\lambda\ge0\`, define
+Let the :math:`r=n-d` strictly positive penalty eigenvalues
+be :math:`\delta_j`. For :math:`\lambda\ge0`, define
 
 .. math::
 
@@ -13,7 +13,7 @@ be :math:\`\delta_j\`. For :math:\`\lambda\ge0\`, define
    \qquad q_j(\lambda)=1-\alpha_j(\lambda)
            =\frac{\lambda\delta_j}{1+\lambda\delta_j}.
 
-The unpenalized :math:\`d\` directions have attenuation 1.
+The unpenalized :math:`d` directions have attenuation 1.
 The **conditional effective degrees of freedom** are
 
 .. math::
@@ -21,9 +21,9 @@ The **conditional effective degrees of freedom** are
    \nu(\lambda)=\operatorname{tr}(H_\lambda)
           =d+\sum_{j=1}^{r}\alpha_j(\lambda).
 
-As :math:\`\lambda\` moves from zero to infinity,
-:math:\`\nu(\lambda)\` decreases from :math:\`n\` to :math:\`d\`
-(for :math:\`d=0\`, to zero).
+As :math:`\lambda` moves from zero to infinity,
+:math:`\nu(\lambda)` decreases from :math:`n` to :math:`d`
+(for :math:`d=0`, to zero).
 
 Original Guerrero index and normalized index
 --------------------------------------------
@@ -44,7 +44,7 @@ The package also reports a **normalized** index on the unit interval,
           =\frac1r\sum_{j=1}^r q_j(\lambda)},
    \qquad S\in[0,1].
 
-Thus :math:\`S_G=(n-d)S/n\`. This is an exact change of
+Thus :math:`S_G=(n-d)S/n`. This is an exact change of
 normalization; **it does not assert equivalence of the geometries
 of different difference orders**.
 
@@ -70,9 +70,9 @@ For finite penalties,
        \frac{\delta_j^2}{(1+\lambda\delta_j)^3}<0.
    \end{aligned}
 
-Hence :math:\`S\` is strictly increasing and concave as a function
-of :math:\`\lambda\`; every target :math:\`s\in(0,1)\` has
-exactly one positive solution to :math:\`S(\lambda)=s\`.
+Hence :math:`S` is strictly increasing and concave as a function
+of :math:`\lambda`; every target :math:`s\in(0,1)` has
+exactly one positive solution to :math:`S(\lambda)=s`.
 
 .. math::
 
@@ -80,14 +80,14 @@ exactly one positive solution to :math:\`S(\lambda)=s\`.
    S_G(\infty)=\frac{n-d}{n}.
 
 For special spectra with identical positive eigenvalues
-:math:\`\delta_j=\delta\`, the inverse is explicit:
+:math:`\delta_j=\delta`, the inverse is explicit:
 
 .. math::
 
    \lambda(s)=\frac{s}{\delta(1-s)}.
 
 For a general spectrum the inverse requires scalar numerical
-root-finding; see :doc:\`numerical_methods\`.
+root-finding; see :doc:`numerical_methods`.
 
 API
 ---
@@ -100,7 +100,7 @@ API
    edf = smoother.degrees_of_freedom(lam)
    lam_recovered = smoother.lambda_for_smoothness(S, method="auto")
 
-All these degrees of freedom are **conditional on fixed** :math:\`\mu\`.
-If \`\`mu="data"\`\` is estimated from the same observations, the
+All these degrees of freedom are **conditional on fixed** :math:`\mu`.
+If ``mu="data"`` is estimated from the same observations, the
 complete fitted-value sensitivity is not described solely by
-:math:\`\operatorname{tr}(H_\lambda)\`.
+:math:`\operatorname{tr}(H_\lambda)`.
