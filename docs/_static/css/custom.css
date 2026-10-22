@@ -782,6 +782,19 @@ input[type="search"], button.copybtn {
   border-radius: var(--te-radius);
 }
 
+/* Notebook explanatory notes use the same restrained interface accent.
+   Keep warning/error admonition semantic colors unchanged. */
+.content :is(.admonition.note,.admonition.seealso) {
+  border-left-color: var(--te-accent);
+}
+.content :is(.admonition.note,.admonition.seealso) > .admonition-title {
+  background: var(--te-accent-subtle);
+  color: var(--te-accent);
+}
+.content :is(.admonition.note,.admonition.seealso) > .admonition-title::before {
+  color: var(--te-accent);
+}
+
 /* Link accents, not code token colors. Prefer native Furo typography. */
 .content a:not(.te-button):not(.te-feature):visited,
 .content a:not(.te-button):not(.te-feature):link,
