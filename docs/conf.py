@@ -23,20 +23,13 @@ html_title = "trendestimation — scientific trend smoothing"
 html_short_title = "trendestimation"
 html_show_sphinx = False
 html_static_path = ["_static"]
-html_css_files = ["custom.css", "css/custom.css"]
+html_css_files = ["css/custom.css"]
 html_favicon = "_static/favicon.svg"
 html_theme_options = {
     "source_repository": "https://github.com/heri-espino/trendestimation/",
     "source_branch": "main",
     "source_directory": "docs/",
-    "light_css_variables": {
-        "color-brand-primary": "#1e4265",
-        "color-brand-content": "#135b83",
-    },
-    "dark_css_variables": {
-        "color-brand-primary": "#78bfeb",
-        "color-brand-content": "#78bfeb",
-    },
+
 }
 exclude_patterns = ["_build", ".DS_Store", "Thumbs.db", "README.md"]
 autodoc_typehints = "description"

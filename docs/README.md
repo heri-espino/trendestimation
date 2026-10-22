@@ -28,10 +28,34 @@ are available.
 
 ## Design and API maintenance
 
-The blue-and-white landing page uses a Furo design system in
-`docs/_static/css/custom.css`; existing shared styles remain in
-`docs/_static/custom.css`. The home page supports accessible keyboard
-focus, reduced motion, and responsive layouts.
+The site uses a single **Pantone 2955 C-inspired navy** (approximate
+web/sRGB value `#003A70`) throughout Furo, the notebook gallery,
+Pygments code highlighting, visited links, active navigation and the
+landing page. To choose a new brand color, edit **one variable** near
+the top of `docs/_static/css/custom.css`:
+
+```css
+:root {
+  --te-brand: #003A70; /* choose your single accent here */
+}
+```
+
+All light/dark UI accent shades are derived from this token with
+`color-mix()`. Neutral background, body text and nonsemantic gray
+elements remain neutral for readability. The favicon SVG is a fixed
+matching illustration; if you change the brand color, update the
+icon's fill to match.
+
+Sphinx loads this **single CSS file** in `docs/conf.py`.
+The previous redundant `docs/_static/custom.css` is removed to prevent
+conflicting definitions. Code-cell input borders, Pygments token colors,
+sidebar links, visited links, buttons and subtle monochromatic gradients
+share the same family. Syntax remains readable in Furo light/dark modes;
+no green or purple is used as a decorative brand accent.
+
+The home page retains accessible keyboard focus, reduced-motion support,
+and responsive layouts. Colors used as semantic warnings/errors are not
+redefined as brand accents.
 
 Public API reference pages are generated from NumPy-style source docstrings
 through Sphinx autodoc and Napoleon. Edit docstrings in
@@ -41,7 +65,7 @@ are shown as text/code by Sphinx and are not automatically doctested.
 
 There are two complementary tutorial collections:
 - `docs/examples/`: three small introductory notebooks.
-- `docs/notebooks/`: eight detailed research and benchmark notebooks.
+- `docs/notebooks/`: ten detailed research, benchmark, and forecast notebooks.
 
 To preview the complete site with a warning-strict build, set
 `TRENDESTIMATION_DOCS_EXECUTION=off` and build Sphinx. The
@@ -52,14 +76,18 @@ when explicitly requested.
 
 ## Gaussian MLE variance-component examples
 
-The public ``estimate_variance_components`` API reports likelihood-based
-observation-noise and latent-difference variances (and their standard
-deviations). These are not the fitted-trend variance, residual MSE, or
-forecast prediction intervals. The short selection notebook introduces
-the method; longer criteria, nonzero-mean, spectral, applied, MLE and
-forecast-pipeline notebooks demonstrate the same API in context.
+The public `estimate_variance_components` API provides Gaussian
+observation-noise and latent difference variances (plus standard deviations).
+These are not forecast-error variances, raw residual MSE, or prediction
+intervals. The introductory selection notebook and the longer criteria,
+nonzero-mean, spectral, applied, MLE and forecast-pipeline notebooks
+show the estimator under its stated assumptions.
 
-Notebook execution and publication remain separate: run selected notebooks
-manually with ``python scripts/run_notebooks.py --fast --only
-09-gaussian-mle-and-guerrero-smoothness --fail-fast`` before an explicit
-Sphinx build. The forecasting chapter profiles historical data only.
+Notebook execution remains manual. To run the dedicated MLE chapter use:
+
+```bash
+python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoothness --fail-fast
+```
+
+The forecast chapter only estimates variance components from historical
+observations, without incorporating the held-out future values.
