@@ -5,6 +5,7 @@ Examples (from any working directory):
 
     python paper/build.py
     python paper/build.py --figures
+    python paper/build.py --render-figures --pdf
     python paper/build.py --benchmarks --benchmark-preset quick --repeats 5
     python paper/build.py --tables
     python paper/build.py --pdf
@@ -68,6 +69,10 @@ def make_parser() -> argparse.ArgumentParser:
     actions.add_argument(
         "--figures", action="store_true",
         help="Run numerical figure generators, render AwesomeFigures vector PDFs, and create the criteria table.",
+    )
+    actions.add_argument(
+        "--render-figures", action="store_true",
+        help="Redraw existing .dat/benchmark results using matched SMCCA LaTeX fonts.",
     )
     actions.add_argument(
         "--benchmarks", action="store_true",
@@ -197,7 +202,7 @@ def run(argv: list[str] | None = None) -> int:
     if args.repeats < 1 or args.blas_threads < 1:
         parser.error("--repeats and --blas-threads must be positive integers")
     if args.clean and any((
-        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks, args.tables, args.pdf, args.all
     )):
         parser.error("--clean cannot be combined with generation or --all")
     if args.benchmark_preset != "quick" and not (
@@ -214,9 +219,11 @@ def run(argv: list[str] | None = None) -> int:
 
     # The default build is deterministic figures + PDF, NOT a long benchmark.
     explicit_steps = any((
-        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks,
+        args.tables, args.pdf, args.all,
     ))
     figures = args.figures or args.all or not explicit_steps
+    redraw = args.render_figures
     benchmarks = args.benchmarks or args.all
     tables = args.tables or benchmarks
     pdf = args.pdf or args.all or not explicit_steps
@@ -236,7 +243,7 @@ def run(argv: list[str] | None = None) -> int:
                     "--tables needs measured benchmark CSV files. "
                     "Run with --benchmarks to obtain them first.",
                 )
-            if pdf and not figures:
+            if pdf and not (figures or redraw):
                 _verify_required(
                     REQUIRED_PDF_INPUTS,
                     "--pdf needs prior generated figures and criteria_table.tex. "
@@ -279,7 +286,11 @@ def run(argv: list[str] | None = None) -> int:
                 step("generate:" + Path(script).name,
                      [sys.executable, script], REPOSITORY)
             step("render:awesomefigures",
-                 [sys.executable, FIGURE_RENDERER, "--figures-only"],
+                 [sys.executable, FIGURE_RENDERER],
+                 REPOSITORY)
+        elif redraw:
+            step("render:awesomefigures-from-existing-data",
+                 [sys.executable, FIGURE_RENDERER],
                  REPOSITORY)
         if benchmarks:
             step(

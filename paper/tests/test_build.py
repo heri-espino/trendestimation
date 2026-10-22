@@ -32,14 +32,14 @@ class BuildFlagsTest(unittest.TestCase):
                      "benchmark_orders.py"):
             self.assertIn(name, output)
         self.assertIn("latexmk -pdf", output)
-        self.assertIn("render_awesomefigures.py --figures-only", output)
+        self.assertIn("render_awesomefigures.py", output)
         self.assertNotIn("run_all.py", output)
 
     def test_figures_flag_does_not_run_latex_or_benchmarks(self):
         status, output = self._capture(["--dry-run", "--figures"])
         self.assertEqual(status, 0)
         self.assertIn("make_figures.py", output)
-        self.assertIn("render_awesomefigures.py --figures-only", output)
+        self.assertIn("render_awesomefigures.py", output)
         self.assertNotIn("latexmk", output)
         self.assertNotIn("run_all.py", output)
 
@@ -50,7 +50,7 @@ class BuildFlagsTest(unittest.TestCase):
         ])
         self.assertEqual(status, 0)
         self.assertIn("benchmark_orders.py", output)
-        self.assertIn("render_awesomefigures.py --figures-only", output)
+        self.assertIn("render_awesomefigures.py", output)
         self.assertIn("render_awesomefigures.py --benchmarks-only", output)
         self.assertIn("run_all.py --preset full --repeats 7 --blas-threads 2", output)
         self.assertIn("latexmk -pdf", output)
@@ -71,6 +71,22 @@ class BuildFlagsTest(unittest.TestCase):
         self.assertIn("render_awesomefigures.py --benchmarks-only", output)
         self.assertNotIn("make_figures.py", output)
         self.assertNotIn("latexmk", output)
+
+    def test_render_only_without_pdf_is_not_default_full_build(self):
+        status, output = self._capture(["--dry-run", "--render-figures"])
+        self.assertEqual(status, 0)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertNotIn("make_figures.py", output)
+        self.assertNotIn("latexmk", output)
+        self.assertNotIn("run_all.py", output)
+
+    def test_render_only_reuses_benchmarks_and_compiles_pdf(self):
+        status, output = self._capture(["--dry-run", "--render-figures", "--pdf"])
+        self.assertEqual(status, 0)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertIn("latexmk -pdf", output)
+        self.assertNotIn("make_figures.py", output)
+        self.assertNotIn("run_all.py", output)
 
     def test_pdf_engine_flag_and_clean(self):
         status, output = self._capture([
