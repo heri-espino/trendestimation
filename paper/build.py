@@ -1,0 +1,295 @@
+#!/usr/bin/env python3
+"""Build the SMCCA manuscript and its reproducible numerical artifacts.
+
+Examples (from any working directory):
+
+    python paper/build.py
+    python paper/build.py --figures
+    python paper/build.py --benchmarks --benchmark-preset quick --repeats 5
+    python paper/build.py --tables
+    python paper/build.py --pdf
+    python paper/build.py --all --benchmark-preset full --repeats 7
+    python paper/build.py --dry-run --all
+    python paper/build.py --clean
+
+Default: regenerate manuscript figures and the criteria table, then compile
+the PDF. Heavy timing benchmarks are opt-in; --all explicitly enables them.
+
+All outputs remain in paper/. No library source file is modified.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import platform
+import shlex
+import shutil
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from time import perf_counter
+
+PAPER = Path(__file__).resolve().parent
+REPOSITORY = PAPER.parent
+BENCHMARK_RESULTS = PAPER / "benchmarks" / "results"
+
+FIGURE_GENERATORS = (
+    "paper/figures/make_figures.py",
+    "paper/figures/make_extended_figures.py",
+    "paper/figures/benchmark_orders.py",
+)
+REQUIRED_PDF_INPUTS = (
+    PAPER / "figures" / "cortes_toto_synthetic.dat",
+    PAPER / "criteria_table.tex",
+    PAPER / "figures" / "mauna_loa_1990_1999.dat",
+    PAPER / "figures" / "high_order_numerics.dat",
+)
+BENCHMARK_CSVS = (
+    BENCHMARK_RESULTS / "full_fit_timings.csv",
+    BENCHMARK_RESULTS / "trace_timings.csv",
+    BENCHMARK_RESULTS / "environment.json",
+)
+BENCHMARK_TABLES = (
+    BENCHMARK_RESULTS / "full_fit_table.tex",
+    BENCHMARK_RESULTS / "trace_table.tex",
+    BENCHMARK_RESULTS / "benchmark_environment.tex",
+)
+
+
+def make_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    actions = parser.add_argument_group("steps")
+    actions.add_argument(
+        "--figures", action="store_true",
+        help="Run all three deterministic figure generators, including the criteria table.",
+    )
+    actions.add_argument(
+        "--benchmarks", action="store_true",
+        help="Measure full-fit and EDF/trace timing; automatically generate result tables.",
+    )
+    actions.add_argument(
+        "--tables", action="store_true",
+        help="Regenerate benchmark LaTeX tables from EXISTING measured CSVs.",
+    )
+    actions.add_argument(
+        "--pdf", action="store_true",
+        help="Compile main.tex using latexmk; existing figures are required.",
+    )
+    actions.add_argument(
+        "--all", action="store_true",
+        help="Generate figures, run opt-in benchmarks, build tables, and compile PDF.",
+    )
+    actions.add_argument(
+        "--clean", action="store_true",
+        help="Clean ONLY LaTeX auxiliary files and main.pdf; preserve figures and raw data.",
+    )
+    options = parser.add_argument_group("options")
+    options.add_argument(
+        "--benchmark-preset", choices=("smoke", "quick", "full"), default="quick",
+        help="Benchmark workload; only used with --benchmarks or --all (default: quick).",
+    )
+    options.add_argument(
+        "--repeats", type=int, default=5,
+        help="Independent benchmark repetitions (default: 5).",
+    )
+    options.add_argument(
+        "--blas-threads", type=int, default=1,
+        help="BLAS threads in benchmark subprocesses (default: 1).",
+    )
+    options.add_argument(
+        "--latex-engine", choices=("pdflatex", "xelatex", "lualatex"),
+        default="pdflatex",
+        help="LaTeX engine selected through latexmk (default: pdflatex).",
+    )
+    options.add_argument(
+        "--dry-run", action="store_true",
+        help="Print each command and intended inputs without executing or writing files.",
+    )
+    return parser
+
+
+def _command(cmd: list[str], *, cwd: Path, dry_run: bool) -> None:
+    print(f"[paper] {cwd}: {shlex.join(cmd)}", flush=True)
+    if dry_run:
+        return
+    subprocess.run(cmd, cwd=cwd, check=True)
+
+
+def _git_sha() -> str | None:
+    try:
+        process = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=REPOSITORY,
+            check=True, capture_output=True, text=True,
+        )
+        return process.stdout.strip() or None
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+
+
+def _verify_required(paths: tuple[Path, ...], reason: str) -> None:
+    missing = [str(path.relative_to(REPOSITORY)) for path in paths if not path.is_file()]
+    if missing:
+        raise ValueError(
+            reason + " Missing file(s): " + ", ".join(missing)
+        )
+
+
+def _latexmk_command(engine: str, clean: bool = False) -> list[str]:
+    if clean:
+        return ["latexmk", "-C", "main.tex"]
+    flag = {
+        "pdflatex": "-pdf",
+        "xelatex": "-xelatex",
+        "lualatex": "-lualatex",
+    }[engine]
+    return [
+        "latexmk", flag, "-interaction=nonstopmode",
+        "-halt-on-error", "-file-line-error", "main.tex",
+    ]
+
+
+def run(argv: list[str] | None = None) -> int:
+    parser = make_parser()
+    args = parser.parse_args(argv)
+
+    if args.repeats < 1 or args.blas_threads < 1:
+        parser.error("--repeats and --blas-threads must be positive integers")
+    if args.clean and any((
+        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+    )):
+        parser.error("--clean cannot be combined with generation or --all")
+    if args.benchmark_preset != "quick" and not (
+        args.benchmarks or args.all or args.clean
+    ):
+        parser.error("--benchmark-preset requires --benchmarks or --all")
+
+    if args.clean:
+        if not args.dry_run and shutil.which("latexmk") is None:
+            parser.error("latexmk is not on PATH; install a TeX distribution")
+        _command(_latexmk_command(args.latex_engine, clean=True),
+                 cwd=PAPER, dry_run=args.dry_run)
+        return 0
+
+    # The default build is deterministic figures + PDF, NOT a long benchmark.
+    explicit_steps = any((
+        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+    ))
+    figures = args.figures or args.all or not explicit_steps
+    benchmarks = args.benchmarks or args.all
+    tables = args.tables or benchmarks
+    pdf = args.pdf or args.all or not explicit_steps
+    if not benchmarks and args.benchmark_preset != "quick":
+        parser.error("--benchmark-preset requires --benchmarks or --all")
+
+    if not args.dry_run:
+        if pdf and shutil.which("latexmk") is None:
+            parser.error(
+                "latexmk is not on PATH. Install a TeX distribution, or "
+                "run --figures/--benchmarks/--tables without --pdf."
+            )
+        try:
+            if tables and not benchmarks:
+                _verify_required(
+                    BENCHMARK_CSVS,
+                    "--tables needs measured benchmark CSV files. "
+                    "Run with --benchmarks to obtain them first.",
+                )
+            if pdf and not figures:
+                _verify_required(
+                    REQUIRED_PDF_INPUTS,
+                    "--pdf needs prior generated figures and criteria_table.tex. "
+                    "Run --figures --pdf (or omit flags for a default build).",
+                )
+        except ValueError as exc:
+            parser.error(str(exc))
+        if pdf and not benchmarks and any(path.is_file() for path in BENCHMARK_TABLES):
+            print(
+                "[paper] NOTE: Existing benchmark tables will be reused. "
+                "Check their host/revision metadata, or rerun --benchmarks.",
+                flush=True,
+            )
+
+    start = perf_counter()
+    steps: list[dict] = []
+
+    def step(name: str, command: list[str], working_dir: Path) -> None:
+        t0 = perf_counter()
+        _command(command, cwd=working_dir, dry_run=args.dry_run)
+        steps.append({
+            "name": name,
+            "command": command,
+            "working_directory": str(working_dir),
+            "elapsed_seconds": round(perf_counter() - t0, 6),
+        })
+
+    try:
+        if figures:
+            for script in FIGURE_GENERATORS:
+                step("generate:" + Path(script).name,
+                     [sys.executable, script], REPOSITORY)
+        if benchmarks:
+            step(
+                "benchmark:fits-and-traces",
+                [
+                    sys.executable, "paper/benchmarks/run_all.py",
+                    "--preset", args.benchmark_preset,
+                    "--repeats", str(args.repeats),
+                    "--blas-threads", str(args.blas_threads),
+                ],
+                REPOSITORY,
+            )
+        elif tables:
+            step(
+                "tables:existing-benchmark-CSV",
+                [sys.executable, "paper/benchmarks/write_paper_results.py"],
+                REPOSITORY,
+            )
+        if pdf:
+            if not args.dry_run:
+                _verify_required(
+                    REQUIRED_PDF_INPUTS,
+                    "Cannot compile PDF because required inputs were not generated.",
+                )
+                if tables:
+                    _verify_required(
+                        BENCHMARK_TABLES,
+                        "Benchmark LaTeX tables were not generated successfully.",
+                    )
+            step("compile:PDF", _latexmk_command(args.latex_engine), PAPER)
+    except (OSError, subprocess.CalledProcessError, ValueError) as exc:
+        print(f"[paper] Build failed: {exc}", file=sys.stderr, flush=True)
+        return 1
+
+    if not args.dry_run:
+        record = {
+            "created_utc": datetime.now(timezone.utc).isoformat(),
+            "git_revision": _git_sha(),
+            "platform": platform.platform(),
+            "python": sys.version,
+            "flags": vars(args),
+            "steps": steps,
+            "total_elapsed_seconds": round(perf_counter() - start, 6),
+            "pdf": str(PAPER / "main.pdf") if pdf else None,
+            "benchmark_results": (
+                str(BENCHMARK_RESULTS) if benchmarks or tables else
+                "reused when present"
+            ),
+        }
+        (PAPER / "build_manifest.json").write_text(
+            json.dumps(record, indent=2) + "\n", encoding="utf-8"
+        )
+        print("[paper] Build manifest: paper/build_manifest.json")
+    if pdf:
+        print("[paper] " + (
+            "Planned PDF: paper/main.pdf" if args.dry_run
+            else "PDF: paper/main.pdf"
+        ))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(run())

@@ -1,0 +1,31 @@
+name: SMCCA paper builder smoke checks
+on:
+  pull_request:
+    paths:
+      - 'paper/build.py'
+      - 'paper/tests/**'
+      - 'paper/Makefile'
+      - 'paper/README.md'
+      - '.github/workflows/smcca-builder-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit-test paper builder (no heavy numerical runs)
+        run: python -m unittest discover -s paper/tests -p 'test_*.py' -v
+      - name: Validate all builder flag combinations without side effects
+        run: |
+          python paper/build.py --help
+          python paper/build.py --dry-run
+          python paper/build.py --dry-run --all --benchmark-preset full --repeats 7
+          python paper/build.py --dry-run --tables
+          python paper/build.py --dry-run --clean

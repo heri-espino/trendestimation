@@ -1,14 +1,22 @@
-# Manual heavy builds only; keep PDF generation off automated push CI.
-.PHONY: figures pdf clean benchmarks pdf-with-benchmarks
+# Shortcuts for paper/build.py. All heavy experiments remain manual.
+# Example: make -C paper pdf-with-benchmarks
+
+.PHONY: figures benchmarks tables pdf pdf-with-benchmarks clean
+
 figures:
-	python figures/make_figures.py
-	python figures/make_extended_figures.py
-	python figures/benchmark_orders.py
+	python build.py --figures
+
 benchmarks:
-	python benchmarks/run_all.py --preset quick --repeats 5
-pdf-with-benchmarks: figures benchmarks
-	latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-pdf: figures
-	latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+	python build.py --benchmarks --benchmark-preset quick --repeats 5
+
+tables:
+	python build.py --tables
+
+pdf:
+	python build.py
+
+pdf-with-benchmarks:
+	python build.py --all --benchmark-preset quick --repeats 5
+
 clean:
-	latexmk -C main.tex
+	python build.py --clean
