@@ -12,23 +12,66 @@
 - **Observed-data example:** `figures/make_extended_figures.py` uses the historical Mauna Loa weekly CO2 measurements bundled with `statsmodels.datasets.co2`; aggregates the 1990–1999 measurements to 120 monthly averages, compares d=2,3,4,5 at normalized smoothness 0.86, and exports the plot data.
 - Independent mathematical test: the same script computes the closed-form conditional GLS/likelihood profile estimator of `mu`, then checks it against a direct joint normal-equation solver for d=1,2,3,5.
 
-## Reproduce (manual)
+## Build the entire paper with one command
 
-From the repository root:
+`paper/build.py` is the canonical command-line interface. It resolves paths
+relative to its own location, so it works whether you launch it from the
+repository root or elsewhere. The current SMCCA PDF is compiled with
+`latexmk`; PDF compilation requires an installed TeX distribution
+(including the journal class's packages, BibTeX and PGFPlots).
+
+Install the scientific dependencies, then run:
 
 ```sh
 python -m pip install -e .
-python -m pip install statsmodels pandas
-python paper/figures/make_figures.py
-python paper/figures/make_extended_figures.py
-python paper/figures/benchmark_orders.py
-cd paper
-latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+python -m pip install statsmodels pandas threadpoolctl
+python paper/build.py
 ```
 
-If a local TeX distribution has `bibtex8` but lacks the `bibtex` command,
-use `pdflatex main.tex`, `bibtex8 main.aux`, then run `pdflatex main.tex` twice.
-A manual-only workflow can compile the paper with a full LaTeX environment.
+The **default build** generates the synthetic plot and CV/GCV/AICc/BIC
+table, the historical Mauna Loa plot and the high-order numerical plot,
+then compiles `paper/main.pdf`. It does **not** run slow timing benchmarks
+implicitly. All generated figures, tables, results and PDF remain inside
+`paper/`.
+
+### CLI flags
+
+| Command | Effect |
+| --- | --- |
+| `python paper/build.py --help` | Show all options. |
+| `python paper/build.py --figures` | Generate all required figures and the synthetic-criteria table, without compiling PDF. |
+| `python paper/build.py --tables` | Rebuild benchmarking LaTeX tables from **existing** raw timing CSVs. |
+| `python paper/build.py --benchmarks --benchmark-preset quick --repeats 5` | Run timed comparisons and automatically produce tables. No PDF compilation. |
+| `python paper/build.py --pdf` | Recompile from **existing** figure and table files; fail with an explanation if required inputs are missing. |
+| `python paper/build.py --all --benchmark-preset full --repeats 7` | Regenerate all figures and benchmark results, then compile the full SMCCA PDF. May be expensive. |
+| `python paper/build.py --dry-run --all` | Inspect the exact commands without running or writing anything. |
+| `python paper/build.py --clean` | Clean LaTeX auxiliary files and the compiled PDF, preserving results and figures. |
+
+Optional controls: `--blas-threads N` (benchmark parallelism;
+default 1), `--latex-engine pdflatex|xelatex|lualatex` (default
+pdfLaTeX), `--benchmark-preset smoke|quick|full`, and `--repeats N`.
+The usual build uses existing measured benchmark tables if they are
+present; check their recorded machine and revision to avoid mixing
+results. To update tables from raw data without rerunning measurements,
+use `--tables --pdf` (after figures are already generated).
+
+A successful non-dry-run build also writes
+`paper/build_manifest.json` with executed commands, durations,
+Python/platform details and Git revision. The manifest is ignored by
+Git; do not present measurements from another computer as your own.
+
+The Makefile delegates to the same interface, for example:
+
+```sh
+make -C paper pdf
+make -C paper figures
+make -C paper pdf-with-benchmarks
+```
+
+The GitHub Actions manuscript workflow is **manual only**. It uses this
+builder for figure generation and the LaTeX action for compilation in an
+isolated TeX environment; it does not run large benchmarks on pushes.
+The manual benchmark workflow produces downloadable raw timing artifacts.
 
 ## Scientific boundaries
 
