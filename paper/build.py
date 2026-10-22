@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import re
 import shlex
 import shutil
 import subprocess
@@ -139,6 +140,42 @@ def _verify_required(paths: tuple[Path, ...], reason: str) -> None:
         )
 
 
+def check_bibliography(path: Path) -> int:
+    """Catch duplicate BibTeX citation keys before costly paper experiments.
+
+    Keys are checked case-insensitively and by their source line.
+    BibTeX syntax errors beyond duplicated keys remain the job of BibTeX.
+    """
+    if not path.is_file():
+        raise ValueError(f"Missing bibliography file: {path}")
+    entries = re.compile(
+        r"^[ \t]*@[A-Za-z]+[ \t]*\{[ \t]*([^,\s]+)[ \t]*,",
+        re.MULTILINE,
+    )
+    seen: dict[str, int] = {}
+    duplicates: list[str] = []
+    text = path.read_text(encoding="utf-8")
+    for match in entries.finditer(text):
+        key = match.group(1)
+        line_number = text.count("\n", 0, match.start()) + 1
+        normal_key = key.casefold()
+        if normal_key in seen:
+            duplicates.append(
+                f"{key!r} (lines {seen[normal_key]} and {line_number})"
+            )
+        else:
+            seen[normal_key] = line_number
+    if duplicates:
+        raise ValueError(
+            "Duplicate BibTeX citation keys in "
+            f"{path}: {', '.join(duplicates)}. "
+            "Remove or rename duplicates before building the manuscript."
+        )
+    if not seen:
+        raise ValueError(f"No BibTeX references found in {path}")
+    return len(seen)
+
+
 def _latexmk_command(engine: str, clean: bool = False) -> list[str]:
     if clean:
         return ["latexmk", "-C", "main.tex"]
@@ -213,6 +250,15 @@ def run(argv: list[str] | None = None) -> int:
                 "Check their host/revision metadata, or rerun --benchmarks.",
                 flush=True,
             )
+
+    # Validate inexpensive bibliographic invariants BEFORE running costly
+    # figure generators and benchmark sweeps, even when using --all.
+    if not args.dry_run and pdf:
+        try:
+            count = check_bibliography(PAPER / "bibliografia.bib")
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(f"[paper] Bibliography preflight: {count} unique citation keys", flush=True)
 
     start = perf_counter()
     steps: list[dict] = []
