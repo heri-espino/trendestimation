@@ -11,5 +11,7 @@ in :doc:`../smoothness_optimization`.
 
 .. autofunction:: trendestimation.score_lambda
 
+.. autofunction:: trendestimation.criteria.cv_derivative
+
 .. autoclass:: trendestimation.SelectionResult
    :members:
