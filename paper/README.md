@@ -31,35 +31,35 @@ python paper/build.py
 
 ### Exact SMCCA typography in figures
 
-The official \`smcca.cls\` loads \`lmodern\` (Latin Modern Roman at a
+The official `smcca.cls` loads `lmodern` (Latin Modern Roman at a
 10-point body size). Ordinary Matplotlib PDFs cannot match those glyphs
 merely by choosing a generic serif font. The paper renderer now uses
-\`af.latex_style("paper/main.tex", width="text")\` to measure the *actual*
+`af.latex_style("paper/main.tex", width="text")` to measure the *actual*
 LaTeX body size and full text width, and exports each standalone figure
-through Matplotlib's \`backend="pgf"\` PDF backend with the same
-\`pdflatex\` + \`lmodern\` typography. The figures are still regular
+through Matplotlib's `backend="pgf"` PDF backend with the same
+`pdflatex` + `lmodern` typography. The figures are still regular
 vector PDFs suitable for SMCCA; no inline TikZ/PGF graphics are inserted
-in the final manuscript. The \`\\includegraphics\` commands intentionally
+in the final manuscript. The `\includegraphics` commands intentionally
 have **no width option**: resizing otherwise shrinks the font point sizes.
 
 For an existing machine-specific benchmark run, regenerate only the
 artwork and recompile the PDF (without recalculating any numerical data):
 
-\`\`\`powershell
+```powershell
 git pull origin main
 python paper/build.py --render-figures --pdf
-\`\`\`
+```
 
 This refreshes all three descriptive figures and the two timing figures
-when their measured \`.dat\` files are present. **Do not rerun
-\`--all --benchmark-preset full\` just to fix the typography.**
+when their measured `.dat` files are present. **Do not rerun
+`--all --benchmark-preset full` just to fix the typography.**
 
-\`pdflatex\` and the \`lmodern\` LaTeX package must be available before
+`pdflatex` and the `lmodern` LaTeX package must be available before
 running the plot generator, as they are when MiKTeX is installed. The
 renderer fails with an explanatory error instead of silently falling back
 to DejaVu. The manual GitHub Actions PDF workflow installs these fonts
 and TeX packages before generating figures. Use
-\`af.verify_latex_placement\` to independently confirm a figure's
+`af.verify_latex_placement` to independently confirm a figure's
 physical width when inspecting a manuscript.
 
 The **default build** uses the GitHub-installed **AwesomeFigures** library
