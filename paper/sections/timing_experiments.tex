@@ -30,7 +30,7 @@ metadata, NumPy/SciPy versions and a stated BLAS-thread limit.
 The code and machine-readable outputs are confined to
 \texttt{paper/benchmarks/}.
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Leading arithmetic complexity for $M$ reconstructed
 trends of length $n$ and fixed order $d$. Setup is counted
@@ -50,7 +50,7 @@ Direct banded solver & $O(nd^2)$ & $O(Mnd^2)$ \\
 
 \subsection{End-to-end full-fit timing results}
 \IfFileExists{benchmarks/results/full_fit_table.tex}{%
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Host-measured end-to-end median times in milliseconds, including
 one-time setup, for $M$ full fitted trends. Every method computes
@@ -59,9 +59,7 @@ naive-fresh-dense time divided by the spectral time. Values and the
 numerical parity check are generated from the raw CSV files, not
 entered manually.}
 \label{tab:full-fit-timings}
-\resizebox{\linewidth}{!}{%
-\input{benchmarks/results/full_fit_table.tex}%
-}
+\input{benchmarks/results/full_fit_table.tex}
 \end{table}
 }{%
 \noindent\emph{No host-verified timing table is bundled:
@@ -96,16 +94,14 @@ Even when the spectral trace is the most efficient
 can still dominate small workloads.
 
 \IfFileExists{benchmarks/results/trace_table.tex}{%
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Median end-to-end times (milliseconds) to evaluate $M$
 effective-degrees-of-freedom traces, including setup. These entries
 measure only scalar $\operatorname{tr}(H_\lambda)$ quantities, not
 reconstructed trends.}
 \label{tab:trace-timings}
-\resizebox{\linewidth}{!}{%
-\input{benchmarks/results/trace_table.tex}%
-}
+\input{benchmarks/results/trace_table.tex}
 \end{table}
 }{}
 \IfFileExists{benchmarks/results/benchmark_environment.tex}{%
@@ -117,7 +113,7 @@ are run and saved on the reference host.}\par
 }
 
 \IfFileExists{figures/full_fit_at_M64.pdf}{%
-\begin{figure}[H]
+\begin{figure}[tbp]
 \centering
 \includegraphics{figures/full_fit_at_M64.pdf}
 \caption{End-to-end median times for $M=64$ fitted curves, including setup,
@@ -132,7 +128,7 @@ requested benchmark run with $M=64$.}\par
 }
 
 \IfFileExists{figures/trace_at_M32.pdf}{%
-\begin{figure}[H]
+\begin{figure}[tbp]
 \centering
 \includegraphics{figures/trace_at_M32.pdf}
 \caption{Repeated effective-degrees-of-freedom trace evaluations
