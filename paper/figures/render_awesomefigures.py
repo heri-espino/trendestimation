@@ -137,7 +137,8 @@ def render_high_order():
 
 def _render_benchmark(input_name, output_name, *, M, title, ylabel):
     source = BENCHMARKS / input_name
-    target = BENCHMARKS / output_name
+    # SMCCA author instructions require ALL included image files in figures/.
+    target = FIGURES / output_name
     if not source.exists():
         # A default figure-only build must not create fictional runtime values.
         return
