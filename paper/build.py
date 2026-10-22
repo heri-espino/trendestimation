@@ -191,18 +191,21 @@ def run(argv: list[str] | None = None) -> int:
                 "latexmk is not on PATH. Install a TeX distribution, or "
                 "run --figures/--benchmarks/--tables without --pdf."
             )
-        if tables and not benchmarks:
-            _verify_required(
-                BENCHMARK_CSVS,
-                "--tables needs measured benchmark CSV files. "
-                "Run with --benchmarks to obtain them first.",
-            )
-        if pdf and not figures:
-            _verify_required(
-                REQUIRED_PDF_INPUTS,
-                "--pdf needs prior generated figures and criteria_table.tex. "
-                "Run --figures --pdf (or omit flags for a default build).",
-            )
+        try:
+            if tables and not benchmarks:
+                _verify_required(
+                    BENCHMARK_CSVS,
+                    "--tables needs measured benchmark CSV files. "
+                    "Run with --benchmarks to obtain them first.",
+                )
+            if pdf and not figures:
+                _verify_required(
+                    REQUIRED_PDF_INPUTS,
+                    "--pdf needs prior generated figures and criteria_table.tex. "
+                    "Run --figures --pdf (or omit flags for a default build).",
+                )
+        except ValueError as exc:
+            parser.error(str(exc))
         if pdf and not benchmarks and any(path.is_file() for path in BENCHMARK_TABLES):
             print(
                 "[paper] NOTE: Existing benchmark tables will be reused. "
@@ -281,7 +284,10 @@ def run(argv: list[str] | None = None) -> int:
         )
         print("[paper] Build manifest: paper/build_manifest.json")
     if pdf:
-        print("[paper] PDF: paper/main.pdf")
+        print("[paper] " + (
+            "Planned PDF: paper/main.pdf" if args.dry_run
+            else "PDF: paper/main.pdf"
+        ))
     return 0
 
 
