@@ -80,9 +80,11 @@ python paper/benchmarks/run_all.py --preset full --repeats 7
 ```
 
 Raw CSV files, hardware information, relative speedups, and optional
-PGFplots timing data are generated in the **ignored** directory
-`paper/benchmarks/results/`. The SMCCA manuscript includes the experiment
-design and renders those timing figures when results are present.
+PGFplots timing data and publication-style LaTeX summary tables are generated in the **ignored** directory
+`paper/benchmarks/results/`. The SMCCA manuscript imports **actual measured timing tables, numerical parity
+and host metadata automatically** when those files exist. Without them it
+prints a missing-results notice; preliminary pilot timings are not silently
+published as measurements from another computer.
 
 **Do not claim universal spectral superiority or GPU acceleration.** The
 banded baseline may be faster than spectral fitting. The numbers must be
