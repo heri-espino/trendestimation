@@ -77,10 +77,10 @@ python paper/build.py --pdf
 ```
 
 The correct class declaration is
-`documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
+`\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
 
 When switching from `smcca.cls` and the old numeric `abbrv` bibliography,
-the old `paper/main.aux` can contain `NAT@force@numbers{}`. Springer
+the old `paper/main.aux` can contain `\NAT@force@numbers{}`. Springer
 uses the author--year `sn-mathphys-ay` bibliography, so that stale auxiliary
 file makes `pdflatex` fail *before* BibTeX can refresh citations.
 The compiler now detects this mismatch automatically and removes only
