@@ -99,6 +99,7 @@ class BuildFlagsTest(unittest.TestCase):
                  patch.object(builder, "_command") as command, \
                  patch.object(builder, "_verify_required") as verify, \
                  patch.object(builder, "_git_sha", return_value="test-revision"), \
+                 patch.object(builder, "check_bibliography", return_value=17), \
                  patch.object(builder.shutil, "which", return_value="latexmk"):
                 status, _ = self._capture(["--figures", "--pdf"])
             self.assertEqual(status, 0)
@@ -109,6 +110,33 @@ class BuildFlagsTest(unittest.TestCase):
             self.assertEqual(len(manifest["steps"]), 5)
             self.assertEqual(manifest["steps"][-1]["name"], "compile:PDF")
             self.assertIn("main.pdf", manifest["pdf"])
+
+    def test_bibtex_duplicate_keys_preflight(self):
+        with tempfile.TemporaryDirectory() as temp:
+            file = Path(temp) / "bibliografia.bib"
+            file.write_text(
+                "@article{biessy2026wh,\n  title={First}\n}\n"
+                "@article{Biessy2026WH,\n  title={Duplicate}\n}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, r"Duplicate BibTeX.*lines 1 and 4"):
+                builder.check_bibliography(file)
+
+    def test_bibtex_unique_keys_preflight(self):
+        with tempfile.TemporaryDirectory() as temp:
+            file = Path(temp) / "bibliografia.bib"
+            file.write_text(
+                "@article{biessy2026wh,\n  title={Research}\n}\n"
+                "@book{guerrero2007penalized,\n  title={Another reference}\n}\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(builder.check_bibliography(file), 2)
+
+    def test_repo_bibliography_has_unique_keys(self):
+        self.assertGreaterEqual(
+            builder.check_bibliography(BUILD_FILE.parent / "bibliografia.bib"),
+            17,
+        )
 
     def test_dry_run_does_not_write_manifest(self):
         with tempfile.TemporaryDirectory() as temp:
