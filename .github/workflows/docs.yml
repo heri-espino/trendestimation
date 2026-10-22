@@ -25,6 +25,8 @@ jobs:
           cache: pip
       - name: Install documented extra dependencies
         run: python -m pip install -e ".[docs,plot]"
+      - name: Install pinned AwesomeFigures from GitHub
+        run: python -m pip install -r docs/requirements-figures.txt
       - name: Execute notebooks for static illustrations
         run: python scripts/run_notebooks.py --fast --in-place --fail-fast
       - name: Build Sphinx site strictly
