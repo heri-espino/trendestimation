@@ -1,0 +1,52 @@
+name: SMCCA benchmarks (manual only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: Benchmark suite (smoke, quick, full)
+        required: true
+        default: quick
+        type: choice
+        options:
+          - smoke
+          - quick
+          - full
+      repeats:
+        description: Repetitions per workload
+        required: true
+        default: '5'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  paper-benchmarks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install research dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install threadpoolctl
+      - name: Time repeated full fits and EDF traces
+        env:
+          PRESET: ${{ inputs.preset }}
+          REPEATS: ${{ inputs.repeats }}
+        run: >
+          python paper/benchmarks/run_all.py
+          --preset "$PRESET"
+          --repeats "$REPEATS"
+          --blas-threads 1
+      - name: Upload raw timing evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: smcca-benchmark-data
+          path: paper/benchmarks/results/
+          if-no-files-found: error

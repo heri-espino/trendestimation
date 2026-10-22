@@ -65,10 +65,29 @@ are shown as text/code by Sphinx and are not automatically doctested.
 
 There are two complementary tutorial collections:
 - `docs/examples/`: three small introductory notebooks.
-- `docs/notebooks/`: eight detailed research and benchmark notebooks.
+- `docs/notebooks/`: ten detailed research, benchmark, and forecast notebooks.
 
 To preview the complete site with a warning-strict build, set
 `TRENDESTIMATION_DOCS_EXECUTION=off` and build Sphinx. The
 `docs-preview.yml` workflow uploads HTML for inspection but does not deploy
 it. The separate manual Pages workflow executes the longer notebooks
 when explicitly requested.
+
+
+## Gaussian MLE variance-component examples
+
+The public `estimate_variance_components` API provides Gaussian
+observation-noise and latent difference variances (plus standard deviations).
+These are not forecast-error variances, raw residual MSE, or prediction
+intervals. The introductory selection notebook and the longer criteria,
+nonzero-mean, spectral, applied, MLE and forecast-pipeline notebooks
+show the estimator under its stated assumptions.
+
+Notebook execution remains manual. To run the dedicated MLE chapter use:
+
+```bash
+python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoothness --fail-fast
+```
+
+The forecast chapter only estimates variance components from historical
+observations, without incorporating the held-out future values.
