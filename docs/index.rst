@@ -39,7 +39,7 @@ trendestimation
      <section class="te-section" aria-labelledby="te-capabilities-heading">
        <div class="te-section-heading">
          <div><p class="te-overline">THE TOOLKIT</p><h2 id="te-capabilities-heading">Methods and documentation</h2></div>
-         <p>Implementation details, parameter selection, and the reference API.</p>
+         <p>Implementation details, parameter selection, and the <a href="handbook/index.html">mathematical handbook</a>.</p>
        </div>
        <div class="te-feature-grid">
          <a class="te-feature" href="mathematics.html">
@@ -49,12 +49,12 @@ trendestimation
            <p>Estimate smooth trends using finite differences of any admissible integer order, with fixed or observed-difference reference means.</p>
            <span class="te-feature-link">Read the mathematics <span aria-hidden="true">&rarr;</span></span>
          </a>
-         <a class="te-feature" href="quickstart.html">
+         <a class="te-feature" href="smoothness_optimization.html">
            <span class="te-feature-number">02 / SELECTION</span>
            <span class="te-feature-icon" aria-hidden="true">&#955;</span>
            <h3>Choose the smoothing</h3>
            <p>Compare CV, GCV, AICc, BIC, and Gaussian marginal MLE; alternatively specify a target smoothness.</p>
-           <span class="te-feature-link">See the workflow <span aria-hidden="true">&rarr;</span></span>
+           <span class="te-feature-link">Read optimization guide <span aria-hidden="true">&rarr;</span></span>
          </a>
          <a class="te-feature" href="api.html">
            <span class="te-feature-number">03 / COMPUTATION</span>
@@ -104,6 +104,8 @@ trendestimation
    notebooks
    gallery
    mathematics
+   smoothness_optimization
+   handbook/index
    benchmarks
    references
    api

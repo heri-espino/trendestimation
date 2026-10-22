@@ -32,12 +32,14 @@ class BuildFlagsTest(unittest.TestCase):
                      "benchmark_orders.py"):
             self.assertIn(name, output)
         self.assertIn("latexmk -pdf", output)
+        self.assertIn("render_awesomefigures.py", output)
         self.assertNotIn("run_all.py", output)
 
     def test_figures_flag_does_not_run_latex_or_benchmarks(self):
         status, output = self._capture(["--dry-run", "--figures"])
         self.assertEqual(status, 0)
         self.assertIn("make_figures.py", output)
+        self.assertIn("render_awesomefigures.py", output)
         self.assertNotIn("latexmk", output)
         self.assertNotIn("run_all.py", output)
 
@@ -48,6 +50,8 @@ class BuildFlagsTest(unittest.TestCase):
         ])
         self.assertEqual(status, 0)
         self.assertIn("benchmark_orders.py", output)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertIn("render_awesomefigures.py --benchmarks-only", output)
         self.assertIn("run_all.py --preset full --repeats 7 --blas-threads 2", output)
         self.assertIn("latexmk -pdf", output)
         self.assertNotIn("write_paper_results.py", output)  # already done by run_all
@@ -56,6 +60,7 @@ class BuildFlagsTest(unittest.TestCase):
         status, output = self._capture(["--dry-run", "--tables"])
         self.assertEqual(status, 0)
         self.assertIn("write_paper_results.py", output)
+        self.assertIn("render_awesomefigures.py --benchmarks-only", output)
         self.assertNotIn("run_all.py", output)
         self.assertNotIn("latexmk", output)
 
@@ -63,8 +68,25 @@ class BuildFlagsTest(unittest.TestCase):
         status, output = self._capture(["--dry-run", "--benchmarks"])
         self.assertEqual(status, 0)
         self.assertIn("run_all.py --preset quick --repeats 5", output)
+        self.assertIn("render_awesomefigures.py --benchmarks-only", output)
         self.assertNotIn("make_figures.py", output)
         self.assertNotIn("latexmk", output)
+
+    def test_render_only_without_pdf_is_not_default_full_build(self):
+        status, output = self._capture(["--dry-run", "--render-figures"])
+        self.assertEqual(status, 0)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertNotIn("make_figures.py", output)
+        self.assertNotIn("latexmk", output)
+        self.assertNotIn("run_all.py", output)
+
+    def test_render_only_reuses_benchmarks_and_compiles_pdf(self):
+        status, output = self._capture(["--dry-run", "--render-figures", "--pdf"])
+        self.assertEqual(status, 0)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertIn("latexmk -pdf", output)
+        self.assertNotIn("make_figures.py", output)
+        self.assertNotIn("run_all.py", output)
 
     def test_pdf_engine_flag_and_clean(self):
         status, output = self._capture([
@@ -93,16 +115,44 @@ class BuildFlagsTest(unittest.TestCase):
                  patch.object(builder, "_command") as command, \
                  patch.object(builder, "_verify_required") as verify, \
                  patch.object(builder, "_git_sha", return_value="test-revision"), \
+                 patch.object(builder, "check_bibliography", return_value=17), \
                  patch.object(builder.shutil, "which", return_value="latexmk"):
                 status, _ = self._capture(["--figures", "--pdf"])
             self.assertEqual(status, 0)
-            self.assertEqual(command.call_count, 4)
+            self.assertEqual(command.call_count, 5)
             self.assertGreaterEqual(verify.call_count, 1)
             manifest = json.loads((paper / "build_manifest.json").read_text())
             self.assertEqual(manifest["git_revision"], "test-revision")
-            self.assertEqual(len(manifest["steps"]), 4)
+            self.assertEqual(len(manifest["steps"]), 5)
             self.assertEqual(manifest["steps"][-1]["name"], "compile:PDF")
             self.assertIn("main.pdf", manifest["pdf"])
+
+    def test_bibtex_duplicate_keys_preflight(self):
+        with tempfile.TemporaryDirectory() as temp:
+            file = Path(temp) / "bibliografia.bib"
+            file.write_text(
+                "@article{biessy2026wh,\n  title={First}\n}\n"
+                "@article{Biessy2026WH,\n  title={Duplicate}\n}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, r"Duplicate BibTeX.*lines 1 and 4"):
+                builder.check_bibliography(file)
+
+    def test_bibtex_unique_keys_preflight(self):
+        with tempfile.TemporaryDirectory() as temp:
+            file = Path(temp) / "bibliografia.bib"
+            file.write_text(
+                "@article{biessy2026wh,\n  title={Research}\n}\n"
+                "@book{guerrero2007penalized,\n  title={Another reference}\n}\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(builder.check_bibliography(file), 2)
+
+    def test_repo_bibliography_has_unique_keys(self):
+        self.assertGreaterEqual(
+            builder.check_bibliography(BUILD_FILE.parent / "bibliografia.bib"),
+            17,
+        )
 
     def test_dry_run_does_not_write_manifest(self):
         with tempfile.TemporaryDirectory() as temp:

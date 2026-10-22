@@ -42,7 +42,7 @@
  */
 
 :root {
-  --te-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --te-font: "DejaVu Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --te-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
@@ -842,78 +842,205 @@ html { scroll-behavior: smooth; }
 }
 
 
-/* Left sidebar: quiet editorial motion, native Furo navigation intact.
-   Only its interface changes; Python syntax highlighting is untouched. */
-.sidebar-tree li > .reference {
-  position: relative;
-  border-radius: var(--te-radius);
-  transition:
-    background-color .64s ease,
-    color .64s ease,
-    transform .64s cubic-bezier(.22, 1, .36, 1);
+/* ==========================================================================
+   Muted links + Furo sidebar motion, independent of Pygments syntax colors.
+   Furo uses distinct --color-sidebar-link-text--top-level and
+   --color-brand-visited tokens, which must be overridden explicitly.
+   ========================================================================== */
+:root {
+  --te-link: color-mix(in srgb, var(--te-brand) 72%, #465160);
+  --te-sidebar-text: #354353;
+  --te-nav-hover: color-mix(in srgb, var(--te-brand) 5%, #fff);
+  --te-nav-current: color-mix(in srgb, var(--te-brand) 9%, #fff);
+  --color-brand-primary: var(--te-link);
+  --color-brand-content: var(--te-link);
+  --color-brand-visited: var(--te-link);
+  --color-sidebar-link-text: var(--te-sidebar-text);
+  --color-sidebar-link-text--top-level: var(--te-sidebar-text);
+  --color-sidebar-item-background--current: var(--te-nav-current);
+  --color-sidebar-item-background--hover: var(--te-nav-hover);
+  --color-sidebar-item-expander-background--hover: var(--te-nav-hover);
+  --color-toc-item-text--active: var(--te-link);
+  --color-link: var(--te-link);
+  --color-link--visited: var(--te-link);
+  --color-link--hover: var(--te-brand);
+  --color-link--visited--hover: var(--te-brand);
 }
-.sidebar-tree li > .reference:hover {
-  background-color: var(--te-accent-subtle);
-  transform: translateX(2px);
+[data-theme="dark"] {
+  --te-link: color-mix(in srgb, var(--te-brand) 35%, #e0e7ef);
+  --te-sidebar-text: #c0c9d3;
+  --te-nav-hover: color-mix(in srgb, var(--te-brand) 14%, #20242b);
+  --te-nav-current: color-mix(in srgb, var(--te-brand) 19%, #20242b);
+  --color-link--hover: color-mix(in srgb, var(--te-link) 82%, white);
+  --color-link--visited--hover: var(--color-link--hover);
 }
-.sidebar-tree li > .reference:focus-visible,
-.sidebar-tree li > label:focus-visible {
-  outline: 2px solid var(--te-focus);
-  outline-offset: -2px;
+
+/* Body links, including previously visited references, have one restrained
+   tone. Avoid tinting <code> contents or syntax token elements. */
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):link,
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):visited,
+.related-pages a:link, .related-pages a:visited,
+.footer a:link, .footer a:visited {
+  color: var(--te-link);
 }
-.sidebar-tree li.current > .reference {
-  background-color: var(--te-accent-subtle);
-  color: var(--te-accent);
+.content article a:not(.te-button):not(.te-feature):not(.sd-btn):hover {
+  color: var(--color-link--hover);
 }
-.sidebar-tree li.current > .reference::before {
-  content: "";
-  position: absolute;
-  inset-block: 22%;
-  inset-inline-start: 0;
-  width: 2px;
-  background-color: var(--te-accent);
-  transform-origin: center;
-  animation: te-nav-indicator .8s ease-out both;
+.sidebar-tree li > a.reference:link,
+.sidebar-tree li > a.reference:visited {
+  color: var(--te-sidebar-text);
+  transition: color .65s ease, background-color .65s ease,
+              transform .65s ease, box-shadow .65s ease;
 }
-@keyframes te-nav-indicator {
-  from { transform: scaleY(0); opacity: 0; }
-  to { transform: scaleY(1); opacity: 1; }
+.sidebar-tree li > a.reference:hover,
+.sidebar-tree li > a.reference:focus-visible {
+  color: var(--te-link);
+  background: var(--te-nav-hover);
 }
-.sidebar-tree li.has-children > label {
-  border-radius: var(--te-radius);
-  transition: background-color .64s ease, color .64s ease;
+.sidebar-tree li.current-page > a.reference,
+.sidebar-tree li.current > a.reference {
+  color: var(--te-link);
+  background: var(--te-nav-current);
+  box-shadow: inset 2px 0 0 var(--te-link);
+  font-weight: 650;
 }
-.sidebar-tree li.has-children > label:hover,
-.sidebar-tree li.has-children > label:focus-visible {
-  background-color: var(--te-accent-subtle);
+.sidebar-tree label {
+  transition: background-color .65s ease;
 }
-.sidebar-tree li.has-children > label .icon svg {
-  transition: transform .68s cubic-bezier(.22, 1, .36, 1);
-  transform-origin: center;
+.sidebar-tree label .icon svg,
+.sidebar-tree .toctree-checkbox ~ label .icon svg {
+  transition: transform .65s cubic-bezier(.22, 1, .36, 1),
+              color .65s ease;
 }
-/* Furo's unchecked input normally hides the child UL immediately.
-   Temporarily keep it in flow while the JS close animation runs. */
-.sidebar-tree li.te-nav-animating > ul {
-  display: block !important;
+.sidebar-tree .toctree-checkbox:checked ~ label .icon svg {
+  transform: rotate(-90deg);
+}
+.sidebar-tree .toctree-checkbox:not(:checked) ~ label .icon svg {
+  transform: rotate(90deg);
+}
+
+/* Navigation is never hidden without JavaScript. Animate only where supported.
+   Furo controls the checked state; sidebar.js merely animates the <ul>
+   height/opacity after that state changes. */
+.sidebar-tree li.has-children > ul { transform-origin: top; }
+.sidebar-tree .toctree-l1 > .reference { font-weight: 500; }
+.sidebar-tree .current-page > .reference { font-weight: 650; }
+
+/* True page-to-page navigation keeps ordinary anchors and browser history.
+   A subtle arrival animation runs on the freshly loaded Sphinx article. */
+@keyframes te-document-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .sidebar-scroll {
-    scroll-behavior: smooth;
+  .content > article {
+    animation: te-document-enter .85s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .sidebar-tree {
+    animation: te-document-enter 1s cubic-bezier(.22, 1, .36, 1) both;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sidebar-tree li > .reference,
-  .sidebar-tree li.has-children > label,
-  .sidebar-tree li.has-children > label .icon svg {
+  .content > article, .sidebar-tree { animation: none !important; }
+  .sidebar-tree li > a.reference,
+  .sidebar-tree label, .sidebar-tree label .icon svg {
     transition: none !important;
   }
-  .sidebar-tree li.current > .reference::before {
+}
+
+/* Scalable vector plots, independent from the site's single navy UI color. */
+.content :is(.cell_output,.nboutput,.output_area) svg,
+.content :is(.cell_output,.nboutput,.output_area) img[src$=".svg"],
+.content img[src*=".svg"] {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* -----------------------------------------------------------------------
+   Chart/document typography and navigation sequencing, October 2026.
+   DejaVu Sans is also the reproducible Matplotlib figure font.
+   Furo renders the article at #furo-main-content, not .content > article.
+   Keep the sidebar stationary while a new article fades into the viewport.
+   ----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-tree {
     animation: none !important;
   }
-  .sidebar-tree li > .reference:hover {
-    transform: none;
+  #furo-main-content {
+    animation: te-document-enter 1.15s cubic-bezier(.22, 1, .36, 1) both;
   }
-  .sidebar-scroll {
-    scroll-behavior: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  #furo-main-content,
+  .sidebar-tree {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Notebook code is not a bordered card. Remove ALL nested MyST-NB/Jupyter
+   framing while retaining a subtle background and native Pygments colors.
+   Regular Sphinx code blocks outside notebooks keep their own treatment. */
+.cell_input,
+.cell_input .highlight,
+.cell_input .highlight pre,
+.cell_input .highlight-ipython3,
+.nbinput,
+.nbinput .input_area,
+.nbinput .highlight,
+.nbinput .highlight pre,
+div.cell_input,
+div.cell_input div.highlight,
+div.cell_input div.highlight pre {
+  border: none !important;
+  border-left: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Keep the right-hand "On this page" navigation visually identical to
+   the left tree. Furo uses .toc-tree a.reference and a more specific
+   li.scroll-current selector: generic .toc-tree a rules are not enough.
+   Both palettes (light/dark) inherit the existing left-sidebar tokens. */
+:root,
+[data-theme="dark"] {
+  --color-toc-item-text: var(--te-sidebar-text);
+  --color-toc-item-text--hover: var(--te-link);
+  --color-toc-item-text--active: var(--te-link);
+}
+.toc-tree a.reference:link,
+.toc-tree a.reference:visited {
+  color: var(--te-sidebar-text);
+  font-weight: 500;
+  transition: color .65s ease, background-color .65s ease;
+}
+.toc-tree a.reference:hover,
+.toc-tree a.reference:focus-visible {
+  color: var(--te-link);
+  background: var(--te-nav-hover);
+}
+.toc-tree li.scroll-current > a.reference,
+.toc-tree li.scroll-current > a.reference:link,
+.toc-tree li.scroll-current > a.reference:visited {
+  color: var(--te-link);
+  background: var(--te-nav-current);
+  font-weight: 650;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc-tree a.reference { transition: none !important; }
+}
+
+/* Keyboard controls for Furo's sidebar groups; existing motion stays native. */
+.sidebar-tree li.has-children > label:focus-visible {
+  outline: 2px solid var(--te-focus);
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-tree li.has-children > label:focus-visible {
+    transition: none !important;
   }
 }

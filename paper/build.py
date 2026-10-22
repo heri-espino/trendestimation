@@ -5,6 +5,7 @@ Examples (from any working directory):
 
     python paper/build.py
     python paper/build.py --figures
+    python paper/build.py --render-figures --pdf
     python paper/build.py --benchmarks --benchmark-preset quick --repeats 5
     python paper/build.py --tables
     python paper/build.py --pdf
@@ -12,8 +13,8 @@ Examples (from any working directory):
     python paper/build.py --dry-run --all
     python paper/build.py --clean
 
-Default: regenerate manuscript figures and the criteria table, then compile
-the PDF. Heavy timing benchmarks are opt-in; --all explicitly enables them.
+Default: regenerate numerical data, export AwesomeFigures vector PDFs,
+and compile the SMCCA paper. Heavy timing benchmarks remain opt-in.
 
 All outputs remain in paper/. No library source file is modified.
 """
@@ -22,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import re
 import shlex
 import shutil
 import subprocess
@@ -39,11 +41,12 @@ FIGURE_GENERATORS = (
     "paper/figures/make_extended_figures.py",
     "paper/figures/benchmark_orders.py",
 )
+FIGURE_RENDERER = "paper/figures/render_awesomefigures.py"
 REQUIRED_PDF_INPUTS = (
-    PAPER / "figures" / "cortes_toto_synthetic.dat",
+    PAPER / "figures" / "cortes_toto_synthetic.pdf",
     PAPER / "criteria_table.tex",
-    PAPER / "figures" / "mauna_loa_1990_1999.dat",
-    PAPER / "figures" / "high_order_numerics.dat",
+    PAPER / "figures" / "mauna_loa_1990_1999.pdf",
+    PAPER / "figures" / "high_order_numerics.pdf",
 )
 BENCHMARK_CSVS = (
     BENCHMARK_RESULTS / "full_fit_timings.csv",
@@ -65,7 +68,11 @@ def make_parser() -> argparse.ArgumentParser:
     actions = parser.add_argument_group("steps")
     actions.add_argument(
         "--figures", action="store_true",
-        help="Run all three deterministic figure generators, including the criteria table.",
+        help="Run numerical figure generators, render AwesomeFigures vector PDFs, and create the criteria table.",
+    )
+    actions.add_argument(
+        "--render-figures", action="store_true",
+        help="Redraw existing .dat/benchmark results using matched SMCCA LaTeX fonts.",
     )
     actions.add_argument(
         "--benchmarks", action="store_true",
@@ -138,6 +145,42 @@ def _verify_required(paths: tuple[Path, ...], reason: str) -> None:
         )
 
 
+def check_bibliography(path: Path) -> int:
+    """Catch duplicate BibTeX citation keys before costly paper experiments.
+
+    Keys are checked case-insensitively and by their source line.
+    BibTeX syntax errors beyond duplicated keys remain the job of BibTeX.
+    """
+    if not path.is_file():
+        raise ValueError(f"Missing bibliography file: {path}")
+    entries = re.compile(
+        r"^[ \t]*@[A-Za-z]+[ \t]*\{[ \t]*([^,\s]+)[ \t]*,",
+        re.MULTILINE,
+    )
+    seen: dict[str, int] = {}
+    duplicates: list[str] = []
+    text = path.read_text(encoding="utf-8")
+    for match in entries.finditer(text):
+        key = match.group(1)
+        line_number = text.count("\n", 0, match.start()) + 1
+        normal_key = key.casefold()
+        if normal_key in seen:
+            duplicates.append(
+                f"{key!r} (lines {seen[normal_key]} and {line_number})"
+            )
+        else:
+            seen[normal_key] = line_number
+    if duplicates:
+        raise ValueError(
+            "Duplicate BibTeX citation keys in "
+            f"{path}: {', '.join(duplicates)}. "
+            "Remove or rename duplicates before building the manuscript."
+        )
+    if not seen:
+        raise ValueError(f"No BibTeX references found in {path}")
+    return len(seen)
+
+
 def _latexmk_command(engine: str, clean: bool = False) -> list[str]:
     if clean:
         return ["latexmk", "-C", "main.tex"]
@@ -159,7 +202,7 @@ def run(argv: list[str] | None = None) -> int:
     if args.repeats < 1 or args.blas_threads < 1:
         parser.error("--repeats and --blas-threads must be positive integers")
     if args.clean and any((
-        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks, args.tables, args.pdf, args.all
     )):
         parser.error("--clean cannot be combined with generation or --all")
     if args.benchmark_preset != "quick" and not (
@@ -176,9 +219,11 @@ def run(argv: list[str] | None = None) -> int:
 
     # The default build is deterministic figures + PDF, NOT a long benchmark.
     explicit_steps = any((
-        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks,
+        args.tables, args.pdf, args.all,
     ))
     figures = args.figures or args.all or not explicit_steps
+    redraw = args.render_figures
     benchmarks = args.benchmarks or args.all
     tables = args.tables or benchmarks
     pdf = args.pdf or args.all or not explicit_steps
@@ -198,11 +243,11 @@ def run(argv: list[str] | None = None) -> int:
                     "--tables needs measured benchmark CSV files. "
                     "Run with --benchmarks to obtain them first.",
                 )
-            if pdf and not figures:
+            if pdf and not (figures or redraw):
                 _verify_required(
                     REQUIRED_PDF_INPUTS,
                     "--pdf needs prior generated figures and criteria_table.tex. "
-                    "Run --figures --pdf (or omit flags for a default build).",
+                    "Run --figures --pdf (or omit flags for a default build)." ,
                 )
         except ValueError as exc:
             parser.error(str(exc))
@@ -212,6 +257,15 @@ def run(argv: list[str] | None = None) -> int:
                 "Check their host/revision metadata, or rerun --benchmarks.",
                 flush=True,
             )
+
+    # Validate inexpensive bibliographic invariants BEFORE running costly
+    # figure generators and benchmark sweeps, even when using --all.
+    if not args.dry_run and pdf:
+        try:
+            count = check_bibliography(PAPER / "bibliografia.bib")
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(f"[paper] Bibliography preflight: {count} unique citation keys", flush=True)
 
     start = perf_counter()
     steps: list[dict] = []
@@ -231,6 +285,13 @@ def run(argv: list[str] | None = None) -> int:
             for script in FIGURE_GENERATORS:
                 step("generate:" + Path(script).name,
                      [sys.executable, script], REPOSITORY)
+            step("render:awesomefigures",
+                 [sys.executable, FIGURE_RENDERER],
+                 REPOSITORY)
+        elif redraw:
+            step("render:awesomefigures-from-existing-data",
+                 [sys.executable, FIGURE_RENDERER],
+                 REPOSITORY)
         if benchmarks:
             step(
                 "benchmark:fits-and-traces",
@@ -242,12 +303,18 @@ def run(argv: list[str] | None = None) -> int:
                 ],
                 REPOSITORY,
             )
+            step("render:benchmark-figures",
+                 [sys.executable, FIGURE_RENDERER, "--benchmarks-only"],
+                 REPOSITORY)
         elif tables:
             step(
                 "tables:existing-benchmark-CSV",
                 [sys.executable, "paper/benchmarks/write_paper_results.py"],
                 REPOSITORY,
             )
+            step("render:benchmark-figures",
+                 [sys.executable, FIGURE_RENDERER, "--benchmarks-only"],
+                 REPOSITORY)
         if pdf:
             if not args.dry_run:
                 _verify_required(

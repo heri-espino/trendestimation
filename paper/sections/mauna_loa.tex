@@ -23,28 +23,7 @@ different endpoint behavior.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
- width=.98\linewidth,height=5.1cm,
- xlabel={Year}, ylabel={$\mathrm{CO}_2$ (parts per million)},
- grid=both, grid style={gray!12},
- xticklabel style={/pgf/number format/1000 sep=},
- legend style={font=\scriptsize,at={(.5,-.26)},anchor=north,legend columns=4},
- tick label style={font=\small}]
-\addplot[gray!55,very thin]
-table[x=year,y=observed]{figures/mauna_loa_1990_1999.dat};
-\addlegendentry{Monthly observed}
-\addplot[blue!70!black,thick]
-table[x=year,y=d2]{figures/mauna_loa_1990_1999.dat};
-\addlegendentry{$d=2$}
-\addplot[red!60!black,thick,dashed]
-table[x=year,y=d3]{figures/mauna_loa_1990_1999.dat};
-\addlegendentry{$d=3$}
-\addplot[green!45!black,thick,dashdotted]
-table[x=year,y=d4]{figures/mauna_loa_1990_1999.dat};
-\addlegendentry{$d=4$}
-\end{axis}
-\end{tikzpicture}
+\includegraphics{figures/mauna_loa_1990_1999.pdf}
 \caption{Historical Mauna Loa atmospheric carbon dioxide,
 monthly aggregates of weekly measurements from 1990--1999,
 and two-sided PLS fits with common normalized smoothness

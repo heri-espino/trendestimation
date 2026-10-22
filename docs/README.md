@@ -8,6 +8,7 @@ At the repository root:
 
 ```bash
 python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
 python -m pytest tests/test_notebook_gallery.py -q
 python scripts/run_notebooks.py --list
 python scripts/run_notebooks.py --fast --in-place --fail-fast
@@ -58,15 +59,6 @@ remain distinct. The homepage's dark inline example uses a separate
 readable multicolor palette. Do not add `.highlight span[class]` or
 similar rules that tint every code token navy.
 
-The left Furo sidebar uses the same restrained motion: its hover/selected
-states and disclosure chevrons transition smoothly, while a short
-`docs/_static/js/sidebar-motion.js` enhancement animates expansion and
-collapse of the native checkbox-controlled navigation groups. Expand
-controls remain keyboard-operable (Enter/Space). Furo's unmodified
-show/hide behavior remains the fallback if JavaScript or the Web Animations
-API is unavailable. Reduced-motion preferences bypass the animation
-entirely. Sidebar motion must not hide links or change page navigation.
-
 The design uses sharp **90-degree corners** via `--te-radius: 0px`
 and restrained editorial typography. Hover and opening transitions are
 slower, while `docs/_static/js/reveal.js` adds one-time section reveals
@@ -75,7 +67,11 @@ all content stays visible; users who request reduced motion see content
 without scroll reveals or forced smooth scrolling.
 
 The browser page title is exactly **trendestimation**, not a longer
-marketing tagline. The landing page keeps a compact Python example and
+marketing tagline. The main document element, `#furo-main-content`, now
+fades into view on navigation, while the sidebar stays visually stationary.
+Sidebar groups still animate when explicitly expanded or collapsed.
+Notebook input boxes have no enclosing gray borders; standard non-notebook
+code blocks retain their usual styling. The landing page keeps a compact Python example and
 omits duplicate tutorial prose below its navigation cards.
 
 The home page retains keyboard focus, accessible reduced-motion support,
@@ -116,3 +112,101 @@ python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoot
 
 The forecast chapter only estimates variance components from historical
 observations, without incorporating the held-out future values.
+
+
+## Sidebar navigation, page transitions, and API sections
+
+Furo uses separate colors for ordinary content links, visited links, and
+**top-level sidebar links**. These are all mapped to the single restrained
+navy-derived `--te-link` token in
+`docs/_static/css/custom.css`; the other controls still derive from
+`--te-brand`. Regular sidebar labels are neutral; selected navigation
+and content links use muted navy. The code syntax palette remains
+independent of the brand colors.
+
+`docs/_static/js/sidebar.js` uses Furo's existing checkbox state and a
+short height/opacity animation to expand and collapse subtrees. It does
+not intercept navigation, modify URLs, or disrupt browser history.
+A short CSS entrance transition applies after each regular page load.
+Both effects respect `prefers-reduced-motion`; pages remain functional
+without JavaScript.
+
+
+The disclosure labels also support Tab, Enter and Space, expose
+``aria-expanded`` state, and show a visible keyboard focus outline.
+This enhancement works even when the Web Animations API is unavailable;
+the existing ``sidebar.js`` remains the only animation controller.
+
+The `docs/api.rst` landing page links to independent
+`docs/api/{core,selection,variances,forecasting,simulation,visualization}.rst`
+pages, each containing **Sphinx autodoc directives**. Public signatures
+and behavior stay sourced from Python docstrings. Update
+`docs/api.rst` and one of the section files when the public API changes.
+Complexity formulas in mathematical/benchmark pages use MathJax
+`:math:\`\\mathcal{O}(n)\`` rather than raw `O(n)` text.
+
+## AwesomeFigures SVG notebook plots
+
+Every executable notebook configures the GitHub-only
+[AwesomeFigures](https://github.com/awesomefigures/awesomefigures) package
+as a Matplotlib style (``elegante``, Okabe–Ito categorical palette, DejaVu
+Sans, no LaTeX, no deliberate artist rasterization). The Sphinx site
+uses the **same first-choice DejaVu Sans font**. After loading AwesomeFigures,
+all 13 notebooks call ``apply_documentation_figure_style()`` from
+``trendestimation._docs_style`` to enlarge typography consistently:
+16 pt body, 19 pt axes titles, 17 pt labels, 14 pt ticks, 15 pt legends
+and 21 pt figure titles. The forecasting plot utilities now respect these
+values rather than forcing 8-9 pt labels. The statistical algorithms,
+data, selection criteria, and numerical outputs are unchanged.
+
+Its full Git commit is pinned in ``docs/requirements-figures.txt``. Install
+it separately from ``.[docs,plot]``: keeping the VCS URL out of published
+``pyproject.toml`` metadata avoids a PyPI direct-reference dependency and
+keeps core numerical installations free of plotting requirements.
+
+The first code cell in each notebook calls
+``set_matplotlib_formats("svg")`` from ``matplotlib_inline.backend_inline``.
+When executed inside Jupyter, the produced ``image/svg+xml`` output is
+stored in the notebook and embedded as SVG in Sphinx, without storing PNG
+screenshots. The automatic PR preview executes only the **three short introduction**
+notebooks, saving SVG outputs in its ephemeral checkout for HTML preview;
+its 10 longer computational research notebooks remain unexecuted.
+The manual GitHub Pages workflow executes the 10 extended notebooks in
+place and Sphinx ``auto`` execution fills in the three introductory ones.
+Full gallery execution and deployment remain manual.
+
+To render the complete site with new SVG plots, run from the repository root:
+
+```bash
+python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
+python scripts/run_notebooks.py --fast --in-place --fail-fast
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
+```
+
+Chapter 10 additionally exports standalone vector files when
+``SAVE_SVG=True`` (default: False); the figure filenames end in ``.svg``.
+The SVG container is scalable, but ``imshow``/image artists can embed
+raster pixel data inside an SVG. Matplotlib text remains editable where
+supported (``svg.fonttype='none'``). Generated figures are not committed
+or deployed automatically.
+
+### Rebuilding figures after typography changes
+
+SVG plots are generated from notebook execution, not re-styled afterward
+like HTML text. An older deployed SVG remains unchanged until the
+corresponding notebook has been executed again and Sphinx HTML rebuilt.
+The PR preview automatically executes the three introductory notebooks,
+but the ten longer notebooks and Pages deployment remain manual-only:
+
+```bash
+python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
+python scripts/run_notebooks.py --fast --in-place --fail-fast
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
+```
+
+The font change is reproducible on Matplotlib installations because
+DejaVu Sans is bundled with Matplotlib. The website requests DejaVu Sans
+first and falls back to standard sans-serif fonts in browsers without it.
+No fonts are bundled in the repository.

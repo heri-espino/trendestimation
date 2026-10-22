@@ -51,7 +51,7 @@ def test_forecast_notebook_documents_full_pipeline():
     assert "forecast_trend(\n    history" in code
     assert "last_observation_baseline" in code
     assert "MAE" in code and "RMSE" in code
-    assert "SAVE_PNG" in code
+    assert "SAVE_SVG" in code
     assert "prediction interval" in narrative.lower()
 
 

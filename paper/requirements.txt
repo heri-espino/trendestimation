@@ -1,0 +1,8 @@
+# Paper-only dependencies. The trendestimation library is installed separately:
+#   python -m pip install -e .
+# Pin an immutable commit so published plots can be reproduced across machines.
+# Source: https://github.com/awesomefigures/awesomefigures
+awesomefigures @ git+https://github.com/awesomefigures/awesomefigures.git@54c8bf2374551fa39428f47f69580b4822d4b938
+statsmodels>=0.14
+pandas>=2.0
+threadpoolctl>=3.0

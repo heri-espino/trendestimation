@@ -19,7 +19,9 @@ chronological holdout, visit :doc:`notebooks/10-forecast-pipeline` in the
 
    When documentation execution is enabled, the site build runs these
    small, deterministic notebooks and embeds
-   their figures and outputs. Download the .ipynb files from the repository
+   their SVG figures and outputs. The plotting style comes from pinned
+   GitHub AwesomeFigures in ``docs/requirements-figures.txt``.
+   Download the .ipynb files from the repository
    to explore the examples interactively in Jupyter.
 
 .. toctree::

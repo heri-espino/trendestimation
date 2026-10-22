@@ -42,6 +42,7 @@ Run the entire gallery or selected examples
 From the repository root::
 
    python -m pip install -e ".[docs,plot]"
+   python -m pip install -r docs/requirements-figures.txt
    python scripts/run_notebooks.py --list
    python scripts/run_notebooks.py --fast --fail-fast
    python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoothness --fail-fast
@@ -60,3 +61,16 @@ To render executed figures in the Sphinx website::
 
 Alternatively, set the Sphinx execution mode to auto and build directly.
 Notebook source lives exclusively under ``docs/notebooks/``.
+
+SVG figure display
+------------------
+
+All 13 notebooks set the ``awesomefigures`` ``elegante`` style with the
+Okabe–Ito palette, then ``set_matplotlib_formats("svg")`` for crisp
+inline figures. The dependency is pinned to GitHub in
+``docs/requirements-figures.txt``; a PyPI release is not required.
+
+The **manual** executed-notebook workflow embeds SVG outputs in Sphinx HTML.
+The normal PR build disables expensive notebook execution but runs one short
+SVG smoke notebook. In chapter 10, set ``SAVE_SVG=True`` to also export
+individual SVG files rather than PNG.
