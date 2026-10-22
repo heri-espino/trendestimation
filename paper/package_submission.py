@@ -96,6 +96,10 @@ def package(output: Path, *, require_pdf: bool = True) -> list[str]:
             raise FileNotFoundError(path)
         seen_tex.add(path)
         text = path.read_text(encoding="utf-8")
+        optional_references = {
+            ref for command, ref in PATTERN.findall(text)
+            if command == "IfFileExists"
+        }
 
         def rewrite(match: re.Match[str]) -> str:
             command, ref = match.groups()
@@ -103,8 +107,9 @@ def package(output: Path, *, require_pdf: bool = True) -> list[str]:
             resource = resolve_source(ref, suffix=extension)
             target = resource.name
             if not resource.is_file():
-                if command == "IfFileExists":
-                    # Optional plots remain disabled if no data were measured.
+                if command == "IfFileExists" or ref in optional_references:
+                    # Missing optional benchmark tables or figures remain
+                    # suppressed by their existing IfFileExists guards.
                     return match.group(0).replace("{" + ref + "}", "{" + target + "}")
                 raise FileNotFoundError(
                     f"Missing manuscript dependency for {command}: {resource}"
