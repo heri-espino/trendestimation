@@ -38,5 +38,15 @@ should be edited in the Python source rather than duplicated
 in hand-maintained reference pages.
 
 Notebook examples illustrate existing software, not new forecast models.
-The select_lambda function uses classical in-sample criteria for fixed numeric
-reference means; it does not perform rolling or horizon-specific validation.
+The four classical in-sample criteria (CV, GCV, AICc, BIC) require a fixed
+numeric reference mean. Gaussian marginal MLE is a separate selector that
+also permits an observed-difference plug-in mean (``mu="data"``), without
+jointly estimating that mean.
+
+The short :doc:`examples/02_select_smoothness` tutorial and extended
+:doc:`notebooks/09-gaussian-mle-and-guerrero-smoothness` chapter show
+how to estimate *both* Gaussian variance components: observation noise
+and latent differences of order d. The forecast-pipeline notebook uses
+historical observations only; these are not forecast-error variances,
+prediction intervals, or evidence of future forecast performance.
+The selectors do not implement rolling or horizon-specific CV.
