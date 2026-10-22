@@ -6,6 +6,9 @@ Candidate versions in the source tree are not necessarily published releases.
 ## [Unreleased]
 
 ### Added
+- Ninth executable notebook: end-to-end fixed-smoothness forecast pipeline,
+  six visualization helpers, optional CSV input and PNG export, and
+  one chronological holdout comparing extrapolations with a naive baseline.
 - Transparent fixed-smoothness trend-extrapolation baselines (default normalized 0.8).
 - Six forecast/diagnostic plots, manual PNG example gallery, and supporting tests;
   these do not imply validated forecasting performance.
