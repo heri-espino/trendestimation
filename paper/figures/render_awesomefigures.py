@@ -80,7 +80,6 @@ def publication_context():
                 r"\usepackage{amsmath,amssymb}"
             ),
             "font.family": "serif",
-            "font.serif": [],
             "savefig.bbox": None,
             "savefig.pad_inches": 0,
         }):
