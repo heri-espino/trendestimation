@@ -112,10 +112,12 @@ trendestimation
 Additional reproducible tutorials
 ---------------------------------
 
-The :doc:`forecasting` guide demonstrates fixed-smoothness trend extrapolation,
-point plots, multiple visual diagnostics, and a manually generated PNG gallery.
+The :doc:`forecasting` guide illustrates conditional fixed-smoothness
+trend extrapolation and diagnostic visualizations. It is not a validated
+time-series forecasting method.
 
-The :doc:`gallery` contains eight longer scientific notebooks covering
+
+The :doc:`gallery` contains nine longer scientific notebooks covering
 simulation scenarios, spectral diagnostics, numerical benchmarks, and
 applied examples. The :doc:`notebooks` section offers three introductory
 tutorials. Both collections are preserved as executable source notebooks.

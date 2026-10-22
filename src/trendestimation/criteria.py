@@ -7,18 +7,19 @@ from typing import Literal
 import numpy as np
 
 from .core import TrendSmoother
+from .likelihood import _score_profile_mle
 
-Criterion = Literal["cv", "gcv", "aicc", "bic"]
+Criterion = Literal["cv", "gcv", "aicc", "bic", "mle"]
 
 
 @dataclass(frozen=True)
 class SelectionResult:
-    """Best classical smoothing criterion result on a specified grid.
+    """Best smoothing criterion result on a specified grid.
 
     Attributes
     ----------
     criterion : str
-        One of "cv", "gcv", "aicc", or "bic".
+        One of "cv", "gcv", "aicc", "bic", or "mle".
     lambda_ : float
         Selected penalty on the candidate grid.
     smoothness : float
@@ -43,6 +44,8 @@ def _score_from_coordinates(
     smoother: TrendSmoother, coord: np.ndarray, *,
     lambda_: float, name: Criterion,
 ) -> float:
+    if name == "mle":
+        return _score_profile_mle(smoother, coord, lambda_=lambda_)
     alpha = smoother._attenuation(lambda_)
     edf = float(np.sum(alpha))
     residual_coordinates = (1.0 - alpha) * coord
@@ -70,7 +73,7 @@ def _score_from_coordinates(
 
 def score_lambda(
     smoother: TrendSmoother, y, *, lambda_: float,
-    criterion: Criterion = "gcv", mu: float = 0.0,
+    criterion: Criterion = "gcv", mu: float | Literal["data"] = 0.0,
 ) -> float:
     """Score a penalty by one classical in-sample selection criterion.
 
@@ -82,10 +85,10 @@ def score_lambda(
         Observed finite one-dimensional series.
     lambda_ : float
         Penalty to evaluate, including positive infinity.
-    criterion : {"cv", "gcv", "aicc", "bic"}, default="gcv"
-        Classical selection score.
-    mu : float, default=0.0
-        Fixed numeric mean of penalized differences.
+    criterion : {"cv", "gcv", "aicc", "bic", "mle"}, default="gcv"
+        Classical criterion or Gaussian profiled marginal MLE.
+    mu : float or {"data"}, default=0.0
+        Fixed numeric mean; MLE also permits observed-difference plug-in "data".
 
     Returns
     -------
@@ -95,6 +98,14 @@ def score_lambda(
 
     Notes
     -----
+    Gaussian MLE profiles observation variance on the positive-penalty
+    coordinates and eliminates unpenalized polynomial trend components.
+    For MLE, mu="data" means mean(D_d @ y) and is used as a conditional
+    plug-in, not joint maximum likelihood of mu and lambda. Classical
+    CV/GCV/AICc/BIC require fixed numeric mu, and the MLE score is
+    twice negative profiled marginal log-likelihood up to constants.
+    lambda=0 has an improper prior and an infinite MLE score.
+
     Criteria are only provided for fixed numeric mu. Calling with
     mu="data" raises ValueError because a data-selected mean would
     have to be re-estimated in each deletion for exact leave-one-out CV.
@@ -103,17 +114,19 @@ def score_lambda(
     basis; select_lambda amortizes this step across a grid.
     """
     name = str(criterion).lower()
-    if name not in {"cv", "gcv", "aicc", "bic"}:
-        raise ValueError("criterion must be cv, gcv, aicc, or bic.")
-    if isinstance(mu, str):
-        raise ValueError("Criteria require fixed numeric mu.")
-    _, _, _, coord = smoother._prepare(y, float(mu))
+    if name not in {"cv", "gcv", "aicc", "bic", "mle"}:
+        raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
+    if isinstance(mu, str) and (mu != "data" or name != "mle"):
+        raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
+    if name == "mle" and (smoother.order == 0 or smoother.n - smoother.order < 2):
+        raise ValueError("mle requires order >= 1 and at least two penalized coordinates.")
+    _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     return _score_from_coordinates(smoother, coord, lambda_=lambda_, name=name)
 
 
 def select_lambda(
     smoother: TrendSmoother, y, *, criterion: Criterion = "gcv",
-    mu: float = 0.0, grid=None,
+    mu: float | Literal["data"] = 0.0, grid=None,
 ) -> SelectionResult:
     """Select smoothing strength on a grid using an in-sample criterion.
 
@@ -123,10 +136,10 @@ def select_lambda(
         Reusable spectral smoother with matching series length.
     y : array_like
         Finite observations to smooth.
-    criterion : {"cv", "gcv", "aicc", "bic"}, default="gcv"
-        Classical criterion minimized on the grid.
-    mu : float, default=0.0
-        Fixed numeric reference difference mean.
+    criterion : {"cv", "gcv", "aicc", "bic", "mle"}, default="gcv"
+        Classical criterion or Gaussian profiled marginal MLE.
+    mu : float or {"data"}, default=0.0
+        Fixed numeric mean; MLE also permits observed-difference plug-in "data".
     grid : array_like, optional
         One-dimensional nonnegative lambda candidates; defaults to
         121 geometric candidates plus the exact infinite-penalty limit.
@@ -140,10 +153,18 @@ def select_lambda(
     ------
     ValueError
         If input candidates are invalid, all scores are undefined,
-        or mu is selected from the observations.
+        or the input mu is unsupported for the selected criterion.
 
     Notes
     -----
+    Gaussian MLE profiles observation variance on the positive-penalty
+    coordinates and eliminates unpenalized polynomial trend components.
+    For MLE, mu="data" means mean(D_d @ y) and is used as a conditional
+    plug-in, not joint maximum likelihood of mu and lambda. Classical
+    CV/GCV/AICc/BIC require fixed numeric mu, and the MLE score is
+    twice negative profiled marginal log-likelihood up to constants.
+    lambda=0 has an improper prior and an infinite MLE score.
+
     Selection is classical in-sample CV/GCV/AICc/BIC, not rolling
     time-series cross-validation or future-forecast tuning. The
     method evaluates a finite candidate grid and does not claim
@@ -158,18 +179,20 @@ def select_lambda(
     >>> 0 <= result.smoothness <= 1
     True
     """
-    if isinstance(mu, str):
-        raise ValueError("select_lambda requires fixed numeric mu.")
     name = str(criterion).lower()
-    if name not in {"cv", "gcv", "aicc", "bic"}:
-        raise ValueError("criterion must be cv, gcv, aicc, or bic.")
+    if name not in {"cv", "gcv", "aicc", "bic", "mle"}:
+        raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
+    if isinstance(mu, str) and (mu != "data" or name != "mle"):
+        raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
+    if name == "mle" and (smoother.order == 0 or smoother.n - smoother.order < 2):
+        raise ValueError("mle requires order >= 1 and at least two penalized coordinates.")
     if grid is None:
         scale = 1.0 / smoother._median_positive_eigenvalue
         grid = np.r_[scale * np.geomspace(1e-6, 1e6, 121), np.inf]
     grid = np.asarray(grid, dtype=float)
     if grid.ndim != 1 or grid.size == 0 or np.any(np.isnan(grid)) or np.any(grid < 0):
         raise ValueError("grid must contain nonnegative lambda values.")
-    _, _, _, coord = smoother._prepare(y, float(mu))
+    _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     scores = np.asarray([
         _score_from_coordinates(smoother, coord, lambda_=lam, name=name)
         for lam in grid
