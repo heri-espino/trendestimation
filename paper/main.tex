@@ -4,11 +4,10 @@
 \pgfplotsset{compat=1.18}
 \usepackage{url}
 
-\title{\texttt{trendestimation}: A Reproducible Spectral Implementation of Penalized Least-Squares Trend Smoothing}
+\title{\texttt{trendestimation}: Spectral Penalized Least-Squares Trends, General Difference Orders, and Likelihood Profiling}
 \author[1]{Heriberto Espino-Montelongo}
-\author[2]{Daniela Cort\'es-Toto}
-\affil[1]{Universidad de las Am\'ericas Puebla, San Andr\'es Cholula, Puebla, Mexico.}
-\affil[2]{Institutional affiliation to be confirmed before submission.}
+\author[1]{Daniela Cort\'es-Toto}
+\affil[1]{Universidad de las Am\'ericas Puebla (UDLAP), San Andr\'es Cholula, Puebla, Mexico.}
 \date{}
 \setcounter{page}{1}
 
@@ -19,10 +18,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Penalized least squares provides a flexible way to estimate a smooth trend from noisy observations, but practical use requires transparent parameter selection, stable numerical calculations, and reproducible software. We describe \texttt{trendestimation}, a Python implementation of published finite-difference smoothing methods for arbitrary admissible difference order, including fixed nonzero mean differences and classical in-sample selection criteria. Reusable spectral factorization expresses each fitted trend through scalar attenuation factors and permits inexpensive repeated smoothing-index evaluations. A deterministic fifty-observation illustration compares CV, GCV, AICc, and BIC; independent normal-equation checks confirm agreement to floating-point precision in the tested cases. The contribution is a documented numerical implementation and reproducibility workflow, not a new smoother or a claim of universally faster computation.
+We describe \texttt{trendestimation}, reproducible scientific software for finite-difference penalized least-squares trends with admissible difference orders and nonzero reference differences. We derive the $d$-dimensional nullspace, diagonal attenuation factors, and a corrected trace-based smoothness index spanning $[0,1]$. We explain the speed and limitations of a reusable singular-value decomposition; no GPU execution claim is made. We also investigate Gaussian marginal maximum likelihood and obtain a closed-form reference-difference mean estimator conditional on the smoothing parameter, distinct from the released plug-in procedure. Reproducible simulations and historical atmospheric carbon-dioxide measurements compare difference orders and illustrate when automatic selection may favor near-interpolating fits. The contribution is mathematical synthesis, tested computational integration, and a reproducibility workflow, not invention of PLS or marginal likelihood.
 \end{abstract}
 \vspace{1em}
-\noindent\textbf{Keywords:} penalized least squares; trend estimation; finite differences; spectral decomposition; generalized cross-validation; scientific Python.
+\noindent\textbf{Keywords:} penalized least squares; trend estimation; finite differences; spectral decomposition; likelihood profiling; smoothness correction; scientific Python.
 \vspace{10pt}
 
 \section{Introduction}
@@ -47,6 +46,8 @@ Write $Q_d=D_d^\top D_d$ and choose $p\in\R^n$ satisfying $D_dp=\mu\mathbf1$. Us
  \widehat\tau_{\lambda,\mu}=p+H_\lambda(y-p),\qquad H_\lambda=(I_n+\lambda Q_d)^{-1}.
 \end{equation}
 Indeed, $(I_n+\lambda Q_d)x=y-p$ and $I_n+\lambda Q_d$ is positive definite for every finite $\lambda\ge0$. This affine expression is equivalent to the normal equations $(I_n+\lambda Q_d)\widehat\tau=y+\lambda\mu D_d^\top\mathbf1$.
+
+\input{sections/kernel_derivatives}
 
 \subsection{Null space, SVD, and limiting trends}
 The rows of $D_d$ are independent in exact arithmetic, so $\operatorname{rank}(D_d)=n-d$ and $\dim\ker D_d=d$. The null space consists of the sampled polynomials of degree at most $d-1$. Let $D_d=U\Sigma V^\top$ be a full SVD. With nonnegative eigenvalues $\delta_j$ of $Q_d$, ordered so that exactly $d$ are zero, the smoother becomes
@@ -74,10 +75,14 @@ The software checks denominators and excludes undefined candidates, evaluates a 
 
 Guerrero \cite{guerrero2007penalized} also considers the feasible plug-in $\widehat\mu=\operatorname{mean}(D_dy)$. This option is available \emph{for fitting}; however, the formula for leave-one-out CV in \eqref{eq:criteria} presumes that $\mu$ remains fixed under deletion. The current public selectors intentionally require a fixed numerical $\mu$. Likewise, $\tr(H_\lambda)$ is a conditional EDF and is not automatically the full degrees of freedom of a procedure that estimates $\mu$ from the same observations.
 
+\input{sections/smoothness_speed}
+
 \subsection{Reusable computation and cost}
 The package exposes a reusable \texttt{TrendSmoother(n, order=d)} object. Construction forms the difference operator and its SVD. For each candidate $\lambda$, a fitted curve is obtained with the transformed vector $c$ and spectral attenuation in \eqref{eq:spectrum}. The library offers \texttt{fit}, \texttt{degrees\_of\_freedom}, \texttt{smoothness}, and \texttt{select\_lambda}, while plotting utilities visualize fits and criterion profiles. Sphinx incorporates executable Jupyter notebooks, with deterministic random seeds and figure code for inspection.
 
 The computational trade-off must distinguish decomposition from reuse. A dense full SVD costs $O(n^3)$ preprocessing and $O(n^2)$ memory; after projection, EDF, smoothness, GCV, AICc, and BIC summaries cost $O(n)$ per penalty candidate, while full reconstruction and exact CV leverage scores require $O(n^2)$ each. In contrast, the banded structure of $I_n+\lambda Q_d$ allows efficient specialized direct solvers \cite{weinert2007wh}. Thus the phrase \emph{fast computation} means repeated spectral evaluation under a stated workload, not a blanket claim that SVD beats banded factorization. A separate reproducible benchmark in the repository measures setup and fit times independently.
+
+\input{sections/likelihood_mu}
 
 \section{Reproducible numerical illustration}
 \subsection{Source-inspired nonlinear design}
@@ -122,8 +127,10 @@ As shown in Table~\ref{tab:criteria}, CV and GCV agree in this particular realiz
 \subsection{Algebraic and numerical checks}
 An independent check compares the SVD implementation with the direct normal equations for $n=50$, $\lambda=30$, $d\in\{1,2,3\}$ and $\mu\in\{0,0.15\}$ on a second fixed-seed Gaussian sample. The maximum componentwise absolute difference is $2.01\times10^{-12}$ across these six cases, and the limiting constraint $D_d\widehat\tau_{\infty,\mu}=\mu\mathbf1$ holds to maximum error $4.42\times10^{-12}$. Both values result from the supplied deterministic regression script in IEEE double precision; they verify the tested algebra rather than establish stability for all $n,d,\lambda$. Higher differencing orders can be ill-conditioned, and systematic machine-dependent speed measurements remain a distinct stage of the study.
 
+\input{sections/mauna_loa}
+
 \section{Conclusions}
-We have documented \texttt{trendestimation} as an openly inspectable implementation of established finite-difference PLS smoothing, supporting arbitrary admissible order, fixed and data-based difference means for fitting, exact infinite-penalty limits, four classical selectors for fixed means, and reproducible visual explanations. Spectral decomposition makes repeated penalty evaluation transparent and inexpensive after preprocessing; specialized banded solvers remain important competitors for isolated fits and large samples. The source-inspired experiment shows how the same observations can lead to distinct smoothness choices under established criteria, while deterministic checks support correctness in a bounded set of cases. Broader performance conclusions require reported machine characteristics, workload-specific runtimes, and stability diagnostics. No new smoothing estimator or forecast-optimal criterion is claimed.
+We have presented an auditable implementation of established penalized least-squares smoothing, together with additional derivations of the difference nullspace, the corrected smoothness index, and a Gaussian mean-difference profile estimator. The latter has numerical checks but is not yet a released joint-MLE API. Our Mauna Loa observations give a real, explicitly descriptive application of high-order differencing. Spectral decomposition makes repeated penalty evaluation transparent and inexpensive after preprocessing; specialized banded solvers remain important competitors for isolated fits and large samples. The source-inspired experiment shows how the same observations can lead to distinct smoothness choices under established criteria, while deterministic checks support correctness in a bounded set of cases. Broader performance conclusions require reported machine characteristics, workload-specific runtimes, and stability diagnostics. Neither high-order differencing nor likelihood-based smoothing is claimed as a newly discovered concept. No GPU acceleration has been verified in the released CPU implementation.
 
 \bibliographystyle{abbrv}
 \bibliography{bibliografia}
