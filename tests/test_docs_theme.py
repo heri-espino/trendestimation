@@ -99,3 +99,16 @@ def test_furo_sidebar_motion_and_muted_links():
     assert "prefers-reduced-motion: reduce" in js
     assert "location.href" not in js
     assert "preventDefault" not in js
+
+
+def test_right_toc_matches_left_sidebar_in_light_and_dark():
+    """Furo's active scroll-current selector must not revert to bright blue."""
+    css = CSS.read_text(encoding="utf-8")
+    assert "--color-toc-item-text: var(--te-sidebar-text)" in css
+    assert "--color-toc-item-text--hover: var(--te-link)" in css
+    assert "--color-toc-item-text--active: var(--te-link)" in css
+    assert ".toc-tree a.reference:visited" in css
+    assert ".toc-tree li.scroll-current > a.reference" in css
+    assert "background: var(--te-nav-current)" in css
+    assert ':root,\n[data-theme="dark"] {' in css
+    assert ".toc-tree a.reference { transition: none !important; }" in css
