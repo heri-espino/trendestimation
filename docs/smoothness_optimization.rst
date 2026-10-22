@@ -353,3 +353,157 @@ With `normalized=False`, the upper valid target is
 library method; Newton and secant below are demonstrated by
 calling **SciPy**, rather than inventing Agent 2 method names.
 
+
+Runnable Python: default CV, legacy grid, GCV
+------------------------------------------------
+
+All snippets use seeded synthetic values and the **confirmed**
+interface on the inspected main branch. To install the source and
+documentation dependencies, run `python -m pip install -e ".[docs,plot]"`.
+The present default is **grid CV**; a planned derivative-based
+default must be documented after Agent 1's merge.
+
+.. code-block:: python
+
+   import numpy as np
+   from trendestimation import TrendSmoother, select_lambda
+
+   rng = np.random.default_rng(2026)
+   t = np.arange(60, dtype=float)
+   y = (0.035 * t + 0.7 * np.sin(t / 8.0)
+        + 0.35 * np.cos(t / 17.0)
+        + rng.normal(0.0, 0.33, len(t)))
+   smoother = TrendSmoother(len(y), order=2)
+
+   default_cv = select_lambda(
+       smoother, y, criterion="cv", mu=0.0
+   )
+   legacy_grid = np.r_[np.geomspace(1e-4, 1e5, 180), np.inf]
+   grid_cv = select_lambda(
+       smoother, y, criterion="cv", mu=0.0, grid=legacy_grid
+   )
+   gcv = select_lambda(
+       smoother, y, criterion="gcv", mu=0.0
+   )
+   for selected in (default_cv, grid_cv, gcv):
+       print(selected.criterion, selected.lambda_,
+             selected.smoothness, selected.score)
+
+   trend = smoother.fit(
+       y, lambda_=default_cv.lambda_, mu=0.0
+   ).trend
+
+Notice that `select_lambda` returns the selected penalty
+in `lambda_` and its score in `score`, while `scores`
+and `grid` contain the evaluated candidates. The
+explicit grid reproduces the existing grid-search API;
+it does **not** guess a new future `optimizer=` option.
+
+Runnable Python: numerical root-finder comparison
+--------------------------------------------------
+
+The package's root inversion is shown first. The additional
+methods are **SciPy** public algorithms, **not** hypothetical
+options to `lambda_for_smoothness`.
+
+.. code-block:: python
+
+   import numpy as np
+   from scipy.optimize import brentq, newton, root_scalar
+   from trendestimation import TrendSmoother, difference_matrix
+
+   smoother = TrendSmoother(60, order=2)
+   target = 0.75
+   library_root = smoother.lambda_for_smoothness(target)
+
+   # D D^T has exactly n-d positive eigenvalues.
+   D = difference_matrix(60, 2)
+   delta = np.linalg.eigvalsh(D @ D.T)
+
+   def f(lam):
+       return smoother.smoothness(lam) - target
+
+   def derivative(lam):
+       return np.mean(delta / (1.0 + lam * delta)**2)
+
+   upper = 1.0
+   while f(upper) < 0:
+       upper *= 2.0
+
+   roots = {
+       "Library Brent": library_root,
+       "SciPy Brent": brentq(f, 0, upper),
+       "SciPy Newton": newton(
+           f, x0=upper / 2, fprime=derivative
+       ),
+       "SciPy secant": root_scalar(
+           f, x0=upper / 5, x1=0.3 * upper,
+           method="secant"
+       ).root,
+   }
+   for name, root in roots.items():
+       print(name, root, abs(f(root)))
+       assert root >= 0 and abs(f(root)) < 1e-8
+
+   assert smoother.lambda_for_smoothness(0.0) == 0
+   assert np.isinf(smoother.lambda_for_smoothness(1.0))
+
+These initial guesses work on this **specific** example;
+general-purpose Newton and secant implementations need domain
+checks, iteration limits and a bracket fallback.
+
+Visual demonstration: smoothness versus CV MSE
+-----------------------------------------------
+
+The following figure uses 60 synthetic observations, difference
+order 2, fixed `mu=0` and seed 2026. The graph shows 49
+normalized smoothness candidates and highlights five of them.
+**Smaller CV MSE is better** for this in-sample score.
+
+.. figure:: _static/figures/smoothness-cv.svg
+   :alt: A blue line of leave-one-out MSE against normalized smoothness decreases towards a minimum near 0.90 and rises sharply at high smoothness. Five candidate values from 0.15 to 0.90 are labelled.
+   :width: 100%
+   :align: center
+
+   **Synthetic classical LOOCV example.** The five highlighted
+   candidates are :math:`S=0.15,0.35,0.55,0.75,0.90`.
+   Minimum displayed MSE occurs near :math:`S=0.90`.
+   The shape is data-dependent and not a forecast result.
+
+Run `python docs/examples/smoothness_optimization.py` to
+regenerate the figure, inspect the selected penalty values,
+compare default CV with GCV and review the candidate table.
+The script writes only to `docs/_static/figures/` when
+explicitly invoked (not as part of automatic documentation builds).
+
+.. literalinclude:: examples/smoothness_optimization.py
+   :language: python
+   :caption: Generate the validation-error-versus-smoothness plot
+   :linenos:
+
+Scientific scope, limitations and sources
+-----------------------------------------
+
+Analytical LOO formulae require fixed numeric :math:`\mu`,
+unchanged differencing conventions, and a fixed linear
+smoother for each :math:`\lambda`. Search tolerances,
+conditioning, excluded boundary solutions and the extent
+of the scanned domain affect numerical results. An MLE
+criterion is meaningful only under its assumed stochastic
+model. Do not conflate in-sample smoothness selection
+with selection for future forecast horizons.
+
+See :doc:`mathematics` for the complete mathematical
+conventions, :doc:`api/selection` for current signatures,
+:doc:`quickstart` for an introductory workflow and
+:doc:`references` for the full bibliography.
+
+* Guerrero (2007), *Time series smoothing by penalized least squares*:
+  https://doi.org/10.1016/j.spl.2007.03.006
+* Cortés-Toto, Guerrero and Reyes (2017), *Trend smoothness achieved
+  by penalized least squares with the smoothing parameter chosen
+  by optimality criteria*: https://doi.org/10.1080/03610918.2015.1005236
+* Weinert (2007), *Efficient computation for Whittaker–Henderson smoothing*:
+  https://doi.org/10.1016/j.csda.2006.11.038
+* Biessy (2026), *Whittaker–Henderson smoothing revisited*:
+  https://doi.org/10.1017/asb.2025.10061
