@@ -29,9 +29,8 @@ are available.
 ## Design and API maintenance
 
 The site uses a single **Pantone 2955 C-inspired navy** (approximate
-web/sRGB value `#003A70`) throughout Furo, the notebook gallery,
-Pygments code highlighting, visited links, active navigation and the
-landing page. To choose a new brand color, edit **one variable** near
+web/sRGB value `#003A70`) for Furo and notebook **decorations**,
+visited links, active navigation and the landing page. To choose a new brand color, edit **one variable** near
 the top of `docs/_static/css/custom.css`:
 
 ```css
@@ -47,15 +46,32 @@ matching illustration; if you change the brand color, update the
 icon's fill to match.
 
 Sphinx loads this **single CSS file** in `docs/conf.py`.
-The previous redundant `docs/_static/custom.css` is removed to prevent
-conflicting definitions. Code-cell input borders, Pygments token colors,
-sidebar links, visited links, buttons and subtle monochromatic gradients
-share the same family. Syntax remains readable in Furo light/dark modes;
-no green or purple is used as a decorative brand accent.
+The previous redundant `docs/_static/custom.css` was removed to prevent
+conflicting definitions. The one editable brand color controls only
+**interface decorations**: links, sidebar navigation, button surfaces,
+notebook input left borders, charts and restrained decorative gradients.
 
-The home page retains accessible keyboard focus, reduced-motion support,
-and responsive layouts. Colors used as semantic warnings/errors are not
-redefined as brand accents.
+**Python syntax highlighting is intentionally independent of the brand.**
+Furo/Pygments applies the conventional multicolor syntax in notebook and
+regular code cells, so strings, numbers, comments, operators and keywords
+remain distinct. The homepage's dark inline example uses a separate
+readable multicolor palette. Do not add `.highlight span[class]` or
+similar rules that tint every code token navy.
+
+The design uses sharp **90-degree corners** via `--te-radius: 0px`
+and restrained editorial typography. Hover and opening transitions are
+slower, while `docs/_static/js/reveal.js` adds one-time section reveals
+during scrolling through progressive enhancement. Without JavaScript,
+all content stays visible; users who request reduced motion see content
+without scroll reveals or forced smooth scrolling.
+
+The browser page title is exactly **trendestimation**, not a longer
+marketing tagline. The landing page keeps a compact Python example and
+omits duplicate tutorial prose below its navigation cards.
+
+The home page retains keyboard focus, accessible reduced-motion support,
+and responsive layouts. Semantic warnings/errors are not recolored as
+brand accents.
 
 Public API reference pages are generated from NumPy-style source docstrings
 through Sphinx autodoc and Napoleon. Edit docstrings in
