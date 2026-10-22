@@ -131,10 +131,17 @@ published-style simulations, spectral diagnostics, numerical benchmarks, and
 illustrative economic, actuarial, and engineering use cases. The notebooks use
 seeded synthetic data; they are not evidence of future forecasting accuracy.
 
+A [full forecasting and plotting notebook](docs/notebooks/09-forecast-pipeline.ipynb)
+walks through fixed smoothness 0.8, plotting individual observed points,
+extrapolation assumptions, six chart types, and chronological held-out
+MAE/RMSE with a naive baseline. The single holdout is illustrative rather
+than evidence of general forecast superiority.
+
 Run notebook examples and record timings using:
 
 ```bash
 python scripts/run_notebooks.py --list
+python scripts/run_notebooks.py --fast --only 09-forecast-pipeline --fail-fast
 python scripts/run_notebooks.py --fast --fail-fast
 ```
 
