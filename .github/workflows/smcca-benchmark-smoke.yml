@@ -1,0 +1,25 @@
+name: SMCCA benchmark smoke (lightweight)
+on:
+  pull_request:
+    paths:
+      - 'paper/benchmarks/**'
+      - '.github/workflows/smcca-benchmark-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install current release code
+        run: |
+          python -m pip install -e .
+          python -m pip install threadpoolctl
+      - name: Validate actual repository API and 4-solver numerical parity
+        run: python paper/benchmarks/run_all.py --preset smoke --repeats 1

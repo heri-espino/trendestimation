@@ -58,3 +58,36 @@ The prior SMCCA articles cited are Balam et al. (2025),
 *Hybrid Discontinuous Galerkin Method for Perturbations of the Modified
 Helmholtz Equation*. The exposition mirrors their compact numerical-analysis
 structure without claiming a directly shared mathematical method.
+
+## Paper-only timing comparisons
+
+The scripts under `paper/benchmarks/` compare naive fresh dense solves,
+cached dense solves, a reusable spectral decomposition, and a directly
+banded penalty solver. A separate test compares full matrix EDF/trace
+computation against summing spectral attenuation factors. All numerical
+parity checks are separated from timed regions; one-time SVD setup is
+included. No library API or `src/` file is modified.
+
+Run from the repository root:
+
+```sh
+python -m pip install -e .
+python -m pip install threadpoolctl
+python paper/benchmarks/run_all.py --preset smoke --repeats 2
+python paper/benchmarks/run_all.py --preset quick --repeats 5
+# Longer study, explicitly manual:
+python paper/benchmarks/run_all.py --preset full --repeats 7
+```
+
+Raw CSV files, hardware information, relative speedups, and optional
+PGFplots timing data and publication-style LaTeX summary tables are generated in the **ignored** directory
+`paper/benchmarks/results/`. The SMCCA manuscript imports **actual measured timing tables, numerical parity
+and host metadata automatically** when those files exist. Without them it
+prints a missing-results notice; preliminary pilot timings are not silently
+published as measurements from another computer.
+
+**Do not claim universal spectral superiority or GPU acceleration.** The
+banded baseline may be faster than spectral fitting. The numbers must be
+measured on a named host, repeated, and associated with a source revision.
+See `paper/benchmarks/README.md` for the operation model, input grid,
+numerical tolerances and detailed interpretation.
