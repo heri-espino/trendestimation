@@ -28,10 +28,34 @@ are available.
 
 ## Design and API maintenance
 
-The blue-and-white landing page uses a Furo design system in
-`docs/_static/css/custom.css`; existing shared styles remain in
-`docs/_static/custom.css`. The home page supports accessible keyboard
-focus, reduced motion, and responsive layouts.
+The site uses a single **Pantone 2955 C-inspired navy** (approximate
+web/sRGB value `#003A70`) throughout Furo, the notebook gallery,
+Pygments code highlighting, visited links, active navigation and the
+landing page. To choose a new brand color, edit **one variable** near
+the top of `docs/_static/css/custom.css`:
+
+```css
+:root {
+  --te-brand: #003A70; /* choose your single accent here */
+}
+```
+
+All light/dark UI accent shades are derived from this token with
+`color-mix()`. Neutral background, body text and nonsemantic gray
+elements remain neutral for readability. The favicon SVG is a fixed
+matching illustration; if you change the brand color, update the
+icon's fill to match.
+
+Sphinx loads this **single CSS file** in `docs/conf.py`.
+The previous redundant `docs/_static/custom.css` is removed to prevent
+conflicting definitions. Code-cell input borders, Pygments token colors,
+sidebar links, visited links, buttons and subtle monochromatic gradients
+share the same family. Syntax remains readable in Furo light/dark modes;
+no green or purple is used as a decorative brand accent.
+
+The home page retains accessible keyboard focus, reduced-motion support,
+and responsive layouts. Colors used as semantic warnings/errors are not
+redefined as brand accents.
 
 Public API reference pages are generated from NumPy-style source docstrings
 through Sphinx autodoc and Napoleon. Edit docstrings in
