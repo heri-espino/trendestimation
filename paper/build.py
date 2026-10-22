@@ -186,6 +186,104 @@ def check_bibliography(path: Path) -> int:
     return len(seen)
 
 
+def _latex_source_identity(source: str) -> dict[str, str]:
+    """Identify the LaTeX class and citation format without compiling it."""
+    match = re.search(
+        r"\\documentclass\s*(?:\[([^\]]*)\])?\s*\{([^{}]+)\}", source
+    )
+    if match is None:
+        raise ValueError("paper/main.tex has no valid \\documentclass declaration")
+    options = match.group(1) or ""
+    document_class = match.group(2).strip()
+    # sn-jnl itself loads natbib and sets the .bst from its class option.
+    springer_styles = (
+        "sn-mathphys-ay", "sn-mathphys-num", "sn-basic",
+        "sn-apa", "sn-chicago", "sn-vancouver-ay", "sn-vancouver-num",
+        "sn-aps", "sn-nature",
+    )
+    styles = [style for style in springer_styles if style in options.split(",")]
+    if document_class == "sn-jnl" and styles:
+        bib_style = styles[0]
+    else:
+        style = re.search(r"\\bibliographystyle\s*\{([^{}]+)\}", source)
+        bib_style = style.group(1) if style else ""
+    return {"document_class": document_class, "bib_style": bib_style}
+
+
+def _prepare_latex_transition(paper: Path) -> list[str]:
+    """Discard obsolete LaTeX auxiliaries when journal or .bst changes.
+
+    The legacy SMCCA .aux contains \NAT@force@numbers and abbrv citations.
+    Springer sn-mathphys-ay reads .aux *before* BibTeX can rebuild it, so
+    the class switch otherwise errors out immediately. Never delete figures,
+    benchmark CSVs, source files, or manuscript data.
+    """
+    main = paper / "main.tex"
+    if not main.is_file():
+        raise ValueError(f"Missing manuscript source {main}")
+    identity = _latex_source_identity(main.read_text(encoding="utf-8-sig"))
+    if identity["document_class"] != "sn-jnl":
+        raise ValueError(
+            "The manuscript is still using the previous journal class "
+            f"({identity['document_class']!r}). Pull the latest main branch "
+            "and confirm paper/main.tex starts with "
+            "\\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}."
+        )
+    if identity["bib_style"] != "sn-mathphys-ay":
+        raise ValueError(
+            f"Expected sn-mathphys-ay author-year bibliography; "
+            f"found {identity['bib_style']!r}."
+        )
+    state_path = paper / ".latex_build_identity.json"
+    prior = None
+    if state_path.is_file():
+        try:
+            prior = json.loads(state_path.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            prior = None
+
+    aux = paper / "main.aux"
+    aux_text = aux.read_text(encoding="utf-8", errors="replace") if aux.is_file() else ""
+    bib_from_aux = re.search(r"\\bibstyle\s*\{([^{}]+)\}", aux_text)
+    forced_numeric = r"\NAT@force@numbers" in aux_text
+    stale_bib = (
+        bib_from_aux is not None
+        and bib_from_aux.group(1) != identity["bib_style"]
+    )
+    stale_identity = prior is not None and prior != identity
+    needs_reset = stale_bib or forced_numeric or stale_identity
+    removed: list[str] = []
+    if needs_reset:
+        # Target *only* files produced by TeX/BibTeX/latexmk, never inputs
+        # or expensive computed experimental artifacts.
+        extensions = (
+            ".aux", ".bbl", ".blg", ".fdb_latexmk", ".fls", ".log",
+            ".out", ".toc", ".lof", ".lot", ".synctex.gz",
+            ".bcf", ".run.xml",
+        )
+        for extension in extensions:
+            path = paper / ("main" + extension)
+            if path.is_file():
+                path.unlink()
+                removed.append(path.name)
+        # latexmk will overwrite the draft PDF. Keep any previous PDF until
+        # successful compilation rather than destroying a user's last copy.
+        print(
+            "[paper] Changed LaTeX class/bibliography detected: "
+            "removed obsolete auxiliary files "
+            + (", ".join(removed) if removed else "(none)"),
+            flush=True,
+        )
+    return removed
+
+
+def _save_latex_identity(paper: Path) -> None:
+    identity = _latex_source_identity((paper / "main.tex").read_text(encoding="utf-8-sig"))
+    (paper / ".latex_build_identity.json").write_text(
+        json.dumps(identity, indent=2) + "\n", encoding="utf-8"
+    )
+
+
 def _latexmk_command(engine: str, clean: bool = False) -> list[str]:
     if clean:
         return ["latexmk", "-C", "main.tex"]
@@ -272,6 +370,10 @@ def run(argv: list[str] | None = None) -> int:
         except (OSError, ValueError) as exc:
             parser.error(str(exc))
         print(f"[paper] Bibliography preflight: {count} unique citation keys", flush=True)
+        try:
+            _prepare_latex_transition(PAPER)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
 
     start = perf_counter()
     steps: list[dict] = []
@@ -333,6 +435,8 @@ def run(argv: list[str] | None = None) -> int:
                         "Benchmark LaTeX tables were not generated successfully.",
                     )
             step("compile:PDF", _latexmk_command(args.latex_engine), PAPER)
+            if not args.dry_run:
+                _save_latex_identity(PAPER)
         if args.package or args.all:
             step(
                 "package:Computational-Statistics",
