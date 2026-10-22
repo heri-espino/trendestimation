@@ -1,0 +1,155 @@
+\section{Measured computational cost and repeated parameter evaluation}
+\subsection{Experimental design and independent baselines}
+Numerical correctness and elapsed time are distinct properties. We
+therefore benchmark the same PLS estimator at matched $(n,d,\mu)$
+and identical candidate penalties, using four implementations:
+(i) a deliberately naive dense solver that reconstructs $D_d$,
+$Q_d=D_d^\top D_d$, and solves the normal equations at every
+candidate; (ii) a denser but fairer baseline that caches $Q_d$ and
+repeats its dense solve; (iii) the reusable full-SVD spectral
+implementation of \texttt{TrendSmoother}; and (iv) a banded solver
+that assembles $Q_d$ directly in its sparse-band storage and uses
+a structure-aware linear solver. The last comparison is crucial:
+beating dense normal equations does not imply beating specialized
+PLS solvers \cite{weinert2007wh}.
+
+For every case a deterministic Gaussian sequence is generated,
+$\mu$ is held at either zero or a fixed nonzero value, and
+$\lambda$ spans $10^{-3}$ to $10^3$ on a geometric grid.
+The \texttt{quick} experiment varies $n\in\{40,100,180\}$,
+$M\in\{1,16,64\}$ with $d=2$ and adds
+$d\in\{1,3,5\}$ at $n=100$, $M=24$, together
+with a nonzero-$\mu$ case. The \texttt{full} experiment reaches
+$n=400$, $M=256$ and additional difference orders.
+All results include one-time setup (not only post-SVD solves);
+we record medians, extrema, and median absolute deviations over
+repeated independent runs. We bound maximum disagreement against
+an independent banded solve for \emph{every} tested penalty.
+Runs use a declared random seed, source revision, machine
+metadata, NumPy/SciPy versions and a stated BLAS-thread limit.
+The code and machine-readable outputs are confined to
+\texttt{paper/benchmarks/}.
+
+\begin{table}[H]
+\centering
+\caption{Leading arithmetic complexity for $M$ reconstructed
+trends of length $n$ and fixed order $d$. Setup is counted
+and no exact operation counts or GPU measurements are asserted.}
+\label{tab:complexity}
+\begin{tabular}{lll}
+\toprule
+Method & Setup & Repeated full fits \\
+\midrule
+Fresh dense solves & rebuilt per $\lambda$ & $O(Mn^3)$ \\
+Cached dense $Q_d$ & dense penalty matrix & $O(Mn^3)$ \\
+Spectral SVD & $O(n^3)$ & $O(Mn^2)$ \\
+Direct banded solver & $O(nd^2)$ & $O(Mnd^2)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Scalar smoothness and EDF are different workloads}
+To evaluate $\operatorname{tr}(H_\lambda)$ repeatedly, the
+spectral method needs only $n-d$ positive eigenvalues:
+\[
+\operatorname{tr}(H_\lambda)
+=d+\sum_{j=1}^{n-d}(1+\lambda\delta_j)^{-1}.
+\]
+This is $O(Mn)$ work \emph{after} spectral setup, not
+$O(Mn^2)$ reconstructed trends. An independent second
+experiment compares repeated dense computations
+of $\operatorname{tr}[(I+\lambda Q_d)^{-1}]$,
+a banded solver applied to all $n$ canonical right-hand
+sides, and the spectral sum. The experiment checks
+algebraic equivalence separately from timed regions.
+Even when the spectral trace is the most efficient
+\emph{marginal} score after setup, the $O(n^3)$ SVD cost
+can still dominate small workloads.
+
+\IfFileExists{benchmarks/results/full_fit_at_M64.dat}{%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=.92\linewidth,height=5cm,
+ xlabel={Series length $n$ ($d=2$, $M=64$)},
+ ylabel={End-to-end wall time (seconds)},
+ ymode=log,grid=both,
+ legend style={font=\scriptsize,at={(.5,-.25)},
+ anchor=north,legend columns=2}]
+\addplot[gray!75!black,mark=o] table[x=n,y=densefresh]
+ {benchmarks/results/full_fit_at_M64.dat};
+\addlegendentry{Fresh dense}
+\addplot[red!70!black,mark=triangle*] table[x=n,y=densecached]
+ {benchmarks/results/full_fit_at_M64.dat};
+\addlegendentry{Cached dense}
+\addplot[blue!75!black,mark=*] table[x=n,y=spectral]
+ {benchmarks/results/full_fit_at_M64.dat};
+\addlegendentry{Spectral SVD}
+\addplot[green!45!black,mark=square*] table[x=n,y=banded]
+ {benchmarks/results/full_fit_at_M64.dat};
+\addlegendentry{Banded solve}
+\end{axis}
+\end{tikzpicture}
+\caption{End-to-end median wall-clock times generated
+on the executing host (source file:
+\texttt{paper/benchmarks/results/full\_fit\_at\_M64.dat}).
+The same number of full fitted trends is produced by
+each method. The figure is present only when benchmark
+measurements have been generated locally.}
+\label{fig:timing-full}
+\end{figure}
+}{%
+\noindent\emph{The full-fit timing figure is generated locally
+after running \texttt{python paper/benchmarks/run\_all.py}.
+No hardware-dependent runtime plot is supplied by default.}\par}
+
+\IfFileExists{benchmarks/results/trace_at_M32.dat}{%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=.92\linewidth,height=4.7cm,
+ xlabel={Series length $n$ ($d=2$, $M=32$)},
+ ylabel={EDF sweep wall time (seconds)},
+ ymode=log,grid=both,
+ legend style={font=\scriptsize,at={(.5,-.25)},
+ anchor=north,legend columns=2}]
+\addplot[gray!75!black,mark=o] table[x=n,y=densefresh]
+ {benchmarks/results/trace_at_M32.dat};
+\addlegendentry{Fresh dense trace}
+\addplot[red!70!black,mark=triangle*] table[x=n,y=densecached]
+ {benchmarks/results/trace_at_M32.dat};
+\addlegendentry{Cached dense trace}
+\addplot[blue!75!black,mark=*] table[x=n,y=spectral]
+ {benchmarks/results/trace_at_M32.dat};
+\addlegendentry{Spectral sum}
+\addplot[green!45!black,mark=square*] table[x=n,y=banded]
+ {benchmarks/results/trace_at_M32.dat};
+\addlegendentry{Banded trace}
+\end{axis}
+\end{tikzpicture}
+\caption{Repeated EDF/trace evaluations, including
+preprocessing, on the executing host. This workload
+differs from reconstructing full fitted trends.}
+\label{fig:timing-trace}
+\end{figure}
+}{}
+
+\subsection{Interpreting speed and computational cost}
+A timed speed ratio is defined by the two end-to-end
+medians, for example
+$R_{\rm dense/spectral}
+=t_{\rm dense}/t_{\rm spectral}$.
+A value above one favors the spectral approach for the
+tested workload, not for arbitrary data lengths or
+hardware. CPU time, wall time, arithmetic complexity
+and energy consumption are different quantities.
+CPU numerical libraries already use optimized native
+linear algebra, but this experiment does not establish
+GPU execution or electricity use. An explicit device
+and power measurement would be necessary to make
+either claim. Results are intentionally generated
+only through a manual command, so the manuscript
+does not inadvertently contain timings from a
+different machine presented as those of its authors.
