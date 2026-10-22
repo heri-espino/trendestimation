@@ -13,7 +13,7 @@ extensions = [
     "sphinx.ext.githubpages",
 ]
 
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "README.md"]
 autodoc_typehints = "description"
 autodoc_member_order = "bysource"
 napoleon_google_docstring = True
@@ -21,6 +21,12 @@ napoleon_numpy_docstring = True
 
 # Render real Jupyter notebooks without running code in CI or site builds.
 nb_execution_mode = "off"
+
+# Numpy-style parameter descriptors are not importable Python classes.
+# Keep strict reference checks on real API objects while exempting prose types.
+nitpick_ignore_regex = [
+    ("py:class", r"^(?:array_like|numpy\.ndarray|matplotlib\.axes\.Axes|optional|default=.*|\{.*|\".*)$"),
+]
 html_theme = "furo"
 html_title = "trendestimation — scientific trend smoothing"
 html_short_title = "trendestimation"
