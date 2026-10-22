@@ -1,67 +1,58 @@
 # Preliminary local timing observations — NOT FOR PUBLICATION
 
-These numbers are **exploratory checks** made in a Linux execution container
-(October 2026), with **one BLAS thread and 3 repetitions**. They used a
-small source-compatible replica of the `TrendSmoother` API because this
-execution container could not directly clone the GitHub repository.
-They are **not** evidence that the exact GitHub release binary was timed.
-Use the scripts in this PR to reproduce on the actual checkout and on
-Heriberto's computer before incorporating results into the SMCCA text.
+These are **exploratory** wall-clock results from a Linux execution
+container (October 2026), **one BLAS thread and five repetitions**.
+A local source-compatible replica of the TrendSmoother API was used,
+rather than an exact installation of a tagged GitHub checkout.
+Consequently these are **not author-machine or release benchmarks**.
+The reproducible benchmark scripts in this PR call the real public
+library API when run from an installed checkout.
 
-- Host: Linux 6.18.55 x86_64 (containerized)
-- CPU description: unavailable from `platform.processor()`; 5 logical CPUs
-  visible to the benchmark process.
-- NumPy 2.3.5; SciPy 1.17.0.
-- 1 BLAS thread; 3 full workload repetitions; median end-to-end time.
-- Every method returned the same trends within approximately
-  `2.1e-13` for the displayed full-fit cases.
-- Benchmarks report wall-clock seconds; no energy or GPU data are available.
+- Host: Linux 6.18.55 x86_64, containerized; processor model not exposed.
+- 5 logical CPU resources reported by the container runtime.
+- NumPy 2.3.5; SciPy 1.17.0; 1 BLAS thread; median of five repeats.
+- All compared trends passed numerical parity checks to the declared tolerance.
+- End-to-end times include setup; these times may vary even within one host.
 
-## Complete fitted trends: d=2, mu=0, M=64
+## Full fitted curves (d=2, mu=0, M=64)
 
-| Method | n=100 (ms) | n=180 (ms) |
-|---|---:|---:|
-| Dense, fresh D and Q per lambda | 9.454 | 35.130 |
-| Dense, Q cached | 7.989 | 19.133 |
-| Spectral, SVD prepared once | 3.148 | 8.662 |
-| Direct banded solve | **2.301** | **3.657** |
+| Algorithm | n=100 (ms) | n=180 (ms) |
+| --- | ---: | ---: |
+| Naive fresh dense solve | 9.887 | 34.121 |
+| Cached-Q dense solve | 5.469 | 19.046 |
+| Reused spectral SVD | 3.375 | 7.231 |
+| Direct banded solve | **2.386** | **2.908** |
 
-In these exploratory cases, spectral reuse is about 3.00× (n=100)
-and 4.06× (n=180) faster than the naive dense method **including
-setup**, but the banded solver is faster than spectral by about 1.37×
-and 2.37×, respectively. These ratios are specific to the stated
-workloads, library versions, and temporary container.
+The spectral method was about 2.93× faster than the naive fresh dense
+approach at n=100 and 4.72× at n=180, **including SVD preparation**.
+The directly banded method was even faster than spectral by
+approximately 1.41× and 2.49× respectively.
 
-For **one fit** at n=40,d=2, naive dense setup + fitting took
-0.0501 ms and spectral setup + fitting 0.528 ms: here spectral
-preprocessing was substantially more expensive.
+**One fit** at n=100, d=2 showed the opposite preference:
+fresh dense ~0.126 ms, spectral ~1.51 ms, because a full SVD
+was computed for a single requested value of lambda.
 
-## EDF/trace sweep (including setup)
+## EDF/trace evaluations (setup plus M evaluations)
 
-| n | M | Dense fresh (ms) | Cached dense (ms) | Spectral trace (ms) | Banded trace (ms) |
-|---:|---:|---:|---:|---:|---:|
-| 40 | 8 | 0.538 | 0.348 | 0.356 | 0.602 |
-| 100 | 8 | 2.654 | 2.519 | 1.484 | 1.863 |
-| 100 | 32 | 11.270 | 8.817 | **1.499** | 6.137 |
-| 180 | 32 | 47.091 | 38.097 | **5.230** | 16.832 |
+| n | M | Fresh dense trace (ms) | Cached dense trace (ms) | Spectral trace (ms) | Banded trace (ms) |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 40 | 8 | 0.485 | 0.418 | 0.329 | 0.511 |
+| 100 | 8 | 3.669 | 2.372 | 1.958 | **1.754** |
+| 100 | 32 | 11.137 | 10.335 | **1.785** | 8.274 |
+| 180 | 32 | 57.000 | 44.777 | **5.582** | 18.132 |
 
-A trace-only spectral computation is distinct from producing all
-the fitted trends. It exploits
-`trace(H_lambda)=d+sum_{j=1}^{n-d}1/(1+lambda*delta_j)`
-after an expensive one-off factorization.
+These trace numbers refer to computing tr(H), **not** to fitting
+a complete trend M times. The spectral method uses a sum over
+eigenvalues after the initial factorization.
 
-## Publication-quality protocol
+## Remaining verification before journal inclusion
 
-1. Install the actual source revision with `python -m pip install -e .`.
-2. Run `python paper/benchmarks/run_all.py --preset full --repeats 7`.
-3. Record source commit, CPU model, BLAS implementation, number of
-   threads, Python/NumPy/SciPy versions, and raw outputs under
-   `paper/benchmarks/results/`.
-4. Compare both end-to-end and post-setup times, and disclose
-   whether a specialized banded solution wins.
-5. Repeat on a second workstation if making a general efficiency claim.
-6. Only then move exact numerical findings into the main manuscript.
+Run `python paper/benchmarks/run_all.py --preset full --repeats 7`
+from an installed **exact** source revision; keep the generated
+`paper/benchmarks/results/` CSVs and the environment manifest.
+Record the CPU model, BLAS vendor/thread count, source commit and
+runtime variation. Independently verify the numerical tolerances.
 
-The manuscript section contains the experimental design and conditional
-figures; it does not silently promote these exploratory numbers to
-author-verified published measurements.
+Avoid a claim that spectral is always faster than structured banded
+solvers. GPU execution, electricity use, and actual monetary cost have
+**not been measured**.
