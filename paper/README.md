@@ -87,6 +87,24 @@ builder for figure generation and the LaTeX action for compilation in an
 isolated TeX environment; it does not run large benchmarks on pushes.
 The manual benchmark workflow produces downloadable raw timing artifacts.
 
+## Recover from an interrupted BibTeX build
+
+If all figures and timing benchmarks have already been generated but
+`latexmk` stops at a bibliography error, **do not rerun `--all`**.
+After applying the fix, keep the current ignored experiment outputs and
+compile only the manuscript:
+
+```powershell
+git pull origin main
+python paper/build.py --pdf
+```
+
+This reuses `paper/figures/*.pdf`, the existing LaTeX tables and the
+machine-specific benchmark results under `paper/benchmarks/results/`.
+The builder checks `paper/bibliografia.bib` for duplicate citation keys
+before starting any expensive work. BibTeX remains responsible for full
+bibliography syntax validation.
+
 ## Scientific boundaries
 
 The long-known PLS estimator, arbitrary finite-difference order and polynomial
