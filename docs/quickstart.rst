@@ -26,6 +26,9 @@ Open ``docs/_build/html/index.html`` in a browser.
 Your first trend
 ----------------
 
+For the precise distinction between grid CV, analytical derivatives and
+smoothness inversion, consult :doc:`smoothness_optimization`.
+
 Use the order-2 finite-difference penalty and choose its smoothing parameter
 using generalized cross-validation (GCV). This is **in-sample** smoothing
 parameter selection, not an evaluation of future forecast accuracy.

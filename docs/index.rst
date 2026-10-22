@@ -49,12 +49,12 @@ trendestimation
            <p>Estimate smooth trends using finite differences of any admissible integer order, with fixed or observed-difference reference means.</p>
            <span class="te-feature-link">Read the mathematics <span aria-hidden="true">&rarr;</span></span>
          </a>
-         <a class="te-feature" href="quickstart.html">
+         <a class="te-feature" href="smoothness_optimization.html">
            <span class="te-feature-number">02 / SELECTION</span>
            <span class="te-feature-icon" aria-hidden="true">&#955;</span>
            <h3>Choose the smoothing</h3>
            <p>Compare CV, GCV, AICc, BIC, and Gaussian marginal MLE; alternatively specify a target smoothness.</p>
-           <span class="te-feature-link">See the workflow <span aria-hidden="true">&rarr;</span></span>
+           <span class="te-feature-link">Read optimization guide <span aria-hidden="true">&rarr;</span></span>
          </a>
          <a class="te-feature" href="api.html">
            <span class="te-feature-number">03 / COMPUTATION</span>
@@ -104,6 +104,7 @@ trendestimation
    notebooks
    gallery
    mathematics
+   smoothness_optimization
    benchmarks
    references
    api
