@@ -840,3 +840,80 @@ html { scroll-behavior: smooth; }
     transition: none !important;
   }
 }
+
+
+/* Left sidebar: quiet editorial motion, native Furo navigation intact.
+   Only its interface changes; Python syntax highlighting is untouched. */
+.sidebar-tree li > .reference {
+  position: relative;
+  border-radius: var(--te-radius);
+  transition:
+    background-color .64s ease,
+    color .64s ease,
+    transform .64s cubic-bezier(.22, 1, .36, 1);
+}
+.sidebar-tree li > .reference:hover {
+  background-color: var(--te-accent-subtle);
+  transform: translateX(2px);
+}
+.sidebar-tree li > .reference:focus-visible,
+.sidebar-tree li > label:focus-visible {
+  outline: 2px solid var(--te-focus);
+  outline-offset: -2px;
+}
+.sidebar-tree li.current > .reference {
+  background-color: var(--te-accent-subtle);
+  color: var(--te-accent);
+}
+.sidebar-tree li.current > .reference::before {
+  content: "";
+  position: absolute;
+  inset-block: 22%;
+  inset-inline-start: 0;
+  width: 2px;
+  background-color: var(--te-accent);
+  transform-origin: center;
+  animation: te-nav-indicator .8s ease-out both;
+}
+@keyframes te-nav-indicator {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+.sidebar-tree li.has-children > label {
+  border-radius: var(--te-radius);
+  transition: background-color .64s ease, color .64s ease;
+}
+.sidebar-tree li.has-children > label:hover,
+.sidebar-tree li.has-children > label:focus-visible {
+  background-color: var(--te-accent-subtle);
+}
+.sidebar-tree li.has-children > label .icon svg {
+  transition: transform .68s cubic-bezier(.22, 1, .36, 1);
+  transform-origin: center;
+}
+/* Furo's unchecked input normally hides the child UL immediately.
+   Temporarily keep it in flow while the JS close animation runs. */
+.sidebar-tree li.te-nav-animating > ul {
+  display: block !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-scroll {
+    scroll-behavior: smooth;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-tree li > .reference,
+  .sidebar-tree li.has-children > label,
+  .sidebar-tree li.has-children > label .icon svg {
+    transition: none !important;
+  }
+  .sidebar-tree li.current > .reference::before {
+    animation: none !important;
+  }
+  .sidebar-tree li > .reference:hover {
+    transform: none;
+  }
+  .sidebar-scroll {
+    scroll-behavior: auto;
+  }
+}
