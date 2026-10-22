@@ -8,6 +8,7 @@ At the repository root:
 
 ```bash
 python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
 python -m pytest tests/test_notebook_gallery.py -q
 python scripts/run_notebooks.py --list
 python scripts/run_notebooks.py --fast --in-place --fail-fast
@@ -107,3 +108,39 @@ python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoot
 
 The forecast chapter only estimates variance components from historical
 observations, without incorporating the held-out future values.
+
+## AwesomeFigures SVG notebook plots
+
+Every executable notebook configures the GitHub-only
+[AwesomeFigures](https://github.com/awesomefigures/awesomefigures) package
+as a Matplotlib style (``elegante``, Okabe–Ito categorical palette, DejaVu
+Sans, no LaTeX, no deliberate artist rasterization). This affects how
+figures look, **not** the trend estimation algorithms or statistical scores.
+
+Its full Git commit is pinned in ``docs/requirements-figures.txt``. Install
+it separately from ``.[docs,plot]``: keeping the VCS URL out of published
+``pyproject.toml`` metadata avoids a PyPI direct-reference dependency and
+keeps core numerical installations free of plotting requirements.
+
+The first code cell in each notebook calls
+``set_matplotlib_formats("svg")`` from ``matplotlib_inline.backend_inline``.
+When executed inside Jupyter, the produced ``image/svg+xml`` output is
+stored in the notebook and embedded as SVG in Sphinx, without storing PNG
+screenshots. The automatic PR checks execute only one small notebook.
+Full notebook execution and GitHub Pages deployment remain manual.
+
+To render the complete site with new SVG plots, run from the repository root:
+
+```bash
+python -m pip install -e '.[docs,plot]'
+python -m pip install -r docs/requirements-figures.txt
+python scripts/run_notebooks.py --fast --in-place --fail-fast
+TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
+```
+
+Chapter 10 additionally exports standalone vector files when
+``SAVE_SVG=True`` (default: False); the figure filenames end in ``.svg``.
+The SVG container is scalable, but ``imshow``/image artists can embed
+raster pixel data inside an SVG. Matplotlib text remains editable where
+supported (``svg.fonttype='none'``). Generated figures are not committed
+or deployed automatically.
