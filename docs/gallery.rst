@@ -26,14 +26,26 @@ Notebook chapters
    notebooks/09-gaussian-mle-and-guerrero-smoothness
    notebooks/10-forecast-pipeline
 
-Run the entire gallery or only the forecast pipeline
-----------------------------------------------------
+Gaussian variance-component examples
+------------------------------------
+
+Gaussian marginal MLE and ``estimate_variance_components`` are illustrated
+in chapters 3, 4, 6, 8 and especially 9, alongside the classical criteria
+and Guerrero's difference-reference mean. Chapter 10 estimates these
+variances from historical data only, separately from held-out forecast
+metrics. Latent-difference variance is not variance of the fitted trend,
+residual mean squared error, or forecast-error uncertainty.
+
+Run the entire gallery or selected examples
+-------------------------------------------
 
 From the repository root::
 
    python -m pip install -e ".[docs,plot]"
    python scripts/run_notebooks.py --list
    python scripts/run_notebooks.py --fast --fail-fast
+   python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoothness --fail-fast
+   python scripts/run_notebooks.py --fast --only 03-classical-criteria 04-nonzero-mean --fail-fast
    python scripts/run_notebooks.py --fast --only 10-forecast-pipeline --fail-fast
 
 The batch runner writes executed copies, ``timings.csv`` and
