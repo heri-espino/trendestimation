@@ -10,10 +10,9 @@ classical smoothing-parameter selection and the role of differencing order.
 
 .. note::
 
-   The HTML documentation displays notebook source without executing it
-   during the Sphinx build. This keeps builds deterministic and lightweight.
-   Download the .ipynb files from the repository and run them locally
-   to generate figures and numerical outputs.
+   The site build runs these small, deterministic notebooks and embeds
+   their figures and outputs. Download the .ipynb files from the repository
+   to explore the examples interactively in Jupyter.
 
 .. toctree::
    :maxdepth: 1
