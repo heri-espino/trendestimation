@@ -13,6 +13,8 @@
   --te-focus: color-mix(in srgb, var(--te-brand) 75%, white);
   --te-surface: #fff;
   --te-code-text: #202936;
+  --te-code-on-dark: color-mix(in srgb, var(--te-brand) 28%, white);
+  --te-code-string-on-dark: color-mix(in srgb, var(--te-brand) 15%, white);
   --te-code-keyword: var(--te-brand);
   --te-code-string: color-mix(in srgb, var(--te-brand) 75%, #465466);
   --te-code-number: color-mix(in srgb, var(--te-brand) 60%, #58616c);
@@ -587,9 +589,9 @@ body:has(.te-landing) .content > article > h1 {
   font-size: inherit;
 }
 
-.te-code-keyword { color: var(--te-accent); }
+.te-code-keyword { color: var(--te-code-on-dark); }
 .te-code-number { color: #cad3e1; }
-.te-code-string { color: #c4d7ea; }
+.te-code-string { color: var(--te-code-string-on-dark); }
 
 .te-footer-panel {
   display: flex;
@@ -641,7 +643,9 @@ body:has(.te-landing) .content > article > h1 {
   border-color: var(--te-accent-border);
 }
 [data-theme="dark"] .te-demo {
-  background: linear-gradient(145deg, #182737, #202f3e);
+  background: linear-gradient(145deg,
+    color-mix(in srgb, var(--te-brand) 15%, #141d28),
+    color-mix(in srgb, var(--te-brand) 22%, #141d28));
   border-color: #39495c;
 }
 [data-theme="dark"] .te-button-primary {
