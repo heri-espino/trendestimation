@@ -36,8 +36,6 @@ except ImportError as exc:
 PAPER = Path(__file__).resolve().parents[1]
 FIGURES = PAPER / "figures"
 BENCHMARKS = PAPER / "benchmarks" / "results"
-# The official SMCCA class has 2.5 cm margins on US letter paper:
-# a width of ~6.4 inches avoids oversize artwork and unreadable legends.
 # Never fix physical width independently of the SMCCA class: af.latex_style
 # probes the real manuscript and derives textwidth/normal font size.
 COLORS = af.color_palette("okabe-ito", as_hex=True)
