@@ -4,7 +4,8 @@ Quickstart
 Installation
 ------------
 
-Clone the repository, then install from its root directory.
+This alpha candidate is not yet published on PyPI. Clone the standalone
+repository, then install from its root directory.
 
 .. code-block:: console
 
@@ -30,6 +31,9 @@ Your first smoothed trend
    print("Penalty:", choice.lambda_)
    print("Normalized smoothness:", choice.smoothness)
    plot_trend(y, fit)
+
+For a fitted mean of ``mu='data'``, classical selection scores are not
+claimed to represent exact leave-one-out refits of that mean.
 
 The full :doc:`gallery` shows multiple values of `d`,
 different selection criteria, fixed/nonzero means, diagnostics,

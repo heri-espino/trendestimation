@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the repository and the underlying published statistical methodology."
+type: software
+title: "trendestimation: Spectral Finite-Difference Penalized Least-Squares Trend Estimation"
+authors:
+  - given-names: Heriberto
+    family-names: Espino-Montelongo
+    affiliation: "Universidad de las Américas Puebla (UDLAP)"
+    orcid: "https://orcid.org/0009-0009-1230-2931"
+repository-code: "https://github.com/trendestimation/trendestimation"
+url: "https://github.com/trendestimation/trendestimation"
+version: "0.1.0a0"
+license: MIT
+keywords:
+  - time series
+  - penalized least squares
+  - trend estimation
+  - smoothing

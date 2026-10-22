@@ -4,7 +4,8 @@ from __future__ import annotations
 import os
 
 project = "trendestimation"
-author = "Heriberto Espino Montelongo"
+author = "Heriberto Espino-Montelongo"
+copyright = "2026, Heriberto Espino-Montelongo"
 release = "0.1.0a0"
 
 extensions = [

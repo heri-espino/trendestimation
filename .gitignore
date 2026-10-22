@@ -1,10 +1,43 @@
-# Generated notebook outputs, site builds and local environments
-build/
-docs/_build/
-.ipynb_checkpoints/
+# Python caches and tests
 __pycache__/
+*.py[cod]
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Virtual environments
 .venv/
-.env
+venv/
+env/
+.conda/
+
+# Distributions
+build/
+dist/
 *.egg-info/
+*.egg/
+
+# Documentation
+/docs/_build/
+
+# Editors and operating systems
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Jupyter notebook working files
+.ipynb_checkpoints/
