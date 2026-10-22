@@ -219,7 +219,8 @@ def run(argv: list[str] | None = None) -> int:
 
     # The default build is deterministic figures + PDF, NOT a long benchmark.
     explicit_steps = any((
-        args.figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks,
+        args.tables, args.pdf, args.all,
     ))
     figures = args.figures or args.all or not explicit_steps
     redraw = args.render_figures
