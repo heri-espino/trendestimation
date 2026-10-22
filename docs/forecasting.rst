@@ -1,7 +1,7 @@
 Forecast a smoothed trend
 =========================
 
-`trendestimation` can extrapolate a fitted historical PLS trend into
+``trendestimation`` can extrapolate a fitted historical PLS trend into
 future equally spaced time steps. **This is an illustrative baseline**, not a
 forecasting model trained to minimize future prediction errors, and it has
 no calibrated forecast intervals. The PLS trend is fitted using historical
@@ -38,9 +38,9 @@ Fixed smoothness: 0.8
    ax = plot_forecast(result)
    plt.show()
 
-If `smoothness` and `lambda_` are both omitted, the library defaults to
-`smoothness=0.8`. Providing both raises an error. Setting
-`smoothness=1` uses the exact infinite-penalty limit of the trend estimator.
+If ``smoothness`` and ``lambda_`` are both omitted, the library defaults to
+``smoothness=0.8``. Providing both raises an error. Setting
+``smoothness=1`` uses the exact infinite-penalty limit of the trend estimator.
 
 Smoothness is the normalized index
 
@@ -49,19 +49,19 @@ Smoothness is the normalized index
    s(\lambda)=\frac{n-\operatorname{tr}\bigl((I+\lambda D_d^\top D_d)^{-1}\bigr)}
                   {n-d},
 
-where `d` is the forward-difference order and `n` is the length of
+where ``d`` is the forward-difference order and ``n`` is the length of
 the observed history. **80% smoothness does not mean 80% forecast
 accuracy or an 80% confidence interval.**
 
 Extrapolation rules
 -------------------
 
-The fitted PLS trend is `tau`. Let `b` be the least-squares slope
-calculated over its last `window` values. For future step `h >= 1`:
+The fitted PLS trend is ``tau``. Let ``b`` be the least-squares slope
+calculated over its last ``window`` values. For future step ``h >= 1``:
 
-- `local_linear`: extrapolate `tau[-1] + h*b`.
-- `last_value`: extrapolate the last historical fitted trend value.
-- `damped_linear`: extrapolate `tau[-1] + b*sum(damping**k, k=1..h)`.
+- ``local_linear``: extrapolate ``tau[-1] + h*b``.
+- ``last_value``: extrapolate the last historical fitted trend value.
+- ``damped_linear``: extrapolate ``tau[-1] + b*sum(damping**k, k=1..h)``.
 
 The first future value connects directly to the last smoothed trend,
 so local regression intercepts do not create an artificial jump at the
@@ -106,15 +106,15 @@ Run from the repository root (after installing the plotting extra):
 
 The script uses seeded, **synthetic** history, then produces:
 
-1. `01-observations-trend-and-forecast.png`
-2. `02-smoothness-comparison.png`
-3. `03-extrapolation-methods.png`
-4. `04-smoothness-path.png`
-5. `05-residual-diagnostics.png`
-6. `06-six-panel-dashboard.png`
+1. ``01-observations-trend-and-forecast.png``
+2. ``02-smoothness-comparison.png``
+3. ``03-extrapolation-methods.png``
+4. ``04-smoothness-path.png``
+5. ``05-residual-diagnostics.png``
+6. ``06-six-panel-dashboard.png``
 
 No expensive automatic figure-rendering workflow is installed.
-You can use an explicit matplotlib `fig.savefig("my-figure.png", dpi=180)`
+You can use an explicit matplotlib ``fig.savefig("my-figure.png", dpi=180)``
 on any returned figure. See :doc:`api` for complete signatures.
 
 Scientific scope
