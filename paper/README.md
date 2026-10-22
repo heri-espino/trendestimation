@@ -91,6 +91,31 @@ You do not need to rerun `--all` merely to switch journal format.
 If you inspect an old PDF after a successful build, ensure you open
 `paper/main.pdf` (not an old downloaded copy of the SMCCA manuscript).
 
+## Springer float and generated-table compatibility
+
+The old SMCCA manuscript used forced `[H]` placement for tables and figures
+and embedded a generated `tabular` source inside `\\resizebox{...}{...}{\\input{...}}`.
+Both patterns can fail with the official Springer Nature `sn-jnl.cls`
+(`Extra }, or forgotten \\endgroup` at `\\end{table}`).
+
+The Springer version uses standard `[tbp]` placement and inputs
+`full_fit_table.tex` and `trace_table.tex` directly. Their measured
+numerical values, generated CSVs, and caption text are unchanged.
+A regression test checks both the LaTeX source and (when available)
+a minimal real `pdflatex` compile against the official class.
+
+To resume after updating `main`:
+
+```powershell
+git switch main
+git pull --ff-only origin main
+python paper/build.py --pdf --package
+```
+
+The `--pdf` step reuses existing vector figures, benchmark tables,
+and measured data. Undefined-citation warnings on the *first* LaTeX pass
+are expected; `latexmk` runs BibTeX and the subsequent LaTeX passes.
+
 ## Flat submission source ZIP
 
 The journal explicitly states: **do not upload LaTeX sources in subfolders**.
