@@ -69,6 +69,21 @@ boundary. These are assumptions, not competing methods with
 established accuracy rankings. If the historical end point changes
 when more data arrive, the extrapolation may change.
 
+Full executable notebook pipeline
+---------------------------------
+
+:doc:`notebooks/10-forecast-pipeline` combines the entire workflow:
+CSV or seeded synthetic observations, chronological training/test split,
+fixed 0.8 smoothness, trend extrapolation, all six visualizations, and
+out-of-sample MAE/RMSE with a naive baseline.
+
+.. code-block:: console
+
+   python scripts/run_notebooks.py --fast --only 10-forecast-pipeline --fail-fast
+
+The held-out observations are not used to fit the trend. The single
+holdout is illustrative, not evidence of robust forecasting performance.
+
 A gallery of six plots
 ----------------------
 

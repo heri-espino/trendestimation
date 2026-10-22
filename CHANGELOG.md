@@ -6,6 +6,9 @@ Candidate versions in the source tree are not necessarily published releases.
 ## [Unreleased]
 
 ### Added
+- Tenth executable notebook: complete 0.8 smoothness forecast and plots
+  pipeline; reproducible synthetic/local-CSV input, chronological holdout,
+  six visualization functions, and optional PNG export.
 - Transparent fixed-smoothness trend-extrapolation baselines (default normalized 0.8).
 - Six forecast/diagnostic plots, manual PNG example gallery, and supporting tests;
   these do not imply validated forecasting performance.
