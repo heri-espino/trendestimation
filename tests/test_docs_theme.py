@@ -29,7 +29,7 @@ def test_documentation_accents_share_one_color_family():
     for selector in (
         "--color-brand-content", "--color-brand-primary", ".content a:visited",
         ".sidebar-tree a:visited", ".cell_input", ".nbinput",
-        ".highlight span[class]", ".sd-btn-primary",
+        ".sd-btn-primary", ".te-reveal",
         ".te-chart-panel", ".te-demo", "prefers-reduced-motion",
     ):
         assert selector in stylesheet
@@ -45,3 +45,35 @@ def test_favicon_matches_brand():
     favicon = (DOCS / "_static" / "favicon.svg").read_text(encoding="utf-8")
     assert 'fill="#003A70"' in favicon
     assert "<linearGradient" not in favicon
+    assert 'rx="0"' in favicon
+
+
+
+def test_native_syntax_highlighting_is_not_tinted_as_branding():
+    """Pygments owns token colors; navy only decorates the code border."""
+    stylesheet = CSS.read_text(encoding="utf-8")
+    assert ".highlight span[class]" not in stylesheet
+    assert ".highlight span:is(" not in stylesheet
+    assert "--te-code-keyword:" not in stylesheet
+    assert "--te-code-string:" not in stylesheet
+    assert ".te-code-keyword { color: #c792ea; }" in stylesheet
+    assert ".te-code-string { color: #a8d8a0; }" in stylesheet
+    assert ".te-code-number { color: #f7bc7d; }" in stylesheet
+
+
+def test_square_corners_and_scroll_reveal_are_progressive():
+    stylesheet = CSS.read_text(encoding="utf-8")
+    conf = (DOCS / "conf.py").read_text(encoding="utf-8")
+    script = (DOCS / "_static" / "js" / "reveal.js").read_text(encoding="utf-8")
+    assert "--te-radius: 0px;" in stylesheet
+    assert "border-radius: var(--te-radius) !important" in stylesheet
+    assert "prefers-reduced-motion: reduce" in stylesheet
+    assert "IntersectionObserver" in script
+    assert 'root.dataset.teRevealReady = "true"' in script
+    assert 'html_js_files = ["js/reveal.js"]' in conf
+
+
+def test_site_title_is_only_the_project_name():
+    conf = (DOCS / "conf.py").read_text(encoding="utf-8")
+    assert 'html_title = "trendestimation"' in conf
+    assert 'html_short_title = "trendestimation"' in conf
