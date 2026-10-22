@@ -27,7 +27,7 @@ Notebook chapters
    notebooks/10-forecast-pipeline
 
 Run the entire gallery or only the forecast pipeline
--------------------------------------
+----------------------------------------------------
 
 From the repository root::
 
