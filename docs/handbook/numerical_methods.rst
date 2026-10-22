@@ -58,7 +58,7 @@ under ``method="auto"`` retains grid-only semantics.
    )
 
 Root-finding methods for smoothness inversion
---------------------------------------------
+---------------------------------------------
 
 For a general positive spectrum, invert smoothness in
 :math:`x=\log\lambda`, using
