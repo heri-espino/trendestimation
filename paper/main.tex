@@ -1,35 +1,42 @@
-\documentclass[english]{smcca}
+% Computational Statistics (Springer Nature) — December 2024 official
+% sn-jnl class. Retained historical SMCCA entrypoint: legacy_smcca_main.tex.
+% Do not replace this with an unofficial journal class or custom fonts.
+\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{booktabs}
-% Figures are vector PDF files generated with AwesomeFigures.
-% SMCCA/Scipedia does not support inline TikZ plots.
+\usepackage{float}
 \usepackage{url}
-
-\title{\texttt{trendestimation}: Spectral Penalized Least-Squares Trends, General Difference Orders, and Likelihood Profiling}
-\author[1]{Heriberto Espino-Montelongo}
-\author[1]{Daniela Cort\'es-Toto}
-\affil[1]{Universidad de las Am\'ericas Puebla (UDLAP), San Andr\'es Cholula, Puebla, Mexico.}
-\date{}
-\setcounter{page}{1}
+% Original experimental figures are external, publication-sized vector PDFs.
+% Springer Nature discourages additional formatting beyond the template.
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\tr}{\operatorname{tr}}
 \newcommand{\diag}{\operatorname{diag}}
 
 \begin{document}
+
+\title[Penalized least-squares trend estimation]{Computational aspects of penalized least-squares trend estimation with controlled smoothness}
+
+% Correspondence and affiliation must be verified by both coauthors.
+% TODO before submission: add verified \email{...} for corresponding author.
+\author*[1]{\fnm{Heriberto} \sur{Espino-Montelongo}}
+\author[1]{\fnm{Daniela} \sur{Cort\'es-Toto}}
+\affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
+  \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
+
+\abstract{Penalized least-squares trend estimators provide an interpretable way to separate persistent variation from short-term fluctuations. Their practical use nevertheless requires choices about difference order, reference differences, smoothing intensity, and numerical implementation. We examine these choices through a reproducible computational framework for finite-difference penalties. We derive the polynomial null space and the spectral representation of the smoother, and normalize the trace-based smoothness index so that its range is independent of the difference order. We also study the conditional profile estimator of a nonzero reference-difference mean, distinguishing this derivation from procedures available in the software. Controlled experiments compare naive and cached dense linear systems, a reusable singular-value decomposition, and a banded solver. We separately investigate repeated full-trend reconstruction and scalar effective-degrees-of-freedom evaluations, including numerical agreement and preprocessing time. A nonlinear synthetic example illustrates the behavior of classical smoothing criteria, while monthly atmospheric carbon-dioxide observations demonstrate controlled smoothness at different penalty orders. The results highlight workload-dependent computational trade-offs rather than the universal superiority of any individual algorithm. The accompanying Python implementation and executable experiments provide a transparent basis for further numerical and statistical investigation.}
+
+\keywords{Whittaker--Henderson smoothing, spectral decomposition, smoothing parameter selection, time-series trend, reproducible computation}
+
 \maketitle
-\begin{abstract}
-We present \texttt{trendestimation}, a reproducible Python implementation of finite-difference penalized least-squares trend estimation. We derive the polynomial nullspace, spectral attenuation, and a normalized smoothness index, and study conditional profiling of the reference difference mean. Numerical experiments compare dense, spectral, and banded solvers for complete fits and repeated smoothness evaluations, explicitly accounting for preprocessing cost and numerical agreement. Synthetic experiments and historical Mauna Loa carbon-dioxide observations illustrate smoothing choices and high-order conditioning. The contribution is a tested computational synthesis of established methods, not a new penalized least-squares estimator. All figures are exported as publication-ready vector PDFs using \texttt{awesomefigures}.
-\end{abstract}
-\vspace{1em}
-\noindent\textbf{Keywords:} penalized least squares; trend estimation; finite differences; spectral decomposition; likelihood profiling; scientific Python.
-\vspace{10pt}
 
 \section{Introduction}
 An observed time series may combine low-frequency behavior with temporary movements and measurement noise. Estimating its trend is a descriptive task: the resulting curve depends on how fidelity to the observations is traded against smoothness. Whittaker's graduation framework and subsequent finite-difference penalized least-squares (PLS) estimators formalize this compromise \cite{whittaker1923graduation,guerrero2007penalized}. The Hodrick--Prescott filter is an important second-difference special case, but the statistical problem admits other penalty orders and nonzero reference values for the differences \cite{cortes2017smoothness}.
 
 The tuning parameter must also be chosen. Cort\'es-Toto, Guerrero, and Reyes \cite{cortes2017smoothness} investigate attained smoothness when choosing the penalty with cross-validation (CV), generalized cross-validation (GCV), corrected Akaike information criterion (AICc), or Bayesian information criterion (BIC). Their simulations vary trend shape, series length, variability, and seasonality. Efficient Whittaker--Henderson computation has an extensive history, including methods exploiting banded factorization and structure to reduce numerical expense \cite{weinert2007wh}; consequently, diagonalization is not presented here as a newly discovered mathematical algorithm.
 
-Within the \emph{Bolet\'in de la Sociedad Mexicana de Computaci\'on Cient\'ifica y sus Aplicaciones}, Balam et al. \cite{balam2025overview} compare normal equations, QR, and singular-value decomposition (SVD) in least-squares computation and discuss conditioning. Azofeifa and Moreles \cite{azofeifa2025hybrid} present a different numerical model, but similarly distinguish the formulation, solver, numerical comparisons, and limitations. We follow this expository pattern while studying a separate statistical problem.
+In the scientific-computing literature, Balam et al. \cite{balam2025overview} compare normal equations, QR, and singular-value decomposition (SVD) in least-squares computation and discuss conditioning. Azofeifa and Moreles \cite{azofeifa2025hybrid} present a different numerical model, but similarly distinguish the formulation, solver, numerical comparisons, and limitations. We similarly distinguish statistical formulation, numerical algorithms, empirical comparisons, and their limitations.
 
 Our objective is to provide a small, auditable Python package, \texttt{trendestimation}, that implements the \emph{published} PLS family and exposes examples as executable notebooks within Sphinx documentation. Specifically, we describe the affine solution for general order $d$ and reference mean $\mu$, its spectral implementation, the criteria available in the public API, and numerical experiments that report computational time, solver agreement, and precomputation costs alongside reproducible illustrations. Experimental forecast-horizon cross-validation and dynamic tracking of minima from other research projects are not included. The distinction between an in-sample smoother and an ex ante forecast is maintained throughout.
 
@@ -120,6 +127,19 @@ An independent check compares the SVD implementation with the direct normal equa
 \section{Conclusions}
 We have presented an auditable implementation of established penalized least-squares smoothing, together with additional derivations of the difference nullspace, the corrected smoothness index, and a Gaussian mean-difference profile estimator. The latter has numerical checks but is not yet a released joint-MLE API. Our Mauna Loa observations give a real, explicitly descriptive application of high-order differencing. Spectral decomposition makes repeated penalty evaluation transparent and inexpensive after preprocessing; specialized banded solvers remain important competitors for isolated fits and large samples. The source-inspired experiment shows how the same observations can lead to distinct smoothness choices under established criteria, while deterministic checks support correctness in a bounded set of cases. The separate numerical comparison places naive dense normal equations, cached dense solves, reusable SVD, and an independently assembled banded solver under matched workloads. This distinction is important: spectral reuse is particularly attractive for repeated trace-based scores, but is not automatically optimal for reconstructing full trends. Broader performance conclusions require reported machine characteristics, workload-specific runtimes, and stability diagnostics. Neither high-order differencing nor likelihood-based smoothing is claimed as a newly discovered concept. No GPU acceleration has been verified in the released CPU implementation.
 
-\bibliographystyle{abbrv}
+\section*{Declarations}
+% These are editorial placeholders, not statements verified on behalf of the authors.
+\noindent\textbf{Funding.} To be confirmed by the authors before submission.
+
+\noindent\textbf{Competing interests.} To be confirmed by the authors before submission.
+
+\noindent\textbf{Ethics approval and consent.} Not applicable to the presented numerical algorithms and historical aggregate time-series examples; authors to verify.
+
+\noindent\textbf{Data availability.} The simulated data can be reproduced from the supplied scripts and seeds. The observed monthly carbon-dioxide series is derived from \texttt{statsmodels.datasets.co2}; data access and provenance are described in the manuscript.
+
+\noindent\textbf{Code availability.} The implementation and paper-specific simulation and benchmark scripts are maintained at \url{https://github.com/heri-espino/trendestimation}. A permanently archived release identifier should be added before submission.
+
+\noindent\textbf{Author contributions.} To be confirmed and approved by both authors before submission.
+
 \bibliography{bibliografia}
 \end{document}
