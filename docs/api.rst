@@ -18,14 +18,22 @@ Trend estimation
 .. autoclass:: trendestimation.FitResult
    :members:
 
-Classical selection criteria
-----------------------------
+Selection criteria
+------------------
 
 .. autofunction:: trendestimation.select_lambda
 
 .. autofunction:: trendestimation.score_lambda
 
 .. autoclass:: trendestimation.SelectionResult
+   :members:
+
+Gaussian variance components
+----------------------------
+
+.. autofunction:: trendestimation.estimate_variance_components
+
+.. autoclass:: trendestimation.VarianceComponents
    :members:
 
 Reproducible synthetic data

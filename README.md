@@ -24,6 +24,10 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
   Accepts a fixed numeric mean or observed-difference plug-in mu="data".
   This is a marginal statistical likelihood, not minimization of the PLS
   objective over lambda; it relies on Gaussian variance-component assumptions.
+- Gaussian variance-component estimates at a selected positive penalty:
+  observation-noise and latent *d*-th-difference variance (plus standard
+  deviations). Their model ratio equals lambda. These are profile-likelihood
+  estimates, not raw residual MSE or the variance of the full latent trend.
 - Reproducible synthetic linear/nonlinear examples and optional Matplotlib plots.
 - Fixed-smoothness conditional historical-trend extrapolation with three transparent
   rules and six blue-and-white visualization helpers (not validated forecasts).
@@ -92,6 +96,14 @@ print("Original smoothness:", original_smoothness)
 ml = select_lambda(solver, y, criterion="mle", mu="data")
 ml_fit = solver.fit(y, lambda_=ml.lambda_, mu="data")
 print("MLE lambda:", ml.lambda_, "plug-in mu:", ml_fit.mu)
+
+# Both Gaussian variance components at the selected penalty:
+from trendestimation import estimate_variance_components
+variances = estimate_variance_components(
+    solver, y, lambda_=ml.lambda_, mu="data",
+)
+print("Noise variance:", variances.observation_variance)
+print("Latent difference variance:", variances.difference_variance)
 ```
 
 ## Fixed-smoothness trend extrapolation and plots

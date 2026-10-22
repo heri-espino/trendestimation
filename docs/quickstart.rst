@@ -68,6 +68,15 @@ Guerrero's original index uses denominator :math:`n` rather than
    print("Observed difference mean:", fit_ml.mu)
    print("Original smoothness:", fit_ml.guerrero_smoothness)
 
+   from trendestimation import estimate_variance_components
+   variances = estimate_variance_components(
+       smoother, y, lambda_=mle.lambda_, mu="data",
+   )
+   print("Observation noise variance:", variances.observation_variance)
+   print("Latent difference variance:", variances.difference_variance)
+   print("Noise SD:", variances.observation_sd)
+   print("Difference SD:", variances.difference_sd)
+
 The data-derived reference mu is mean(D_d @ y), i.e., the average of
 the observed order-d differences. MLE uses a Gaussian marginal likelihood
 with observation variance profiled out and the polynomial nullspace

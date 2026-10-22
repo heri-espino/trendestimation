@@ -77,6 +77,36 @@ independent of :math:`\lambda`:
                   \frac{z_j^2}{c_j(\lambda)}\right]
       +\sum_{j=1}^r\log c_j(\lambda).
 
+The two Gaussian variance components underlying this likelihood are
+observation-noise variance :math:`\sigma_{\varepsilon}^2` and the
+variance of the *latent d-th differences* :math:`\sigma_{\eta}^2`.
+In the assumed model,
+
+.. math::
+
+   y=\tau+\varepsilon,\qquad
+   \varepsilon\sim N(0,\sigma_{\varepsilon}^2 I),\qquad
+   D_d\tau-\mu\mathbf 1\sim N(0,\sigma_{\eta}^2 I),
+
+.. math::
+
+   \lambda=\frac{\sigma_{\varepsilon}^2}{\sigma_{\eta}^2},
+   \qquad
+   \widehat{\sigma}_{\varepsilon}^2(\lambda)
+     =\frac{1}{r}\sum_{j=1}^r \frac{z_j^2}{c_j(\lambda)},
+   \qquad
+   \widehat{\sigma}_{\eta}^2(\lambda)
+     =\frac{\widehat{\sigma}_{\varepsilon}^2(\lambda)}{\lambda}.
+
+The public ``estimate_variance_components`` function returns both
+variances and their standard deviations for a chosen positive penalty;
+the exact infinite-penalty limit has zero latent-difference variance.
+These are likelihood-based estimates, **not** the empirical variance
+of the fitted trend and **not** the ordinary residual mean squared
+error. With ``mu="data"``, the reference mean is an empirical plug-in.
+No joint optimization over :math:`\mu`, :math:`\lambda`, and the
+variance components or uncertainty intervals is claimed.
+
 The remaining :math:`d` coordinates form the unpenalized polynomial
 nullspace, treated as nuisance trend coordinates (REML-style
 likelihood). This choice is motivated by the Gaussian marginal
