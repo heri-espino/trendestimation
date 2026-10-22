@@ -127,6 +127,8 @@ As shown in Table~\ref{tab:criteria}, CV and GCV agree in this particular realiz
 \subsection{Algebraic and numerical checks}
 An independent check compares the SVD implementation with the direct normal equations for $n=50$, $\lambda=30$, $d\in\{1,2,3\}$ and $\mu\in\{0,0.15\}$ on a second fixed-seed Gaussian sample. The maximum componentwise absolute difference is $2.01\times10^{-12}$ across these six cases, and the limiting constraint $D_d\widehat\tau_{\infty,\mu}=\mu\mathbf1$ holds to maximum error $4.42\times10^{-12}$. Both values result from the supplied deterministic regression script in IEEE double precision; they verify the tested algebra rather than establish stability for all $n,d,\lambda$. Higher differencing orders can be ill-conditioned, and systematic machine-dependent speed measurements remain a distinct stage of the study.
 
+\input{sections/timing_experiments}
+
 \input{sections/high_order_numerics}
 
 \input{sections/mauna_loa}
