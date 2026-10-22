@@ -155,7 +155,7 @@ def package(output: Path, *, require_pdf: bool = True) -> list[str]:
     add_tex(PAPER / "main.tex")
     for name in SOURCE_FILES[1:]:
         path = PAPER / name
-        add_file(path, name, template_bytes.get(name, path.read_bytes()))
+        add_file(path, name, template_bytes[name] if name in template_bytes else path.read_bytes())
     if require_pdf:
         path = PAPER / "main.pdf"
         add_file(path, path.name, path.read_bytes())
