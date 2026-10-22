@@ -30,7 +30,7 @@ class SmccaTemplateTest(unittest.TestCase):
             ("main.tex", "figures/cortes_toto_synthetic.pdf"),
             ("sections/mauna_loa.tex", "figures/mauna_loa_1990_1999.pdf"),
             ("sections/high_order_numerics.tex", "figures/high_order_numerics.pdf"),
-            ("sections/timing_experiments.tex", "benchmarks/results/full_fit_at_M64.pdf"),
+            ("sections/timing_experiments.tex", "figures/full_fit_at_M64.pdf"),
         ):
             content = (HERE / source).read_text(encoding="utf-8")
             self.assertNotIn(r"\begin{tikzpicture}", content)
@@ -101,8 +101,8 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
 
     def test_benchmark_figures_do_not_invent_data(self):
         self.renderer.main(["--benchmarks-only"])
-        self.assertFalse((self.benchmarks / "full_fit_at_M64.pdf").exists())
-        self.assertFalse((self.benchmarks / "trace_at_M32.pdf").exists())
+        self.assertFalse((self.figures / "full_fit_at_M64.pdf").exists())
+        self.assertFalse((self.figures / "trace_at_M32.pdf").exists())
         self._write(
             "full_fit_at_M64.dat",
             "n M densefresh densecached spectral banded",
@@ -118,8 +118,8 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
             directory=self.benchmarks,
         )
         self.renderer.main(["--benchmarks-only"])
-        self._assert_pdf(self.benchmarks / "full_fit_at_M64.pdf")
-        self._assert_pdf(self.benchmarks / "trace_at_M32.pdf")
+        self._assert_pdf(self.figures / "full_fit_at_M64.pdf")
+        self._assert_pdf(self.figures / "trace_at_M32.pdf")
 
 
 if __name__ == "__main__":
