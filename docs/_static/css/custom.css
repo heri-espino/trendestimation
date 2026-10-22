@@ -1,3 +1,49 @@
+/* The only brand-color choice. Pantone 2955 C-inspired sRGB approximation.
+ * Change --te-brand to retheme the site; all accent tints are derived.
+ * Neutrals remain neutral for readability and WCAG contrast.
+ */
+:root {
+  --te-brand: #003A70;
+  --te-accent: var(--te-brand);
+  --te-accent-strong: color-mix(in srgb, var(--te-brand) 78%, black);
+  --te-accent-muted: color-mix(in srgb, var(--te-brand) 60%, white);
+  --te-accent-subtle: color-mix(in srgb, var(--te-brand) 6%, white);
+  --te-accent-border: color-mix(in srgb, var(--te-brand) 22%, white);
+  --te-chart-observed: color-mix(in srgb, var(--te-brand) 35%, #b7bdc6);
+  --te-focus: color-mix(in srgb, var(--te-brand) 75%, white);
+  --te-surface: #fff;
+  --te-code-text: #202936;
+  --te-code-keyword: var(--te-brand);
+  --te-code-string: color-mix(in srgb, var(--te-brand) 75%, #465466);
+  --te-code-number: color-mix(in srgb, var(--te-brand) 60%, #58616c);
+  --te-code-comment: #6a7480;
+
+  /* Furo and Sphinx Design: brand links, nav, active states and buttons. */
+  --color-brand-primary: var(--te-accent);
+  --color-brand-content: var(--te-accent);
+  --color-link: var(--te-accent);
+  --color-link--hover: var(--te-accent-strong);
+  --color-link--visited: var(--te-accent);
+  --sd-color-primary: var(--te-accent);
+  --sd-color-primary-highlight: var(--te-accent-strong);
+}
+
+[data-theme="dark"] {
+  --te-accent: color-mix(in srgb, var(--te-brand) 36%, white);
+  --te-accent-strong: color-mix(in srgb, var(--te-brand) 22%, white);
+  --te-accent-muted: color-mix(in srgb, var(--te-brand) 48%, white);
+  --te-accent-subtle: color-mix(in srgb, var(--te-brand) 24%, #141b25);
+  --te-accent-border: color-mix(in srgb, var(--te-brand) 57%, #3b475a);
+  --te-chart-observed: color-mix(in srgb, var(--te-brand) 36%, #b9c8d9);
+  --te-focus: color-mix(in srgb, var(--te-brand) 32%, white);
+  --te-surface: #1b2531;
+  --te-code-text: #e2e9f1;
+  --te-code-keyword: var(--te-accent);
+  --te-code-string: color-mix(in srgb, var(--te-accent) 55%, #dce2eb);
+  --te-code-number: color-mix(in srgb, var(--te-accent) 60%, #dce2eb);
+  --te-code-comment: #aab6c6;
+}
+
 /*
  * trendestimation documentation design system.
  * Scoped to the landing page and conservative global refinements.
@@ -28,7 +74,7 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid #75adff;
+  outline: 3px solid var(--te-focus);
   outline-offset: 3px;
   border-radius: 3px;
 }
@@ -49,16 +95,16 @@ body:has(.te-landing) .content > article > h1 {
   letter-spacing: .13em;
   text-transform: uppercase;
   margin: 0 0 1.1rem;
-  color: #3464b1;
+  color: var(--te-accent);
 }
 
 .te-landing {
-  --te-ink: #14243c;
-  --te-muted: #61738b;
-  --te-blue: #275fd0;
-  --te-blue-deep: #174bb4;
-  --te-blue-soft: #eef5ff;
-  --te-border: #dce7f4;
+  --te-ink: #202936;
+  --te-muted: #697685;
+  --te-blue: var(--te-accent);
+  --te-blue-deep: var(--te-accent-strong);
+  --te-blue-soft: var(--te-accent-subtle);
+  --te-border: #dce3ec;
   --te-white: #fff;
   --te-shadow: 0 24px 65px -48px rgba(22, 56, 111, .42);
   color: var(--te-ink);
@@ -104,7 +150,7 @@ body:has(.te-landing) .content > article > h1 {
   width: 65%;
   height: 92%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(90, 156, 250, .1), transparent 70%);
+  background: none;
 }
 
 .te-eyebrow,
@@ -131,14 +177,14 @@ body:has(.te-landing) .content > article > h1 {
   width: .48rem;
   height: .48rem;
   border-radius: 50%;
-  background: #3c8ef0;
-  box-shadow: 0 0 0 4px #e9f3ff;
+  background: var(--te-accent);
+  box-shadow: 0 0 0 4px var(--te-accent-subtle);
 }
 
 .te-eyebrow-divider {
   width: 1px;
   height: 13px;
-  background: #c5d7f3;
+  background: #dce3ec;
 }
 
 .te-hero h2 {
@@ -195,12 +241,12 @@ body:has(.te-landing) .content > article > h1 {
 .te-button-primary {
   background: var(--te-blue);
   color: #fff !important;
-  box-shadow: 0 9px 25px -15px rgba(25, 73, 170, .9);
+  box-shadow: none;
 }
 
 .te-button-primary:hover {
   background: var(--te-blue-deep);
-  box-shadow: 0 17px 33px -17px rgba(25, 73, 170, .78);
+  box-shadow: none;
 }
 
 .te-button-secondary,
@@ -213,7 +259,7 @@ body:has(.te-landing) .content > article > h1 {
 .te-button-secondary:hover,
 .te-button-outline:hover {
   background: var(--te-blue-soft);
-  border-color: #bcd3f5;
+  border-color: var(--te-accent-border);
 }
 
 .te-hero-footnote {
@@ -231,17 +277,17 @@ body:has(.te-landing) .content > article > h1 {
 .te-chart-panel {
   position: relative;
   overflow: hidden;
-  border-radius: 1.35rem;
+  border-radius: .85rem;
   border: 1px solid var(--te-border);
-  background: linear-gradient(153deg, #fff, #f7faff 72%, #eaf3ff);
-  box-shadow: var(--te-shadow), 0 12px 45px -30px #729bd6;
+  background: var(--te-surface);
+  box-shadow: 0 8px 30px -24px rgba(18, 35, 54, .16);
   padding: 1.25rem 1.25rem 1.15rem;
   transition: box-shadow .35s ease, transform .35s ease;
 }
 
 .te-chart-panel:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 32px 75px -50px rgba(25, 66, 140, .65);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px -23px rgba(18, 35, 54, .18);
 }
 
 .te-chart-top,
@@ -253,7 +299,7 @@ body:has(.te-landing) .content > article > h1 {
 }
 
 .te-chart-kicker {
-  color: #6a82a3;
+  color: #657589;
   font-size: .63rem;
 }
 
@@ -270,7 +316,7 @@ body:has(.te-landing) .content > article > h1 {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #cbdaf0;
+  background: #ced7e2;
 }
 
 .te-chart {
@@ -284,29 +330,23 @@ body:has(.te-landing) .content > article > h1 {
 
 .te-grid {
   fill: none;
-  stroke: #dfe8f6;
+  stroke: #e3e8ee;
   stroke-width: 1;
 }
 
 .te-observed {
   fill: none;
-  stroke: #adc2df;
+  stroke: var(--te-chart-observed);
   stroke-width: 2.1;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
-.te-trend-glow {
-  fill: none;
-  stroke: #72aaff;
-  stroke-width: 13;
-  opacity: .15;
-  stroke-linecap: round;
-}
+.te-trend-glow { display: none; }
 
 .te-trend {
   fill: none;
-  stroke: #2f6ce0;
+  stroke: var(--te-accent);
   stroke-width: 4;
   stroke-linecap: round;
   stroke-dasharray: 650;
@@ -315,7 +355,7 @@ body:has(.te-landing) .content > article > h1 {
 }
 
 .te-endpoint {
-  fill: #2f6ce0;
+  fill: var(--te-accent);
   stroke: white;
   stroke-width: 2;
 }
@@ -325,7 +365,7 @@ body:has(.te-landing) .content > article > h1 {
   justify-content: center;
   flex-wrap: wrap;
   gap: 1.35rem;
-  color: #627792;
+  color: #687889;
   font-size: .76rem;
 }
 
@@ -342,8 +382,8 @@ body:has(.te-landing) .content > article > h1 {
   border-radius: 3px;
 }
 
-.te-legend-observed { background: #adc2df; }
-.te-legend-trend { background: #2f6ce0; }
+.te-legend-observed { background: var(--te-chart-observed); }
+.te-legend-trend { background: var(--te-accent); }
 
 .te-illustration-caption {
   text-align: center;
@@ -396,23 +436,23 @@ body:has(.te-landing) .content > article > h1 {
   min-height: 19.5rem;
   padding: clamp(1.2rem, 2.1vw, 1.8rem);
   border: 1px solid var(--te-border);
-  border-radius: 1rem;
+  border-radius: .75rem;
   background: var(--te-white);
   color: var(--te-ink) !important;
-  box-shadow: 0 8px 22px -24px rgba(38, 76, 130, .5);
+  box-shadow: none;
   transition: transform .25s ease, border-color .25s ease, background-color .25s ease, box-shadow .25s ease;
 }
 
 .te-feature:hover {
-  transform: translateY(-4px);
-  border-color: #b5d1fa;
-  background: #fcfdff;
-  box-shadow: 0 28px 48px -38px rgba(20, 69, 145, .48);
+  transform: translateY(-2px);
+  border-color: var(--te-accent-border);
+  background: #fff;
+  box-shadow: 0 6px 20px -16px rgba(18, 35, 54, .13);
 }
 
 .te-feature-number {
   font-size: .65rem;
-  color: #6b85a8;
+  color: var(--te-accent-muted);
 }
 
 .te-feature-icon {
@@ -473,9 +513,9 @@ body:has(.te-landing) .content > article > h1 {
   align-items: center;
   gap: clamp(1.5rem, 4vw, 4.5rem);
   padding: clamp(2rem, 4vw, 3.3rem);
-  border-radius: 1.35rem;
-  background: linear-gradient(135deg, #f3f8ff, #edf4ff);
-  border: 1px solid #e1ecfa;
+  border-radius: .85rem;
+  background: linear-gradient(145deg, var(--te-accent-subtle), color-mix(in srgb, var(--te-brand) 3%, white));
+  border: 1px solid #dce3ec;
 }
 
 .te-demo-copy > p:not(.te-overline) {
@@ -499,29 +539,29 @@ body:has(.te-landing) .content > article > h1 {
   min-width: 0;
   overflow: hidden;
   border-radius: .95rem;
-  background: #12223a;
-  border: 1px solid #223955;
-  box-shadow: 0 23px 37px -27px rgba(11, 29, 59, .57);
+  background: #162232;
+  border: 1px solid #354355;
+  box-shadow: none;
 }
 
 .te-code-header {
   min-height: 2.9rem;
   padding: .75rem 1.05rem;
-  color: #b4c8e6;
+  color: #c8d5e5;
   font-size: .73rem;
-  border-bottom: 1px solid #2a405b;
+  border-bottom: 1px solid #354355;
 }
 
 .te-code-header > span:last-child {
-  color: #829dbd;
+  color: #a4b4c8;
   font-size: .61rem;
   font-weight: 750;
   letter-spacing: .1em;
 }
 
-.te-code-dots i:nth-child(1) { background: #78a9f2; }
-.te-code-dots i:nth-child(2) { background: #577fbf; }
-.te-code-dots i:nth-child(3) { background: #3d618f; }
+.te-code-dots i:nth-child(1) { background: var(--te-accent-muted); }
+.te-code-dots i:nth-child(2) { background: var(--te-accent-muted); }
+.te-code-dots i:nth-child(3) { background: var(--te-accent-muted); }
 
 .te-landing .te-code {
   background: transparent;
@@ -533,7 +573,7 @@ body:has(.te-landing) .content > article > h1 {
   margin: 0;
   font-size: clamp(.66rem, 1vw, .79rem);
   line-height: 1.84;
-  color: #e8f0ff;
+  color: #e6ecf5;
   font-family: var(--te-mono);
   white-space: pre;
 }
@@ -547,9 +587,9 @@ body:has(.te-landing) .content > article > h1 {
   font-size: inherit;
 }
 
-.te-code-keyword { color: #9abbff; }
-.te-code-number { color: #f0cd97; }
-.te-code-string { color: #a4e6c3; }
+.te-code-keyword { color: var(--te-accent); }
+.te-code-number { color: #cad3e1; }
+.te-code-string { color: #c4d7ea; }
 
 .te-footer-panel {
   display: flex;
@@ -580,30 +620,37 @@ body:has(.te-landing) .content > article > h1 {
 .te-footer-panel .te-button { flex-shrink: 0; }
 
 [data-theme="dark"] .te-landing {
-  --te-ink: #e8f0fc;
-  --te-muted: #bac9dc;
-  --te-blue: #94bafa;
-  --te-blue-deep: #3166ce;
-  --te-blue-soft: #192d49;
-  --te-border: #314663;
-  --te-white: #162338;
+  --te-ink: #e7ebf2;
+  --te-muted: #b9c4d1;
+  --te-blue: var(--te-accent);
+  --te-blue-deep: var(--te-accent-strong);
+  --te-blue-soft: var(--te-accent-subtle);
+  --te-border: #3a4655;
+  --te-white: var(--te-surface);
 }
-
-[data-theme="dark"] .te-hero::before {
-  background: radial-gradient(ellipse, rgba(63, 103, 181, .13), transparent 70%);
-}
-
-[data-theme="dark"] .te-status-dot { box-shadow: 0 0 0 4px #233b5c; }
-[data-theme="dark"] .te-eyebrow-divider { background: #50627e; }
-[data-theme="dark"] .te-chart-panel { background: linear-gradient(145deg, #15263c, #1c324e); }
-[data-theme="dark"] .te-grid { stroke: #2d425f; }
-[data-theme="dark"] .te-observed { stroke: #6588b4; }
+[data-theme="dark"] .te-hero::before { background: none; }
+[data-theme="dark"] .te-status-dot { box-shadow: 0 0 0 4px var(--te-accent-subtle); }
+[data-theme="dark"] .te-eyebrow-divider { background: #3a4655; }
+[data-theme="dark"] .te-chart-panel { background: var(--te-surface); }
+[data-theme="dark"] .te-grid { stroke: #384557; }
+[data-theme="dark"] .te-observed { stroke: var(--te-chart-observed); }
 [data-theme="dark"] .te-chart-kicker,
-[data-theme="dark"] .te-chart-legend { color: #b7c9e3; }
-[data-theme="dark"] .te-feature:hover { background: #1d2e45; border-color: #507bb6; }
-[data-theme="dark"] .te-demo { background: linear-gradient(135deg, #152840, #1c3350); border-color: #30476b; }
-[data-theme="dark"] .te-button-primary { color: #0c244c !important; background: #a5c7ff; }
-[data-theme="dark"] .te-button-primary:hover { background: #c1d9ff; }
+[data-theme="dark"] .te-chart-legend { color: #b9c4d1; }
+[data-theme="dark"] .te-feature:hover {
+  background: #202f3e;
+  border-color: var(--te-accent-border);
+}
+[data-theme="dark"] .te-demo {
+  background: linear-gradient(145deg, #182737, #202f3e);
+  border-color: #39495c;
+}
+[data-theme="dark"] .te-button-primary {
+  color: #102335 !important;
+  background: var(--te-accent);
+}
+[data-theme="dark"] .te-button-primary:hover {
+  background: var(--te-accent-strong);
+}
 
 @keyframes te-arrive {
   from { opacity: 0; transform: translateY(10px); }
@@ -650,3 +697,94 @@ body:has(.te-landing) .content > article > h1 {
   }
   .te-trend { stroke-dashoffset: 0; }
 }
+
+/* Consistent link/visited/hover treatment throughout Furo and MyST.
+   Visited links must NOT switch to the browser's purple default. */
+.content a:not(.te-button),
+.content a:visited:not(.te-button),
+.sidebar-tree a:link,
+.sidebar-tree a:visited,
+.toc-tree a:link,
+.toc-tree a:visited,
+a.headerlink,
+a.headerlink:visited {
+  color: var(--te-accent);
+}
+.content a:hover:not(.te-button),
+.sidebar-tree a:hover,
+.toc-tree a:hover { color: var(--te-accent-strong); }
+.sidebar-tree .current > a,
+.sidebar-tree a.current,
+.toc-tree .current > a { color: var(--te-accent); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--te-focus);
+  outline-offset: 2px;
+}
+.content a:not(.te-button) {
+  text-decoration-color: color-mix(in srgb, var(--te-accent) 37%, transparent);
+}
+
+/* MyST-NB/Sphinx input cells and regular highlighted blocks:
+   eliminate the default green accent, including nested input areas. */
+.cell_input,
+.cell_input .highlight,
+.cell_input .highlight-ipython3,
+.nbinput,
+.nbinput .input_area,
+.nbinput .highlight,
+div.highlight,
+div.highlight-python,
+div.highlight-ipython3 {
+  border-left-color: var(--te-accent) !important;
+}
+.cell_input,
+.nbinput,
+div.highlight:not(.te-code-window) {
+  border-left-style: solid;
+  border-left-width: 3px;
+  border-radius: .45rem;
+}
+.cell_input,
+.nbinput,
+.highlight,
+.highlight pre,
+.nbinput .input_area {
+  background-color: var(--te-accent-subtle);
+}
+.cell_output, .nboutput { border-left-color: #cbd2dc !important; }
+
+/* Sphinx/Pygments highlight styles are separate from Furo.
+   One navy-derived syntax family, with gray comments/punctuation.
+   The scoped !important wins over the generated Pygments stylesheet. */
+.highlight span[class] { color: var(--te-code-text) !important; }
+.highlight span:is(.k,.kc,.kd,.kn,.kp,.kr,.kt,.ow) {
+  color: var(--te-code-keyword) !important;
+  font-weight: 600;
+}
+.highlight span:is(.nf,.fm,.nc,.nn,.na,.nb,.ne) {
+  color: var(--te-accent) !important;
+}
+.highlight span:is(.s,.s1,.s2,.sa,.sb,.sc,.sd,.se,.sh,.si,.sr,.ss,.sx) {
+  color: var(--te-code-string) !important;
+}
+.highlight span:is(.m,.mi,.mf,.mh,.mo,.il) {
+  color: var(--te-code-number) !important;
+}
+.highlight span:is(.c,.c1,.cm,.cp,.ch,.cs) {
+  color: var(--te-code-comment) !important;
+  font-style: italic;
+}
+.highlight span:is(.o,.p,.n,.nx,.w) { color: var(--te-code-text) !important; }
+.highlight pre { color: var(--te-code-text); }
+
+/* Links, cards and Sphinx Design affordances share the same accent. */
+.sd-btn-primary, .sd-bg-primary {
+  background-color: var(--te-accent) !important;
+  border-color: var(--te-accent) !important;
+}
+.sd-btn-outline-primary, .sd-text-primary { color: var(--te-accent) !important; }
+.sd-btn-primary:hover {
+  background-color: var(--te-accent-strong) !important;
+  border-color: var(--te-accent-strong) !important;
+}
+.sd-card:focus-within { border-color: var(--te-accent-border); }
