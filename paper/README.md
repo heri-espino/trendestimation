@@ -57,7 +57,7 @@ altering any computations, uses the colorblind-accessible Okabe–Ito palette
 and exports standalone PDFs through `af.save_figure`. Manuscript figures use
 `\\includegraphics` instead of inline TikZ/PGFPlots, as required by the
 SMCCA Scipedia author instructions. The figure PDFs and numerical arrays stay
-inside `paper/figures/`, and timing plots under `paper/benchmarks/results/`.
+inside `paper/figures/`, while raw timing data stays under `paper/benchmarks/results/`.
 
 The usual build uses existing measured benchmark tables if they are
 present; check their recorded machine and revision to avoid mixing
