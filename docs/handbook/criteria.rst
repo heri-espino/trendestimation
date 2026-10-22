@@ -4,9 +4,9 @@ Selection criteria: CV, GCV, AICc, and BIC
 Shared notation and domain
 --------------------------
 
-Fix the reference mean :math:\`\mu\` numerically and write
-:math:\`p=p_\mu\`, :math:\`z=y-p\`, :math:\`H=H_\lambda\`,
-:math:\`\widehat\tau=p+Hz\`. Define
+Fix the reference mean :math:`\mu` numerically and write
+:math:`p=p_\mu`, :math:`z=y-p`, :math:`H=H_\lambda`,
+:math:`\widehat\tau=p+Hz`. Define
 
 .. math::
 
@@ -17,15 +17,15 @@ Fix the reference mean :math:\`\mu\` numerically and write
 
 All implemented scores are **minimized**. These are classical
 **in-sample** selection criteria, not rolling-origin forecast-horizon
-cross-validation. Unless otherwise specified, :math:\`\lambda\ge0\`
-and :math:\`\mu\` is held fixed across candidate penalties.
+cross-validation. Unless otherwise specified, :math:`\lambda\ge0`
+and :math:`\mu` is held fixed across candidate penalties.
 
 Ordinary leave-one-out CV
 -------------------------
 
-Remove observation :math:\`i\` from the *data-fidelity term*
+Remove observation :math:`i` from the *data-fidelity term*
 while keeping the original grid, difference penalty and fixed
-:math:\`\mu\`. If :math:\`h_i<1\`, the leave-one-out residual is
+:math:`\mu`. If :math:`h_i<1`, the leave-one-out residual is
 
 .. math::
 
@@ -33,7 +33,7 @@ while keeping the original grid, difference penalty and fixed
       =\frac{e_i}{1-h_i}.
 
 Thus **one fitted smoother**, together with the hat-matrix
-diagonal, provides the exact LOOCV score without :math:\`n\`
+diagonal, provides the exact LOOCV score without :math:`n`
 separate refits:
 
 .. math::
@@ -43,17 +43,17 @@ separate refits:
           \left(\frac{e_i}{1-h_i}\right)^2}.
 
 The reported score is **MSE**, not RMSE. Nevertheless
-:math:\`\sqrt{\mathrm{CV}}\` has the same minimizer.
-At :math:\`\lambda=0\`, :math:\`H=I\` and the displayed
+:math:`\sqrt{\mathrm{CV}}` has the same minimizer.
+At :math:`\lambda=0`, :math:`H=I` and the displayed
 LOOCV formula is undefined (zero denominators); this is
-not an ordinary zero-error CV result. For :math:\`\lambda>0\`,
+not an ordinary zero-error CV result. For :math:`\lambda>0`,
 stable small-penalty evaluation can cancel common factors.
 
 Generalized cross-validation
 ----------------------------
 
 GCV replaces observation-specific leverages by their average
-:math:\`\nu/n\`:
+:math:`\nu/n`:
 
 .. math::
 
@@ -62,8 +62,8 @@ GCV replaces observation-specific leverages by their average
         =\frac{nR}{(n-\nu)^2}}.
 
 It is inexpensive after spectral preprocessing because it
-requires only :math:\`R\` and :math:\`\nu\`.
-It is undefined if :math:\`n-\nu=0\`; it is not the same
+requires only :math:`R` and :math:`\nu`.
+It is undefined if :math:`n-\nu=0`; it is not the same
 as exact LOOCV when individual leverages differ.
 
 Corrected Akaike information criterion
@@ -78,7 +78,7 @@ The library's precise **AICc score convention** is
 
 It combines a log residual-error term and a finite-sample
 complexity correction. Here it is defined only when
-:math:\`R>0\` and :math:\`n-\nu-2>0\`.
+:math:`R>0` and :math:`n-\nu-2>0`.
 Other AICc conventions exist; this page documents the
 **implemented** one (as used for the Cortés-Toto comparison).
 
@@ -93,8 +93,8 @@ The library's **BIC score convention** is
       =\log(R/n)+\frac{\nu\log n}{n}}.
 
 The penalty is linear in effective degrees of freedom, with
-coefficient :math:\`\log(n)/n\`. This score is undefined
-for :math:\`R=0\`. The near-interpolating boundary can
+coefficient :math:`\log(n)/n`. This score is undefined
+for :math:`R=0`. The near-interpolating boundary can
 give extreme log-residual behavior; an interior optimum
 is not guaranteed.
 
@@ -124,14 +124,14 @@ Criterion summary
    * - MLE
      - Gaussian marginal profile likelihood
      - Requires a stochastic variance-component model;
-       see :doc:\`likelihood\`
+       see :doc:`likelihood`
 
 The closed-form *criterion scores* do not imply a closed-form
-optimum :math:\`\arg\min_\lambda C(\lambda)\`. Consult
-:doc:\`derivatives\` and :doc:\`numerical_methods\`.
+optimum :math:`\arg\min_\lambda C(\lambda)`. Consult
+:doc:`derivatives` and :doc:`numerical_methods`.
 
-Use \`\`score_lambda(smoother, y, lambda_=..., criterion=..., mu=...)\`\`
-to evaluate a chosen criterion and \`\`select_lambda(...)\`\` to
+Use ``score_lambda(smoother, y, lambda_=..., criterion=..., mu=...)``
+to evaluate a chosen criterion and ``select_lambda(...)`` to
 select a penalty. Classical CV/GCV/AICc/BIC require **numeric**
-:math:\`\mu\`; their fixed-mean formulas do not cover
-foldwise estimation of \`\`mu="data"\`\`.
+:math:`\mu`; their fixed-mean formulas do not cover
+foldwise estimation of ``mu="data"``.
