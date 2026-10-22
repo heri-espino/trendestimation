@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Build the SMCCA manuscript and its reproducible numerical artifacts.
+"""Build Computational Statistics article with Springer Nature's official format.
 
 Examples (from any working directory):
 
     python paper/build.py
     python paper/build.py --figures
     python paper/build.py --render-figures --pdf
+    python paper/build.py --pdf --package
     python paper/build.py --benchmarks --benchmark-preset quick --repeats 5
     python paper/build.py --tables
     python paper/build.py --pdf
@@ -14,7 +15,7 @@ Examples (from any working directory):
     python paper/build.py --clean
 
 Default: regenerate numerical data, export AwesomeFigures vector PDFs,
-and compile the SMCCA paper. Heavy timing benchmarks remain opt-in.
+and compile the Springer Nature paper. Heavy timing benchmarks remain opt-in.
 
 All outputs remain in paper/. No library source file is modified.
 """
@@ -89,6 +90,10 @@ def make_parser() -> argparse.ArgumentParser:
     actions.add_argument(
         "--all", action="store_true",
         help="Generate figures, run opt-in benchmarks, build tables, and compile PDF.",
+    )
+    actions.add_argument(
+        "--package", action="store_true",
+        help="Package the current PDF and flatten all LaTeX sources into a journal-ready ZIP.",
     )
     actions.add_argument(
         "--clean", action="store_true",
@@ -202,7 +207,8 @@ def run(argv: list[str] | None = None) -> int:
     if args.repeats < 1 or args.blas_threads < 1:
         parser.error("--repeats and --blas-threads must be positive integers")
     if args.clean and any((
-        args.figures, args.render_figures, args.benchmarks, args.tables, args.pdf, args.all
+        args.figures, args.render_figures, args.benchmarks,
+        args.tables, args.pdf, args.package, args.all
     )):
         parser.error("--clean cannot be combined with generation or --all")
     if args.benchmark_preset != "quick" and not (
@@ -220,7 +226,7 @@ def run(argv: list[str] | None = None) -> int:
     # The default build is deterministic figures + PDF, NOT a long benchmark.
     explicit_steps = any((
         args.figures, args.render_figures, args.benchmarks,
-        args.tables, args.pdf, args.all,
+        args.tables, args.pdf, args.package, args.all,
     ))
     figures = args.figures or args.all or not explicit_steps
     redraw = args.render_figures
@@ -327,6 +333,12 @@ def run(argv: list[str] | None = None) -> int:
                         "Benchmark LaTeX tables were not generated successfully.",
                     )
             step("compile:PDF", _latexmk_command(args.latex_engine), PAPER)
+        if args.package or args.all:
+            step(
+                "package:Computational-Statistics",
+                [sys.executable, "paper/package_submission.py"],
+                REPOSITORY,
+            )
     except (OSError, subprocess.CalledProcessError, ValueError) as exc:
         print(f"[paper] Build failed: {exc}", file=sys.stderr, flush=True)
         return 1
