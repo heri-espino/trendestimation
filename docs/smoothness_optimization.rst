@@ -6,8 +6,9 @@ Smoothing-parameter optimization
 This guide explains finite-difference penalized least squares,
 normalized smoothness, ordinary cross-validation, numerical
 optimization and inversion. Examples use deterministic synthetic
-data, not live downloads. Methods under development by other agents
-are identified as **theory**, not publicly implemented APIs.
+data, not live downloads. The examples below use the merged public CV-optimization and
+smoothness-inversion APIs. They distinguish exact algebraic identities
+from numerical optimization, which is not globally certified.
 
 .. contents:: Contents
    :local:
@@ -215,11 +216,13 @@ differentiation is not an analytical minimizer.**
 
 .. note::
 
-   These equations describe the mathematical basis of Agent 1's
-   pending work. On the inspected `main` branch of
-   22 October 2026, `select_lambda` remains a **grid**
-   optimizer. No derivative-selector keyword or default is
-   documented here as implemented before its API is verified.
+   The public `trendestimation.criteria.cv_derivative` evaluates the
+   analytical derivative for positive penalties and **fixed numeric**
+   `mu`. For `criterion="cv"`, `select_lambda(..., method="auto")`
+   uses a broad log-penalty scan and derivative-based refinement.
+   `method="grid"` retains the established finite candidate search.
+   The automatic derivative search checks multiple candidate minima
+   but **does not certify the global minimum**.
 
 Competing selection criteria
 ----------------------------
@@ -282,12 +285,19 @@ See :doc:`mathematics` and :doc:`api/variances`.
 Numerical optimization and global minima
 ----------------------------------------
 
-Currently, `select_lambda(..., grid=None)` evaluates
-**121 geometric candidate penalties**, scaled by the
-median positive eigenvalue, and also the exact
-:math:`\lambda=\infty` limit. A user may provide
-an explicit array via `grid=`. This is a finite
-search, not a guarantee about an unexamined continuum.
+The default depends on the criterion. For **classical CV**,
+`select_lambda(..., criterion="cv", method="auto")` evaluates
+97 log-spaced seed penalties spanning the positive eigenvalue
+transition scales, refines sampled derivative sign changes with
+Brent's bracketed root finder, and compares original CV scores,
+candidate valleys and boundary limits. This is a heuristic
+multi-start search, **not a proof of global optimality**.
+
+For `method="grid"`, the established default evaluates
+**121 geometric penalties** plus the exact :math:`\lambda=\infty`
+limit. GCV, AICc, BIC, and MLE continue to use grid selection
+under `method="auto"`. An explicitly provided `grid=` also
+selects exclusively among its supplied candidate penalties.
 
 .. list-table:: Methods and trade-offs
    :header-rows: 1
@@ -329,37 +339,43 @@ Smoothness inversion: Brent, Newton, secant
 Given :math:`s\in(0,1)`, define
 :math:`F(\lambda)=S(\lambda)-s`. Equation
 :eq:`s-derivative` proves the root is unique.
-The shipped `TrendSmoother.lambda_for_smoothness(s)`
-repeatedly doubles a bracket's upper endpoint and
-calls SciPy's bracketed **Brent `brentq`** algorithm.
+The public `TrendSmoother.lambda_for_smoothness` implements
+`method="auto"` (Brent for a general spectrum),
+`"brentq"`, safeguarded `"newton"`, safeguarded `"secant"`,
+and `"bisect"` (alias `"bisection"`). It solves in
+:math:`x=\log\lambda`, using a stable spectral evaluation,
+rather than taking unguarded steps in :math:`\lambda`.
 
-* **Newton–Raphson:** :math:`\lambda_{k+1}=\lambda_k-F(\lambda_k)/S'(\lambda_k)`.
-  It converges locally quickly but may step negative.
-* **Secant:** approximate the derivative from the preceding
-  two iterates; no derivative is required, but the step need
-  not stay in the domain.
-* **Bracket-preserving fallback:** if an open iteration fails,
-  retain an interval with a sign change and use a validated
-  bracketed solver. The specific future fallback policy is
-  not yet part of the confirmed public API.
+* **Brent:** bracket-preserving and robust, with no analytical
+  derivative required.
+* **Newton–Raphson:** uses the analytical log-penalty derivative,
+  retaining a valid bracket to safeguard out-of-range steps.
+* **Secant:** estimates a slope from function evaluations and
+  uses a bracket safeguard.
+* **Bisection:** robust reference solver, generally requiring
+  more evaluations.
+* **Analytical inversion:** when all positive eigenvalues are
+  identical (including `d=0`) or there is only one positive
+  eigenvalue, the solver uses the exact scalar formula.
 
+The `tol` and `maxiter` keywords control convergence;
+unsupported inputs or unsuccessful solutions raise exceptions.
 Endpoint inversion is exact:
 :math:`s=0\mapsto\lambda=0` and
 :math:`s=1\mapsto\lambda=\infty`.
 With `normalized=False`, the upper valid target is
-:math:`(n-d)/n`. Only **Brent** is currently confirmed as a
-library method; Newton and secant below are demonstrated by
-calling **SciPy**, rather than inventing Agent 2 method names.
+:math:`(n-d)/n`. The default prioritizes reliable convergence,
+**not a universal guarantee of fastest runtime**.
 
 
 Runnable Python: default CV, legacy grid, GCV
 ------------------------------------------------
 
-All snippets use seeded synthetic values and the **confirmed**
-interface on the inspected main branch. To install the source and
-documentation dependencies, run `python -m pip install -e ".[docs,plot]"`.
-The present default is **grid CV**; a planned derivative-based
-default must be documented after Agent 1's merge.
+All snippets use seeded synthetic values and the merged public APIs.
+To install the source and documentation dependencies, run
+`python -m pip install -e ".[docs,plot]"`.
+Classical `criterion="cv"` defaults to derivative-guided
+refinement, while `criterion="gcv"` uses the legacy grid by default.
 
 .. code-block:: python
 
@@ -376,14 +392,17 @@ default must be documented after Agent 1's merge.
    default_cv = select_lambda(
        smoother, y, criterion="cv", mu=0.0
    )
-   legacy_grid = np.r_[np.geomspace(1e-4, 1e5, 180), np.inf]
    grid_cv = select_lambda(
-       smoother, y, criterion="cv", mu=0.0, grid=legacy_grid
+       smoother, y, criterion="cv", mu=0.0, method="grid"
+   )
+   custom_grid = np.r_[np.geomspace(1e-4, 1e5, 180), np.inf]
+   custom_cv = select_lambda(
+       smoother, y, criterion="cv", mu=0.0, grid=custom_grid
    )
    gcv = select_lambda(
        smoother, y, criterion="gcv", mu=0.0
    )
-   for selected in (default_cv, grid_cv, gcv):
+   for selected in (default_cv, grid_cv, custom_cv, gcv):
        print(selected.criterion, selected.lambda_,
              selected.smoothness, selected.score)
 
@@ -393,62 +412,60 @@ default must be documented after Agent 1's merge.
 
 Notice that `select_lambda` returns the selected penalty
 in `lambda_` and its score in `score`, while `scores`
-and `grid` contain the evaluated candidates. The
-explicit grid reproduces the existing grid-search API;
-it does **not** guess a new future `optimizer=` option.
+and `grid` contain the evaluated candidates. An explicit `grid=` preserves user-defined candidates and
+always selects among those candidates only under `method="auto"`.
+The derivative can be evaluated independently:
+
+.. code-block:: python
+
+   from trendestimation.criteria import cv_derivative
+
+   gradient = cv_derivative(
+       smoother, y, lambda_=default_cv.lambda_, mu=0.0
+   )
+   print("d CV / d lambda:", gradient)
+
+At an **interior** stationary minimum, this derivative should
+approach zero. At a boundary optimum, it need not do so.
 
 Runnable Python: numerical root-finder comparison
 --------------------------------------------------
 
-The package's root inversion is shown first. The additional
-methods are **SciPy** public algorithms, **not** hypothetical
-options to `lambda_for_smoothness`.
+All the following methods are provided directly by
+`TrendSmoother.lambda_for_smoothness`; they share the same
+mathematical smoothness definition and reproduce the same target
+within numerical tolerance.
 
 .. code-block:: python
 
    import numpy as np
-   from scipy.optimize import brentq, newton, root_scalar
-   from trendestimation import TrendSmoother, difference_matrix
+   from trendestimation import TrendSmoother
 
    smoother = TrendSmoother(60, order=2)
    target = 0.75
-   library_root = smoother.lambda_for_smoothness(target)
-
-   # D D^T has exactly n-d positive eigenvalues.
-   D = difference_matrix(60, 2)
-   delta = np.linalg.eigvalsh(D @ D.T)
-
-   def f(lam):
-       return smoother.smoothness(lam) - target
-
-   def derivative(lam):
-       return np.mean(delta / (1.0 + lam * delta)**2)
-
-   upper = 1.0
-   while f(upper) < 0:
-       upper *= 2.0
-
+   methods = ("auto", "brentq", "newton", "secant", "bisect")
    roots = {
-       "Library Brent": library_root,
-       "SciPy Brent": brentq(f, 0, upper),
-       "SciPy Newton": newton(
-           f, x0=upper / 2, fprime=derivative
-       ),
-       "SciPy secant": root_scalar(
-           f, x0=upper / 5, x1=0.3 * upper,
-           method="secant"
-       ).root,
+       name: smoother.lambda_for_smoothness(
+           target, method=name, tol=1e-12, maxiter=200
+       )
+       for name in methods
    }
    for name, root in roots.items():
-       print(name, root, abs(f(root)))
-       assert root >= 0 and abs(f(root)) < 1e-8
+       print(name, root, abs(smoother.smoothness(root) - target))
+       assert root > 0 and abs(smoother.smoothness(root) - target) < 1e-9
 
-   assert smoother.lambda_for_smoothness(0.0) == 0
+   original = smoother.smoothness(roots["auto"], normalized=False)
+   restored = smoother.lambda_for_smoothness(
+       original, normalized=False, method="newton"
+   )
+   assert np.isclose(restored, roots["auto"], rtol=1e-9)
+   assert smoother.lambda_for_smoothness(0.0) == 0.0
    assert np.isinf(smoother.lambda_for_smoothness(1.0))
 
-These initial guesses work on this **specific** example;
-general-purpose Newton and secant implementations need domain
-checks, iteration limits and a bracket fallback.
+The most efficient method depends on the spectral distribution,
+target smoothness and requested tolerance. A benchmark script in
+`benchmarks/smoothness_root_solvers.py` compares iterations,
+evaluations and measured time without including the one-time SVD.
 
 Visual demonstration: smoothness versus CV MSE
 -----------------------------------------------
