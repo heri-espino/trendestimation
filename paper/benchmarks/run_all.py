@@ -33,6 +33,10 @@ def main():
         ]
         print("Running", " ".join(command), flush=True)
         subprocess.run(command, check=True)
+    # Convert genuine measured CSVs into paper-ready tables, preserving the
+    # executing host's software and hardware provenance.
+    from write_paper_results import run as write_paper_results
+    write_paper_results(args.output_dir.resolve())
     print("All numerical checks passed; files saved at", args.output_dir.resolve())
 
 
