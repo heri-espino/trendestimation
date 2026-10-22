@@ -69,6 +69,22 @@ boundary. These are assumptions, not competing methods with
 established accuracy rankings. If the historical end point changes
 when more data arrive, the extrapolation may change.
 
+Full executable notebook pipeline
+---------------------------------
+
+For a complete, reproducible example that includes synthetic or local-CSV
+observations, train-only fixed 0.8 smoothness, trend extrapolation, all six
+plotting helpers, and a chronological holdout with MAE/RMSE against baselines,
+run :doc:`notebooks/09-forecast-pipeline`.
+
+.. code-block:: console
+
+   python scripts/run_notebooks.py --fast --only 09-forecast-pipeline --fail-fast
+
+The notebook uses no data from the holdout when selecting the fixed smoothing
+level or estimating the trend. This is **one illustrative evaluation split**, not
+rolling-origin validation or an empirical guarantee.
+
 A gallery of six plots
 ----------------------
 
