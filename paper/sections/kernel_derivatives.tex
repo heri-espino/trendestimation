@@ -1,0 +1,54 @@
+\subsection{Proof of the $d$-dimensional kernel}
+For $1\le d<n$, the $d$th forward difference has the explicit binomial stencil
+\begin{equation}\label{eq:stencil2}
+ (D_d\tau)_t=\sum_{k=0}^{d}(-1)^{d-k}\binom{d}{k}\tau_{t+k},\quad
+ t=0,\ldots,n-d-1.
+\end{equation}
+The first $n-d$ columns of $D_d$ form an upper triangular
+$(n-d)\times(n-d)$ submatrix with nonzero diagonal $(-1)^d$.
+Hence $\mathrm{rank}(D_d)=n-d$. As $Q_d=D_d^\top D_d$,
+$x^\top Q_dx=\|D_dx\|^2$, and therefore
+\begin{equation}\label{eq:kernel-proof}
+\ker Q_d=\ker D_d,\qquad
+\dim\ker Q_d=n-\mathrm{rank}(D_d)=d.
+\end{equation}
+The vectors $1,t,\ldots,t^{d-1}$ have vanishing $d$th forward differences
+and are linearly independent on $n>d$ nodes. Thus they give a basis
+of the kernel, proving that exactly $d$ eigenvalues of $Q_d$ vanish
+in exact arithmetic. Under $\mu=0$, the limit $\lambda\to\infty$
+is the least-squares projection onto polynomials of degree $\le d-1$.
+For instance $d=1$ preserves a constant, $d=2$ a line, and
+$d=3$ a quadratic. When $\mu\ne0$, the limiting set is instead
+the affine space $\{\tau:D_d\tau=\mu\mathbf1\}$, which has the same
+$d$ homogeneous directions but includes a degree-$d$ particular
+solution. In the implementation $p_t=\mu\binom{t}{d}$.
+
+\subsection{Interpretation of higher orders and the spline connection}
+For a sufficiently smooth function $f$ observed on an equally spaced
+mesh of width $h$, Taylor expansion yields
+$\Delta_h^df(x_t)=h^df^{(d)}(x_t)+O(h^{d+1})$. Consequently,
+under appropriate mesh-refinement assumptions,
+\begin{equation}\label{eq:spline-bridge}
+h^{1-2d}\sum_t(\Delta_h^df(x_t))^2
+\longrightarrow\int |f^{(d)}(x)|^2\,dx.
+\end{equation}
+This is a mathematical bridge to roughness penalties in smoothing
+splines. A Whittaker-type trend smoother penalizes differences
+of fitted ordinates directly, while a $P$-spline instead penalizes
+differences of coefficients in a chosen spline basis; these are related
+ideas but not identical estimators. For a continuous penalty weight
+$\lambda_{\rm cont}$, the corresponding discrete coefficient is scaled
+approximately as $\lambda_{\rm disc}=\lambda_{\rm cont}h^{1-2d}$.
+
+The order $d$ is an integer representing the order of the derivative
+being approximated; it is not a continuous interpolation between
+derivative orders. Comparing different $d$ values is a change of
+regularization model, so equal numerical $\lambda$ does not
+imply equal smoothing. It is useful to examine orders
+$d=1,\ldots,5$ under a common normalized trace-based index;
+however, arbitrary orders and polynomial nullspaces have long been
+known \cite{weinert2007wh,biessy2026wh}. Larger $d$ can be
+ill-conditioned because the binomial stencil has growing coefficients
+and the positive eigenvalues may span many orders of magnitude.
+Neither higher $d$ nor higher polynomial degree guarantees a better
+trend or numerical stability.
