@@ -45,6 +45,62 @@ Both, and the reported EDF, condition on a fixed mu. When mu is
 estimated from observations they are not automatically the complete
 effective degrees of freedom of the data-dependent procedure.
 
+
+
+Gaussian marginal maximum likelihood
+------------------------------------
+
+The ``mle`` criterion chooses a smoothing parameter by maximizing the
+Gaussian marginal likelihood rather than minimizing the penalized
+least-squares objective itself. For a fixed reference mean ``mu``, the
+positive-penalty spectral coordinates of ``y-p(mu)`` are denoted by
+:math:`z_j`, with penalty eigenvalues :math:`\delta_j>0`. On the
+:math:`r=n-d` positive coordinates we posit independent latent trend
+noise of variance :math:`\sigma^2/(\lambda\delta_j)` and observation
+noise of variance :math:`\sigma^2`. The implied marginal variances
+are :math:`\sigma^2 c_j(\lambda)`, where
+
+.. math::
+
+   c_j(\lambda) = 1 + \frac{1}{\lambda\delta_j},\qquad
+   \widehat\sigma^2(\lambda) =
+   \frac{1}{r}\sum_{j=1}^{r}\frac{z_j^2}{c_j(\lambda)}.
+
+After profiling the nuisance observation variance, the implementation
+minimizes twice the negative marginal log-likelihood, excluding terms
+independent of :math:`\lambda`:
+
+.. math::
+
+   L_{\mathrm{profile}}(\lambda) =
+      r\log\left[\frac{1}{r}\sum_{j=1}^r
+                  \frac{z_j^2}{c_j(\lambda)}\right]
+      +\sum_{j=1}^r\log c_j(\lambda).
+
+The remaining :math:`d` coordinates form the unpenalized polynomial
+nullspace, treated as nuisance trend coordinates (REML-style
+likelihood). This choice is motivated by the Gaussian marginal
+likelihood of Biessy (2026, Section 5.3), but differs by profiling the
+unknown observation variance. It assumes Gaussian noise and a latent
+Gaussian difference penalty; it is *not* a distribution-free selection
+method. The prior is improper at :math:`\lambda=0`, which is not
+considered an admissible MLE candidate, whereas the
+:math:`\lambda\rightarrow\infty` limit is computed exactly.
+
+In order zero, the variance components are confounded when observation
+variance is profiled out. The implementation therefore rejects MLE
+selection for :math:`d=0` or fewer than two positive-penalty coordinates.
+Very low or exactly zero positive-subspace residual energy can also
+lead to a degenerate likelihood.
+
+The alternative ``mu="data"`` estimates the reference level by the
+arithmetic mean of :math:`D_d y`, the observed differences of order
+:math:`d`. This plug-in is passed to the MLE score *as fixed* and
+is not jointly optimized with the variance components. Classical
+``cv``, ``gcv``, ``aicc``, and ``bic`` still require fixed numeric
+reference means because their usual degrees-of-freedom and ordinary
+LOOCV formulas omit plug-in-mean re-estimation.
+
 Computational costs
 -------------------
 

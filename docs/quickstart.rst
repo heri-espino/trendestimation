@@ -49,7 +49,31 @@ parameter selection, not an evaluation of future forecast accuracy.
 
 The solver can be reused for the same series length and differencing order.
 Available classical criteria are ``cv``, ``gcv``, ``aicc``, and ``bic``;
-they require a **fixed numeric reference mean**.
+they require a **fixed numeric reference mean**. Gaussian marginal MLE
+is also available with criterion="mle" (numeric or plug-in mu).
+
+Guerrero's original smoothness and Gaussian MLE
+-------------------------------------------------
+
+Guerrero's original index uses denominator :math:`n` rather than
+:math:`n-d` and has upper limit :math:`1-d/n`.
+
+.. code-block:: python
+
+   original = smoother.smoothness(choice.lambda_, normalized=False)
+   restored = smoother.lambda_for_smoothness(original, normalized=False)
+   mle = select_lambda(smoother, y, criterion="mle", mu="data")
+   fit_ml = smoother.fit(y, lambda_=mle.lambda_, mu="data")
+   print("MLE lambda:", mle.lambda_)
+   print("Observed difference mean:", fit_ml.mu)
+   print("Original smoothness:", fit_ml.guerrero_smoothness)
+
+The data-derived reference mu is mean(D_d @ y), i.e., the average of
+the observed order-d differences. MLE uses a Gaussian marginal likelihood
+with observation variance profiled out and the polynomial nullspace
+unpenalized. A data-derived mu is only a conditional plug-in; this is not
+joint optimization over mu and lambda. The classical four criteria
+continue to require a fixed numeric mu.
 
 Reproduce published simulation settings
 ---------------------------------------
@@ -96,7 +120,7 @@ leave-one-out refits of a data-dependent mean.
 Reproducibility gallery
 -----------------------
 
-The eight longer :doc:`gallery` notebooks provide published-style simulation
+The nine longer :doc:`gallery` notebooks provide published-style simulation
 scenarios, spectral diagnostics and computational benchmarks. To execute
 and record their results manually, use::
 

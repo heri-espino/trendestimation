@@ -6,9 +6,9 @@ import nbformat
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_eight_explanatory_executable_notebooks():
+def test_nine_explanatory_executable_notebooks():
     examples = sorted((ROOT / "docs" / "notebooks").glob("*.ipynb"))
-    assert len(examples) == 8
+    assert len(examples) == 9
     for file in examples:
         notebook = nbformat.read(file, as_version=4)
         nbformat.validate(notebook)
