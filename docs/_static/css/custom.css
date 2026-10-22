@@ -42,7 +42,7 @@
  */
 
 :root {
-  --te-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --te-font: "DejaVu Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --te-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
@@ -955,4 +955,48 @@ html { scroll-behavior: smooth; }
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+
+/* -----------------------------------------------------------------------
+   Chart/document typography and navigation sequencing, October 2026.
+   DejaVu Sans is also the reproducible Matplotlib figure font.
+   Furo renders the article at #furo-main-content, not .content > article.
+   Keep the sidebar stationary while a new article fades into the viewport.
+   ----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-tree {
+    animation: none !important;
+  }
+  #furo-main-content {
+    animation: te-document-enter 1.15s cubic-bezier(.22, 1, .36, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #furo-main-content,
+  .sidebar-tree {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Notebook code is not a bordered card. Remove ALL nested MyST-NB/Jupyter
+   framing while retaining a subtle background and native Pygments colors.
+   Regular Sphinx code blocks outside notebooks keep their own treatment. */
+.cell_input,
+.cell_input .highlight,
+.cell_input .highlight pre,
+.cell_input .highlight-ipython3,
+.nbinput,
+.nbinput .input_area,
+.nbinput .highlight,
+.nbinput .highlight pre,
+div.cell_input,
+div.cell_input div.highlight,
+div.cell_input div.highlight pre {
+  border: none !important;
+  border-left: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
