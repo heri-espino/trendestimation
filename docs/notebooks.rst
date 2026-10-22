@@ -5,11 +5,15 @@ The notebooks are the **executable examples** for this library. They use
 fixed random seeds and synthetic data, so they can be reproduced without
 external data downloads.
 
-These three short introduction tutorials complement the eight longer notebooks
+These three short introduction tutorials complement the ten longer notebooks
 in the :doc:`gallery`.
 
 Start with the first notebook to fit a penalized trend, then explore
 classical smoothing-parameter selection and the role of differencing order.
+For an end-to-end pipeline that includes fixed 0.8 smoothness, historical
+observations, extrapolation, six visualization methods and a separate
+chronological holdout, visit :doc:`notebooks/10-forecast-pipeline` in the
+:doc:`gallery`. The forecast is an illustrative conditional baseline.
 
 .. note::
 
