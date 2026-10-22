@@ -20,8 +20,9 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
   selection for a **fixed numeric** reference mean, as studied by Cortés-Toto,
   Guerrero, and Reyes (2017).
 - Reproducible synthetic linear/nonlinear examples and optional Matplotlib plots.
+- Fixed-smoothness (e.g., 0.8) conditional trend extrapolation, with six blue/white Matplotlib visualization styles.
 
-**Not included:** forecast-optimal smoothing, horizon-specific/rolling
+**Not included:** forecast-optimal smoothing, validated forecast intervals, horizon-specific/rolling
 time-series cross-validation (TSCV), dynamic local-minimum tracking, Sturm
 methods for forecast losses, or prototype estimation of forecast-optimal means.
 
@@ -72,6 +73,35 @@ plot_trend(y, fit)
 # Guerrero observed-difference plug-in fitting (not ordinary CV for this mu):
 fit_with_mean = solver.fit(y, lambda_=choice.lambda_, mu="data")
 ```
+
+## Fixed-smoothness trend extrapolation and plots
+
+The package provides a deliberately simple conditional extrapolation of an
+**estimated historical trend**. It is not a model selected for forecasting accuracy.
+
+```python
+import numpy as np
+from trendestimation import forecast_trend, plot_forecast, plot_forecast_dashboard
+
+history = np.arange(100) * .04 + np.random.default_rng(7).normal(0, .3, 100)
+result = forecast_trend(history, horizon=12, smoothness=.8, window=20)
+print(result.lambda_, result.smoothness, result.forecast)
+plot_forecast(result)
+figure = plot_forecast_dashboard(result)
+figure.savefig("trend-dashboard.png", dpi=160)
+```
+
+Other plots compare smoothing targets, forecast extrapolation assumptions, the
+penalty/smoothness curve and in-sample residual diagnostics. Generate six
+reproducible synthetic PNGs **manually** with:
+
+```bash
+python examples/forecast_gallery.py --output-dir build/forecast-gallery
+```
+
+See [forecasting and visualization documentation](docs/forecasting.rst).
+The future region is a visual demarcation, not a prediction interval.
+An 80% normalized smoothness level **does not imply 80% accuracy**.
 
 ## Reproducible notebook gallery
 
