@@ -72,6 +72,14 @@ class BuildFlagsTest(unittest.TestCase):
         self.assertNotIn("make_figures.py", output)
         self.assertNotIn("latexmk", output)
 
+    def test_render_only_without_pdf_is_not_default_full_build(self):
+        status, output = self._capture(["--dry-run", "--render-figures"])
+        self.assertEqual(status, 0)
+        self.assertIn("render_awesomefigures.py", output)
+        self.assertNotIn("make_figures.py", output)
+        self.assertNotIn("latexmk", output)
+        self.assertNotIn("run_all.py", output)
+
     def test_render_only_reuses_benchmarks_and_compiles_pdf(self):
         status, output = self._capture(["--dry-run", "--render-figures", "--pdf"])
         self.assertEqual(status, 0)
