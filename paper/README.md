@@ -116,6 +116,29 @@ The `--pdf` step reuses existing vector figures, benchmark tables,
 and measured data. Undefined-citation warnings on the *first* LaTeX pass
 are expected; `latexmk` runs BibTeX and the subsequent LaTeX passes.
 
+## Windows CRLF and official template integrity
+
+The official December 2024 `sn-mathphys-ay.bst` uses LF line endings.
+With Windows Git `core.autocrlf=true`, the working-tree copy may contain
+CRLF. A strict byte hash of that copy differs despite identical BibTeX
+contents, and previously blocked `--package` after PDF compilation.
+
+The packager now validates the original template hash, trying only a
+CRLF-to-LF normalization if the raw hash does not match. The output ZIP
+contains the **original verified Springer bytes**, not locally converted
+lines. Substantive template modifications still fail verification.
+The repository `.gitattributes` also requests LF for the `.bst` on
+future checkouts and preserves the CR-only `.cls` without Git conversion.
+Existing Windows checkouts are supported without discarding experiments.
+
+To regenerate just the submission package after a successful PDF build:
+
+```powershell
+git switch main
+git pull --ff-only origin main
+python paper/build.py --package
+```
+
 ## Flat submission source ZIP
 
 The journal explicitly states: **do not upload LaTeX sources in subfolders**.
