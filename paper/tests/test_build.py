@@ -127,6 +127,8 @@ class BuildFlagsTest(unittest.TestCase):
                  patch.object(builder, "_verify_required") as verify, \
                  patch.object(builder, "_git_sha", return_value="test-revision"), \
                  patch.object(builder, "check_bibliography", return_value=17), \
+                 patch.object(builder, "_prepare_latex_transition", return_value=[]), \
+                 patch.object(builder, "_save_latex_identity"), \
                  patch.object(builder.shutil, "which", return_value="latexmk"):
                 status, _ = self._capture(["--figures", "--pdf"])
             self.assertEqual(status, 0)

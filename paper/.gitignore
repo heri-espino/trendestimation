@@ -27,3 +27,6 @@ figures/*.pdf
 
 # Journal submission packages are generated locally
 computational-statistics-submission.zip
+
+# Local journal class/bibliography build identity (not a source artifact)
+.latex_build_identity.json

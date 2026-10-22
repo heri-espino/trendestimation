@@ -64,6 +64,33 @@ Additional steps:
 | `--dry-run` | Show commands without writing files. |
 | `--clean` | Clean LaTeX outputs, preserve experimental results. |
 
+## Switching from the previous SMCCA / Boletín build
+
+PR #29 already merged the Springer Nature `sn-jnl` manuscript into `main`.
+If you still see a Boletín header, update your *local checkout*:
+
+```powershell
+git switch main
+git pull --ff-only origin main
+Select-String -Path paper/main.tex -Pattern 'documentclass'
+python paper/build.py --pdf
+```
+
+The correct class declaration is
+`\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
+
+When switching from `smcca.cls` and the old numeric `abbrv` bibliography,
+the old `paper/main.aux` can contain `\NAT@force@numbers{}`. Springer
+uses the author--year `sn-mathphys-ay` bibliography, so that stale auxiliary
+file makes `pdflatex` fail *before* BibTeX can refresh citations.
+The compiler now detects this mismatch automatically and removes only
+the obsolete LaTeX/BibTeX auxiliary files. It preserves all numerical data,
+benchmarks, figures and the previous PDF until the next successful compile.
+You do not need to rerun `--all` merely to switch journal format.
+
+If you inspect an old PDF after a successful build, ensure you open
+`paper/main.pdf` (not an old downloaded copy of the SMCCA manuscript).
+
 ## Flat submission source ZIP
 
 The journal explicitly states: **do not upload LaTeX sources in subfolders**.
