@@ -1,4 +1,4 @@
-name: SMCCA manuscript PDF (manual)
+name: Computational Statistics manuscript PDF (manual)
 
 on:
   workflow_dispatch:
@@ -26,17 +26,21 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pip install -r paper/requirements.txt
-      - name: Generate all required manuscript figures and simulation tables
+      - name: Generate Springer manuscript figures and simulation tables
         run: python paper/build.py --figures
-      - name: Compile SMCCA LaTeX
+      - name: Compile official Springer Nature LaTeX
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: paper
           root_file: main.tex
           latexmk_use_xelatex: false
-      - name: Upload reviewed draft PDF
+      - name: Make flat Computational Statistics submission archive
+        run: python paper/build.py --package
+      - name: Upload Springer draft and source archive
         uses: actions/upload-artifact@v4
         with:
-          name: trendestimation-smcca-expanded
-          path: paper/main.pdf
+          name: trendestimation-computational-statistics-draft
+          path: |
+            paper/main.pdf
+            paper/computational-statistics-submission.zip
           if-no-files-found: error

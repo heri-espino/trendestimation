@@ -29,14 +29,14 @@ try:
     import awesomefigures as af
 except ImportError as exc:
     raise SystemExit(
-        "AwesomeFigures is required for the SMCCA figures. Install it using "
+        "AwesomeFigures is required for the Springer Nature figures. Install it using "
         "'python -m pip install -r paper/requirements.txt'."
     ) from exc
 
 PAPER = Path(__file__).resolve().parents[1]
 FIGURES = PAPER / "figures"
 BENCHMARKS = PAPER / "benchmarks" / "results"
-# Never fix physical width independently of the SMCCA class: af.latex_style
+# Never fix physical width independently of the Springer Nature class: af.latex_style
 # probes the real manuscript and derives textwidth/normal font size.
 COLORS = af.color_palette("okabe-ito", as_hex=True)
 
@@ -48,16 +48,16 @@ MARKERS = ("o", "s", "^", "D")
 
 @contextmanager
 def publication_context():
-    """Measure the official SMCCA document and typeset PDF text with LaTeX.
+    """Measure the official Springer Nature document and typeset PDF text with LaTeX.
 
     af.latex_style matches physical figure/text dimensions, but with its
     default Matplotlib PDF backend only the *serif family* (not the glyphs)
     would match. The PGF PDF backend, using the same pdflatex font stack as
-    smcca.cls, makes the embedded glyphs actually Latin Modern.
+    sn-jnl.cls, makes the embedded glyphs actually Latin Modern.
     """
     if shutil.which("pdflatex") is None:
         raise RuntimeError(
-            "Exact SMCCA figure typography requires pdflatex on PATH. "
+            "Exact Springer Nature figure typography requires pdflatex on PATH. "
             "Install MiKTeX/TeX Live and rerun this command; falling back to "
             "DejaVu or another system font would silently change your paper."
         )
@@ -74,17 +74,14 @@ def publication_context():
         with matplotlib.rc_context({
             "pgf.texsystem": "pdflatex",
             "pgf.rcfonts": False,
-            "pgf.preamble": (
-                r"\usepackage[T1]{fontenc}" + "\n"
-                r"\usepackage{lmodern}" + "\n"
-                r"\usepackage{amsmath,amssymb}"
-            ),
-            "font.family": "serif",
+            # sn-jnl.cls uses its default Computer Modern fonts. Do not
+            # inject SMCCA's Latin Modern or T1 encoding into these figures.
+            "pgf.preamble": r"\usepackage{amsmath,amssymb}",
             "savefig.bbox": None,
             "savefig.pad_inches": 0,
         }):
             print(
-                "[awesomefigures] SMCCA TeX measurements: "
+                "[awesomefigures] Springer Nature TeX measurements: "
                 f"textwidth={publication.layout.textwidth_pt:.2f}pt, "
                 f"body font={publication.layout.fontsize_pt:.1f}pt, "
                 f"family={publication.layout.font_family}, "
@@ -97,11 +94,11 @@ def publication_context():
 def _save(publication, fig, target: Path):
     # Unlike af.save_figure's ordinary tight-crop preset, PublicationStyle
     # keeps the PDF at its measured width. The backend="pgf" option renders
-    # real TeX/Latin Modern glyphs into the standalone PDF, so Scipedia still
+    # real TeX document-matched glyphs into the standalone PDF, so Scipedia still
     # receives a vector PDF instead of unsupported in-document TikZ/PGF.
     audit = publication.audit(fig)
     if abs(audit.output_width_pt - audit.expected_width_pt) > 0.5:
-        raise RuntimeError(f"Figure width deviates from SMCCA: {audit.warnings}")
+        raise RuntimeError(f"Figure width deviates from Springer Nature: {audit.warnings}")
     if audit.smallest_text_pt is not None and audit.smallest_text_pt < 7.0:
         raise RuntimeError(f"Figure text too small at printed size: {audit.warnings}")
     publication.savefig(fig, target, backend="pgf", audit=True)
@@ -128,7 +125,7 @@ def _load(path: Path, columns: tuple[str, ...]):
 
 
 def _axis(publication, ylog=False):
-    # At 100% insertion size, axis labels = the actual SMCCA body font size;
+    # At 100% insertion size, axis labels = the actual Springer Nature body font size;
     # ticks/legends = 0.8 x body size. No later LaTeX scaling is permitted.
     fig, ax = publication.subplots(height_ratio=0.59, layout=None)
     ax.grid(which="major", alpha=0.17, linewidth=0.5)
@@ -198,7 +195,7 @@ def render_high_order(publication):
 
 def _render_benchmark(publication, input_name, output_name, *, M, title, ylabel):
     source = BENCHMARKS / input_name
-    # SMCCA author instructions require ALL included image files in figures/.
+    # Springer Nature author instructions require ALL included image files in figures/.
     target = FIGURES / output_name
     if not source.exists():
         # A default figure-only build must not create fictional runtime values.
@@ -234,7 +231,7 @@ def main(argv=None):
                        help="Render timing PDFs from already measured CSV-derived data")
     args = parser.parse_args(argv)
 
-    # The layout is measured from the REAL compiled SMCCA preamble, not
+    # The layout is measured from the REAL compiled Springer Nature preamble, not
     # guessed from a nominal US-letter page size or Matplotlib defaults.
     with publication_context() as publication:
         if not args.benchmarks_only:

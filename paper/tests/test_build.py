@@ -88,6 +88,17 @@ class BuildFlagsTest(unittest.TestCase):
         self.assertNotIn("make_figures.py", output)
         self.assertNotIn("run_all.py", output)
 
+    def test_springer_packaging_is_opt_in_and_does_not_trigger_benchmarks(self):
+        status, output = self._capture(["--dry-run", "--package"])
+        self.assertEqual(status, 0)
+        self.assertIn("package_submission.py", output)
+        self.assertNotIn("run_all.py", output)
+        self.assertNotIn("latexmk", output)
+        status, output = self._capture(["--dry-run", "--pdf", "--package"])
+        self.assertEqual(status, 0)
+        self.assertIn("latexmk -pdf", output)
+        self.assertIn("package_submission.py", output)
+
     def test_pdf_engine_flag_and_clean(self):
         status, output = self._capture([
             "--dry-run", "--pdf", "--latex-engine", "xelatex"

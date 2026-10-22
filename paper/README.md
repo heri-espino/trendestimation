@@ -1,202 +1,114 @@
-# SMCCA scientific-computing manuscript
+# Computational Statistics manuscript — Springer Nature
 
-**Draft, not approved for journal submission.**
+This directory contains an **unsubmitted working draft** of the scientific
+paper describing the `trendestimation` Python library. The intended venue
+is **Computational Statistics** (Springer Nature, ISSN 0943-4062).
+This is distinct from *Computational Statistics & Data Analysis* (Elsevier).
 
-- First author: **Heriberto Espino-Montelongo**.
-- Second author: **Daniela Cortés-Toto**.
-- Affiliation for **both**: Universidad de las Américas Puebla (UDLAP).
-- Officially styled with the available SMCCA `smcca.cls` class already used in the research repo.
-- Main document: `main.tex`; sections of the extended mathematical derivation are in `sections/`.
-- Bibliography: `bibliografia.bib`, including the two other SMCCA articles previously identified.
-- Synthetic replication: `figures/make_figures.py` (Cortés-Toto et al. scenario).
-- **Observed-data example:** `figures/make_extended_figures.py` uses the historical Mauna Loa weekly CO2 measurements bundled with `statsmodels.datasets.co2`; aggregates the 1990–1999 measurements to 120 monthly averages, compares d=2,3,4,5 at normalized smoothness 0.86, and exports the plot data.
-- Independent mathematical test: the same script computes the closed-form conditional GLS/likelihood profile estimator of `mu`, then checks it against a direct joint normal-equation solver for d=1,2,3,5.
+## Official December 2024 template
 
-## Build the entire paper with one command
+- `main.tex` uses `\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
+- `sn-jnl.cls` and `sn-mathphys-ay.bst` were checked against the author's
+  uploaded December 2024 Springer Nature ZIP, **byte-for-byte** by Git blob hash:
+  `d25f07cb51c685e90a4ab97e95479826289486d4` and
+  `35533152b3a21c47815f2fe194fef46285c4ccd8` respectively.
+- The style is **author–year**, consistent with the journal's instructions.
+- The scientific model, mathematics, figures and experiments are inherited
+  from the earlier paper; no new measurements were invented in changing venue.
+- Previous SMCCA-specific entrypoint: `legacy_smcca_main.tex`. Original
+  documentation: `README_SMCCA.md`; old `smcca.cls` is untouched.
 
-`paper/build.py` is the canonical command-line interface. It resolves paths
-relative to its own location, so it works whether you launch it from the
-repository root or elsewhere. The current SMCCA PDF is compiled with
-`latexmk`; PDF compilation requires an installed TeX distribution
-(including the journal class's packages and BibTeX). Figures are exported
-as vector PDF images to comply with the SMCCA/Scipedia submission requirements.
+Journal instructions: https://link.springer.com/journal/180/submission-guidelines
 
-Install the scientific dependencies, then run:
+## Build
 
-```sh
+From repository root with your existing `trendestimation` conda environment:
+
+```powershell
 python -m pip install -e .
 python -m pip install -r paper/requirements.txt
 python paper/build.py
 ```
 
-### Exact SMCCA typography in figures
+This creates `paper/main.pdf` using Springer Nature's `sn-jnl` class. It
+generates deterministic synthetic, observational and higher-order data and
+uses [AwesomeFigures](https://github.com/awesomefigures/awesomefigures) to
+render standalone vector PDFs. Its `af.latex_style()` probes **the current
+paper/main.tex**, not the old SMCCA document, so figure text sizes and
+fonts follow the new class's physical layout. Requires `latexmk`,
+`pdflatex`, and `bibtex` (e.g. MiKTeX).
 
-The official `smcca.cls` loads `lmodern` (Latin Modern Roman at a
-10-point body size). Ordinary Matplotlib PDFs cannot match those glyphs
-merely by choosing a generic serif font. The paper renderer now uses
-`af.latex_style("paper/main.tex", width="text")` to measure the *actual*
-LaTeX body size and full text width, and exports each standalone figure
-through Matplotlib's `backend="pgf"` PDF backend with the same
-`pdflatex` + `lmodern` typography. The figures are still regular
-vector PDFs suitable for SMCCA; no inline TikZ/PGF graphics are inserted
-in the final manuscript. The `\includegraphics` commands intentionally
-have **no width option**: resizing otherwise shrinks the font point sizes.
-
-For an existing machine-specific benchmark run, regenerate only the
-artwork and recompile the PDF (without recalculating any numerical data):
+To reuse results from an existing Windows benchmark run:
 
 ```powershell
-git pull origin main
-python paper/build.py --render-figures --pdf
+python paper/build.py --render-figures --pdf --package
 ```
 
-This refreshes all three descriptive figures and the two timing figures
-when their measured `.dat` files are present. **Do not rerun
-`--all --benchmark-preset full` just to fix the typography.**
+For a full fresh run, including costly benchmarks and packaging:
 
-`pdflatex` and the `lmodern` LaTeX package must be available before
-running the plot generator, as they are when MiKTeX is installed. The
-renderer fails with an explanatory error instead of silently falling back
-to DejaVu. The manual GitHub Actions PDF workflow installs these fonts
-and TeX packages before generating figures. Use
-`af.verify_latex_placement` to independently confirm a figure's
-physical width when inspecting a manuscript.
+```powershell
+python paper/build.py --all --benchmark-preset full --repeats 7
+```
 
-The **default build** uses the GitHub-installed **AwesomeFigures** library
-(pinned to an immutable commit in `paper/requirements.txt`) to render vector
-PDF figures. It regenerates the synthetic CV/GCV/AICc/BIC table, the historical Mauna Loa plot and the high-order numerical plot,
-then compiles `paper/main.pdf`. It does **not** run slow timing benchmarks
-implicitly. All generated figures, tables, results and PDF remain inside
-`paper/`.
+Additional steps:
 
-### CLI flags
-
-| Command | Effect |
+| Flag | Effect |
 | --- | --- |
-| `python paper/build.py --help` | Show all options. |
-| `python paper/build.py --render-figures --pdf` | Redraw native-size LaTeX-font PDFs using existing numerical data, then recompile without new experiments. |
-| `python paper/build.py --figures` | Generate all required figures and the synthetic-criteria table, without compiling PDF. |
-| `python paper/build.py --tables` | Rebuild benchmarking LaTeX tables from **existing** raw timing CSVs. |
-| `python paper/build.py --benchmarks --benchmark-preset quick --repeats 5` | Run timed comparisons and automatically produce tables. No PDF compilation. |
-| `python paper/build.py --pdf` | Recompile from **existing** figure and table files; fail with an explanation if required inputs are missing. |
-| `python paper/build.py --all --benchmark-preset full --repeats 7` | Regenerate all figures and benchmark results, then compile the full SMCCA PDF. May be expensive. |
-| `python paper/build.py --dry-run --all` | Inspect the exact commands without running or writing anything. |
-| `python paper/build.py --clean` | Clean LaTeX auxiliary files and the compiled PDF, preserving results and figures. |
+| `--figures` | Regenerate deterministic data and publication figures. |
+| `--render-figures` | Redraw using existing data; do not rerun experiments. |
+| `--benchmarks` | Run full-fit and trace performance comparisons. |
+| `--tables` | Regenerate benchmark tables from measured CSVs. |
+| `--pdf` | Compile PDF from existing data/figures. |
+| `--package` | Produce a **flat** Springer submission ZIP using existing PDF and LaTeX sources. |
+| `--all` | Full reproducible figures + benchmarks + PDF + submission ZIP. |
+| `--dry-run` | Show commands without writing files. |
+| `--clean` | Clean LaTeX outputs, preserve experimental results. |
 
-Optional controls: `--blas-threads N` (benchmark parallelism;
-default 1), `--latex-engine pdflatex|xelatex|lualatex` (default
-pdfLaTeX), `--benchmark-preset smoke|quick|full`, and `--repeats N`.
-The figure renderer reads the original numeric `.dat` files without
-altering any computations, uses the colorblind-accessible Okabe–Ito palette
-and exports standalone PDFs through `af.save_figure`. Manuscript figures use
-`\\includegraphics` instead of inline TikZ/PGFPlots, as required by the
-SMCCA Scipedia author instructions. The figure PDFs and numerical arrays stay
-inside `paper/figures/`, while raw timing data stays under `paper/benchmarks/results/`.
+## Flat submission source ZIP
 
-The usual build uses existing measured benchmark tables if they are
-present; check their recorded machine and revision to avoid mixing
-results. To update tables from raw data without rerunning measurements,
-use `--tables --pdf` (after figures are already generated).
-
-The uploaded June 2026 SMCCA template's `smcca.cls` is identical to
-`paper/smcca.cls` (Git blob SHA `8f2642cbe1c9553e43f82f3c1e4e708b1a33d618`).
-We preserve the class rather than creating a custom substitute; see
-`paper/SMCCA_TEMPLATE.md` for journal layout and figure requirements.
-
-A successful non-dry-run build also writes
-`paper/build_manifest.json` with executed commands, durations,
-Python/platform details and Git revision. The manifest is ignored by
-Git; do not present measurements from another computer as your own.
-
-The Makefile delegates to the same interface, for example:
-
-```sh
-make -C paper pdf
-make -C paper figures
-make -C paper pdf-with-benchmarks
-```
-
-The GitHub Actions manuscript workflow is **manual only**. It uses this
-builder for figure generation and the LaTeX action for compilation in an
-isolated TeX environment; it does not run large benchmarks on pushes.
-The manual benchmark workflow produces downloadable raw timing artifacts.
-
-## Recover from an interrupted BibTeX build
-
-If all figures and timing benchmarks have already been generated but
-`latexmk` stops at a bibliography error, **do not rerun `--all`**.
-After applying the fix, keep the current ignored experiment outputs and
-compile only the manuscript:
+The journal explicitly states: **do not upload LaTeX sources in subfolders**.
+Running
 
 ```powershell
-git pull origin main
-python paper/build.py --pdf
+python paper/build.py --package
 ```
 
-This reuses `paper/figures/*.pdf`, the existing LaTeX tables and the
-machine-specific benchmark results under `paper/benchmarks/results/`.
-The builder checks `paper/bibliografia.bib` for duplicate citation keys
-before starting any expensive work. BibTeX remains responsible for full
-bibliography syntax validation.
+produces `paper/computational-statistics-submission.zip`. It includes
+`main.tex`, `main.pdf`, `bibliografia.bib`, the official `.cls`
+and `.bst`, referenced `sections/*.tex`, optional generated LaTeX timing
+tables, and referenced vector `.pdf` figures, all **flattened at ZIP root**.
+A reference-rewriting pass makes the flattened sources self-contained.
+The packager checks template blob hashes, missing files and potentially
+stale PDF outputs. It does **not** include ignored numeric benchmark CSVs
+or private/local data by default. Consider archiving verified raw benchmark
+results separately for research reproducibility.
 
-## Scientific boundaries
+## Journal requirements and remaining author approvals
 
-The long-known PLS estimator, arbitrary finite-difference order and polynomial
-nullspace, nonzero reference-difference mean, spectral decomposition,
-smoothing splines, and Gaussian marginal likelihood are not claimed as novel.
-The package integrates these methods with an illustrative gallery.
+Computational Statistics' online instructions request a 150–250 word
+abstract, 4–6 keywords, author–year citations and editable LaTeX source.
+The current paper includes an abstract and five keywords, and introduces
+a `Declarations` section.
 
-- The correction maps Guerrero's index `[0, 1-d/n]` to `[0,1]`. Do not
-  write `1-n/d`.
-- The reviewed base package uses **SciPy/NumPy on CPU**, not a verified GPU
-  backend. No runtime/GPU speedup has been measured for the paper.
-- The other agent's MLE branch implements Gaussian marginal likelihood with
-  fixed or plugged-in `mu`. The new analytical **joint profile formula for mu**
-  is research code under `figures/make_extended_figures.py`; it is **not**
-  yet a public package API and must not be presented as one.
-- The real CO2 observations include seasonality, not merely measurement error.
-  The visualization is two-sided descriptive smoothing, not future forecasting.
-- Large difference orders may be poorly conditioned. A bounded reproducible d=1..10 experiment reports the condition ratio of the positive penalty spectrum and direct-versus-spectral disagreement.
-- All coauthor approvals, affiliation presentation, author contribution statements,
-  manuscript novelty review and release tagging remain to be completed.
+**Before any submission, the authors must verify and complete:**
+corresponding-author email; affiliations; funding; competing interests;
+author contributions; research data and code availability, ideally with
+an archived code release and stable DOI; publication ethics statements;
+permissions if any third-party figure is reused; novelty and statistical
+significance relative to recent work. Placeholders have intentionally
+not been filled with unverified statements.
 
-## Context in this journal
+The **computational** focus is critical: assess numerical stability,
+setup vs repeated-use costs, scaling and hardware effects carefully.
+Specialized banded solvers often outperform SVD for full fitted curves.
+The work should not claim that existing Whittaker--Henderson methods,
+penalized least squares, or standard cross-validation are newly invented.
 
-The prior SMCCA articles cited are Balam et al. (2025),
-*A Simple Overview of Least Squares*, and Azofeifa and Moreles (2025),
-*Hybrid Discontinuous Galerkin Method for Perturbations of the Modified
-Helmholtz Equation*. The exposition mirrors their compact numerical-analysis
-structure without claiming a directly shared mathematical method.
+The existing timing data generated by the author are in the ignored
+`paper/benchmarks/results/`. Use `paper/benchmarks/README.md` for
+experiment methodology and provenance. Heavy GitHub Actions continue to
+run **only via manual workflow_dispatch**; regular CI is limited to tests.
 
-## Paper-only timing comparisons
-
-The scripts under `paper/benchmarks/` compare naive fresh dense solves,
-cached dense solves, a reusable spectral decomposition, and a directly
-banded penalty solver. A separate test compares full matrix EDF/trace
-computation against summing spectral attenuation factors. All numerical
-parity checks are separated from timed regions; one-time SVD setup is
-included. No library API or `src/` file is modified.
-
-Run from the repository root:
-
-```sh
-python -m pip install -e .
-python -m pip install threadpoolctl
-python paper/benchmarks/run_all.py --preset smoke --repeats 2
-python paper/benchmarks/run_all.py --preset quick --repeats 5
-# Longer study, explicitly manual:
-python paper/benchmarks/run_all.py --preset full --repeats 7
-```
-
-Raw CSV files, hardware information, relative speedups, and optional
-vector-PDF timing figures plus publication-style LaTeX summary tables are generated in the **ignored** directory
-`paper/benchmarks/results/`. The SMCCA manuscript imports **actual measured timing tables, numerical parity
-and host metadata automatically** when those files exist. Without them it
-prints a missing-results notice; preliminary pilot timings are not silently
-published as measurements from another computer.
-
-**Do not claim universal spectral superiority or GPU acceleration.** The
-banded baseline may be faster than spectral fitting. The numbers must be
-measured on a named host, repeated, and associated with a source revision.
-See `paper/benchmarks/README.md` for the operation model, input grid,
-numerical tolerances and detailed interpretation.
+Original template readme and full article authoring manual are supplied
+in the uploaded Springer Nature December 2024 ZIP; the manuscript
+repository stores the verified build-critical `.cls` and `.bst`.
