@@ -125,6 +125,13 @@ def main():
             f.write(f"{n} {m} " + " ".join(
                 f"{group[method]['total_median_s']:.10g}" for method in METHODS
             ) + "\n")
+    with (args.output_dir/"trace_at_M32.dat").open("w",encoding="utf-8") as f:
+        f.write("n densefresh densecached spectral banded\n")
+        for (n,m),group in sorted(grouped.items()):
+            if m == 32:
+                f.write(f"{n} " + " ".join(
+                    f"{group[method]['total_median_s']:.10g}" for method in METHODS
+                ) + "\n")
     print("Trace profiles agree. Output:",args.output_dir)
 
 
