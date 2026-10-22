@@ -103,7 +103,6 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
         self.assertGreater(len(data), 1000)
         self.assertTrue(data.startswith(b"%PDF-"), path)
 
-    @unittest.skipUnless(HAS_LATEX, "Exact TeX-backed figures need pdflatex")
     def test_renderer_never_silently_falls_back_to_dejavu(self):
         with patch.object(self.renderer.shutil, "which", return_value=None):
             with self.assertRaisesRegex(RuntimeError, "pdflatex on PATH"):
@@ -147,6 +146,7 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
         self.assertEqual(publisher.savefig.call_args.kwargs["backend"], "pgf")
         self.assertTrue(publisher.savefig.call_args.kwargs["audit"])
 
+    @unittest.skipUnless(HAS_LATEX, "Exact TeX-backed figures need pdflatex")
     def test_core_vector_pdfs(self):
         self.renderer.main(["--figures-only"])
         for name in ("cortes_toto_synthetic", "mauna_loa_1990_1999",
