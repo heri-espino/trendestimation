@@ -29,6 +29,39 @@ python -m pip install -r paper/requirements.txt
 python paper/build.py
 ```
 
+### Exact SMCCA typography in figures
+
+The official \`smcca.cls\` loads \`lmodern\` (Latin Modern Roman at a
+10-point body size). Ordinary Matplotlib PDFs cannot match those glyphs
+merely by choosing a generic serif font. The paper renderer now uses
+\`af.latex_style("paper/main.tex", width="text")\` to measure the *actual*
+LaTeX body size and full text width, and exports each standalone figure
+through Matplotlib's \`backend="pgf"\` PDF backend with the same
+\`pdflatex\` + \`lmodern\` typography. The figures are still regular
+vector PDFs suitable for SMCCA; no inline TikZ/PGF graphics are inserted
+in the final manuscript. The \`\\includegraphics\` commands intentionally
+have **no width option**: resizing otherwise shrinks the font point sizes.
+
+For an existing machine-specific benchmark run, regenerate only the
+artwork and recompile the PDF (without recalculating any numerical data):
+
+\`\`\`powershell
+git pull origin main
+python paper/build.py --render-figures --pdf
+\`\`\`
+
+This refreshes all three descriptive figures and the two timing figures
+when their measured \`.dat\` files are present. **Do not rerun
+\`--all --benchmark-preset full\` just to fix the typography.**
+
+\`pdflatex\` and the \`lmodern\` LaTeX package must be available before
+running the plot generator, as they are when MiKTeX is installed. The
+renderer fails with an explanatory error instead of silently falling back
+to DejaVu. The manual GitHub Actions PDF workflow installs these fonts
+and TeX packages before generating figures. Use
+\`af.verify_latex_placement\` to independently confirm a figure's
+physical width when inspecting a manuscript.
+
 The **default build** uses the GitHub-installed **AwesomeFigures** library
 (pinned to an immutable commit in `paper/requirements.txt`) to render vector
 PDF figures. It regenerates the synthetic CV/GCV/AICc/BIC table, the historical Mauna Loa plot and the high-order numerical plot,
@@ -41,6 +74,7 @@ implicitly. All generated figures, tables, results and PDF remain inside
 | Command | Effect |
 | --- | --- |
 | `python paper/build.py --help` | Show all options. |
+| `python paper/build.py --render-figures --pdf` | Redraw native-size LaTeX-font PDFs using existing numerical data, then recompile without new experiments. |
 | `python paper/build.py --figures` | Generate all required figures and the synthetic-criteria table, without compiling PDF. |
 | `python paper/build.py --tables` | Rebuild benchmarking LaTeX tables from **existing** raw timing CSVs. |
 | `python paper/build.py --benchmarks --benchmark-preset quick --repeats 5` | Run timed comparisons and automatically produce tables. No PDF compilation. |
