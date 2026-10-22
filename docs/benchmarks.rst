@@ -19,19 +19,19 @@ the number of candidate smoothing penalties.
    * - Operation
      - Approximate complexity
    * - Full spectral factorization
-     - :math:`\\mathcal{O}(n^3)`
+     - :math:`\mathcal{O}(n^3)`
    * - Store one dense spectral basis
-     - :math:`\\mathcal{O}(n^2)` memory
+     - :math:`\mathcal{O}(n^2)` memory
    * - Conditional EDF or spectral smoothness
-     - :math:`\\mathcal{O}(n)` per penalty
+     - :math:`\mathcal{O}(n)` per penalty
    * - GCV, AICc, BIC after one projection
-     - :math:`\\mathcal{O}(n)` per penalty
+     - :math:`\mathcal{O}(n)` per penalty
    * - Reconstruct a full fitted trend
-     - :math:`\\mathcal{O}(n^2)` per penalty
+     - :math:`\mathcal{O}(n^2)` per penalty
    * - Full diagonal leverage CV after one projection
-     - :math:`\\mathcal{O}(n^2)` per penalty
+     - :math:`\mathcal{O}(n^2)` per penalty
 
-The :math:`\\mathcal{O}(n)` criterion evaluations assume the eigensystem and projections have
+The :math:`\mathcal{O}(n)` criterion evaluations assume the eigensystem and projections have
 already been computed. Dense spectral setup is explicitly included in the
 benchmark timing, and actual complexity can depend on library and hardware.
 
