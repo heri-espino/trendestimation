@@ -137,3 +137,49 @@ def test_sidebar_expanders_are_keyboard_accessible_without_motion_support():
     assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in (
         DOCS / "conf.py"
     ).read_text(encoding="utf-8")
+
+
+def test_sphinx_and_awesomefigures_use_identical_dejavu_letter_shapes():
+    """A browser's fallbacks must not silently alter outlined SVG labels."""
+    stylesheet = CSS.read_text(encoding="utf-8")
+    helper = (ROOT / "src" / "trendestimation" / "_docs_style.py").read_text(
+        encoding="utf-8"
+    )
+    readme = (DOCS / "README.md").read_text(encoding="utf-8")
+    assert 'font-family: "DejaVu Sans";' in stylesheet
+    assert "fontsource/fonts/dejavu-sans@5.3.0/latin-400-normal.woff2" in stylesheet
+    assert "fontsource/fonts/dejavu-sans@5.3.0/latin-700-normal.woff2" in stylesheet
+    assert "--font-stack: var(--te-font);" in stylesheet
+    assert "--font-stack--headings: var(--te-font);" in stylesheet
+    assert '"font.family": "DejaVu Sans"' in helper
+    assert '"svg.fonttype": "path"' in helper
+    assert "outlined" in readme
+
+
+def test_matplotlib_svg_glyphs_are_vector_outlines():
+    """Standalone notebook SVGs must not depend on system-installed fonts."""
+    from io import StringIO
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    from trendestimation._docs_style import apply_documentation_figure_style
+
+    with plt.rc_context():
+        apply_documentation_figure_style()
+        assert matplotlib.rcParams["font.family"] == ["DejaVu Sans"]
+        assert matplotlib.rcParams["svg.fonttype"] == "path"
+        fig, ax = plt.subplots(figsize=(2, 1.5))
+        try:
+            ax.set_title("Sample trend")
+            ax.set_xlabel("Smoothness")
+            svg = StringIO()
+            fig.savefig(svg, format="svg")
+            content = svg.getvalue()
+        finally:
+            plt.close(fig)
+    # SVG text from Matplotlib has been converted to paths, while the
+    # document remains vector-based and browser/system-font-independent.
+    assert "<path" in content
+    assert "<text" not in content

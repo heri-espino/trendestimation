@@ -150,8 +150,19 @@ Complexity formulas in mathematical/benchmark pages use MathJax
 Every executable notebook configures the GitHub-only
 [AwesomeFigures](https://github.com/awesomefigures/awesomefigures) package
 as a Matplotlib style (``elegante``, Okabe–Ito categorical palette, DejaVu
-Sans, no LaTeX, no deliberate artist rasterization). The Sphinx site
-uses the **same first-choice DejaVu Sans font**. After loading AwesomeFigures,
+Sans, no LaTeX, no deliberate artist rasterization). The site uses **the
+same DejaVu Sans 2.37 family**: Furo's body and heading font stacks are
+explicitly set, and the browser loads version-pinned Fontsource DejaVu
+Sans faces from jsDelivr when no matching local font is installed.
+External SVG images cannot inherit that website CSS, so their Matplotlib
+labels are saved as vector glyph paths (``svg.fonttype="path"``). The
+figures retain scalable vector rendering and exact DejaVu letter shapes
+even on machines lacking the font. These outlined labels are **not**
+selectable/searchable SVG text; canvas descriptions and captions remain
+real HTML text. A browser without CDN access falls back to the local
+DejaVu font, if installed, or Arial, so complete web-page matching cannot
+be guaranteed offline.
+After loading AwesomeFigures,
 all 13 notebooks call ``apply_documentation_figure_style()`` from
 ``trendestimation._docs_style`` to enlarge typography consistently:
 16 pt body, 19 pt axes titles, 17 pt labels, 14 pt ticks, 15 pt legends
@@ -187,9 +198,9 @@ TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
 Chapter 10 additionally exports standalone vector files when
 ``SAVE_SVG=True`` (default: False); the figure filenames end in ``.svg``.
 The SVG container is scalable, but ``imshow``/image artists can embed
-raster pixel data inside an SVG. Matplotlib text remains editable where
-supported (``svg.fonttype='none'``). Generated figures are not committed
-or deployed automatically.
+raster pixel data inside an SVG. Figure text from Matplotlib is outlined
+(``svg.fonttype='path'``), not editable/searchable text. Generated figures
+are not committed or deployed automatically.
 
 ### Rebuilding figures after typography changes
 
@@ -206,10 +217,13 @@ python scripts/run_notebooks.py --fast --in-place --fail-fast
 TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -W -b html docs build/site
 ```
 
-The font change is reproducible on Matplotlib installations because
-DejaVu Sans is bundled with Matplotlib. The website requests DejaVu Sans
-first and falls back to standard sans-serif fonts in browsers without it.
-No fonts are bundled in the repository.
+The plotting font is reproducible because DejaVu Sans is bundled with
+Matplotlib. The Sphinx site requests the same font and fetches a pinned
+Fontsource webfont over HTTPS when it is not locally installed. Without
+webfont access, the website uses its configured fallback while SVG
+glyph outlines retain the intended font. No font binaries are checked into
+the repository. Rebuild the notebooks and redeploy the site manually to
+replace previously cached SVG figures; CSS alone cannot change those files.
 
 ## Naive versus cached spectral benchmark
 
