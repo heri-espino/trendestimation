@@ -56,12 +56,12 @@ trendestimation
            <p>Compare CV, GCV, AICc, BIC, and Gaussian marginal MLE; alternatively specify a target smoothness.</p>
            <span class="te-feature-link">Read optimization guide <span aria-hidden="true">&rarr;</span></span>
          </a>
-         <a class="te-feature" href="api.html">
+         <a class="te-feature" href="benchmarks.html">
            <span class="te-feature-number">03 / COMPUTATION</span>
            <span class="te-feature-icon" aria-hidden="true">&#931;</span>
            <h3>Reusable spectral solver</h3>
            <p>Reuse a spectral decomposition across smoothing parameters; inspect effective degrees of freedom and the exact limiting trend.</p>
-           <span class="te-feature-link">Explore the API <span aria-hidden="true">&rarr;</span></span>
+           <span class="te-feature-link">Why it is fast <span aria-hidden="true">&rarr;</span></span>
          </a>
        </div>
      </section>
