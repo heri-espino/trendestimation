@@ -17,23 +17,33 @@ def apply_documentation_figure_style() -> None:
     webfont CSS and otherwise falls back to a different system font.
 
     SVG text is therefore visually reproducible but no longer selectable.
-    Point sizes: body 16, titles 19, axes 17, ticks 14, legends 15,
-    figure titles 21. This changes rendering only, never statistical data.
+    Point sizes: body 11, titles 13, axes 11, ticks 10, legends 10,
+    figure titles 14. Major grids use both axes; ordinary line markers
+    are disabled unless they convey actual individual observations. This changes rendering only, never statistical data.
     """
     import matplotlib as mpl
 
     mpl.rcParams.update({
         "font.family": "DejaVu Sans",
-        "font.size": 16.0,
-        "axes.titlesize": 19.0,
-        "axes.labelsize": 17.0,
-        "axes.titlepad": 13.0,
-        "xtick.labelsize": 14.0,
-        "ytick.labelsize": 14.0,
-        "legend.fontsize": 15.0,
-        "legend.title_fontsize": 15.0,
-        "figure.titlesize": 21.0,
+        "font.size": 11.0,
+        "axes.titlesize": 13.0,
+        "axes.labelsize": 11.0,
+        "axes.titlepad": 9.0,
+        "xtick.labelsize": 10.0,
+        "ytick.labelsize": 10.0,
+        "legend.fontsize": 10.0,
+        "legend.title_fontsize": 10.0,
+        "figure.titlesize": 14.0,
         "figure.titleweight": "semibold",
+        "lines.marker": "None",
+        "lines.markersize": 0.0,
+        "axes.grid": True,
+        "axes.grid.axis": "both",
+        "axes.grid.which": "major",
+        "axes.axisbelow": True,
+        "grid.color": "#CFDCE7",
+        "grid.linewidth": 0.65,
+        "grid.alpha": 0.6,
         "svg.fonttype": "path",
         "pdf.fonttype": 42,
         "savefig.bbox": "tight",
