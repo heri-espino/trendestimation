@@ -210,3 +210,15 @@ The font change is reproducible on Matplotlib installations because
 DejaVu Sans is bundled with Matplotlib. The website requests DejaVu Sans
 first and falls back to standard sans-serif fonts in browsers without it.
 No fonts are bundled in the repository.
+
+## Naive versus cached spectral benchmark
+
+The [computation guide](benchmarks.rst) explains the one-time full SVD,
+its asymptotic costs, reuse for EDF/smoothness, RSS-based criteria,
+and exact LOOCV via cached leverages. It distinguishes a deliberately
+naive dense implementation from the separate banded-solver benchmark.
+Run `python docs/examples/naive_vs_spectral.py` from the repository
+root for a seeded apples-to-apples CV/GCV comparison; scores are
+checked for numerical agreement before times are printed. Setup and
+repeated candidate scoring are reported separately. The benchmark is
+manual-only and is not executed as part of CI or Sphinx builds.
