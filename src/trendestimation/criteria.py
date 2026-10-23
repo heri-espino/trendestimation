@@ -405,32 +405,61 @@ def _select_cv_smoothness(
 def select_lambda(
     smoother: TrendSmoother, y, *, criterion: Criterion = "gcv",
     mu: float | Literal["data"] = 0.0, grid=None, method: Method = "auto",
+    search_space: SearchSpace = "lambda",
 ) -> SelectionResult:
-    """Select smoothing strength with grid or analytical CV refinement.
+    """Select a smoothing penalty in lambda or normalized smoothness S.
 
-    For criterion='cv', method='auto' (default) finds all sampled
-    derivative sign-change brackets on a broad log-penalty interval,
-    refines them with Brent's root solver, verifies their original
-    CV scores, and also compares boundary and limiting candidates.
-    A finite search cannot certify the global minimum.
+    Parameters
+    ----------
+    smoother : TrendSmoother
+        Reusable spectral smoother.
+    y : array_like
+        Observed finite one-dimensional data.
+    criterion : {"cv", "gcv", "aicc", "bic", "mle"}
+        The original statistical score; no criterion is redefined.
+    mu : float or {"data"}, default=0.0
+        Fixed numerical mean. Only conditional MLE permits the observed
+        difference plug-in "data"; this is not joint mean estimation.
+    grid : array_like, optional
+        Candidate values in the selected search_space. For "lambda" these
+        are nonnegative penalties, possibly infinity. For "smoothness"
+        these are normalized S values in [0, 1]. Explicit grids retain
+        their ordering and duplicates and override "auto" optimization.
+    method : {"auto", "grid", "derivative"}, default="auto"
+        Auto uses stationary-point refinement for CV and a grid for the
+        other criteria. Explicit "derivative" requires CV, without grid.
+    search_space : {"lambda", "smoothness"}, default="lambda"
+        "lambda" preserves prior behavior and grids; "smoothness"
+        optimizes the same score over s=S(lambda) in [0, 1].
 
-    method='grid' preserves the 121-point default grid plus infinity.
-    An explicitly provided grid overrides method='auto' and scores
-    only those values, preserving their order and any duplicates.
-    Non-CV criteria always use the legacy grid strategy; explicit
-    method='derivative' is only supported for classical CV.
+    Returns
+    -------
+    SelectionResult
+        The grid attribute always holds evaluated penalty values for
+        backward compatibility. The search_grid attribute reports the
+        searched coordinate, aligned with the scores, and the winner
+        has both a lambda_ and normalized smoothness value.
 
-    SelectionResult.grid and .scores record every scored candidate,
-    including root evaluations for derivative-based search.
-    The reported smoothness is the existing normalized trace index.
-    Fixed numeric mu is mandatory for classical criteria. MLE alone
-    supports the empirical plug-in mu='data' as before.
+    Notes
+    -----
+    S(lambda)=(n-tr(H_lambda))/(n-d), NOT Guerrero's n-denominator
+    index. S(0)=0, S(infinity)=1. The inverse is unique for all
+    interior values, but its numerical calculation can fail at
+    unrepresentable float64 tails. A bounded parameterization neither
+    guarantees faster optimization nor global optimality.
+
+    For CV, the derivative search uses
+    dCV/ds=(dCV/dloglambda)/(dS/dloglambda). Multiple stationary
+    candidates and exact endpoints are compared. The MLE option
+    remains conditional on fixed or observed-difference plug-in mu.
     """
     name = str(criterion).lower()
     if name not in {"cv", "gcv", "aicc", "bic", "mle"}:
         raise ValueError("criterion must be cv, gcv, aicc, bic, or mle.")
     if method not in {"auto", "grid", "derivative"}:
         raise ValueError("method must be auto, grid, or derivative.")
+    if search_space not in {"lambda", "smoothness"}:
+        raise ValueError("search_space must be lambda or smoothness.")
     if isinstance(mu, str) and (mu != "data" or name != "mle"):
         raise ValueError("Only mle supports mu='data'; classical criteria require fixed mu.")
     if name == "mle" and (smoother.order == 0 or smoother.n - smoother.order < 2):
@@ -439,21 +468,44 @@ def select_lambda(
         raise ValueError("method='derivative' is only supported for criterion='cv'.")
     if grid is not None and method == "derivative":
         raise ValueError("Provide a grid or use method='derivative', not both.")
+
     _, _, _, coord = smoother._prepare(y, mu if mu == "data" else float(mu))
     if name == "cv" and grid is None and method != "grid":
-        penalties, scores = _select_cv_derivative(smoother, coord)
+        if search_space == "lambda":
+            penalties, scores = _select_cv_derivative(smoother, coord)
+            searched = penalties.copy()
+        else:
+            penalties, scores, searched = _select_cv_smoothness(smoother, coord)
     else:
-        if grid is None:
-            scale = 1.0 / smoother._median_positive_eigenvalue
-            grid = np.r_[scale * np.geomspace(1e-6, 1e6, 121), np.inf]
-        penalties = np.asarray(grid, dtype=float)
-        if (penalties.ndim != 1 or penalties.size == 0
-                or np.any(np.isnan(penalties)) or np.any(penalties < 0)):
-            raise ValueError("grid must contain nonnegative lambda values.")
+        if search_space == "lambda":
+            if grid is None:
+                scale = 1.0 / smoother._median_positive_eigenvalue
+                grid = np.r_[scale * np.geomspace(1e-6, 1e6, 121), np.inf]
+            penalties = np.asarray(grid, dtype=float)
+            if (penalties.ndim != 1 or penalties.size == 0
+                    or np.any(np.isnan(penalties)) or np.any(penalties < 0)):
+                raise ValueError("grid must contain nonnegative lambda values.")
+            searched = penalties.copy()
+        else:
+            if grid is None:
+                grid = np.unique(np.r_[
+                    np.linspace(0.0, 1.0, 121),
+                    [1e-6, 1e-4, 1 - 1e-4, 1 - 1e-6],
+                ])
+            searched = np.asarray(grid, dtype=float)
+            if (searched.ndim != 1 or searched.size == 0
+                    or not np.all(np.isfinite(searched))
+                    or np.any(searched < 0) or np.any(searched > 1)):
+                raise ValueError("smoothness grid must contain values in [0, 1].")
+            penalties = np.asarray([
+                smoother.lambda_for_smoothness(float(s))
+                for s in searched
+            ], dtype=float)
         scores = np.asarray([
             _score_from_coordinates(smoother, coord, lambda_=lam, name=name)
             for lam in penalties
         ])
+
     valid = np.isfinite(scores)
     if not np.any(valid):
         raise ValueError("No finite criterion score on the grid.")
@@ -463,5 +515,8 @@ def select_lambda(
         lambda_=float(penalties[best]),
         smoothness=smoother.smoothness(penalties[best]),
         score=float(scores[best]),
-        grid=penalties, scores=scores,
+        grid=penalties,
+        scores=scores,
+        search_space=search_space,
+        search_grid=searched,
     )
