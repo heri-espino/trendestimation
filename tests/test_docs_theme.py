@@ -137,3 +137,20 @@ def test_sidebar_expanders_are_keyboard_accessible_without_motion_support():
     assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in (
         DOCS / "conf.py"
     ).read_text(encoding="utf-8")
+
+
+def test_sphinx_and_awesomefigures_use_identical_dejavu_letter_shapes():
+    """A browser's fallbacks must not silently alter outlined SVG labels."""
+    stylesheet = CSS.read_text(encoding="utf-8")
+    helper = (ROOT / "src" / "trendestimation" / "_docs_style.py").read_text(
+        encoding="utf-8"
+    )
+    readme = (DOCS / "README.md").read_text(encoding="utf-8")
+    assert 'font-family: "DejaVu Sans";' in stylesheet
+    assert "fontsource/fonts/dejavu-sans@5.3.0/latin-400-normal.woff2" in stylesheet
+    assert "fontsource/fonts/dejavu-sans@5.3.0/latin-700-normal.woff2" in stylesheet
+    assert "--font-stack: var(--te-font);" in stylesheet
+    assert "--font-stack--headings: var(--te-font);" in stylesheet
+    assert '"font.family": "DejaVu Sans"' in helper
+    assert '"svg.fonttype": "path"' in helper
+    assert "outlined" in readme
