@@ -32,6 +32,8 @@ jobs:
         env:
           TRENDESTIMATION_DOCS_EXECUTION: "off"
         run: python -m sphinx -W --keep-going -b html docs build/site
+      - name: Verify rendered notebook mathematics
+        run: python scripts/check_rendered_notebook_math.py build/site
       - name: Upload rendered HTML preview (not deployed)
         uses: actions/upload-artifact@v4
         with:
