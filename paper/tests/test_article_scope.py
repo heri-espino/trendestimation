@@ -39,13 +39,27 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertGreaterEqual(len(keys), 4)
         self.assertLessEqual(len(keys), 6)
 
-    def test_deferred_joint_mle_not_in_submission(self):
+    def test_core_equations_remain_visible(self):
+        for equation in (
+            "objective", "affine", "smoothness",
+            "likelihood-profile", "mu-profile-mle", "lambda-profile-mle",
+        ):
+            with self.subTest(equation=equation):
+                self.assertIn(r"\label{eq:" + equation + "}", self.main)
+        self.assertIn(r"\arg\min_{\tau\in\R^n}", self.main)
+        self.assertIn(r"\|D_d\tau-\mu\mathbf1\|_2^2", self.main)
+        self.assertIn(
+            r"\arg\min_{\lambda>0}", self.main,
+        )
+
+    def test_joint_mle_is_theoretical_outlook_not_empirical_result(self):
         self.assertNotIn(r"\input{sections/likelihood_mu}", self.main)
         self.assertTrue((PAPER / "sections" / "likelihood_mu.tex").is_file())
-        for text in (self.main, self.real):
-            self.assertNotIn(r"\eqref{eq:mu-profile-mle}", text)
-            self.assertNotIn(r"\eqref{eq:likelihood-profile}", text)
+        self.assertIn("a deferred extension", self.main)
+        self.assertIn("not a tested", self.main)
         self.assertIn("outside the scope", self.main)
+        self.assertNotIn(r"\eqref{eq:lambda-profile-mle}", self.real)
+        self.assertNotIn(r"\eqref{eq:mu-profile-mle}", self.real)
 
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
