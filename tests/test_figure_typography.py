@@ -43,7 +43,7 @@ def test_figure_font_scale_and_portable_svg():
         plt.close(fig)
         assert "<path" in svg
         assert "<text" not in svg
-        assert "DejaVu Sans" in svg
+        assert "DejaVuSans" in svg  # Path glyph IDs carry the font family.
 
 
 def test_all_notebooks_activate_large_figure_style_after_awesomefigures():
