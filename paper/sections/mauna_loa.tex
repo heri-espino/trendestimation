@@ -31,36 +31,13 @@ $S=0.86$. These are descriptive trends, not forecasts.}
 \label{fig:real-co2}
 \end{figure}
 
-For $d=2$ at the corresponding $\lambda=37.03$,
-the observed-difference plug-in is
-$\overline{D_2y}=0.002119$ ppm/month$^2$,
-while the likelihood-profile formula gives
-$\widehat\mu(\lambda)=-0.003092$ in the same units.
-This illustrates that a positive-penalty profile estimate
-is not generally the raw observed-difference mean.
-Profiling $\lambda$ jointly over the declared positive
-search interval selected a very small value (approximately
-$6.14\times10^{-6}$) in this particular dataset; seasonal
-structure is an important modeling limitation and
-such boundary behavior should not be interpreted as
-evidence of superior estimation. The figure therefore uses
-the separate controlled-smoothness choice.
-
-\begin{table}[tbp]
-\centering
-\caption{Direct joint normal-equation versus spectral
-profile-$\mu$ numerical check; independent Gaussian test series,
-$n=50$, $\lambda=27$. The values are maximum absolute
-floating-point differences, not inferential errors.}
-\label{tab:mu-check}
-\begin{tabular}{rrr}\toprule
-$d$ & $|\Delta\mu|$ & $\|\Delta\tau\|_\infty$\\\midrule
-1 & $1.02\times10^{-16}$ & $1.17\times10^{-15}$\\
-2 & $1.49\times10^{-16}$ & $7.61\times10^{-15}$\\
-3 & $2.65\times10^{-14}$ & $8.04\times10^{-14}$\\
-5 & $2.21\times10^{-12}$ & $2.64\times10^{-11}$\\\bottomrule
-\end{tabular}
-\end{table}
+The reference mean is fixed at $\mu=0$ for each displayed order,
+so the curves show the effect of changing $d$ while keeping the
+normalized trace-based smoothness index constant. This descriptive
+comparison does not estimate $\mu$ from the data, optimize a Gaussian
+marginal likelihood, or provide a forecast evaluation. The observed
+seasonal fluctuations should not be interpreted as independent
+measurement noise.
 
 A full atmospheric analysis would explicitly model annual
 seasonality, measurement uncertainty, and revisions to the
