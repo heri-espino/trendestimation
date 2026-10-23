@@ -1078,3 +1078,144 @@ div.cell_input div.highlight pre {
     transition: none !important;
   }
 }
+
+
+/* Notebook SVGs, Sphinx figures and responsive image zoom controls.
+   All interactions are progressive enhancements of the static page. */
+.te-zoom-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+}
+.te-zoom-frame > img,
+.te-zoom-frame > svg,
+.te-zoom-frame > a.image-reference,
+.te-zoom-frame > a.image-reference > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.te-zoom-frame .te-zoomable-media {
+  cursor: zoom-in;
+}
+.te-zoom-frame .te-zoomable-media:focus-visible,
+.te-zoom-frame > a.image-reference:focus-visible {
+  outline: 2px solid var(--te-focus);
+  outline-offset: 3px;
+}
+.te-zoom-trigger {
+  position: absolute;
+  z-index: 2;
+  top: .7rem;
+  right: .7rem;
+  padding: .45rem .7rem;
+  border: 1px solid var(--te-accent-border);
+  border-radius: var(--te-radius);
+  background: rgba(255, 255, 255, .96);
+  color: #18344b;
+  font: 600 .78rem/1.2 var(--te-font);
+  cursor: zoom-in;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .22s ease, transform .22s ease, background-color .22s ease;
+}
+.te-zoom-frame:hover > .te-zoom-trigger,
+.te-zoom-frame:focus-within > .te-zoom-trigger {
+  opacity: 1;
+  transform: none;
+}
+.te-zoom-trigger:hover,
+.te-zoom-trigger:focus-visible {
+  background: #e8f1fa;
+}
+@media (hover: none) {
+  .te-zoom-trigger { opacity: 1; transform: none; }
+}
+
+/* Native dialog supplies Escape support, a focus trap and a backdrop. */
+.te-zoom-dialog {
+  box-sizing: border-box;
+  width: min(96vw, 1340px);
+  max-width: 96vw;
+  max-height: 96vh;
+  max-height: 96dvh;
+  padding: 0;
+  border: 1px solid #c9d5e1;
+  border-radius: var(--te-radius);
+  box-shadow: 0 28px 100px rgba(15, 30, 52, .3);
+  background: #fff;
+  color: #18344b;
+  overflow: hidden;
+}
+.te-zoom-dialog::backdrop {
+  background: rgba(10, 23, 40, .78);
+}
+.te-zoom-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .55rem 1rem;
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #dbe3ec;
+  background: #f7fafd;
+}
+.te-zoom-caption {
+  font: 600 .85rem/1.4 var(--te-font);
+  max-width: min(62ch, 100%);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.te-zoom-actions {
+  display: flex;
+  gap: .35rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.te-zoom-actions button {
+  border: 1px solid #cbd9e6;
+  border-radius: var(--te-radius);
+  background: #fff;
+  color: #18344b;
+  padding: .36rem .7rem;
+  font: 600 .8rem/1.5 var(--te-font);
+  cursor: pointer;
+}
+.te-zoom-actions button:hover {
+  border-color: #507b9f;
+  background: #e8f1fa;
+}
+.te-zoom-level {
+  min-width: 3.5rem;
+  color: #294b68;
+  text-align: center;
+  font: 500 .8rem/1.5 var(--te-font);
+}
+.te-zoom-viewport {
+  box-sizing: border-box;
+  width: 100%;
+  height: min(78vh, 900px);
+  height: min(78dvh, 900px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: #fff;
+}
+.te-zoom-stage {
+  width: 100%;
+  min-width: 0;
+  margin: auto;
+}
+.te-zoom-media {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .te-zoom-trigger {
+    transition: none;
+    transform: none;
+  }
+}

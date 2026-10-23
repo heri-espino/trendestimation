@@ -29,7 +29,7 @@ def _style(ax):
         ax.spines[side].set_color("#c7d6e0")
     # Respect the configured plotting theme's tick font sizes.
     ax.tick_params(colors=OTHER, length=3)
-    ax.grid(axis="y", color="#e6eff5", lw=.7, zorder=0)
+    ax.grid(True, axis="both", color="#CFDCE7", alpha=.6, lw=.65, zorder=0)
     ax.set_axisbelow(True)
     ax.title.set_color(INK)
     ax.xaxis.label.set_color(INK)
@@ -44,7 +44,7 @@ def _new_ax(ax, figsize=(10, 4.5)):
     return _style(ax)
 
 
-def plot_forecast(result: TrendForecast, *, ax=None, title=None, show_points=True):
+def plot_forecast(result: TrendForecast, *, ax=None, title=None, show_points=False):
     """Plot historical points, smoothed trend and future extrapolation.
 
     Future shading marks the horizon, NOT a confidence or prediction band.
@@ -66,7 +66,6 @@ def plot_forecast(result: TrendForecast, *, ax=None, title=None, show_points=Tru
     ax.plot(fx, fy, lw=2.5, color=TEAL, ls="--",
             label=f"Trend extrapolation: {result.method}")
     ax.axvline(n - .5, color=OTHER, lw=1, ls=":")
-    ax.scatter(result.future_index, result.forecast, color=TEAL, s=18, zorder=4)
     ax.set(xlabel="Time step", ylabel="Value",
            title=title or "Observed points, estimated trend and future extrapolation")
     ax.legend(frameon=False)
@@ -89,7 +88,7 @@ def plot_smoothness_comparison(
         raise ValueError("smoothness_levels must contain at least one value.")
     ax = _new_ax(ax)
     x = np.arange(len(observed))
-    ax.scatter(x, observed, s=10, color=POINT, alpha=.5, label="Observed")
+    ax.plot(x, observed, lw=.95, color=POINT, alpha=.7, label="Observed")
     colors = [SKY, OTHER, BLUE, DEEP, TEAL]
     for i, s in enumerate(levels):
         lam = solver.lambda_for_smoothness(s)
@@ -109,7 +108,7 @@ def plot_forecast_methods(result: TrendForecast, *, ax=None, damping=.85):
     ax = _new_ax(ax)
     n = len(result.observed)
     x = np.arange(n)
-    ax.scatter(x, result.observed, color=POINT, s=10, alpha=.45, label="Observed")
+    ax.plot(x, result.observed, color=POINT, lw=.95, alpha=.7, label="Observed")
     ax.plot(x, result.fit.trend, color=BLUE, lw=2.2, label="Estimated trend")
     steps = np.arange(1, result.horizon + 1)
     initial = result.fit.trend[-1]
@@ -161,7 +160,7 @@ def plot_residual_diagnostics(result: TrendForecast):
     t = result.history_index
     ax = _style(axes[0, 0])
     ax.axhline(0, color=OTHER, lw=1)
-    ax.scatter(t, r, c=BLUE, s=16, alpha=.7)
+    ax.plot(t, r, color=BLUE, lw=1.1, alpha=.7)
     ax.set(title="Historical fit residuals", xlabel="Time step", ylabel="Observed − trend")
     ax = _style(axes[0, 1])
     ax.hist(r, bins="auto", color=SKY, edgecolor="white")
@@ -184,7 +183,6 @@ def plot_residual_diagnostics(result: TrendForecast):
         lags = np.arange(1, max_lag + 1)
         acf = [np.dot(centered[:-k], centered[k:]) / total for k in lags]
         ax.vlines(lags, 0, acf, color=BLUE, lw=1.6)
-        ax.scatter(lags, acf, color=BLUE, s=12)
     else:
         ax.text(.5, .5, "Zero residual variance",
                 transform=ax.transAxes, ha="center", va="center")
@@ -205,7 +203,7 @@ def plot_forecast_dashboard(result: TrendForecast):
     plot_forecast_methods(result, ax=axes[0, 1])
     ax = _style(axes[1, 0])
     ax.axhline(0, color=OTHER, lw=1)
-    ax.scatter(result.history_index, result.fit.residual, c=BLUE, s=11)
+    ax.plot(result.history_index, result.fit.residual, color=BLUE, lw=1.1)
     ax.set(title="In-sample residuals", xlabel="Time step", ylabel="Residual")
     ax = _style(axes[1, 1])
     ax.hist(result.fit.residual, bins="auto", color=SKY, edgecolor="white")

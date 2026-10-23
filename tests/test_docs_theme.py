@@ -70,7 +70,7 @@ def test_square_corners_and_scroll_reveal_are_progressive():
     assert "prefers-reduced-motion: reduce" in stylesheet
     assert "IntersectionObserver" in script
     assert 'root.dataset.teRevealReady = "true"' in script
-    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in conf
+    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js", "js/figure-zoom.js"]' in conf
 
 
 def test_site_title_is_only_the_project_name():
@@ -134,7 +134,7 @@ def test_sidebar_expanders_are_keyboard_accessible_without_motion_support():
     assert ".sidebar-tree li.has-children > label:focus-visible" in css
     assert "prefers-reduced-motion: reduce" in css
     # Never load duplicate WAAPI controllers for the same checkbox.
-    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js"]' in (
+    assert 'html_js_files = ["js/reveal.js", "js/sidebar.js", "js/figure-zoom.js"]' in (
         DOCS / "conf.py"
     ).read_text(encoding="utf-8")
 
@@ -183,3 +183,29 @@ def test_matplotlib_svg_glyphs_are_vector_outlines():
     # document remains vector-based and browser/system-font-independent.
     assert "<path" in content
     assert "<text" not in content
+
+
+def test_every_sphinx_figure_has_accessible_enlargement_controls():
+    """An opt-in static-document lightbox must include notebook SVG outputs."""
+    conf = (DOCS / "conf.py").read_text(encoding="utf-8")
+    js = (DOCS / "_static/js/figure-zoom.js").read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
+    assert '"js/figure-zoom.js"' in conf
+    assert "img[src]" in js
+    assert '".cell_output svg"' in js
+    assert '".nboutput svg"' in js
+    assert '".output_area svg"' in js
+    assert 'document.createElement("dialog")' in js
+    assert "dialog.showModal()" in js
+    assert 'dialog.addEventListener("close"' in js
+    assert '"Escape"' not in js  # Browser's native dialog handles Escape.
+    assert 'event.key !== "Enter" && event.key !== " "' in js
+    assert "XMLSerializer()" in js
+    assert "URL.revokeObjectURL" in js
+    assert 'data-action="in"' in js
+    assert 'data-action="out"' in js
+    assert 'data-action="reset"' in js
+    assert "sourceFocus?.focus()" in js
+    assert ".te-zoom-dialog::backdrop" in css
+    assert ".te-zoom-trigger" in css
+    assert "prefers-reduced-motion: reduce" in css
