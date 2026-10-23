@@ -148,6 +148,7 @@
     ];
     content.querySelectorAll(selectors.join(", ")).forEach((source) => {
       if (source.closest(".te-landing, .te-zoom-frame, button")) return;
+      if (source instanceof SVGElement && source.ownerSVGElement) return;
       // Other linked figures keep their pre-existing navigation actions.
       const anchor = source.closest("a");
       if (anchor && !anchor.classList.contains("image-reference")) return;
