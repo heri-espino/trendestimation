@@ -56,7 +56,7 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertNotIn(r"\input{sections/likelihood_mu}", self.main)
         self.assertTrue((PAPER / "sections" / "likelihood_mu.tex").is_file())
         self.assertIn("a deferred extension", self.main)
-        self.assertIn("not a tested", self.main)
+        self.assertIn(r"\emph{not} a tested", self.main)
         self.assertIn("outside the scope", self.main)
         self.assertNotIn(r"\eqref{eq:lambda-profile-mle}", self.real)
         self.assertNotIn(r"\eqref{eq:mu-profile-mle}", self.real)
