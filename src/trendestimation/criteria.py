@@ -309,6 +309,99 @@ def _select_cv_derivative(
     return penalties, criterion_scores
 
 
+def _select_cv_smoothness(
+    smoother: TrendSmoother, coordinates: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Refine classical fixed-mu CV directly in normalized smoothness.
+
+    Sample a uniform S mesh together with logit-spaced values near both
+    limits; refine stationary brackets via dCV/dS and local score valleys.
+    Always compare exact endpoints. This is not certified global search.
+    """
+    sampled = np.unique(np.r_[
+        np.linspace(0.0, 1.0, 97),
+        expit(np.linspace(-28.0, 28.0, 97)),
+    ])
+    cache: dict[float, tuple[float, float, float]] = {}
+
+    def evaluate(s: float) -> tuple[float, float, float]:
+        s = float(s)
+        if s not in cache:
+            penalty = smoother.lambda_for_smoothness(s)
+            score, derivative_log = _cv_score_and_log_derivative(
+                smoother, coordinates, penalty,
+            )
+            derivative_s = float("nan")
+            if 0.0 < s < 1.0 and np.isfinite(derivative_log):
+                slope = smoother._smoothness_log_derivative(np.log(penalty))
+                if slope > 0:
+                    derivative_s = float(derivative_log / slope)
+            cache[s] = float(penalty), float(score), derivative_s
+        return cache[s]
+
+    for s in sampled:
+        evaluate(float(s))
+
+    def derivative(s: float) -> float:
+        value = evaluate(s)[2]
+        if not np.isfinite(value):
+            raise ValueError("Nonfinite derivative in smoothness search")
+        return value
+
+    def objective(s: float) -> float:
+        return evaluate(s)[1]
+
+    slopes = [evaluate(float(s))[2] for s in sampled]
+    scores = [evaluate(float(s))[1] for s in sampled]
+    finite_scores = [v for v in scores if np.isfinite(v)]
+    threshold = 1e-13 * max(1.0, max(finite_scores, default=1.0))
+
+    for i in range(1, len(sampled) - 2):
+        left, right = slopes[i], slopes[i + 1]
+        if not (np.isfinite(left) and np.isfinite(right)):
+            continue
+        if abs(left) <= threshold or abs(right) <= threshold:
+            continue
+        if np.signbit(left) == np.signbit(right):
+            continue
+        try:
+            root = brentq(
+                derivative, float(sampled[i]), float(sampled[i + 1]),
+                xtol=1e-12, maxiter=100,
+            )
+            evaluate(float(root))
+        except (ValueError, ArithmeticError, OverflowError, RuntimeError):
+            continue
+
+    # Refining sampled score valleys can catch a minimum with a nearly
+    # flat or numerically unresolved derivative.
+    for i in range(1, len(sampled) - 1):
+        if not (scores[i] <= scores[i - 1] and scores[i] <= scores[i + 1]):
+            continue
+        if (
+            np.isfinite(slopes[i - 1]) and np.isfinite(slopes[i + 1])
+            and slopes[i - 1] < 0 < slopes[i + 1]
+            and abs(slopes[i - 1]) > threshold
+            and abs(slopes[i + 1]) > threshold
+        ):
+            continue
+        try:
+            result = minimize_scalar(
+                objective,
+                bounds=(float(sampled[i - 1]), float(sampled[i + 1])),
+                method="bounded", options={"xatol": 1e-12},
+            )
+            if result.success:
+                evaluate(float(result.x))
+        except (ValueError, ArithmeticError, OverflowError, RuntimeError):
+            continue
+
+    search_grid = np.asarray(sorted(cache), dtype=float)
+    penalties = np.asarray([cache[float(s)][0] for s in search_grid])
+    scores = np.asarray([cache[float(s)][1] for s in search_grid])
+    return penalties, scores, search_grid
+
+
 def select_lambda(
     smoother: TrendSmoother, y, *, criterion: Criterion = "gcv",
     mu: float | Literal["data"] = 0.0, grid=None, method: Method = "auto",
