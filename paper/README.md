@@ -5,6 +5,43 @@ paper describing the `trendestimation` Python library. The intended venue
 is **Computational Statistics** (Springer Nature, ISSN 0943-4062).
 This is distinct from *Computational Statistics & Data Analysis* (Elsevier).
 
+## Scope of the Computational Statistics paper
+
+**Research question:** For finite-difference penalized least-squares (PLS)
+smoothers with a **specified difference order and fixed numerical
+reference-difference mean**, when is reusable spectral computation
+competitive with dense and banded methods, and what numerical-accuracy
+limitations arise as difference order increases?
+
+The manuscript reports only existing and reproducible evidence:
+
+- the established affine PLS estimator, its polynomial null space and
+  normalized trace-based smoothness coordinate;
+- four end-to-end solver implementations under matched workloads,
+  separating full fitted curves from scalar EDF/trace evaluations;
+- deterministic numerical agreement and high-order conditioning checks;
+- one fixed-mean, second-order nonlinear synthetic illustration of
+  **CV/GCV/AICc/BIC**, without claiming a general ranking;
+- a descriptive monthly Mauna Loa CO2 smoothing illustration across
+  orders using the same **prescribed smoothness**, not a forecast test.
+
+**Not part of this manuscript:** new estimation of arbitrary-order PLS
+as a mathematical family; joint Gaussian MLE of `(lambda, mu)`;
+comparison of MLE with CV/GCV/AICc/BIC across datasets; inference after
+`mu="data"` plug-in estimation; forecast-optimal/horizon-based smoothing;
+GPU or energy benchmarks. `paper/sections/likelihood_mu.tex` is retained
+for future research but deliberately **not included** by `main.tex`.
+The public package's Gaussian marginal-likelihood criterion is also
+not benchmarked or presented as a principal contribution here.
+
+An earlier version mixed a profiled-mean likelihood derivation into the
+numerical benchmarking paper. This revision changes **manuscript scope
+and exposition only**: no measured CSVs, fixed seeds, simulation code,
+published figures, original sources, or library APIs are altered.
+
+Submission still requires author approval of the experimental conclusions,
+benchmarks' provenance, correspondence details and editorial declarations.
+
 ## Official December 2024 template
 
 - `main.tex` uses `\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
