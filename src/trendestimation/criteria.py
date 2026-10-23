@@ -6,12 +6,14 @@ from typing import Literal
 
 import numpy as np
 from scipy.optimize import brentq, minimize_scalar
+from scipy.special import expit
 
 from .core import TrendSmoother
 from .likelihood import _score_profile_mle
 
 Criterion = Literal["cv", "gcv", "aicc", "bic", "mle"]
 Method = Literal["auto", "grid", "derivative"]
+SearchSpace = Literal["lambda", "smoothness"]
 
 
 @dataclass(frozen=True)
@@ -32,6 +34,11 @@ class SelectionResult:
         All evaluated nonnegative candidates, including derivative refinements.
     scores : numpy.ndarray
         Criterion scores, aligned with the evaluated candidates.
+    search_space : {"lambda", "smoothness"}
+        Coordinate used for the candidate search.
+    search_grid : numpy.ndarray
+        Coordinates searched, aligned with grid and scores. The grid
+        attribute always contains penalty values for compatibility.
     """
 
     criterion: str
@@ -40,6 +47,8 @@ class SelectionResult:
     score: float
     grid: np.ndarray
     scores: np.ndarray
+    search_space: str = "lambda"
+    search_grid: np.ndarray | None = None
 
 
 
