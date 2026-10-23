@@ -18,6 +18,11 @@ extensions = [
     "sphinx_copybutton",
     "myst_nb",
 ]
+# MyST-NB shares the MyST Markdown parser. Explicitly enable LaTeX math
+# delimiters in notebook Markdown (single $ inline, double $ display).
+# MathJax typesets these parsed nodes; it cannot fix plain-text $...$.
+myst_enable_extensions = ["dollarmath", "amsmath"]
+
 html_theme = "furo"
 html_title = "trendestimation"
 html_short_title = "trendestimation"
