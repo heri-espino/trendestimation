@@ -508,6 +508,9 @@ criterion is meaningful only under its assumed stochastic
 model. Do not conflate in-sample smoothness selection
 with selection for future forecast horizons.
 
+For a detailed explanation of the computation cost and a runnable
+naive-dense versus cached-spectral comparison, see :doc:`benchmarks`.
+
 See :doc:`mathematics` for the complete mathematical
 conventions, :doc:`api/selection` for current signatures,
 :doc:`quickstart` for an introductory workflow and

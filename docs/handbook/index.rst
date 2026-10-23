@@ -85,3 +85,6 @@ This is a concise reference to established PLS theory and the explicit
 criterion conventions in this package, **not a novelty claim**. See
 :doc:`../references` for Guerrero (2007, 2008),
 Cortés-Toto et al. (2017), Weinert (2007), and Biessy (2026).
+
+See :doc:`../benchmarks` for a worked computational-cost derivation
+and a reproducible naive dense refit versus spectral LOOCV benchmark.
