@@ -16,7 +16,7 @@
 
 \begin{document}
 
-\title[Penalized least-squares trend estimation]{Computational aspects of penalized least-squares trend estimation with controlled smoothness}
+\title[Reusable spectral computation for trend smoothing]{Reusable spectral computation for finite-difference penalized least-squares trends: numerical accuracy and cost}
 
 % Correspondence and affiliation must be verified by both coauthors.
 % TODO before submission: add verified \email{...} for corresponding author.
@@ -25,22 +25,22 @@
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Penalized least-squares trend estimators provide an interpretable way to separate persistent variation from short-term fluctuations. Their practical use nevertheless requires choices about difference order, reference differences, smoothing intensity, and numerical implementation. We examine these choices through a reproducible computational framework for finite-difference penalties. We derive the polynomial null space and the spectral representation of the smoother, and normalize the trace-based smoothness index so that its range is independent of the difference order. We also study the conditional profile estimator of a nonzero reference-difference mean, distinguishing this derivation from procedures available in the software. Controlled experiments compare naive and cached dense linear systems, a reusable singular-value decomposition, and a banded solver. We separately investigate repeated full-trend reconstruction and scalar effective-degrees-of-freedom evaluations, including numerical agreement and preprocessing time. A nonlinear synthetic example illustrates the behavior of classical smoothing criteria, while monthly atmospheric carbon-dioxide observations demonstrate controlled smoothness at different penalty orders. The results highlight workload-dependent computational trade-offs rather than the universal superiority of any individual algorithm. The accompanying Python implementation and executable experiments provide a transparent basis for further numerical and statistical investigation.}
+\abstract{Finite-difference penalized least squares provides a flexible framework for extracting trends from noisy time series. This study examines a specific computational question: when does reusing a spectral decomposition make smoothing calculations efficient, and how does its numerical behavior compare with structured alternatives? We consider equally spaced observations, a specified difference order, and a fixed mean for the penalized differences. The resulting affine estimator has a polynomial null space and a reusable singular-value representation. This representation permits inexpensive repeated evaluations of effective degrees of freedom and a normalized smoothness index, although reconstructing fitted trends remains more expensive. We compare fresh and cached dense solvers, a reusable spectral implementation, and a direct banded solver under matched computational workloads, distinguishing preprocessing from repeated evaluations. Deterministic experiments assess numerical agreement and conditioning over several difference orders. A single nonlinear synthetic example illustrates classical smoothing-parameter criteria, and a historical atmospheric carbon-dioxide series illustrates controlled smoothness on observed data. The results characterize workload-dependent computational trade-offs; they do not establish universal speed superiority or forecast accuracy. Joint likelihood estimation of the smoothing parameter and difference mean is outside the scope of this study.}
 
-\keywords{Whittaker--Henderson smoothing, spectral decomposition, smoothing parameter selection, time-series trend, reproducible computation}
+\keywords{penalized least squares, Whittaker--Henderson smoothing, spectral methods, numerical benchmarking, finite differences}
 
 \maketitle
 
 \section{Introduction}
-An observed time series may combine low-frequency behavior with temporary movements and measurement noise. Estimating its trend is a descriptive task: the resulting curve depends on how fidelity to the observations is traded against smoothness. Whittaker's graduation framework and subsequent finite-difference penalized least-squares (PLS) estimators formalize this compromise \cite{whittaker1923graduation,guerrero2007penalized}. The Hodrick--Prescott filter is an important second-difference special case, but the statistical problem admits other penalty orders and nonzero reference values for the differences \cite{cortes2017smoothness}.
+Finite-difference penalized least squares (PLS) is a well-established approach to extracting a smooth trend from an observed series. Its statistical formulation separates fidelity to the observations from a penalty on successive differences of the trend, as in Whittaker's graduation method and subsequent work \cite{whittaker1923graduation,guerrero2007penalized}. Difference orders beyond two and nonzero reference means are part of this existing family; they are not proposed here as new estimators \cite{guerrero2007penalized,cortes2017smoothness}.
 
-The tuning parameter must also be chosen. Cort\'es-Toto, Guerrero, and Reyes \cite{cortes2017smoothness} investigate attained smoothness when choosing the penalty with cross-validation (CV), generalized cross-validation (GCV), corrected Akaike information criterion (AICc), or Bayesian information criterion (BIC). Their simulations vary trend shape, series length, variability, and seasonality. Efficient Whittaker--Henderson computation has an extensive history, including methods exploiting banded factorization and structure to reduce numerical expense \cite{weinert2007wh}; consequently, diagonalization is not presented here as a newly discovered mathematical algorithm.
+The computational difficulty depends on the task. A single trend at a prescribed penalty can exploit the banded structure of the normal equations, whereas evaluating many smoothing parameters can justify preprocessing a reusable spectral decomposition \cite{weinert2007wh,biessy2026wh}. It is therefore insufficient to compare a cached spectral implementation only with a dense solver that rebuilds the penalty matrix at every step. Likewise, estimating one fitted curve and evaluating a scalar trace-based criterion are different computational workloads.
 
-In the scientific-computing literature, Balam et al. \cite{balam2025overview} compare normal equations, QR, and singular-value decomposition (SVD) in least-squares computation and discuss conditioning. Azofeifa and Moreles \cite{azofeifa2025hybrid} present a different numerical model, but similarly distinguish the formulation, solver, numerical comparisons, and limitations. We similarly distinguish statistical formulation, numerical algorithms, empirical comparisons, and their limitations.
+\emph{Our research question is when reusable spectral computation is competitive for fixed-mean PLS smoothing and how accurately it behaves across difference orders.} We document the affine formulation, effective degrees of freedom, and a normalized smoothness coordinate; compare four solver strategies under matched workloads; and report deterministic numerical checks, an illustrative synthetic example, and an observed-data smoothing example. We distinguish one-time factorization, repeated complete fits, and repeated scalar trace calculations. This is a bounded computational study of established estimators, not a new smoothing-penalty formulation or a general statistical comparison of selection criteria.
 
-Our objective is to provide a small, auditable Python package, \texttt{trendestimation}, that implements the \emph{published} PLS family and exposes examples as executable notebooks within Sphinx documentation. Specifically, we describe the affine solution for general order $d$ and reference mean $\mu$, its spectral implementation, the criteria available in the public API, and numerical experiments that report computational time, solver agreement, and precomputation costs alongside reproducible illustrations. Experimental forecast-horizon cross-validation and dynamic tracking of minima from other research projects are not included. The distinction between an in-sample smoother and an ex ante forecast is maintained throughout.
+Throughout the computational comparisons, the reference difference mean $\mu$ is fixed numerically, including a prescribed nonzero value in the numerical checks. The library also supports the observed-difference plug-in $\mu=\overline{D_dy}$ and a Gaussian marginal-likelihood selector for fixed or plug-in $\mu$, but the present experiments do not validate data-adaptive degrees of freedom, joint $(\lambda,\mu)$ estimation, or a universal ranking of MLE against CV, GCV, AICc, and BIC. Forecast-horizon validation, confidence intervals, and claims of predictive improvement are likewise outside this paper's scope.
 
-\section{Model and spectral representation}
+\section{Established model and reusable spectral computation}
 \subsection{Finite-difference penalized least squares}
 Let $y=(y_1,\ldots,y_n)^\top\in\R^n$ denote an equally spaced series. For an integer $1\le d<n$, let $D_d\in\R^{(n-d)\times n}$ represent the $d$th forward-difference operator; for example, row entries of $D_2$ are $(1,-2,1)$. We consider the published estimator
 \begin{equation}\label{eq:objective}
@@ -69,9 +69,24 @@ For fixed $\mu$, the effective degrees of freedom are $\operatorname{EDF}(\lambd
 \end{equation}
 For $1\le d<n$, this coordinate is strictly increasing for finite $\lambda$ because $S'(\lambda)=(n-d)^{-1}\sum_{\delta_j>0}\delta_j/(1+\lambda\delta_j)^2>0$. The normalization changes the scale of the original index but not the ordering of smoothness levels \cite{guerrero2008smoothness}.
 
+\subsection{Interpretation of fixed nonzero differences}
+For finite $\lambda$, specifying $\mu\ne0$ shifts the estimator through
+the reference vector $p_t=\mu\binom{t}{d}$ in
+Eq.~\eqref{eq:affine}; it does not change the smoothing matrix
+$H_\lambda$. As $\lambda\to\infty$, the fitted differences satisfy
+$D_d\widehat\tau=\mu\mathbf1$, so the limit is a polynomial of
+degree at most $d$ rather than at most $d-1$ when $\mu\ne0$.
+For example, a prescribed nonzero first-difference mean admits a
+linear limiting trend, while a prescribed nonzero second-difference
+mean admits a quadratic one. These are known consequences of the
+difference penalty and are used here to check implementation
+correctness, not to claim a newly introduced family of trends.
+All degrees-of-freedom formulas below condition on this fixed
+numerical $\mu$.
+
 \section{Classical parameter selection and numerical implementation}
 \subsection{Selection criteria}
-For a fixed numerical value of $\mu$, define $e_\lambda=y-\widehat\tau_{\lambda,\mu}$, $\operatorname{RSS}_\lambda=\|e_\lambda\|_2^2$, $h_{ii}=(H_\lambda)_{ii}$, and $\nu_\lambda=\tr(H_\lambda)$. The published classical selectors studied in \cite{cortes2017smoothness} are represented, up to constants irrelevant to an optimizer, by
+For a fixed numerical value of $\mu$, define $e_\lambda=y-\widehat\tau_{\lambda,\mu}$, $\operatorname{RSS}_\lambda=\|e_\lambda\|_2^2$, $h_{ii}=(H_\lambda)_{ii}$, and $\nu_\lambda=\tr(H_\lambda)$. The classical selectors examined in the single synthetic illustration, following \cite{cortes2017smoothness}, are represented, up to constants irrelevant to an optimizer, by
 \begin{align}\label{eq:criteria}
  \mathrm{CV}(\lambda)&=\frac1n\sum_{i=1}^n\left(\frac{e_{\lambda,i}}{1-h_{ii}}\right)^2,\\
  \mathrm{GCV}(\lambda)&=\frac{\mathrm{RSS}_\lambda/n}{(1-\nu_\lambda/n)^2},\\
@@ -85,11 +100,9 @@ Guerrero \cite{guerrero2007penalized} also considers the feasible plug-in $\wide
 \input{sections/smoothness_speed}
 
 \subsection{Reusable computation and cost}
-The package exposes a reusable \texttt{TrendSmoother(n, order=d)} object. Construction forms the difference operator and its SVD. For each candidate $\lambda$, a fitted curve is obtained with the transformed vector $c$ and spectral attenuation in \eqref{eq:spectrum}. The library offers \texttt{fit}, \texttt{degrees\_of\_freedom}, \texttt{smoothness}, and \texttt{select\_lambda}, while plotting utilities visualize fits and criterion profiles. Sphinx incorporates executable Jupyter notebooks, with deterministic random seeds and figure code for inspection.
+The reusable \texttt{TrendSmoother(n, order=d)} implementation builds the difference operator and its SVD once. Each candidate $\lambda$ then changes only the spectral attenuation in Eq.~\eqref{eq:spectrum}. The public functions used in this study expose fitted trends, effective degrees of freedom, normalized smoothness, and classical criterion evaluation. The accompanying scripts specify their seeds, inputs, numerical tolerances, and host-recorded timings. The computational experiments, rather than the existence of a Python interface, are the object of evaluation.
 
 The computational trade-off must distinguish decomposition from reuse. A dense full SVD costs $O(n^3)$ preprocessing and $O(n^2)$ memory; after projection, EDF, smoothness, GCV, AICc, and BIC summaries cost $O(n)$ per penalty candidate, while full reconstruction and exact CV leverage scores require $O(n^2)$ each. In contrast, the banded structure of $I_n+\lambda Q_d$ allows efficient specialized direct solvers \cite{weinert2007wh}. Thus the phrase \emph{fast computation} means repeated spectral evaluation under a stated workload, not a blanket claim that SVD beats banded factorization. A separate reproducible benchmark in the repository measures setup and fit times independently.
-
-\input{sections/likelihood_mu}
 
 \section{Reproducible numerical illustration}
 \subsection{Source-inspired nonlinear design}
@@ -124,8 +137,37 @@ An independent check compares the SVD implementation with the direct normal equa
 
 \input{sections/mauna_loa}
 
-\section{Conclusions}
-We have presented an auditable implementation of established penalized least-squares smoothing, together with additional derivations of the difference nullspace, the corrected smoothness index, and a Gaussian mean-difference profile estimator. The latter has numerical checks but is not yet a released joint-MLE API. Our Mauna Loa observations give a real, explicitly descriptive application of high-order differencing. Spectral decomposition makes repeated penalty evaluation transparent and inexpensive after preprocessing; specialized banded solvers remain important competitors for isolated fits and large samples. The source-inspired experiment shows how the same observations can lead to distinct smoothness choices under established criteria, while deterministic checks support correctness in a bounded set of cases. The separate numerical comparison places naive dense normal equations, cached dense solves, reusable SVD, and an independently assembled banded solver under matched workloads. This distinction is important: spectral reuse is particularly attractive for repeated trace-based scores, but is not automatically optimal for reconstructing full trends. Broader performance conclusions require reported machine characteristics, workload-specific runtimes, and stability diagnostics. Neither high-order differencing nor likelihood-based smoothing is claimed as a newly discovered concept. No GPU acceleration has been verified in the released CPU implementation.
+\section{Discussion and conclusions}
+For a fixed difference order and reference mean, penalized least-squares
+trends can be computed through a reusable spectral representation.
+This representation makes repeated scalar trace and smoothness
+evaluations inexpensive after decomposition, while reconstructing
+complete fitted curves still requires matrix--vector operations.
+Our timing experiments compare these tasks separately against fresh
+and cached dense solves and a structure-aware banded solver.
+The resulting performance comparisons are specific to the reported
+data sizes, candidate counts, numerical libraries, and hardware;
+in particular, the one-time $O(n^3)$ cost of a full SVD can outweigh
+reuse benefits, and banded factorization remains an important
+competitor for individual fits.
+
+The deterministic checks support algebraic correctness for the tested
+orders and fixed values of $\mu$, while the higher-order diagnostic
+also exposes increasing numerical ill-conditioning. The single
+nonlinear synthetic example illustrates how established CV, GCV,
+AICc, and BIC rules can select different smoothing levels; it is
+not a method-ranking experiment. The atmospheric carbon-dioxide
+example illustrates historical trend extraction under a specified
+normalized smoothness level, not out-of-sample forecast performance.
+
+We therefore delimit the contribution to a reproducible numerical
+comparison and implementation analysis of \emph{established}
+finite-difference PLS estimators. Estimating $\mu$ jointly with
+$\lambda$ by Gaussian marginal likelihood, measuring the statistical
+properties of such estimates, and designing forecast-optimal
+selection procedures are separate research questions left for
+future work. Neither arbitrary difference orders nor nonzero
+reference means nor spectral smoothing is claimed to be new.
 
 \section*{Declarations}
 % These are editorial placeholders, not statements verified on behalf of the authors.
