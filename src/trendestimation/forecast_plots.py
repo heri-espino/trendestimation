@@ -29,7 +29,7 @@ def _style(ax):
         ax.spines[side].set_color("#c7d6e0")
     # Respect the configured plotting theme's tick font sizes.
     ax.tick_params(colors=OTHER, length=3)
-    ax.grid(axis="y", color="#e6eff5", lw=.7, zorder=0)
+    ax.grid(True, axis="both", color="#CFDCE7", alpha=.6, lw=.65, zorder=0)
     ax.set_axisbelow(True)
     ax.title.set_color(INK)
     ax.xaxis.label.set_color(INK)
