@@ -25,14 +25,22 @@ The manuscript reports only existing and reproducible evidence:
 - a descriptive monthly Mauna Loa CO2 smoothing illustration across
   orders using the same **prescribed smoothness**, not a forecast test.
 
-**Not part of this manuscript:** new estimation of arbitrary-order PLS
-as a mathematical family; joint Gaussian MLE of `(lambda, mu)`;
-comparison of MLE with CV/GCV/AICc/BIC across datasets; inference after
-`mu="data"` plug-in estimation; forecast-optimal/horizon-based smoothing;
-GPU or energy benchmarks. `paper/sections/likelihood_mu.tex` is retained
-for future research but deliberately **not included** by `main.tex`.
-The public package's Gaussian marginal-likelihood criterion is also
-not benchmarked or presented as a principal contribution here.
+**Equations intentionally retained in the manuscript:** the full
+PLS objective (Eq. `eq:objective`), affine spectral solution, normalized
+smoothness index, and the mathematical identities for a possible
+joint Gaussian likelihood extension: `J(lambda;mu)`, the explicit
+conditional `mu_hat(lambda)`, and the scalar profile optimization for
+`lambda_hat`. Those identities are visibly labelled as a **deferred
+theoretical extension**, not an evaluated method in this submission.
+
+**Not part of the current experiments or contribution claim:** a new
+arbitrary-order PLS family; a validated joint `(lambda, mu)` MLE
+algorithm; MLE-vs-CV/GCV/AICc/BIC comparisons; inference with a
+data-dependent plug-in mean; forecast-optimal selection; GPU/energy
+benchmarks. The longer `paper/sections/likelihood_mu.tex` stays in the
+repository for later work but is deliberately **not included** by
+`main.tex`. The public Gaussian marginal-likelihood selector is
+not benchmarked or presented as a principal contribution.
 
 An earlier version mixed a profiled-mean likelihood derivation into the
 numerical benchmarking paper. This revision changes **manuscript scope

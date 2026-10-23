@@ -38,13 +38,19 @@ The computational difficulty depends on the task. A single trend at a prescribed
 
 \emph{Our research question is when reusable spectral computation is competitive for fixed-mean PLS smoothing and how accurately it behaves across difference orders.} We document the affine formulation, effective degrees of freedom, and a normalized smoothness coordinate; compare four solver strategies under matched workloads; and report deterministic numerical checks, an illustrative synthetic example, and an observed-data smoothing example. We distinguish one-time factorization, repeated complete fits, and repeated scalar trace calculations. This is a bounded computational study of established estimators, not a new smoothing-penalty formulation or a general statistical comparison of selection criteria.
 
-Throughout the computational comparisons, the reference difference mean $\mu$ is fixed numerically, including a prescribed nonzero value in the numerical checks. The library also supports the observed-difference plug-in $\mu=\overline{D_dy}$ and a Gaussian marginal-likelihood selector for fixed or plug-in $\mu$, but the present experiments do not validate data-adaptive degrees of freedom, joint $(\lambda,\mu)$ estimation, or a universal ranking of MLE against CV, GCV, AICc, and BIC. Forecast-horizon validation, confidence intervals, and claims of predictive improvement are likewise outside this paper's scope.
+Throughout the computational comparisons, the reference difference mean $\mu$ is fixed numerically, including a prescribed nonzero value in the numerical checks. The library also supports the observed-difference plug-in $\mu=\overline{D_dy}$ and a Gaussian marginal-likelihood selector for fixed or plug-in $\mu$. We retain a short analytical profile-likelihood identity as a pointer to future work, but the present experiments do not validate data-adaptive degrees of freedom, joint $(\lambda,\mu)$ estimation, or a universal ranking of MLE against CV, GCV, AICc, and BIC. Forecast-horizon validation, confidence intervals, and claims of predictive improvement are likewise outside this paper's scope.
 
 \section{Established model and reusable spectral computation}
 \subsection{Finite-difference penalized least squares}
-Let $y=(y_1,\ldots,y_n)^\top\in\R^n$ denote an equally spaced series. For an integer $1\le d<n$, let $D_d\in\R^{(n-d)\times n}$ represent the $d$th forward-difference operator; for example, row entries of $D_2$ are $(1,-2,1)$. We consider the published estimator
+Let $y=(y_1,\ldots,y_n)^\top\in\R^n$ denote an equally spaced series. For an integer $1\le d<n$, let $D_d\in\R^{(n-d)\times n}$ represent the $d$th forward-difference operator; for example, row entries of $D_2$ are $(1,-2,1)$. The central estimator is the published penalized least-squares
+problem
 \begin{equation}\label{eq:objective}
- \widehat\tau_{\lambda,\mu}=\arg\min_{\tau\in\R^n}\left\{\|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf{1}\|_2^2\right\},\qquad\lambda\ge0,
+\widehat{\tau}_{\lambda,\mu}
+=\arg\min_{\tau\in\R^n}
+\left\{
+\|y-\tau\|_2^2+
+\lambda\|D_d\tau-\mu\mathbf1\|_2^2
+\right\},\qquad \lambda\ge0.
 \end{equation}
 where $\mu\in\R$ is a fixed reference mean for the differences. The choice $\mu=0$ gives the familiar pure penalty. The implementation additionally permits $d=0$, with $D_0=I_n$, as a well-defined edge case; the geometric statements below concern $1\le d<n$.
 
@@ -83,6 +89,56 @@ difference penalty and are used here to check implementation
 correctness, not to claim a newly introduced family of trends.
 All degrees-of-freedom formulas below condition on this fixed
 numerical $\mu$.
+
+\subsection{Analytical likelihood profiling: a deferred extension}
+For completeness, we retain the key formulas motivating a separate
+likelihood-based extension, without incorporating it into the
+computational experiments below. Assume a Gaussian model with
+independent observation errors of variance $\sigma^2$ and latent
+centered $d$th differences of variance $\sigma^2/\lambda$, where
+$\lambda>0$. Write $r=n-d$, let $\delta_j>0$ and $v_j$ denote
+the $r$ positive-penalty eigenvalues and corresponding eigenvectors
+of $Q_d$, and put
+\[
+p^{(1)}_t=\binom{t}{d},\qquad
+z_j=v_j^\top y,\qquad
+b_j=v_j^\top p^{(1)},\qquad
+w_j(\lambda)=\frac{\lambda\delta_j}{1+\lambda\delta_j}.
+\]
+Eliminating the unpenalized polynomial coordinates and profiling out
+the observation variance gives the marginal negative log-likelihood
+criterion, up to constants,
+\begin{equation}\label{eq:likelihood-profile}
+J(\lambda;\mu)
+=r\log\left[\frac1r\sum_{j=1}^r
+w_j(\lambda)(z_j-b_j\mu)^2\right]
+-\sum_{j=1}^r\log w_j(\lambda).
+\end{equation}
+For a \emph{fixed positive} $\lambda$, the corresponding optimal
+difference mean has the explicit weighted formula
+\begin{equation}\label{eq:mu-profile-mle}
+\widehat{\mu}(\lambda)=
+\frac{\sum_{j=1}^{r}w_j(\lambda)b_jz_j}
+{\sum_{j=1}^{r}w_j(\lambda)b_j^2}.
+\end{equation}
+This reduces the prospective two-parameter optimization to a
+one-dimensional profile problem:
+\begin{equation}\label{eq:lambda-profile-mle}
+\widehat{\lambda}
+=\arg\min_{\lambda>0}
+J\bigl(\lambda;\widehat{\mu}(\lambda)\bigr).
+\end{equation}
+These identities are a mathematical outline, \emph{not} a tested
+joint-MLE algorithm or a claim of new likelihood theory
+\cite{guerrero2007penalized,biessy2026wh}. In particular, the
+observed-difference plug-in $\mu=\overline{D_dy}$ is not the
+joint likelihood estimate at general positive $\lambda$.
+The public implementation currently supports likelihood selection
+conditional on a fixed or plug-in $\mu$, not this joint profile.
+Identifiability, numerical minimization, inference, and comparative
+performance for the joint estimator are left to future work. The
+remaining sections evaluate only fixed-$\mu$ smoothing and its
+computational costs.
 
 \section{Classical parameter selection and numerical implementation}
 \subsection{Selection criteria}
