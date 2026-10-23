@@ -154,3 +154,32 @@ def test_sphinx_and_awesomefigures_use_identical_dejavu_letter_shapes():
     assert '"font.family": "DejaVu Sans"' in helper
     assert '"svg.fonttype": "path"' in helper
     assert "outlined" in readme
+
+
+def test_matplotlib_svg_glyphs_are_vector_outlines():
+    """Standalone notebook SVGs must not depend on system-installed fonts."""
+    from io import StringIO
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    from trendestimation._docs_style import apply_documentation_figure_style
+
+    with plt.rc_context():
+        apply_documentation_figure_style()
+        assert matplotlib.rcParams["font.family"] == ["DejaVu Sans"]
+        assert matplotlib.rcParams["svg.fonttype"] == "path"
+        fig, ax = plt.subplots(figsize=(2, 1.5))
+        try:
+            ax.set_title("Sample trend")
+            ax.set_xlabel("Smoothness")
+            svg = StringIO()
+            fig.savefig(svg, format="svg")
+            content = svg.getvalue()
+        finally:
+            plt.close(fig)
+    # SVG text from Matplotlib has been converted to paths, while the
+    # document remains vector-based and browser/system-font-independent.
+    assert "<path" in content
+    assert "<text" not in content
