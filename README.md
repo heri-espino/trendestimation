@@ -16,6 +16,10 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
 - Zero, fixed nonzero, and Guerrero (2007) observed-difference plug-in reference means (`mu="data"`).
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
+- Optional parameter search in either penalty **lambda** (existing default)
+  or bounded, normalized **smoothness S in [0, 1]**. Classical CV supports
+  analytical derivative refinement in both coordinates; other criteria
+  use a grid. This is a reparameterization, not a new score.
 - Classical **in-sample** CV, GCV, AICc, and BIC smoothing-parameter
   selection for a **fixed numeric** reference mean, as studied by Cortés-Toto,
   Guerrero, and Reyes (2017).
@@ -79,6 +83,13 @@ from trendestimation import TrendSmoother, select_lambda, plot_trend
 y = 0.03 * np.arange(100) + np.random.default_rng(42).normal(0, 0.25, 100)
 solver = TrendSmoother(len(y), order=2)
 choice = select_lambda(solver, y, criterion="gcv", mu=0.0)
+# Same GCV criterion, but search a normalized smoothness grid:
+choice_s = select_lambda(
+    solver, y, criterion="gcv", mu=0.0,
+    search_space="smoothness",
+)
+print("selected smoothness:", choice_s.smoothness)
+print("corresponding lambda:", choice_s.lambda_)
 fit = solver.fit(y, lambda_=choice.lambda_, mu=0.0)
 print("lambda:", choice.lambda_)
 print("smoothness:", choice.smoothness)

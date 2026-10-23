@@ -125,6 +125,91 @@ Finite **uniform smoothness** and **log-penalty** grids
 sample different sets, however. Their discretized minima
 can differ even though the exact optimum does not.
 
+Selecting in penalty or normalized smoothness coordinates
+-------------------------------------------------------------
+
+The selector can search in penalty (lambda) or in the normalized
+smoothness coordinate S between zero and one. It changes only
+**where candidates are sampled and refined**: the original CV,
+GCV, AICc, BIC and conditional Gaussian MLE scores stay unchanged.
+
+Let Lambda denote the inverse of S. Then the selection problem can
+be written as
+
+.. math::
+
+   \widehat s=\arg\min_{s\in[0,1]}C(\Lambda(s);\mu),
+   \qquad
+   \widehat\lambda=\Lambda(\widehat s).
+
+For a fixed numerical reference mean, the chain rule is
+
+.. math::
+   :label: score-s-derivative
+
+   \frac{d\,C(\Lambda(s);\mu)}{ds}
+     =\frac{dC/d\log\lambda}{dS/d\log\lambda},
+   \qquad
+   \frac{dS}{d\log\lambda}
+     =\frac1{n-d}\sum_{j=1}^{n-d}
+        \frac{\lambda\delta_j}{(1+\lambda\delta_j)^2}>0.
+
+For classical fixed-mean LOOCV the library uses this **analytical
+chain-rule derivative** to refine stationary candidates directly
+in smoothness. A combined uniform and logit-spaced grid explores
+both the center and the tails. The previous log-penalty optimizer
+remains the default.
+
+.. code-block:: python
+
+   import numpy as np
+   from trendestimation import TrendSmoother, select_lambda
+
+   t = np.arange(35, dtype=float)
+   y = np.sin(t / 6) + np.random.default_rng(24).normal(0, 0.2, t.size)
+   solver = TrendSmoother(len(y), order=2)
+
+   by_lambda = select_lambda(solver, y, criterion="cv",
+                             search_space="lambda", mu=0.1)
+   by_s = select_lambda(solver, y, criterion="cv",
+                        search_space="smoothness", mu=0.1)
+
+   print("Penalty search:", by_lambda.lambda_, by_lambda.smoothness)
+   print("Smoothness search:", by_s.lambda_, by_s.smoothness)
+
+   # Candidate grids are interpreted in the selected coordinate.
+   s_grid = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
+   tested = select_lambda(solver, y, criterion="gcv",
+                          search_space="smoothness", grid=s_grid)
+   print(tested.search_grid)  # Values in S, including endpoints.
+   print(tested.grid)         # Matching lambda values, including infinity.
+   print(tested.scores)       # Original GCV scores in the same order.
+
+For other criteria, including MLE, the smoothness-coordinate default
+is a numerical S grid: only CV has analytical derivative guidance.
+Explicit grids preserve input order and duplicates. The returned
+**lambda_** is always the selected penalty and **smoothness** its
+normalized index. The legacy **grid** attribute still contains the
+evaluated penalties, while **search_grid** contains coordinates
+in the selected search space; both align with **scores**.
+
+Exact endpoints: S=0 maps to lambda=0 and S=1 maps to infinite
+penalty. CV and MLE retain undefined values at their zero-penalty
+boundary. Extreme interior S values may require penalties outside
+float64 range.
+
+.. warning::
+
+   Bounded search is **not automatically faster**: every interior
+   smoothness value requires numerical inversion. The denominator
+   dS/dlog(lambda) approaches zero near the endpoints. Finite S
+   grids and logarithmic lambda grids can find different minima;
+   no finite scan certifies global optimality. This option does
+   not jointly estimate lambda and mu.
+
+For the full proof and the deferred joint-MLE direction see
+https://github.com/heri-espino/trendestimation/blob/main/notes/smoothness_parameterization.md.
+
 Classical leave-one-out cross-validation
 ----------------------------------------
 

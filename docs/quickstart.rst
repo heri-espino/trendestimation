@@ -58,6 +58,34 @@ Available classical criteria are ``cv``, ``gcv``, ``aicc``, and ``bic``;
 they require a **fixed numeric reference mean**. Gaussian marginal MLE
 is also available with criterion="mle" (numeric or plug-in mu).
 
+Searching over normalized smoothness
+-------------------------------------
+
+The same criterion can also be searched directly over normalized S
+on the unit interval. The previous lambda search stays the default.
+
+.. code-block:: python
+
+   choice_s = select_lambda(
+       smoother, y, criterion="gcv", mu=0.0,
+       search_space="smoothness",
+   )
+   print(choice_s.lambda_, choice_s.smoothness)
+
+   grid_s = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
+   custom = select_lambda(
+       smoother, y, criterion="gcv", mu=0.0,
+       search_space="smoothness", grid=grid_s,
+   )
+   print(custom.search_grid)  # S coordinates
+   print(custom.grid)         # Corresponding lambda values
+
+For derivative-guided classical CV, setting
+**search_space="smoothness"** also searches for stationary points
+within S using the existing analytical CV derivative and the chain
+rule. This is not joint estimation of mu and lambda and it is not
+rolling-origin forecast validation. See :doc:`smoothness_optimization`.
+
 Guerrero's original smoothness and Gaussian MLE
 -------------------------------------------------
 
