@@ -236,3 +236,39 @@ root for a seeded apples-to-apples CV/GCV comparison; scores are
 checked for numerical agreement before times are printed. Setup and
 repeated candidate scoring are reported separately. The benchmark is
 manual-only and is not executed as part of CI or Sphinx builds.
+
+
+## Mathematics in notebook Markdown
+
+MyST-NB does not interpret `$...$` as math unless the MyST
+`dollarmath` extension is explicitly enabled. `docs/conf.py` configures
+`myst_enable_extensions = ["dollarmath", "amsmath"]` alongside
+`sphinx.ext.mathjax`. Write notebook **Markdown cells** using standard
+LaTeX (no Unicode pseudo-equations, no screenshots):
+
+- Inline: `$\lambda=\sigma_\varepsilon^2/\sigma_\eta^2$`
+- Display: a separate `$$` line, a LaTeX formula, then another `$$` line
+- Aligned environments: standard `\begin{align}...\end{align}`
+
+Example Markdown cell:
+
+~~~markdown
+The penalty is $\lambda=\sigma_\varepsilon^2/\sigma_\eta^2$.
+
+$$
+\widehat{\sigma}_\varepsilon^2 =
+\frac{1}{n-d}\sum_{j=1}^{n-d}\frac{z_j^2}{c_j}.
+$$
+~~~
+
+MyST parses the math into Sphinx equation nodes; MathJax then typesets
+the HTML in the browser. This is **separate from Matplotlib / SVG
+figure typography**: `svg.fonttype="path"` affects only labels inside
+generated figures, not mathematical Markdown in Jupyter notebooks.
+
+A strict Sphinx build can succeed even when math delimiters are shown
+literally. The Sphinx preview workflow therefore also runs
+`python scripts/check_rendered_notebook_math.py build/site` to assert
+that actual equation nodes occur in the built HTML. It does not execute
+the computational notebook cells. Refresh or republish Sphinx after
+merging to make these changes visible on the public site.
