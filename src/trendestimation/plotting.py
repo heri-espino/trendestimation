@@ -36,6 +36,8 @@ def plot_trend(y, fit, *, ax=None, title: str | None = None):
     ax.plot(x, fit.trend, label="Estimated trend", linewidth=2)
     ax.set(xlabel="Observation", ylabel="Value",
            title=title or "Penalized trend estimation")
+    ax.grid(True, axis="both", color="#CFDCE7", alpha=0.6, linewidth=0.65)
+    ax.set_axisbelow(True)
     ax.legend()
     return ax
 
@@ -73,5 +75,7 @@ def plot_selection(selection, *, ax=None):
                    label="Selected lambda")
     ax.set(xlabel="Penalty parameter λ", ylabel="Criterion value",
            title="Smoothing selection")
+    ax.grid(True, axis="both", color="#CFDCE7", alpha=0.6, linewidth=0.65)
+    ax.set_axisbelow(True)
     ax.legend()
     return ax
