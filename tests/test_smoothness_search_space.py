@@ -32,10 +32,10 @@ def test_same_explicit_candidates_have_same_original_scores(order, criterion):
     assert_allclose(by_lambda.search_grid, penalties, rtol=0, atol=0)
     assert_allclose(by_s.grid, penalties, rtol=2e-9, atol=1e-10)
     assert_allclose(by_s.scores, by_lambda.scores, rtol=1e-9, atol=1e-10)
-    # For order zero, classical CV is flat over positive penalties:
-    # equivalent finite search grids need not select the same tied value
-    # after inverse-map roundoff, but their optimal scores must agree.
-    if order == 0 and criterion == "cv":
+    # For order zero, both CV and GCV are flat over positive penalties:
+    # rounding from the inverse map can change the arbitrary tied winner.
+    # Verify the same optimum value, not an identical penalty in this case.
+    if order == 0 and criterion in {"cv", "gcv"}:
         assert by_s.score == pytest.approx(by_lambda.score, abs=1e-10)
     else:
         assert by_s.lambda_ == pytest.approx(by_lambda.lambda_, rel=2e-9)
