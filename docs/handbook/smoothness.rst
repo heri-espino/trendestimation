@@ -89,6 +89,27 @@ For special spectra with identical positive eigenvalues
 For a general spectrum the inverse requires scalar numerical
 root-finding; see :doc:`numerical_methods`.
 
+Reparameterizing selection criteria
+-----------------------------------
+
+Any existing fixed-mean selection criterion can be evaluated at
+lambda(s), the inverse of the normalized S map. On the interior,
+
+.. math::
+
+   \frac{d\,C(\lambda(s))}{ds}
+   =\frac{dC/d\log\lambda}{dS/d\log\lambda},
+   \qquad
+   \frac{dS}{d\log\lambda}
+   =\frac1r\sum_{j=1}^r
+     \frac{\lambda\delta_j}{(1+\lambda\delta_j)^2}>0.
+
+This is a change of optimization coordinate, not a new smoothing
+criterion. Identical exact minima correspond, but finite grids can
+select different candidates. Near either endpoint the transformed
+derivative can be poorly conditioned. The optional public API setting
+is **search_space="smoothness"**; the default is **"lambda"**.
+
 API
 ---
 
