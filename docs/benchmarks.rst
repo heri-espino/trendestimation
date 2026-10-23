@@ -65,7 +65,7 @@ the penalized least-squares solution is
 
 A straightforward dense implementation solves a new
 :math:`n\times n` linear system for **every** penalty. This requires
-approximately :math:`\mathcal O(n^3)` operations per candidate,
+approximately :math:`\mathcal{O}(n^3)` operations per candidate,
 assuming general dense factorization. Forming the inverse explicitly
 is unnecessary and usually less numerically appropriate than solving
 the system; the naive benchmarks below use ``numpy.linalg.solve``.
@@ -92,10 +92,10 @@ There are four distinct computational savings:
 
 1. **Full fitted trend:** Multiply by the cached basis to reconstruct
    :math:`\widehat\tau_\lambda` in
-   :math:`\mathcal O(n^2)`, instead of solving another
-   :math:`\mathcal O(n^3)` dense system. A direct
+   :math:`\mathcal{O}(n^2)`, instead of solving another
+   :math:`\mathcal{O}(n^3)` dense system. A direct
    ``smoother.fit`` call also projects the data, costing
-   :math:`\mathcal O(n^2)` per call.
+   :math:`\mathcal{O}(n^2)` per call.
 2. **Smoothness and EDF:** Only the eigenvalues matter:
 
    .. math::
@@ -106,11 +106,11 @@ There are four distinct computational savings:
       S(\lambda)=\frac1{n-d}\sum_{j=1}^{n-d}
         \frac{\lambda\delta_j}{1+\lambda\delta_j}.
 
-   Thus each evaluation is :math:`\mathcal O(n)`. The smoothness
+   Thus each evaluation is :math:`\mathcal{O}(n)`. The smoothness
    inversion solver evaluates short spectral sums in
    :math:`x=\log\lambda`, using numerically stable smaller-tail
    calculations; :math:`k` evaluations cost
-   :math:`\mathcal O(kn)` after the decomposition.
+   :math:`\mathcal{O}(kn)` after the decomposition.
 3. **GCV/AICc/BIC/MLE:** Project :math:`c=U^\top z` once and
    use Parseval's identity to compute
 
@@ -123,14 +123,14 @@ There are four distinct computational savings:
 
    The cached candidate loop in ``select_lambda`` evaluates
    residual- and EDF-based criteria in
-   :math:`\mathcal O(n)` per penalty. The Gaussian marginal MLE
+   :math:`\mathcal{O}(n)` per penalty. The Gaussian marginal MLE
    also uses spectral sums. A standalone ``score_lambda``
    call recomputes the data projection, so its total cost
-   is :math:`\mathcal O(n^2)`.
+   is :math:`\mathcal{O}(n^2)`.
 4. **Exact classical LOOCV:** Literally leaving out and refitting each
    of :math:`n` observations would require :math:`n` dense solves
    for every candidate penalty:
-   :math:`\mathcal O(n^4)` per penalty. Instead, for the positive
+   :math:`\mathcal{O}(n^4)` per penalty. Instead, for the positive
    eigenpairs :math:`U_+,\delta_+` and
    :math:`w_j=\lambda\delta_j/(1+\lambda\delta_j)`,
 
@@ -144,8 +144,8 @@ There are four distinct computational savings:
          \frac1n\sum_i(e_i^{(-i)})^2.
 
    The numerator and denominator each require a matrix-vector
-   product: :math:`\mathcal O(n(n-d))`, at most
-   :math:`\mathcal O(n^2)`. The analytical CV derivative
+   product: :math:`\mathcal{O}(n(n-d))`, at most
+   :math:`\mathcal{O}(n^2)`. The analytical CV derivative
    reuses similar products without forming dense inverses or
    finite-difference gradients.
 
@@ -162,8 +162,8 @@ Naive dense versus spectral: full complexity comparison
 The table assumes low fixed :math:`d`, :math:`n-d=\Theta(n)`,
 :math:`K` candidate penalties and **dense** computations. Spectral
 setup is **not free**: the full SVD costs
-:math:`\mathcal O(n^3)` time and
-:math:`\mathcal O(n^2)` storage.
+:math:`\mathcal{O}(n^3)` time and
+:math:`\mathcal{O}(n^2)` storage.
 
 .. list-table::
    :header-rows: 1
@@ -173,23 +173,23 @@ setup is **not free**: the full SVD costs
      - Naive dense method
      - Cached spectrum
    * - Fit one trend
-     - :math:`\mathcal O(n^3)`
-     - :math:`\mathcal O(n^2)` after SVD
+     - :math:`\mathcal{O}(n^3)`
+     - :math:`\mathcal{O}(n^2)` after SVD
    * - Fit :math:`K` trends
-     - :math:`\mathcal O(Kn^3)`
-     - :math:`\mathcal O(n^3+Kn^2)` including setup
+     - :math:`\mathcal{O}(Kn^3)`
+     - :math:`\mathcal{O}(n^3+Kn^2)` including setup
    * - EDF / normalized smoothness
-     - :math:`\mathcal O(n^3)` if forming dense hat
-     - :math:`\mathcal O(n)`
+     - :math:`\mathcal{O}(n^3)` if forming dense hat
+     - :math:`\mathcal{O}(n)`
    * - :math:`K` GCV / AICc / BIC / MLE evaluations
-     - :math:`\mathcal O(Kn^3)` with dense hats
-     - :math:`\mathcal O(n^3+Kn)` plus projection
+     - :math:`\mathcal{O}(Kn^3)` with dense hats
+     - :math:`\mathcal{O}(n^3+Kn)` plus projection
    * - :math:`K` exact classical CV scores
-     - :math:`\mathcal O(Kn^4)` with :math:`n` refits
-     - :math:`\mathcal O(n^3+Kn^2)` including setup
+     - :math:`\mathcal{O}(Kn^4)` with :math:`n` refits
+     - :math:`\mathcal{O}(n^3+Kn^2)` including setup
    * - Smoothness inversion, :math:`k` scalar evaluations
-     - :math:`\mathcal O(kn^3)` if forming dense hats
-     - :math:`\mathcal O(n^3+kn)` including setup
+     - :math:`\mathcal{O}(kn^3)` if forming dense hats
+     - :math:`\mathcal{O}(n^3+kn)` including setup
 
 The speed benefit becomes more useful as the same
 ``TrendSmoother(n, order=d)`` is reused. For a single fit or short
@@ -235,7 +235,7 @@ are machine-dependent; no universal speedup factor is claimed.
 
    The script runs only when requested; neither a Sphinx build
    nor automatic CI executes the expensive
-   :math:`\mathcal O(n^4)` reference loop. Add the reported SVD
+   :math:`\mathcal{O}(n^4)` reference loop. Add the reported SVD
    setup to spectral grid time for a *one-off* end-to-end comparison.
    Hardware, threading, array size and warm-up can reverse speed
    rankings on very small examples.
@@ -246,8 +246,8 @@ Why a banded comparison is also essential
 The normal-equation matrix :math:`Q=D_d^\top D_d` is **banded**,
 with half-bandwidth :math:`d`. A well-implemented banded
 Cholesky solve can achieve approximately
-:math:`\mathcal O(nd^2)` time and
-:math:`\mathcal O(nd)` storage per penalty. For small fixed
+:math:`\mathcal{O}(nd^2)` time and
+:math:`\mathcal{O}(nd)` storage per penalty. For small fixed
 :math:`d` and one fit, it may outperform the dense SVD by a
 large margin. The full hat-matrix *diagonal* required for exact
 LOOCV is a separate computational problem.
