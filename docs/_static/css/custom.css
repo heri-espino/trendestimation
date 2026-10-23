@@ -1205,7 +1205,7 @@ div.cell_input div.highlight pre {
 }
 .te-zoom-stage {
   width: 100%;
-  min-width: 100%;
+  min-width: 0;
   margin: auto;
 }
 .te-zoom-media {
