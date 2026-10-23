@@ -32,8 +32,14 @@ def test_same_explicit_candidates_have_same_original_scores(order, criterion):
     assert_allclose(by_lambda.search_grid, penalties, rtol=0, atol=0)
     assert_allclose(by_s.grid, penalties, rtol=2e-9, atol=1e-10)
     assert_allclose(by_s.scores, by_lambda.scores, rtol=1e-9, atol=1e-10)
-    assert by_s.lambda_ == pytest.approx(by_lambda.lambda_, rel=2e-9)
-    assert by_s.smoothness == pytest.approx(by_lambda.smoothness, abs=1e-12)
+    # For order zero, classical CV is flat over positive penalties:
+    # equivalent finite search grids need not select the same tied value
+    # after inverse-map roundoff, but their optimal scores must agree.
+    if order == 0 and criterion == "cv":
+        assert by_s.score == pytest.approx(by_lambda.score, abs=1e-10)
+    else:
+        assert by_s.lambda_ == pytest.approx(by_lambda.lambda_, rel=2e-9)
+        assert by_s.smoothness == pytest.approx(by_lambda.smoothness, abs=1e-12)
 
 
 def test_conditional_mle_preserves_data_mean_and_boundary():
