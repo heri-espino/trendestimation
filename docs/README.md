@@ -277,8 +277,8 @@ merging to make these changes visible on the public site.
 
 ## Clean figures and click-to-enlarge
 
-All figure pages load ¤docs/_static/js/figure-zoom.js¤ along with the
-existing CSS. Images from ¤.. figure::¤ and SVG plots embedded by MyST-NB
+All figure pages load `docs/_static/js/figure-zoom.js` along with the
+existing CSS. Images from `.. figure::` and SVG plots embedded by MyST-NB
 are clickable and include an **Expand** control. Selecting a figure
 opens a full-viewport modal without navigating away from the notebook.
 Buttons provide **+**, **−**, **Reset** and **Close**; the browser also
@@ -293,7 +293,7 @@ navigation icons, and links with their own actions are not zoomed.
 Matplotlib figures in the documentation now default to 11–14 pt
 typography instead of the previous oversized 14–21 pt scheme.
 Lightweight *major x and y grids* replace cluttered backgrounds.
-The AwesomeFigures ¤elegante¤ style and Okabe–Ito palette remain intact.
+The AwesomeFigures `elegante` style and Okabe–Ito palette remain intact.
 Default curve markers and decorative markers such as `o-`,
 `s-`, and point-only dots have been removed from example time-series
 lines. **Scatter-only figures that show distinct data observations**,
