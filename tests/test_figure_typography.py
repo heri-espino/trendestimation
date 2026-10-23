@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 
 
-def test_figure_font_scale_and_editable_svg():
+def test_figure_font_scale_and_portable_svg():
     """The documentation style must override tiny AwesomeFigures defaults."""
     with mpl.rc_context():
         apply_documentation_figure_style()
@@ -28,7 +28,7 @@ def test_figure_font_scale_and_editable_svg():
             "ytick.labelsize": 14.0,
             "legend.fontsize": 15.0,
             "figure.titlesize": 21.0,
-            "svg.fonttype": "none",
+            "svg.fonttype": "path",
         }
         for name, expected in settings.items():
             assert mpl.rcParams[name] == expected, name
@@ -41,7 +41,8 @@ def test_figure_font_scale_and_editable_svg():
         fig.savefig(output, format="svg")
         svg = output.getvalue()
         plt.close(fig)
-        assert "<text" in svg
+        assert "<path" in svg
+        assert "<text" not in svg
         assert "DejaVu Sans" in svg
 
 
