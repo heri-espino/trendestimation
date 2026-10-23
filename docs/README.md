@@ -164,9 +164,10 @@ DejaVu font, if installed, or Arial, so complete web-page matching cannot
 be guaranteed offline.
 After loading AwesomeFigures,
 all 13 notebooks call ``apply_documentation_figure_style()`` from
-``trendestimation._docs_style`` to enlarge typography consistently:
-16 pt body, 19 pt axes titles, 17 pt labels, 14 pt ticks, 15 pt legends
-and 21 pt figure titles. The forecasting plot utilities now respect these
+``trendestimation._docs_style`` to use restrained typography:
+11 pt body, 13 pt axes titles, 11 pt labels, 10 pt ticks and legends,
+and 14 pt figure titles. This also adds subtle major horizontal and
+vertical grid lines and removes decorative markers on line charts. The forecasting plot utilities now respect these
 values rather than forcing 8-9 pt labels. The statistical algorithms,
 data, selection criteria, and numerical outputs are unchanged.
 
@@ -272,3 +273,34 @@ literally. The Sphinx preview workflow therefore also runs
 that actual equation nodes occur in the built HTML. It does not execute
 the computational notebook cells. Refresh or republish Sphinx after
 merging to make these changes visible on the public site.
+
+
+## Clean figures and click-to-enlarge
+
+All figure pages load ¤docs/_static/js/figure-zoom.js¤ along with the
+existing CSS. Images from ¤.. figure::¤ and SVG plots embedded by MyST-NB
+are clickable and include an **Expand** control. Selecting a figure
+opens a full-viewport modal without navigating away from the notebook.
+Buttons provide **+**, **−**, **Reset** and **Close**; the browser also
+supports **Escape**. To use a keyboard, tab to the image or its control
+and press Enter/Space. The preview remains a vector SVG where the
+underlying output was SVG, so it can be enlarged without blur.
+
+The behavior is a progressive enhancement: the original figure still
+renders without JavaScript. The homepage decorative hero illustration,
+navigation icons, and links with their own actions are not zoomed.
+
+Matplotlib figures in the documentation now default to 11–14 pt
+typography instead of the previous oversized 14–21 pt scheme.
+Lightweight *major x and y grids* replace cluttered backgrounds.
+The AwesomeFigures ¤elegante¤ style and Okabe–Ito palette remain intact.
+Default curve markers and decorative markers such as `o-`,
+`s-`, and point-only dots have been removed from example time-series
+lines. **Scatter-only figures that show distinct data observations**,
+such as diagnostics or held-out actual values, retain those observations.
+
+To see the updated line styles in existing notebook figures, rebuild
+and publish through the **manual** GitHub Pages workflow; changing
+the library style does not retroactively alter previously committed
+or cached SVG outputs. The zoom controls apply to Sphinx HTML when
+the site itself is rebuilt, even before the figures are regenerated.
