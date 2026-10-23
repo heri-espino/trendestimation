@@ -438,7 +438,7 @@ def select_lambda(
         The grid attribute always holds evaluated penalty values for
         backward compatibility. The search_grid attribute reports the
         searched coordinate, aligned with the scores, and the winner
-        has both a lambda_ and normalized smoothness value.
+        has both the selected penalty and normalized smoothness value.
 
     Notes
     -----
