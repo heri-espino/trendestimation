@@ -9,14 +9,16 @@ from __future__ import annotations
 
 
 def apply_documentation_figure_style() -> None:
-    """Enlarge SVG figure text to match the website's DejaVu Sans font.
+    """Match notebook figures to the documentation's DejaVu Sans face.
 
-    Execute this function after awesomefigures.set_style in notebooks.
-    DejaVu Sans ships with Matplotlib, and svg.fonttype='none' preserves
-    editable vector text. Sizes: body 16, axis titles 19, axis labels 17,
-    tick labels 14, legends 15, and figure titles 21 points.
+    Call after awesomefigures.set_style so its other theme settings are
+    retained. SVG fonttype='path' outlines glyphs from Matplotlib's bundled
+    DejaVu Sans: a standalone SVG loaded via <img> cannot inherit the page's
+    webfont CSS and otherwise falls back to a different system font.
 
-    Only plotting presentation changes; model outputs stay unchanged.
+    SVG text is therefore visually reproducible but no longer selectable.
+    Point sizes: body 16, titles 19, axes 17, ticks 14, legends 15,
+    figure titles 21. This changes rendering only, never statistical data.
     """
     import matplotlib as mpl
 
@@ -32,7 +34,7 @@ def apply_documentation_figure_style() -> None:
         "legend.title_fontsize": 15.0,
         "figure.titlesize": 21.0,
         "figure.titleweight": "semibold",
-        "svg.fonttype": "none",
+        "svg.fonttype": "path",
         "pdf.fonttype": 42,
         "savefig.bbox": "tight",
     })
