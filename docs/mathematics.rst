@@ -3,6 +3,9 @@ Mathematics and computational scope
 
 For a concise, sectioned reference of PLS, smoothness, selection scores,
 analytical derivatives and numerical solvers, see :doc:`handbook/index`.
+For a beginner-friendly explanation of the normalized smoothing
+coordinate :math:`S\in[0,1]` and both optimization APIs, see
+:doc:`smoothness_coordinate`.
 
 Let :math:`y\in\mathbb R^n`, :math:`0\le d<n`,
 :math:`D_d\in\mathbb R^{(n-d)\times n}` denote order-d forward
