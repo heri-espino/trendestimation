@@ -192,7 +192,7 @@ Thus the empirical mean of the observed differences is
 not in general the conditional estimator at a positive penalty.
 
 Concentrated likelihood for :math:`(\lambda,\mu)`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Allowing :math:`\mu` to vary, the profiled Gaussian
 negative log-likelihood (up to constants) becomes
