@@ -61,6 +61,26 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertNotIn(r"\eqref{eq:lambda-profile-mle}", self.real)
         self.assertNotIn(r"\eqref{eq:mu-profile-mle}", self.real)
 
+    def test_smoothness_coordinate_math_and_implementation_scope(self):
+        section_path = PAPER / "sections" / "smoothness_coordinate_search.tex"
+        self.assertTrue(section_path.is_file())
+        content = section_path.read_text(encoding="utf-8")
+        self.assertIn(r"\input{sections/smoothness_coordinate_search}", self.main)
+        for label in (
+            "inverse-s-coordinate", "s-coordinate-derivative",
+            "criterion-s-coordinate", "score-s-chain",
+            "future-joint-s-profile",
+        ):
+            with self.subTest(label=label):
+                self.assertIn(r"\label{eq:" + label + "}", content)
+        self.assertIn(r"\texttt{search\_space=", content)
+        self.assertIn("search\\_grid", content)
+        self.assertIn("additional scalar inversion", content)
+        self.assertIn(r"\emph{unimplemented research extension}", content)
+        self.assertIn("not covered by the solver-only timing comparisons", self.main)
+        self.assertIn("These additional costs have not", self.main)
+        self.assertIn("been benchmarked against the log-penalty search", self.main)
+
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
             "sections/kernel_derivatives",

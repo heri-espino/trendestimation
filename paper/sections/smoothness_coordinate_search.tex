@@ -1,0 +1,105 @@
+\subsection{Selecting a criterion in normalized smoothness coordinates}
+\label{sec:smoothness-coordinate-search}
+The monotonicity in Eq.~\eqref{eq:s-derivative} permits a change of
+optimization coordinate without changing the underlying PLS estimator
+or statistical selection criterion. Write $r=n-d$, let
+$\delta_1,\ldots,\delta_r$ denote the strictly positive penalty
+eigenvalues, and define
+\begin{equation}\label{eq:inverse-s-coordinate}
+s=S(\lambda)
+=\frac{1}{r}\sum_{j=1}^{r}
+\frac{\lambda\delta_j}{1+\lambda\delta_j},
+\qquad
+\Lambda(s)=S^{-1}(s),\quad 0<s<1.
+\end{equation}
+Since
+\begin{equation}\label{eq:s-coordinate-derivative}
+S'(\lambda)=\frac1r\sum_{j=1}^{r}
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0
+\qquad (\lambda\ge0),
+\end{equation}
+$S$ is continuous and strictly increasing, taking the extended
+endpoints $S(0)=0$ and $S(\infty)=1$. We define
+$\Lambda(0)=0$ and $\Lambda(1)=\infty$ exactly. These formulas
+apply for any admissible order $0\le d<n$, provided the positive
+penalty spectrum is numerically resolved.
+
+For an existing criterion $C(\lambda;\mu)$ conditional on a fixed
+reference mean, introduce $\widetilde C(s;\mu)=C(\Lambda(s);\mu)$.
+The same ideal optimization problem can be written as
+\begin{equation}\label{eq:criterion-s-coordinate}
+\widehat s\in\arg\min_{s\in[0,1]}
+\widetilde C(s;\mu),
+\qquad
+\widehat\lambda=\Lambda(\widehat s).
+\end{equation}
+Here inadmissible boundary values retain their original definition,
+including an undefined ordinary CV score at $\lambda=0$; the
+correspondence between global minimizers is set-valued in the
+presence of ties. This is an exact reparameterization, not a new
+criterion or a proof that a finite numerical search locates the
+global optimum. Equal $s$ across difference orders means equal
+\emph{normalized conditional trace smoothness}, not equal trend
+geometry, variability, or forecast accuracy.
+
+For a differentiable criterion and $0<s<1$, the inverse-function
+theorem and the chain rule give
+\begin{equation}\label{eq:score-s-chain}
+\frac{d\widetilde C}{ds}
+=\frac{C'(\lambda)}{S'(\lambda)}
+=\frac{dC/d\log\lambda}{dS/d\log\lambda},
+\qquad
+\frac{dS}{d\log\lambda}
+=\frac{1}{r}\sum_{j=1}^{r}
+\frac{\lambda\delta_j}{(1+\lambda\delta_j)^2}>0,
+\quad\lambda=\Lambda(s).
+\end{equation}
+Thus interior stationary points coincide in the two
+parameterizations. The public implementation exposes the optional
+\texttt{search\_space="smoothness"} in
+\texttt{select\_lambda}, while
+\texttt{search\_space="lambda"} remains the default.
+For classical fixed-$\mu$ CV, it scans a uniform and a
+logit-spaced set of $s$ values, refines sampled derivative
+sign-change brackets and score valleys, and compares evaluated
+criterion values at those candidates and exact boundaries.
+For GCV, AICc, BIC, and conditional Gaussian MLE the option
+evaluates a grid in $s$, using the same score as in $\lambda$.
+A user-supplied \texttt{grid} is interpreted in the selected
+coordinate. The returned \texttt{lambda\_} remains a penalty;
+\texttt{smoothness} returns its normalized trace index,
+\texttt{grid} records evaluated penalties, and
+\texttt{search\_grid} records the requested coordinates.
+Only Gaussian MLE supports the previously defined
+observed-difference plug-in for $\mu$; the new coordinate does
+not jointly estimate $(\lambda,\mu)$.
+
+The inverse is obtained with a safeguarded root finder in
+$\log\lambda$, reusing the spectral representation.
+Every interior smoothness evaluation therefore incurs an
+additional scalar inversion, typically several $O(r)$
+spectral evaluations, before the unchanged criterion score.
+Moreover $dS/d\log\lambda$ tends to zero at both limits, so
+derivative conversion can be poorly conditioned near $s=0$
+or $s=1$. Interior values requiring an unrepresentable
+floating-point penalty are rejected rather than silently
+treated as endpoints. A bounded search interval does not,
+by itself, establish a speed or accuracy advantage over
+direct optimization in $\log\lambda$.
+
+For completeness, the prospective joint likelihood profile
+in Eq.~\eqref{eq:lambda-profile-mle} could also be expressed
+in this coordinate as
+\begin{equation}\label{eq:future-joint-s-profile}
+\widehat s_{\mathrm{joint}}
+=\arg\min_{0<s<1}
+J\bigl(\Lambda(s);\widehat\mu(\Lambda(s))\bigr),
+\qquad
+\widehat\lambda_{\mathrm{joint}}
+=\Lambda(\widehat s_{\mathrm{joint}}).
+\end{equation}
+Equation~\eqref{eq:future-joint-s-profile} describes an
+\emph{unimplemented research extension}, not a result of
+the conditional-MLE selector or of the benchmarks below.
+Boundary candidates and identifiability would require
+separate treatment in a full joint-estimation study.

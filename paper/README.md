@@ -25,6 +25,30 @@ The manuscript reports only existing and reproducible evidence:
 - a descriptive monthly Mauna Loa CO2 smoothing illustration across
   orders using the same **prescribed smoothness**, not a forecast test.
 
+**New bounded-parameterization subsection:**
+`paper/sections/smoothness_coordinate_search.tex` explains how the
+existing criteria can be searched either over `lambda` or over
+`s=S(lambda)` in `[0,1]`, without changing their definitions.
+It includes the monotone inverse, analytical chain rule
+`dC/ds=(dC/dloglambda)/(dS/dloglambda)`, CV refinement strategy,
+exact endpoints and numerical inversion limitations. The paper
+mentions the deterministic library regression tests that compare
+mapped candidate scores and derivatives across orders, but makes
+**no new runtime or predictive-performance claim** for S-space search.
+The existing timing tables measure solver workloads, not an
+end-to-end comparison of lambda-space and S-space optimizers.
+The manuscript still retains the joint `(lambda, mu)` profile only
+as an explicitly deferred theoretical extension.
+
+For the mathematical derivation and all boundary assumptions see
+[notes/smoothness_parameterization.md](../notes/smoothness_parameterization.md).
+Existing numerical CSVs, vector figures, and benchmark scripts are
+intentionally unchanged. After pulling the update, compile with:
+
+```powershell
+python paper/build.py --pdf --package
+```
+
 **Equations intentionally retained in the manuscript:** the full
 PLS objective (Eq. `eq:objective`), affine spectral solution, normalized
 smoothness index, and the mathematical identities for a possible
