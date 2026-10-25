@@ -86,6 +86,159 @@ variance, or prediction intervals.
    )
    print(parts.observation_variance, parts.difference_variance)
 
+
+Estimating the reference-difference mean
+----------------------------------------
+
+There are **two distinct estimates** of :math:`\mu` in the
+research framework. The public ``mu="data"`` option uses
+Guerrero's empirical mean of observed differences:
+
+.. math::
+
+   \boxed{\widehat\mu_G
+     =\frac{1}{n-d}\mathbf1^\top D_dy
+     =\operatorname{mean}(D_dy)}.
+
+This is a **plug-in reference mean**. In particular, for
+:math:`d>0` it is generally not the arithmetic mean of
+the raw observations :math:`y`.
+
+Conditional generalized least-squares profile for :math:`\mu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following analytical estimator is derived in the research
+manuscript (``paper/sections/likelihood_mu.tex``), but is
+**not currently exposed by the Python package as a joint-MLE API**.
+
+Assume :math:`1\le d<n` and finite :math:`\lambda>0`.
+Define the unit-reference vector
+:math:`p^{(1)}_t=\binom{t}{d}`, indexed from
+:math:`t=0,\ldots,n-1`, so that
+:math:`D_dp^{(1)}=\mathbf1`. Let
+:math:`v_j` be the positive-penalty eigenvectors
+of :math:`Q=D_d^\top D_d` and write
+
+.. math::
+
+   z_j^{(0)}=v_j^\top y,\qquad
+   b_j=v_j^\top p^{(1)},\qquad
+   w_j(\lambda)=\frac{1}{c_j(\lambda)}
+     =\frac{\lambda\delta_j}{1+\lambda\delta_j}.
+
+Here :math:`z_j^{(0)}` is the coordinate of the **raw**
+observations, unlike the fixed-mean coordinates
+:math:`z_j(\mu)=v_j^\top(y-\mu p^{(1)})
+=z_j^{(0)}-b_j\mu` used in the preceding sections.
+
+For fixed :math:`\lambda`, the relevant weighted residual sum
+of squares is
+
+.. math::
+
+   T(\lambda,\mu)=\sum_{j=1}^{n-d}
+       w_j(\lambda)(z_j^{(0)}-b_j\mu)^2.
+
+Differentiation with respect to :math:`\mu` yields
+
+.. math::
+
+   \frac{\partial T}{\partial\mu}
+       =-2\sum_j w_jb_j(z_j^{(0)}-b_j\mu),\qquad
+   \frac{\partial^2 T}{\partial\mu^2}
+       =2\sum_j w_j b_j^2>0.
+
+The last inequality follows because
+:math:`D_dp^{(1)}=\mathbf1`, hence the positive-eigenvalue
+projection of :math:`p^{(1)}` is not zero.
+Setting the first derivative to zero gives the unique
+conditional **weighted least-squares estimator**:
+
+.. math::
+
+   \boxed{\widehat\mu(\lambda)
+       =\frac{\sum_{j=1}^{n-d}
+            w_j(\lambda)b_j z_j^{(0)}}
+            {\sum_{j=1}^{n-d}w_j(\lambda)b_j^2}}.
+
+For fixed :math:`\lambda`, this also minimizes the PLS
+objective *jointly over the fitted trend and* :math:`\mu`
+after the trend has been eliminated. Its equality with the
+conditional likelihood minimizer follows because the
+profiled Gaussian score is increasing in :math:`T`
+when :math:`T>0`.
+
+Connection to Guerrero's empirical mean
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As :math:`\lambda\downarrow0`,
+:math:`w_j(\lambda)/\lambda\to\delta_j`.
+Since :math:`Q=D_d^\top D_d`,
+
+.. math::
+
+   \begin{aligned}
+   \lim_{\lambda\downarrow0}\widehat\mu(\lambda)
+   &=\frac{(p^{(1)})^\top Qy}
+           {(p^{(1)})^\top Qp^{(1)}}\\
+   &=\frac{(D_dp^{(1)})^\top D_dy}
+           {\|D_dp^{(1)}\|^2}\\
+   &=\frac{\mathbf1^\top D_dy}{n-d}
+   =\widehat\mu_G.
+   \end{aligned}
+
+Thus the empirical mean of the observed differences is
+**the small-penalty limit of the conditional estimator**,
+not in general the conditional estimator at a positive penalty.
+
+Concentrated likelihood for :math:`(\lambda,\mu)`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Allowing :math:`\mu` to vary, the profiled Gaussian
+negative log-likelihood (up to constants) becomes
+
+.. math::
+
+   J(\lambda;\mu)
+      =(n-d)\log\left(\frac{T(\lambda,\mu)}{n-d}\right)
+       +\sum_{j=1}^{n-d}\log c_j(\lambda).
+
+Insert the conditional optimum :math:`\widehat\mu(\lambda)`
+to obtain a one-dimensional concentrated objective:
+
+.. math::
+
+   J_{\mathrm{conc}}(\lambda)
+     =J(\lambda;\widehat\mu(\lambda)),\qquad
+   \widehat\lambda\in\underset{\lambda>0}{\operatorname{argmin}}
+                    \,J_{\mathrm{conc}}(\lambda),\qquad
+   \widehat\mu=\widehat\mu(\widehat\lambda).
+
+If the optimum is finite, its corresponding profiled
+variance components would be
+
+.. math::
+
+   \widehat\sigma_\varepsilon^2
+    =\frac{T(\widehat\lambda,\widehat\mu)}{n-d},
+   \qquad
+   \widehat\sigma_\eta^2
+    =\frac{\widehat\sigma_\varepsilon^2}{\widehat\lambda}.
+
+These are **conditional/profile likelihood equations**, not
+claims of a publicly implemented joint estimator. Numerical
+optimization over :math:`\lambda` and identifiability must
+still be assessed; the result is not a closed-form joint solution.
+Profiling an additional mean parameter does not automatically
+make these variance estimates unbiased.
+
+Estimating :math:`\mu` from the same observations changes
+the data-to-fitted-trend operator. Accordingly the fixed-mean
+effective degrees of freedom :math:`\operatorname{tr}(H_\lambda)`
+and the usual fixed-mean LOOCV denominators cannot simply
+be reused as though :math:`\mu` were known. For the present
+public API, see :doc:`../api/selection`.
+
 Assumptions and identifiability
 -------------------------------
 
