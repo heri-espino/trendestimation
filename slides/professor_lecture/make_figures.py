@@ -141,7 +141,7 @@ def plot_differences(t, truth, y, models):
     D = models[3].D
     ax.grid(False)
     ax.imshow(D[:18, :22], cmap="coolwarm", aspect="auto",
-              vmin=-max(abs(D.flat)), vmax=max(abs(D.flat)))
+              vmin=-float(np.max(np.abs(D))), vmax=float(np.max(np.abs(D))))
     save("12_matrix_D", fig)
     fig, ax = axes("Binomial stencil coefficients", "position in stencil", "coefficient")
     for d in (1, 2, 3, 4, 5):
