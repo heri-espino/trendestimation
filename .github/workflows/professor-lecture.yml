@@ -48,8 +48,7 @@ jobs:
           PY
       - name: Export readable HTML
         run: |
-          npx --yes @marp-team/marp-cli --theme-set slides/professor_lecture/theme.css \
-            slides/professor_lecture/main.md --html --allow-local-files \
+          npx --yes @marp-team/marp-cli slides/professor_lecture/main.md --theme slides/professor_lecture/theme.css --html --allow-local-files \
             --output slides/professor_lecture/main.html
           test -s slides/professor_lecture/main.html
       - name: Save research-lecture HTML and SVG preview
