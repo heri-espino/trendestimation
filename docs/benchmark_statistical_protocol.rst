@@ -1,5 +1,5 @@
 Formal statistical benchmark protocol
-====================================
+=====================================
 
 Purpose
 -------
