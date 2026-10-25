@@ -925,6 +925,30 @@ selected.scores        # unchanged criterion values
 
 ---
 
+<!-- _class: code -->
+# You can also prescribe S without optimizing a criterion
+
+~~~python
+target_s = 0.80
+penalty = solver.lambda_for_smoothness(target_s)
+
+fit = solver.fit(y, lambda_=penalty, mu=0.0)
+print("penalty lambda:", penalty)
+print("normalized smoothness:", fit.smoothness)
+print("conditional EDF:", fit.edf_conditional)
+~~~
+
+$\boxed{
+S(\lambda)=0.8
+\quad\Longleftrightarrow\quad
+\lambda=S^{-1}(0.8).
+}$
+
+**The user chooses an interpretable smoothing level; the library finds
+the penalty needed for the specified series length and order.**
+
+---
+
 <!-- _class: compact -->
 # Why a bounded interval is not automatically faster
 
