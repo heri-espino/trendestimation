@@ -47,7 +47,7 @@ FILE_ALLOWLIST = (
     "slides/professor_lecture/main.pptx",
 )
 # Ignore hidden files even if extension looks compatible.
-BANNED_NAMES = {"secrets.json", "credentials.json", "token.json"}
+BANNED_NAMES = {"secret.json", "secrets.json", "credentials.json", "token.json"}
 DEFAULT_IMPORT_SOURCES = (
     "build/solver-study", "build/formal-solver-study",
     "build/solver-study-smoke",
@@ -67,6 +67,9 @@ def is_allowed_file(path: Path, root: Path = ROOT) -> bool:
         return False
     try:
         relative = path.relative_to(root)
+        # A directory symlink must not escape the working checkout.
+        if not path.resolve().is_relative_to(root.resolve()):
+            return False
     except ValueError:
         return False
     if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
