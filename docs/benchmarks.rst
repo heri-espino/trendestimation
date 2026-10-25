@@ -1,6 +1,9 @@
 Computation and benchmarking
 ============================
 
+A reproducible three-way comparison of SVD, dense eigen-decomposition
+and direct banded Cholesky is described in :doc:`solver_backends`.
+
 The ``trendestimation`` package uses the singular-value decomposition of
 the finite-difference matrix. Spectral reuse is valuable when evaluating many
 candidate penalty parameters, but a dense SVD is not always the fastest
