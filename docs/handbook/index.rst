@@ -2,7 +2,8 @@ Mathematical handbook
 =====================
 
 A compact, section-by-section reference for the mathematical results
-**implemented in** ``trendestimation``. Each page states the formulas,
+**used by** ``trendestimation`` and related research derivations. Each
+page states the formulas,
 their assumptions, boundary behavior, and the corresponding software entry
 points. This handbook is designed for lookup; for worked examples see
 :doc:`../smoothness_optimization`, and for theoretical background see
@@ -10,8 +11,10 @@ points. This handbook is designed for lookup; for worked examples see
 
 **Scope:** finite-difference penalized least squares (PLS), fixed-reference
 classical leave-one-out CV, GCV, AICc, BIC, Gaussian marginal likelihood,
-and numerical parameter selection. **Not** forecast-horizon CV, rolling
-forecast evaluation, or joint likelihood estimation of the reference mean.
+numerical parameter selection, and a documented theoretical profile
+estimator for the reference mean. **Not** forecast-horizon CV or rolling
+forecast evaluation. The joint mean--penalty profile is mathematical
+research material, **not a currently exposed public API**.
 
 .. toctree::
    :maxdepth: 2
@@ -60,6 +63,9 @@ Quick formula index
      - :doc:`derivatives`
    * - Marginal Gaussian MLE
      - Profiled likelihood and variance components
+     - :doc:`likelihood`
+   * - Profiled reference-difference mean
+     - :math:`\widehat\mu(\lambda)=\sum_j w_jb_jz_j^{(0)}/\sum_j w_jb_j^2`
      - :doc:`likelihood`
    * - Root solving
      - :math:`S(\lambda)-s=0`, or :math:`\mathrm{CV}'(\lambda)=0`
