@@ -92,7 +92,7 @@ class ArticleScopeTests(unittest.TestCase):
             self.main,
         )
         self.assertIn("not a new smoothing criterion", self.main)
-        self.assertIn("not a head-to-head timing comparison", self.main)
+        self.assertIn(r"\emph{not} a head-to-head timing comparison", self.main)
 
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
