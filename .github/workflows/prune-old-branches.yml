@@ -1,0 +1,47 @@
+name: One-time old branch cleanup
+
+# The push path filter runs this once when this maintenance workflow is
+# merged into main. Future changes can opt in using workflow_dispatch.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/prune-old-branches.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit branch eligibility (non-destructive)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/cleanup_old_branches.py \
+            --output build/branch-cleanup-preview.json
+      - name: Remove obsolete branches; preserve unmerged history in tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/cleanup_old_branches.py \
+            --apply \
+            --output build/branch-cleanup-report.json
+      - name: Upload machine-readable audit trail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: old-branch-cleanup-${{ github.run_id }}
+          path: build/branch-cleanup-*.json
+          retention-days: 90
+          if-no-files-found: warn
