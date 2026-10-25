@@ -27,6 +27,18 @@ For user-machine cost reporting, use the `--watts` and
 `--mxn-per-kwh` options only when measured or documented assumptions
 are available.
 
+## Smoothness coordinate guide
+
+`docs/smoothness_coordinate.rst` is the introductory guide for searching
+by the traditional penalty `lambda` or normalized trace smoothness `S`
+in `[0, 1]`. It derives `EDF = n - (n-d)S`, explains the inverse and
+chain-rule derivative, and documents the existing `select_lambda`
+`search_space` option with deterministic examples. It is linked from
+the homepage, sidebar, API landing page and quickstart. The longer
+`docs/smoothness_optimization.rst` remains the detailed numerical reference.
+No performance advantage for S-space selection is claimed without
+an end-to-end comparison, and classical criteria keep fixed-mean semantics.
+
 ## Design and API maintenance
 
 The site uses a single **Pantone 2955 C-inspired navy** (approximate
