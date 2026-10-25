@@ -1,0 +1,61 @@
+name: Professor Marp lecture (figures and HTML)
+
+on:
+  pull_request:
+    paths:
+      - 'slides/professor_lecture/**'
+      - 'tests/test_professor_lecture.py'
+      - '.github/workflows/professor-lecture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-lecture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Dependencies
+        run: |
+          python -m pip install -e '.[plot]'
+          python -m pip install statsmodels
+      - name: Full deterministic SVG generation
+        run: python slides/professor_lecture/make_figures.py
+      - name: Verify all slide images exist
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          folder=Path('slides/professor_lecture')
+          refs=set(re.findall(r'figures/([A-Za-z0-9_]+\.svg)', (folder/'main.md').read_text()))
+          missing=sorted(p for p in refs if not (folder/'figures'/p).is_file())
+          manifest=json.loads((folder/'figures/manifest.json').read_text())
+          print('slides referenced', len(refs), 'figures emitted', manifest['count'])
+          assert len(refs)>=40, 'Expected at least 40 unique scientific illustrations'
+          assert not missing, f'Missing generated SVGs: {missing}'
+          assert manifest['count']>=len(refs)
+          PY
+      - name: Export readable HTML
+        run: |
+          npx --yes @marp-team/marp-cli slides/professor_lecture/main.md --theme slides/professor_lecture/theme.css --html --allow-local-files \
+            --output slides/professor_lecture/main.html
+          test -s slides/professor_lecture/main.html
+      - name: Save research-lecture HTML and SVG preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: professor-marp-html-and-svg
+          path: |
+            slides/professor_lecture/main.html
+            slides/professor_lecture/figures/
+          retention-days: 14
