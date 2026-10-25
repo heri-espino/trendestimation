@@ -26,8 +26,10 @@ Open ``docs/_build/html/index.html`` in a browser.
 Your first trend
 ----------------
 
-For the precise distinction between grid CV, analytical derivatives and
-smoothness inversion, consult :doc:`smoothness_optimization`.
+For an intuitive explanation of why smoothing can be selected through
+either the penalty :math:`\lambda` or the bounded index :math:`S`, start
+with :doc:`smoothness_coordinate`. For grid CV, analytical derivatives
+and numerical inversion details, consult :doc:`smoothness_optimization`.
 For a concise, section-by-section formula reference (PLS, CV, GCV,
 AICc, BIC, derivatives, Guerrero smoothness, and root solvers), see
 :doc:`handbook/index`.
@@ -63,6 +65,9 @@ Searching over normalized smoothness
 
 The same criterion can also be searched directly over normalized S
 on the unit interval. The previous lambda search stays the default.
+The identity :math:`\operatorname{EDF}=n-(n-d)S` explains the
+interpretation of the index. See :doc:`smoothness_coordinate` for the
+mathematical mapping, the derivative and the meaning of the endpoints.
 
 .. code-block:: python
 
