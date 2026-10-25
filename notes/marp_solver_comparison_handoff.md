@@ -48,6 +48,17 @@ python benchmarks/compare_solver_backends.py --preset quick --repeats 5 --thread
 python benchmarks/compare_solver_backends.py --preset full --repeats 7 --threads 1 --output build/solver-backends-full.json
 ```
 
+Generate the measured SVG/PNG plots and per-workload winner table with:
+
+```bash
+python benchmarks/plot_solver_backends.py --input build/solver-backends.json --output-dir build/solver-plots
+```
+
+A manually dispatched GitHub Actions workflow,
+`.github/workflows/solver-backends-benchmarks.yml`, can also produce
+portable JSON, CSV and plots as downloadable run artifacts; it does not
+run on pushes or modify the presentation branch.
+
 Include the machine/BLAS/Python/NumPy/SciPy metadata and seed beside the
 plots. These are host-specific measurements, **not a universal ranking**.
 Do not fabricate charts, speed ratios or results.
