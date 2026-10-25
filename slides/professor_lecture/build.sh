@@ -16,11 +16,9 @@ cd "$REPO"
 if [ "$SKIP_FIGURES" -eq 0 ]; then
  python "$ROOT/make_figures.py"
 fi
-npx --yes @marp-team/marp-cli --theme-set "$ROOT/theme.css" \
- "$ROOT/main.md" --html --allow-local-files --output "$ROOT/main.html"
+npx --yes @marp-team/marp-cli "$ROOT/main.md" --theme "$ROOT/theme.css" --html --allow-local-files --output "$ROOT/main.html"
 if [ "$HTML_ONLY" -eq 0 ]; then
- npx --yes @marp-team/marp-cli --theme-set "$ROOT/theme.css" \
-  "$ROOT/main.md" --html --allow-local-files --pdf --output "$ROOT/main.pdf"
+ npx --yes @marp-team/marp-cli "$ROOT/main.md" --theme "$ROOT/theme.css" --html --allow-local-files --pdf --output "$ROOT/main.pdf"
 fi
 echo "[lecture] HTML: $ROOT/main.html"
 if [ "$HTML_ONLY" -eq 0 ]; then echo "[lecture] PDF: $ROOT/main.pdf"; fi
