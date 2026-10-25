@@ -45,6 +45,7 @@ class MarpResearchLecture(unittest.TestCase):
         static={m+".svg" for m in re.findall(
             r'save\("([0-9][a-zA-Z0-9_]+)"', self.script,
         )}
+        static.discard("00_smoke.svg")  # generated only by --smoke
         self.assertEqual(names, static | dynamic)
         self.assertFalse((LECTURE/"main.md").read_text().count("TODO"))
 
