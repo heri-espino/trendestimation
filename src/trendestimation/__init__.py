@@ -1,5 +1,6 @@
 """trendestimation: classical PLS smoothing and transparent trend extrapolation."""
 from .core import FitResult, TrendSmoother, difference_matrix, fit_trend
+from .solvers import PreparedPLSSolver, fit_penalized
 from .criteria import SelectionResult, score_lambda, select_lambda
 from .likelihood import VarianceComponents, estimate_variance_components
 from .examples import SimulatedSeries, simulate_cortes_toto
@@ -12,6 +13,7 @@ from .forecast_plots import (
 
 __all__ = [
     "FitResult", "TrendSmoother", "difference_matrix", "fit_trend",
+    "PreparedPLSSolver", "fit_penalized",
     "SelectionResult", "score_lambda", "select_lambda",
     "VarianceComponents", "estimate_variance_components",
     "SimulatedSeries", "simulate_cortes_toto",

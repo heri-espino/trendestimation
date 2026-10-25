@@ -1,0 +1,63 @@
+name: PLS solver backend benchmarks
+
+# CPU timing is host-dependent; this workflow is *manual* on purpose.
+on:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: "Benchmark workload"
+        required: true
+        type: choice
+        default: quick
+        options:
+          - smoke
+          - quick
+          - full
+      repeats:
+        description: "Repetitions for each matched case"
+        required: true
+        default: "5"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Compare SVD, eigh, and banded Cholesky
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project and benchmark requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . threadpoolctl matplotlib
+      - name: Run matched benchmarks
+        env:
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          mkdir -p build/solver-backends
+          python benchmarks/compare_solver_backends.py \
+            --preset "${{ inputs.preset }}" \
+            --repeats "${{ inputs.repeats }}" \
+            --threads 1 \
+            --output build/solver-backends/measurements.json \
+            > build/solver-backends/measurements.log
+          python benchmarks/plot_solver_backends.py \
+            --input build/solver-backends/measurements.json \
+            --output-dir build/solver-backends/plots
+      - name: Publish benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: solver-backends-${{ github.run_id }}
+          path: build/solver-backends/
+          retention-days: 30

@@ -14,6 +14,10 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
 
 - Integer differencing orders `0 <= d < n`; very high orders may be ill-conditioned.
 - Zero, fixed nonzero, and Guerrero (2007) observed-difference plug-in reference means (`mu="data"`).
+- Alternative full-trend reconstruction backends (SVD, dense symmetric eigendecomposition,
+  and banded Cholesky) with matched reproducible benchmarks via
+  `PreparedPLSSolver` / `fit_penalized`; these return trends only, without
+  replacing the established spectral criterion-selection interface.
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
 - Optional parameter search in either penalty **lambda** (existing default)
