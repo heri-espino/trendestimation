@@ -77,9 +77,22 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertIn("search\\_grid", content)
         self.assertIn("additional scalar inversion", content)
         self.assertIn(r"\emph{unimplemented research extension}", content)
-        self.assertIn("not covered by the solver-only timing comparisons", self.main)
-        self.assertIn("These additional costs have not", self.main)
-        self.assertIn("been benchmarked against the log-penalty search", self.main)
+        self.assertIn("The central question of this computational study", self.main)
+        self.assertIn("Direct end-to-end timing comparisons", self.main)
+        self.assertIn("rather than an automatic speed improvement", self.main)
+
+    def test_smoothness_is_the_primary_manuscript_coordinate(self):
+        self.assertIn(
+            r"\title[Normalized smoothness for trend estimation]",
+            self.main,
+        )
+        self.assertIn(r"$s=S(\lambda)\in[0,1]$", self.main)
+        self.assertIn(
+            "mapped-grid equivalence checks and numerical validation",
+            self.main,
+        )
+        self.assertIn("not a new smoothing criterion", self.main)
+        self.assertIn("not a head-to-head timing comparison", self.main)
 
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
