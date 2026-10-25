@@ -1,0 +1,113 @@
+/* @theme trend-lecture */
+/* Marp lecture theme for trendestimation: light, scientific, accessible. */
+@import 'default';
+:root {
+  --navy: #102844; --ink: #263d5a; --blue: #205fd4;
+  --teal: #138b94; --muted: #62758c; --line: #dce6f1;
+  --pale: #f1f6fc; --paper: #ffffff; --accent: #e4f0ff;
+}
+section {
+  box-sizing: border-box;
+  width: 1280px; height: 720px;
+  padding: 66px 82px 65px 82px;
+  background: linear-gradient(145deg, #fff 55%, #f6faff);
+  color: var(--ink);
+  font-family: "Aptos", "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 1.29;
+  letter-spacing: -0.013em;
+  overflow: hidden;
+}
+section::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 8px;
+  background: linear-gradient(90deg, #163b76 0%, #2e75dc 60%, #7dbce8 100%);
+}
+h1, h2, h3 {color: var(--navy); letter-spacing: -0.032em; font-weight: 730;}
+h1 {font-size: 44px; line-height: 1.12; margin: 0 0 24px;}
+h2 {font-size: 33px; margin: 0 0 15px;}
+h3 {font-size: 26px; margin: 0 0 11px;}
+p {margin: 8px 0 16px}
+strong {color: var(--navy); font-weight: 720}
+em {color: #315886}
+a {color: var(--blue); text-decoration: none;}
+ul,ol {padding-left: 1.13em; margin: 10px 0;}
+li {padding-left: 0.16em; margin: 6px 0;}
+li::marker {color: var(--blue);}
+code {color: #144c9e; background: #f0f5fd; border-radius: 5px; padding: .12em .28em; font-size: .83em;}
+pre {background: #f1f6fc !important; color: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px;}
+pre code {background: transparent; font-size: 19px; line-height: 1.28;}
+blockquote {margin: 17px 0; padding: 16px 23px; border-left: 5px solid #3785d9; border-radius: 0 12px 12px 0; background: #eef5ff; color: var(--navy);}
+blockquote p {margin: 0;}
+table {font-size: 19px; width: 100%; border-collapse: collapse; margin-top: 16px;}
+th {background: #eaf2fc; color: var(--navy); font-weight: 700;}
+td, th {border-bottom: 1px solid #dce8f4; padding: 11px 14px; text-align:left;}
+section img {object-fit: contain;}
+section img[src$=".svg"] {max-width:100%;}
+section .katex-display, section mjx-container[display="true"] {margin: 19px 0; font-size: 1.04em;}
+section::after {
+  color: #91a4b9;
+  font-size: 14px;
+  bottom: 23px;
+  right: 67px;
+}
+footer {
+  position: absolute; bottom: 23px; left: 82px;
+  color: #7c90a7; font-size: 13px; letter-spacing: 0.015em;
+}
+header {position: absolute; right:82px; top:31px; font-size:13px; color:#8396ab}
+section.lead {
+  background: radial-gradient(circle at 85% 20%, #e6f2ff 0%, transparent 35%),
+              linear-gradient(140deg,#fff 30%,#eaf4ff 100%);
+  padding-top: 127px;
+}
+section.lead h1 {font-size: 64px; max-width: 1010px; line-height: 1.07;}
+section.lead h2 {color: #356cb5; font-size: 31px; font-weight: 500;}
+section.lead p {max-width: 970px; font-size: 23px;}
+section.chapter {
+  background: radial-gradient(ellipse at 90% 110%, #356dcb 0%, transparent 42%),
+              linear-gradient(125deg,#13345b,#0f2b4b);
+  color: #f4f8ff; padding-top: 155px;
+}
+section.chapter::before {background:#64b5ef;}
+section.chapter h1 {color: #fff; font-size: 66px;}
+section.chapter h2,section.chapter strong {color:#cae5ff;}
+section.chapter p {color:#cbdcf0;}
+section.chapter footer,section.chapter::after {color:#a8c0dc;}
+section.takeaway {background: linear-gradient(130deg,#f3f8ff,#fff);}
+section.takeaway h1 {font-size: 52px;}
+section.fig {padding-top: 46px;}
+section.fig h1 {font-size: 35px; margin-bottom: 11px;}
+section.fig p {font-size: 18px; color:#677b91; margin-top: 3px;}
+section.fig img {display:block; margin:0 auto; max-height: 535px;}
+section.fig .pair img {max-height: 410px;}
+section.compact {font-size: 21px;}
+section.compact h1 {font-size:37px;}
+section.compact table {font-size: 17px;}
+section.math {font-size: 23px;}
+section.math h1 {font-size: 39px;}
+section.math .katex-display,section.math mjx-container[display="true"] {font-size:1.19em;}
+section.code {font-size: 21px;}
+section.code pre {font-size:19px;}
+section.small {font-size:18px;}
+section.small h1 {font-size:36px;}
+section.small pre code {font-size:16px;}
+section.warning blockquote {background:#fff8ee; border-color:#e6a452;}
+.tag {
+ display:inline-block; border:1px solid #c2d7ef; border-radius:99px;
+ color:#3262a0; background:#edf5ff; font-size:16px; font-weight:700;
+ padding:6px 15px; margin:6px 5px 4px 0;
+}
+.tag.future {background:#fff7e9; border-color:#e6cf9b; color:#996c1e;}
+.tag.verified {background:#eaf8f5; border-color:#b3ded9; color:#176c70;}
+.pair {display:flex; gap:25px; justify-content:center; align-items:center;}
+.pair img {width:49%; height:auto;}
+.hero-stat {font-size: 63px; color:var(--blue); font-weight:750; letter-spacing:-.05em;}
+.muted {color:#6f8297; font-size:19px;}
+.rail {display:flex; gap:13px; margin-top:23px;}
+.rail > span {flex:1; background:#eef5fc; padding:17px; border-radius:12px; text-align:center; font-weight:650; font-size:20px;}
+.split {display:grid; grid-template-columns:1fr 1fr; gap:33px;}
+.split p,.split li {font-size:22px;}
+.spacer {height:22px;}
+.tight li {margin:3px 0}
