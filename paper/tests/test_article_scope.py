@@ -78,7 +78,8 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertIn("additional scalar inversion", content)
         self.assertIn(r"\emph{unimplemented research extension}", content)
         self.assertIn("not covered by the solver-only timing comparisons", self.main)
-        self.assertIn("have not\\nbeen benchmarked", self.main)
+        self.assertIn("These additional costs have not", self.main)
+        self.assertIn("been benchmarked against the log-penalty search", self.main)
 
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
