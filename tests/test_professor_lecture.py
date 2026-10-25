@@ -55,7 +55,7 @@ class MarpResearchLecture(unittest.TestCase):
                 self.assertTrue((LECTURE/fname).is_file())
         for fname in ("build.ps1", "build.sh"):
             script=(LECTURE/fname).read_text(encoding="utf-8")
-            self.assertIn("--theme-set", script)
+            self.assertIn("--theme", script)
             self.assertIn("--html", script)
             self.assertIn("--allow-local-files", script)
             self.assertIn("make_figures.py", script)
