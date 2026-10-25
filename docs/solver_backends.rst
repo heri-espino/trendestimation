@@ -111,5 +111,9 @@ A sound automatic default depends on whether we optimize a single
 full fit, many reconstructed curves, or repeated CV/GCV/MLE scores.
 No solver is universally fastest for all three workloads.
 
+For a formal repeated-block experiment with paired hypothesis tests,
+Holm correction and paper/Marp output, see
+:doc:`benchmark_statistical_protocol`.
+
 See :doc:`benchmarks` for the existing banded comparison, and
 :doc:`handbook/pls` for the PLS mathematical theory.
