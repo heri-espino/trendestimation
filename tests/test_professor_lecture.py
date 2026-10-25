@@ -33,6 +33,27 @@ class MarpResearchLecture(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase.lower(), self.deck.lower())
 
+    def test_bounded_smoothness_is_explained_before_technical_sections(self):
+        """Core formulas, numerical interpretation and code must stay visible."""
+        deck = self.deck
+        opening = deck.split("# I. Why estimate a trend?")[0]
+        self.assertIn("The central question in three formulas", opening)
+        self.assertIn(r"s=S(\lambda)", opening)
+        self.assertIn(r"S^{-1}(\widehat s)", opening)
+        self.assertIn("Interpret a smoothness target S = 0.8", deck)
+        self.assertIn(r"\nu(\lambda)=n-(n-d)S(\lambda)", deck)
+        self.assertIn("$21.6$", deck)
+        self.assertIn("not 80% of the noise", deck)
+        self.assertIn("Two search coordinates: what changes?", deck)
+        self.assertIn('search_space="lambda"', deck)
+        self.assertIn('search_space="smoothness"', deck)
+        self.assertIn("np.testing.assert_allclose(from_lam.scores, from_s.scores", deck)
+        self.assertIn("solver.lambda_for_smoothness(target_s)", deck)
+        self.assertIn("not automatically faster", deck)
+        self.assertIn("docs/smoothness_coordinate.rst", deck)
+        self.assertIn("manual GitHub Pages deployment", deck)
+        self.assertIn("end-to-end optimization", deck)
+
     def test_every_figure_reference_has_a_reproducible_recipe(self):
         names=set(re.findall(r"figures/([a-zA-Z0-9_]+\.svg)", self.deck))
         self.assertGreaterEqual(len(names), 40)

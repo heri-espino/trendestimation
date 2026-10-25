@@ -14,7 +14,9 @@ author: "Heriberto Espino-Montelongo"
 <!-- _class: lead -->
 # Trend estimation by penalized least squares
 
-## Theory · numerical computation · selection criteria · open problems
+## From the penalty $\lambda$ to interpretable smoothness $S\in[0,1]$
+
+### Theory · numerical computation · selection criteria · open problems
 
 Heriberto Espino-Montelongo · Daniela Cortés-Toto  
 Universidad de las Américas Puebla
@@ -31,13 +33,37 @@ Universidad de las Américas Puebla
 1. Motivation and the established PLS estimator.
 2. Arbitrary finite-difference orders and reference means.
 3. Affine solution, polynomial nullspace, SVD and cost.
-4. Effective degrees of freedom and normalized smoothness.
-5. Searching over penalty lambda or bounded smoothness S.
+4. **Normalized smoothness $S\in[0,1]$ as an interpretable selection coordinate.**
+5. Equivalent penalty and smoothness searches, their derivatives and costs.
 6. CV, GCV, AICc, BIC, Gaussian MLE and a deferred joint mean.
 7. Fair runtime benchmarks, numerical conditioning and scientific examples.
 8. What is new, what is known, and where research can continue.
 
 **Legend:** established theory · implemented methods · tested numerical claims · future research.
+
+---
+
+<!-- _class: math -->
+# The central question in three formulas
+
+**Can we search in normalized smoothness instead of raw penalty units?**
+
+$
+\boxed{s=S(\lambda)=\frac{n-\operatorname{tr}(H_\lambda)}{n-d}
+\in[0,1].}
+$
+
+$
+\boxed{
+\widehat s\in\arg\min_{s\in[0,1]}
+C(S^{-1}(s);\mu),\qquad
+\widehat\lambda=S^{-1}(\widehat s).
+}
+$
+
+**Same fitted trends and criterion; a different optimization coordinate.**
+
+*Computational question: is the interpretability worth the inversion cost?*
 
 ---
 
@@ -588,6 +614,30 @@ Now $S(0)=0$ and $S(\infty)=1$.
 
 ---
 
+<!-- _class: math -->
+# Interpret a smoothness target S = 0.8
+
+The definition gives the **conditional effective degrees of freedom**:
+
+$
+\boxed{\nu(\lambda)=n-(n-d)S(\lambda).}
+$
+
+For $n=100$, difference order $d=2$:
+
+| Smoothness | Conditional EDF |
+| :---: | ---: |
+| $s=0$ | $100$ |
+| $s=0.5$ | $51$ |
+| $s=0.8$ | $21.6$ |
+| $s=1$ | $2$ |
+
+**$s=0.8$ removes 80% of the *penalizable* EDF, not 80% of the noise.**
+
+This interpretation assumes fixed $\mu$; estimating $\mu$ changes the full fitting sensitivity.
+
+---
+
 <!-- _class: fig -->
 # A monotone index with exact endpoints
 
@@ -685,6 +735,22 @@ $$
 Exact global minimizers correspond under this monotone map (ties and undefined endpoints must be treated carefully).
 
 This is **not a newly invented selection criterion**.
+
+---
+
+<!-- _class: compact -->
+# Two search coordinates: what changes?
+
+| Aspect | Penalty search | Smoothness search |
+| --- | --- | --- |
+| Search variable | $\lambda\in[0,\infty]$ | $s\in[0,1]$ |
+| Estimator | Same PLS objective | Same PLS objective |
+| Criterion | Original $C(\lambda;\mu)$ | Same $C(S^{-1}(s);\mu)$ |
+| Interpretation | Penalty units depend on $d$ | Fraction of penalizable EDF suppressed |
+| Extra search work | No inverse of $S$ | Solve $S(\lambda)=s$ for each interior $s$ |
+| Global guarantee | None from finite search | None from finite search |
+
+**Ideal global minimizers correspond; finite grids and numerical paths need not.**
 
 ---
 
@@ -794,21 +860,49 @@ For S-based CV search, evaluate the chain-rule quotient and compare multiple sta
 # Try both coordinates in Python
 
 ~~~python
+import numpy as np
 from trendestimation import TrendSmoother, select_lambda
+
+t = np.arange(40, dtype=float)
+y = np.sin(t / 6) + np.random.default_rng(24).normal(0, .2, len(t))
 solver = TrendSmoother(len(y), order=2)
 
 default = select_lambda(
-    solver, y, criterion="cv", mu=0.0,
-    search_space="lambda",
+    solver, y, criterion="cv", mu=0.0, search_space="lambda",
 )
 bounded = select_lambda(
-    solver, y, criterion="cv", mu=0.0,
-    search_space="smoothness",
+    solver, y, criterion="cv", mu=0.0, search_space="smoothness",
+)
+print("lambda search:", default.lambda_, default.smoothness)
+print("S search:", bounded.lambda_, bounded.smoothness)
+~~~
+
+*Both searches return the underlying penalty and achieved smoothness.*
+
+---
+
+<!-- _class: small -->
+# Verify equal criteria at equivalent candidates
+
+~~~python
+penalties = np.array([.1, 1.0, 10.0, np.inf])
+s_grid = [solver.smoothness(x) for x in penalties]
+
+from_lam = select_lambda(
+    solver, y, criterion="gcv", mu=0.0,
+    search_space="lambda", grid=penalties,
+)
+from_s = select_lambda(
+    solver, y, criterion="gcv", mu=0.0,
+    search_space="smoothness", grid=s_grid,
 )
 
-print(default.lambda_, default.smoothness)
-print(bounded.lambda_, bounded.smoothness)
+np.testing.assert_allclose(from_lam.scores, from_s.scores,
+                           rtol=1e-9, atol=1e-9)
 ~~~
+
+**Same mathematical scores.** Independent default grids test the
+*search strategies*, not the definition of the criterion.
 
 ---
 
@@ -828,6 +922,30 @@ selected.grid          # evaluated penalties
 selected.search_grid   # input S coordinates
 selected.scores        # unchanged criterion values
 ~~~
+
+---
+
+<!-- _class: code -->
+# You can also prescribe S without optimizing a criterion
+
+~~~python
+target_s = 0.80
+penalty = solver.lambda_for_smoothness(target_s)
+
+fit = solver.fit(y, lambda_=penalty, mu=0.0)
+print("penalty lambda:", penalty)
+print("normalized smoothness:", fit.smoothness)
+print("conditional EDF:", fit.edf_conditional)
+~~~
+
+$\boxed{
+S(\lambda)=0.8
+\quad\Longleftrightarrow\quad
+\lambda=S^{-1}(0.8).
+}$
+
+**The user chooses an interpretable smoothing level; the library finds
+the penalty needed for the specified series length and order.**
 
 ---
 
@@ -1446,10 +1564,11 @@ Seasonality in CO2 is physical structure, not automatically measurement noise. T
 <!-- _class: compact -->
 # The bounded Computational Statistics paper
 
-**Central research question:** for an established fixed-mean PLS estimator, under what workloads is reusable spectral computation accurate and competitive?
+**Central research question:** can $s=S(\lambda)\in[0,1]$ serve as an interpretable, numerically reliable coordinate for existing fixed-$\mu$ PLS selection criteria?
 
 The manuscript includes:
-- algebraic derivations and the normalized S coordinate;
+- the normalized S inverse, derivative, and equivalent $\lambda$/S searches;
+- mapped-candidate score tests and inversion caveats;
 - separate complete-fit and scalar-trace workloads;
 - dense cached/fresh, spectral and banded baselines;
 - numerical conditioning diagnostics;
@@ -1673,7 +1792,11 @@ $$
 **Core implementation:** src/trendestimation/core.py  
 **Selection and likelihood:** src/trendestimation/criteria.py and likelihood.py  
 **Experimental scripts:** paper/figures/ and paper/benchmarks/  
-**Reference handbook:** docs/handbook/
+**Reference handbook:** docs/handbook/  
+**Smoothness-coordinate website guide:** docs/smoothness_coordinate.rst
+
+[Website companion: smoothness S versus penalty lambda](https://trendestimation.github.io/trendestimation/smoothness_coordinate.html)  
+*(The public page requires the separate manual GitHub Pages deployment.)*
 
 **Foundational literature referenced by the paper:** Whittaker (1923), Guerrero (2007/2008), Cortés-Toto et al. (2017), Weinert (2007), Biessy (2026).
 
@@ -1704,8 +1827,18 @@ powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
 <!-- _class: takeaway -->
 # Conclusion and discussion
 
-The research is strongest when it combines **clear established mathematics**, a reusable and tested implementation, **honest numerical comparison**, and carefully delimited novelty.
+$$
+\boxed{s=S(\lambda)\in[0,1],\qquad
+\widehat\lambda=S^{-1}(\widehat s).}
+$$
 
-**Three directions to discuss:** (i) strengthen the computational paper; (ii) validate joint likelihood mean profiling; (iii) measure whether searching over S changes end-to-end optimization efficiency.
+**A bounded, interpretable coordinate for the same established PLS estimator
+and selection criteria.**
+
+Keep separate: theory, mapped-candidate correctness, measured solver costs,
+and future joint-mean likelihood research.
+
+**Next experiment:** compare end-to-end optimization over $s$ and
+$\log\lambda$ for accuracy, runtime and conditioning.
 
 *Which result should become the next theorem or experiment?*
