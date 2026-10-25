@@ -516,3 +516,586 @@ These are the inputs for effective degrees of freedom and several classical scal
 ![width:1030px](figures/29_rss_edf.svg)
 
 *The functions are computed from a reused spectral basis.*
+
+---
+
+<!-- _class: chapter -->
+# V. Effective degrees of freedom
+
+## A trace-based interpretation of smoothing intensity
+
+---
+
+<!-- _class: math -->
+# What are effective degrees of freedom?
+
+For fixed numerical $\mu$,
+
+$$
+\boxed{\nu(\lambda)=\operatorname{tr}(H_\lambda)
+=d+\sum_{j=1}^{n-d}\frac{1}{1+\lambda\delta_j}.}
+$$
+
+With $d\ge1$, $\nu(0)=n$ and $\nu(\infty)=d$.
+
+For $d=0$, the limiting EDF is zero.
+
+**A data-estimated $\mu$ alters the full fitted-value sensitivity.**
+
+---
+
+<!-- _class: fig -->
+# EDF falls with the penalty
+
+![width:1030px](figures/21_edf.svg)
+
+*The infinite-penalty EDF equals d, the unpenalized dimension.*
+
+---
+
+<!-- _class: math -->
+# Guerrero's original smoothness index
+
+$$
+\boxed{
+S_G(\lambda)=1-\frac{\nu(\lambda)}{n}.
+}
+$$
+
+For order $d>0$, its range is
+
+$$0\le S_G(\lambda)\le\frac{n-d}{n}.$$
+
+Therefore the original denominator-$n$ index **does not reach one** in general.
+
+---
+
+<!-- _class: math -->
+# Our normalized smoothness coordinate
+
+$$
+\boxed{
+S(\lambda)=\frac{n-\nu(\lambda)}{n-d}
+=\frac{1}{n-d}\sum_{j=1}^{n-d}
+\frac{\lambda\delta_j}{1+\lambda\delta_j}.
+}
+$$
+
+Now $S(0)=0$ and $S(\infty)=1$.
+
+**Meaning:** average spectral shrinkage in the penalized directions.  
+**Not:** confidence, probability of correctness, or forecast accuracy.
+
+---
+
+<!-- _class: fig -->
+# A monotone index with exact endpoints
+
+![width:1030px](figures/22_smoothness.svg)
+
+*S ranges from zero to one.*
+
+---
+
+<!-- _class: fig -->
+# Original Guerrero smoothness versus normalized smoothness
+
+![width:1030px](figures/23_two_s_indices.svg)
+
+*S_G=(n-d)S/n; the distinction matters when d>0.*
+
+---
+
+<!-- _class: fig -->
+# Different d values induce different lambda-to-S maps
+
+![width:1030px](figures/24_s_by_order.svg)
+
+*Equal numerical penalties can yield very different shrinkage.*
+
+---
+
+<!-- _class: fig -->
+# Equal S does not make geometries identical
+
+![width:1030px](figures/05_order_comparison.svg)
+
+*A common trace index does not imply identical fits across orders.*
+
+---
+
+<!-- _class: math -->
+# Prove the monotone inverse exists
+
+For every finite $\lambda\ge0$,
+
+$$
+\boxed{
+S'(\lambda)=\frac{1}{n-d}
+\sum_{j=1}^{n-d}
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.}
+$$
+
+Every summand is positive on the resolved positive spectrum, so S is strictly increasing and continuous.
+
+Define $\Lambda(s)=S^{-1}(s)$ on $0<s<1$ and extend with $\Lambda(0)=0$, $\Lambda(1)=\infty$.
+
+---
+
+<!-- _class: fig -->
+# The first derivative remains positive
+
+![width:1030px](figures/25_s_derivative.svg)
+
+*The derivative is positive but becomes small for very large lambda.*
+
+---
+
+<!-- _class: fig -->
+# Derivative with respect to log(lambda)
+
+![width:1030px](figures/26_log_s_derivative.svg)
+
+*Small slopes near both extremes matter for optimization conditioning.*
+
+---
+
+<!-- _class: chapter -->
+# VI. Select lambda or select S
+
+## A bounded coordinate for the same statistical problem
+
+---
+
+<!-- _class: math -->
+# Reparameterize a criterion without changing it
+
+Let $C(\lambda;\mu)$ denote an existing criterion evaluated at fixed $\mu$.
+
+Write $\Lambda=S^{-1}$ and $\widetilde C(s;\mu)=C(\Lambda(s);\mu)$.
+
+$$
+\boxed{
+\widehat s\in\arg\min_{s\in[0,1]}\widetilde C(s;\mu),
+\quad
+\widehat\lambda=\Lambda(\widehat s).
+}
+$$
+
+Exact global minimizers correspond under this monotone map (ties and undefined endpoints must be treated carefully).
+
+This is **not a newly invented selection criterion**.
+
+---
+
+<!-- _class: fig -->
+# Inverse smoothness: bounded S, unbounded penalty
+
+![width:1030px](figures/27_inverse.svg)
+
+*The numerical inverse may cover many orders of magnitude.*
+
+---
+
+<!-- _class: fig -->
+# Equal steps in S are uneven in lambda
+
+![width:1030px](figures/28_s_grid.svg)
+
+*A uniform S grid and a log-lambda grid are not the same candidate set.*
+
+---
+
+<!-- _class: fig -->
+# The CV objective on the penalty scale
+
+![width:1030px](figures/30_cv_lambda.svg)
+
+*Ordinary fixed-mu LOOCV score as a function of lambda.*
+
+---
+
+<!-- _class: fig -->
+# The SAME CV score in the smoothness coordinate
+
+![width:1030px](figures/31_cv_s.svg)
+
+*The statistical score has not been modified.*
+
+---
+
+<!-- _class: fig -->
+# The optimum corresponds under S and lambda
+
+![width:1030px](figures/32_cv_minimum.svg)
+
+*Finite candidate grids may still find different local minima.*
+
+---
+
+<!-- _class: math -->
+# The chain rule gives the exact derivative
+
+Since $s=S(\lambda)$ and $S'>0$,
+
+$$\frac{d\lambda}{ds}=\frac{1}{S'(\lambda)}.$$
+
+Therefore,
+
+$$
+\boxed{
+\frac{d\widetilde C}{ds}
+=\frac{C'(\lambda)}{S'(\lambda)}
+=\frac{dC/d\log\lambda}{dS/d\log\lambda}.
+}
+$$
+
+Interior derivative zeros occur at the same fitted trends.  
+**Near S=0 or S=1 the denominator can be tiny.**
+
+---
+
+<!-- _class: math -->
+# The stable log-penalty derivative of S
+
+$$
+\boxed{
+\frac{dS}{d\log\lambda}
+=\frac{1}{n-d}
+\sum_{j=1}^{n-d}
+\frac{\lambda\delta_j}{(1+\lambda\delta_j)^2}>0.
+}
+$$
+
+Classical CV already has an analytical derivative in the library.
+
+For S-based CV search, evaluate the chain-rule quotient and compare multiple stationary candidates and exact boundaries.
+
+**Neither numerical search is globally certified.**
+
+---
+
+<!-- _class: small -->
+# What the public selector supports
+
+| Argument | Meaning |
+| --- | --- |
+| search_space="lambda" | Original default, search penalties |
+| search_space="smoothness" | Search normalized S in [0,1] |
+| criterion="cv", method="auto" | Analytical multi-candidate derivative search |
+| GCV/AICc/BIC/MLE, method="auto" | Grid search in chosen coordinate |
+| Explicit grid | Interpreted in chosen coordinate |
+| Result grid | Always the evaluated lambda values |
+| Result search_grid | Values in requested search coordinate |
+
+---
+
+<!-- _class: code -->
+# Try both coordinates in Python
+
+~~~python
+from trendestimation import TrendSmoother, select_lambda
+solver = TrendSmoother(len(y), order=2)
+
+default = select_lambda(
+    solver, y, criterion="cv", mu=0.0,
+    search_space="lambda",
+)
+bounded = select_lambda(
+    solver, y, criterion="cv", mu=0.0,
+    search_space="smoothness",
+)
+
+print(default.lambda_, default.smoothness)
+print(bounded.lambda_, bounded.smoothness)
+~~~
+
+---
+
+<!-- _class: code -->
+# Explicit grid of normalized smoothness levels
+
+~~~python
+selected = select_lambda(
+    solver, y, criterion="gcv", mu=0.0,
+    search_space="smoothness",
+    grid=[0, .25, .50, .75, 1],
+)
+
+selected.lambda_       # fitted penalty
+selected.smoothness    # achieved normalized index
+selected.grid          # evaluated penalties
+selected.search_grid   # input S coordinates
+selected.scores        # unchanged criterion values
+~~~
+
+---
+
+<!-- _class: compact -->
+# Why a bounded interval is not automatically faster
+
+- Each interior S requires solving S(lambda)=s.
+- Several scalar spectral evaluations can be needed per inverse.
+- The chain-rule derivative can become sensitive in the tails.
+- Uniform S and log-lambda grids cover **different finite candidates**.
+- More optimizer evaluations can erase the advantages of an interpretable coordinate.
+
+**No actual end-to-end runtime improvement has been established for optimizing over S.**
+
+---
+
+<!-- _class: chapter -->
+# VII. Statistical selection criteria
+
+## What gets minimized and how its derivative arises
+
+---
+
+<!-- _class: math -->
+# Ordinary leave-one-out CV
+
+Let $e=y-\widehat\tau$, $h_{ii}=(H_\lambda)_{ii}$ with **fixed numeric $\mu$**.
+
+$$
+\boxed{
+\mathrm{CV}(\lambda)=
+\frac1n\sum_i\left(\frac{e_i}{1-h_{ii}}\right)^2.
+}
+$$
+
+At lambda=0, $H=I$ and the shortcut has zero denominators.
+
+This is **not chronological or rolling-origin forecast validation**.
+
+---
+
+<!-- _class: fig -->
+# The leverage of each observation
+
+![width:1030px](figures/35_leverage.svg)
+
+*GCV replaces individual leverages by their mean.*
+
+---
+
+<!-- _class: fig -->
+# Training residuals vs leave-one-out residuals
+
+![width:1030px](figures/36_loo_residuals.svg)
+
+*e_i^(-i)=e_i/(1-h_ii), provided mu and the penalty are fixed.*
+
+---
+
+<!-- _class: math -->
+# Analytical derivative of classical CV
+
+Set $a_i=e_i$ and $b_i=1-h_{ii}$. From $H'=-HQH$,
+
+$$a'=HQH(y-p),\qquad b_i'=(HQH)_{ii}.$$
+
+Then
+
+$$
+\boxed{
+\mathrm{CV}'(\lambda)=\frac2n
+\sum_i \frac{a_i}{b_i}
+\frac{a_i'b_i-a_ib_i'}{b_i^2}.
+}
+$$
+
+**This is an analytical derivative, not a closed-form optimal lambda.**
+
+---
+
+<!-- _class: math -->
+# GCV, AICc, BIC: implemented conventions
+
+With $R=\mathrm{RSS}$ and $\nu=\operatorname{tr}(H_\lambda)$:
+
+$$
+\boxed{\mathrm{GCV}=\frac{R/n}{(1-\nu/n)^2}.}
+$$
+
+$$
+\boxed{\mathrm{AICc}=\log(R/n)+\frac{2\nu+1}{n-\nu-2}.}
+$$
+
+$$
+\boxed{\mathrm{BIC}=\log(R/n)+\frac{\nu\log n}{n}.}
+$$
+
+Admissible domains matter; AICc conventions vary across the literature.
+
+---
+
+<!-- _class: fig -->
+# All four scores as functions of lambda
+
+![width:1030px](figures/33_criteria.svg)
+
+*Profiles centered and rescaled only for the plot. Real selection uses original units.*
+
+---
+
+<!-- _class: fig -->
+# Different criteria yield different in-sample trends
+
+![width:1030px](figures/34_selected_trends.svg)
+
+*A single seeded example does not establish an overall ranking.*
+
+---
+
+<!-- _class: fig -->
+# LOOCV versus chronological holdout
+
+![width:1030px](figures/37_chronological_split.svg)
+
+*Future-horizon forecasting requires a different experimental design.*
+
+---
+
+<!-- _class: chapter -->
+# VIII. Gaussian marginal likelihood
+
+## Conditional MLE is implemented; joint mu profiling is future work
+
+---
+
+<!-- _class: math -->
+# The Gaussian stochastic model
+
+$$
+y=\tau+\varepsilon,\qquad
+\varepsilon\sim N(0,\sigma_\varepsilon^2 I).
+$$
+
+$$
+D_d\tau-\mu\mathbf1\sim N(0,\sigma_\eta^2 I),
+\qquad
+\boxed{\lambda=\frac{\sigma_\varepsilon^2}{\sigma_\eta^2}.}
+$$
+
+This is a **model-based interpretation**, not a property of arbitrary distributions.
+
+The unpenalized polynomial coordinates are treated as nuisance trend components.
+
+---
+
+<!-- _class: math -->
+# Conditional Gaussian marginal likelihood
+
+Set $r=n-d$, $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$ and $z_j=v_j^\top(y-p_\mu)$.
+
+The profile score, up to constants, is
+
+$$
+\boxed{
+L(\lambda;\mu)=
+r\log\left(\frac1r\sum_{j=1}^r w_jz_j^2\right)
+-\sum_{j=1}^r\log w_j.
+}
+$$
+
+It profiles observation variance and selects $\lambda$ for fixed or plug-in $\mu$.
+
+---
+
+<!-- _class: fig -->
+# Conditional marginal-likelihood score
+
+![width:1030px](figures/38_mle_profile.svg)
+
+*Gaussian model-based score, not cross-validation.*
+
+---
+
+<!-- _class: math -->
+# The analytical conditional likelihood mean
+
+Let $p_t^{(1)}=\binom td$, $z_j=v_j^\top y$ and $b_j=v_j^\top p^{(1)}$.
+
+For fixed positive $\lambda$,
+
+$$
+\boxed{
+\widehat\mu(\lambda)=
+\frac{\sum_jw_j(\lambda)b_jz_j}
+{\sum_jw_j(\lambda)b_j^2}.
+}
+$$
+
+A nonzero denominator follows from the positive-subspace model assumptions.
+
+**This formula is retained as a deferred research result, not a validated joint API.**
+
+---
+
+<!-- _class: fig -->
+# The optimal conditional mean can depend on lambda
+
+![width:1030px](figures/39_mu_profile.svg)
+
+*Derived profile formula; no joint numerical optimizer is claimed.*
+
+---
+
+<!-- _class: math -->
+# A future scalar optimization of both lambda and mu
+
+Rather than optimizing two variables numerically, insert the conditional optimum into the likelihood:
+
+$$
+\boxed{
+\widehat\lambda=
+\arg\min_{\lambda>0}J(\lambda;\widehat\mu(\lambda)).
+}
+$$
+
+**Open problems:** identifiability, boundary optima, numerical stability, inference and a fair comparison against conditional MLE.
+
+This extension is not yet experimentally validated in the library.
+
+---
+
+<!-- _class: fig -->
+# Visualize the analytical joint-likelihood surface
+
+![width:1030px](figures/40_joint_mle_surface.svg)
+
+*Analytical schematic based on derived formula, not a released joint estimator.*
+
+---
+
+<!-- _class: math -->
+# Joint profiling could also use bounded S
+
+With $\Lambda(s)=S^{-1}(s)$,
+
+$$
+\boxed{
+\widehat s_{\mathrm{joint}}=
+\arg\min_{0<s<1}
+J\big(\Lambda(s);\widehat\mu(\Lambda(s))\big).
+}
+$$
+
+Then $\widehat\lambda_{\mathrm{joint}}=\Lambda(\widehat s_{\mathrm{joint}})$.
+
+This **changes coordinates only**; the joint estimation problem still requires implementation and validation.
+
+---
+
+<!-- _class: compact -->
+# What is currently implemented versus future
+
+| Functionality | Research status |
+| --- | --- |
+| Fixed mu PLS fitting | Implemented |
+| Observed-difference mu plug-in | Implemented |
+| Conditional Gaussian MLE | Implemented |
+| Conditional MLE search in S | Implemented |
+| Analytical $\widehat\mu(\lambda)$ | Mathematical derivation |
+| Joint $(\lambda,\mu)$ solver | Not yet implemented |
+| Confidence intervals for joint estimates | Not yet validated |
