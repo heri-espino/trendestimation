@@ -206,6 +206,24 @@ Biessy (2026), Section 5.3, with an additional profiled-variance step.
 Only equally spaced one-dimensional observations are supported. Smoothing
 the full series is not an out-of-sample forecast evaluation.
 
+## Formal solver benchmark study
+
+A publication-oriented, *manual* matched benchmark of SVD, symmetric
+`eigh` and banded Cholesky saves **all raw times**, numerical parity,
+CPU/BLAS metadata, seed-level bootstrap confidence intervals, two-sided
+paired sign-flip p-values and Holm adjustments for primary comparisons.
+The outputs include LaTeX tables, Markdown interpretation and SVG/PNG/PDF
+figures for future paper and Marp integration. No presentation branch is
+modified.
+
+```bash
+python -m pip install -e . threadpoolctl matplotlib
+python benchmarks/formal_solver_study.py --preset quick --seeds 20 --repeats 5 --threads 1 --output-dir paper/benchmarks/solver_study_runs/pilot-01
+python benchmarks/analyze_formal_solver_study.py --input-dir paper/benchmarks/solver_study_runs/pilot-01 --bootstrap 10000 --permutations 50000
+```
+
+Alternatively run the [manual formal benchmark workflow](.github/workflows/formal-solver-study.yml), optionally archiving its evidence permanently to a dedicated results-only Git branch. See [the statistical protocol](docs/benchmark_statistical_protocol.rst) before interpreting p-values; timing blocks are *not* independent samples.
+
 ## Development
 
 ```bash
