@@ -7,12 +7,32 @@ This is distinct from *Computational Statistics & Data Analysis* (Elsevier).
 
 ## Scope of the Computational Statistics paper
 
-**Research question:** For finite-difference penalized least-squares (PLS)
-smoothers with a **specified difference order and fixed numerical
-reference-difference mean**, when is reusable spectral computation
-competitive with dense and banded methods, and what numerical-accuracy
-limitations arise as difference order increases?
+**Research question:** Can the normalized conditional smoothness index
+`s=S(lambda)` in `[0,1]` serve as an interpretable parameter-search
+coordinate for established finite-difference penalized least-squares
+trends without changing their selection criteria, and what numerical
+trade-offs arise from spectral inversion and repeated solver work?
 
+**Both options are available in the library:**
+
+```python
+from trendestimation import TrendSmoother, select_lambda
+
+solver = TrendSmoother(len(y), order=2)
+by_lambda = select_lambda(solver, y, criterion="cv", mu=0.0,
+                          search_space="lambda")
+by_s = select_lambda(solver, y, criterion="cv", mu=0.0,
+                     search_space="smoothness")
+# Either result reports .lambda_ and .smoothness.
+# With grid=..., entries represent the selected search coordinate.
+```
+
+The paper presents the invertible map, chain-rule CV derivative and
+mapped-grid agreement tests, then studies the related computational
+question through independent four-solver timings and numerical
+conditioning. It **does not** claim that optimizing in `s` is faster:
+end-to-end optimization times in the two search coordinates are not
+part of the currently reported benchmark series.
 The manuscript reports only existing and reproducible evidence:
 
 - the established affine PLS estimator, its polynomial null space and
