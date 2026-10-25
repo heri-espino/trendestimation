@@ -5,7 +5,9 @@ Smoothing-parameter optimization
 
 This guide explains finite-difference penalized least squares,
 normalized smoothness, ordinary cross-validation, numerical
-optimization and inversion. Examples use deterministic synthetic
+optimization and inversion. For an intuitive first introduction to
+why the index :math:`S\in[0,1]` can replace :math:`\lambda` as a
+search coordinate, see :doc:`smoothness_coordinate`. Examples use deterministic synthetic
 data, not live downloads. The examples below use the merged public CV-optimization and
 smoothness-inversion APIs. They distinguish exact algebraic identities
 from numerical optimization, which is not globally certified.

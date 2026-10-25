@@ -8,12 +8,12 @@ trendestimation
        <div class="te-hero-copy">
          <div class="te-eyebrow"><span class="te-status-dot" aria-hidden="true"></span> Scientific Python <span class="te-eyebrow-divider" aria-hidden="true"></span> Pre-release 0.1</div>
          <h2 id="te-hero-title">Finite-difference<br><span>trend estimation.</span></h2>
-         <p class="te-hero-description">Penalized least-squares smoothing for equally spaced time series. Choose a difference order, select a penalty, and examine the fitted trend through documented Python methods and executable notebooks.</p>
+         <p class="te-hero-description">Penalized least-squares smoothing for equally spaced time series. Choose a difference order and search by the penalty &lambda; or bounded smoothness S &isin; [0, 1]. Explore the formulas, Python API, and executable notebooks.</p>
          <div class="te-actions">
            <a class="te-button te-button-primary" href="notebooks.html">Explore notebooks <span aria-hidden="true">&rarr;</span></a>
            <a class="te-button te-button-secondary" href="api.html">Explore the API <span aria-hidden="true">&nearr;</span></a>
          </div>
-         <p class="te-hero-footnote">In-sample estimation &middot; Explicit assumptions &middot; Reproducible examples</p>
+         <p class="te-hero-footnote">In-sample estimation &middot; <a href="smoothness_coordinate.html">Why search by S instead of &lambda;?</a> &middot; Reproducible examples</p>
        </div>
        <div class="te-hero-visual">
          <div class="te-chart-panel">
@@ -49,12 +49,12 @@ trendestimation
            <p>Estimate smooth trends using finite differences of any admissible integer order, with fixed or observed-difference reference means.</p>
            <span class="te-feature-link">Read the mathematics <span aria-hidden="true">&rarr;</span></span>
          </a>
-         <a class="te-feature" href="smoothness_optimization.html">
-           <span class="te-feature-number">02 / SELECTION</span>
-           <span class="te-feature-icon" aria-hidden="true">&#955;</span>
-           <h3>Choose the smoothing</h3>
-           <p>Compare CV, GCV, AICc, BIC, and Gaussian marginal MLE; alternatively specify a target smoothness.</p>
-           <span class="te-feature-link">Read optimization guide <span aria-hidden="true">&rarr;</span></span>
+         <a class="te-feature" href="smoothness_coordinate.html">
+           <span class="te-feature-number">02 / SMOOTHNESS</span>
+           <span class="te-feature-icon" aria-hidden="true">S</span>
+           <h3>Choose S or &lambda;</h3>
+           <p>Search familiar criteria on a bounded smoothness scale, or stay in penalty coordinates. Learn what S measures and why the optimum is unchanged.</p>
+           <span class="te-feature-link">Explore smoothness coordinates <span aria-hidden="true">&rarr;</span></span>
          </a>
          <a class="te-feature" href="benchmarks.html">
            <span class="te-feature-number">03 / COMPUTATION</span>
@@ -70,7 +70,7 @@ trendestimation
        <div class="te-demo-copy">
          <p class="te-overline">START WITH PYTHON</p>
          <h2 id="te-demo-heading">A concise Python workflow</h2>
-         <p>Construct a smoother, select the penalty with GCV, and obtain a fitted trend from a seeded synthetic series.</p>
+         <p>Construct a smoother, search the GCV criterion in normalized smoothness, and obtain the equivalent fitted trend from a seeded synthetic series.</p>
          <a class="te-text-link" href="notebooks.html">Explore the Jupyter notebooks <span aria-hidden="true">&rarr;</span></a>
        </div>
        <div class="te-code-window">
@@ -83,8 +83,10 @@ trendestimation
    y = np.sin(t / <span class="te-code-number">14</span>) + rng.normal(<span class="te-code-number">0</span>, <span class="te-code-number">.25</span>, len(t))
 
    solver = TrendSmoother(len(y), order=<span class="te-code-number">2</span>)
-   best = select_lambda(solver, y, criterion=<span class="te-code-string">"gcv"</span>)
-   trend = solver.fit(y, lambda_=best.lambda_).trend</code></pre>
+   best = select_lambda(solver, y, criterion=<span class="te-code-string">"gcv"</span>,
+                        search_space=<span class="te-code-string">"smoothness"</span>)
+   trend = solver.fit(y, lambda_=best.lambda_).trend
+   print(best.smoothness, best.lambda_)</code></pre>
        </div>
      </section>
 
@@ -104,6 +106,7 @@ trendestimation
    notebooks
    gallery
    mathematics
+   smoothness_coordinate
    smoothness_optimization
    handbook/index
    solver_backends
