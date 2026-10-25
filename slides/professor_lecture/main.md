@@ -1099,3 +1099,613 @@ This **changes coordinates only**; the joint estimation problem still requires i
 | Analytical $\widehat\mu(\lambda)$ | Mathematical derivation |
 | Joint $(\lambda,\mu)$ solver | Not yet implemented |
 | Confidence intervals for joint estimates | Not yet validated |
+
+---
+
+<!-- _class: chapter -->
+# IX. Numerical inversion algorithms
+
+## Root finding is not the same as optimizing a criterion
+
+---
+
+<!-- _class: math -->
+# Invert normalized smoothness numerically
+
+For a prescribed $s\in(0,1)$, solve
+
+$$F(\lambda)=S(\lambda)-s=0.$$
+
+For $x=\log\lambda$, evaluate stable logistic spectral terms:
+
+$$
+S(e^x)=\frac1{n-d}\sum_j
+\frac{1}{1+\exp[-(x+\log\delta_j)]}.
+$$
+
+Methods in the library: **Brent, safeguarded Newton, safeguarded secant and bisection**, plus exact special-spectrum inversion.
+
+Endpoints $s=0,1$ require no root search.
+
+---
+
+<!-- _class: fig -->
+# Compare safeguarded root-solving ideas
+
+![width:1030px](figures/41_root_methods.svg)
+
+*Illustrative solver trajectories, not actual recorded iteration histories.*
+
+---
+
+<!-- _class: compact -->
+# Two mathematically distinct numerical tasks
+
+**A. Invert smoothness**
+
+$$S(\lambda)-s=0$$
+
+has one root because $S'>0$.
+
+**B. Select a statistical criterion**
+
+$$C'(\lambda)=0$$
+
+can have multiple stationary points and non-global minima.
+
+**A derivative root is not automatically the global minimum.**
+
+---
+
+<!-- _class: compact -->
+# The actual library selection pipeline
+
+1. Fix n, difference order d, and mean convention.
+2. Precompute spectral information.
+3. Choose CV / GCV / AICc / BIC / conditional MLE.
+4. Choose search_space=lambda or search_space=smoothness.
+5. Evaluate sampled candidates (invert S first when needed).
+6. For CV, inspect analytical derivative sign changes and local valleys.
+7. Compare the **original score** at admissible candidates and endpoints.
+8. Return selected lambda, selected S and aligned search metadata.
+
+A finite multi-start search cannot *prove* a global minimum.
+
+---
+
+<!-- _class: chapter -->
+# X. Why is spectral computation potentially fast?
+
+## Compare identical workloads and honest baselines
+
+---
+
+<!-- _class: compact -->
+# Four independent implementations
+
+| Solver family | What is included |
+| --- | --- |
+| Dense fresh | Rebuild D and Q, then solve per candidate |
+| Dense cached | Build Q once, solve dense system repeatedly |
+| Spectral SVD | Build full SVD once, reuse basis and weights |
+| Direct banded | Build narrow band storage and use a structured solve |
+
+The **banded baseline matters**: beating a deliberately naive dense solver alone is insufficient.
+
+---
+
+<!-- _class: fig -->
+# Operation-count growth is not measured elapsed time
+
+![width:1030px](figures/42_arithmetic_costs.svg)
+
+*Analytical complexity models with schematic proportionality constants.*
+
+---
+
+<!-- _class: math -->
+# Leading work for M reconstructed trends
+
+| Method | Leading cost |
+| --- | --- |
+| Repeated dense solving | $O(Mn^3)$ |
+| One SVD plus M reconstructions | $O(n^3)+O(Mn^2)$ |
+| Banded solving at fixed d | About $O(Mnd^2)$ plus setup |
+| Spectral trace-only queries | $O(n^3)+O(Mn)$ |
+
+**Setup, memory and actual machine effects must be included in timings.**
+
+---
+
+<!-- _class: fig -->
+# The number of candidate penalties changes the crossover
+
+![width:1030px](figures/43_crossover_schematic.svg)
+
+*Conceptual cost model only; no invented runtime measurements.*
+
+---
+
+<!-- _class: fig -->
+# Real host timings: full fitted-curve workload
+
+![width:1030px](figures/47_measured_full.svg)
+
+*Loads genuine host CSV when available; otherwise reports missing measurements explicitly.*
+
+---
+
+<!-- _class: fig -->
+# Real host timings: EDF trace-only workload
+
+![width:1030px](figures/48_measured_trace.svg)
+
+*A scalar trace is not the same workload as reconstructing M fitted curves.*
+
+---
+
+<!-- _class: compact -->
+# What it would take to claim that a method is faster
+
+- Measure **complete end-to-end time**, including setup and M evaluations.
+- Match n, d, mu, lambda candidates and numerical precision.
+- Save source revision, CPU/BLAS/software versions and thread count.
+- Repeat runs; report medians and dispersion.
+- Record a numerical agreement tolerance against independent solvers.
+- A ratio greater than one demonstrates only a **host- and workload-specific** advantage.
+- Searching in S adds scalar inversion overhead not measured by the original four-solver benchmark.
+
+**No GPU or energy savings have been demonstrated.**
+
+---
+
+<!-- _class: chapter -->
+# XI. Numerical stability
+
+## Arbitrary admissible d does not imply stable floating-point computation
+
+---
+
+<!-- _class: fig -->
+# Penalty energy shrinks with increasing lambda
+
+![width:1030px](figures/16_penalty_energy.svg)
+
+*Computed with the original order-two difference operator.*
+
+---
+
+<!-- _class: fig -->
+# Positive-spectrum conditioning grows with d
+
+![width:1030px](figures/45_conditioning.svg)
+
+*Computed from the singular values of D_d on a deterministic n=50 case.*
+
+---
+
+<!-- _class: math -->
+# The exact condition-ratio definition
+
+The penalty Q is singular when $d\ge1$. Instead inspect only its strictly positive spectrum:
+
+$$
+\boxed{
+\kappa_+(Q_d)=
+\frac{\max_{1\le j\le n-d}\delta_j}
+{\min_{1\le j\le n-d}\delta_j}.
+}
+$$
+
+In the manuscript's higher-order diagnostic (n=50, d=1..10), this increases to approximately $2.44\times10^{15}$ at d=10.
+
+**This is not the condition number of $I+\lambda Q_d$.**
+
+---
+
+<!-- _class: fig -->
+# Spectral and normal-equation fits can diverge numerically
+
+![width:1030px](figures/46_numeric_discrepancy.svg)
+
+*Both are float64 numerical methods; direct normal equations are not exact ground truth at high d.*
+
+---
+
+<!-- _class: compact -->
+# Deterministic agreement checks in the paper
+
+Paper-specific script, n=50, lambda=30, seed 20261021, and
+
+$$d\in\{1,2,3\},\quad \mu\in\{0,0.15\}.$$
+
+Reported maximum fitted-ordinate difference against direct normal equations: approximately $2.01\times10^{-12}$.
+
+Reported infinite-penalty difference constraint error: approximately $4.42\times10^{-12}$.
+
+These are results for **the stated inputs**, not a general forward-error theorem.
+
+---
+
+<!-- _class: compact -->
+# What the new S-coordinate tests actually test
+
+- Matched candidate penalties and normalized-S grids for d=0,1,2,4.
+- Nonzero fixed mean and all classical scores.
+- Analytical CV gradient in S against numerical finite differences.
+- Exact endpoints, invalid coordinates and float64 extremes.
+- The d=0 degeneracy: CV and GCV may tie across positive penalties.
+
+**No comparative optimization runtime was measured by those tests.**
+
+---
+
+<!-- _class: fig -->
+# Residuals still need their own diagnostics
+
+![width:1030px](figures/08_residuals.svg)
+
+*Smoothing does not itself imply independent or Gaussian residuals.*
+
+---
+
+<!-- _class: chapter -->
+# XII. Applications and interpretation
+
+## Illustrative synthetic truth and historical atmospheric data
+
+---
+
+<!-- _class: compact -->
+# The nonlinear synthetic scenario in the paper
+
+A Cortés-Toto-inspired single realization:
+
+$$
+\tau(t)=0.6f_{\mathrm{Beta}(30,17)}(t/n)
++0.4f_{\mathrm{Beta}(3,11)}(t/n).
+$$
+
+- n=50, Gaussian observation-noise SD=0.5, seed=19.
+- No seasonality for this declared replication.
+- d=2, fixed mu=0.
+- CV/GCV/AICc/BIC on the same 121-point geometric lambda grid plus infinity.
+- RMSE versus known synthetic truth is **trend recovery**, not forecast accuracy.
+
+---
+
+<!-- _class: fig -->
+# Criteria versus known synthetic truth
+
+![width:1030px](figures/34_selected_trends.svg)
+
+*Visualized curves are deterministic; one case does not rank methods in general.*
+
+---
+
+<!-- _class: fig -->
+# Real observations: Mauna Loa CO2, 1990–1999
+
+![width:1030px](figures/49_mauna_loa.svg)
+
+*Monthly averages of statsmodels weekly CO2 observations, when the optional dataset is installed.*
+
+---
+
+<!-- _class: compact -->
+# The observational illustration uses common normalized S
+
+The paper sets
+
+$$\boxed{S=0.86,\qquad\mu=0}$$
+
+and compares d=2,3,4,5 on 120 monthly values.
+
+Reported penalty values: approximately 37.03, 134.01, 488.32 and 1702.30.
+
+Seasonality in CO2 is physical structure, not automatically measurement noise. The fitted curves are **two-sided historical trends** and are not evaluated as forecasts.
+
+---
+
+<!-- _class: chapter -->
+# XIII. What is new, exactly?
+
+## Existing theory, released software, numerical validation and future research
+
+---
+
+<!-- _class: compact -->
+# What must not be presented as a mathematical invention
+
+- Finite-difference penalized least squares.
+- Arbitrary positive integer difference order.
+- Nonzero difference-reference means.
+- Polynomial nullspaces and eigenvalue attenuation.
+- Existing trace-based smoothness concepts.
+- CV, GCV, AICc, BIC and Gaussian likelihood as classes of methods.
+
+**Accurate attribution makes a computational contribution more credible.**
+
+---
+
+<!-- _class: compact -->
+# What this library integrates
+
+- Reusable full-SVD core for an admissible integer d.
+- Fixed nonzero mu and observed-difference plug-in.
+- Exact infinite-penalty affine projection.
+- Conditional EDF, original Guerrero index and normalized S.
+- Analytical classical-LOOCV derivative with multi-candidate refinement.
+- Brent, Newton, secant and bisection for inverse smoothness.
+- Optional optimization over lambda or normalized S.
+- Conditional Gaussian MLE and variance-component estimates.
+- Four-solver host benchmark suite, regression tests, Sphinx handbook.
+
+---
+
+<!-- _class: compact -->
+# The bounded Computational Statistics paper
+
+**Central research question:** for an established fixed-mean PLS estimator, under what workloads is reusable spectral computation accurate and competitive?
+
+The manuscript includes:
+- algebraic derivations and the normalized S coordinate;
+- separate complete-fit and scalar-trace workloads;
+- dense cached/fresh, spectral and banded baselines;
+- numerical conditioning diagnostics;
+- one synthetic and one observed-data demonstration;
+- an explicit limitations section.
+
+**Joint mean likelihood estimation is kept as future work.**
+
+---
+
+<!-- _class: compact -->
+# The repository as a reproducible research system
+
+**Mathematics:** notes/ and docs/handbook/  
+**Implementation:** src/trendestimation/  
+**Tests:** tests/ and validation/  
+**Host benchmarks:** paper/benchmarks/  
+**Manuscript:** paper/main.tex and paper/sections/  
+**Website:** Sphinx documentation and notebooks  
+**Research lecture:** slides/professor_lecture/
+
+Benchmark CSVs are host-specific: never invent values or misattribute a machine.
+
+---
+
+<!-- _class: chapter -->
+# XIV. Research agenda and questions
+
+## Which contribution should be pursued after the paper?
+
+---
+
+<!-- _class: math -->
+# Joint likelihood profiling: the next theoretical direction
+
+Given the conditional identity
+
+$$
+\boxed{
+\widehat\mu(\lambda)=
+\frac{\sum_jw_jb_jz_j}{\sum_jw_jb_j^2},
+}
+$$
+
+consider
+
+$$
+\boxed{\widehat\lambda
+=\arg\min_{\lambda>0}J(\lambda;\widehat\mu(\lambda)).}
+$$
+
+Questions: identifiability, endpoints, second derivatives, robust numerical optimization, inferential properties, and simulation comparisons.
+
+**The identity is derived; the joint estimator is not a validated library feature.**
+
+---
+
+<!-- _class: compact -->
+# An experiment that could genuinely assess S-search
+
+1. Fix the *same* statistical criterion and data.
+2. Compare direct log-lambda optimization against inverse-S optimization.
+3. Match numerical tolerances and computational budgets.
+4. Vary sample size, difference order, mean and selected smoothness.
+5. Record criterion calls, root iterations, time including inversion, and optimum scores.
+6. Include near-boundary and multiple-minima cases.
+7. Repeat on specified CPU/BLAS setups with independent seeds.
+
+**Do not claim an acceleration before this is measured.**
+
+---
+
+<!-- _class: compact -->
+# Separately: forecast-optimal smoothing
+
+For a later forecasting paper we would need:
+
+- An origin date and forecast horizon h.
+- Rolling/expanding windows that do not use future observations.
+- Separate historical price and return trends, if studying financial series.
+- Forecasting baselines, uncertainty and relevant error measures.
+- Multiple regimes, instruments and genuinely held-out periods.
+
+**Ordinary LOOCV and a smooth historical curve do not establish forecasting skill.**
+
+---
+
+<!-- _class: takeaway -->
+# Questions for the professor
+
+1. Is the present computational manuscript appropriately delimited?
+2. Are direct banded competitors and conditioning tests sufficiently convincing?
+3. Is normalized S valuable mainly for interpretation, optimization, or both?
+4. Is conditional closed-form mu profiling a promising separate article?
+5. What theorem or simulation would materially strengthen originality?
+6. Which computations should we run on the VM next?
+
+**We should separately label established theory, tested implementation, host measurements, and open hypotheses.**
+
+---
+
+<!-- _class: chapter -->
+# Appendix. The central mathematical identities
+
+## A quick first-pass reading of the essential formulas
+
+---
+
+<!-- _class: math -->
+# A1. PLS and its affine representation
+
+$$
+\boxed{
+\widehat\tau_{\lambda,\mu}
+=\arg\min_\tau\{\|y-\tau\|^2+
+\lambda\|D_d\tau-\mu\mathbf1\|^2\}.}
+$$
+
+$$
+p_t=\mu\binom td,\qquad
+\widehat\tau=p+H_\lambda(y-p),\quad
+H_\lambda=(I+\lambda D_d^\top D_d)^{-1}.
+$$
+
+---
+
+<!-- _class: math -->
+# A2. Spectral response and residual energy
+
+$$
+H_\lambda=V\operatorname{diag}
+\left((1+\lambda\delta_j)^{-1}\right)V^\top.
+$$
+
+$$
+\nu(\lambda)=d+\sum_{\delta_j>0}\frac1{1+\lambda\delta_j}.
+$$
+
+$$
+R(\lambda)=\sum_{\delta_j>0}
+\left(\frac{\lambda\delta_j}{1+\lambda\delta_j}\right)^2c_j^2.
+$$
+
+---
+
+<!-- _class: math -->
+# A3. The exact smoothness map and derivative
+
+$$
+\boxed{
+S(\lambda)=\frac1{n-d}
+\sum_{\delta_j>0}\frac{\lambda\delta_j}{1+\lambda\delta_j}.}
+$$
+
+$$
+\boxed{
+S'(\lambda)=\frac1{n-d}
+\sum_{\delta_j>0}\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.}
+$$
+
+$$
+\boxed{
+\frac{dC}{ds}
+=\frac{dC/d\log\lambda}{dS/d\log\lambda}.}
+$$
+
+---
+
+<!-- _class: math -->
+# A4. The four classical criteria
+
+$$
+\mathrm{CV}=\frac1n\sum_i\left(\frac{e_i}{1-h_{ii}}\right)^2,
+\quad
+\mathrm{GCV}=\frac{R/n}{(1-\nu/n)^2}.
+$$
+
+$$
+\mathrm{AICc}=\log(R/n)+\frac{2\nu+1}{n-\nu-2},
+$$
+
+$$
+\mathrm{BIC}=\log(R/n)+\frac{\nu\log n}{n}.
+$$
+
+Conditional on fixed mu; these are the library's stated conventions.
+
+---
+
+<!-- _class: math -->
+# A5. Gaussian likelihood and a future profiled mean
+
+$$
+w_j=\frac{\lambda\delta_j}{1+\lambda\delta_j},
+\qquad
+J(\lambda;\mu)=r\log\left(
+\frac1r\sum_jw_j(z_j-b_j\mu)^2\right)-\sum_j\log w_j.
+$$
+
+$$
+\boxed{\widehat\mu(\lambda)
+=\frac{\sum_jw_jb_jz_j}{\sum_jw_jb_j^2}.}
+$$
+
+**The public likelihood search is conditional; a joint numerical method is future research.**
+
+---
+
+<!-- _class: chapter -->
+# Reproducibility and sources
+
+## How the slide deck relates to the repository
+
+---
+
+<!-- _class: compact -->
+# Scientific source map
+
+**Manuscript:** paper/main.tex and paper/sections/*.tex  
+**Mathematical notes:** notes/smoothness_parameterization.md  
+**Core implementation:** src/trendestimation/core.py  
+**Selection and likelihood:** src/trendestimation/criteria.py and likelihood.py  
+**Experimental scripts:** paper/figures/ and paper/benchmarks/  
+**Reference handbook:** docs/handbook/
+
+**Foundational literature referenced by the paper:** Whittaker (1923), Guerrero (2007/2008), Cortés-Toto et al. (2017), Weinert (2007), Biessy (2026).
+
+The generated figure manifest records which visuals are synthetic, schematic, observed or derived from local host CSVs.
+
+---
+
+<!-- _class: code -->
+# Build on Windows or the VM
+
+~~~powershell
+git switch main
+git pull --ff-only origin main
+conda activate trendestimation
+python -m pip install -e ".[plot]"
+python -m pip install statsmodels
+
+python slides/professor_lecture/make_figures.py
+npm install --global @marp-team/marp-cli
+
+powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
+~~~
+
+**HTML and PDF are generated locally; no live website deployment occurs.**
+
+---
+
+<!-- _class: takeaway -->
+# Conclusion and discussion
+
+The research is strongest when it combines **clear established mathematics**, a reusable and tested implementation, **honest numerical comparison**, and carefully delimited novelty.
+
+**Three directions to discuss:** (i) strengthen the computational paper; (ii) validate joint likelihood mean profiling; (iii) measure whether searching over S changes end-to-end optimization efficiency.
+
+*Which result should become the next theorem or experiment?*
