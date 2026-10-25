@@ -1,0 +1,93 @@
+name: Formal paired PLS solver timing study
+
+# Manual and deliberately outside CI: wall-clock measurements are host-dependent.
+on:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: "Workloads (smoke is pipeline validation, not publication)"
+        type: choice
+        required: true
+        default: quick
+        options:
+          - smoke
+          - quick
+          - full
+      seeds:
+        description: "Independent datasets per workload (>=5 for inferential p-values)"
+        type: string
+        required: true
+        default: "20"
+      repeats:
+        description: "Paired timing blocks per dataset; NOT independent N"
+        type: string
+        required: true
+        default: "5"
+      archive_to_branch:
+        description: "Create permanent results-only Git branch (no PR/merge)"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  formal-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    concurrency:
+      group: formal-solver-timing-${{ github.run_id }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install scientific dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . threadpoolctl matplotlib
+      - name: Measure and analyze paired workloads
+        env:
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          NUMEXPR_NUM_THREADS: "1"
+        run: |
+          python benchmarks/formal_solver_study.py \
+            --preset "${{ inputs.preset }}" \
+            --seeds "${{ inputs.seeds }}" \
+            --repeats "${{ inputs.repeats }}" \
+            --threads 1 --single-calls 20 \
+            --output-dir build/formal-solver-study
+          python benchmarks/analyze_formal_solver_study.py \
+            --input-dir build/formal-solver-study \
+            --bootstrap 10000 --permutations 50000 --alpha 0.05
+      - name: Upload raw, analysis, and figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: paired-solvers-${{ github.run_id }}
+          path: build/formal-solver-study/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Archive results permanently in a separate Git branch (optional)
+        if: ${{ inputs.archive_to_branch }}
+        env:
+          ARCHIVE_BRANCH: results/solver-study-${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest="paper/benchmarks/solver_study_runs/run-${GITHUB_RUN_ID}"
+          mkdir -p "$dest"
+          cp -a build/formal-solver-study/. "$dest/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$ARCHIVE_BRANCH"
+          git add "$dest"
+          git commit -m "data: archive paired PLS solver benchmark run ${GITHUB_RUN_ID}"
+          git push origin "HEAD:refs/heads/$ARCHIVE_BRANCH"
+          echo "Results permanently saved to branch $ARCHIVE_BRANCH"
