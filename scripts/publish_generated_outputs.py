@@ -18,8 +18,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
-import re
 import shutil
 import subprocess
 import sys
@@ -233,7 +231,6 @@ def main(argv: list[str] | None = None) -> int:
         existing = discover_publishable(root)
         stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         incoming: list[tuple[Path, Path]] = []
-        existing_sources = {p.resolve() for p in existing}
         for idx, source in enumerate(imports):
             # Do not duplicate runs already stored in publication directory.
             if source.is_relative_to((root / "paper/benchmarks/solver_study_runs").resolve()):
