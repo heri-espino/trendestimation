@@ -9,6 +9,33 @@ CV/GCV/AICc/BIC, conditional marginal MLE, **deferred** joint mu profiling,
 numerical inversion, stability, synthetic and Mauna Loa examples,
 reproducibility, novelty boundaries, and future research.
 
+## The central bounded-smoothness story
+
+The lecture now foregrounds a first-pass narrative around
+**why search using normalized smoothness `s=S(lambda)` rather than only
+the unbounded PLS penalty**. Section V includes a concrete
+`EDF=n-(n-d)S` interpretation (for `n=100, d=2, S=.8`, conditional
+EDF is 21.6). Section VI compares the two numerical coordinates,
+displays their monotone inverse and exact derivative, and provides
+self-contained Python examples for both `select_lambda(...,
+search_space="lambda"|"smoothness")` options, mapped-candidate
+score equivalence, and direct smoothing targets via
+`TrendSmoother.lambda_for_smoothness`.
+
+The website has a matching introductory explanation at
+[docs/smoothness_coordinate.rst](../../docs/smoothness_coordinate.rst).
+A published URL is
+https://trendestimation.github.io/trendestimation/smoothness_coordinate.html
+**after the separate manual GitHub Pages deployment**.
+
+The normalized index is conditional trace smoothness, **not**
+forecast confidence or a percentage of noise removed. Neither
+bounded coordinates nor numerical inversion establish faster
+optimization. The existing host solver benchmarks do not compare
+end-to-end `S` versus `log(lambda)` searches; that experiment
+remains a future task. All 49 figure recipes and existing measured
+data remain unchanged.
+
 The repository stores the **source** of approximately 49
 publication-style SVG figures and exports to both **HTML and PDF**.
 The figure generator creates figures/manifest.json with provenance.
