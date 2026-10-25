@@ -1,0 +1,253 @@
+{
+  "generator": "slides/professor_lecture/make_figures.py",
+  "reproducibility_seed": 24021,
+  "count": 49,
+  "figures": [
+    {
+      "file": "figures/01_signal.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/02_fidelity.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/03_penalty.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/04_lambda_sweep.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/05_order_comparison.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/06_mu_sweep.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/07_affine_limit.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/08_residuals.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/09_diff_d1.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/10_diff_d2.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/11_diff_d3.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/12_matrix_D.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/13_stencils.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/14_kernel.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/15_polynomial_limit.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/16_penalty_energy.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/17_eigen_spectrum.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/18_attenuation.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/19_hat_weak.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/20_hat_strong.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/21_edf.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/22_smoothness.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/23_two_s_indices.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/24_s_by_order.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/25_s_derivative.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/26_log_s_derivative.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/27_inverse.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/28_s_grid.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/29_rss_edf.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/30_cv_lambda.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/31_cv_s.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/32_cv_minimum.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/33_criteria.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/34_selected_trends.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/35_leverage.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/36_loo_residuals.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/37_chronological_split.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/38_mle_profile.svg",
+      "kind": "deterministic",
+      "source": "computed from seeded synthetic data"
+    },
+    {
+      "file": "figures/39_mu_profile.svg",
+      "kind": "analytical illustration",
+      "source": "profile formula only; no released joint optimizer"
+    },
+    {
+      "file": "figures/40_joint_mle_surface.svg",
+      "kind": "analytical illustration",
+      "source": "analytical likelihood surface; not a tested joint estimator"
+    },
+    {
+      "file": "figures/41_root_methods.svg",
+      "kind": "schematic",
+      "source": "illustrative trajectories, not observed iteration logs"
+    },
+    {
+      "file": "figures/42_arithmetic_costs.svg",
+      "kind": "complexity schematic",
+      "source": "Big-O models only; arbitrary multiplicative constants"
+    },
+    {
+      "file": "figures/43_crossover_schematic.svg",
+      "kind": "complexity schematic",
+      "source": "illustrative cost model, not measured performance"
+    },
+    {
+      "file": "figures/44_trace_vs_fit.svg",
+      "kind": "complexity schematic",
+      "source": "operation growth only, no observed wall times"
+    },
+    {
+      "file": "figures/45_conditioning.svg",
+      "kind": "deterministic",
+      "source": "n=50; eigenvalue condition ratio from SVD"
+    },
+    {
+      "file": "figures/46_numeric_discrepancy.svg",
+      "kind": "deterministic",
+      "source": "n=50 seed=24021 S=.86; direct normal-equation comparator"
+    },
+    {
+      "file": "figures/47_measured_full.svg",
+      "kind": "host measured",
+      "source": "paper\\benchmarks\\results\\full_fit_timings.csv; local CSV, includes setup"
+    },
+    {
+      "file": "figures/48_measured_trace.svg",
+      "kind": "host measured",
+      "source": "paper\\benchmarks\\results\\trace_timings.csv; local CSV, includes setup"
+    },
+    {
+      "file": "figures/49_mauna_loa.svg",
+      "kind": "observed data",
+      "source": "statsmodels.datasets.co2 weekly observations aggregated to monthly means"
+    }
+  ],
+  "warning": "Complexity and root-method schematics are not measured runtimes."
+}
