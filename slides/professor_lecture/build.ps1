@@ -19,11 +19,11 @@ try {
     $html=Join-Path $Root "main.html"
     $pdf=Join-Path $Root "main.pdf"
     Write-Host "[lecture] Exporting offline HTML..."
-    & npx --yes "@marp-team/marp-cli" --theme-set $css $md --html --allow-local-files --output $html
+    & npx --yes "@marp-team/marp-cli" $md --theme $css --html --allow-local-files --output $html
     if ($LASTEXITCODE -ne 0) { throw "Marp HTML failed: $LASTEXITCODE" }
     if (-not $HtmlOnly) {
         Write-Host "[lecture] Exporting PDF (needs Chromium)..."
-        & npx --yes "@marp-team/marp-cli" --theme-set $css $md --html --allow-local-files --pdf --output $pdf
+        & npx --yes "@marp-team/marp-cli" $md --theme $css --html --allow-local-files --pdf --output $pdf
         if ($LASTEXITCODE -ne 0) { throw "Marp PDF failed: $LASTEXITCODE" }
     }
     Write-Host "[lecture] HTML: $html"
