@@ -224,6 +224,30 @@ python benchmarks/analyze_formal_solver_study.py --input-dir paper/benchmarks/so
 
 Alternatively run the [manual formal benchmark workflow](.github/workflows/formal-solver-study.yml), optionally archiving its evidence permanently to a dedicated results-only Git branch. See [the statistical protocol](docs/benchmark_statistical_protocol.rst) before interpreting p-values; timing blocks are *not* independent samples.
 
+
+## Publish generated research outputs to the repository
+
+After running the benchmarks and statistical analysis on your own machine,
+publish the **actual local evidence**, optional manuscript PDF and generated
+Marp figures without staging unrelated files. In Windows PowerShell:
+
+~~~powershell
+git switch main
+git pull --ff-only origin main
+python scripts/publish_generated_outputs.py
+python scripts/publish_generated_outputs.py --publish
+~~~
+
+The first command is a preview; the second creates a separate
+results-only branch, commits allowlisted outputs with SHA-256 provenance,
+and pushes it to GitHub. If GitHub CLI is configured it also creates
+a pull request; otherwise it prints a direct link. Ignored outputs
+under build/solver-study are automatically copied to a publishable
+study-run directory. No source code or Marp presentation branch is changed.
+
+For details and safety restrictions, see
+[Publishing research outputs](docs/publishing-research-outputs.md).
+
 ## Development
 
 ```bash

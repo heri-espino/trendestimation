@@ -108,6 +108,7 @@ trendestimation
    handbook/index
    solver_backends
    benchmark_statistical_protocol
+   publishing-research-outputs
    benchmarks
    references
    api
