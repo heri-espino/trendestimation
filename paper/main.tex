@@ -16,7 +16,7 @@
 
 \begin{document}
 
-\title[Reusable spectral computation for trend smoothing]{Reusable spectral computation for finite-difference penalized least-squares trends: numerical accuracy and cost}
+\title[Normalized smoothness for trend estimation]{Normalized smoothness coordinates for penalized least-squares trend estimation: a computational study}
 
 % Correspondence and affiliation must be verified by both coauthors.
 % TODO before submission: add verified \email{...} for corresponding author.
@@ -25,20 +25,65 @@
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Finite-difference penalized least squares provides a flexible framework for extracting trends from noisy time series. This study examines a specific computational question: when does reusing a spectral decomposition make smoothing calculations efficient, and how does its numerical behavior compare with structured alternatives? We consider equally spaced observations, a specified difference order, and a fixed mean for the penalized differences. The resulting affine estimator has a polynomial null space and a reusable singular-value representation. This representation permits inexpensive repeated evaluations of effective degrees of freedom and a normalized smoothness index, although reconstructing fitted trends remains more expensive. We also examine the equivalent bounded parameterization of selection criteria through normalized smoothness, including its analytic derivative transformation and inversion costs. We compare fresh and cached dense solvers, a reusable spectral implementation, and a direct banded solver under matched computational workloads, distinguishing preprocessing from repeated evaluations. Deterministic experiments assess numerical agreement and conditioning over several difference orders. A single nonlinear synthetic example illustrates classical smoothing-parameter criteria, and a historical atmospheric carbon-dioxide series illustrates controlled smoothness on observed data. The results characterize workload-dependent computational trade-offs; they do not establish universal speed superiority or forecast accuracy. Joint likelihood estimation of the smoothing parameter and difference mean is outside the scope of this study.}
+\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, and banded solvers under matched workloads. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
 
-\keywords{penalized least squares, Whittaker--Henderson smoothing, spectral methods, numerical benchmarking, finite differences}
+\keywords{normalized smoothness index, penalized least squares, smoothing parameter selection, spectral computation, numerical benchmarking}
 
 \maketitle
 
 \section{Introduction}
-Finite-difference penalized least squares (PLS) is a well-established approach to extracting a smooth trend from an observed series. Its statistical formulation separates fidelity to the observations from a penalty on successive differences of the trend, as in Whittaker's graduation method and subsequent work \cite{whittaker1923graduation,guerrero2007penalized}. Difference orders beyond two and nonzero reference means are part of this existing family; they are not proposed here as new estimators \cite{guerrero2007penalized,cortes2017smoothness}.
+Finite-difference penalized least squares (PLS) is an established method
+for extracting trends from noisy time series
+\cite{whittaker1923graduation,guerrero2007penalized}. Its smoothing
+parameter $\lambda\ge0$ is conventionally expressed in penalty units.
+However, equal numerical penalties need not produce comparable degrees
+of smoothing for different difference orders. Guerrero's trace-based
+smoothness measure provides an interpretable description of the
+resulting smoother \cite{guerrero2008smoothness}. Normalizing its range
+by the number of penalized directions yields a coordinate
+$s=S(\lambda)\in[0,1]$, with $s=0$ for no smoothing and $s=1$ for the
+polynomial limiting fit.
 
-The computational difficulty depends on the task. A single trend at a prescribed penalty can exploit the banded structure of the normal equations, whereas evaluating many smoothing parameters can justify preprocessing a reusable spectral decomposition \cite{weinert2007wh,biessy2026wh}. It is therefore insufficient to compare a cached spectral implementation only with a dense solver that rebuilds the penalty matrix at every step. Likewise, estimating one fitted curve and evaluating a scalar trace-based criterion are different computational workloads.
+\emph{The central question of this computational study is whether
+normalized smoothness can serve as a practical, interpretable coordinate
+for searching established PLS selection criteria, without changing their
+statistical meaning or concealing computational costs.} We retain both
+$\lambda$- and $s$-based parameter searches and expose the explicit
+inverse relationship, analytical derivative transformation, exact
+endpoints, and finite-precision limitations. This is a
+reparameterization of known estimators, not a new smoothing criterion
+or a claim that numerical global optimization becomes automatic.
 
-\emph{Our research question is when reusable spectral computation is competitive for fixed-mean PLS smoothing and how accurately it behaves across difference orders.} We document the affine formulation, effective degrees of freedom, and the option to search an existing criterion over either the penalty or normalized smoothness coordinate; compare four solver strategies under matched workloads; and report deterministic numerical checks, an illustrative synthetic example, and an observed-data smoothing example. We distinguish one-time factorization, repeated complete fits, and repeated scalar trace calculations. This is a bounded computational study of established estimators, not a new smoothing-penalty formulation or a general statistical comparison of selection criteria.
+Efficient implementation matters because a bounded parameter does not
+make evaluation free. The inverse $S^{-1}$ must be computed at candidate
+$s$ values, and objective evaluation may require either a complete
+trend fit or only a spectral trace and residual sum of squares.
+The banded structure of PLS normal equations can favor an individual
+fit, whereas a reusable decomposition can favor repeated evaluations
+\cite{weinert2007wh,biessy2026wh}. Accordingly, we supplement the
+parameterization with numerical agreement, higher-order conditioning,
+and measured comparisons of fresh and cached dense solves, spectral
+reuse, and a banded solver under matched workloads. These measurements
+describe solver costs, \emph{not} a head-to-head timing comparison of
+end-to-end optimizers in $\lambda$ and $s$.
 
-Throughout the computational comparisons, the reference difference mean $\mu$ is fixed numerically, including a prescribed nonzero value in the numerical checks. The library also supports the observed-difference plug-in $\mu=\overline{D_dy}$ and a Gaussian marginal-likelihood selector for fixed or plug-in $\mu$. We retain a short analytical profile-likelihood identity as a pointer to future work, but the present experiments do not validate data-adaptive degrees of freedom, joint $(\lambda,\mu)$ estimation, or a universal ranking of MLE against CV, GCV, AICc, and BIC. Forecast-horizon validation, confidence intervals, and claims of predictive improvement are likewise outside this paper's scope.
+We report mapped-grid equivalence checks and numerical validation of
+the CV derivative, a single illustrative nonlinear simulation for CV,
+GCV, AICc, and BIC, and a historical atmospheric carbon-dioxide
+example at prescribed normalized smoothness. Neither one synthetic
+realization nor mapped-grid agreement establishes a general statistical
+ranking or speed advantage. Arbitrary difference orders and fixed
+nonzero reference means belong to the published PLS family
+\cite{guerrero2007penalized,cortes2017smoothness}; their use is not a
+novel penalty formulation.
+
+The numerical experiments condition on a specified mean $\mu$ of the
+penalized differences. The software also provides the plug-in
+$\mu=\overline{D_dy}$ and conditional Gaussian marginal-likelihood
+selection. We display a separate mathematical joint-likelihood
+profile as future work, but neither joint $(\lambda,\mu)$ estimation,
+data-adaptive effective degrees of freedom, forecast-horizon
+validation, nor predictive gains are evaluated in this article.
 
 \section{Established model and reusable spectral computation}
 \subsection{Finite-difference penalized least squares}
@@ -196,42 +241,46 @@ An independent check compares the SVD implementation with the direct normal equa
 \input{sections/mauna_loa}
 
 \section{Discussion and conclusions}
-For a fixed difference order and reference mean, penalized least-squares
-trends can be computed through a reusable spectral representation.
-This representation makes repeated scalar trace and smoothness
-evaluations inexpensive after decomposition, while reconstructing
-complete fitted curves still requires matrix--vector operations.
-Our timing experiments compare these tasks separately against fresh
-and cached dense solves and a structure-aware banded solver.
-The resulting performance comparisons are specific to the reported
-data sizes, candidate counts, numerical libraries, and hardware;
-in particular, the one-time $O(n^3)$ cost of a full SVD can outweigh
-reuse benefits, and banded factorization remains an important
-competitor for individual fits.
+The normalized trace index $s=S(\lambda)$ provides a bounded,
+interpretable coordinate for the same penalized least-squares
+estimators and classical selection criteria used in penalty space.
+Monotonicity and the inverse mapping preserve ideal criterion
+minimizers, while the chain rule transforms the analytical CV
+derivative. The public implementation offers both coordinates.
+Regression checks verify agreement on mapped candidate grids,
+including boundaries and nonzero fixed difference means; they do
+not establish uniform numerical stability or universal convergence
+for arbitrary inputs.
 
-The deterministic checks support algebraic correctness for the tested
-orders and fixed values of $\mu$, while the higher-order diagnostic
-also exposes increasing numerical ill-conditioning. The single
-nonlinear synthetic example illustrates how established CV, GCV,
-AICc, and BIC rules can select different smoothing levels; it is
-not a method-ranking experiment. The atmospheric carbon-dioxide
-example illustrates historical trend extraction under a specified
-normalized smoothness level, not out-of-sample forecast performance.
-The normalized coordinate gives a monotone, bounded way to search
-existing selection scores while retaining their exact ideal minima.
-Its practical appeal is interpretability, but each candidate
-requires inverse computation and the chain-rule derivative becomes
-sensitive near the endpoints. These additional costs have not
-been benchmarked against the log-penalty search in this study.
+The reparameterization has distinct computational costs. Each
+interior $s$ typically requires a numerical inversion to recover
+$\lambda$, and the derivative conversion can be sensitive near
+$s=0$ and $s=1$. A bounded search interval therefore provides
+interpretability rather than an automatic speed improvement.
+Direct end-to-end timing comparisons of the two selection searches
+remain necessary before recommending either as universally faster.
 
-We therefore delimit the contribution to a reproducible numerical
-comparison and implementation analysis of \emph{established}
-finite-difference PLS estimators. Estimating $\mu$ jointly with
-$\lambda$ by Gaussian marginal likelihood, measuring the statistical
-properties of such estimates, and designing forecast-optimal
-selection procedures are separate research questions left for
-future work. Neither arbitrary difference orders nor nonzero
-reference means nor spectral smoothing is claimed to be new.
+Our complementary solver comparisons distinguish one-time
+preprocessing, repeated scalar trace evaluations, and complete
+fitted-trend reconstruction. A reusable spectral decomposition
+provides cheap scalar evaluations after preprocessing, but a dense
+full SVD incurs $O(n^3)$ setup time and $O(n^2)$ storage, and banded
+methods remain competitive, particularly for isolated fits.
+Observed timing differences apply to the stated workloads and
+hardware. Higher differencing orders can amplify numerical
+conditioning problems; a common $s$ across orders standardizes
+a conditional trace index, \emph{not} trend geometry.
+
+The nonlinear synthetic example illustrates different selections
+from established CV, GCV, AICc, and BIC criteria, without a general
+method ranking. The atmospheric carbon-dioxide case illustrates
+historical smoothness control, not future forecast accuracy.
+Our contribution is an auditable numerical treatment of an
+interpretable coordinate for an existing PLS family, supported by
+explicit solver trade-offs; it is not a new statistical penalty,
+a new likelihood theory, or evidence of forecast superiority.
+Joint estimation of $(\lambda,\mu)$ and inferential comparisons
+remain outside the present study.
 
 \section*{Declarations}
 % These are editorial placeholders, not statements verified on behalf of the authors.
