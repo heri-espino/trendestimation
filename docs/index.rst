@@ -106,6 +106,7 @@ trendestimation
    mathematics
    smoothness_optimization
    handbook/index
+   solver_backends
    benchmarks
    references
    api
