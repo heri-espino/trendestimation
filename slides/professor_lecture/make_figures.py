@@ -135,7 +135,7 @@ def plot_differences(t, truth, y, models):
         ax.plot(np.arange(len(y)-d), np.diff(y, n=d),
                 color=PALETTE[d-1], lw=1.8)
         ax.axhline(0, lw=.8, color=INK)
-        save(f"09_diff_d{d}", fig)
+        save(f"{8+d:02d}_diff_d{d}", fig)
     fig, ax = axes("The difference operator is sparse and banded",
                    xlabel="time index", ylabel="difference row", size=(8.3, 4.9))
     D = models[3].D
