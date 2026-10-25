@@ -1,5 +1,5 @@
 SVD, eigendecomposition, and banded Cholesky backends
-====================================================
+=====================================================
 
 Three methods, one trend
 ------------------------
