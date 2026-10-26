@@ -1,0 +1,85 @@
+name: Commit executed notebook figures
+
+on:
+  push:
+    branches:
+      - feature/committed-notebook-gallery-dual-coordinate
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: commit-notebook-figures-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  render-all-notebooks:
+    name: Execute and commit all 13 notebooks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install code, notebooks, and plot support
+        run: |
+          python -m pip install -e ".[docs,plot]" pytest threadpoolctl
+          python -m pip install -r docs/requirements-figures.txt
+      - name: Validate notebook cells before execution
+        run: |
+          python -m pytest -q tests/test_notebook_gallery.py tests/test_svg_figure_notebooks.py
+      - name: Execute ALL notebooks with inline SVG and PNG images
+        run: python scripts/run_notebooks.py --fast --all --in-place --fail-fast --timeout 600
+      - name: Verify all executed outputs are visibly embedded
+        run: |
+          python - <<'PY'
+          import nbformat
+          from pathlib import Path
+          paths = sorted(Path("docs/examples").glob("*.ipynb")) + sorted(Path("docs/notebooks").glob("*.ipynb"))
+          assert len(paths) == 13, len(paths)
+          for path in paths:
+              nb = nbformat.read(path, as_version=4)
+              code = [c for c in nb.cells if c.cell_type == "code"]
+              assert code and all(c.execution_count is not None for c in code), path
+              assert all(not any(o.get("output_type") == "error" for o in c.outputs) for c in code), path
+              dual = next(c for c in code if c.get("id") == "te-dual-coordinate")
+              svg = sum("image/svg+xml" in o.get("data", {}) for o in dual.outputs)
+              png = sum("image/png" in o.get("data", {}) for o in dual.outputs)
+              assert svg >= 3 and png >= 3, (path, svg, png)
+              print(f"{path}: {len(code)} code cells, {svg} SVG and {png} PNG paired-coordinate plots")
+          PY
+      - name: Strict Sphinx build from committed outputs
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: "off"
+        run: |
+          python -m sphinx -W --keep-going -b html docs build/site
+          python scripts/check_rendered_notebook_math.py build/site
+      - name: Commit execution outputs into the source notebooks
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/examples/*.ipynb docs/notebooks/*.ipynb
+          if git diff --cached --quiet; then
+            echo "All notebook figures are already committed."
+          else
+            git commit -m "docs(notebooks): embed executed SVG and PNG comparisons"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: executed-notebooks-${{ github.run_id }}
+          path: |
+            docs/examples/*.ipynb
+            docs/notebooks/*.ipynb
+            build/notebook-runs/manifest.json
+            build/notebook-runs/timings.csv
+            build/site/
+          retention-days: 30

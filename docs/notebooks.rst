@@ -52,3 +52,16 @@ and latent differences of order d. The forecast-pipeline notebook uses
 historical observations only; these are not forecast-error variances,
 prediction intervals, or evidence of future forecast performance.
 The selectors do not implement rolling or horizon-specific CV.
+
+Both parameterizations and committed figure outputs
+---------------------------------------------------
+
+All 13 notebooks contain additional mapped-coordinate figures: the
+relationship between the nonnegative penalty and normalized
+smoothness, and paired CV/GCV/AICc/BIC objective plots against both
+:math:`\\lambda` and :math:`S(\\lambda)`. The executed notebooks
+in GitHub contain stored SVG and PNG figure outputs, so no local
+execution is needed to inspect them. Execute the entire collection
+with ``python scripts/run_notebooks.py --fast --all --in-place --fail-fast``.
+The illustrative one-run timing chart is not a substitute for the
+controlled factorial benchmark.

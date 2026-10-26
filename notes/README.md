@@ -14,5 +14,10 @@ or inclusion in a scientific manuscript.
   algorithms, the cited 2012 book, and the distinction between the
   paper's generic banded timing baseline and the library's Cholesky backend.
 
+- [Factorial solver × criterion × search-coordinate study](criterion_coordinate_factorial.md):
+  mathematical equivalence of lambda/S search, distinct Cholesky/SVD/eigh
+  score workloads, fair matched-candidate design, the actual public
+  selector experiment, scripts, statistical cautions and spline outlook.
+
 When changing code or Sphinx documentation, preserve an explanation here
 of the underlying mathematical relationship and its limitations.

@@ -22,14 +22,20 @@ def test_all_notebooks_select_pinned_awesomefigures_and_svg():
             'af.set_style("elegante"',
             'palette="okabe-ito"',
             "rasterize=False",
-            'set_matplotlib_formats("svg")',
+            'set_matplotlib_formats("svg", "png")',
         ):
             assert signature in first, (path, signature)
         for code in codes:
             ast.parse(code, filename=str(path))
+        # GitHub's notebook viewer can display PNG while Sphinx uses SVG.
+        # Executed figures retain both MIME variants, not raster-only images.
         for cell in nb.cells:
             for output in cell.get("outputs", []):
-                assert "image/png" not in output.get("data", {}), path
+                data = output.get("data", {})
+                if "image/png" in data:
+                    assert "image/svg+xml" in data, path
+        assert any(cell.get("id") == "te-dual-coordinate" for cell in nb.cells)
+
 
 
 def test_forecast_optional_export_is_svg():

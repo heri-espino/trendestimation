@@ -36,6 +36,55 @@ end-to-end `S` versus `log(lambda)` searches; that experiment
 remains a future task. All 49 figure recipes and existing measured
 data remain unchanged.
 
+## Factorial computational comparison: 3 × 4 × 3, plus released selectors
+
+The extended lecture now adds a substantial **research-oriented factorial
+module** (over 160 slides overall) to the original historical and mathematical
+story. It includes **paired lambda / normalized-S objective plots for all
+four criteria**, the SVD/eigh/banded-Cholesky numerical distinctions,
+the complete 36-cell (3 solvers × 4 criteria × 3 search policies)
+experimental design, host-measured timing and optimum-quality plots,
+and a separate study of the actual public `select_lambda` default.
+
+**Two complementary studies, not one combined speed ranking:**
+
+1. `benchmarks/criterion_coordinate_matrix.py`: controlled grid search
+   cross-product. `lambda` computes S *once after selecting lambda*;
+   `s_mapped` uses the identical penalties after independent
+   backend-specific inverse S; `s_uniform` changes which candidates
+   are evaluated while keeping the candidate **count** fixed.
+2. `benchmarks/public_coordinate_optimizer_benchmark.py`: times the
+   released `select_lambda(..., method="auto")` with
+   `search_space="lambda"` versus `"smoothness"`, including setup,
+   actual candidate counts, and selected scores. The CV derivative
+   searches have **different** default grids and budgets.
+
+For reproducible smoke runs from the root:
+
+```bash
+python -m pip install -e ".[plot]" threadpoolctl
+python benchmarks/criterion_coordinate_matrix.py --preset smoke --seeds 1 --repeats 2
+python benchmarks/public_coordinate_optimizer_benchmark.py --preset smoke --seeds 1 --repeats 2
+python slides/professor_lecture/make_figures.py
+bash slides/professor_lecture/build.sh --html-only
+```
+
+For a larger research run, use `--preset quick --seeds 3 --repeats 4`
+on both benchmark scripts (or `full` after reviewing numerical
+conditioning). The two scripts produce raw and summarized CSVs with
+environment metadata in `build/criterion-coordinate-study/`.
+**Timing figures 54–59 are generated only from those measured CSVs**
+and explicitly display missing-measurement panels otherwise.
+Figures 50–53 are seeded deterministic criterion transformations,
+not speed measurements.
+
+A precise mathematical and experimental protocol, plus limitations and
+future spline comparisons, is in
+[notes/criterion_coordinate_factorial.md](../../notes/criterion_coordinate_factorial.md).
+The extant original paper timing suite is untouched: its
+`solve_banded` results must not be described as specific Cholesky
+factorization measurements.
+
 The repository stores the **source** of approximately 49
 publication-style SVG figures and exports to both **HTML and PDF**.
 The figure generator creates figures/manifest.json with provenance.
@@ -94,8 +143,9 @@ python paper/benchmarks/run_all.py --preset quick --repeats 5
 python slides/professor_lecture/make_figures.py
 ~~~
 
-The existing solver benchmarks do NOT measure end-to-end optimization
-speed of searching in S versus log(lambda). That is a future experiment.
+The original solver benchmark does not measure end-to-end lambda/S selection.
+The two new experiments described above measure controlled grid-selection
+work and real public auto selectors, respectively, once executed manually.
 
 The CO2 figure uses statsmodels' weekly CO2 dataset aggregated to
 monthly observations in 1990–1999. Install statsmodels to enable it.
