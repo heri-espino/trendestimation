@@ -69,7 +69,8 @@ class CurrentExamplesTests(unittest.TestCase):
     def test_manuscript_cites_guarded_extrapolation(self):
         main=(STUDY/"main.tex").read_text()
         section=(STUDY/"current_applications.tex").read_text()
-        self.assertIn(r"\input{current_applications.tex}",main)
+        self.assertIn(r"\input{dashboard_applications.tex}",main)
+        self.assertIn("not jointly maximized", (STUDY/"dashboard_applications.tex").read_text())
         self.assertIn("not a substitute",section)
         self.assertIn("Board of Governors",section)
         self.assertIn("2026",section)
