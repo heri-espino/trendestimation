@@ -104,3 +104,99 @@ and coordinate mappings in \texttt{s\_lambda\_grid.csv}.
 The result is a characterization of \emph{conditional in-sample
 criteria and numerical implementations}, not evidence of improved
 forecast accuracy or a universally fastest backend.
+
+\subsubsection{Single evaluations, repeated grids, and coordinate optimizers}
+\label{sec:full-s-search-modes}
+A further experiment refines the previous full-$S$ factorial by separating
+three computational workloads: (i) one score evaluation at $S=0.5$,
+(ii) one complete seventeen-point grid search, and (iii) repeated complete
+searches on independent series visiting the same candidate penalties.
+To distinguish factorization reuse from the search coordinate, repeated
+workloads are evaluated both with cold backend construction on every
+series and with one shared backend preparation across the series.
+
+For the \emph{discrete} search, we distinguish:
+(1) \emph{native $S$}, where each candidate is inverted inside the
+search, (2) \emph{premapped $S\to\lambda$}, where the same normalized-$S$
+candidate set is inverted once and supplied as penalties, and
+(3) \emph{direct log-$\lambda$ grid}, with the same finite endpoints,
+same seventeen candidate count and exact zero/infinite boundaries
+but different interior candidates. The first two evaluate exactly
+the same criterion scores, up to numerical error: a difference in elapsed
+time cannot be a new estimator or a statistical advantage.
+The standalone premapped-grid time includes one initial inversion
+pass; the backend-only time excludes that common, reusable pass.
+When multiple criteria and solvers share a single mapped grid its
+initial inversion should be amortized once, rather than charged separately
+to each of the thirty-five method--criterion cells.
+
+We additionally compare true \emph{bounded local continuous search}
+using numerical optimization of $C(S^{-1}(s))$ versus $C(\exp(x))$
+in $x=\log\lambda$. The bounds are the common strictly positive finite
+candidate range and both exact endpoints are scored analytically.
+These optimizers have variable numbers of evaluations; they are
+not guaranteed to find a global minimum of a nonconvex criterion.
+Their minima must not be conflated with a complete grid search,
+and a local optimizer's different selected smoothness is not by
+itself a numerical error. CV/GCV/AICc/BIC/MLE retain their
+original definitions in all five coordinate policies.
+
+The new benchmark preserves the seven original numerical backends,
+all five criteria, $d=0,\ldots,5$ with Gaussian marginal MLE at
+$d=0$ explicitly not applicable, fixed $\mu=0$ and $\mu=0.15$,
+and the entire seventeen-point $S$ grid with the exact $S=1$
+limit. Numerical agreement with the spectral score is checked
+\emph{outside} the timed calculations; direct methods that lose
+accuracy in the extreme near-one tail do not qualify for a valid
+whole-grid speed ranking. Backend construction, evaluation, inversion,
+and standalone total are stored separately. One isolated call is
+not evidence for how repeated searches amortize factorizations.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{figures/full_s_single_grid_repeated.pdf}
+\caption{Measured work for one $S=0.5$ GCV score, one seventeen-point
+full-$S$ grid search, and three independent full-grid searches at
+$n=24$, $d=1$ and fixed $\mu=0$. All curves use identical mapped
+penalties, with shared backend preprocessing, and the standalone
+mapped-grid inversion charged once. Only numerically validated
+method/workload results are shown. Ordinate logarithmic.}
+\label{fig:full-s-single-repeated}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{figures/full_s_grid_coordinate_times.pdf}
+\caption{Standalone measured complete-grid selection time for
+CV, GCV, AICc, BIC and Gaussian marginal MLE on a spectral solver,
+$d=2$, $\mu=0$, $n=24$. Native $S$ and premapped $S\to\lambda$
+sample the \emph{same} seventeen candidates. An independent
+log-$\lambda$ grid has the same endpoints and budget, but different
+interior candidates and potentially different selected scores.
+The one-time premapping is included in its standalone timing.
+Ordinate logarithmic.}
+\label{fig:full-s-coordinate-timing}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{figures/full_s_continuous_coordinate_times.pdf}
+\caption{Measured bounded local objective minimization directly in
+normalized smoothness and in $\log\lambda$, with exact $S=0$
+and $S=1$ endpoints considered separately. These use variable
+function-evaluation counts and are \emph{not} statistically equivalent
+to searching exactly the seventeen-point grid or certified global
+optimization. Same fixed mean and series as
+Fig.~\ref{fig:full-s-coordinate-timing}.}
+\label{fig:full-s-continuous-timing}
+\end{figure}
+
+The companion website shows further plots of cold/shared solver
+preprocessing and selected $S$ for each coordinate strategy.
+Raw measurements, valid/invalid result flags, evaluation counts,
+and machine metadata are stored in
+\texttt{paper/benchmarks/full\_s\_search\_reference/}.
+The figures are generated with the same AwesomeFigures
+Springer-width vector pipeline. As with the previous factorial,
+these in-sample measurements do not establish out-of-sample
+forecasting superiority or a universally fastest optimizer.
