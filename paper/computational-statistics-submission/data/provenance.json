@@ -1,0 +1,49 @@
+{
+  "generated_utc": "not stamped; reproducible pinned source data",
+  "sources": [
+    {
+      "dataset": "NOAA Mauna Loa CO2 monthly mean",
+      "url": "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.csv",
+      "file": "data/noaa_mlo_monthly_1990_2026_09.csv",
+      "n": 441,
+      "last": "2026-09",
+      "last_value": 426.07,
+      "publisher_revisions_possible": true
+    },
+    {
+      "dataset": "Federal Reserve federal funds rate FEDFUNDS via FRED",
+      "url": "https://fred.stlouisfed.org/series/FEDFUNDS",
+      "csv_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS",
+      "file": "data/fred_fedfunds_2010_2026_09.csv",
+      "n": 201,
+      "last": "2026-09",
+      "last_value": 3.75,
+      "publisher_revisions_possible": true
+    }
+  ],
+  "files_sha256": {
+    "data/noaa_mlo_monthly_1990_2026_09.csv": "67c8f770f25f5a55b23457366e7d0cb50af9920f2677c6af7de8436e75dc133c",
+    "data/fred_fedfunds_2010_2026_09.csv": "851c37443e6dc45cb01eed39d788d454f914a0734bcd70d38538ac53dd226f29"
+  },
+  "cases": [
+    {
+      "dataset": "NOAA Mauna Loa CO2 (ppm)",
+      "n": 441,
+      "start": "1990-01-01",
+      "end": "2026-09-01"
+    },
+    {
+      "dataset": "NOAA Mauna Loa CO2 (ppm)",
+      "n": 120,
+      "start": "2016-10-01",
+      "end": "2026-09-01"
+    },
+    {
+      "dataset": "FRED US effective federal funds rate (percent, NSA)",
+      "n": 201,
+      "start": "2010-01-01",
+      "end": "2026-09-01"
+    }
+  ],
+  "limits": "Forecast paths are descriptive extrapolations; local polynomial order capped at 2. Single-origin 12-month holdout is not a statistically sufficient rolling-origin comparison. Selection scores are in-sample, no causal or climate forecasting inference."
+}
