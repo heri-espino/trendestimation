@@ -1,4 +1,4 @@
-"""Execute small tutorial notebooks and validate inline SVG MIME output.
+"""Execute small tutorial notebooks and validate inline SVG and PNG MIME output.
 
 Use --save-intro-outputs only in the ephemeral Sphinx PR preview workspace:
 this writes SVG outputs to three introductory notebooks without committing them.
@@ -30,13 +30,13 @@ def execute_and_check(path: Path, *, save: bool) -> int:
     svg = [d["image/svg+xml"] for d in data if "image/svg+xml" in d]
     if not svg:
         raise AssertionError(f"{path.name} did not emit SVG MIME output")
-    if any("image/png" in d for d in data):
-        raise AssertionError(f"{path.name} emitted unwanted PNG MIME output")
+    if any("image/svg+xml" in d and "image/png" not in d for d in data):
+        raise AssertionError(f"{path.name} emitted SVG without GitHub PNG fallback")
     if not any("<svg" in (v if isinstance(v, str) else "".join(v)) for v in svg):
         raise AssertionError(f"{path.name} SVG MIME output contains no SVG element")
     if save:
         nbformat.write(notebook, path)
-    print(f"SVG smoke passed: {path.name}: {len(svg)} vector figure(s)")
+    print(f"SVG + PNG smoke passed: {path.name}: {len(svg)} vector figure(s)")
     return len(svg)
 
 
