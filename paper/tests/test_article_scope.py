@@ -78,7 +78,9 @@ class ArticleScopeTests(unittest.TestCase):
         self.assertIn("additional scalar inversion", content)
         self.assertIn(r"\emph{unimplemented research extension}", content)
         self.assertIn("The central question of this computational study", self.main)
-        self.assertIn("Direct end-to-end timing comparisons", self.main)
+        self.assertIn("Measured end-to-end finite-grid GCV searches", self.main)
+        self.assertIn(r"\input{sections/gcv_grid_reuse}", self.main)
+        self.assertIn("not a new smoothing criterion", self.main)
         self.assertIn("rather than an automatic speed improvement", self.main)
 
     def test_smoothness_is_the_primary_manuscript_coordinate(self):

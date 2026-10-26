@@ -1,0 +1,100 @@
+\subsection{Six backends for full fits versus actual GCV grid selection}\label{sec:gcv-grid-reuse}
+The preceding four-method tables concern fixed-penalty trend fitting and
+scalar EDF calculations, not a complete parameter search. A separate,
+reproducible companion experiment compares six numerical approaches:
+fresh and cached dense solves, reusable full SVD, the general banded
+solver, dense Cholesky, and \emph{banded Cholesky}. The new Cholesky
+measurements use \texttt{cho\_factor}/\texttt{cho\_solve} or
+\texttt{cholesky\_banded}/\texttt{cho\_solve\_banded}, respectively;
+we do not retroactively relabel the general banded solver as Cholesky.
+All return numerically agreeing trend fits under the same fixed
+$(n,d,\mu,\lambda)$, including nonzero $\mu$.
+
+For \emph{actual} classical GCV grid search, each solver evaluates
+$\operatorname{GCV}(\lambda)=n\Vert y-\widehat\tau_\lambda\Vert_2^2/
+[n-\operatorname{tr}(H_\lambda)]^2$ and selects the smallest
+finite score over its supplied candidate grid. For fixed $\mu$,
+$A_\lambda\widehat\tau=y+\lambda\mu D_d^\top\mathbf1$,
+$A_\lambda=I+\lambda D_d^\top D_d$, and
+$H_\lambda=A_\lambda^{-1}$. Consequently, changing the fixed
+reference mean alters fitted values and criterion values but not
+$H_\lambda$, its trace, or the coefficient matrix. For Cholesky
+and dense/banded direct methods, the trace calculation requires
+additional operations beyond a full trend solve. In contrast, SVD
+reuses the spectral eigenvalues for EDF and the already projected
+observations for the grid scores.
+
+\begin{table}[tbp]
+\centering
+\caption{Measured end-to-end classical GCV grid-search time (milliseconds) on the recorded GitHub Actions Linux runner, including setup and 11 log-penalty candidate scores, with one independent series ($n=48$, $R=1$), warm preparation, one BLAS thread, and three timing blocks. The reference mean $\mu$ is fixed in each comparison. BChol is banded Cholesky; the separate general-banded route and dense Cholesky are available in the underlying six-method CSV. Lower is faster in this sampled workload.}
+\label{tab:gcv-six-d}
+\begin{tabular}{rrrrr}
+\toprule
+$d$ & $\mu$ & SVD (ms) & BChol (ms) & SVD/BChol \\
+\midrule
+1 & 0.00 & 0.630 & 1.205 & 0.52 \\
+1 & 0.15 & 0.621 & 1.204 & 0.52 \\
+2 & 0.00 & 0.622 & 1.287 & 0.48 \\
+2 & 0.15 & 0.626 & 1.259 & 0.50 \\
+3 & 0.00 & 0.628 & 1.336 & 0.47 \\
+3 & 0.15 & 0.623 & 1.363 & 0.46 \\
+4 & 0.00 & 0.630 & 1.421 & 0.44 \\
+4 & 0.15 & 0.621 & 1.413 & 0.44 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\caption{Reusing candidate-specific preprocessing across four independently simulated series ($n=48$, $d=2$, $M=11$, $\mu=0$), end-to-end GCV search time including preparation on the same Linux runner. Cold rebuilds for each series; warm prepares once and reuses information at the same penalty candidates. Speedup is cold/warm.}
+\label{tab:gcv-reuse}
+\begin{tabular}{lrrr}
+\toprule
+Method & Cold (ms) & Warm (ms) & Cold/Warm \\
+\midrule
+SVD & 2.451 & 0.888 & 2.76 \\
+Banded Cholesky & 5.167 & 1.830 & 2.82 \\
+General banded & 6.275 & 3.234 & 1.94 \\
+Dense Cholesky & 3.436 & 1.507 & 2.28 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+The \texttt{quick} reference experiment considers $d\in\{1,2,3,4\}$,
+$M\in\{5,11\}$, $R\in\{1,4\}$, and fixed
+$\mu\in\{0,0.15\}$ at $n=48$. It compares equally spaced
+log-penalty points with uniformly spaced normalized-$S$ points
+mapped to the \emph{same finite penalty endpoints}. The common
+$S\to\lambda$ inversion cost is timed separately and deliberately
+excluded from the method-specific numbers above. An $S$ grid and
+a log-penalty grid need not contain the same interior candidates
+or select the same discrete optimum; this does not contradict
+continuous reparameterization invariance. Exact $S=0$ and $S=1$
+are supported elsewhere in the library but excluded from the
+finite-system comparison to avoid limiting/singular computational
+branches.
+
+In the recorded scenarios, reusable SVD was faster for the
+\emph{end-to-end GCV selection} cases in Table~\ref{tab:gcv-six-d},
+while separate full-fit-only measurements favor banded Cholesky
+for many repeated reconstructions. Reusing the \emph{same} grid
+across multiple independent series can amortize the preprocessing
+(Table~\ref{tab:gcv-reuse}); Cholesky factors do \emph{not}
+carry over across different penalty values. These are descriptive
+measurements from a GitHub-hosted Linux runner with Python~3.11,
+NumPy~2.4.6, SciPy~1.17.1, one BLAS thread, three repeats,
+and one seeded synthetic data design, not statistical evidence
+of a universally fastest backend. Raw records and environment
+provenance are archived in
+\texttt{paper/benchmarks/grid\_reuse\_reference/}. A separate
+six-way full-fit table with its own provenance is available under
+\texttt{paper/benchmarks/cholesky\_reference/}. The author's
+subsequent Windows-VM \texttt{full} run is not included here
+because its CSV files have not yet been archived in the repository.
+
+The library therefore retains \emph{spectral SVD} for
+\texttt{TrendSmoother} and for CV/GCV/AICc/BIC/conditional MLE
+selection, while its \emph{trend-only} convenience solver defaults
+to banded Cholesky. This is a workload-specific engineering choice,
+not a change to the objective, selection criterion, or theory.

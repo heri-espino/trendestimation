@@ -16,8 +16,9 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
 - Zero, fixed nonzero, and Guerrero (2007) observed-difference plug-in reference means (`mu="data"`).
 - Alternative full-trend reconstruction backends (SVD, dense symmetric eigendecomposition,
   and banded Cholesky) with matched reproducible benchmarks via
-  `PreparedPLSSolver` / `fit_penalized`; these return trends only, without
-  replacing the established spectral criterion-selection interface.
+  `PreparedPLSSolver` / `fit_penalized`. Their **fit-only default is banded
+  Cholesky**; these return trends only, without replacing the established
+  **spectral default for CV/GCV/AICc/BIC/MLE selection**, EDF, and normalized smoothness.
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
 - Optional parameter search in either penalty **lambda** (existing default)
@@ -152,7 +153,7 @@ An 80% normalized smoothness level **does not imply 80% accuracy**.
 
 ## Reproducible notebook gallery
 
-The [ten Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
+The [thirteen research Jupyter notebook tutorials](docs/gallery.rst) cover trend fitting,
 finite-difference matrices, CV/GCV/AICc/BIC, fixed and plug-in difference means, Gaussian MLE and Guerrero smoothness,
 published-style simulations, spectral diagnostics, numerical benchmarks, and
 illustrative economic, actuarial, and engineering use cases. The notebooks use
@@ -289,3 +290,28 @@ institutional ownership or endorsement.
 
 The MIT license applies to the **original software and project-authored
 documentation**, not to third-party scientific papers or figures.
+
+
+## Measured solver choices by task
+
+For a **known lambda** and trend-only output, use the banded-Cholesky
+default; for **parameter selection or spectral diagnostics**, use the SVD
+selector (unchanged):
+
+```python
+from trendestimation import fit_penalized, TrendSmoother, select_lambda
+
+trend_only = fit_penalized(y, lambda_=30, order=2, mu=0.15)
+solver = TrendSmoother(len(y), order=2)
+choice = select_lambda(solver, y, criterion="gcv", mu=0.15)
+diagnostics = solver.fit(y, lambda_=choice.lambda_, mu=0.15)
+```
+
+Our [GCV grid/reuse benchmark](docs/grid_reuse_selection.rst) uses six
+solvers, matched normalized-S/log-penalty candidate budgets, fixed
+nonzero mu, multiple difference orders and repeated independent series.
+Banded Cholesky often wins full-trend sweeps, while SVD was fastest for
+GCV selection in the recorded reference cases. Results and
+[executed charts](docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb)
+are specific to a declared hosted-Linux environment; no universal
+ranking or faster uniform-S search is claimed.

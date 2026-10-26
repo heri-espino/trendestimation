@@ -56,12 +56,12 @@ trendestimation
            <p>Search familiar criteria on a bounded smoothness scale, or stay in penalty coordinates. Learn what S measures and why the optimum is unchanged.</p>
            <span class="te-feature-link">Explore smoothness coordinates <span aria-hidden="true">&rarr;</span></span>
          </a>
-         <a class="te-feature" href="benchmarks.html">
+         <a class="te-feature" href="grid_reuse_selection.html">
            <span class="te-feature-number">03 / COMPUTATION</span>
            <span class="te-feature-icon" aria-hidden="true">&#931;</span>
-           <h3>Reusable spectral solver</h3>
-           <p>Reuse a spectral decomposition across smoothing parameters; inspect effective degrees of freedom and the exact limiting trend.</p>
-           <span class="te-feature-link">Why it is fast <span aria-hidden="true">&rarr;</span></span>
+           <h3>Workload-aware solvers</h3>
+           <p>Use banded Cholesky for trend-only fits and spectral computation for smoothing-criterion searches. Compare six solvers across grids and difference orders.</p>
+           <span class="te-feature-link">Explore solver comparisons <span aria-hidden="true">&rarr;</span></span>
          </a>
        </div>
      </section>
@@ -110,6 +110,7 @@ trendestimation
    smoothness_optimization
    handbook/index
    solver_backends
+   grid_reuse_selection
    benchmark_statistical_protocol
    publishing-research-outputs
    benchmarks

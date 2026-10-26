@@ -25,7 +25,7 @@
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, and banded solvers under matched workloads. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
+\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, general banded, dense Cholesky, and banded Cholesky solvers under matched workloads. A companion study compares six implementations for actual GCV grid searches under varying difference orders, fixed nonzero reference means and reusable preprocessing. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
 
 \keywords{normalized smoothness index, penalized least squares, smoothing parameter selection, spectral computation, numerical benchmarking}
 
@@ -248,6 +248,7 @@ As shown in Table~\ref{tab:criteria}, CV and GCV agree in this particular realiz
 An independent check compares the SVD implementation with the direct normal equations for $n=50$, $\lambda=30$, $d\in\{1,2,3\}$ and $\mu\in\{0,0.15\}$ on a second fixed-seed Gaussian sample. The maximum componentwise absolute difference is $2.01\times10^{-12}$ across these six cases, and the limiting constraint $D_d\widehat\tau_{\infty,\mu}=\mu\mathbf1$ holds to maximum error $4.42\times10^{-12}$. Both values result from the supplied deterministic regression script in IEEE double precision; they verify the tested algebra rather than establish stability for all $n,d,\lambda$. In addition, the library regression tests evaluate matched candidate penalties and normalized-smoothness coordinates for $d\in\{0,1,2,4\}$ at a fixed nonzero mean, comparing the original criterion scores after inverse mapping. They also check the smoothness-space CV derivative against centered finite differences. These tests establish numerical agreement at the checked inputs, not faster optimization or identical outcomes of two independently sampled finite grids. Higher differencing orders can be ill-conditioned, and systematic machine-dependent speed measurements remain a distinct stage of the study.
 
 \input{sections/timing_experiments}
+\input{sections/gcv_grid_reuse}
 
 \input{sections/high_order_numerics}
 
@@ -270,15 +271,22 @@ interior $s$ typically requires a numerical inversion to recover
 $\lambda$, and the derivative conversion can be sensitive near
 $s=0$ and $s=1$. A bounded search interval therefore provides
 interpretability rather than an automatic speed improvement.
-Direct end-to-end timing comparisons of the two selection searches
-remain necessary before recommending either as universally faster.
+Measured end-to-end finite-grid GCV searches at matched candidate budgets
+compare both coordinates under controlled penalty endpoints, but finite
+grid discretization and the extra inversion work prevent a universal
+recommendation for either sampling policy.
 
 Our complementary solver comparisons distinguish one-time
 preprocessing, repeated scalar trace evaluations, and complete
 fitted-trend reconstruction. A reusable spectral decomposition
 provides cheap scalar evaluations after preprocessing, but a dense
 full SVD incurs $O(n^3)$ setup time and $O(n^2)$ storage, and banded
-methods remain competitive, particularly for isolated fits.
+methods remain competitive, particularly for isolated fits. The new
+six-backend GCV measurements under fixed zero and nonzero reference means
+support spectral computation for criterion selection in the tested
+workloads, while banded Cholesky is an efficient choice for many full-
+trend reconstructions. Reusing Cholesky factors is beneficial only when
+the same penalty candidates recur across multiple series.
 Observed timing differences apply to the stated workloads and
 hardware. Higher differencing orders can amplify numerical
 conditioning problems; a common $s$ across orders standardizes

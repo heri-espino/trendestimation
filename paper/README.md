@@ -1,3 +1,32 @@
+## October 2026: six-solver GCV grid search included in paper
+
+The manuscript now includes `sections/gcv_grid_reuse.tex` with numerical
+tables derived from the archived **GitHub-hosted Linux quick-preset**
+reference CSVs under `benchmarks/grid_reuse_reference/`. These give
+actual GCV selection timings for six methods (including dense and banded
+Cholesky), `d=1,2,3,4`, fixed `mu=0` and `mu=.15`, log-penalty
+versus normalized-S candidate grids, and repeated independent series
+with cold vs reused preprocessing. It distinguishes true GCV grid search
+from the earlier fitted-trend-only and trace-only benchmarks.
+
+These numbers are NOT the author's Windows VM full-preset run and are
+not claims of universally optimal solver choices. The Windows-generated
+`paper/benchmarks/results/grid_reuse/` CSVs need to be committed under
+their own provenance-preserving results branch or attached for a separate
+author-run revision before manuscript submission. The finite grid
+endpoints in the GCV runtime comparison exclude S=0/1; other notebook
+tests exercise those exact theoretical endpoints.
+
+**Fit-only public backend default:** `fit_penalized` and
+`PreparedPLSSolver` now use banded Cholesky by default, with explicit
+`method="svd"` and `method="eigh"` options. The SVD-based
+`TrendSmoother` and `select_lambda` remain unchanged to provide
+efficient EDF, smoothness, CV/GCV/AICc/BIC, and MLE spectral computation.
+
+Run `python paper/build.py --pdf --package` to regenerate the
+actual manuscript PDF and submission ZIP from these sources after
+checking the host timing labels and coauthor approvals.
+
 # Computational Statistics manuscript — Springer Nature
 
 This directory contains an **unsubmitted working draft** of the scientific
