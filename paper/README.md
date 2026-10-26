@@ -42,8 +42,9 @@ The manuscript reports only existing and reproducible evidence:
 - deterministic numerical agreement and high-order conditioning checks;
 - one fixed-mean, second-order nonlinear synthetic illustration of
   **CV/GCV/AICc/BIC**, without claiming a general ranking;
-- a descriptive monthly Mauna Loa CO2 smoothing illustration across
-  orders using the same **prescribed smoothness**, not a forecast test.
+- a descriptive NOAA Mauna Loa CO2 monthly-mean illustration from
+  **January 1990 through September 2026** (`n=441`), comparing orders
+  at the same **prescribed smoothness** (not a forecast test).
 
 **New bounded-parameterization subsection:**
 `paper/sections/smoothness_coordinate_search.tex` explains how the
@@ -94,6 +95,49 @@ published figures, original sources, or library APIs are altered.
 Submission still requires author approval of the experimental conclusions,
 benchmarks' provenance, correspondence details and editorial declarations.
 
+## Updated NOAA Mauna Loa experiment — October 25, 2026 cutoff
+
+The primary observed-data figure now uses monthly-mean observations from
+NOAA Global Monitoring Laboratory over 1990-01 to 2026-09 (441 months).
+The last released complete monthly value as of the cutoff is **426.07 ppm**
+for September 2026; NOAA published the update October 9, 2026.
+
+The 441 values are frozen in `paper/figures/noaa_mlo_monthly_1990_2026_09.csv`.
+First 440 months (through August 2026) follow the public
+[datasets/co2-ppm NOAA mirror](https://github.com/datasets/co2-ppm/blob/main/data/co2-mm-mlo.csv).
+The September 2026 value was independently checked against
+[NOAA GML](https://gml.noaa.gov/ccgg/trends/). This is a pinned **derived
+snapshot**, not a byte-identical reproduction of NOAA's complete 2026-10
+CSV; it may require deliberate revision when NOAA updates its values.
+
+The current example preserves `mu=0`, `S=0.86`, and difference orders
+`d=2,3,4,5`. Parameters are freshly computed for 441 months, not reused
+from the older 120-month experiment. Results are written by
+`paper/figures/make_updated_mauna_loa.py` to
+`paper/real_data_2026_summary.json` and
+`paper/figures/mauna_loa_1990_2026_09.dat`, then rendered as
+`paper/figures/mauna_loa_1990_2026_09.pdf`.
+
+The old 1990–1999 example aggregated historical weekly observations from
+a `statsmodels` dataset. Its data, PDF, and generator remain archived
+separately. The two series are **not identical measurement inputs**, so
+changes in the fitted curve must not be attributed to time extension alone.
+
+From a fresh checkout, regenerate the data and vector figure, compile
+the Springer draft, and package its sources with:
+
+```powershell
+python paper/build.py --figures --pdf --package
+```
+
+This does not rerun heavy measured timing benchmarks. For a quick
+input-only check, use `python paper/figures/make_updated_mauna_loa.py
+--validate-only`. A bare `--pdf` requires the new figure to have
+already been rendered.
+
+The experiment produces two-sided historical smoothing curves, not
+forecasts. Annual seasonality, observation uncertainty, the 2022 eruption
+site changes, and later NOAA revisions remain domain limitations.
 ## Official December 2024 template
 
 - `main.tex` uses `\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
