@@ -1,6 +1,10 @@
 Computation and benchmarking
 ============================
 
+For four AwesomeFigures charts, including CV/GCV/AICc/BIC and
+conditional Gaussian MLE selection in S/lambda coordinates,
+see :doc:`mle_coordinate_figures`.
+
 A reproducible three-way comparison of SVD, dense eigen-decomposition
 and direct banded Cholesky is described in :doc:`solver_backends`.
 
