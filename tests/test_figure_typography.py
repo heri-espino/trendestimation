@@ -53,7 +53,7 @@ def test_figure_font_scale_and_portable_svg():
 
 def test_all_notebooks_activate_clean_figure_style_after_awesomefigures():
     paths = sorted(DOCS.glob("**/*.ipynb"))
-    assert len(paths) == 14
+    assert len(paths) == 15
     for path in paths:
         nb = nbformat.read(path, as_version=4)
         nbformat.validate(nb)
