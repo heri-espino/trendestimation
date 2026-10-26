@@ -117,6 +117,34 @@ def render_all(pub,paper,colors,axis_factory,save_pdf):
         fig.subplots_adjust(left=.12,right=.97,top=.95,bottom=.32)
         _save(pub,fig,figure_dir/"criteria_with_mle_s_paths.pdf",save_pdf)
 
+    if paths:
+        # The corresponding *same 16 candidates* in log-penalty coordinates.
+        # Exact endpoints 0 and infinity were SCORED above but are not
+        # plottable on a finite logarithmic horizontal axis.
+        fig,ax=axis_factory(pub)
+        for i,criterion in enumerate(CRITERIA):
+            complete=sorted(
+                [(float(r["lambda"]),float(r["score"])) for r in paths
+                 if int(r["n"])==60 and int(r["d"])==2
+                 and float(r["mu"])==0 and r["criterion"]==criterion
+                 and r["finite"].lower()=="true"],
+                key=lambda item:item[0])
+            finite=np.asarray([p[1] for p in complete])
+            scale=float(finite.max()-finite.min())
+            part=[(lam,(value-finite.min())/scale if scale else 0.)
+                  for lam,value in complete if 0<lam<np.inf]
+            ax.plot([p[0] for p in part],[p[1] for p in part],
+                    color=colors[i],marker=MARKERS[i%4],
+                    markersize=3.0,ls=STYLES[i%4],lw=1.3,
+                    label=criterion.upper())
+        ax.set_xscale("log")
+        ax.set(xlabel="Penalty $\lambda$ (log scale; endpoints scored, not plotted)",
+               ylabel="Score rescaled WITHIN criterion (0=minimum)")
+        ax.legend(ncol=3,loc="upper center",bbox_to_anchor=(.5,-.20),
+                  frameon=False)
+        fig.subplots_adjust(left=.12,right=.97,top=.95,bottom=.32)
+        _save(pub,fig,figure_dir/"criteria_with_mle_lambda_paths.pdf",save_pdf)
+
     if times:
         fig,ax=axis_factory(pub,ylog=True)
         policies=(("matched_lambda","Mapped penalty (reuse)"),
