@@ -44,7 +44,7 @@ From the repository root::
    python -m pip install -e ".[docs,plot]"
    python -m pip install -r docs/requirements-figures.txt
    python scripts/run_notebooks.py --list
-   python scripts/run_notebooks.py --fast --fail-fast
+   python scripts/run_notebooks.py --fast --all --in-place --fail-fast
    python scripts/run_notebooks.py --fast --only 09-gaussian-mle-and-guerrero-smoothness --fail-fast
    python scripts/run_notebooks.py --fast --only 03-classical-criteria 04-nonzero-mean --fail-fast
    python scripts/run_notebooks.py --fast --only 10-forecast-pipeline --fail-fast
@@ -56,7 +56,7 @@ failure status, and optional electricity-cost assumptions.
 
 To render executed figures in the Sphinx website::
 
-   python scripts/run_notebooks.py --fast --in-place --fail-fast
+   python scripts/run_notebooks.py --fast --all --in-place --fail-fast
    TRENDESTIMATION_DOCS_EXECUTION=off python -m sphinx -b html docs build/site
 
 Alternatively, set the Sphinx execution mode to auto and build directly.
@@ -66,11 +66,28 @@ SVG figure display
 ------------------
 
 All 13 notebooks set the ``awesomefigures`` ``elegante`` style with the
-Okabe–Ito palette, then ``set_matplotlib_formats("svg")`` for crisp
-inline figures. The dependency is pinned to GitHub in
+Okabe–Ito palette, then ``set_matplotlib_formats("svg", "png")`` for crisp
+inline SVG figures with GitHub-compatible PNG fallbacks. The dependency is pinned to GitHub in
 ``docs/requirements-figures.txt``; a PyPI release is not required.
 
 The **manual** executed-notebook workflow embeds SVG outputs in Sphinx HTML.
 The normal PR build disables expensive notebook execution but runs one short
 SVG smoke notebook. In chapter 10, set ``SAVE_SVG=True`` to also export
 individual SVG files rather than PNG.
+
+Paired penalty and normalized smoothness
+--------------------------------------
+
+Every introductory and research notebook now contains an executable visual
+comparison of the same fixed-mu PLS criteria against ``lambda`` and
+``S(lambda)``. It displays the monotone map and its inverse,
+CV/GCV/AICc/BIC in both coordinates, their selected mapped-grid points,
+and a small illustrative GCV timing comparison. The published factorial
+study instead times three linear-algebra solvers across three search
+policies with independent seeds and host metadata. Single notebook timings
+are not publication-grade speed conclusions.
+
+Use ``python scripts/run_notebooks.py --fast --all --in-place --fail-fast``
+from the repository root to execute and save **all 13** notebooks. The
+``Commit rendered notebook outputs`` workflow also runs the full gallery
+on GitHub Actions and commits the executed SVG/PNG cells to the branch.
