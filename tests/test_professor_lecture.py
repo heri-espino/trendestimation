@@ -62,6 +62,12 @@ class MarpResearchLecture(unittest.TestCase):
             "19_hat_weak.svg", "20_hat_strong.svg",
             "47_measured_full.svg", "48_measured_trace.svg",
             "49_mauna_loa.svg",
+            "50_cv_coordinate_pair.svg", "51_gcv_coordinate_pair.svg",
+            "52_aicc_coordinate_pair.svg", "53_bic_coordinate_pair.svg",
+            "54_coordinate_factorial.svg", "55_s_vs_lambda_ratio.svg",
+            "56_phase_breakdown.svg", "57_optimum_quality.svg",
+            "58_public_coordinate_runtime.svg",
+            "59_public_candidate_quality.svg",
         }
         static={m+".svg" for m in re.findall(
             r'save\("([0-9][a-zA-Z0-9_]+)"', self.script,
@@ -80,6 +86,10 @@ class MarpResearchLecture(unittest.TestCase):
             self.assertIn("--html", script)
             self.assertIn("--allow-local-files", script)
             self.assertIn("make_figures.py", script)
+        self.assertTrue((LECTURE / "coordinate_experiment_figures.py").is_file())
+        self.assertIn("paired_score_figures", self.script)
+        self.assertIn("measured_figures", self.script)
+        self.assertIn("public_selector_figures", self.script)
         self.assertIn("full_fit_timings.csv", self.script)
         self.assertIn("trace_timings.csv", self.script)
         self.assertIn("no host benchmark CSV present", self.script)
