@@ -1,0 +1,83 @@
+name: Full unit-S seven-solver five-criterion factorial
+
+on:
+  push:
+    branches: [research/full-s-all-solvers-five-criteria-d0-d5]
+    paths:
+      - 'paper/benchmarks/full_s_backend_criteria.py'
+      - 'tests/test_full_s_backend_criteria.py'
+      - '.github/workflows/full-s-factorial.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install scientific and test dependencies
+        run: |
+          python -m pip install -e '.[dev,docs,plot]'
+          python -m pip install threadpoolctl
+      - name: Verify full-S and method-by-criterion parity on d=0..5
+        run: |
+          python -m pytest -q tests/test_full_s_backend_criteria.py
+      - name: Run actual 17-point full-domain quick experiment
+        run: |
+          python paper/benchmarks/full_s_backend_criteria.py --preset quick --repeats 2 --threads 1 --output paper/benchmarks/full_s_reference
+      - name: Verify required experiment axes, limits and provenance
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path('paper/benchmarks/full_s_reference')
+          with (root/'candidate_scores_and_times.csv').open() as f:
+              rows=list(csv.DictReader(f))
+          with (root/'full_grid_summary.csv').open() as f:
+              summaries=list(csv.DictReader(f))
+          with (root/'s_lambda_grid.csv').open() as f:
+              mapping=list(csv.DictReader(f))
+          env=json.loads((root/'environment.json').read_text())
+          assert {int(r['d']) for r in rows}==set(range(6))
+          assert {float(r['mu']) for r in rows}=={0,.15}
+          assert len({r['method'] for r in rows})==7
+          assert {r['criterion'] for r in rows}=={'cv','gcv','aicc','bic','mle'}
+          assert {float(r['S']) for r in mapping}=={
+              0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.,.95,.99,.999,.9999,.999999,.999999999999
+          } or len({float(r['S']) for r in mapping})==17
+          assert any(r['S']=='1.0' and r['status']=='analytic_limit' for r in rows)
+          assert any(r['status']=='not_applicable_d0_mle' for r in rows)
+          assert any(r['status']=='ok' for r in rows)
+          assert {r['all_interior_valid'] for r in summaries}<= {'True','False'}
+          assert env['blas_threads']==1
+          print('Recorded',len(rows),'candidate rows,',len(summaries),'grid summaries')
+          PY
+      - name: Commit all real measurements and raw failure statuses
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/benchmarks/full_s_reference/*.csv
+          git add -f paper/benchmarks/full_s_reference/environment.json
+          if git diff --cached --quiet; then
+            echo "No new results"
+          else
+            git commit -m "results: full S=0..1 seven solver five criterion benchmark with d0..5"
+            git push origin HEAD:research/full-s-all-solvers-five-criteria-d0-d5
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-s-seven-backend-results
+          path: paper/benchmarks/full_s_reference/
+          retention-days: 30
