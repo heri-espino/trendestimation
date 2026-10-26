@@ -11,7 +11,33 @@ implementation of \texttt{TrendSmoother}; and (iv) a banded solver
 that assembles $Q_d$ directly in its sparse-band storage and uses
 a structure-aware linear solver. The last comparison is crucial:
 beating dense normal equations does not imply beating specialized
-PLS solvers \cite{weinert2007wh}.
+PLS solvers \cite{weinert2007wh,weinert2012fast}.
+
+\paragraph{Banded factorization and benchmark scope.}
+For every finite $\lambda\geq0$, the normal-equation matrix
+$A_\lambda=I_n+\lambda D_d^\top D_d$ is symmetric positive
+definite, since $x^\top A_\lambda x=\|x\|_2^2+
+\lambda\|D_dx\|_2^2>0$ for any nonzero $x$.
+It has half-bandwidth $d$, so a banded Cholesky factorization
+$A_\lambda=L_\lambda L_\lambda^\top$ is a valid
+structure-aware solution method. Its factor generally must be
+recomputed when $\lambda$ changes, whereas a spectral basis
+can be reused across penalties. This is established computational
+prior art \cite{weinert2007wh,weinert2012fast}.
+
+Importantly, the \emph{banded} timings in the four-method
+tables below come from \texttt{scipy.linalg.solve\_banded},
+a general banded linear-system solver in
+\texttt{paper/benchmarks/run\_benchmarks.py}; they are
+\emph{not} measured Cholesky timings. The separate library
+backend \texttt{PreparedPLSSolver(method="cholesky")} in
+\texttt{src/trendestimation/solvers.py} instead calls
+\texttt{scipy.linalg.cholesky\_banded} followed by
+\texttt{scipy.linalg.cho\_solve\_banded} to produce full
+fitted trends. Neither its timings nor Weinert's QR or FFT
+methods are included in these four-method tables.
+We therefore make no measured Cholesky-specific speed
+claim from this experiment.
 
 For every case a deterministic Gaussian sequence is generated,
 $\mu$ is held at either zero or a fixed nonzero value, and
