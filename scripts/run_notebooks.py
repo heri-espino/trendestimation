@@ -29,7 +29,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=Path("build/notebook-runs"))
     parser.add_argument("--all", action="store_true",
-                        help="Execute all 14: three docs/examples plus eleven docs/notebooks.")
+                        help="Execute all 15: three docs/examples plus twelve docs/notebooks.")
     parser.add_argument("--in-place", action="store_true",
                         help="Additionally save executed source notebooks for Sphinx.")
     parser.add_argument("--fail-fast", action="store_true")

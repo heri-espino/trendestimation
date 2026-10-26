@@ -1,0 +1,53 @@
+{
+  "date_utc": "2026-10-26T11:01:19.973935+00:00",
+  "system": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "logical_cpus": 4,
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "blas_threads": 1,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "preset": "quick",
+  "repeats": 5,
+  "seed": 20261026,
+  "git_revision": "a9757b98bf3e708d03c65ec1928dea466d47ff5e",
+  "fit_methods": [
+    "dense_fresh",
+    "dense_cached",
+    "spectral",
+    "banded",
+    "dense_cholesky",
+    "banded_cholesky"
+  ],
+  "trace_methods": [
+    "dense_fresh_trace",
+    "dense_cached_trace",
+    "spectral_trace",
+    "banded_trace",
+    "dense_cholesky_trace",
+    "banded_cholesky_trace"
+  ],
+  "note": "Measured on this host. Same signal and penalties for paired mu=0/0.15 fits; mu does not alter the smoothing matrix. The original four-method paper CSVs are untouched."
+}

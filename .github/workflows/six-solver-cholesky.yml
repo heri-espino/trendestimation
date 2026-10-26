@@ -1,0 +1,98 @@
+name: Six-solver Cholesky benchmark and executed notebook
+
+on:
+  push:
+    branches:
+      - feature/cholesky-dense-banded-mu-study
+    paths:
+      - 'paper/benchmarks/cholesky_comparison.py'
+      - 'tests/test_six_solver_cholesky_mu.py'
+      - '.github/workflows/six-solver-cholesky.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: six-solver-cholesky-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  measure-and-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install benchmark, notebook and plot dependencies
+        run: |
+          python -m pip install -e '.[docs,plot]' pytest threadpoolctl
+          python -m pip install -r docs/requirements-figures.txt
+      - name: Independent solver correctness checks
+        run: |
+          python -m pytest -q tests/test_six_solver_cholesky_mu.py
+          python -m pytest -q tests/test_notebook_gallery.py tests/test_svg_figure_notebooks.py
+      - name: Generate genuine host-specific six-way timing CSVs
+        run: |
+          python paper/benchmarks/cholesky_comparison.py --preset quick --repeats 5 --blas-threads 1 --output-dir paper/benchmarks/cholesky_reference
+      - name: Execute and store notebook charts (SVG and PNG)
+        run: python scripts/run_notebooks.py --only 12-six-solvers-cholesky-nonzero-mu --in-place --fail-fast --timeout 600
+      - name: Verify measured data, notebook graphics and provenance
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import csv, json, nbformat
+          folder = Path('paper/benchmarks/cholesky_reference')
+          env = json.loads((folder / 'environment.json').read_text())
+          fits = list(csv.DictReader((folder / 'full_fit_timings.csv').open()))
+          traces = list(csv.DictReader((folder / 'trace_timings.csv').open()))
+          assert env['preset'] == 'quick' and env['blas_threads'] == 1
+          assert len({r['method'] for r in fits}) == 6
+          assert len({r['method'] for r in traces}) == 6
+          assert {float(r['mu']) for r in fits} == {0.0, 0.15}
+          assert max(float(r['max_error_banded']) for r in fits) < 3e-6
+          assert max(float(r['max_abs_trace_error']) for r in traces) < 1e-6
+          file = Path('docs/notebooks/12-six-solvers-cholesky-nonzero-mu.ipynb')
+          nb = nbformat.read(file, as_version=4)
+          nbformat.validate(nb)
+          outputs = [o for c in nb.cells if c.cell_type == 'code' for o in c.outputs]
+          assert sum('image/svg+xml' in o.get('data',{}) for o in outputs) >= 3
+          assert sum('image/png' in o.get('data',{}) for o in outputs) >= 3
+          assert all(c.execution_count is not None for c in nb.cells if c.cell_type == 'code')
+          print('Reference host:', env['system'])
+          print('Rows:', len(fits),len(traces), 'embedded charts verified')
+          PY
+      - name: Strict documentation build from stored results
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: 'off'
+        run: |
+          python -m sphinx -W --keep-going -b html docs build/site
+      - name: Commit measured CSVs and notebook graphic outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/benchmarks/cholesky_reference/*.csv
+          git add -f paper/benchmarks/cholesky_reference/environment.json
+          git add docs/notebooks/12-six-solvers-cholesky-nonzero-mu.ipynb
+          if git diff --cached --quiet; then
+            echo "Measurements and rendered notebook already committed"
+          else
+            git commit -m "results: measured six-solver Cholesky timing with paired mu and notebook figures"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: six-solver-cholesky-${{ github.run_id }}
+          path: |
+            paper/benchmarks/cholesky_reference/
+            docs/notebooks/12-six-solvers-cholesky-nonzero-mu.ipynb
+            build/notebook-runs/manifest.json
+          retention-days: 30

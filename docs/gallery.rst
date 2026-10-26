@@ -1,7 +1,7 @@
 Executable notebook gallery
 ===========================
 
-Eleven **real Jupyter notebooks** drive both the standalone tutorial experience
+Twelve **real Jupyter notebooks** drive both the standalone tutorial experience
 and this Sphinx website. Every notebook includes mathematical exposition,
 deterministic source code, plots, and interpretation. The default inputs are simulated. The final chapter can also read an equally
 spaced local CSV and illustrates chronological holdout evaluation of a
@@ -26,6 +26,7 @@ Notebook chapters
    notebooks/09-gaussian-mle-and-guerrero-smoothness
    notebooks/10-forecast-pipeline
    notebooks/11-paper-solver-timing-comparison
+   notebooks/12-six-solvers-cholesky-nonzero-mu
 
 Gaussian variance-component examples
 ------------------------------------
@@ -66,7 +67,7 @@ Notebook source lives exclusively under ``docs/notebooks/``.
 SVG figure display
 ------------------
 
-All 14 notebooks set the ``awesomefigures`` ``elegante`` style with the
+All 15 notebooks set the ``awesomefigures`` ``elegante`` style with the
 Okabe–Ito palette, then ``set_matplotlib_formats("svg", "png")`` for crisp
 inline SVG figures with GitHub-compatible PNG fallbacks. The dependency is pinned to GitHub in
 ``docs/requirements-figures.txt``; a PyPI release is not required.
@@ -93,7 +94,7 @@ policies with independent seeds and host metadata. Single notebook timings
 are not publication-grade speed conclusions.
 
 Use ``python scripts/run_notebooks.py --fast --all --in-place --fail-fast``
-from the repository root to execute and save **all 14** notebooks. The
+from the repository root to execute and save **all 15** notebooks. The
 ``Commit rendered notebook outputs`` workflow also runs the full gallery
 on GitHub Actions and commits the executed SVG/PNG cells to the branch.
 
@@ -102,3 +103,12 @@ recorded paper timing CSV results (not invented measurements), comparing
 four numerical methods for complete trend fits and separate EDF/trace sweeps.
 The associated environment.json and numerical-parity errors are inspected.
 The paper's general banded solver is not a Cholesky implementation.
+
+The new :doc:`notebooks/12-six-solvers-cholesky-nonzero-mu` extends the
+four original solvers with dense Cholesky and true banded Cholesky,
+measuring paired full-fit workloads for both fixed ``mu=0`` and ``mu=0.15``.
+A separate six-way trace comparison is shown only once because the
+smoothing matrix and EDF are independent of fixed numeric ``mu``.
+Machine-specific reference timings are checked into
+``paper/benchmarks/cholesky_reference/`` with their provenance;
+the original four-method paper benchmark tables remain unchanged.
