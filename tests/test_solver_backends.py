@@ -104,13 +104,20 @@ def test_invalid_penalties_and_data():
         solver.fit_many(y, [np.nan])
 
 
-def test_existing_default_svd_trends_and_selection_unchanged():
+def test_default_banded_cholesky_for_fit_only_and_spectral_selection():
     y = np.random.default_rng(18).normal(size=27)
     modern = PreparedPLSSolver(len(y), order=2)
     current = TrendSmoother(len(y), order=2)
-    assert modern.method == "svd"
-    assert_allclose(
-        modern.fit(y, lambda_=8.0),
-        current.fit(y, lambda_=8.0).trend,
-        rtol=1e-11, atol=1e-11,
-    )
+    assert modern.method == "cholesky"
+    assert_allclose(modern.fit(y, lambda_=8.0, mu=0.15),
+                    current.fit(y, lambda_=8.0, mu=0.15).trend,
+                    rtol=2e-7, atol=2e-7)
+    assert_allclose(fit_penalized(y, lambda_=8.0, mu=0.15),
+                    current.fit(y, lambda_=8.0, mu=0.15).trend,
+                    rtol=2e-7, atol=2e-7)
+    assert_allclose(PreparedPLSSolver(len(y), 2, method="svd")
+                    .fit(y, lambda_=8.0), current.fit(y, lambda_=8.0).trend,
+                    rtol=1e-11, atol=1e-11)
+    # The fit-only default must never remove the spectral diagnostic API.
+    assert 0 < current.smoothness(8.0) < 1
+    assert current.degrees_of_freedom(8.0) > 0
