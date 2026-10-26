@@ -66,8 +66,24 @@ each positive penalty.
 SVD. The alternative backend interface computes **only the fitted
 trend**, without silently performing expensive spectral work.
 Cholesky does not automatically yield exact LOOCV leverages or EDF.
-The new default method ``svd`` retains the original convention,
-not a claim that it is universally fastest.
+The **fit-only default method is now** ``cholesky`` (banded Cholesky),
+informed by comparative full-trend runtime measurements. This is not
+a universal speed guarantee. The spectral SVD remains the default for
+``TrendSmoother``, ``fit_trend``, and ``select_lambda``: exact EDF,
+normalized smoothness and CV/GCV/AICc/BIC/MLE scoring require additional
+diagnostics that a single banded Cholesky fit does not supply.
+
+For an automatic fit-only backend and an explicit equivalent spectral
+fit, respectively:
+
+.. code-block:: python
+
+   fit_auto = fit_penalized(y, lambda_=30., order=2, mu=0.15)
+   fit_svd = fit_penalized(y, lambda_=30., order=2, mu=0.15,
+                           method="svd")
+   assert np.allclose(fit_auto, fit_svd, atol=2e-7)
+
+These two interfaces return only the trend, not a ``FitResult``.
 
 Matched experimental comparison
 -------------------------------
@@ -107,9 +123,12 @@ end-to-end setup plus batched fits. It reports medians, stored-array
 bytes, library and BLAS metadata. Figures or claimed speedups must
 come from these verified machine-specific outputs, not assumptions.
 
-A sound automatic default depends on whether we optimize a single
-full fit, many reconstructed curves, or repeated CV/GCV/MLE scores.
-No solver is universally fastest for all three workloads.
+The separate six-method benchmarks include true GCV searches over
+candidate grids at both fixed mu=0 and mu=0.15, with different orders
+and repeated series. The :doc:`grid_reuse_selection` page reports
+measured host timings and explains why SVD can win for GCV even when
+banded Cholesky wins for multiple full trend fits.
+No solver is universally fastest for every workload.
 
 For a formal repeated-block experiment with paired hypothesis tests,
 Holm correction and paper/Marp output, see
