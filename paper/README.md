@@ -140,7 +140,7 @@ forecasts. Annual seasonality, observation uncertainty, the 2022 eruption
 site changes, and later NOAA revisions remain domain limitations.
 ## Cholesky and banded-solver prior art
 
-Cort\'es-Toto, Guerrero and Reyes (2017, Sections 1 and 3.2) cite
+Cortés-Toto, Guerrero and Reyes (2017, Sections 1 and 3.2) cite
 Weinert's 2012 book for Cholesky-based spline algorithms but report
 implementing their own PLS criterion-selection study in R. The source
 does not establish which factorization their R implementation used.
