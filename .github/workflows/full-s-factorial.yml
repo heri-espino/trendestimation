@@ -6,6 +6,9 @@ on:
     paths:
       - 'paper/benchmarks/full_s_backend_criteria.py'
       - 'tests/test_full_s_backend_criteria.py'
+      - 'paper/figures/render_full_s_factorial.py'
+      - 'paper/sections/full_s_factorial.tex'
+      - 'docs/full_s_factorial.rst'
       - '.github/workflows/full-s-factorial.yml'
   workflow_dispatch:
 
@@ -64,12 +67,44 @@ jobs:
           assert env['blas_threads']==1
           print('Recorded',len(rows),'candidate rows,',len(summaries),'grid summaries')
           PY
+      - name: Install pinned AwesomeFigures and exact Springer typography
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk
+          python -m pip install -r paper/requirements.txt
+      - name: Render real AwesomeFigures PDF/SVG for every criterion and reference mean
+        run: python paper/figures/render_full_s_factorial.py
+      - name: Validate all real figure pairs and complete normalized grid
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          stems=([f'full_s_time_{k}' for k in ('cv','gcv','aicc','bic','mle')]
+              +['full_s_validity_gcv','full_s_validity_mle',
+                'full_s_selected_mu0','full_s_selected_mu015',
+                'full_s_lambda_tail'])
+          for name in stems:
+              root=Path('paper/figures')
+              pdf=root/(name+'.pdf')
+              svg=root/(name+'.svg')
+              assert pdf.is_file() and pdf.read_bytes().startswith(b'%PDF-'),pdf
+              assert svg.is_file() and '<svg' in svg.read_text(),svg
+          print('Verified',len(stems),'AwesomeFigures PDF/SVG pairs')
+          PY
+      - name: Build strict Sphinx website with committed vector figures
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: 'off'
+        run: python -m sphinx -W --keep-going -b html docs build/site
+      - name: Compile Springer manuscript and submission package
+        run: |
+          python paper/build.py --pdf --package
       - name: Commit all real measurements and raw failure statuses
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f paper/benchmarks/full_s_reference/*.csv
           git add -f paper/benchmarks/full_s_reference/environment.json
+          git add -f paper/figures/full_s_*.pdf paper/figures/full_s_*.svg
+          git add -f paper/main.pdf paper/computational-statistics-submission.zip
           if git diff --cached --quiet; then
             echo "No new results"
           else
@@ -79,5 +114,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: full-s-seven-backend-results
-          path: paper/benchmarks/full_s_reference/
+          path: |
+            paper/benchmarks/full_s_reference/
+            paper/figures/full_s_*.pdf
+            paper/figures/full_s_*.svg
+            paper/main.pdf
+            paper/computational-statistics-submission.zip
+            build/site/
           retention-days: 30
