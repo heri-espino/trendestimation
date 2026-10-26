@@ -1378,6 +1378,410 @@ The **banded baseline matters**: beating a deliberately naive dense solver alone
 ---
 
 <!-- _class: chapter -->
+# X-B. The full solver × criterion × coordinate experiment
+
+## Which pipeline is actually faster, and when does the answer change?
+
+---
+
+<!-- _class: compact -->
+# The proposed Computational Statistics experiment
+
+**Question:** Should we optimize a classical criterion directly in the penalty, or in the normalized smoothness index?
+
+We cross:
+
+- **3 backends:** singular-value decomposition (SVD), eigen-decomposition of $Q_d=D_d^\top D_d$, and direct *banded Cholesky*.
+- **4 statistical criteria:** CV, GCV, AICc and BIC.
+- **3 candidate-coordinate strategies:** direct $\lambda$ search, mapped-$S$ search, native uniform-$S$ search.
+
+That is **36 measured configurations per $(n,d,\mu,y)$ and timing block**.
+
+All three backends solve the *same* finite-difference PLS problem. The statistical criteria are not redefined.
+
+---
+
+<!-- _class: math -->
+# Two ways to get the same exact optimum
+
+Assume the same admissible search domain and exact global minimization:
+
+$
+\widehat\lambda=\arg\min_{\lambda\geq 0} C(\lambda;\mu),
+\qquad
+\widehat s=S(\widehat\lambda).
+$
+
+Equivalently,
+
+$
+\widehat s=\arg\min_{0\le s\le1}C(S^{-1}(s);\mu),
+\qquad
+\widehat\lambda=S^{-1}(\widehat s).
+$
+
+**The two ideal minima correspond.** But actual grids, solvers, rounding, boundary treatment and computation time can differ.
+
+---
+
+<!-- _class: compact -->
+# Three strategies, not merely two labels
+
+| Strategy | Candidate construction | Post-search operation |
+| --- | --- | --- |
+| **Direct $\lambda$** | Prescribed geometric $\lambda$ grid | Compute $S(\widehat\lambda)$ **once** |
+| **Mapped $S$** | Apply $S$ to the *same* $\lambda$ grid | Invert $S$ once **per candidate** |
+| **Native $S$** | Sample uniformly in $S\in(0,1)$ | Invert $S$ once **per candidate** |
+
+The **mapped** comparison isolates coordinate-conversion overhead and should select the same candidate within numerical error.
+
+The **native** comparison changes the grid; it evaluates whether uniform spacing in interpretable smoothing degrees is valuable enough to justify inversion.
+
+---
+
+<!-- _class: math -->
+# What extra computation does the S-first route require?
+
+The inverse mapping solves a scalar root problem:
+
+$
+F(x;s)=S(e^x)-s=0,\qquad x=\log\lambda.
+$
+
+For $r=n-d$ penalized spectral modes:
+
+$
+S(e^x)=\frac1r\sum_{j=1}^{r}
+\frac1{1+\exp[-(x+\log\delta_j)]}.
+$
+
+If each inverse takes $K$ scalar trace evaluations, a grid of $M$ smoothness targets requires approximately $KM$ additional trace evaluations.
+
+**Direct $\lambda$ search requires only one final $\lambda\to S$ conversion.**
+
+---
+
+<!-- _class: fig -->
+# CV: the identical objective in both coordinates
+
+![width:1070px](figures/50_cv_coordinate_pair.svg)
+
+*Both panels plot precisely the same candidate penalties; minimum and score must correspond.*
+
+---
+
+<!-- _class: fig -->
+# GCV: changing coordinates does not alter its definition
+
+![width:1070px](figures/51_gcv_coordinate_pair.svg)
+
+*Smoothness replaces the horizontal coordinate, not the GCV loss.*
+
+---
+
+<!-- _class: fig -->
+# AICc: the same selected score under a mapped grid
+
+![width:1070px](figures/52_aicc_coordinate_pair.svg)
+
+*These panels illustrate the numerical equivalence of one finite candidate set.*
+
+---
+
+<!-- _class: fig -->
+# BIC: inspect near-interpolation and boundary behavior
+
+![width:1070px](figures/53_bic_coordinate_pair.svg)
+
+*The finite-grid minimizer need not be a robust interior statistical optimum.*
+
+---
+
+<!-- _class: compact -->
+# The 36-case experimental matrix
+
+For *each* statistical criterion:
+
+| Backend | Direct $\lambda$ | Mapped $S$ | Native $S$ |
+| --- | :---: | :---: | :---: |
+| SVD of $D_d$ | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC |
+| $\operatorname{eigh}(D_d^\top D_d)$ | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC |
+| Banded Cholesky | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC | CV/GCV/AICc/BIC |
+
+**Repeat across** $n$, difference order $d$, fixed $\mu$, simulated series, random seeds, and timing blocks.
+
+This is a **finite-grid** factorial search study, not yet the analytical-gradient optimizer benchmark.
+
+---
+
+<!-- _class: math -->
+# A single normal-equation matrix, three factorizations
+
+$
+Q_d=D_d^\top D_d,\qquad
+A_\lambda=I+\lambda Q_d,\qquad
+A_\lambda \widehat x=y-p_\mu.
+$
+
+**SVD:** $D_d=U\Sigma V^\top$ gives reusable singular vectors.
+
+**Diagonalization:** $Q_d=V\Delta V^\top$ gives reusable eigenvectors, but explicitly forming $Q_d$ can square conditioning.
+
+**Cholesky:** $A_\lambda=L_\lambda L_\lambda^\top$ exploits bandwidth $d$, but the factor depends on $\lambda$.
+
+Numerical methods differ; **the statistical estimator is unchanged.**
+
+---
+
+<!-- _class: compact -->
+# Workload is criterion-dependent
+
+| Criterion | Needs fitted residual energy? | Needs $\operatorname{tr}(H)$? | Needs $h_{ii}$? |
+| --- | :---: | :---: | :---: |
+| Classical **CV** | Yes (pointwise) | Not necessarily | **Yes** |
+| **GCV** | Yes (scalar RSS) | **Yes** | No |
+| **AICc** | Yes (scalar RSS) | **Yes** | No |
+| **BIC** | Yes (scalar RSS) | **Yes** | No |
+| Smoothness inversion | No observed-data residual | **Yes, repeatedly** | No |
+
+Computing a single trend quickly is **not** the same as computing its CV score quickly.
+
+---
+
+<!-- _class: math -->
+# Why Cholesky needs extra work for CV or S
+
+For finite $\lambda\ge 0$, $A_\lambda$ is positive definite because
+
+$
+x^\top A_\lambda x=\|x\|^2+\lambda\|D_dx\|^2>0.
+$
+
+Banded Cholesky can solve $A_\lambda x=b$ efficiently for one right-hand side.
+
+But obtaining the *exact* trace and leverage diagonal through this implementation requires
+
+$
+H_\lambda=A_\lambda^{-1},\quad
+\nu=\operatorname{tr}(H_\lambda),\quad
+h_{ii}=(H_\lambda)_{ii}.
+$
+
+The factorial script obtains these from **$n$ right-hand-side solves**, timed inside the Cholesky workload.
+
+---
+
+<!-- _class: compact -->
+# An honest SVD versus Cholesky comparison
+
+**SVD/eigh:** pay a larger one-time spectral setup; reuse the diagonal attenuation for new penalties.
+
+**Cholesky:** comparatively inexpensive banded preparation and factorization for one $\lambda$; however, CV leverage, EDF and $S^{-1}$ require additional operations.
+
+Our experiment does **not** borrow the SVD eigenvalues when labeling a cell "Cholesky in S": it recomputes the required trace from Cholesky solves.
+
+**Important:** `scipy.linalg.solve_banded` in the older paper benchmark is *not* a measured Cholesky-specific timing. The new factorial study uses `cholesky_banded` and `cho_solve_banded` explicitly.
+
+---
+
+<!-- _class: compact -->
+# Original sources: what is already known?
+
+- **Cortés-Toto, Guerrero and Reyes (2017):** compare PLS criterion selection and resulting trend smoothness; they cite Weinert's Cholesky-based spline algorithms, but do *not establish* that Cholesky was their own simulation backend.
+- **Weinert (2007):** efficient Whittaker–Henderson smoothing.
+- **Weinert (2012), _Fast Compact Algorithms and Software for Spline Smoothing_:** numerical algorithms including Cholesky, QR and FFT.
+
+**Our research question differs:** cross **numerical backend × statistical criterion × search coordinate** for discrete difference-penalized trends, with end-to-end time and numerical agreement.
+
+Novelty requires an informed literature review; a Cartesian-product experiment is not automatically a theoretical advance.
+
+---
+
+<!-- _class: compact -->
+# A benchmark must decompose its elapsed time
+
+For every cell, record:
+
+1. **Setup** — finite-difference/band construction, SVD/eigh if applicable.
+2. **Coordinate inversion** — all root iterations for interior smoothness candidates.
+3. **Criterion evaluation** — complete CV/GCV/AICc/BIC scores for all candidates.
+4. **Post-map** — map the selected penalty back to normalized $S$.
+5. **End-to-end time** — measured from before setup through reporting the optimum.
+
+The script also records objective calls, number of inversions and number of trace evaluations, *and* the selected $\widehat\lambda,\widehat s,C(\widehat\lambda)$.
+
+---
+
+<!-- _class: fig -->
+# Observed experiment: 36 cells per workload
+
+![width:1070px](figures/54_coordinate_factorial.svg)
+
+*Measured medians only. If the new benchmark is absent, this panel explains the missing evidence.*
+
+---
+
+<!-- _class: fig -->
+# Is searching in S faster than searching in lambda?
+
+![width:1070px](figures/55_s_vs_lambda_ratio.svg)
+
+*Ratio above 1 means native S search was slower **on the tested machine**. No universal ranking follows.*
+
+---
+
+<!-- _class: fig -->
+# Where was the time spent?
+
+![width:1070px](figures/56_phase_breakdown.svg)
+
+*Measured phases separate factorization setup, inverse calculation, scoring and final conversion.*
+
+---
+
+<!-- _class: fig -->
+# Did a faster search choose a worse candidate?
+
+![width:1070px](figures/57_optimum_quality.svg)
+
+*Mapped-S scores should agree with direct lambda scores. Native S searches a different candidate grid.*
+
+---
+
+<!-- _class: compact -->
+# Compare both quality and speed
+
+**Runtime alone is insufficient.** A candidate search returning a different penalty can be faster but statistically worse *under its own criterion*.
+
+Evaluate both:
+
+$
+T_{\text{end-to-end}}\quad\text{and}\quad
+\Delta C=C(\widehat\lambda_{\mathrm{alternative}})
+-C(\widehat\lambda_{\lambda\text{-grid}}).
+$
+
+For mapped grids, $\Delta C$ should be approximately zero, allowing for inversion and floating-point discrepancies.
+
+For native uniform-S grids, $\Delta C$ can be positive or negative because **different candidate sets** are compared.
+
+---
+
+<!-- _class: compact -->
+# A crucial limitation: grid search versus auto optimization
+
+Our initial 36-case factorial uses **equal numbers of candidate points** for its three coordinate strategies.
+
+The released `select_lambda` API behaves differently by default:
+
+- For CV, it uses derivative-based refinement and a multi-start scan.
+- For GCV/AICc/BIC, it uses prescribed grids unless the caller overrides.
+- CV in S uses a uniform *and* logit-spaced mesh, not just the direct-$\lambda$ mesh.
+
+**Therefore:** the factorial study does *not* measure the complete default public auto-selector. That requires a second, separately labelled API benchmark.
+
+---
+
+<!-- _class: compact -->
+# Reproducible runs from the repository root
+
+```bash
+python -m pip install -e ".[plot]" threadpoolctl
+python benchmarks/criterion_coordinate_matrix.py \
+  --preset smoke --seeds 1 --repeats 2
+
+python benchmarks/criterion_coordinate_matrix.py \
+  --preset quick --seeds 3 --repeats 4 --threads 1
+
+python slides/professor_lecture/make_figures.py
+bash slides/professor_lecture/build.sh --html-only
+```
+
+Produces `build/criterion-coordinate-study/raw_trials.csv`, `summary.csv`, `environment.json` and SVG timing figures.
+
+**Publication-grade inference** should use more independent seeds, timing blocks, a controlled host, and paired analysis.
+
+---
+
+<!-- _class: chapter -->
+# X-C. What does the public selector actually do?
+
+## From a controlled grid experiment to the released optimization algorithms
+
+---
+
+<!-- _class: compact -->
+# Benchmark the actual library method='auto'
+
+The factorial matrix is controlled: same number of candidate points for the three strategies.
+
+Now run the **actual** public code:
+
+```python
+select_lambda(model, y, criterion="cv",
+              search_space="lambda", method="auto")
+select_lambda(model, y, criterion="cv",
+              search_space="smoothness", method="auto")
+```
+
+Repeat with GCV, AICc, BIC; record **full construction + selection time**, evaluated candidate count, chosen penalty and criterion score.
+
+The CV default uses **different** multi-start candidate grids and derivative refinement in the two coordinates. These are *not* a matched-budget comparison.
+
+---
+
+<!-- _class: fig -->
+# Public API: direct penalty versus inverse-smoothness search
+
+![width:1070px](figures/58_public_coordinate_runtime.svg)
+
+*Only recorded host times appear. The reported total includes construction of the public TrendSmoother.*
+
+---
+
+<!-- _class: fig -->
+# Public API: did each strategy do the same work?
+
+![width:1070px](figures/59_public_candidate_quality.svg)
+
+*We must report objective-candidate counts as well as the scores reached, especially for derivative-based CV.*
+
+---
+
+<!-- _class: compact -->
+# Run the two complementary studies
+
+```bash
+# Controlled factorial: 3 solvers × 4 criteria × 3 searches
+python benchmarks/criterion_coordinate_matrix.py \
+  --preset quick --seeds 3 --repeats 4 --threads 1
+
+# Released API: 4 criteria × 2 auto search coordinates
+python benchmarks/public_coordinate_optimizer_benchmark.py \
+  --preset quick --seeds 3 --repeats 4 --threads 1
+
+# Generate charts with actual CSVs and export presentation
+bash slides/professor_lecture/build.sh --html-only
+```
+
+**Do not combine the two runtime studies into a single speed ranking:** their candidate policies and workloads differ.
+
+---
+
+<!-- _class: compact -->
+# What should we test next for the journal?
+
+**Three increasingly strong experiments:**
+
+1. **Exact same $\lambda$ candidates:** numerical and speed parity, including inversion overhead.
+2. **Same candidate budget, different coordinate grids:** runtime *and* quality of selected score; vary $n$, $d$ and noise.
+3. **Actual optimizer strategies:** derivative roots, multistart scalar minimization, inversion root solvers, and the public API's native CV refinements.
+
+Then test other structured families where appropriate: Whittaker–Henderson and cubic smoothing splines, without conflating their function spaces, penalties or boundary conditions.
+
+---
+
+<!-- _class: chapter -->
 # XI. Numerical stability
 
 ## Arbitrary admissible d does not imply stable floating-point computation
