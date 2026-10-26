@@ -32,13 +32,13 @@ class CurrentExamplesTests(unittest.TestCase):
         self.assertAlmostEqual(y[-1],426.07)
 
     def test_pinned_fred_snapshot_when_downloaded(self):
-        source=STUDY/"data/fred_unrate_2010_2026_09.csv"
+        source=STUDY/"data/fred_fedfunds_2010_2026_09.csv"
         if not source.is_file():
             self.skipTest("FRED snapshot produced by workflow")
         dates,y=self.mod.load_series(source,"value")
         self.assertEqual(len(y),201)
         self.assertEqual(dates[-1].isoformat(),"2026-09-01")
-        self.assertAlmostEqual(y[-1],4.2)
+        self.assertAlmostEqual(y[-1],3.75)
 
     def test_local_polynomial_extension(self):
         t=np.arange(55,dtype=float)
@@ -70,8 +70,8 @@ class CurrentExamplesTests(unittest.TestCase):
         main=(STUDY/"main.tex").read_text()
         section=(STUDY/"current_applications.tex").read_text()
         self.assertIn(r"\input{current_applications.tex}",main)
-        self.assertIn("not validated forecasts",section)
-        self.assertIn("Bureau of Labor Statistics",section)
+        self.assertIn("not a substitute",section)
+        self.assertIn("Board of Governors",section)
         self.assertIn("2026",section)
 
 
