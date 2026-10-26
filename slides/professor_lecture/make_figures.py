@@ -494,10 +494,11 @@ def main():
         # coordinate matrices are kept separate from the legacy 49
         # recipes. Timing placeholders never invent observations.
         from coordinate_experiment_figures import (
-            paired_score_figures, measured_figures,
+            paired_score_figures, measured_figures, public_selector_figures,
         )
         paired_score_figures(models[2], y, save)
         measured_figures(save, axes, message)
+        public_selector_figures(save, axes, message)
     manifest={
         "generator":"slides/professor_lecture/make_figures.py",
         "reproducibility_seed":24021,
