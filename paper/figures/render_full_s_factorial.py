@@ -141,12 +141,17 @@ def make_figures():
                           for r in grid if int(r["n"])==24
                           and int(r["d"])==d
                           and not r["is_endpoint"]=="True")
-            ax.plot([s for s,lam in series],
+            # A linear S axis collapses 0.9999 and 0.999999999999
+            # into the same pixel. Plot -log10(1-S) to resolve the tail.
+            ax.plot([-np.log10(1-s) for s,lam in series],
                     [lam for s,lam in series],
                     marker="o",markersize=2.4,lw=1.25,
                     color=palette[d%len(palette)],label=f"d={d}")
-        ax.set_xlim(0,1.018)
-        ax.set(xlabel="Normalized S, including near-one grid",
+        ax.set_xlim(0,12.4)
+        ax.set_xticks([0,1,2,3,4,6,12],
+                      ["0","0.9","0.99","0.999","0.9999","0.999999","1-1e-12"])
+        ax.tick_params(axis="x",labelsize=7)
+        ax.set(xlabel="S targets (tail-expanded -log10(1-S) axis)",
                ylabel="Mapped finite penalty lambda (log scale)")
         ax.legend(ncol=3,loc="upper center",bbox_to_anchor=(.5,-.2),
                   frameon=False)
