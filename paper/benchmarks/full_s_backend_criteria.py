@@ -81,7 +81,7 @@ def _banded(Q, d):
 class Backend:
     """The backend really computes H and fit; GCV/CV need its diagonal/trace."""
 
-    def __init__(self, n, d, method):
+    def __init__(self, n, d, method, criterion="mle"):
         self.n, self.d, self.method = n,d,method
         self.I = np.eye(n)
         self.D = difference_matrix(n,d)
@@ -94,7 +94,7 @@ class Backend:
         # backends. This reusable d-specific constant is part of
         # the setup for EVERY direct pathway, not a free spectral score.
         # Construct D D.T (r x r) and its determinant once when d>=1.
-        if d>=1:
+        if d>=1 and criterion=="mle" and method not in ("svd","eigh"):
             sign, val = np.linalg.slogdet(self.D @ self.D.T)
             if sign <= 0:
                 raise ArithmeticError("D D.T determinant not positive")
@@ -154,7 +154,10 @@ class Backend:
             Q=self.Q
             if self.method=="dense_fresh":
                 Q=self.D.T@self.D
-            rhs=np.column_stack((centered,self.I))
+            # MLE needs no leverage/EDF: do not charge it for n
+            # unnecessary identity right-hand sides.
+            rhs = (centered if criterion=="mle"
+                   else np.column_stack((centered,self.I)))
             if self.method in ("dense_fresh","dense_cached"):
                 A=self.I+lam*Q
                 solved=np.linalg.solve(A,rhs)
@@ -175,10 +178,16 @@ class Backend:
                 factor=cholesky_banded(ab,lower=True,check_finite=False)
                 solved=cho_solve_banded((factor,True),rhs,check_finite=False)
                 logdetA=2*float(np.log(factor[0]).sum())
-            projected, H=solved[:,0],solved[:,1:]
+            if criterion=="mle":
+                projected=solved
+                H=None
+                edf=float("nan")
+                diagH=None
+            else:
+                projected,H=solved[:,0],solved[:,1:]
+                edf=float(np.trace(H))
+                diagH=np.diag(H)
             residual=centered-projected
-            edf=float(np.trace(H))
-            diagH=np.diag(H)
             if criterion=="mle":
                 # This logdet computation is charged to direct routes.
                 if logdetA is None:
@@ -277,7 +286,7 @@ def run(preset="quick",repeats=2,seed=20261026,threads=1,
                             for method in BACKENDS:
                                 start=perf_counter()
                                 try:
-                                    backend=Backend(n,d,method)
+                                    backend=Backend(n,d,method,criterion)
                                     setup=perf_counter()-start
                                 except Exception as exc:
                                     for idx,(s,lam) in enumerate(zip(targets,lambdas)):
@@ -312,13 +321,17 @@ def run(preset="quick",repeats=2,seed=20261026,threads=1,
                                         ref=float(baseline[idx])
                                         err=(abs(value-ref) if np.isfinite(ref)
                                              and np.isfinite(value) else float("inf"))
-                                        passed=(np.isfinite(value) and np.isfinite(ref)
-                                                and np.isclose(value,ref,
-                                                               rtol=1e-5,atol=1e-5))
-                                        if not passed:
-                                            status="unstable_numerics"
-                                        else:
+                                        if not np.isfinite(ref):
+                                            # Undefined is a criterion decision,
+                                            # not necessarily a failed factorization.
+                                            status="criterion_undefined"
+                                            err=float("nan")
+                                        elif np.isfinite(value) and np.isclose(
+                                            value,ref,rtol=1e-5,atol=1e-5
+                                        ):
                                             status="ok"
+                                        else:
+                                            status="unstable_numerics"
                                         duration=[]
                                         for _ in range(repeats):
                                             t0=perf_counter()
