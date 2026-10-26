@@ -1,46 +1,68 @@
 \section{Observed-data illustration: atmospheric carbon dioxide}
-A practical use for trend estimation is the Mauna Loa atmospheric
-$\mathrm{CO}_2$ record. These are physical observations, not a
-synthetic series. We use the historical weekly concentrations
-distributed by \texttt{statsmodels.datasets.co2}
-\cite{keeling2004co2,statsmodels2010}, aggregate weekly data
-to calendar-month means for 1990--1999, and obtain $n=120$
-equally spaced monthly values. No monthly values are missing
-within this window. The original monthly sequence mixes an
-increasing long-run component with strong seasonal variation;
-the latter must not be interpreted solely as instrument noise.
+We update the Mauna Loa atmospheric $\mathrm{CO}_2$ illustration
+through the most recently released complete monthly observation
+available on October 25, 2026. The NOAA Global Monitoring Laboratory
+(GML) monthly means cover January 1990--September 2026,
+$n=441$ equally spaced months; the September 2026 mean is
+$426.07$ parts per million (ppm) \cite{noaa2026mlo}.
+The October 2026 monthly mean was not available at the
+data cutoff. We analyze the \emph{published monthly means},
+without estimating missing observations or removing the
+substantial annual seasonal fluctuations.
 
-We estimate descriptive low-frequency curves for $d=2,3,4,5$.
-Because a conventional GCV grid can select a nearly
-interpolating solution in this seasonally varying case,
-we instead prescribe the clearly defined normalized
-trace-based index $S=0.86$ and solve Eq.~\eqref{eq:normalized-scale}
-for $\lambda$ at each order. The resulting penalties are,
-respectively, $37.03$, $134.01$, $488.32$, and $1702.30$.
-Even at the same normalized $S$, distinct $d$ values
-preserve different polynomial directions and may have
-different endpoint behavior.
+These data differ in provenance from the archived 1990--1999
+example, which aggregated the historical weekly series distributed
+by \texttt{statsmodels.datasets.co2}. The original
+120-month data, figure, and reproduction script remain in
+the repository, but the updated plot uses NOAA's monthly
+averages directly. Values for 1990--August 2026 were
+transcribed from a public mirror of NOAA's monthly series
+and the September 2026 value was checked against NOAA's
+October 9 release. The exact 441-value slice, source locations,
+and cutoff date are recorded in
+\texttt{figures/noaa\_mlo\_monthly\_1990\_2026\_09.csv}.
+NOAA values are subject to subsequent revision.
+
+As in the archived illustration, we fix the reference
+difference mean at $\mu=0$, prescribe the same normalized
+conditional trace smoothness $S=0.86$, and compare orders
+$d\in\{2,3,4,5\}$. For each order we invert
+Eq.~\eqref{eq:normalized-scale}, then fit the trend
+with the recovered penalty. The new penalties
+$\lambda$ are, respectively, approximately
+$41.77$, $175.72$, $787.53$, and $3564.46$.
+The associated conditional effective degrees of freedom,
+$\nu=n-(n-d)S$, are $63.46$, $64.32$, $65.18$,
+and $66.04$. Unlike a common numeric penalty,
+a common $S$ controls the \emph{fraction of penalizable
+trace degrees of freedom} across orders;
+it does not guarantee identical geometric trends.
 
 \begin{figure}[tbp]
 \centering
-\includegraphics{figures/mauna_loa_1990_1999.pdf}
-\caption{Historical Mauna Loa atmospheric carbon dioxide,
-monthly aggregates of weekly measurements from 1990--1999,
-and two-sided PLS fits with common normalized smoothness
-$S=0.86$. These are descriptive trends, not forecasts.}
+\includegraphics{figures/mauna_loa_1990_2026_09.pdf}
+\caption{NOAA GML Mauna Loa monthly-mean atmospheric
+$\mathrm{CO}_2$ (1990--September 2026; $n=441$) and
+two-sided PLS estimates of orders $d=2,3,4,5$,
+each with fixed $\mu=0$ and normalized smoothness
+$S=0.86$. The original shorter 1990--1999 illustration
+remains reproducible in the source repository.
+These are historical descriptive fits, not forecasts.}
 \label{fig:real-co2}
 \end{figure}
 
-The reference mean is fixed at $\mu=0$ for each displayed order,
-so the curves show the effect of changing $d$ while keeping the
-normalized trace-based smoothness index constant. This descriptive
-comparison does not estimate $\mu$ from the data, optimize a Gaussian
-marginal likelihood, or provide a forecast evaluation. The observed
-seasonal fluctuations should not be interpreted as independent
-measurement noise.
+The observed rising CO$_2$ baseline and seasonal
+oscillations illustrate why a smoothed historical trend is
+not automatically an estimate of measurement noise or a
+seasonally adjusted signal. Different orders preserve
+different polynomial null spaces and can behave
+differently near the endpoints. Using the full historical
+series gives a \emph{two-sided} trend estimate: observations
+later than a given month enter that month's fitted value.
+No held-out future period or forecast accuracy is evaluated.
 
-A full atmospheric analysis would explicitly model annual
-seasonality, measurement uncertainty, and revisions to the
-underlying data. The present package smooths the complete
-observed series; it does not estimate predictive skill from
-future held-out years.
+A substantive atmospheric analysis would explicitly model
+annual seasonality, site changes, measurement uncertainty,
+and later data revisions. These tasks, like statistical
+inference for a jointly estimated $(\lambda,\mu)$, remain
+outside the present computational comparison.
