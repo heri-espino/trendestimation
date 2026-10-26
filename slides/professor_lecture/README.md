@@ -100,11 +100,22 @@ python -m pip install statsmodels
 npm install --global @marp-team/marp-cli
 ~~~
 
-On Windows PowerShell:
+On Windows 11 PowerShell:
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
+# From the repository root; no editable package installation is required
+# for the slide builder to locate the local src/trendestimation sources.
+conda activate trendestimation
+powershell -ExecutionPolicy Bypass -File .\slides\professor_lecture\build.ps1
 ~~~
+
+The Windows builder temporarily places the local ``src`` directory on
+``PYTHONPATH`` and restores the previous value afterward, so it works
+with a src-layout checkout even if ``pip install -e .`` was missed.
+NumPy, SciPy, Matplotlib, Marp/Node.js and optional statsmodels are still
+required. The direct Python command ``python slides/professor_lecture/make_figures.py``
+still requires an editable installation or an explicit ``PYTHONPATH``.
+
 
 On Ubuntu/Linux VM:
 
