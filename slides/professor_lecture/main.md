@@ -1580,7 +1580,7 @@ The factorial script obtains these from **$n$ right-hand-side solves**, timed in
 
 Our experiment does **not** borrow the SVD eigenvalues when labeling a cell "Cholesky in S": it recomputes the required trace from Cholesky solves.
 
-**Important:** \`scipy.linalg.solve_banded\` in the older paper benchmark is *not* a measured Cholesky-specific timing. The new factorial study uses \`cholesky_banded\` and \`cho_solve_banded\` explicitly.
+**Important:** `scipy.linalg.solve_banded` in the older paper benchmark is *not* a measured Cholesky-specific timing. The new factorial study uses `cholesky_banded` and `cho_solve_banded` explicitly.
 
 ---
 
@@ -1672,7 +1672,7 @@ For native uniform-S grids, $\Delta C$ can be positive or negative because **dif
 
 Our initial 36-case factorial uses **equal numbers of candidate points** for its three coordinate strategies.
 
-The released \`select_lambda\` API behaves differently by default:
+The released `select_lambda` API behaves differently by default:
 
 - For CV, it uses derivative-based refinement and a multi-start scan.
 - For GCV/AICc/BIC, it uses prescribed grids unless the caller overrides.
@@ -1685,7 +1685,7 @@ The released \`select_lambda\` API behaves differently by default:
 <!-- _class: compact -->
 # Reproducible runs from the repository root
 
-\`\`\`bash
+```bash
 python -m pip install -e ".[plot]" threadpoolctl
 python benchmarks/criterion_coordinate_matrix.py \
   --preset smoke --seeds 1 --repeats 2
@@ -1695,9 +1695,9 @@ python benchmarks/criterion_coordinate_matrix.py \
 
 python slides/professor_lecture/make_figures.py
 bash slides/professor_lecture/build.sh --html-only
-\`\`\`
+```
 
-Produces \`build/criterion-coordinate-study/raw_trials.csv\`, \`summary.csv\`, \`environment.json\` and SVG timing figures.
+Produces `build/criterion-coordinate-study/raw_trials.csv`, `summary.csv`, `environment.json` and SVG timing figures.
 
 **Publication-grade inference** should use more independent seeds, timing blocks, a controlled host, and paired analysis.
 
