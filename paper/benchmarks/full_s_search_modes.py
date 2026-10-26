@@ -329,17 +329,21 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
 
 def workloads(preset):
     if preset=="smoke":
-        return (16,), (1,3), (20261026,), 1
+        return (16,), (1,2), (20261026,), (0,2,5), (
+            "cv","gcv","mle"), ("svd","eigh","banded_cholesky"), 1
     if preset=="quick":
-        return (24,), (1,3), (20261026,), 2
+        return (24,), (1,3), (20261026,), tuple(range(6)), (
+            *CRITERIA,), (*BACKENDS,), 2
     if preset=="full":
-        return (24,48), (1,3,8), (20261026,20261027), 5
+        return (24,48), (1,3,8), (20261026,20261027), tuple(range(6)), (
+            *CRITERIA,), (*BACKENDS,), 5
     raise ValueError(preset)
 
 
 def run(preset="quick",repeats=None,seed=20261026,threads=1,
         output=HERE/"results"/"full_s_search_modes"):
-    n_values,R_values,seeds,default_repeats=workloads(preset)
+    (n_values,R_values,seeds,orders,criteria,backends,
+     default_repeats)=workloads(preset)
     repeats=default_repeats if repeats is None else int(repeats)
     if repeats<1 or threads<1:
         raise ValueError("repeats and threads must be positive")
@@ -351,9 +355,9 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
             scipy=scipy.__version__,numpy=np.__version__,
             blas_threads=threads,threadpools=threadpool_info(),
             preset=preset,repeats=repeats,seeds=list(seeds),
-            n=list(n_values),d=list(range(6)),
-            reference_means=[0.,.15],criteria=list(CRITERIA),
-            backends=list(BACKENDS),R=list(R_values),
+            n=list(n_values),d=list(orders),
+            reference_means=[0.,.15],criteria=list(criteria),
+            backends=list(backends),R=list(R_values),
             policies=["single"]+list(GRID_POLICIES)+list(CONTINUOUS_POLICIES),
             reuse_modes=["shared","cold"],
             difference_between_policies=(
@@ -366,10 +370,10 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                 "construction; standalone mapped runtime counts it once."
             ),
         )
-        total=len(n_values)*6*len(seeds)*2*5*7*len(R_values)*6*2
+        total=len(n_values)*len(orders)*len(seeds)*2*len(criteria)*len(backends)*len(R_values)*6*2
         count=0
         for n in n_values:
-            for d in range(6):
+            for d in orders:
                 sm=TrendSmoother(n,d)
                 targets,mapped,direct,elapsed=design(sm)
                 design_rows.append(dict(n=n,d=d,candidate_count=len(targets),
@@ -379,8 +383,8 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                                         finite_lambda_max=mapped[-2]))
                 for seed_i in seeds:
                     for mu in (0.,.15):
-                        for criterion in CRITERIA:
-                            for method in BACKENDS:
+                        for criterion in criteria:
+                            for method in backends:
                                 for R in R_values:
                                     for reuse_mode in ("shared","cold"):
                                         for policy in ("single",)+GRID_POLICIES+CONTINUOUS_POLICIES:
