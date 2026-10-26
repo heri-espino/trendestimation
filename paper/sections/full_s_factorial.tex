@@ -200,3 +200,34 @@ The figures are generated with the same AwesomeFigures
 Springer-width vector pipeline. As with the previous factorial,
 these in-sample measurements do not establish out-of-sample
 forecasting superiority or a universally fastest optimizer.
+
+
+
+In the recorded hosted-Linux quick study, using the spectral
+implementation with $n=24$, $d=2$, fixed $\mu=0$ and two
+timing repetitions, an isolated GCV search over the full
+seventeen-point normalized-$S$ grid required
+$2.113$\,ms when inverting targets inside the search and
+$2.019$\,ms when the same grid was premapped once
+\emph{including} that mapping cost. The corresponding
+single GCV score at $S=0.5$ took $0.374$\,ms with native
+$S$, compared with $0.144$\,ms at a supplied known penalty.
+For five criteria revisiting exactly the same grid, native-$S$
+standalone times summed to $10.872$\,ms; shared preparation
+was $1.627$\,ms and the five combined backend-only selection
+times $2.278$\,ms, a total of approximately $3.905$\,ms.
+This $2.78$-fold descriptive difference illustrates
+why amortized inversion matters even when isolated
+full-grid times are similar. It is not an inference
+about other series sizes or machines.
+
+For GCV, the bounded local optimizers selected nearly
+the same smoothness ($S\simeq0.695064$), requiring
+$1.826$\,ms in $S$ and $0.554$\,ms in $\log\lambda$
+on this example. However, the BIC local optimizers
+converged to distinct candidate smoothness values
+($S\simeq0.1$ and $S\simeq0.699$), reinforcing that
+bounded local minimization is not a global criterion
+optimization guarantee. Every figure and timing value
+refers to the archived runner and a specified workload,
+not to an abstract superiority of either coordinate.
