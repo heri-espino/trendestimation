@@ -7,8 +7,22 @@ param([switch]$HtmlOnly,[switch]$SkipFigures)
 $ErrorActionPreference="Stop"
 $Root=Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepositoryRoot=(Resolve-Path (Join-Path $Root "../..")).Path
+# Use the repository's src-layout package without requiring an editable pip
+# installation. Preserve an existing PYTHONPATH and restore it on exit.
+$SourceDirectory=Join-Path $RepositoryRoot "src"
+$PreviousPythonPath=[Environment]::GetEnvironmentVariable("PYTHONPATH", "Process")
 Push-Location $RepositoryRoot
 try {
+    if ([string]::IsNullOrEmpty($PreviousPythonPath)) {
+        $env:PYTHONPATH=$SourceDirectory
+    }
+    else {
+        $env:PYTHONPATH="$SourceDirectory$([IO.Path]::PathSeparator)$PreviousPythonPath"
+    }
+    & python -c "import trendestimation; print('[lecture] Using:', trendestimation.__file__)"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Cannot import local trendestimation source. Run: python -m pip install -e '.[plot]'"
+    }
     if (-not $SkipFigures) {
         Write-Host "[lecture] Generating reproducible SVG figures..."
         & python (Join-Path $Root "make_figures.py")
@@ -30,4 +44,12 @@ try {
     if (-not $HtmlOnly) { Write-Host "[lecture] PDF: $pdf" }
     Write-Host "[lecture] SVG provenance: $(Join-Path $Root 'figures/manifest.json')"
 }
-finally { Pop-Location }
+finally {
+    if ($null -eq $PreviousPythonPath) {
+        Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:PYTHONPATH=$PreviousPythonPath
+    }
+    Pop-Location
+}
