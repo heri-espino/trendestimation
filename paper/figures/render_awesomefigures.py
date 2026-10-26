@@ -259,6 +259,8 @@ def main(argv=None):
             render_co2_updated(publication)
             render_high_order(publication)
         if not args.figures_only:
+            from render_mle_benchmarks import render_all
+            render_all(publication, PAPER, COLORS, _axis, _save)
             _render_benchmark(
                 publication, "full_fit_at_M64.dat", "full_fit_at_M64.pdf",
                 M=64, title="End-to-end full-trend fitting",
