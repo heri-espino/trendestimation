@@ -5,6 +5,12 @@ computational decisions, and reproducibility checks for methods explored in
 `trendestimation`. Notes do not necessarily imply release-quality implementation
 or inclusion in a scientific manuscript.
 
+- [Experiment001: solver studies, MLE, and publication figures](experiment001_solver_selection_figures.md):
+  central onboarding map of all measured benchmarks, PR history,
+  six numerical solvers versus five selection criteria, conditional MLE,
+  matched S/lambda grids, reproducible AwesomeFigures vectors, defaults,
+  scientific limitations, Windows result provenance and next steps.
+
 - [Normalized smoothness as an optimization coordinate](smoothness_parameterization.md):
   proof of monotonicity, inverse map, selection-score chain rule,
   boundary conventions, and a separate joint-likelihood research outlook.
