@@ -74,7 +74,7 @@ def make_figures():
             ax.set(xlabel="Difference order d (full 0 < S < 1 grid)",
                    ylabel="Median total valid-grid runtime (ms)")
             ax.set_title(f"{criterion.upper()}: seven backend implementations")
-            ax.legend(ncol=3,fontsize=6.5,frameon=False,
+            ax.legend(ncol=3,fontsize=7.0,frameon=False,
                       loc="upper center",bbox_to_anchor=(.5,-.23))
             fig.subplots_adjust(left=.12,right=.97,top=.92,bottom=.36)
             save(pub,fig,f"full_s_time_{criterion}",original_save)
