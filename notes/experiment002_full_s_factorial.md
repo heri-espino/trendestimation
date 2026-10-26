@@ -209,3 +209,101 @@ artifact includes the measurements and rendered publication output.
 
 The separate numerical and publication smoke tests passed; figure paths
 are verified as actual files rather than placeholders.
+
+
+
+## 9. Extension: one call, complete grid, repeated grids and coordinate optimization
+
+The follow-up extends Experiment002 rather than replacing or
+reinterpreting its validated seven-backend/five-criterion full-S
+candidate audit.
+
+### Computational questions that MUST remain separate
+
+1. **One score at a prescribed S=0.5** for a single y. Compare
+   known-lambda scoring (no mapping), direct S (invert on each
+   invocation) and premapped S-to-lambda (invert once and reuse).
+2. **One complete 17-point grid search**, including the exact
+   limits S=0 and S=1 (lambda=0 and infinity analytically).
+3. **Repeated searches across independent y** with the same
+   grid. Compare cold backend preparation for every series
+   with preparation shared across 3 or 8 series.
+4. **Different finite grids:** direct 17-point log-lambda
+   grid with the *same* two finite extreme penalties and
+   exact boundary limits, but different interior points.
+   A different minimum is discretization, not proof of an
+   improved continuous optimization algorithm.
+5. **True bounded local continuous optimization:** minimize
+   C(S^-1(s)) or C(exp(x)), x=log(lambda). Evaluate the same
+   underlying criterion with both analytical boundaries
+   considered. The two paths use different evaluation locations
+   and variable function-call counts. SciPy bounded minimization
+   may miss a global minimum; it must never be described as an
+   exhaustive global search.
+
+### Fair computational accounting
+
+Every backend/criterion/series is verified against the canonical
+spectral numerical score *outside the measured interval*.
+A valid complete-grid winner must score **all 15 finite
+interior points** correctly (or report a mathematically
+undefined criterion value) and include preparation and
+evaluation time. An invalid/unstable backend may not be ranked
+as the fastest by computing fewer points.
+
+For each record the experiment stores:
+- backend setup time, total scored evaluation time, and
+  one-time common S-grid inversion separately;
+- standalone elapsed time with inversion charged once for
+  pretranslating S into lambda;
+- candidate count / local optimizer evaluation count;
+- the chosen normalized S and criterion score;
+- numerical validity, d0 MLE applicability, n, d, mu, R,
+  source host, BLAS threads and seed.
+
+A shared S-grid inversion is paid once for **all**
+method/criterion searches that use its mapped penalties,
+not once per one of seven backends or five statistical
+criteria; sums of per-method standalone times would
+double-count that common work. Native S search instead
+pays inversion for each evaluated S target and every
+repeated run. With a pre-existing directly supplied
+lambda grid, no inversion of S is necessary.
+
+Cold and warm repeated runs are compared at matched
+d/mu/criterion/backend/grid and observations.
+Reuse of a Cholesky factor at a *different* lambda is
+not assumed; only d-specific setup is shared by the
+existing backend. Exact infinite penalty is always
+treated analytically, never by Cholesky.
+
+### Source files
+
+- `paper/benchmarks/full_s_search_modes.py`
+- `paper/benchmarks/full_s_search_reference/search_mode_timings.csv`
+- `paper/benchmarks/full_s_search_reference/search_grid_preparation.csv`
+- `paper/benchmarks/full_s_search_reference/environment.json`
+- `paper/figures/render_full_s_search_modes.py`
+- `docs/full_s_factorial.rst`
+- `paper/sections/full_s_factorial.tex`
+
+AwesomeFigures/Springer-matched vector outputs:
+`full_s_single_grid_repeated`,
+`full_s_search_reuse_speedup`,
+`full_s_grid_coordinate_times`,
+`full_s_continuous_coordinate_times`,
+`full_s_coordinate_selected_s` (.pdf and .svg).
+
+Quick preset: n=24, all d0..5, both mu, all seven backends,
+all five criteria (MLE d0 N/A), R=1 and R=3, cold/shared
+preparation, three 17-point grid policies, three single
+evaluation variants and two local continuous optimizers.
+The full Windows preset adds n=48, R=8 and a second seed.
+A focused smoke preset exists for CI and incremental testing.
+Keep Linux reference timings and Windows/VM timings separate.
+
+**No claims of universal fastest method or forecasting accuracy
+follow from one-host microbenchmarks.** The continuous-coordinate
+optimization and fixed discrete candidate-grid comparisons answer
+different numerical questions. An optimized S is a coordinate, not
+a new statistical selection criterion.
