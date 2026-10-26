@@ -40,6 +40,10 @@ jobs:
       - name: Retrieve, pin and validate FRED vintage; generate all figures
         run: |
           python paper/computational-statistics-submission/make_current_examples.py --fetch-fred
+      - name: Regenerate older synthetic criterion table for standalone manuscript
+        run: |
+          python paper/figures/make_figures.py
+          cp paper/criteria_table.tex paper/computational-statistics-submission/criteria_table.tex
       - name: Scientific and source regression tests
         run: |
           python -m pytest -q tests/test_current_study_examples.py
@@ -57,6 +61,7 @@ jobs:
           git add -f paper/computational-statistics-submission/data/
           git add -f paper/computational-statistics-submission/figures/
           git add -f paper/computational-statistics-submission/current_examples_table.tex
+          git add -f paper/computational-statistics-submission/criteria_table.tex
           git add -f paper/computational-statistics-submission/main.pdf
           if git diff --cached --quiet; then
             echo "Identical frozen figures and data already committed."
