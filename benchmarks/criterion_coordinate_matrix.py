@@ -27,7 +27,6 @@ import subprocess
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
-from math import comb
 from pathlib import Path
 from time import perf_counter_ns
 
@@ -143,7 +142,8 @@ class Scorer:
         # values at the outset: banded Cholesky can lose the numerical
         # nullspace when lambda*Q overwhelms the identity term.
         # Check monotone brackets and stop explicitly on any breakdown.
-        f = lambda x: self.smoothness(float(np.exp(x))) - target
+        def f(x: float) -> float:
+            return self.smoothness(float(np.exp(x))) - target
         lo, hi = -8.0, 4.0
         lower = f(lo)
         upper = f(hi)
@@ -318,7 +318,6 @@ def summarize(rows: list[dict]) -> list[dict]:
     for key, group in sorted(buckets.items()):
         values = np.asarray([v["end_to_end_ns"]/1e6 for v in group])
         times = np.asarray([v["inversion_ns"]/1e6 for v in group])
-        scores = np.asarray([v["selected_score"] for v in group])
         reference = {(v["seed"], v["block"]): v["selected_score"]
                      for v in rows if (v["n"], v["d"], v["mu"],
                      v["criterion"], v["solver"], v["coordinate"]) ==
