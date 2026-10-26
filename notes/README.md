@@ -9,5 +9,10 @@ or inclusion in a scientific manuscript.
   proof of monotonicity, inverse map, selection-score chain rule,
   boundary conventions, and a separate joint-likelihood research outlook.
 
+- [Factorial solver × criterion × search-coordinate study](criterion_coordinate_factorial.md):
+  mathematical equivalence of lambda/S search, distinct Cholesky/SVD/eigh
+  score workloads, fair matched-candidate design, the actual public
+  selector experiment, scripts, statistical cautions and spline outlook.
+
 When changing code or Sphinx documentation, preserve an explanation here
 of the underlying mathematical relationship and its limitations.
