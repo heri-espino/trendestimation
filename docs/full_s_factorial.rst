@@ -253,3 +253,58 @@ Run the full benchmark separately on your Windows VM:
 The Windows CSVs default to
 `paper/benchmarks/results/full_s_search_modes/`.
 Do not mix them with the archived Linux-hosted reference data.
+
+
+
+Illustrative measured results: isolated versus shared mapping
+--------------------------------------------------------------
+
+The hosted Linux quick run (n=24, d=2, fixed mu=0,
+spectral SVD, one BLAS thread, two timer repetitions)
+recorded the following **standalone times**:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 28 24 25 23
+
+   * - Criterion
+     - Native S grid (ms)
+     - Map S once, then lambda (ms)
+     - Selected matched-grid S
+   * - CV
+     - 2.220
+     - 2.165
+     - 0.7
+   * - GCV
+     - 2.113
+     - 2.019
+     - 0.7
+   * - AICc
+     - 2.170
+     - 2.046
+     - 0.8
+   * - BIC
+     - 2.154
+     - 2.063
+     - 0.1
+   * - MLE
+     - 2.215
+     - 2.122
+     - 0.6
+
+For **one GCV full-grid search**, native S (2.113 ms)
+and once-mapped lambda (2.019 ms) are similar.
+Across **all five criteria sharing the same mapped
+grid**, native-S evaluation totals about 10.872 ms
+whereas mapping once (1.627 ms) plus five
+backend-only searches (2.278 ms) totals about
+**3.905 ms** (approximately 2.78 times faster).
+
+The logarithmic-lambda grid and continuous
+optimizers are separate policies: their interior
+candidate locations or evaluation counts differ.
+One case (BIC) produced distinct local minima under
+bounded optimization in S versus log-lambda;
+these local solvers do not certify the global optimum.
+All reported values are actual hosted-runner measurements,
+not Windows-VM timings or general hardware guarantees.
