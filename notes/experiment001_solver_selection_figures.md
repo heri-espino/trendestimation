@@ -186,6 +186,9 @@ PGF-rendered vector PDFs and the Sphinx site uses matching SVG.
   six-backend cold versus warm GCV factor reuse ratio.
 - `paper/figures/criteria_with_mle_s_paths.pdf/svg`:
   five within-criterion normalized score shapes in S, including MLE.
+- `paper/figures/criteria_with_mle_lambda_paths.pdf/svg`:
+  the *same* five score paths and candidate penalties shown on a
+  log-lambda horizontal axis (endpoints scored, but non-plottable).
 - `paper/figures/criteria_with_mle_search_time.pdf/svg`:
   public selector runtime for matched lambda/native S/log lambda.
 
