@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-26T19:08:07.382891+00:00",
+  "timestamp_utc": "2026-10-26T19:23:18.496736+00:00",
   "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "processor": "x86_64",
@@ -11,20 +11,20 @@
       "internal_api": "openblas",
       "num_threads": 1,
       "prefix": "libscipy_openblas",
-      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
-      "version": "0.3.30",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
       "threading_layer": "pthreads",
-      "architecture": "Haswell"
+      "architecture": "SkylakeX"
     },
     {
       "user_api": "blas",
       "internal_api": "openblas",
       "num_threads": 1,
       "prefix": "libscipy_openblas",
-      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
-      "version": "0.3.31.188.0",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
       "threading_layer": "pthreads",
-      "architecture": "Haswell"
+      "architecture": "SkylakeX"
     }
   ],
   "blas_threads": 1,
