@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - paper/current-data-multiorder-extrapolation-20261026
+      - paper/forecast-dashboard-mle-mu-20261026
     paths:
       - "paper/computational-statistics-submission/**"
       - "tests/test_current_study_examples.py"
+      - "tests/test_selection_dashboards.py"
       - ".github/workflows/current-journal-examples.yml"
   workflow_dispatch:
 
@@ -40,13 +42,16 @@ jobs:
       - name: Retrieve, pin and validate FRED vintage; generate all figures
         run: |
           python paper/computational-statistics-submission/make_current_examples.py --fetch-fred
+      - name: Generate 4x6 MLE and mu-sensitive dashboards from frozen observations
+        run: |
+          python paper/computational-statistics-submission/make_selection_dashboards.py
       - name: Regenerate older synthetic criterion table for standalone manuscript
         run: |
           python paper/figures/make_figures.py
           cp paper/criteria_table.tex paper/computational-statistics-submission/criteria_table.tex
       - name: Scientific and source regression tests
         run: |
-          python -m pytest -q tests/test_current_study_examples.py
+          python -m pytest -q tests/test_current_study_examples.py tests/test_selection_dashboards.py
       - name: Compile independent Springer submission
         uses: xu-cheng/latex-action@v3
         with:
@@ -61,12 +66,13 @@ jobs:
           git add -f paper/computational-statistics-submission/data/
           git add -f paper/computational-statistics-submission/figures/
           git add -f paper/computational-statistics-submission/current_examples_table.tex
+          git add -f paper/computational-statistics-submission/dashboard_summary_table.tex
           git add -f paper/computational-statistics-submission/criteria_table.tex
           git add -f paper/computational-statistics-submission/main.pdf
           if git diff --cached --quiet; then
             echo "Identical frozen figures and data already committed."
           else
-            git commit -m "paper(data): freeze Sep 2026 CO2 and unemployment examples with rendered vector plots"
+            git commit -m "paper(data): update contemporary CO2 and FEDFUNDS MLE/mu dashboards and vector figures"
             git push origin "HEAD:${{ github.ref_name }}"
           fi
       - uses: actions/upload-artifact@v4
@@ -76,6 +82,7 @@ jobs:
             paper/computational-statistics-submission/data/
             paper/computational-statistics-submission/figures/
             paper/computational-statistics-submission/current_examples_table.tex
+            paper/computational-statistics-submission/dashboard_summary_table.tex
             paper/computational-statistics-submission/main.pdf
           retention-days: 30
           if-no-files-found: error
