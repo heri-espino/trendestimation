@@ -9,6 +9,7 @@ on:
       - 'paper/figures/render_awesomefigures.py'
       - '.github/workflows/mle-awesomefigures.yml'
       - 'tests/test_selection_coordinate_mle_figures.py'
+      - 'paper/tests/test_publication_figures.py'
   workflow_dispatch:
 
 permissions:
