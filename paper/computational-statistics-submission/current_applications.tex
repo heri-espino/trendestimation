@@ -108,6 +108,8 @@ a forecasting model to the PLS smoother}, we regress the
 final 36 fitted values on a locally centered polynomial
 of degree $\min(d-1,2)$ and evaluate that polynomial for
 the next 12 months, October 2026--September 2027.
+Each extension is shifted to agree exactly with the final fitted
+PLS value at the sample cutoff, ensuring continuity.
 For $d=1$ this is a constant continuation, $d=2$ a
 linear continuation, and $d\ge3$ a quadratic continuation.
 The degree cap is an explicitly imposed stability choice:
