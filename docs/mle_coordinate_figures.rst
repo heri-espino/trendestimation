@@ -55,6 +55,20 @@ across methods as if they had identical units.
 The exact S=1 limit is included; MLE is undefined at
 S=0 (lambda=0) under its improper variance prior.
 
+The same criterion profiles, now in log-lambda coordinates
+--------------------------------------------------------
+
+.. image:: ../paper/figures/criteria_with_mle_lambda_paths.svg
+   :alt: Five within-criterion rescaled CV GCV AICc BIC and Gaussian MLE objective profiles over logarithmic finite positive penalty lambda
+   :width: 100%
+
+These are **exactly the same evaluated interior penalties** as
+the S-coordinate figure. The exact zero and infinite penalty
+limits were scored but cannot appear as finite x-coordinates
+on a logarithmic axis; use the S plot to see those endpoints.
+Comparing the two plots demonstrates reparameterization rather
+than a new statistical criterion.
+
 Timing the S-versus-lambda search
 ---------------------------------
 
