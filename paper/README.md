@@ -138,6 +138,28 @@ already been rendered.
 The experiment produces two-sided historical smoothing curves, not
 forecasts. Annual seasonality, observation uncertainty, the 2022 eruption
 site changes, and later NOAA revisions remain domain limitations.
+## Cholesky and banded-solver prior art
+
+Cort\'es-Toto, Guerrero and Reyes (2017, Sections 1 and 3.2) cite
+Weinert's 2012 book for Cholesky-based spline algorithms but report
+implementing their own PLS criterion-selection study in R. The source
+does not establish which factorization their R implementation used.
+The bibliography now also includes Weinert, *Fast Compact Algorithms
+and Software for Spline Smoothing* (electronic edition 2012,
+Springer copyright 2013; DOI
+[10.1007/978-1-4614-5496-0](https://doi.org/10.1007/978-1-4614-5496-0)).
+That work compares Cholesky, QR and FFT algorithms; this manuscript
+does not introduce those methods.
+
+**Benchmark naming:** the four-way comparison in
+`paper/benchmarks/run_benchmarks.py` times general
+`scipy.linalg.solve_banded`, *not* Cholesky. The separately
+implemented full-trend `PreparedPLSSolver(method="cholesky")`
+uses `cholesky_banded` and `cho_solve_banded`, but its timing results
+are not part of the paper's four-way tables. See
+[the provenance note](../notes/cholesky_prior_art_cortes2017.md).
+Do not relabel the existing measurements as Cholesky benchmarks.
+
 ## Official December 2024 template
 
 - `main.tex` uses `\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}`.
