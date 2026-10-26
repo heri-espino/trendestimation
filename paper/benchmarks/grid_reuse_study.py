@@ -118,6 +118,16 @@ class CandidateSearch:
                 if method == "spectral":
                     alpha = 1/(1+lam*self.deltas)
                     self.saved[j] = (alpha, float(alpha.sum()))
+                elif method == "dense_cached":
+                    A = self.identity + lam*self.Q
+                    edf = float(np.trace(np.linalg.solve(A,self.identity)))
+                    self.saved[j] = (None,edf)
+                elif method == "banded":
+                    ab=lam*self.bands.copy()
+                    ab[self.d]+=1
+                    edf=float(np.trace(solve_banded(
+                        (self.d,self.d),ab,self.identity,check_finite=False)))
+                    self.saved[j] = (None,edf)
                 elif method == "dense_cholesky":
                     factor = cho_factor(self.identity+lam*self.Q,
                                         lower=True,check_finite=False)
@@ -157,14 +167,16 @@ class CandidateSearch:
             elif self.method == "dense_cached":
                 A = self.identity+lam*self.Q
                 trend = np.linalg.solve(A,y+lam*self.shift)
-                edf = float(np.trace(np.linalg.solve(A,self.identity)))
+                edf = (self.saved[j][1] if j in self.saved
+                       else float(np.trace(np.linalg.solve(A,self.identity))))
             elif self.method == "banded":
                 ab = lam*self.bands.copy()
                 ab[self.d] += 1
                 trend = solve_banded((self.d,self.d),ab,
                                      y+lam*self.shift,check_finite=False)
-                edf = float(np.trace(solve_banded(
-                    (self.d,self.d),ab,self.identity,check_finite=False)))
+                edf = (self.saved[j][1] if j in self.saved
+                       else float(np.trace(solve_banded(
+                           (self.d,self.d),ab,self.identity,check_finite=False))))
             elif self.method == "dense_cholesky":
                 if j in self.saved:
                     factor,edf = self.saved[j]
@@ -195,7 +207,7 @@ class CandidateSearch:
 
 def data_vectors(n,d,seed,R):
     """Same independently seeded observations for both mu values."""
-    rng=np.random.default_rng(np.random.SeedSequence([seed,n,d,R]))
+    rng=np.random.default_rng(np.random.SeedSequence([seed,n,d]))
     t=np.linspace(0,1,n)
     trend=.6*np.sin(7*t)+.3*np.cos(17*t)+.25*t
     return np.asarray([trend+rng.normal(0,.22,n) for _ in range(R)])
@@ -235,7 +247,8 @@ def measure_cell(n,d,M,R,mu,seed,grid_policy,penalties,repeats):
                     model=CandidateSearch(n,d,mu,method,penalties,reuse=True)
                     setup=perf_counter()-begin
                     tick=perf_counter()
-                    selected=[model.scores(y) for y in observations]
+                    for y in observations:
+                        model.scores(y)
                     score_duration=perf_counter()-tick
                 else:
                     setup=0.0
@@ -261,7 +274,7 @@ def measure_cell(n,d,M,R,mu,seed,grid_policy,penalties,repeats):
                 "total_MAD_s":float(np.median(abs(total-np.median(total)))),
                 "max_score_difference":error,
                 "selected_score_mean":float(np.mean([v.min() for v in found])),
-                "mean_optimum_s":float(np.mean([np.argmin(v) for v in found])),
+                "mean_selected_grid_index":float(np.mean([np.argmin(v) for v in found])),
             })
     return results
 
