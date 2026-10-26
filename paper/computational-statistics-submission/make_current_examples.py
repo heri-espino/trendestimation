@@ -103,6 +103,10 @@ def extrapolate_tail(trend: np.ndarray, d: int, horizon: int) -> np.ndarray:
     basis = np.vander(t / scale, N=degree+1, increasing=True)
     coefficients = np.linalg.lstsq(basis, trend[-window:], rcond=None)[0]
     predicted = np.vander(future/scale, N=degree+1, increasing=True) @ coefficients
+    # Anchor at the last fitted PLS value. A local least-squares
+    # polynomial need not pass through its final sample point; without
+    # anchoring the future dashed segment jumps at the observed cutoff.
+    predicted += float(trend[-1] - coefficients[0])
     if not np.all(np.isfinite(predicted)):
         raise ArithmeticError("Nonfinite extrapolated trend")
     return predicted
