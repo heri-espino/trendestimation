@@ -65,7 +65,8 @@ def test_manuscript_website_notes_and_renderer_register_actual_images():
         encoding="utf-8")
     assert r"\input{sections/selection_visuals}" in paper
     for name in ("gcv_solver_by_order","gcv_repeated_search",
-                 "criteria_with_mle_s_paths","criteria_with_mle_search_time"):
+                 "criteria_with_mle_s_paths","criteria_with_mle_lambda_paths",
+                 "criteria_with_mle_search_time"):
         assert f"figures/{name}.pdf" in figures
         assert f"figures/{name}.svg" in docs
     assert "awesomefigures" in (
