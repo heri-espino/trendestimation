@@ -147,3 +147,109 @@ cross-validation or out-of-sample prediction.
 See :doc:`mle_coordinate_figures` for public-selection
 search-space timing with native S versus reusable lambda, and
 :doc:`grid_reuse_selection` for the separate GCV repeated-series study.
+
+
+
+Single evaluation versus complete and repeated searches
+--------------------------------------------------------
+
+The extension to Experiment002 measures three distinct workloads on
+the **same complete 17-point normalized-S grid**: one evaluation at
+S=0.5, a whole grid search on one series, and the same grid visited
+on multiple independently sampled series. Each workload includes
+seven numerical backends, all five supported criteria, both fixed
+means, and difference orders d=0..5 (conditional MLE remains N/A at d=0).
+
+.. image:: ../paper/figures/full_s_single_grid_repeated.svg
+   :alt: Seven backend runtimes for one GCV score, one full smoothness grid and three repeated complete grid searches
+   :width: 100%
+
+Cold versus shared preprocessing is explicitly recorded for repeated
+series. Shared preparation is potentially beneficial for spectral
+factorizations and for any d-specific backend state; it does **not**
+mean a Cholesky factor at one lambda works at a different penalty.
+
+.. image:: ../paper/figures/full_s_search_reuse_speedup.svg
+   :alt: Ratios of cold to reused backend preparation over three repeated full-grid GCV searches
+   :width: 100%
+
+Three ways to search a finite full-domain grid
+----------------------------------------------
+
+The grid budget is 17, with exact S=0 and S=1 boundaries in all
+three policies:
+
+- **Native S grid:** invert S to lambda each time a search scores
+  its candidates, including repeated searches.
+- **Convert S to lambda once:** precompute and reuse the mapped
+  17 penalties. The standalone timing includes one initial
+  mapping, while the backend-only timing excludes it.
+- **Direct lambda grid:** sample 17 log-spaced penalty candidates
+  with the same two exact endpoints and identical finite
+  *outer* endpoints. Its intermediate candidates differ from
+  the S-based grids.
+
+The first two paths are statistically identical at the same
+candidate points; the third policy can choose a different
+discrete minimum because its interior points differ.
+
+.. image:: ../paper/figures/full_s_grid_coordinate_times.svg
+   :alt: Measured five-criterion runtime for native S, once-translated S to lambda, and direct lambda grids
+   :width: 100%
+
+Continuous optimization is a separate problem
+---------------------------------------------
+
+We also measure bounded scalar optimization on the two equivalent
+continuous coordinates, minimizing the criterion in S or in
+log-lambda, with exact endpoints tested analytically.
+
+.. image:: ../paper/figures/full_s_continuous_coordinate_times.svg
+   :alt: Measured runtime of local bounded scalar search on S versus log lambda for the five criteria
+   :width: 100%
+
+A bounded scalar search generally evaluates **different candidates**
+from a 17-point grid, uses a variable number of function calls,
+and can converge to a local, not global, minimum. It therefore
+cannot be treated as identical to the grid search.
+
+.. image:: ../paper/figures/full_s_coordinate_selected_s.svg
+   :alt: Smoothness selected by five criteria under equal grids, independent log lambda grid and local continuous optimizers
+   :width: 100%
+
+For all plots, unavailable Gaussian MLE at d=0 is recorded as
+not applicable and numerically unstable near-one solutions do
+not qualify as valid whole-grid winners. The raw data preserves
+the full error/status record and the benchmark code performs
+reference-score verification outside its measured timing blocks.
+
+Source and timing conventions
+-----------------------------
+
+- `paper/benchmarks/full_s_search_reference/search_mode_timings.csv`:
+  method, criterion, difference order, mean, workload R,
+  policy, cold/shared preparation, runtime, selected smoothness,
+  success flags and function-evaluation counts
+- `paper/benchmarks/full_s_search_reference/search_grid_preparation.csv`:
+  independently measured S-to-lambda inversion cost
+- `paper/benchmarks/full_s_search_reference/environment.json`:
+  reproducible host/BLAS/seed/runtime metadata
+
+The single and premapped full-grid standalone times explicitly count
+the required S-to-lambda inversion once. That cost must be **shared
+once**, not 35 times, when using a common penalty grid for all
+five criteria and seven solvers. If lambda candidates are already
+known and supplied directly, their construction is not charged
+to backend evaluation time. The two local continuous optimizers
+are not certified global solvers.
+
+Run the full benchmark separately on your Windows VM:
+
+.. code-block:: powershell
+
+   conda activate trendestimation
+   python paper/benchmarks/full_s_search_modes.py --preset full --repeats 7
+
+The Windows CSVs default to
+`paper/benchmarks/results/full_s_search_modes/`.
+Do not mix them with the archived Linux-hosted reference data.
