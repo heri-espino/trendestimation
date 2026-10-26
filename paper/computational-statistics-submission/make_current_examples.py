@@ -7,7 +7,7 @@ Usage from repo root:
 
 Output PDFs/SVGs/PNGs, a selection table, and JSON/CSV audit trails.
 No artificial observations or data-filling of missing monthly values.
-The frozen NOAA slice ends 2026-09; FRED's UNRATE snapshot must have
+The frozen NOAA slice ends 2026-09; FRED's FEDFUNDS snapshot must have
 an explicit observed last month. Forecast paths are local-polynomial
 extrapolations of smoothed endpoints, NOT calibrated forecast models.
 """
@@ -40,12 +40,12 @@ TARGET_S = np.linspace(.10, .98, 29)
 HORIZON = 12
 HOLDOUT = 12
 DATE_CUTOFF = date(2026, 9, 1)
-FRED_SOURCE = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE"
+FRED_SOURCE = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS"
 NOAA_SOURCE = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.csv"
 
 def fetch_fred() -> Path:
     """Download fresh observations into a pinned snapshot (explicit opt-in)."""
-    dest = DATA / "fred_unrate_2010_2026_09.csv"
+    dest = DATA / "fred_fedfunds_2010_2026_09.csv"
     request = urllib.request.Request(
         FRED_SOURCE, headers={"User-Agent": "trendestimation-research/1.0",
                               "Accept": "text/csv"})
@@ -53,13 +53,13 @@ def fetch_fred() -> Path:
         raw = response.read(400_000).decode("utf-8-sig")
     lines = list(csv.DictReader(raw.splitlines()))
     if not lines or "observation_date" not in lines[0] and "DATE" not in lines[0]:
-        raise ValueError("Unexpected FRED UNRATE CSV format")
+        raise ValueError("Unexpected FRED FEDFUNDS CSV format")
     col = "observation_date" if "observation_date" in lines[0] else "DATE"
     rows = []
     for item in lines:
         period = date.fromisoformat(item[col])
         if date(2010, 1, 1) <= period <= DATE_CUTOFF:
-            value = float(item["UNRATE"])
+            value = float(item["FEDFUNDS"])
             if not np.isfinite(value):
                 raise ValueError("Missing FRED observation; refuse imputation")
             rows.append((period, value))
@@ -167,7 +167,7 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
     if recent_months:
         dates, observations = dates[-recent_months:], observations[-recent_months:]
     n = len(observations)
-    tag = ("co2_recent" if recent_months else "co2_full") if "CO2" in name else "unrate_full"
+    tag = ("co2_recent" if recent_months else "co2_full") if "CO2" in name else "fedfunds_full"
     print(f"[paper] {tag}: n={n}, last={dates[-1]}", flush=True)
     fitted: dict[tuple[int,str], np.ndarray] = {}
     selected = {}
@@ -291,23 +291,23 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fetch-fred", action="store_true",
-                    help="Replace pinned FRED UNRATE snapshot with new source data")
+                    help="Replace pinned FRED FEDFUNDS snapshot with new source data")
     args=ap.parse_args()
     if args.fetch_fred:
         print("[paper] FRED downloaded:",fetch_fred())
     DATA.mkdir(exist_ok=True)
     co2_file=DATA/"noaa_mlo_monthly_1990_2026_09.csv"
-    fred_file=DATA/"fred_unrate_2010_2026_09.csv"
+    fred_file=DATA/"fred_fedfunds_2010_2026_09.csv"
     noaa_x,noaa_y=load_series(co2_file, "average_ppm")
     fred_x,fred_y=load_series(fred_file, "value")
     if len(noaa_y)!=441 or abs(noaa_y[-1]-426.07)>1e-9:
         raise ValueError("NOAA 441-month cutoff or value differs")
-    if len(fred_y)!=201 or abs(fred_y[-1]-4.2)>1e-9:
-        raise ValueError("FRED UNRATE 201-month Sep 2026 cutoff or value differs")
+    if len(fred_y)!=201 or abs(fred_y[-1]-3.75)>1e-9:
+        raise ValueError("FRED FEDFUNDS 201-month Sep 2026 cutoff or value differs")
     out=[
         evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y),
         evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y,recent_months=120),
-        evaluate("FRED US unemployment rate (percent, SA)", fred_x,fred_y),
+        evaluate("FRED US effective federal funds rate (percent, NSA)", fred_x,fred_y),
     ]
     # Compact paper LaTeX table: order d=2 from all three empirical designs.
     lines=[
@@ -315,7 +315,7 @@ def main():
         r"Dataset & Selector & $\lambda$ & $S$ & holdout RMSE\\\midrule",
     ]
     for report,display in zip(out,("CO$_2$ (1990--2026)",
-                                   "CO$_2$ (recent 120 months)","Unemployment (2010--2026)")):
+                                   "CO$_2$ (recent 120 months)","Fed funds (2010--2026)")):
         for criterion in METHODS:
             s=report["selection"][f"d2_{criterion}"]
             loss=report["holdout"][f"d2_{criterion}"]["rmse"]
@@ -331,11 +331,11 @@ def main():
              "file":str(co2_file.relative_to(ROOT)),"n":441,
              "last":"2026-09","last_value":426.07,
              "publisher_revisions_possible":True},
-            {"dataset":"BLS unemployment rate UNRATE via FRED",
-             "url":"https://fred.stlouisfed.org/series/UNRATE",
+            {"dataset":"Federal Reserve federal funds rate FEDFUNDS via FRED",
+             "url":"https://fred.stlouisfed.org/series/FEDFUNDS",
              "csv_url":FRED_SOURCE,
              "file":str(fred_file.relative_to(ROOT)),"n":201,
-             "last":"2026-09","last_value":4.2,
+             "last":"2026-09","last_value":3.75,
              "publisher_revisions_possible":True}
         ],
         "files_sha256":{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
