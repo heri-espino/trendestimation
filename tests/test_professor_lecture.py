@@ -80,6 +80,11 @@ class MarpResearchLecture(unittest.TestCase):
         for fname in ("theme.css", "build.ps1", "build.sh", "README.md"):
             with self.subTest(fname=fname):
                 self.assertTrue((LECTURE/fname).is_file())
+        windows=(LECTURE/"build.ps1").read_text(encoding="utf-8")
+        self.assertIn('Join-Path $RepositoryRoot "src"', windows)
+        self.assertIn('$env:PYTHONPATH=$SourceDirectory', windows)
+        self.assertIn('[IO.Path]::PathSeparator', windows)
+        self.assertIn('Remove-Item Env:PYTHONPATH', windows)
         for fname in ("build.ps1", "build.sh"):
             script=(LECTURE/fname).read_text(encoding="utf-8")
             self.assertIn("--theme", script)
