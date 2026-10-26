@@ -1703,6 +1703,71 @@ Produces `build/criterion-coordinate-study/raw_trials.csv`, `summary.csv`, `envi
 
 ---
 
+<!-- _class: chapter -->
+# X-C. What does the public selector actually do?
+
+## From a controlled grid experiment to the released optimization algorithms
+
+---
+
+<!-- _class: compact -->
+# Benchmark the actual library method='auto'
+
+The factorial matrix is controlled: same number of candidate points for the three strategies.
+
+Now run the **actual** public code:
+
+```python
+select_lambda(model, y, criterion="cv",
+              search_space="lambda", method="auto")
+select_lambda(model, y, criterion="cv",
+              search_space="smoothness", method="auto")
+```
+
+Repeat with GCV, AICc, BIC; record **full construction + selection time**, evaluated candidate count, chosen penalty and criterion score.
+
+The CV default uses **different** multi-start candidate grids and derivative refinement in the two coordinates. These are *not* a matched-budget comparison.
+
+---
+
+<!-- _class: fig -->
+# Public API: direct penalty versus inverse-smoothness search
+
+![width:1070px](figures/58_public_coordinate_runtime.svg)
+
+*Only recorded host times appear. The reported total includes construction of the public TrendSmoother.*
+
+---
+
+<!-- _class: fig -->
+# Public API: did each strategy do the same work?
+
+![width:1070px](figures/59_public_candidate_quality.svg)
+
+*We must report objective-candidate counts as well as the scores reached, especially for derivative-based CV.*
+
+---
+
+<!-- _class: compact -->
+# Run the two complementary studies
+
+```bash
+# Controlled factorial: 3 solvers × 4 criteria × 3 searches
+python benchmarks/criterion_coordinate_matrix.py \
+  --preset quick --seeds 3 --repeats 4 --threads 1
+
+# Released API: 4 criteria × 2 auto search coordinates
+python benchmarks/public_coordinate_optimizer_benchmark.py \
+  --preset quick --seeds 3 --repeats 4 --threads 1
+
+# Generate charts with actual CSVs and export presentation
+bash slides/professor_lecture/build.sh --html-only
+```
+
+**Do not combine the two runtime studies into a single speed ranking:** their candidate policies and workloads differ.
+
+---
+
 <!-- _class: compact -->
 # What should we test next for the journal?
 
