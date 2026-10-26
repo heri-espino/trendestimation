@@ -118,3 +118,38 @@ hardware provenance and optional PGFplots figures in sections/timing_experiments
 LaTeX compilation to populate the figures. To publish quantitative claims,
 run on the actual source checkout/tag and machine, document the commit SHA,
 software/BLAS versions and raw CSV files, and review all tolerances.
+
+## Six-method Cholesky comparison with fixed nonzero mu
+
+The separate companion `cholesky_comparison.py` preserves all original
+four-method timing CSVs and the current paper's displayed tables. It adds
+**dense Cholesky** (`scipy.linalg.cho_factor` / `cho_solve`) and **banded
+Cholesky** (`scipy.linalg.cholesky_banded` / `cho_solve_banded`), alongside
+`dense_fresh`, `dense_cached`, `spectral`, and general `banded`.
+
+It compares the same generated observations and finite penalty candidates at
+both **mu=0** and **mu=0.15** for every n, d, M workload, verifies the full
+fitted trends against the existing general banded baseline *outside* timed
+blocks, and reports setup, sweep and total median times with MAD. The
+independent EDF/trace-only suite includes all six methods but does not vary
+mu: the hat matrix H(lambda) does not depend on fixed mu.
+
+Run on Windows PowerShell from the repo root:
+
+~~~powershell
+conda activate trendestimation
+python -m pip install -e ".[dev,docs,plot]" threadpoolctl
+python paper/benchmarks/cholesky_comparison.py --preset quick --repeats 5
+python paper/benchmarks/cholesky_comparison.py --preset full --repeats 7
+~~~
+
+Default outputs are `paper/benchmarks/results/six_solver/`, containing
+`full_fit_timings.csv`, `trace_timings.csv` and `environment.json`.
+A quick-preset reference recorded on a GitHub Actions Linux runner is stored
+separately in `paper/benchmarks/cholesky_reference/` with environment
+metadata; see the rendered
+[companion notebook](../../docs/notebooks/12-six-solvers-cholesky-nonzero-mu.ipynb).
+**Do not interpret reference timings as measurements on the user's Windows VM.**
+Timing methodology and numerical parity alone do not establish a globally
+fastest method; the existing independent multi-seed Cholesky study is the
+appropriate starting point for inferential claims.
