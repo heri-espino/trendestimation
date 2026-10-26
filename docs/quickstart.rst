@@ -61,7 +61,7 @@ they require a **fixed numeric reference mean**. Gaussian marginal MLE
 is also available with criterion="mle" (numeric or plug-in mu).
 
 Fast fit-only reconstruction versus criterion selection
------------------------------------------------------
+--------------------------------------------------------
 
 Use the banded-Cholesky default for a trend-only result at a
 known penalty, without constructing a full SVD:
