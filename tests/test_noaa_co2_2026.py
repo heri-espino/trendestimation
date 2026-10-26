@@ -1,7 +1,6 @@
 """Reproduce updated NOAA monthly CO2 experiment without live downloads."""
 from __future__ import annotations
 
-import csv
 import importlib.util
 import math
 from datetime import date
