@@ -18,13 +18,12 @@ conflated with observational error or removed implicitly by PLS.
 We also study the most recent 120-month subset of this record to
 isolate the consequences of a shorter estimation window.
 
-For an independent economic example, we use the US civilian
-unemployment rate (UNRATE), reported monthly and seasonally
-adjusted, from January 2010 through September 2026 ($n=201$).
-The underlying source is the US Bureau of Labor Statistics
+For an independent economic example, we use the US effective federal funds rate (FEDFUNDS), the
+monthly average of daily rates (not not seasonally adjusted), from January 2010 through September 2026 ($n=201$).
+The underlying source is the Board of Governors of the Federal Reserve System
 and the distribution is through the Federal Reserve Economic
-Data (FRED) service \cite{fred2026unrate}. The September 2026
-release reports 4.2 percent. The snapshot is retained with its
+Data (FRED) service \cite{fred2026fedfunds}. The September 2026
+release reports 3.75 percent. The snapshot is retained with its
 download URL, last observation, checksum, and retrieval procedure.
 Both records may subsequently be revised by their publishers.
 
@@ -75,14 +74,14 @@ minimize their named scores over the candidate grid.}
 
 \begin{figure}[tbp]
 \centering
-\includegraphics[width=\linewidth]{figures/unrate_full_criteria.pdf}
-\caption{US monthly seasonally adjusted unemployment
-(UNRATE), January 2010--September 2026,
+\includegraphics[width=\linewidth]{figures/fedfunds_full_criteria.pdf}
+\caption{US monthly not not monthly effective federal funds rate
+(FEDFUNDS), January 2010--September 2026,
 with CV, GCV, AICc, and BIC selections across
 $d=1,2,3,4$. This independent macroeconomic example
 illustrates structurally different dynamics from the
 seasonally varying CO$_2$ record.}
-\label{fig:unrate-current-criteria}
+\label{fig:fedfunds-current-criteria}
 \end{figure}
 
 \begin{table}[tbp]
@@ -90,9 +89,9 @@ seasonally varying CO$_2$ record.}
 \caption{Reproducibly selected penalties, normalized
 smoothness and 12-month single-origin holdout RMSE
 for $d=2$ across the full CO$_2$ record, its last
-120 months, and seasonally adjusted unemployment.
+120 months, and not monthly effective federal funds rate.
 The controlled smoothness $S=0.86$ is prescribed.
-CO$_2$ errors are in ppm and unemployment errors
+CO$_2$ errors are in ppm and federal funds rate errors
 in percentage points; the RMSE values are \emph{not}
 directly comparable across datasets. The 12-month
 evaluation is exploratory, not a rolling-origin
@@ -115,7 +114,7 @@ an unrestricted degree-$d-1$ extrapolation for large $d$
 can diverge rapidly. These lines extrapolate the
 \emph{smoothed trend only}; they do not forecast
 CO$_2$ seasonal components, policy shocks, or
-unemployment innovations, and no predictive intervals
+interest-rate policy changes, and no predictive intervals
 are inferred.
 
 \begin{figure}[tbp]
@@ -132,13 +131,13 @@ model-based forecasts, or confidence intervals.}
 
 \begin{figure}[tbp]
 \centering
-\includegraphics[width=\linewidth]{figures/unrate_full_future_extrapolations.pdf}
+\includegraphics[width=\linewidth]{figures/fedfunds_full_future_extrapolations.pdf}
 \caption{Corresponding trend-only 12-month extension for
-seasonally adjusted US unemployment. The different
+not monthly federal funds effective rate. The different
 orders may imply substantially different extrapolation
 slopes or curvature even at identical normalized $S$.
 Dashed segments are illustrative, not validated forecasts.}
-\label{fig:unrate-extrapolation}
+\label{fig:fedfunds-extrapolation}
 \end{figure}
 
 As an independent \emph{single-origin diagnostic}, we additionally
