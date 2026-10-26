@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproducible 4x6 PLS dashboard: difference orders × selectors × reference means.
+r"""Reproducible 4x6 PLS dashboard: difference orders × selectors × reference means.
 
 Run from repository root (Windows PowerShell):
     python paper\computational-statistics-submission\make_selection_dashboards.py
