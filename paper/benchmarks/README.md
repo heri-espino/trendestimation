@@ -19,6 +19,16 @@ We compare **four** algorithms for the same fixed n, d, mu and lambda grid:
 4. banded — construct the banded penalty *directly*, then call scipy.linalg
    solve_banded per candidate (proper structural competitor).
 
+**Important factorization distinction:** this paper-only benchmark uses
+the *general* `scipy.linalg.solve_banded` solver; its measurements must
+not be described as Cholesky timings. The separate library backend
+`PreparedPLSSolver(method="cholesky")` in
+`src/trendestimation/solvers.py` explicitly uses
+`cholesky_banded` plus `cho_solve_banded`, but its independent
+backend study is not included in the four-method paper tables.
+See `notes/cholesky_prior_art_cortes2017.md` and Weinert (2007,
+2012) for numerical prior art.
+
 A second experiment benchmarks **EDF/trace-only** evaluation:
 tr[(I+lambda*Q)^(-1)]. A spectral trace is O(n) after SVD, while
 a dense solve of all columns of H is O(n^3) per lambda.
