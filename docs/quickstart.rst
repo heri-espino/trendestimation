@@ -60,6 +60,26 @@ Available classical criteria are ``cv``, ``gcv``, ``aicc``, and ``bic``;
 they require a **fixed numeric reference mean**. Gaussian marginal MLE
 is also available with criterion="mle" (numeric or plug-in mu).
 
+Fast fit-only reconstruction versus criterion selection
+-----------------------------------------------------
+
+Use the banded-Cholesky default for a trend-only result at a
+known penalty, without constructing a full SVD:
+
+.. code-block:: python
+
+   from trendestimation import fit_penalized, PreparedPLSSolver
+
+   trend_only = fit_penalized(y, lambda_=30.0, order=2, mu=0.15)
+   prepared = PreparedPLSSolver(len(y), order=2)
+   assert prepared.method == "cholesky"
+   other = prepared.fit(y, lambda_=50.0, mu=0.15)
+
+For EDF, smoothness, GCV and the other selectors, continue to use
+``TrendSmoother`` as shown above. These defaults reflect separate
+fit-only and selection workloads; see :doc:`grid_reuse_selection`
+for measured costs and limitations.
+
 Searching over normalized smoothness
 -------------------------------------
 
