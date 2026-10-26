@@ -208,15 +208,18 @@ def continuous_search(backend, smoother, y, mu, criterion, policy,
 
 
 def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
-                smoother,targets,mapped,direct,grid_map_s):
+                smoother,targets,mapped,direct,grid_map_s,reuse_mode):
     R = workload
+    if reuse_mode not in ("shared","cold"):
+        raise ValueError(reuse_mode)
     ys=[observation(n, seed+101*i+n+17*d) for i in range(R)]
     if criterion=="mle" and d==0:
         return dict(
             n=n,d=d,mu=mu,criterion=criterion,method=method,R=R,
             workload="single" if policy=="single" else
                      ("continuous" if policy in CONTINUOUS_POLICIES else "grid"),
-            policy=policy,status="not_applicable_d0_mle",
+            policy=policy,reuse_mode=reuse_mode,
+            status="not_applicable_d0_mle",
             success=False,setup_s=0.,evaluate_s=0.,mapping_once_s=0.,
             total_standalone_s=0.,total_backend_only_s=0.,
             selected_s=float("nan"),mean_score=float("nan"),
@@ -264,19 +267,28 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
     records=[]
     max_error=0.
     for _ in range(repeats):
-        start=perf_counter()
-        backend=Backend(n,d,method,criterion)
-        setup=perf_counter()-start
-        st=perf_counter()
+        setup=0.0
+        elapsed=0.0
+        shared=None
+        if reuse_mode=="shared":
+            t0=perf_counter()
+            shared=Backend(n,d,method,criterion)
+            setup=perf_counter()-t0
         evaluated=[]
         for y in ys:
+            backend=shared
+            if backend is None:
+                t0=perf_counter()
+                backend=Backend(n,d,method,criterion)
+                setup+=perf_counter()-t0
+            t0=perf_counter()
             if policy in CONTINUOUS_POLICIES:
                 evaluated.append(continuous_search(
                     backend,smoother,y,mu,criterion,mode,mapped,check=False))
             else:
                 evaluated.append(evaluate_grid(
                     backend,smoother,y,mu,criterion,mode,values,check=False))
-        elapsed=perf_counter()-st
+            elapsed+=perf_counter()-t0
         records.append((setup,elapsed,evaluated))
     setups=np.array([r[0] for r in records])
     evaluations=np.array([r[1] for r in records])
@@ -302,7 +314,7 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
         n=n,d=d,mu=mu,criterion=criterion,method=method,R=R,
         workload=("single" if policy=="single" else
                   ("continuous" if policy in CONTINUOUS_POLICIES else "grid")),
-        policy=policy,
+        policy=policy,reuse_mode=reuse_mode,
         status=("ok" if valid_count==R else "numerical_or_criterion_failure"),
         success=valid_count==R,
         setup_s=setup,evaluate_s=runtime,mapping_once_s=common_mapping,
@@ -343,6 +355,7 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
             reference_means=[0.,.15],criteria=list(CRITERIA),
             backends=list(BACKENDS),R=list(R_values),
             policies=["single"]+list(GRID_POLICIES)+list(CONTINUOUS_POLICIES),
+            reuse_modes=["shared","cold"],
             difference_between_policies=(
                 "native_s and mapped_s_lambda use identical 17 candidates; "
                 "native_log_lambda uses 17 different interior penalties "
@@ -353,7 +366,7 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                 "construction; standalone mapped runtime counts it once."
             ),
         )
-        total=len(n_values)*6*len(seeds)*2*5*7*len(R_values)*6
+        total=len(n_values)*6*len(seeds)*2*5*7*len(R_values)*6*2
         count=0
         for n in n_values:
             for d in range(6):
@@ -369,12 +382,13 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                         for criterion in CRITERIA:
                             for method in BACKENDS:
                                 for R in R_values:
-                                    for policy in ("single",)+GRID_POLICIES+CONTINUOUS_POLICIES:
-                                        rows.append(measure_one(
-                                            n,d,mu,criterion,method,R,policy,
-                                            seed_i,repeats,sm,targets,mapped,
-                                            direct,elapsed))
-                                        count+=1
+                                    for reuse_mode in ("shared","cold"):
+                                        for policy in ("single",)+GRID_POLICIES+CONTINUOUS_POLICIES:
+                                            rows.append(measure_one(
+                                                n,d,mu,criterion,method,R,policy,
+                                                seed_i,repeats,sm,targets,mapped,
+                                                direct,elapsed,reuse_mode))
+                                            count+=1
                                     if count % 252 == 0:
                                         print(f"[search] {count}/{total} "
                                               f"n={n}, d={d}, R={R}, mu={mu}, "
