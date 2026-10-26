@@ -14,6 +14,10 @@ cholesky: positive-definite Cholesky factorization in lower band storage
 
 Full SVD and eigh reuse dense spectral bases across penalties; Cholesky
 builds the penalty directly in banded form without a dense n-by-n Q.
+The fit-only convenience interfaces default to banded Cholesky after a
+measured multi-backend fit study. TrendSmoother and select_lambda retain
+their spectral backend because EDF/smoothness and CV/GCV selection need
+spectral summaries or hat-matrix diagnostics, not just a fitted curve.
 """
 from __future__ import annotations
 
@@ -54,9 +58,11 @@ class PreparedPLSSolver:
         Series length, at least one.
     order : int, default=2
         Forward difference order with 0 <= order < n.
-    method : {"svd", "eigh", "cholesky"}, default="svd"
-        Solver used for the fitted trend. The default intentionally matches
-        the current library rather than asserting an unverified fastest method.
+    method : {"svd", "eigh", "cholesky"}, default="cholesky"
+        Solver used for the fitted trend. The default is the banded Cholesky
+        method for fit-only applications. Measured runtimes depend on
+        n, d, the number of fits, and hardware; explicit svd and eigh
+        remain supported. Criterion selection and EDF are not computed here.
 
     Notes
     -----
@@ -67,7 +73,7 @@ class PreparedPLSSolver:
     """
 
     def __init__(
-        self, n: int, order: int = 2, *, method: FitBackend = "svd",
+        self, n: int, order: int = 2, *, method: FitBackend = "cholesky",
     ) -> None:
         if (isinstance(n, (bool, np.bool_)) or
                 not isinstance(n, (int, np.integer)) or n < 1):
@@ -229,12 +235,18 @@ class PreparedPLSSolver:
 def fit_penalized(
     y, *, lambda_: float, order: int = 2,
     mu: float | Literal["data"] = 0.0,
-    method: FitBackend = "svd",
+    method: FitBackend = "cholesky",
 ) -> np.ndarray:
     """Fit one trend with a chosen backend, returning its 1-D values.
 
-    Construct PreparedPLSSolver explicitly for repeated penalty fits so
-    the cost of spectral preparation is paid only once.
+    The default uses banded Cholesky for trend-only reconstruction.
+    This is an empirically motivated fit-only choice, not a universal
+    fastest algorithm. Use method="svd" for explicit spectral fitting.
+    Construct PreparedPLSSolver explicitly for repeated penalty fits and
+    to amortize the selected backend's setup cost.
+
+    To compute EDF, smoothness or classical CV/GCV/AICc/BIC scores, use
+    TrendSmoother and select_lambda, which remain spectral by default.
     """
     values = np.asarray(y, dtype=float)
     if values.ndim != 1:
