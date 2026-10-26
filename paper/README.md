@@ -1,6 +1,6 @@
 ## AwesomeFigures and five-criterion selection (including conditional MLE)
 
-`sections/selection_visuals.tex` now includes four PDF charts with
+`sections/selection_visuals.tex` now includes five PDF charts with
 identical SVG counterparts linked from the Sphinx website. The
 figure generator uses the pinned `awesomefigures` package and the
 measured official Springer Nature typography; raw benchmarking CSVs
