@@ -54,7 +54,7 @@ prediction intervals, or evidence of future forecast performance.
 The selectors do not implement rolling or horizon-specific CV.
 
 Both parameterizations and committed figure outputs
--------------------------------------------------
+---------------------------------------------------
 
 All 13 notebooks contain additional mapped-coordinate figures: the
 relationship between the nonnegative penalty and normalized
