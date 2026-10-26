@@ -153,3 +153,38 @@ metadata; see the rendered
 Timing methodology and numerical parity alone do not establish a globally
 fastest method; the existing independent multi-seed Cholesky study is the
 appropriate starting point for inferential claims.
+
+## Grid search versus repeated independent series, across d and mu
+
+The additional `grid_reuse_study.py` measures **actual classical GCV
+selection** at finite candidate penalties for the same six solvers. Unlike
+the fit-only experiment, the GCV score requires the method-specific
+`tr((I+lambda D.T D)^-1)`, including the cost of computing this trace.
+The study compares: logarithmically spaced penalties versus uniform-S
+penalties with matched endpoints and M candidates; new searches on each
+series (**cold**) versus reused structure, Cholesky factors at each
+candidate, and cached traces across independent series (**warm**);
+paired mu=0 and mu=0.15; different orders d; varied candidate counts M
+and numbers of independent series R. The same observations are reused
+across all methods and reference means. Inverting the common S-grid is
+measured separately and *excluded* from backend-specific timing.
+
+A finite safe penalty interval avoids near-singular high-order dense
+factorizations. Therefore the S grids in this **timing** experiment do
+not cover the exact S=0 or S=1 endpoints; the notebook gallery's full-S
+example does cover them. Grid candidates are mathematically different
+inside identical endpoints, so minimum selected scores can differ.
+
+~~~powershell
+conda activate trendestimation
+python paper/benchmarks/grid_reuse_study.py --preset quick --repeats 3
+python paper/benchmarks/grid_reuse_study.py --preset full --repeats 7
+~~~
+
+Local CSVs default to `paper/benchmarks/results/grid_reuse/`. Genuine
+GitHub-hosted reference measurements are stored under
+`paper/benchmarks/grid_reuse_reference/`, with platform metadata.
+Read the executed notebook
+[13-grid-search-repeated-solvers-orders.ipynb](../../docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb).
+This study times **GCV**, not classical LOOCV, time-series CV, or a
+forecasting criterion. No cross-host or universal fastest-method claim.

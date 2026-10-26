@@ -1,0 +1,105 @@
+name: Measured GCV grid/reuse/d comparison notebook
+
+on:
+  push:
+    branches:
+      - feature/grid-reuse-by-d-mu
+    paths:
+      - 'paper/benchmarks/grid_reuse_study.py'
+      - 'tests/test_grid_reuse_study.py'
+      - '.github/workflows/grid-reuse-notebook.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: grid-reuse-notebook-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install project, Jupyter and figure dependencies
+        run: |
+          python -m pip install -e '.[docs,plot]' pytest threadpoolctl
+          python -m pip install -r docs/requirements-figures.txt
+      - name: Numerical regression and notebook structure
+        run: |
+          python -m pytest -q tests/test_grid_reuse_study.py tests/test_six_solver_cholesky_mu.py
+          python -m pytest -q tests/test_notebook_gallery.py tests/test_svg_figure_notebooks.py tests/test_figure_typography.py
+      - name: Measure actual GCV searches over grids, repetitions, mu and d
+        run: |
+          python paper/benchmarks/grid_reuse_study.py --preset quick --repeats 3 --blas-threads 1 --output-dir paper/benchmarks/grid_reuse_reference
+      - name: Execute and embed all four comparison charts
+        run: |
+          python scripts/run_notebooks.py --only 13-grid-search-repeated-solvers-orders --in-place --fail-fast --timeout 900
+      - name: Verify genuine data and embedded SVG/PNG output
+        run: |
+          python - <<'PY'
+          import csv,json,nbformat
+          from pathlib import Path
+          folder=Path("paper/benchmarks/grid_reuse_reference")
+          with (folder/"gcv_grid_timings.csv").open() as file:
+              rows=list(csv.DictReader(file))
+          with (folder/"grid_metadata.csv").open() as file:
+              meta=list(csv.DictReader(file))
+          env=json.loads((folder/"environment.json").read_text())
+          assert env["preset"]=="quick" and env["blas_threads"]==1
+          assert {int(r["d"]) for r in rows}=={1,2,3,4}
+          assert {int(r["M"]) for r in rows}=={5,11}
+          assert {int(r["R"]) for r in rows}=={1,4}
+          assert {float(r["mu"]) for r in rows}=={0,.15}
+          assert {r["reuse"] for r in rows}=={"cold","warm"}
+          assert {r["grid_policy"] for r in rows}=={"log_lambda","uniform_s"}
+          assert len({r["method"] for r in rows})==6
+          assert max(float(r["max_score_difference"]) for r in rows)>=0
+          assert {r["grid_policy"] for r in meta}=={"log_lambda","uniform_s"}
+          file=Path("docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb")
+          nb=nbformat.read(file,as_version=4)
+          nbformat.validate(nb)
+          code=[c for c in nb.cells if c.cell_type=="code"]
+          assert all(c.execution_count is not None for c in code)
+          outputs=[o for c in code for o in c.outputs]
+          svg=sum("image/svg+xml" in o.get("data",{}) for o in outputs)
+          png=sum("image/png" in o.get("data",{}) for o in outputs)
+          assert svg>=4 and png>=4,(svg,png)
+          print(env["platform"],"rows",len(rows),"svg",svg,"png",png)
+          PY
+      - name: Strict Sphinx from executed notebook
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: 'off'
+        run: python -m sphinx -W --keep-going -b html docs build/site
+      - name: Commit genuine measurements and executed figures to source branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/benchmarks/grid_reuse_reference/*.csv
+          git add -f paper/benchmarks/grid_reuse_reference/environment.json
+          git add docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb
+          if git diff --cached --quiet; then
+            echo "Results and notebook outputs already committed"
+          else
+            git commit -m "results: measured GCV grid, factor reuse and difference-order comparisons"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gcv-grid-reuse-${{ github.run_id }}
+          path: |
+            paper/benchmarks/grid_reuse_reference/
+            docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb
+            build/notebook-runs/manifest.json
+          retention-days: 30

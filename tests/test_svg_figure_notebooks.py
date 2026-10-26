@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_all_notebooks_select_pinned_awesomefigures_and_svg():
     paths = sorted((ROOT / "docs").glob("**/*.ipynb"))
-    assert len(paths) == 15
+    assert len(paths) == 16
     for path in paths:
         nb = nbformat.read(path, as_version=4)
         nbformat.validate(nb)
@@ -35,9 +35,11 @@ def test_all_notebooks_select_pinned_awesomefigures_and_svg():
                 if "image/png" in data:
                     assert "image/svg+xml" in data, path
         if path.stem in ("11-paper-solver-timing-comparison",
-                         "12-six-solvers-cholesky-nonzero-mu"):
+                         "12-six-solvers-cholesky-nonzero-mu",
+                         "13-grid-search-repeated-solvers-orders"):
             # The paper timing notebook compares actual solver timings instead.
-            assert any("full_fit_timings.csv" in code for code in codes), path
+            assert any(("full_fit_timings.csv" in code or "gcv_grid_timings.csv" in code)
+                       for code in codes), path
             assert any("plt.show()" in code for code in codes), path
         else:
             assert any(cell.get("id") == "te-dual-coordinate" for cell in nb.cells)
