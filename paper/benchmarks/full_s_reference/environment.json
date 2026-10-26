@@ -1,0 +1,68 @@
+{
+  "timestamp_utc": "2026-10-26T19:05:55.227078+00:00",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "scipy": "1.17.1",
+  "numpy": "2.4.6",
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "blas_threads": 1,
+  "preset": "quick",
+  "repeats": 2,
+  "seeds": [
+    20261026
+  ],
+  "n": [
+    24
+  ],
+  "d": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "mu": [
+    0.0,
+    0.15
+  ],
+  "methods": [
+    "dense_fresh",
+    "dense_cached",
+    "general_banded",
+    "dense_cholesky",
+    "banded_cholesky",
+    "eigh",
+    "svd"
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "aicc",
+    "bic",
+    "mle"
+  ],
+  "note": "Method-specific CV/GCV/AICc/BIC/MLE complete objective including leverage/EDF/likelihood. Analytical endpoints are shared by all methods, not timed as factorizations. MLE d=0 not supported. Near-1 failed/unstable solves are tracked, not replaced with spectral results."
+}
