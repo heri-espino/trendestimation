@@ -167,7 +167,7 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
     if recent_months:
         dates, observations = dates[-recent_months:], observations[-recent_months:]
     n = len(observations)
-    tag = name + ("_recent" if recent_months else "")
+    tag = ("co2_recent" if recent_months else "co2_full") if "CO2" in name else "unrate_full"
     print(f"[paper] {tag}: n={n}, last={dates[-1]}", flush=True)
     fitted: dict[tuple[int,str], np.ndarray] = {}
     selected = {}
