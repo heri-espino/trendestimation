@@ -46,7 +46,7 @@ class CurrentExamplesTests(unittest.TestCase):
             self.mod.extrapolate_tail(4+2*t,2,12),
             4+2*np.arange(55,67,dtype=float),atol=1e-10))
         const=self.mod.extrapolate_tail(t,1,12)
-        self.assertTrue(np.allclose(const,np.mean(t[-36:])))
+        self.assertTrue(np.allclose(const,t[-1]))
         q=1+0.5*t+0.01*t*t
         self.assertTrue(np.allclose(
             self.mod.extrapolate_tail(q,4,12),
