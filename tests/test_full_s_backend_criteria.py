@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+from trendestimation import TrendSmoother, score_lambda
 
 BENCH=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"
 sys.path.insert(0,str(BENCH))
@@ -12,8 +13,7 @@ sys.path.insert(0,str(BENCH))
 from full_s_backend_criteria import (  # noqa: E402
     BACKENDS, CRITERIA, Backend, complete_s_grid, observation, run,
 )
-from trendestimation import TrendSmoother, score_lambda
-
+ 
 
 def test_entire_s_grid_both_exact_limits_and_extreme_tail():
     s=complete_s_grid()
