@@ -1,0 +1,75 @@
+\section{Gaussian marginal likelihood and profiling the difference mean}
+\subsection{Likelihood selection for fixed $\mu$}
+A probabilistic interpretation of the penalty assumes observation
+noise $\varepsilon\sim N(0,\sigma^2I_n)$ and stochastic differences
+$D_d\tau=\mu\mathbf1+\eta$ with
+$\eta\sim N(0,\sigma^2\lambda^{-1}I_{n-d})$.
+The $d$ unpenalized polynomial coordinates act as nuisance
+fixed effects. In the $r=n-d$ positive-penalty singular coordinates
+$z_j=v_j^\top y$, write $p^{(1)}_t=\binom td$,
+$b_j=v_j^\top p^{(1)}$. Marginalization gives
+\begin{equation}\label{eq:marginal-model}
+z_j\mid\mu,\lambda,\sigma^2
+\sim N\left(b_j\mu,\sigma^2c_j(\lambda)\right),\quad
+c_j(\lambda)=1+\frac{1}{\lambda\delta_j}.
+\end{equation}
+This is a Gaussian residual/marginal-likelihood interpretation,
+not a new form of PLS. It is related to likelihood-based
+Whittaker--Henderson smoothing \cite{biessy2026wh}.
+Profiling the variance $\sigma^2$ for a fixed numerical $\mu$
+leaves, up to an additive constant,
+\begin{equation}\label{eq:likelihood-profile}
+J(\lambda;\mu)=r\log\left(
+\frac{1}{r}\sum_{j=1}^{r}
+\frac{(z_j-b_j\mu)^2}{c_j(\lambda)}
+\right)+\sum_{j=1}^{r}\log c_j(\lambda).
+\end{equation}
+An independently developed branch of the package,
+\texttt{feature/mle-smoothness-and-data-mu-20261021},
+adds this profiled Gaussian score for fixed $\mu$ or
+the conditional plug-in $\mu=\overline{D_dy}$.
+That plug-in must not be mislabeled as a joint MLE.
+
+\subsection{A closed-form estimator of $\mu$ conditional on $\lambda$}
+Let $w_j(\lambda)=c_j(\lambda)^{-1}
+=\lambda\delta_j/(1+\lambda\delta_j)$.
+For a fixed positive $\lambda$, the generalized
+least-squares optimum satisfies
+\begin{equation}\label{eq:mu-profile-mle}
+\widehat\mu(\lambda)
+=\frac{\sum_{j=1}^{r}w_jb_jz_j}
+{\sum_{j=1}^{r}w_jb_j^2}.
+\end{equation}
+The denominator is positive because $D_dp^{(1)}=\mathbf1$.
+Equation~\eqref{eq:mu-profile-mle} is also obtained by
+minimizing the PLS objective jointly in $\tau$ and $\mu$
+for a fixed $\lambda$. Substitution in
+\eqref{eq:likelihood-profile} gives the one-dimensional
+concentrated score
+$J(\lambda;\widehat\mu(\lambda))$,
+whose optimization produces a joint profile-likelihood
+candidate $(\widehat\lambda,\widehat\mu)$.
+Such a solution depends on the Gaussian variance model,
+may lie near a boundary, and must be checked for
+identifiability and other local minima. This paper provides
+the equation and a separately reproducible numerical test;
+joint $\mu$ profiling is not yet an exposed release API.
+
+In fact, taking the limit $\lambda\downarrow0$
+using $w_j\sim\lambda\delta_j$ proves
+\begin{equation}\label{eq:mu-guerrero-link}
+\lim_{\lambda\downarrow0}\widehat\mu(\lambda)
+=\frac{(p^{(1)})^\top Q_d y}{(p^{(1)})^\top Q_dp^{(1)}}
+=\frac{\mathbf1^\top D_dy}{n-d}
+=\overline{D_dy}.
+\end{equation}
+For positive $\lambda$ the two expressions differ in general.
+Estimating $\mu$ adds a rank-one adjustment to the
+data-to-trend linear operator, so the fixed-$\mu$ effective
+degrees of freedom and ordinary leave-one-out denominators
+are not automatically valid after joint estimation.
+Prior literature already considers nonzero difference
+means \cite{guerrero2007penalized,cortes2017smoothness};
+the implementation contribution here is an explicit,
+testable profiling workflow, not a claim to have first
+introduced $\mu$ or likelihood selection.

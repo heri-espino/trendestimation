@@ -1,0 +1,46 @@
+\section{A controlled exploration of larger difference orders}
+The software accepts any integer $0\le d<n$, but this
+algebraic admissibility must be distinguished from
+floating-point stability. We therefore conduct a
+deterministic diagnostic with $n=50$, seed $24021$,
+difference orders $d=1,\ldots,10$, $\mu=0$, and common
+normalized smoothness $S=0.86$. At each order,
+we form the full SVD of $D_d$, compute the condition ratio
+\begin{equation}\label{eq:positive-cond}
+\kappa_+(Q_d)=
+\frac{\max_{1\le j\le n-d}\delta_j}
+{\min_{1\le j\le n-d}\delta_j},
+\end{equation}
+and compare the spectral fitted trend with an independent
+direct solution of $(I+\lambda Q_d)\tau=y$.
+The ratio is calculated from the \emph{strictly positive}
+penalty eigenvalues; the full $Q_d$ has zero eigenvalues
+and is singular for every $d\ge1$.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{high_order_numerics.pdf}
+\caption{Condition ratio of the positive spectrum
+of $D_d^\top D_d$ for $n=50$, $d=1,\ldots,10$.
+Values are recomputed from singular values of $D_d$;
+they do not represent hardware-specific runtime.}
+\label{fig:high-d}
+\end{figure}
+
+The ratio rises from about $10^3$ at $d=1$ to
+$2.44\times10^{15}$ at $d=10$.
+At $d=10$, the maximum componentwise difference
+between the SVD-based fit and the direct normal-equation
+solution is approximately $3.36\times10^{-7}$ for the
+declared sample and smoothing target, versus
+approximately $1.14\times10^{-15}$ at $d=1$.
+The direct normal-equation result is not presumed an
+exact ground truth at large condition numbers:
+both approaches are affected by finite precision.
+The experiment illustrates why support for many difference
+orders needs accompanying conditioning diagnostics,
+rather than establishing new high-order theory,
+unconditional stability, or performance superiority.
+Machine-specific setup/fitting times are separately
+exported by the experiment script for later audit;
+they are not promoted to general speed benchmarks.
