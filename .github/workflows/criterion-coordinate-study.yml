@@ -1,0 +1,68 @@
+name: Coordinate selection research smoke
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/criterion_coordinate_matrix.py"
+      - "benchmarks/public_coordinate_optimizer_benchmark.py"
+      - "slides/professor_lecture/**"
+      - "tests/test_criterion_coordinate_matrix.py"
+      - ".github/workflows/criterion-coordinate-study.yml"
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: "Benchmark size; smoke for correctness, quick/full for research timing"
+        type: choice
+        options: [smoke, quick, full]
+        default: smoke
+      seeds:
+        description: "Independent data seeds"
+        type: number
+        default: 1
+      repeats:
+        description: "Timing blocks per seed"
+        type: number
+        default: 2
+
+jobs:
+  matrix-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MPLBACKEND: Agg
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package and benchmarking dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[plot]" threadpoolctl pytest
+      - name: Numerical and source regressions
+        run: |
+          python -m pytest -q tests/test_criterion_coordinate_matrix.py
+          python -m pytest -q tests/test_professor_lecture.py
+      - name: Run controlled factorial and actual public selectors
+        env:
+          PRESET: ${{ github.event.inputs.preset || 'smoke' }}
+          SEEDS: ${{ github.event.inputs.seeds || '1' }}
+          REPEATS: ${{ github.event.inputs.repeats || '1' }}
+        run: |
+          python benchmarks/criterion_coordinate_matrix.py --preset "$PRESET" --seeds "$SEEDS" --repeats "$REPEATS" --threads 1
+          python benchmarks/public_coordinate_optimizer_benchmark.py --preset "$PRESET" --seeds "$SEEDS" --repeats "$REPEATS" --threads 1
+      - name: Rebuild SVG lecture plots from real CSVs
+        run: python slides/professor_lecture/make_figures.py
+      - name: Upload raw measurements and generated SVGs
+        uses: actions/upload-artifact@v4
+        with:
+          name: coordinate-study-${{ github.run_id }}
+          path: |
+            build/criterion-coordinate-study/
+            slides/professor_lecture/figures/5*.svg
+            slides/professor_lecture/figures/manifest.json
+          retention-days: 30
+          if-no-files-found: error
