@@ -177,6 +177,25 @@ def render_co2(publication):
     _finish(publication, fig, ax, FIGURES / "mauna_loa_1990_1999.pdf", ncol=3)
 
 
+def render_co2_updated(publication):
+    """Contemporary NOAA monthly means, preserved separately from 1990s figure."""
+    arr = _load(FIGURES / "mauna_loa_1990_2026_09.dat",
+                ("year", "observed", "d2", "d3", "d4", "d5"))
+    if len(arr["year"]) != 441:
+        raise ValueError("Expected exactly 441 NOAA monthly means through September 2026.")
+    fig, ax = _axis(publication)
+    ax.plot(arr["year"], arr["observed"], lw=.7, color="#989898",
+            label="NOAA monthly mean")
+    for idx, order in enumerate((2, 3, 4, 5)):
+        ax.plot(arr["year"], arr[f"d{order}"], lw=1.55,
+                color=COLORS[[1, 3, 2, 4][idx]],
+                ls=STYLES[idx], label=f"d = {order}")
+    ax.set(xlabel="Year", ylabel="CO$_2$ (ppm)")
+    ax.set_xlim(1990, 2027)
+    _finish(publication, fig, ax,
+            FIGURES / "mauna_loa_1990_2026_09.pdf", ncol=3)
+
+
 def render_high_order(publication):
     arr = _load(FIGURES / "high_order_numerics.dat", ("d", "condition"))
     if np.any(arr["condition"] <= 0):
@@ -237,6 +256,7 @@ def main(argv=None):
         if not args.benchmarks_only:
             render_synthetic(publication)
             render_co2(publication)
+            render_co2_updated(publication)
             render_high_order(publication)
         if not args.figures_only:
             _render_benchmark(
