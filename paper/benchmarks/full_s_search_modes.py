@@ -53,6 +53,7 @@ from full_s_backend_criteria import (
 from trendestimation import TrendSmoother, score_lambda
 
 HERE = Path(__file__).resolve().parent
+SINGLE_POLICIES = ("single_native_s", "single_lambda", "single_mapped_s_lambda")
 GRID_POLICIES = ("native_s", "mapped_s_lambda", "native_log_lambda")
 CONTINUOUS_POLICIES = ("continuous_s", "continuous_log_lambda")
 TARGET_S = 0.5
@@ -216,7 +217,7 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
     if criterion=="mle" and d==0:
         return dict(
             n=n,d=d,mu=mu,criterion=criterion,method=method,R=R,
-            workload="single" if policy=="single" else
+            workload="single" if policy in SINGLE_POLICIES else
                      ("continuous" if policy in CONTINUOUS_POLICIES else "grid"),
             policy=policy,reuse_mode=reuse_mode,
             status="not_applicable_d0_mle",
@@ -227,14 +228,22 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
             max_error=float("nan"),repeats=repeats,
             shared_grid_size=17,
         )
-    if policy=="single":
-        # A standalone single score at S=.5 still needs one inversion.
-        st_map=perf_counter()
-        single_lam=smoother.lambda_for_smoothness(TARGET_S)
-        single_map_s=perf_counter()-st_map
-        values=np.array([single_lam])
-        mode="mapped_s_lambda"
-        common_mapping=single_map_s
+    if policy in SINGLE_POLICIES:
+        if policy=="single_native_s":
+            values=np.array([TARGET_S])
+            mode="native_s"
+            common_mapping=0.0
+        else:
+            # Both lambda policies score the SAME S=.5 candidate.
+            # The "known lambda" route receives it directly; the
+            # mapped route is charged the one-time inverse cost.
+            st_map=perf_counter()
+            single_lam=smoother.lambda_for_smoothness(TARGET_S)
+            single_map_s=perf_counter()-st_map
+            values=np.array([single_lam])
+            mode="mapped_s_lambda"
+            common_mapping=(single_map_s
+                            if policy=="single_mapped_s_lambda" else 0.0)
     elif policy=="native_s":
         values=targets
         mode=policy
@@ -312,7 +321,7 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
     # Across 5 criteria x 7 methods x R series, reuse it ONCE, not 35R.
     return dict(
         n=n,d=d,mu=mu,criterion=criterion,method=method,R=R,
-        workload=("single" if policy=="single" else
+        workload=("single" if policy in SINGLE_POLICIES else
                   ("continuous" if policy in CONTINUOUS_POLICIES else "grid")),
         policy=policy,reuse_mode=reuse_mode,
         status=("ok" if valid_count==R else "numerical_or_criterion_failure"),
@@ -358,7 +367,7 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
             n=list(n_values),d=list(orders),
             reference_means=[0.,.15],criteria=list(criteria),
             backends=list(backends),R=list(R_values),
-            policies=["single"]+list(GRID_POLICIES)+list(CONTINUOUS_POLICIES),
+            policies=list(SINGLE_POLICIES)+list(GRID_POLICIES)+list(CONTINUOUS_POLICIES),
             reuse_modes=["shared","cold"],
             difference_between_policies=(
                 "native_s and mapped_s_lambda use identical 17 candidates; "
@@ -370,7 +379,7 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                 "construction; standalone mapped runtime counts it once."
             ),
         )
-        total=len(n_values)*len(orders)*len(seeds)*2*len(criteria)*len(backends)*len(R_values)*6*2
+        total=len(n_values)*len(orders)*len(seeds)*2*len(criteria)*len(backends)*len(R_values)*8*2
         count=0
         for n in n_values:
             for d in orders:
@@ -387,7 +396,7 @@ def run(preset="quick",repeats=None,seed=20261026,threads=1,
                             for method in backends:
                                 for R in R_values:
                                     for reuse_mode in ("shared","cold"):
-                                        for policy in ("single",)+GRID_POLICIES+CONTINUOUS_POLICIES:
+                                        for policy in SINGLE_POLICIES+GRID_POLICIES+CONTINUOUS_POLICIES:
                                             rows.append(measure_one(
                                                 n,d,mu,criterion,method,R,policy,
                                                 seed_i,repeats,sm,targets,mapped,
