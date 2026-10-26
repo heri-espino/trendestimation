@@ -5,6 +5,11 @@ computational decisions, and reproducibility checks for methods explored in
 `trendestimation`. Notes do not necessarily imply release-quality implementation
 or inclusion in a scientific manuscript.
 
+- [Experiment002: full S=[0,1] × seven solvers × five criteria](experiment002_full_s_factorial.md):
+  mathematical endpoint treatment, fixed mu, all difference orders d=0..5,
+  numerical stability and undefined-score audits, raw results,
+  vector PDF/SVG figures, and future-agent reproduction instructions.
+
 - [Experiment001: solver studies, MLE, and publication figures](experiment001_solver_selection_figures.md):
   central onboarding map of all measured benchmarks, PR history,
   six numerical solvers versus five selection criteria, conditional MLE,
