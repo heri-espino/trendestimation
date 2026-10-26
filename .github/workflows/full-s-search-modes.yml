@@ -63,20 +63,65 @@ jobs:
           assert env['blas_threads']==1
           print(len(rows),'measured searches across 8 policies; 17 grid candidates')
           PY
+      - name: Install pinned AwesomeFigures and Springer TeX prerequisites
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk
+          python -m pip install -r paper/requirements.txt
+      - name: Generate existing Springer manuscript prerequisites
+        run: python paper/build.py --figures
+      - name: Render five AwesomeFigures PDF and SVG search comparisons
+        run: python paper/figures/render_full_s_search_modes.py
+      - name: Verify all recorded search figures are real PDF/SVG
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          names=('full_s_single_grid_repeated',
+                 'full_s_search_reuse_speedup',
+                 'full_s_grid_coordinate_times',
+                 'full_s_continuous_coordinate_times',
+                 'full_s_coordinate_selected_s')
+          for stem in names:
+              pdf=Path('paper/figures')/(stem+'.pdf')
+              svg=Path('paper/figures')/(stem+'.svg')
+              assert pdf.read_bytes().startswith(b'%PDF-'),pdf
+              assert '<svg' in svg.read_text(),svg
+          print('Verified 5 source-traceable PDF/SVG pairs')
+          PY
+      - name: Strict Sphinx HTML including new vector figures
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: 'off'
+        run: python -m sphinx -W --keep-going -b html docs build/site
+      - name: Compile Springer paper and flat submission ZIP
+        run: python paper/build.py --pdf --package
       - name: Commit genuine host-specific search timings and all statuses
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f paper/benchmarks/full_s_search_reference/*.csv
           git add -f paper/benchmarks/full_s_search_reference/environment.json
+          for stem in full_s_single_grid_repeated full_s_search_reuse_speedup full_s_grid_coordinate_times full_s_continuous_coordinate_times full_s_coordinate_selected_s; do
+            git add -f "paper/figures/$stem.pdf" "paper/figures/$stem.svg"
+          done
+          git add -f paper/main.pdf paper/computational-statistics-submission.zip
           if git diff --cached --quiet; then
             echo 'No measured result changes'
           else
             git commit -m "results: full S one/grid/repeated searches versus native S, lambda, mapped and local optimization"
+            git fetch origin research/full-s-one-grid-repeat-coordinate-search
+            git rebase origin/research/full-s-one-grid-repeat-coordinate-search
             git push origin HEAD:research/full-s-one-grid-repeat-coordinate-search
           fi
       - uses: actions/upload-artifact@v4
         with:
           name: full-s-search-modes
-          path: paper/benchmarks/full_s_search_reference/
+          path: |
+            paper/benchmarks/full_s_search_reference/
+            paper/figures/full_s_single_grid_repeated.*
+            paper/figures/full_s_search_reuse_speedup.*
+            paper/figures/full_s_grid_coordinate_times.*
+            paper/figures/full_s_continuous_coordinate_times.*
+            paper/figures/full_s_coordinate_selected_s.*
+            paper/main.pdf
+            paper/computational-statistics-submission.zip
           retention-days: 30
