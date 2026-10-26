@@ -60,7 +60,7 @@ $s$ values, and objective evaluation may require either a complete
 trend fit or only a spectral trace and residual sum of squares.
 The banded structure of PLS normal equations can favor an individual
 fit, whereas a reusable decomposition can favor repeated evaluations
-\cite{weinert2007wh,biessy2026wh}. Accordingly, we supplement the
+\cite{weinert2007wh,weinert2012fast,biessy2026wh}. Accordingly, we supplement the
 parameterization with numerical agreement, higher-order conditioning,
 and measured comparisons of fresh and cached dense solves, spectral
 reuse, and a banded solver under matched workloads. These measurements
@@ -76,6 +76,19 @@ ranking or speed advantage. Arbitrary difference orders and fixed
 nonzero reference means belong to the published PLS family
 \cite{guerrero2007penalized,cortes2017smoothness}; their use is not a
 novel penalty formulation.
+
+The computational lineage is likewise established. Cort\'es-Toto
+et al.~\cite{cortes2017smoothness} cite Weinert's work on
+Cholesky-based cubic-spline algorithms
+\cite{weinert2012fast}, but describe their own CV/GCV/AICc/BIC
+simulation implementation in R with criteria evaluated explicitly
+for discrete PLS (Section~3.2). Their study does not establish
+that those simulations used a Cholesky factorization or
+compare Cholesky against SVD. Weinert's earlier structured
+Whittaker--Henderson algorithms \cite{weinert2007wh} and
+his book comparing Cholesky, QR and FFT approaches
+\cite{weinert2012fast} are prior numerical work, not algorithms
+introduced here.
 
 The numerical experiments condition on a specified mean $\mu$ of the
 penalized differences. The software also provides the plug-in
