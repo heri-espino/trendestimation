@@ -302,3 +302,10 @@ Reproduce (on your own computer)
 
 The numeric values 80 and 2.0 above are **illustrative inputs**, not
 estimates of the reader's actual power consumption or tariff.
+
+The latest **complete normalized-S interval** experiment compares
+seven solver methods (including symmetric diagonalization and both
+Cholesky variants) across all five criteria, both fixed reference means
+and orders 0 through 5, with analytical zero/infinite penalty limits:
+:doc:`full_s_factorial`. It records per-candidate numerical failures
+rather than silently comparing incomplete timing grids.
