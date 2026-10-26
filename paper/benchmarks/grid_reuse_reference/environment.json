@@ -1,0 +1,59 @@
+{
+  "timestamp_utc": "2026-10-26T11:14:46.749925+00:00",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "logical_cpus": 4,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "blas_threads": 1,
+  "preset": "quick",
+  "repeats": 3,
+  "seed": 20261026,
+  "methods": [
+    "dense_fresh",
+    "dense_cached",
+    "spectral",
+    "banded",
+    "dense_cholesky",
+    "banded_cholesky"
+  ],
+  "orders": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "grid_policies": [
+    "log_lambda",
+    "uniform_s"
+  ],
+  "mu_values": [
+    0.0,
+    0.15
+  ],
+  "git_revision": "94691e92992706ac4d7cd7875afc596096aad481",
+  "note": "Genuine host-specific GCV grid search, not fit-only timing; all lambda candidates shared across backends. S grid inversion is separately timed and excluded from per-backend solver totals. No CV leverage evaluation."
+}
