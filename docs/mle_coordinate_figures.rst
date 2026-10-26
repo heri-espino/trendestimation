@@ -56,7 +56,7 @@ The exact S=1 limit is included; MLE is undefined at
 S=0 (lambda=0) under its improper variance prior.
 
 The same criterion profiles, now in log-lambda coordinates
---------------------------------------------------------
+----------------------------------------------------------
 
 .. image:: ../paper/figures/criteria_with_mle_lambda_paths.svg
    :alt: Five within-criterion rescaled CV GCV AICc BIC and Gaussian MLE objective profiles over logarithmic finite positive penalty lambda
