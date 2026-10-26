@@ -1,0 +1,70 @@
+name: Rebuild full-S search paper after manuscript updates
+
+on:
+  push:
+    branches: [research/full-s-one-grid-repeat-coordinate-search]
+    paths:
+      - 'paper/sections/full_s_factorial.tex'
+      - '.github/workflows/full-s-search-paper-rebuild.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install complete Springer LaTeX and pinned AwesomeFigures
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk
+          python -m pip install -e '.[dev,docs,plot]'
+          python -m pip install -r paper/requirements.txt
+      - name: Generate Springer prerequisites and recompile after text update
+        run: |
+          python paper/build.py --figures --pdf --package
+      - name: Confirm new text is compiled and publication artifacts are valid
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          assert Path('paper/main.pdf').read_bytes().startswith(b'%PDF-')
+          assert Path('paper/main.pdf').stat().st_size>100000
+          assert Path('paper/computational-statistics-submission.zip').stat().st_size>500000
+          for stem in ('full_s_single_grid_repeated',
+                       'full_s_grid_coordinate_times',
+                       'full_s_continuous_coordinate_times'):
+              assert (Path('paper/figures')/(stem+'.pdf')).is_file()
+          print('Compiled updated complete S search manuscript and package')
+          PY
+      - name: Commit manuscript PDF and submission ZIP to research branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/main.pdf paper/computational-statistics-submission.zip
+          if git diff --cached --quiet; then
+            echo 'Manuscript binaries unchanged'
+          else
+            git commit -m "paper: rebuild Springer PDF/ZIP after measured full-S search findings"
+            git fetch origin research/full-s-one-grid-repeat-coordinate-search
+            git -c rebase.autoStash=true rebase origin/research/full-s-one-grid-repeat-coordinate-search
+            git push origin HEAD:research/full-s-one-grid-repeat-coordinate-search
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-s-updated-manuscript
+          path: |
+            paper/main.pdf
+            paper/computational-statistics-submission.zip
+          retention-days: 30
