@@ -11,7 +11,7 @@ the separate, active `paper/main.tex` research draft.
   Original publisher: https://gml.noaa.gov/ccgg/trends/data.html .
   Frozen source: `data/noaa_mlo_monthly_1990_2026_09.csv`.
   NOAA can revise data; this is an auditable snapshot, not a live feed.
-- **US effective federal funds rate (FEDFUNDS)**, monthly not not seasonally adjusted
+- **US effective federal funds rate (FEDFUNDS)**, monthly not seasonally adjusted
   (%), 2010-01 to **2026-09**, 201 months; September 2026 is **3.75%**.
   Underlying publisher Federal Reserve, distributed by FRED:
   https://fred.stlouisfed.org/series/FEDFUNDS .
