@@ -118,3 +118,8 @@ for the mathematical Gaussian MLE derivation.
 The recorded timings are host-specific; they do not establish
 statistical dominance across machines, superior forecasting
 accuracy, or joint inference over mu and lambda.
+
+For the extended seventeen-point grid with more extreme near-one values,
+all seven backends, and difference orders d=0..5,
+see :doc:`full_s_factorial`. The original sixteen-point coordinate
+experiment is retained as a distinct benchmark with its own provenance.

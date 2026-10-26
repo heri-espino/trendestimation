@@ -1,3 +1,23 @@
+## Full S-domain seven-backend × five-criterion factorial
+
+The manuscript additionally includes `sections/full_s_factorial.tex`
+and source-traceable PDF figure pairs rendered by
+`figures/render_full_s_factorial.py`. The experiment
+`benchmarks/full_s_backend_criteria.py` covers S=0,
+the complete decile grid, six near-one points through
+S=0.999999999999 and the exact S=1 limit. For every supported
+criterion, it compares seven methods including eigendecomposition,
+both Cholesky variants and both reference-mean scenarios,
+d=0..5. MLE d0 is deliberately labeled not applicable.
+The zero/infinite endpoints are analytic and are not timed as
+finite matrix factorizations. Raw invalid-criterion and numerical
+instability statuses are archived instead of fabricated scores.
+
+Run the `full` preset on Windows and archive those measurements in
+a separate results branch; do not overwrite Linux reference timings.
+See `notes/experiment002_full_s_factorial.md` and the website page
+`docs/full_s_factorial.rst`.
+
 ## AwesomeFigures and five-criterion selection (including conditional MLE)
 
 `sections/selection_visuals.tex` now includes five PDF charts with
