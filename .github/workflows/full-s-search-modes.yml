@@ -1,0 +1,82 @@
+name: Full-S one/grid/repeated search and coordinate optimizers
+
+on:
+  push:
+    branches: [research/full-s-one-grid-repeat-coordinate-search]
+    paths:
+      - 'paper/benchmarks/full_s_search_modes.py'
+      - 'tests/test_full_s_search_modes.py'
+      - '.github/workflows/full-s-search-modes.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install scientific regression dependencies
+        run: |
+          python -m pip install -e '.[dev,docs,plot]'
+          python -m pip install threadpoolctl
+      - name: Verify full-domain one/grid/repeat and optimizer parity
+        run: |
+          python -m pytest -q tests/test_full_s_search_modes.py tests/test_full_s_backend_criteria.py
+      - name: Actual quick factorial across all d, mu, criteria, backends and workloads
+        run: |
+          python paper/benchmarks/full_s_search_modes.py --preset quick --repeats 2 --threads 1 --output paper/benchmarks/full_s_search_reference
+      - name: Verify provenance, grid policies, strict parity, and cold/warm
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          root=Path('paper/benchmarks/full_s_search_reference')
+          with (root/'search_mode_timings.csv').open(newline='') as f:
+              rows=list(csv.DictReader(f))
+          with (root/'search_grid_preparation.csv').open(newline='') as f:
+              design=list(csv.DictReader(f))
+          env=json.loads((root/'environment.json').read_text())
+          assert {int(x['d']) for x in rows}==set(range(6))
+          assert {float(x['mu']) for x in rows}=={0,.15}
+          assert len({x['criterion'] for x in rows})==5
+          assert len({x['method'] for x in rows})==7
+          assert {int(x['R']) for x in rows}=={1,3}
+          assert {x['reuse_mode'] for x in rows}=={'shared','cold'}
+          assert len({x['policy'] for x in rows})==8
+          assert {x['workload'] for x in rows}=={'single','grid','continuous'}
+          assert all(x['status']=='not_applicable_d0_mle'
+                     for x in rows if int(x['d'])==0 and x['criterion']=='mle')
+          assert all(int(x['shared_grid_size'])==17 for x in rows)
+          assert all(float(x['map_once_s'])>0 for x in design)
+          assert env['blas_threads']==1
+          print(len(rows),'measured searches across 8 policies; 17 grid candidates')
+          PY
+      - name: Commit genuine host-specific search timings and all statuses
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/benchmarks/full_s_search_reference/*.csv
+          git add -f paper/benchmarks/full_s_search_reference/environment.json
+          if git diff --cached --quiet; then
+            echo 'No measured result changes'
+          else
+            git commit -m "results: full S one/grid/repeated searches versus native S, lambda, mapped and local optimization"
+            git push origin HEAD:research/full-s-one-grid-repeat-coordinate-search
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-s-search-modes
+          path: paper/benchmarks/full_s_search_reference/
+          retention-days: 30
