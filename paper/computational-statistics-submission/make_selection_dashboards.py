@@ -366,6 +366,30 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
                             "mu_mode":mode,"d":order,"criterion":method,
                             **{k:record[k] for k in cols[4:]},
                         })
+    # Compact main-text comparison: NOAA full record, d=2, both mu modes.
+    co2 = next((case for case in outputs if case["dataset"] == "co2_full"), None)
+    if co2 is not None:
+        latex_rows = [
+            r"\begin{tabular}{llrrrrr}",
+            r"\toprule",
+            r"$\mu$ mode & Selector & $\mu$ & $\lambda$ & $S$ & RMSE & MAE \\",
+            r"\midrule",
+        ]
+        for mode in MU_MODES:
+            for method in SELECTORS:
+                value = co2["records"][mode][f"d2_{method}"]
+                desc = r"$0$ fixed" if mode == "zero" else "training plug-in"
+                latex_rows.append(
+                    f"{desc} & {SHORT[method].replace(' ', '~')} & "
+                    f"{value['mu']:.3g} & {value['lambda']:.3g} & "
+                    f"{value['s']:.3f} & {value['rmse']:.3f} & "
+                    f"{value['mae']:.3f}" + r" \\"
+                )
+        latex_rows.extend([r"\bottomrule",r"\end{tabular}"])
+        (HERE/"dashboard_summary_table.tex").write_text(
+            "\n".join(latex_rows)+"\n", encoding="utf-8",
+        )
+
     print(f"[dashboard] Wrote {len(outputs)} data scenarios, "
           f"{len(outputs)*len(MU_MODES)*len(SELECTORS)*len(ORDERS)}"
           " selection rows and graphics",flush=True)
@@ -374,7 +398,7 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
 
 def main() -> None:
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dataset",choices=("all",)*(1)+tuple(x[0] for x in SERIES),
+    parser.add_argument("--dataset",choices=("all",)+tuple(x[0] for x in SERIES),
                         default="all",help="Subset of case studies for smoke tests")
     args=parser.parse_args()
     chosen=None if args.dataset=="all" else (args.dataset,)
