@@ -69,14 +69,15 @@ jobs:
                      and float(r['lambda'])==0 for r in paths)
           assert env['blas_threads']==1
           stems=('gcv_solver_by_order','gcv_repeated_search',
-                 'criteria_with_mle_s_paths','criteria_with_mle_search_time')
+                 'criteria_with_mle_s_paths','criteria_with_mle_lambda_paths',
+                 'criteria_with_mle_search_time')
           for name in stems:
               pdf=Path('paper/figures')/(name+'.pdf')
               svg=Path('paper/figures')/(name+'.svg')
               assert pdf.read_bytes().startswith(b'%PDF-')
               assert pdf.stat().st_size>1000
               assert '<svg' in svg.read_text()
-          print('Verified four real PDF/SVG figure pairs')
+          print('Verified five real PDF/SVG figure pairs')
           PY
       - name: Build strict website
         env:
@@ -90,7 +91,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f paper/benchmarks/selection_coordinate_reference/*.csv
           git add -f paper/benchmarks/selection_coordinate_reference/environment.json
-          for stem in gcv_solver_by_order gcv_repeated_search criteria_with_mle_s_paths criteria_with_mle_search_time; do
+          for stem in gcv_solver_by_order gcv_repeated_search criteria_with_mle_s_paths criteria_with_mle_lambda_paths criteria_with_mle_search_time; do
             git add -f "paper/figures/$stem.pdf" "paper/figures/$stem.svg"
           done
           if git diff --cached --quiet; then
@@ -109,6 +110,8 @@ jobs:
             paper/figures/gcv_repeated_search.svg
             paper/figures/criteria_with_mle_s_paths.pdf
             paper/figures/criteria_with_mle_s_paths.svg
+            paper/figures/criteria_with_mle_lambda_paths.pdf
+            paper/figures/criteria_with_mle_lambda_paths.svg
             paper/figures/criteria_with_mle_search_time.pdf
             paper/figures/criteria_with_mle_search_time.svg
             paper/benchmarks/selection_coordinate_reference/
