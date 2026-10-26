@@ -139,12 +139,26 @@ class Scorer:
     def inverse_s(self, target: float) -> float:
         if not 0.0 < target < 1.0:
             raise ValueError("interior target S is required")
-        # The brackets are deliberately common to all backends. A case
-        # that cannot be bracketed is reported, never silently clipped.
-        lo, hi = -34.0, 34.0
+        # Expand from moderate penalties rather than probing enormous
+        # values at the outset: banded Cholesky can lose the numerical
+        # nullspace when lambda*Q overwhelms the identity term.
+        # Check monotone brackets and stop explicitly on any breakdown.
         f = lambda x: self.smoothness(float(np.exp(x))) - target
-        if f(lo) > 0 or f(hi) < 0:
-            raise ArithmeticError("S inversion out of finite search bracket")
+        lo, hi = -8.0, 4.0
+        lower = f(lo)
+        upper = f(hi)
+        while lower > 0 and lo > -60.0:
+            lo -= 4.0
+            lower = f(lo)
+        while upper < 0 and hi < 56.0:
+            hi += 4.0
+            upper = f(hi)
+        if not (np.isfinite(lower) and np.isfinite(upper)
+                and lower <= 0 <= upper):
+            raise ArithmeticError(
+                f"S inversion could not be bracketed numerically: "
+                f"backend={self.method}, target={target:g}, "
+                f"bracket=({lo:g},{hi:g}), f=({lower:g},{upper:g})")
         return float(np.exp(brentq(f, lo, hi, xtol=1e-10, maxiter=120)))
 
     def score(self, lam: float, criterion: str) -> float:
