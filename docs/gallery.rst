@@ -76,7 +76,7 @@ SVG smoke notebook. In chapter 10, set ``SAVE_SVG=True`` to also export
 individual SVG files rather than PNG.
 
 Paired penalty and normalized smoothness
---------------------------------------
+----------------------------------------
 
 Every introductory and research notebook now contains an executable visual
 comparison of the same fixed-mu PLS criteria against ``lambda`` and
