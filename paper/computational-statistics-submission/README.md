@@ -92,3 +92,68 @@ calibration, and comparison with additional forecast models.
 No new contribution is claimed solely from fitting higher
 difference orders or interpolating the same optimal penalty
 using the \(\lambda\) vs \(\ S\) coordinates.
+
+
+## Six-selector dashboards: order × criterion × reference mean
+
+Run the complete dashboard generator after the dataset snapshots
+exist (both NOAA and FEDFUNDS are committed to the repository):
+
+~~~powershell
+conda activate trendestimation
+python -m pip install -e ".[plot]"
+
+# Generate all 4 × 6 panels for each series, mu mode, and origin.
+python paper\computational-statistics-submission\make_selection_dashboards.py
+
+# Or isolate one smaller case during debugging:
+python paper\computational-statistics-submission\make_selection_dashboards.py --dataset co2_recent
+
+Push-Location paper\computational-statistics-submission
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+Pop-Location
+Start-Process .\paper\computational-statistics-submission\main.pdf
+~~~
+
+Rows correspond to difference orders **d=1,2,3,4**.
+Columns are **CV, GCV, AICc, BIC, conditional Gaussian MLE,
+and user-prescribed S=0.86**. Every dataset has separate
+24-panel dashboards for an **honest 12-month historical holdout**
+and future **trend-only extrapolation** after the last published
+month. These are repeated for **mu=0** and
+**mu=mean(D_d y_train)**.
+
+Every reference mean used for holdout is computed on the training
+prefix only. Classical CV/GCV/AICc/BIC scores condition on the
+derived numeric mu, rather than refitting it in every deletion.
+For MLE, the library's mu="data" evaluates an observed-difference
+plug-in. This is NOT joint MLE over (lambda, mu).
+
+New outputs include:
+
+- figures/co2_full_dashboard_holdout_mu_zero.pdf
+- figures/co2_full_dashboard_future_mu_zero.pdf
+- figures/co2_full_dashboard_holdout_mu_data.pdf
+- figures/co2_full_dashboard_future_mu_data.pdf
+- corresponding co2_recent and fedfunds_full variants
+- figures/{dataset}_selection_summary_mu_{zero,data}.pdf
+- figures/{dataset}_mu_sensitivity.pdf
+- data/{dataset}_dashboards.json
+- data/dashboard_selection_summary.csv
+- dashboard_summary_table.tex
+
+PDF, SVG and PNG versions are generated for every figure. The
+journal workflow commits the figures, data audit trails and
+compiled paper. The PDF is included in the manuscript, while
+the vector/raster companions can be enlarged in the professor's
+presentation.
+
+### Methodological scope
+
+The five optimized criteria inspect the *same finite 29-point
+penalty grid* for a given order and reference mean. Their selected
+models are comparable, but their raw objective values are not
+on a common score scale. Controlled smoothness is NOT a sixth
+optimization criterion. Extrapolation curves are anchored local
+polynomials of historical trends, not validated probabilistic
+forecasts. Holdout losses use one historical origin only.
