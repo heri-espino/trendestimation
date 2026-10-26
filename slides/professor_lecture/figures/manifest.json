@@ -1,7 +1,7 @@
 {
   "generator": "slides/professor_lecture/make_figures.py",
   "reproducibility_seed": 24021,
-  "count": 49,
+  "count": 59,
   "figures": [
     {
       "file": "figures/01_signal.svg",
@@ -245,8 +245,58 @@
     },
     {
       "file": "figures/49_mauna_loa.svg",
-      "kind": "observed data",
-      "source": "statsmodels.datasets.co2 weekly observations aggregated to monthly means"
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/50_cv_coordinate_pair.svg",
+      "kind": "deterministic",
+      "source": "n=96, d=2, mu=0, seed=24021; identical 260 lambda candidates"
+    },
+    {
+      "file": "figures/51_gcv_coordinate_pair.svg",
+      "kind": "deterministic",
+      "source": "n=96, d=2, mu=0, seed=24021; identical 260 lambda candidates"
+    },
+    {
+      "file": "figures/52_aicc_coordinate_pair.svg",
+      "kind": "deterministic",
+      "source": "n=96, d=2, mu=0, seed=24021; identical 260 lambda candidates"
+    },
+    {
+      "file": "figures/53_bic_coordinate_pair.svg",
+      "kind": "deterministic",
+      "source": "n=96, d=2, mu=0, seed=24021; identical 260 lambda candidates"
+    },
+    {
+      "file": "figures/54_coordinate_factorial.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/55_s_vs_lambda_ratio.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/56_phase_breakdown.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/57_optimum_quality.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/58_public_coordinate_runtime.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/59_public_candidate_quality.svg",
+      "kind": "missing",
+      "source": "no host benchmark CSV present"
     }
   ],
   "warning": "Complexity and root-method schematics are not measured runtimes."
