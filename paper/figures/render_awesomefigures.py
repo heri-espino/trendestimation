@@ -259,6 +259,13 @@ def main(argv=None):
             render_co2_updated(publication)
             render_high_order(publication)
         if not args.figures_only:
+            # Resolve the neighbor file even when this renderer is imported
+            # via importlib.spec_from_file_location in the publication tests.
+            from runpy import run_path
+            render_all = run_path(str(
+                Path(__file__).with_name("render_mle_benchmarks.py")
+            ))["render_all"]
+            render_all(publication, PAPER, COLORS, _axis, _save)
             _render_benchmark(
                 publication, "full_fit_at_M64.dat", "full_fit_at_M64.pdf",
                 M=64, title="End-to-end full-trend fitting",

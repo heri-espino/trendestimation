@@ -1,3 +1,34 @@
+## AwesomeFigures and five-criterion selection (including conditional MLE)
+
+`sections/selection_visuals.tex` now includes five PDF charts with
+identical SVG counterparts linked from the Sphinx website. The
+figure generator uses the pinned `awesomefigures` package and the
+measured official Springer Nature typography; raw benchmarking CSVs
+are not rewritten by the renderer.
+
+The added `paper/benchmarks/selection_coordinate_mle.py` experiment
+compares **five criteria** (CV/GCV/AICc/BIC/conditional Gaussian MLE),
+two fixed numeric reference means (0 and 0.15), normalized-S candidate
+targets mapped once into lambda, native-S selectors that invert on each
+call, and a separate log-penalty grid with the same candidate count.
+Mapped lambda and native-S candidates are required to give identical
+criterion scores. Scores **cannot be compared across different criteria**;
+only within-criterion profiles, optimum locations and observed time
+are compared. The conditional MLE is not joint estimation of mu.
+
+```powershell
+python paper\benchmarks\selection_coordinate_mle.py --preset quick --repeats 5
+python paper\figures\render_awesomefigures.py --benchmarks-only
+python paper\build.py --pdf --package
+```
+
+For an independent full Windows run, pass
+`--preset full --output-dir paper/benchmarks/results/selection_coordinate_mle`
+and keep its CSVs separate from the GitHub reference data. Archived
+GitHub quick timings are labeled with their own machine metadata.
+See `notes/experiment001_solver_selection_figures.md` for the full
+research handoff and limitations.
+
 ## October 2026: six-solver GCV grid search included in paper
 
 The manuscript now includes `sections/gcv_grid_reuse.tex` with numerical

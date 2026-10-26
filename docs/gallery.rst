@@ -123,3 +123,12 @@ endpoints and candidate counts fixed, varies difference order d from 1 to 4
 (5 in the full research preset), and compares fixed mu=0 and mu=0.15.
 It uses separately recorded reference timing CSVs and reports S inversion
 cost outside the method-specific timing total.
+
+AwesomeFigures publication-quality vector charts for complete GCV solver time,
+preprocessing reuse, Gaussian marginal MLE versus four classical criteria,
+and normalized-S versus penalty-coordinate selection times are collected
+in :doc:`mle_coordinate_figures`. Each plot has a Springer-width PDF
+counterpart in ``paper/figures/`` and a browser-friendly SVG. The
+experiment data and actual machine provenance remain in
+``paper/benchmarks/*_reference/``; no timings are synthesized in the
+figure renderer.

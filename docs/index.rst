@@ -111,6 +111,7 @@ trendestimation
    handbook/index
    solver_backends
    grid_reuse_selection
+   mle_coordinate_figures
    benchmark_statistical_protocol
    publishing-research-outputs
    benchmarks

@@ -95,6 +95,13 @@ class AwesomeFiguresPDFTest(unittest.TestCase):
                          350+k-.3, 350+k-.4)
                         for k in t
                     ])
+        # Updated renderer also expects the separate 441-month NOAA chart.
+        # These are synthetic unit-test coordinates, NOT manuscript data.
+        self._write("mauna_loa_1990_2026_09.dat",
+                    "year observed d2 d3 d4 d5",
+                    [(1990+k/12, 350+0.13*k, 350+0.13*k-0.1,
+                      350+0.13*k-0.2, 350+0.13*k-0.3,
+                      350+0.13*k-0.4) for k in range(441)])
         self._write("high_order_numerics.dat", "d condition error lambda",
                     [(k, 10**(k/2), 0.0, .1) for k in t])
 
