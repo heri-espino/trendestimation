@@ -5,6 +5,30 @@ paper describing the `trendestimation` Python library. The intended venue
 is **Computational Statistics** (Springer Nature, ISSN 0943-4062).
 This is distinct from *Computational Statistics & Data Analysis* (Elsevier).
 
+## Newly proposed factorial selection study (not yet manuscript results)
+
+The research lecture and `notes/criterion_coordinate_factorial.md` now
+specify a reproducible **3 solver × 4 criterion × 3 search-policy**
+factorial benchmark, plus a separate benchmark of the public default
+lambda/S selectors. The three independent backends are full SVD of
+the difference matrix, symmetric eigendecomposition of `Q=D.T@D`,
+and genuine banded Cholesky. Four fixed-mu criteria are CV, GCV,
+AICc and BIC. The search policies use original geometric lambda
+candidates, the *same* candidates reached through smoothness
+inversion, and a *different* uniform smoothness grid.
+
+**This is planned numerical evidence, not a new measured result of
+the submitted working manuscript.** The new timing CSVs live under
+`build/criterion-coordinate-study/` and remain host-dependent.
+The current manuscript's existing tables are unchanged, as are its
+careful distinctions between an exact reparameterization and
+measured optimization runtime. The follow-up should be incorporated
+into the manuscript only after end-to-end timings, score parity,
+selected-score quality and statistical uncertainty have been
+reviewed. See
+[the lecture](../slides/professor_lecture/README.md) and
+[experimental protocol](../notes/criterion_coordinate_factorial.md).
+
 ## Scope of the Computational Statistics paper
 
 **Research question:** Can the normalized conditional smoothness index
