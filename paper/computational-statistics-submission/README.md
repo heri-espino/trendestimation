@@ -41,7 +41,8 @@ honest fixed-origin 12-month historical holdout plot.
 
 **Forecasting caveat:** extrapolated values are local least-squares
 polynomials of degree `min(d-1,2)` fitted on the last 36
-*smoothed* months, with no explicit seasonal/noise model. They
+*smoothed* months, shifted to pass through the final PLS fitted value,
+with no explicit seasonal/noise model. They
 are **not** the PLS method's intrinsic future forecast (PLS is a
 two-sided smoother) and do not include calibrated intervals.
 All time-origin holdout fits/penalties use training data only.
