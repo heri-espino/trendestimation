@@ -260,3 +260,53 @@ or mix measured CSV files from different machines.
 Whittaker–Henderson algorithms, and Gaussian likelihood are prior art.
 The contribution being evaluated is a carefully validated numerical
 comparison and interpretable reparameterization, not a new penalty.
+
+## 10. Newly measured five-criterion evidence (archived Github Linux run)
+
+The AwesomeFigures CI experiment has now completed its quick preset
+with Python 3.11, one BLAS thread, seven timing repeats and generated
+all five paper PDF/SVG pairs. All raw data and metadata are at
+`paper/benchmarks/selection_coordinate_reference/`.
+
+For the same **16 mapped candidate penalties**, with
+`n=60, d=2, mu=0`, the following selected normalized smoothness
+levels were recorded: CV **0.8**, GCV **0.8**, AICc **0.9**,
+BIC **0.1**, and conditional Gaussian MLE **0.8**. When
+`mu=0.15` was held fixed instead, MLE selected **S=0.5**
+on the same S targets: conditional likelihood depends on mu.
+
+A paired runtime illustration (n=60, d=2, fixed mu=0):
+
+| Criterion | Mapped lambda grid, reused (ms) | Native S inversion (ms) |
+| --- | ---: | ---: |
+| CV | 0.773 | 2.859 |
+| GCV | 0.229 | 2.336 |
+| AICc | 0.236 | 2.293 |
+| BIC | 0.273 | 2.310 |
+| Conditional Gaussian MLE | 0.221 | 2.269 |
+
+**Interpretation:** for these public selector calls, native-S
+selection pays repeated numerical inversions; reusing the
+already mapped grid can save cost without changing candidate
+scores or optimum. This does not mean that choosing S is
+statistically inferior or that the mapped grid has free
+preparation: at n=60,d=2 the measured one-time spectral setup
+was **1.188 ms** and the one-time S-grid mapping was
+**2.289 ms**, recorded separately in
+`setup_times.csv`. Those costs must be counted with the
+correct amortization if judging a full end-to-end user workflow.
+
+The independent log-penalty grid has different interior
+candidates and can choose a different minimum; its timing
+cannot establish mathematical superiority of a different
+reparameterization. These are *within-criterion* comparisons,
+not cross-criterion significance tests. The MLE parameters
+are conditional on a fixed numerical mu; no joint inference
+was performed.
+
+The vector figures and paper PDF were successfully generated
+using the pinned AwesomeFigures and the official Springer
+font measurements in GitHub Actions. The paper's authored
+Windows full GCV timings are still stored only on the Windows
+VM, not in these measured Linux records.
+
