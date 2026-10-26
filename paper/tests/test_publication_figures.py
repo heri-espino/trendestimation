@@ -43,7 +43,7 @@ class SmccaTemplateTest(unittest.TestCase):
     def test_figures_are_external_pdf_files_not_inline_tikz(self):
         for source, pdf in (
             ("main.tex", "figures/cortes_toto_synthetic.pdf"),
-            ("sections/mauna_loa.tex", "figures/mauna_loa_1990_1999.pdf"),
+            ("sections/mauna_loa.tex", "figures/mauna_loa_1990_2026_09.pdf"),
             ("sections/high_order_numerics.tex", "figures/high_order_numerics.pdf"),
             ("sections/timing_experiments.tex", "figures/full_fit_at_M64.pdf"),
         ):

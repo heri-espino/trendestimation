@@ -40,6 +40,7 @@ BENCHMARK_RESULTS = PAPER / "benchmarks" / "results"
 FIGURE_GENERATORS = (
     "paper/figures/make_figures.py",
     "paper/figures/make_extended_figures.py",
+    "paper/figures/make_updated_mauna_loa.py",
     "paper/figures/benchmark_orders.py",
 )
 FIGURE_RENDERER = "paper/figures/render_awesomefigures.py"
@@ -47,6 +48,7 @@ REQUIRED_PDF_INPUTS = (
     PAPER / "figures" / "cortes_toto_synthetic.pdf",
     PAPER / "criteria_table.tex",
     PAPER / "figures" / "mauna_loa_1990_1999.pdf",
+    PAPER / "figures" / "mauna_loa_1990_2026_09.pdf",
     PAPER / "figures" / "high_order_numerics.pdf",
 )
 BENCHMARK_CSVS = (
