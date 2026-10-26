@@ -2,7 +2,7 @@
 
 Commands:
   python scripts/run_notebooks.py --list
-  python scripts/run_notebooks.py --fast --in-place --fail-fast
+  python scripts/run_notebooks.py --fast --all --in-place --fail-fast
   python scripts/run_notebooks.py --watts 80 --mxn-per-kwh 2.0
 No costs are inferred unless BOTH wattage and tariff are specified.
 """
@@ -28,6 +28,8 @@ SOURCES = ROOT / "docs" / "notebooks"
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=Path("build/notebook-runs"))
+    parser.add_argument("--all", action="store_true",
+                        help="Execute all 13: three docs/examples plus ten docs/notebooks.")
     parser.add_argument("--in-place", action="store_true",
                         help="Additionally save executed source notebooks for Sphinx.")
     parser.add_argument("--fail-fast", action="store_true")
@@ -43,6 +45,8 @@ def main() -> int:
     args = parser.parse_args()
 
     paths = sorted(SOURCES.glob("*.ipynb"))
+    if args.all:
+        paths = sorted((SOURCES.parent / "examples").glob("*.ipynb")) + paths
     if args.only:
         wanted = {Path(s).stem for s in args.only}
         unexpected = wanted - {p.stem for p in paths}
@@ -62,7 +66,7 @@ def main() -> int:
         parser.error("Watts must be positive and tariff nonnegative.")
 
     output = (ROOT / args.output_dir).resolve()
-    if output == SOURCES.resolve() and not args.in_place:
+    if output in (SOURCES.resolve(), (SOURCES.parent / "examples").resolve()) and not args.in_place:
         parser.error("Use --in-place when writing to the notebook source directory.")
     output.mkdir(parents=True, exist_ok=True)
     if args.fast:
