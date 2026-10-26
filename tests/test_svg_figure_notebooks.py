@@ -34,7 +34,12 @@ def test_all_notebooks_select_pinned_awesomefigures_and_svg():
                 data = output.get("data", {})
                 if "image/png" in data:
                     assert "image/svg+xml" in data, path
-        assert any(cell.get("id") == "te-dual-coordinate" for cell in nb.cells)
+        if path.stem == "11-paper-solver-timing-comparison":
+            # The paper timing notebook compares actual solver timings instead.
+            assert any("full_fit_timings.csv" in code for code in codes), path
+            assert any("plt.show()" in code for code in codes), path
+        else:
+            assert any(cell.get("id") == "te-dual-coordinate" for cell in nb.cells)
 
 
 
