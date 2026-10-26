@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_all_notebooks_select_pinned_awesomefigures_and_svg():
     paths = sorted((ROOT / "docs").glob("**/*.ipynb"))
-    assert len(paths) == 13
+    assert len(paths) == 14
     for path in paths:
         nb = nbformat.read(path, as_version=4)
         nbformat.validate(nb)
