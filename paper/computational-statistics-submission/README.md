@@ -11,13 +11,13 @@ the separate, active `paper/main.tex` research draft.
   Original publisher: https://gml.noaa.gov/ccgg/trends/data.html .
   Frozen source: `data/noaa_mlo_monthly_1990_2026_09.csv`.
   NOAA can revise data; this is an auditable snapshot, not a live feed.
-- **US unemployment rate (UNRATE)**, monthly seasonally adjusted
-  (%), 2010-01 to **2026-09**, 201 months; September 2026 is **4.2%**.
-  Underlying publisher BLS, distributed by FRED:
-  https://fred.stlouisfed.org/series/UNRATE .
+- **US effective federal funds rate (FEDFUNDS)**, monthly not not seasonally adjusted
+  (%), 2010-01 to **2026-09**, 201 months; September 2026 is **3.75%**.
+  Underlying publisher Federal Reserve, distributed by FRED:
+  https://fred.stlouisfed.org/series/FEDFUNDS .
   Source CSV URL:
-  https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE .
-  Frozen source: `data/fred_unrate_2010_2026_09.csv`. The first
+  https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS .
+  Frozen source: `data/fred_fedfunds_2010_2026_09.csv`. The first
   creation of this snapshot requires access to the FRED URL
   (`--fetch-fred`), then a normal reproduction uses committed data.
 
@@ -33,7 +33,7 @@ constructed by inverting a common normalized-smoothness grid in
 `[0.10, 0.98]`. Store **both** selected \(\lambda\) and \(S\).
 
 Three data configurations are shown: full 441-month CO2 series;
-last 120 CO2 months; 201-month unemployment series.
+last 120 CO2 months; 201-month effective federal funds rate series.
 Every case generates a four-criterion overlay, a controlled-S
 order comparison, an \(\lambda/S\) selection-coordinate chart,
 a 12-month future *trend-only extrapolation* plot and an
@@ -68,7 +68,7 @@ Pop-Location
 Start-Process .\paper\computational-statistics-submission\main.pdf
 ~~~
 
-**Output contracts:** `figures/{co2_full,co2_recent,unrate_full}_*.pdf`
+**Output contracts:** `figures/{co2_full,co2_recent,fedfunds_full}_*.pdf`
 (and PNG/SVG companions), `current_examples_table.tex`,
 `data/*_results.json`, `data/provenance.json`.
 
