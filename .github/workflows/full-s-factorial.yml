@@ -72,6 +72,8 @@ jobs:
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk
           python -m pip install -r paper/requirements.txt
+      - name: Regenerate required core manuscript figures and criteria table
+        run: python paper/build.py --figures
       - name: Render real AwesomeFigures PDF/SVG for every criterion and reference mean
         run: python paper/figures/render_full_s_factorial.py
       - name: Validate all real figure pairs and complete normalized grid
