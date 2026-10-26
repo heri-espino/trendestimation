@@ -195,3 +195,17 @@ as the only copy of research.
 7. Regenerate journal PDFs and website SVGs whenever
    results change, with real AwesomeFigures source and
    exact manuscript typography, and archive all outputs.
+
+
+## 8. Verified publication artifacts and CI evidence
+
+The complete hosted quick run, pinned AwesomeFigures rendering, strict
+Sphinx build, Springer PDF build and ZIP packaging all succeeded in
+[GitHub Actions run 40386201940](https://github.com/heri-espino/trendestimation/actions/runs/40386201940).
+Ten PDF/SVG figure pairs, the four reference data/provenance files,
+`paper/main.pdf` and `paper/computational-statistics-submission.zip`
+were committed to the feature branch before merge. The run's downloadable
+artifact includes the measurements and rendered publication output.
+
+The separate numerical and publication smoke tests passed; figure paths
+are verified as actual files rather than placeholders.
