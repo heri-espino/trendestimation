@@ -307,3 +307,78 @@ follow from one-host microbenchmarks.** The continuous-coordinate
 optimization and fixed discrete candidate-grid comparisons answer
 different numerical questions. An optimized S is a coordinate, not
 a new statistical selection criterion.
+
+
+
+### Actual GitHub reference measurements (2026-10-26, quick preset)
+
+The complete 13,440-row quick experiment passed the numerical
+tests and all five PDF/SVG publication graphs compiled. Its source
+of truth is
+`paper/benchmarks/full_s_search_reference/search_mode_timings.csv`,
+with independent machine/BLAS provenance in `environment.json`.
+These are **not Windows VM numbers**.
+
+For a single seeded observation series, n=24, d=2,
+fixed mu=0, spectral SVD, one BLAS thread and two repetitions,
+all numbers below are observed **milliseconds**, and stand-alone
+mapped timings include the corresponding one-time inversion:
+
+| Criterion | Single known lambda | Single native S | Single mapped S | 17-pt native S | 17-pt mapped S, once | 17-pt log lambda |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| CV | 0.166 | 0.391 | 0.264 | 2.220 | 2.165 | 0.612 |
+| GCV | 0.144 | 0.374 | 0.276 | 2.113 | 2.019 | 0.384 |
+| AICc | 0.148 | 0.376 | 0.258 | 2.170 | 2.046 | 0.413 |
+| BIC | 0.156 | 0.390 | 0.267 | 2.154 | 2.063 | 0.427 |
+| Conditional MLE | 0.184 | 0.405 | 0.274 | 2.215 | 2.122 | 0.483 |
+
+For the 17-point **matched** S-based grids, each selected
+value agreed between native S and pretranslation:
+CV 0.7, GCV 0.7, AICc 0.8, BIC 0.1 and MLE 0.6.
+The independent log-lambda grid uses DIFFERENT interior
+candidates, so it can choose a different optimum.
+
+The one-time 17-point inversion was about **1.627 ms**.
+Adding five native-S selector times gives **10.872 ms**.
+For a common once-mapped grid used by all five criteria,
+sum the five *backend-only* times (**2.278 ms**) and
+charge the mapping once (**1.627 ms**), giving about
+**3.905 ms**. Ratio: **2.78x** in this setup.
+By contrast, for one isolated GCV grid search the
+standalone cost is nearly equal: native 2.113 ms versus
+mapped-once 2.019 ms. The difference between a
+one-off operation and amortization across multiple
+criteria is the substantive finding.
+
+The direct log-lambda sample can be much faster here
+because it does not invert the S grid, **but evaluates
+different candidate penalties**. The observed speed
+difference does NOT imply that its discrete optimum
+has lower loss or that it explores the same S nodes.
+
+True bounded local optimizers were also measured.
+For GCV, bounded S took **1.826 ms** and bounded
+log-lambda **0.554 ms**, with matching selected
+S approximately 0.695064 on this dataset.
+For BIC the two bounded optimizers selected distinct
+local solutions (approximately S=0.1 versus S=0.698721);
+this is a **non-global local-search warning**, not
+evidence of a different criterion or mathematical
+failure of the monotone coordinate transform.
+The finite 17-point grid itself selected BIC S=0.1.
+
+With three independent series at d=2, GCV SVD,
+the total *backend-only* time was approximately
+**0.936 ms shared** versus **1.132 ms cold**,
+a measured cold/shared ratio of **1.21x**.
+Both approaches selected identical smoothness values
+for the paired series; ratio precision is descriptive
+only. Banded Cholesky and other backends should not
+be given universal speed rankings when their extreme
+tail candidates are numerically invalid.
+
+These numbers use one hosted Linux runner, fixed seed,
+two timer repetitions, n=24 and BLAS threads=1;
+they are not multi-session inferential evidence.
+Mapped-S timing comparisons must never double-count
+one shared inversion across methods, criteria or series.
