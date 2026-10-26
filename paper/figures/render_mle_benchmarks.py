@@ -138,7 +138,7 @@ def render_all(pub,paper,colors,axis_factory,save_pdf):
                     markersize=3.0,ls=STYLES[i%4],lw=1.3,
                     label=criterion.upper())
         ax.set_xscale("log")
-        ax.set(xlabel="Penalty $\lambda$ (log scale; endpoints scored, not plotted)",
+        ax.set(xlabel=r"Penalty $\lambda$ (log scale; endpoints scored, not plotted)",
                ylabel="Score rescaled WITHIN criterion (0=minimum)")
         ax.legend(ncol=3,loc="upper center",bbox_to_anchor=(.5,-.20),
                   frameon=False)
