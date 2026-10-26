@@ -4,10 +4,20 @@ Computation and benchmarking
 A reproducible three-way comparison of SVD, dense eigen-decomposition
 and direct banded Cholesky is described in :doc:`solver_backends`.
 
-The ``trendestimation`` package uses the singular-value decomposition of
-the finite-difference matrix. Spectral reuse is valuable when evaluating many
-candidate penalty parameters, but a dense SVD is not always the fastest
-method for a single full-trend fit.
+The ``TrendSmoother`` and ``select_lambda`` interfaces use the
+singular-value decomposition of the finite-difference matrix to supply
+EDF, smoothness and criterion selection. Trend-only ``fit_penalized``
+and ``PreparedPLSSolver`` now default to genuine *banded Cholesky*.
+Spectral reuse is valuable when evaluating many candidate penalty
+parameters, but a dense SVD is not always the fastest method for
+full trend reconstruction.
+
+For a measured six-backend comparison including *actual GCV grid search*,
+fixed mu=0 or 0.15, multiple difference orders, and repeated-series
+reuse, see :doc:`grid_reuse_selection`. The associated executed notebook
+is :doc:`notebooks/13-grid-search-repeated-solvers-orders`.
+These times include method-specific EDF work, which must not be omitted
+when comparing criterion selection pipelines.
 
 Computational cost model
 ------------------------
