@@ -112,6 +112,7 @@ trendestimation
    solver_backends
    grid_reuse_selection
    mle_coordinate_figures
+   full_s_factorial
    benchmark_statistical_protocol
    publishing-research-outputs
    benchmarks
