@@ -3,7 +3,13 @@ name: Commit executed notebook figures
 on:
   push:
     branches:
-      - feature/committed-notebook-gallery-dual-coordinate
+      - research/s-full-range-grid-paper-timings
+    paths:
+      - "src/trendestimation/_docs_coordinates.py"
+      - ".github/workflows/commit-notebooks.yml"
+      - "docs/gallery.rst"
+      - "tests/test_docs_coordinate_full_range.py"
+      - "tests/test_svg_figure_notebooks.py"
   workflow_dispatch:
 
 permissions:
@@ -15,7 +21,7 @@ concurrency:
 
 jobs:
   render-all-notebooks:
-    name: Execute and commit all 13 notebooks
+    name: Execute and commit all 14 notebooks
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -44,17 +50,25 @@ jobs:
           import nbformat
           from pathlib import Path
           paths = sorted(Path("docs/examples").glob("*.ipynb")) + sorted(Path("docs/notebooks").glob("*.ipynb"))
-          assert len(paths) == 13, len(paths)
+          assert len(paths) == 14, len(paths)
           for path in paths:
               nb = nbformat.read(path, as_version=4)
               code = [c for c in nb.cells if c.cell_type == "code"]
               assert code and all(c.execution_count is not None for c in code), path
               assert all(not any(o.get("output_type") == "error" for o in c.outputs) for c in code), path
-              dual = next(c for c in code if c.get("id") == "te-dual-coordinate")
-              svg = sum("image/svg+xml" in o.get("data", {}) for o in dual.outputs)
-              png = sum("image/png" in o.get("data", {}) for o in dual.outputs)
-              assert svg >= 3 and png >= 3, (path, svg, png)
-              print(f"{path}: {len(code)} code cells, {svg} SVG and {png} PNG paired-coordinate plots")
+              plot_outputs = [
+                  o for c in code for o in c.outputs
+                  if "image/svg+xml" in o.get("data", {})
+              ]
+              if path.stem == "11-paper-solver-timing-comparison":
+                  assert len(plot_outputs) >= 3, (path, len(plot_outputs))
+                  print(f"{path}: {len(code)} code cells, {len(plot_outputs)} paper timing figures")
+              else:
+                  dual = next(c for c in code if c.get("id") == "te-dual-coordinate")
+                  svg = sum("image/svg+xml" in o.get("data", {}) for o in dual.outputs)
+                  png = sum("image/png" in o.get("data", {}) for o in dual.outputs)
+                  assert svg >= 3 and png >= 3, (path, svg, png)
+                  print(f"{path}: {len(code)} code cells, {svg} SVG and {png} PNG paired-coordinate plots")
           PY
       - name: Strict Sphinx build from committed outputs
         env:

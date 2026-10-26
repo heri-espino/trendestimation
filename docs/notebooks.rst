@@ -5,7 +5,7 @@ The notebooks are the **executable examples** for this library. They use
 fixed random seeds and synthetic data, so they can be reproduced without
 external data downloads.
 
-These three short introduction tutorials complement the ten longer notebooks
+These three short introduction tutorials complement the eleven longer notebooks
 in the :doc:`gallery`.
 
 Start with the first notebook to fit a penalized trend, then explore
@@ -56,7 +56,7 @@ The selectors do not implement rolling or horizon-specific CV.
 Both parameterizations and committed figure outputs
 ---------------------------------------------------
 
-All 13 notebooks contain additional mapped-coordinate figures: the
+All 14 notebooks contain additional mapped-coordinate figures: the
 relationship between the nonnegative penalty and normalized
 smoothness, and paired CV/GCV/AICc/BIC objective plots against both
 :math:`\\lambda` and :math:`S(\\lambda)`. The executed notebooks
@@ -65,3 +65,8 @@ execution is needed to inspect them. Execute the entire collection
 with ``python scripts/run_notebooks.py --fast --all --in-place --fail-fast``.
 The illustrative one-run timing chart is not a substitute for the
 controlled factorial benchmark.
+
+The eleventh research notebook, :doc:`notebooks/11-paper-solver-timing-comparison`,
+loads recorded benchmark CSV files, plots total computation time for all
+four paper methods and EDF/trace-only results, reports numerical parity,
+and distinguishes the paper's general banded solver from actual Cholesky.

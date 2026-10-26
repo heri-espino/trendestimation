@@ -1,7 +1,7 @@
 Executable notebook gallery
 ===========================
 
-Ten **real Jupyter notebooks** drive both the standalone tutorial experience
+Eleven **real Jupyter notebooks** drive both the standalone tutorial experience
 and this Sphinx website. Every notebook includes mathematical exposition,
 deterministic source code, plots, and interpretation. The default inputs are simulated. The final chapter can also read an equally
 spaced local CSV and illustrates chronological holdout evaluation of a
@@ -25,6 +25,7 @@ Notebook chapters
    notebooks/08-applied-workflows
    notebooks/09-gaussian-mle-and-guerrero-smoothness
    notebooks/10-forecast-pipeline
+   notebooks/11-paper-solver-timing-comparison
 
 Gaussian variance-component examples
 ------------------------------------
@@ -65,7 +66,7 @@ Notebook source lives exclusively under ``docs/notebooks/``.
 SVG figure display
 ------------------
 
-All 13 notebooks set the ``awesomefigures`` ``elegante`` style with the
+All 14 notebooks set the ``awesomefigures`` ``elegante`` style with the
 Okabe–Ito palette, then ``set_matplotlib_formats("svg", "png")`` for crisp
 inline SVG figures with GitHub-compatible PNG fallbacks. The dependency is pinned to GitHub in
 ``docs/requirements-figures.txt``; a PyPI release is not required.
@@ -82,12 +83,22 @@ Every introductory and research notebook now contains an executable visual
 comparison of the same fixed-mu PLS criteria against ``lambda`` and
 ``S(lambda)``. It displays the monotone map and its inverse,
 CV/GCV/AICc/BIC in both coordinates, their selected mapped-grid points,
-and a small illustrative GCV timing comparison. The published factorial
+using a native 11-decile S grid enriched at 0.95, 0.99, 0.999, 0.9999,
+and 0.999999, with exact endpoint penalties 0 and infinity. The grid is
+inverted once and the resulting lambda candidates reused for CV/GCV/AICc/BIC;
+an illustrative four-criterion timing comparison separates this reuse from
+repeated S inversion. The published factorial
 study instead times three linear-algebra solvers across three search
 policies with independent seeds and host metadata. Single notebook timings
 are not publication-grade speed conclusions.
 
 Use ``python scripts/run_notebooks.py --fast --all --in-place --fail-fast``
-from the repository root to execute and save **all 13** notebooks. The
+from the repository root to execute and save **all 14** notebooks. The
 ``Commit rendered notebook outputs`` workflow also runs the full gallery
 on GitHub Actions and commits the executed SVG/PNG cells to the branch.
+
+The new :doc:`notebooks/11-paper-solver-timing-comparison` notebook plots
+recorded paper timing CSV results (not invented measurements), comparing
+four numerical methods for complete trend fits and separate EDF/trace sweeps.
+The associated environment.json and numerical-parity errors are inspected.
+The paper's general banded solver is not a Cholesky implementation.
