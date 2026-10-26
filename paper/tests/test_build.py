@@ -132,11 +132,11 @@ class BuildFlagsTest(unittest.TestCase):
                  patch.object(builder.shutil, "which", return_value="latexmk"):
                 status, _ = self._capture(["--figures", "--pdf"])
             self.assertEqual(status, 0)
-            self.assertEqual(command.call_count, 5)
+            self.assertEqual(command.call_count, len(builder.FIGURE_GENERATORS) + 2)
             self.assertGreaterEqual(verify.call_count, 1)
             manifest = json.loads((paper / "build_manifest.json").read_text())
             self.assertEqual(manifest["git_revision"], "test-revision")
-            self.assertEqual(len(manifest["steps"]), 5)
+            self.assertEqual(len(manifest["steps"]), len(builder.FIGURE_GENERATORS) + 2)
             self.assertEqual(manifest["steps"][-1]["name"], "compile:PDF")
             self.assertIn("main.pdf", manifest["pdf"])
 
