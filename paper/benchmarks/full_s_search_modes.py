@@ -225,11 +225,13 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
             shared_grid_size=17,
         )
     if policy=="single":
-        values=np.array([mapped[6]])  # verify index 6 corresponds S=.5?
-        # Use the exact selected point by lookup, never by index.
-        values=np.array([mapped[np.argmin(abs(targets-TARGET_S))]])
+        # A standalone single score at S=.5 still needs one inversion.
+        st_map=perf_counter()
+        single_lam=smoother.lambda_for_smoothness(TARGET_S)
+        single_map_s=perf_counter()-st_map
+        values=np.array([single_lam])
         mode="mapped_s_lambda"
-        common_mapping=0.0
+        common_mapping=single_map_s
     elif policy=="native_s":
         values=targets
         mode=policy
@@ -246,6 +248,19 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
         values=None
         mode=policy
         common_mapping=0.0
+    # Validate once, OUTSIDE timed blocks. Scoring reference spectra
+    # within the timer would falsely advantage slow/fast backends alike.
+    verify_backend=Backend(n,d,method,criterion)
+    checks=[]
+    for y in ys:
+        if policy in CONTINUOUS_POLICIES:
+            checks.append(continuous_search(
+                verify_backend,smoother,y,mu,criterion,mode,mapped,
+                check=True))
+        else:
+            checks.append(evaluate_grid(
+                verify_backend,smoother,y,mu,criterion,mode,values,
+                check=True))
     records=[]
     max_error=0.
     for _ in range(repeats):
@@ -257,10 +272,10 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
         for y in ys:
             if policy in CONTINUOUS_POLICIES:
                 evaluated.append(continuous_search(
-                    backend,smoother,y,mu,criterion,mode,mapped,check=True))
+                    backend,smoother,y,mu,criterion,mode,mapped,check=False))
             else:
                 evaluated.append(evaluate_grid(
-                    backend,smoother,y,mu,criterion,mode,values,check=True))
+                    backend,smoother,y,mu,criterion,mode,values,check=False))
         elapsed=perf_counter()-st
         records.append((setup,elapsed,evaluated))
     setups=np.array([r[0] for r in records])
@@ -269,7 +284,7 @@ def measure_one(n,d,mu,criterion,method,workload,policy,seed,repeats,
     setup=float(np.median(setups))
     runtime=float(np.median(evaluations))
     total=float(np.median(totals))
-    representative=records[-1][2]
+    representative=checks
     valid_count=sum(bool(r["valid"]) for r in representative)
     for e in representative:
         if "errors" in e:
