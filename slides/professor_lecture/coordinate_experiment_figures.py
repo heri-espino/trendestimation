@@ -187,3 +187,64 @@ def measured_figures(save, axes, message):
                  fontsize=17, fontweight="bold")
     save("57_optimum_quality", fig, kind="host measured",
          source=f"{STUDY/'summary.csv'}; score differences")
+
+
+def public_selector_figures(save, axes, message):
+    """Show actual public auto-selector speed and evaluation-count differences."""
+    raw = _read_csv(STUDY/"public_summary.csv")
+    if not raw:
+        message("58_public_coordinate_runtime",
+                "Public API auto-selection: measured lambda versus S",
+                "No public selector benchmark CSV is present.\n"
+                "Run benchmarks/public_coordinate_optimizer_benchmark.py\n"
+                "and regenerate these figures.")
+        message("59_public_candidate_quality",
+                "Public API: evaluation budgets and selected score",
+                "No public selector benchmark CSV is present.\n"
+                "These searches use DIFFERENT candidate budgets.\n"
+                "Benchmark execution is required before comparing them.")
+        return
+    rows, chosen = _selected_rows(raw)
+    idx = {(r["criterion"], r["search_space"]): r for r in rows}
+    fig, ax = plt.subplots(figsize=(10.8, 5.0), layout="constrained")
+    xx = np.arange(len(CRITERIA))
+    for k, coord in enumerate(("lambda", "smoothness")):
+        vals = [float(idx[(crit, coord)]["median_ms"])
+                if (crit, coord) in idx else np.nan for crit in CRITERIA]
+        ax.bar(xx + (k-.5)*.33, vals, width=.32,
+               color=("#205fd4", "#138b94")[k], label=coord)
+    ax.set_xticks(xx, [x.upper() for x in CRITERIA])
+    ax.set_ylabel("Median total setup + selector time (ms)")
+    ax.set_yscale("log")
+    ax.set_title(f"Public select_lambda(..., method='auto') | "
+                 f"n={chosen[0]}, d={chosen[1]}, mu={chosen[2]:g}")
+    ax.legend(frameon=False, title="search_space")
+    ax.grid(alpha=.28, axis="y")
+    save("58_public_coordinate_runtime", fig, kind="host measured",
+         source=f"{STUDY/'public_summary.csv'}; full public API")
+
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.4), layout="constrained")
+    for k, coord in enumerate(("lambda", "smoothness")):
+        counts = [float(idx[(crit, coord)]["median_candidates"])
+                  if (crit, coord) in idx else np.nan for crit in CRITERIA]
+        axs[0].bar(xx+(k-.5)*.31, counts, width=.30,
+                   color=("#205fd4", "#138b94")[k], label=coord)
+    axs[0].set(xticks=xx, xticklabels=[x.upper() for x in CRITERIA],
+               title="Actually evaluated candidate count",
+               ylabel="Median number of candidates")
+    axs[0].legend(frameon=False)
+    diffs = [float(idx[(crit, "smoothness")][
+             "median_score_delta_vs_lambda"])
+             if (crit, "smoothness") in idx else np.nan for crit in CRITERIA]
+    axs[1].bar(xx, diffs, color="#138b94")
+    axs[1].set(xticks=xx, xticklabels=[x.upper() for x in CRITERIA],
+               title="S-search selected score − lambda-search score",
+               ylabel="Median difference in original criterion")
+    axs[1].axhline(0, lw=1.0, color="#62758c")
+    for ax in axs:
+        ax.grid(alpha=.25, axis="y")
+    fig.suptitle(f"Public auto selectors are not matched-budget searches | "
+                 f"n={chosen[0]}, d={chosen[1]}", fontsize=16,
+                 fontweight="bold")
+    save("59_public_candidate_quality", fig, kind="host measured",
+         source=f"{STUDY/'public_summary.csv'}; public auto-selector comparisons")
