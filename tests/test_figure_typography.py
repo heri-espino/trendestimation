@@ -60,7 +60,7 @@ def test_all_notebooks_activate_clean_figure_style_after_awesomefigures():
         code = next(cell.source for cell in nb.cells if cell.cell_type == "code")
         assert "font=\"DejaVu Sans\"" in code, path
         assert "apply_documentation_figure_style()" in code, path
-        assert "set_matplotlib_formats(\"svg\")" in code, path
+        assert 'set_matplotlib_formats("svg", "png")' in code, path
         assert code.index('af.set_style("elegante"') < code.index(
             "apply_documentation_figure_style()"
         ), path
