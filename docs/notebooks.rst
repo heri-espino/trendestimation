@@ -5,7 +5,7 @@ The notebooks are the **executable examples** for this library. They use
 fixed random seeds and synthetic data, so they can be reproduced without
 external data downloads.
 
-These three short introduction tutorials complement the twelve longer notebooks
+These three short introduction tutorials complement the thirteen longer notebooks
 in the :doc:`gallery`.
 
 Start with the first notebook to fit a penalized trend, then explore
@@ -56,7 +56,7 @@ The selectors do not implement rolling or horizon-specific CV.
 Both parameterizations and committed figure outputs
 ---------------------------------------------------
 
-All 15 notebooks contain additional mapped-coordinate figures: the
+All 16 notebooks contain additional mapped-coordinate figures: the
 relationship between the nonnegative penalty and normalized
 smoothness, and paired CV/GCV/AICc/BIC objective plots against both
 :math:`\\lambda` and :math:`S(\\lambda)`. The executed notebooks
@@ -74,3 +74,9 @@ The twelfth chapter, :doc:`notebooks/12-six-solvers-cholesky-nonzero-mu`,
 compares dense and banded Cholesky against all four prior solvers for
 fixed nonzero ``mu``, and explains why EDF depends on the penalty
 matrix but not on this fixed reference-difference mean.
+
+The thirteenth research chapter,
+:doc:`notebooks/13-grid-search-repeated-solvers-orders`, evaluates genuine
+GCV grid-search runtime and optimal criterion scores across six backends,
+two search coordinates, two fixed mu values, multiple difference orders,
+and cold versus reused preprocessing for repeated independent series.
