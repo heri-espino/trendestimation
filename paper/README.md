@@ -446,3 +446,30 @@ run **only via manual workflow_dispatch**; regular CI is limited to tests.
 Original template readme and full article authoring manual are supplied
 in the uploaded Springer Nature December 2024 ZIP; the manuscript
 repository stores the verified build-critical `.cls` and `.bst`.
+
+
+
+### Experiment002 continuation: one score vs 17-point search, direct S/lambda and repeats
+
+The full S=0..1 numerical factorial now has an additional paired
+search-mode benchmark at
+`paper/benchmarks/full_s_search_modes.py`.
+It times one evaluation, one 17-point grid search, and the
+same grid reused over independent series; compares cold vs
+shared backend preparation, native S inversion on every scored
+candidate, translating the S grid once, direct log-lambda
+grid candidates, and *bounded local* continuous optimization
+over S or log-lambda. The local optimizer is not a global
+optimizer and independent grids can select different minima.
+Five additional AwesomeFigures PDF/SVG charts are included in
+the manuscript and Sphinx site's full-S experiment page.
+
+The benchmark's Python/scientific outputs, validity flags,
+candidate-evaluation counts and hardware provenance are
+stored in `paper/benchmarks/full_s_search_reference/`
+(Linux GitHub runner). Windows full runs must be committed
+with separate metadata, never mislabeled as hosted results.
+
+~~~powershell
+python paper/benchmarks/full_s_search_modes.py --preset full --repeats 7
+~~~

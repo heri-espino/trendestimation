@@ -1,0 +1,85 @@
+{
+  "timestamp_utc": "2026-10-26T20:37:31.641903+00:00",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "scipy": "1.17.1",
+  "numpy": "2.4.6",
+  "blas_threads": 1,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "preset": "quick",
+  "repeats": 2,
+  "seeds": [
+    20261026
+  ],
+  "n": [
+    24
+  ],
+  "d": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "reference_means": [
+    0.0,
+    0.15
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "aicc",
+    "bic",
+    "mle"
+  ],
+  "backends": [
+    "dense_fresh",
+    "dense_cached",
+    "general_banded",
+    "dense_cholesky",
+    "banded_cholesky",
+    "eigh",
+    "svd"
+  ],
+  "R": [
+    1,
+    3
+  ],
+  "policies": [
+    "single_native_s",
+    "single_lambda",
+    "single_mapped_s_lambda",
+    "native_s",
+    "mapped_s_lambda",
+    "native_log_lambda",
+    "continuous_s",
+    "continuous_log_lambda"
+  ],
+  "reuse_modes": [
+    "shared",
+    "cold"
+  ],
+  "difference_between_policies": "native_s and mapped_s_lambda use identical 17 candidates; native_log_lambda uses 17 different interior penalties with equal finite endpoints; continuous_s/loglambda perform bounded local minimization and check exact endpoints but are NOT global optimization. Single is one S=.5 score. Timed backend setup and evaluation exclude shared grid construction; standalone mapped runtime counts it once."
+}
