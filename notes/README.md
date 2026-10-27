@@ -30,5 +30,7 @@ or inclusion in a scientific manuscript.
   score workloads, fair matched-candidate design, the actual public
   selector experiment, scripts, statistical cautions and spline outlook.
 
+- [Future project: smoothness-integrated trend comparison](../future_projects/smoothness_integrated_trend_comparison/README.md): archived LaTeX derivations, rolling-window comparisons, change-point research questions, and independent-agent handoff. Research proposal only; no completed empirical claims.
+
 When changing code or Sphinx documentation, preserve an explanation here
 of the underlying mathematical relationship and its limitations.
