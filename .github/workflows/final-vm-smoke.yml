@@ -1,0 +1,72 @@
+name: Final VM study reproducibility smoke
+
+on:
+  push:
+    branches:
+      - research/final-vm-inversion-solver-inference-paper
+    paths:
+      - "benchmarks/inversion_study.py"
+      - "paper/computational-statistics-submission/**"
+      - "tests/test_final_vm_study.py"
+      - ".github/workflows/final-vm-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Smoke solver inference and inversion, compile Springer paper
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install library, plotting, paired statistical analysis
+        run: |
+          python -m pip install -e ".[dev,plot]"
+          python -m pip install threadpoolctl
+      - name: Test numerical root parity, analytic edge and tracked outputs
+        run: python -m pytest -q tests/test_final_vm_study.py
+      - name: Smoke only (not publication measurements)
+        run: |
+          python paper/computational-statistics-submission/run_final_vm_study.py --profile smoke --seeds 3 --repeats 2 --root-repeats 2 --threads 1 --skip-pdf
+      - name: Verify source and resulting LaTeX tables
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("paper/computational-statistics-submission")
+          expected=[
+              p/"final_solver_inference_table.tex",
+              p/"final_inversion_table.tex",
+              p/"figures/final_solver_inference.pdf",
+              p/"figures/final_inversion_speed.pdf",
+              p/"research/final_vm/solver/analysis/paired_comparisons.csv",
+              p/"research/final_vm/inversion/raw_inversions.csv",
+              p/"research/final_vm/run_manifest.json",
+          ]
+          for item in expected:
+              assert item.is_file() and item.stat().st_size>20, item
+              print(item, item.stat().st_size)
+          PY
+      - name: Compile Springer manuscript using smoke-only table placeholders
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/computational-statistics-submission
+          root_file: main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - name: Upload smoke artifact (never claim these are Windows findings)
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-vm-study-smoke-${{ github.run_id }}
+          path: |
+            paper/computational-statistics-submission/research/final_vm/
+            paper/computational-statistics-submission/main.pdf
+            paper/computational-statistics-submission/final_*table.tex
+          retention-days: 14
