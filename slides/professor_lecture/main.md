@@ -1782,6 +1782,218 @@ Then test other structured families where appropriate: Whittaker–Henderson and
 ---
 
 <!-- _class: chapter -->
+# X-D. Completed Windows full-factorial study
+
+## From one computation to 17 smoothness targets, eight repeated searches and continuous optimization
+
+---
+
+<!-- _class: compact -->
+# 80,640 actual measurements — not simulations of runtime
+
+The author ran the **full** workload on Windows (Python 3.11, one BLAS thread, seven repetitions).
+
+- $n=24,48$; difference orders $d=0,1,2,3,4,5$.
+- Fixed reference-difference mean $\mu=0$ versus $\mu=0.15$.
+- Seven backends: fresh/cached dense, general banded, dense/banded Cholesky, eigendecomposition and SVD.
+- Five criteria: CV, GCV, AICc, BIC, conditional Gaussian MLE (**not applicable for $d=0$**).
+- $R=1,3,8$ independent series; cold versus shared preparation.
+- Two recorded seeds (20261026, 20261027).
+
+**Source:** `paper/benchmarks/results/full_s_search_modes/` and its Windows environment.json.
+
+---
+
+<!-- _class: math -->
+# All seventeen normalized-S targets, including both boundaries
+
+$
+\mathcal G_S=\{0,0.1,\ldots,0.9,1\}
+\cup\{0.95,0.99,0.999,0.9999,0.999999,0.999999999999\}.
+$
+
+**15 finite interior** values + two exact limits.
+
+- $S=0\implies\lambda=0$: interpolating fit; ordinary CV/GCV undefined at this endpoint.
+- **$S=1\implies\lambda=\infty$**, not a large finite factorization.
+- At $d\ge1$, the limit is the polynomial-nullspace projection adjusted for fixed $\mu$.
+- At $d=0$, the limiting trend is the constant $\mu\mathbf1$.
+
+The exact endpoint is evaluated **analytically**; no method factors $I+\infty Q$.
+
+---
+
+<!-- _class: fig -->
+# One score, a full grid, then eight full searches
+
+![width:1050px](figures/60_windows_workloads.svg)
+
+*Real Windows GCV measurements; $n=48,d=1,\mu=0$. Only numerically valid method/workload cells appear; one-time inversion is counted in standalone mapping.*
+
+---
+
+<!-- _class: compact -->
+# Same grid or different grid? Three computational policies
+
+| Policy | Candidate penalties | Cost of transforming S |
+|:--|:--|:--|
+| Native $S$ | Prescribed 17-point S grid | Invert every scored target |
+| Premapped $S\to\lambda$ | **Exactly the same** 17 penalties | Invert once, reuse |
+| Direct log-$\lambda$ | **Different interior** points, same bounds and count | No inverse S needed |
+
+**The first two must select the same criterion score and smoothness.**
+
+A faster log-$\lambda$ grid is *not* evidence of better selection at identical candidate penalties.
+
+---
+
+<!-- _class: fig -->
+# Windows selection times for all five criteria
+
+![width:1050px](figures/61_windows_grid_coordinates.svg)
+
+*Full 17-target search, $n=48,d=2,R=1,\mu=0$, spectral SVD; time in milliseconds. Premapped standalone time charges one inverse-grid conversion.*
+
+---
+
+<!-- _class: compact -->
+# One full grid: actual paired Windows timings
+
+*Median across two seeds; $n=48,d=2,\mu=0,R=1$, SVD.*
+
+| Criterion | Native $S$ | Map $S\to\lambda$ once | Direct log-$\lambda$* |
+|:--|--:|--:|--:|
+| CV | 2.004 ms | 1.879 ms | 0.545 ms |
+| GCV | 1.851 ms | 1.800 ms | 0.426 ms |
+| AICc | 1.887 ms | 1.810 ms | 0.458 ms |
+| BIC | 2.016 ms | 1.810 ms | 0.449 ms |
+| MLE | 3.477 ms | 2.035 ms | 0.515 ms |
+
+*The direct log-penalty grid evaluates **different interior targets**.*
+
+**4,484 valid matched-coordinate seed pairs:** zero difference in recorded selected $S$ and scores.
+
+---
+
+<!-- _class: math -->
+# Why the mapping pays off when reused
+
+For $M$ fixed targets and $K$ selections, to first order:
+
+$
+T_{\text{native }S}\approx KM(t_{\rm inv}+t_{\rm score}),
+\qquad
+T_{\text{mapped}}\approx Mt_{\rm inv}+KMt_{\rm score}.
+$
+
+$
+\boxed{\text{Avoided repeated inversion}\approx(K-1)Mt_{\rm inv}.}
+$
+
+**Measured Windows run: five criteria sharing one grid, $n=48,d=2,\mu=0$:**
+
+**11.234 ms** native-$S$ selections vs **3.980 ms** one translation plus five searches.
+
+Descriptive speed ratio: **2.82×**, not a universal hardware-independent result.
+
+---
+
+<!-- _class: fig -->
+# Repeated searches: cold versus shared preparation
+
+![width:1040px](figures/62_windows_reuse_eight.svg)
+
+*Eight independent series, $n=48,\mu=0$, SVD, by difference order and criterion. Ratios are backend-only; missing cases were not fully validated.*
+
+---
+
+<!-- _class: compact -->
+# Continuous optimization is NOT the 17-point grid
+
+We also evaluate the same criterion in two different continuous coordinates:
+
+$
+\min_{0<s<1}C(S^{-1}(s))
+\qquad\text{versus}\qquad
+\min_{x\in\mathbb R}C(e^x),\quad x=\log\lambda.
+$
+
+The implemented scalar searches are **bounded local optimizers**, with exact endpoints checked analytically.
+
+Their evaluation counts and candidate positions differ. They may converge to **different local minima**.
+
+That is not evidence of a different statistical criterion or guaranteed global optimality.
+
+---
+
+<!-- _class: fig -->
+# Bounded local optimization: S versus log(lambda)
+
+![width:1040px](figures/63_windows_bounded_search.svg)
+
+*Actual Windows timings, SVD, $n=48,d=2,\mu=0$. These are local numerical searches, not certified global minima.*
+
+---
+
+<!-- _class: fig -->
+# The effect of a nonzero fixed reference mean
+
+![width:1040px](figures/64_windows_fixed_mu.svg)
+
+*Median selected $S$ across two seeds; $n=48,d=2$. A median like 0.85 may lie BETWEEN sampled grid points. $\mu$ is fixed, not jointly estimated.*
+
+---
+
+<!-- _class: compact -->
+# The near-one numerical stability boundary matters
+
+The target $S=0.999999999999$ can require a huge finite penalty, especially for high $d$.
+
+- Dense, banded and Cholesky numerical evaluations may lose agreement in float64 near the limit.
+- A solver with inaccurate or missing candidate scores cannot claim a complete-grid timing victory.
+- A mathematically undefined criterion is **not** the same thing as a failed matrix factorization.
+- Exact $S=1$ is an analytical limiting case, never a numerical LU/Cholesky solve.
+
+**Backend policy must depend on both workload and numerical correctness.**
+
+---
+
+<!-- _class: compact -->
+# Everything used here is archived in GitHub
+
+**Original Windows experiment:** `paper/benchmarks/results/full_s_search_modes/` — 80,640 rows and environment metadata.
+
+**Derived two-seed study:** `paper/benchmarks/windows_full_s_analysis/` — 40,320 paired design cells, candidate parity, selection outcomes and timings.
+
+**Paper and publication figures:** `paper/main.pdf`, `paper/sections/windows_full_s_results.tex`, and five AwesomeFigures PDF/SVG pairs in `paper/figures/`.
+
+**Website:** `docs/windows_full_s_results.rst`
+
+All five slides reuse the **exact publication SVG files**, with source SHA-256 hashes recorded in the slide manifest. No 80,640-cell rerun is needed.
+
+---
+
+<!-- _class: code -->
+# Rebuild both artifacts locally and commit the results
+
+```powershell
+conda activate trendestimation
+python -m pip install -e ".[dev,docs,plot]"
+python -m pip install -r paper/requirements.txt
+
+# Regenerate paper tables and figures from archived data:
+python paper/benchmarks/report_windows_full_s.py
+python paper/build.py --figures --pdf --package
+
+# Regenerate lecture figures and Marp PDF/HTML:
+powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
+```
+
+**PDF prerequisites:** MiKTeX or TeX Live plus latexmk (paper); Node.js and Chromium/Chrome (Marp). Both PDFs can be force-added to Git.
+
+---
+
+<!-- _class: chapter -->
 # XI. Numerical stability
 
 ## Arbitrary admissible d does not imply stable floating-point computation
@@ -2242,7 +2454,8 @@ and selection criteria.**
 Keep separate: theory, mapped-candidate correctness, measured solver costs,
 and future joint-mean likelihood research.
 
-**Next experiment:** compare end-to-end optimization over $s$ and
-$\log\lambda$ for accuracy, runtime and conditioning.
+**Completed:** the Windows 80,640-cell study now compares single evaluations,
+17-point grids, repeated searches, coordinate conversion and bounded local optimization.
+**Next:** numerical robustness near $S=1$, global optimization, and chronological forecasting.
 
 *Which result should become the next theorem or experiment?*
