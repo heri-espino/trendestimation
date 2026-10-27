@@ -1,3 +1,19 @@
+## Archived Windows full preset: 80,640 search records
+
+The author's original 80,640-cell Windows benchmark (n=24,48,
+d=0..5, both fixed mu, five criteria, seven solvers, R=1/3/8,
+8 search policies, two seeds, seven timing repeats) is preserved under
+`benchmarks/results/full_s_search_modes/`. It is **different from the
+Linux-hosted quick reference** and is never silently pooled with it.
+
+`python paper/benchmarks/report_windows_full_s.py` verifies the
+Windows dataset, generates median two-seed tables, parity and
+provenance records, five Springer-width AwesomeFigures PDF+SVG pairs,
+and the manuscript/web tables. The paper includes
+`sections/windows_full_s_results.tex`; Sphinx includes
+`docs/windows_full_s_results.rst`. Rebuilding does **not** require
+rerunning the 80,640-cell experiment.
+
 ## Full S-domain seven-backend × five-criterion factorial
 
 The manuscript additionally includes `sections/full_s_factorial.tex`

@@ -113,6 +113,7 @@ trendestimation
    grid_reuse_selection
    mle_coordinate_figures
    full_s_factorial
+   windows_full_s_results
    benchmark_statistical_protocol
    publishing-research-outputs
    benchmarks

@@ -382,3 +382,64 @@ two timer repetitions, n=24 and BLAS threads=1;
 they are not multi-session inferential evidence.
 Mapped-S timing comparisons must never double-count
 one shared inversion across methods, criteria or series.
+
+
+## 11. Completed Windows full run: source archive and reproducible report
+
+The author's `full` search-mode benchmark has been uploaded as
+**80,640 original records**, at
+`paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv`.
+It is an independent **Windows** machine run, not the hosted Linux
+quick-preset timing dataset.
+
+The actual `environment.json` records two simulated seeds
+(20261026 and 20261027), `n=24,48`, all orders `d=0..5`,
+fixed `mu=0,.15`, all five criteria, all seven backends,
+`R=1,3,8`, cold/shared preparation, eight search policies,
+seven timing repeats, one BLAS thread, and Python 3.11.
+A separate grid-preparation CSV measures the once-per-order
+smoothness-to-penalty conversion.
+
+Source-preserving integration is implemented by
+`paper/benchmarks/report_windows_full_s.py`.
+The script validates the **entire 80,640-cell factorial**, aggregates
+the two seeds per cell (median), checks pairwise native-S versus
+premapped-lambda selected smoothness on successful paired runs,
+and writes `paper/benchmarks/windows_full_s_analysis/`.
+It produces measured Springer tables and five PDF/SVG AwesomeFigures
+pairs using the **Windows** CSV alone.
+
+The resulting manuscript section is
+`paper/sections/windows_full_s_results.tex`; its table is
+data-generated as `paper/sections/windows_full_s_generated.tex`.
+The website is `docs/windows_full_s_results.rst` with an
+automatically regenerated data summary. These outputs are
+part of the same GitHub integration PR as the original uploaded
+Windows results, and the original Linux reference records remain intact.
+
+**Important analysis limitations:**
+(a) S-grid and converted-lambda grid use the SAME candidates,
+so they must select equivalent statistical optima;
+(b) independent log-lambda grid uses DIFFERENT interior candidates;
+(c) continuous bounded optimization is only local;
+(d) invalid or incomplete high-S backends cannot be ranked as
+complete-grid winners;
+(e) MLE at d=0 is not applicable;
+(f) exact S=1 has lambda=infinity and is handled analytically;
+(g) timings on Windows and Linux must not be pooled as if
+they were a single randomized cross-platform trial.
+
+For a complete rebuild from the already-uploaded data (no
+80,640-cell recomputation), use:
+
+~~~powershell
+conda activate trendestimation
+python paper/benchmarks/report_windows_full_s.py
+python paper/build.py --figures --pdf --package
+$env:TRENDESTIMATION_DOCS_EXECUTION="off"
+python -m sphinx -W --keep-going -b html docs build/site
+~~~
+
+All derived outputs, compiler artifacts, metadata, tests, and
+next research steps must be committed and pushed before an
+ephemeral VM is discarded.
