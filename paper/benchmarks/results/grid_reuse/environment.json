@@ -1,0 +1,60 @@
+{
+  "timestamp_utc": "2026-10-26T11:18:40.834565+00:00",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "logical_cpus": 32,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\numpy.libs\\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\scipy.libs\\libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "blas_threads": 1,
+  "preset": "full",
+  "repeats": 7,
+  "seed": 20261026,
+  "methods": [
+    "dense_fresh",
+    "dense_cached",
+    "spectral",
+    "banded",
+    "dense_cholesky",
+    "banded_cholesky"
+  ],
+  "orders": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "grid_policies": [
+    "log_lambda",
+    "uniform_s"
+  ],
+  "mu_values": [
+    0.0,
+    0.15
+  ],
+  "git_revision": "local-unrecorded",
+  "note": "Genuine host-specific GCV grid search, not fit-only timing; all lambda candidates shared across backends. S grid inversion is separately timed and excluded from per-backend solver totals. No CV leverage evaluation."
+}

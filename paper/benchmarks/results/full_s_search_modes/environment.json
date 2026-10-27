@@ -1,0 +1,88 @@
+{
+  "timestamp_utc": "2026-10-26T23:04:49.264299+00:00",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "scipy": "1.17.1",
+  "numpy": "2.4.6",
+  "blas_threads": 1,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\numpy.libs\\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\scipy.libs\\libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "preset": "full",
+  "repeats": 7,
+  "seeds": [
+    20261026,
+    20261027
+  ],
+  "n": [
+    24,
+    48
+  ],
+  "d": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "reference_means": [
+    0.0,
+    0.15
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "aicc",
+    "bic",
+    "mle"
+  ],
+  "backends": [
+    "dense_fresh",
+    "dense_cached",
+    "general_banded",
+    "dense_cholesky",
+    "banded_cholesky",
+    "eigh",
+    "svd"
+  ],
+  "R": [
+    1,
+    3,
+    8
+  ],
+  "policies": [
+    "single_native_s",
+    "single_lambda",
+    "single_mapped_s_lambda",
+    "native_s",
+    "mapped_s_lambda",
+    "native_log_lambda",
+    "continuous_s",
+    "continuous_log_lambda"
+  ],
+  "reuse_modes": [
+    "shared",
+    "cold"
+  ],
+  "difference_between_policies": "native_s and mapped_s_lambda use identical 17 candidates; native_log_lambda uses 17 different interior penalties with equal finite endpoints; continuous_s/loglambda perform bounded local minimization and check exact endpoints but are NOT global optimization. Single is one S=.5 score. Timed backend setup and evaluation exclude shared grid construction; standalone mapped runtime counts it once."
+}
