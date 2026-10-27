@@ -1,0 +1,110 @@
+name: Publish updated measured Windows Marp lecture PDFs
+
+on:
+  push:
+    branches: [docs/marp-windows-full-and-local-paper-build-20261027]
+    paths:
+      - 'slides/professor_lecture/**'
+      - 'tests/test_professor_lecture.py'
+      - '.github/workflows/marp-windows-full-export.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: marp-windows-full-export-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-preserve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Python plotting and Marp dependencies
+        run: |
+          python -m pip install -e '.[plot]'
+          python -m pip install statsmodels
+          python -m pip install pytest
+      - name: Run research lecture regression tests
+        run: python -m pytest tests/test_professor_lecture.py -q
+      - name: Rebuild scientific vectors without rerunning full benchmark
+        run: python slides/professor_lecture/make_figures.py
+      - name: Verify copied Windows figures exactly match the publication sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          root=Path('slides/professor_lecture')
+          manifest=json.loads((root/'figures/manifest.json').read_text())
+          entries={f['file']:f for f in manifest['figures']}
+          names={
+              '60_windows_workloads':'windows_full_s_workloads',
+              '61_windows_grid_coordinates':'windows_full_s_grid_coordinates',
+              '62_windows_reuse_eight':'windows_full_s_reuse_d',
+              '63_windows_bounded_search':'windows_full_s_bounded',
+              '64_windows_fixed_mu':'windows_full_s_means',
+          }
+          for target,origin in names.items():
+              dst=root/'figures'/f'{target}.svg'
+              src=Path('paper/figures')/f'{origin}.svg'
+              assert dst.read_bytes()==src.read_bytes(),target
+              assert entries[f'figures/{target}.svg']['source_sha256']==hashlib.sha256(src.read_bytes()).hexdigest()
+              assert 'Windows' in entries[f'figures/{target}.svg']['kind']
+          assert manifest['count']>=64
+          print('Verified 5 source-identical Windows SVGs and manifest')
+          PY
+      - name: Convert Marp source to offline HTML and PDF
+        run: |
+          npx --yes @marp-team/marp-cli slides/professor_lecture/main.md --theme slides/professor_lecture/theme.css --html --allow-local-files --output slides/professor_lecture/main.html
+          npx --yes @marp-team/marp-cli slides/professor_lecture/main.md --theme slides/professor_lecture/theme.css --html --allow-local-files --pdf --output slides/professor_lecture/main.pdf
+      - name: Check newly compiled presentation contains both formats
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          folder=Path('slides/professor_lecture')
+          p=folder/'main.pdf'
+          h=folder/'main.html'
+          assert p.read_bytes().startswith(b'%PDF-')
+          assert h.stat().st_size>100000
+          assert p.stat().st_size>100000
+          assert 'Completed Windows full-factorial' in h.read_text(encoding='utf-8')
+          print('Verified compiled lecture HTML and PDF')
+          PY
+      - name: Commit actual exports and manifest on this feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f slides/professor_lecture/main.pdf slides/professor_lecture/main.html
+          git add -f slides/professor_lecture/figures/manifest.json
+          git add -f slides/professor_lecture/figures/60_windows_workloads.svg slides/professor_lecture/figures/61_windows_grid_coordinates.svg
+          git add -f slides/professor_lecture/figures/62_windows_reuse_eight.svg slides/professor_lecture/figures/63_windows_bounded_search.svg slides/professor_lecture/figures/64_windows_fixed_mu.svg
+          if git diff --cached --quiet; then
+            echo 'No published Marp changes'
+          else
+            git commit -m 'slides: archive rebuilt Windows full experiment lecture HTML/PDF and figure manifest'
+            git fetch origin docs/marp-windows-full-and-local-paper-build-20261027
+            git -c rebase.autoStash=true rebase origin/docs/marp-windows-full-and-local-paper-build-20261027
+            git push origin HEAD:docs/marp-windows-full-and-local-paper-build-20261027
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-full-experiment-lecture
+          path: |
+            slides/professor_lecture/main.html
+            slides/professor_lecture/main.pdf
+            slides/professor_lecture/figures/
+          retention-days: 30

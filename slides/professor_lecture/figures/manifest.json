@@ -1,7 +1,7 @@
 {
   "generator": "slides/professor_lecture/make_figures.py",
   "reproducibility_seed": 24021,
-  "count": 59,
+  "count": 64,
   "figures": [
     {
       "file": "figures/01_signal.svg",
@@ -236,17 +236,17 @@
     {
       "file": "figures/47_measured_full.svg",
       "kind": "host measured",
-      "source": "paper\\benchmarks\\results\\full_fit_timings.csv; local CSV, includes setup"
+      "source": "paper/benchmarks/results/full_fit_timings.csv; local CSV, includes setup"
     },
     {
       "file": "figures/48_measured_trace.svg",
       "kind": "host measured",
-      "source": "paper\\benchmarks\\results\\trace_timings.csv; local CSV, includes setup"
+      "source": "paper/benchmarks/results/trace_timings.csv; local CSV, includes setup"
     },
     {
       "file": "figures/49_mauna_loa.svg",
-      "kind": "missing",
-      "source": "no host benchmark CSV present"
+      "kind": "observed data",
+      "source": "statsmodels.datasets.co2 weekly observations aggregated to monthly means"
     },
     {
       "file": "figures/50_cv_coordinate_pair.svg",
@@ -297,6 +297,46 @@
       "file": "figures/59_public_candidate_quality.svg",
       "kind": "missing",
       "source": "no host benchmark CSV present"
+    },
+    {
+      "file": "figures/60_windows_workloads.svg",
+      "kind": "host measured: Windows full",
+      "source": "paper/figures/windows_full_s_workloads.svg",
+      "source_sha256": "49837ca840347f3c5c245b492767fe94495e053873d85dfc29c92c9db46b9be1",
+      "original_measurements": "paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv",
+      "provenance": "Windows full; 80640 rows, 2 seeds, 7 repeats"
+    },
+    {
+      "file": "figures/61_windows_grid_coordinates.svg",
+      "kind": "host measured: Windows full",
+      "source": "paper/figures/windows_full_s_grid_coordinates.svg",
+      "source_sha256": "2e52d233de986826a33663d915518c7333beb0f2b19db7900d13ec311579cb77",
+      "original_measurements": "paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv",
+      "provenance": "Windows full; 80640 rows, 2 seeds, 7 repeats"
+    },
+    {
+      "file": "figures/62_windows_reuse_eight.svg",
+      "kind": "host measured: Windows full",
+      "source": "paper/figures/windows_full_s_reuse_d.svg",
+      "source_sha256": "535ef3ad77304c6cbd7235af2608a05edacb9161f96ae4776156562f73d58110",
+      "original_measurements": "paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv",
+      "provenance": "Windows full; 80640 rows, 2 seeds, 7 repeats"
+    },
+    {
+      "file": "figures/63_windows_bounded_search.svg",
+      "kind": "host measured: Windows full",
+      "source": "paper/figures/windows_full_s_bounded.svg",
+      "source_sha256": "330906fe812381a8621e406eb5bca2bad5aebcc22ba3f196203602d66de15f4f",
+      "original_measurements": "paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv",
+      "provenance": "Windows full; 80640 rows, 2 seeds, 7 repeats"
+    },
+    {
+      "file": "figures/64_windows_fixed_mu.svg",
+      "kind": "host measured: Windows full",
+      "source": "paper/figures/windows_full_s_means.svg",
+      "source_sha256": "dca50199de43cd926e6e3fea0ba92f0dd863b98ccc3046c0d30a47dc7f297edf",
+      "original_measurements": "paper/benchmarks/results/full_s_search_modes/search_mode_timings.csv",
+      "provenance": "Windows full; 80640 rows, 2 seeds, 7 repeats"
     }
   ],
   "warning": "Complexity and root-method schematics are not measured runtimes."

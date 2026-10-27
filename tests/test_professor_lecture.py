@@ -68,6 +68,9 @@ class MarpResearchLecture(unittest.TestCase):
             "56_phase_breakdown.svg", "57_optimum_quality.svg",
             "58_public_coordinate_runtime.svg",
             "59_public_candidate_quality.svg",
+            "60_windows_workloads.svg", "61_windows_grid_coordinates.svg",
+            "62_windows_reuse_eight.svg", "63_windows_bounded_search.svg",
+            "64_windows_fixed_mu.svg",
         }
         static={m+".svg" for m in re.findall(
             r'save\("([0-9][a-zA-Z0-9_]+)"', self.script,
@@ -98,6 +101,28 @@ class MarpResearchLecture(unittest.TestCase):
         self.assertIn("full_fit_timings.csv", self.script)
         self.assertIn("trace_timings.csv", self.script)
         self.assertIn("no host benchmark CSV present", self.script)
+
+    def test_windows_full_preset_slides_use_actual_published_sources(self):
+        windows=LECTURE/"windows_full_results.py"
+        self.assertTrue(windows.is_file())
+        content=windows.read_text(encoding="utf-8")
+        self.assertIn("source_sha256",content)
+        self.assertIn("stage_windows_figures",content)
+        self.assertIn("80640",content)
+        for key in ("60_windows_workloads","61_windows_grid_coordinates",
+                    "62_windows_reuse_eight","63_windows_bounded_search",
+                    "64_windows_fixed_mu"):
+            self.assertIn(f"figures/{key}.svg",self.deck)
+        for key in ("windows_full_s_workloads","windows_full_s_grid_coordinates",
+                    "windows_full_s_reuse_d","windows_full_s_bounded",
+                    "windows_full_s_means"):
+            self.assertTrue((ROOT/"paper"/"figures"/f"{key}.svg").is_file())
+        self.assertIn("80,640 actual measurements",self.deck)
+        self.assertIn("11.234 ms",self.deck)
+        self.assertIn("3.980 ms",self.deck)
+        self.assertIn("4,484 valid matched-coordinate seed pairs",self.deck)
+        self.assertIn("bounded local",self.deck)
+        self.assertIn("report_windows_full_s.py",self.deck)
 
     def test_smoke_svg_generator(self):
         result=subprocess.run(

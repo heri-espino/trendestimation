@@ -499,6 +499,11 @@ def main():
         paired_score_figures(models[2], y, save)
         measured_figures(save, axes, message)
         public_selector_figures(save, axes, message)
+        # Final author-run full factorial (Windows, 80,640 recorded cells).
+        # Reuse exact AwesomeFigures vectors from paper/figures: no rerun,
+        # no invented benchmark timing, with source hashes in the manifest.
+        from windows_full_results import stage_windows_figures
+        stage_windows_figures(FIGURES)
     manifest={
         "generator":"slides/professor_lecture/make_figures.py",
         "reproducibility_seed":24021,
