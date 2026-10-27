@@ -5,7 +5,7 @@ Measured full Windows study
 
 The source contains **80,640 real Windows search records**, with
 two experimental seeds, seven timing repetitions and one BLAS thread.
-For :math:\`n=48, d=2, \mu=0, R=1\`, spectral SVD, the following
+For :math:`n=48, d=2, \mu=0, R=1`, spectral SVD, the following
 millisecond values are medians of the two recorded seeds:
 
 .. list-table:: Seventeen-point grid timings
@@ -24,7 +24,7 @@ millisecond values are medians of the two recorded seeds:
      - 1.851 ms
      - 1.800 ms
      - 0.426 ms
-   * - AICC
+   * - AICc
      - 1.887 ms
      - 1.810 ms
      - 0.458 ms
