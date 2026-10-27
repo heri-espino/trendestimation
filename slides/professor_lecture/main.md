@@ -1910,7 +1910,7 @@ Descriptive speed ratio: **2.82×**, not a universal hardware-independent result
 <!-- _class: compact -->
 # Continuous optimization is NOT the 17-point grid
 
-We also evaluate the same criterion in two different continuous coordinates:
+The recorded **end-to-end optimization** experiment also evaluates the same criterion in two different continuous coordinates:
 
 $
 \min_{0<s<1}C(S^{-1}(s))
