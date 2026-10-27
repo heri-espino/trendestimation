@@ -38,6 +38,7 @@ jobs:
         run: |
           python -m pip install -e '.[plot]'
           python -m pip install statsmodels
+          python -m pip install pytest
       - name: Run research lecture regression tests
         run: python -m pytest tests/test_professor_lecture.py -q
       - name: Rebuild scientific vectors without rerunning full benchmark
