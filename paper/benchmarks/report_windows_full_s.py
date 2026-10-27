@@ -235,7 +235,7 @@ def manuscript(index, prep):
         for policy in ("native_s","mapped_s_lambda","native_log_lambda"):
             r=pick(index,criterion=criterion,policy=policy)
             costs.append(number(value_ms(r)) if r["both_valid"] else "--")
-        header.append(criterion.upper()+" & "+" & ".join(costs)+r" \\")
+        header.append(("AICc" if criterion == "aicc" else criterion.upper())+" & "+" & ".join(costs)+r" \\")
     header += [r"\bottomrule",r"\end{tabular}",r"\end{table}",""]
     ref = [pick(index,criterion=c,policy="native_s") for c in CRITERIA]
     mapped = [pick(index,criterion=c,policy="mapped_s_lambda") for c in CRITERIA]
@@ -281,7 +281,7 @@ def docs(index, parity):
         "",
         "The source contains **80,640 real Windows search records**, with",
         "two experimental seeds, seven timing repetitions and one BLAS thread.",
-        "For :math:\`n=48, d=2, \\mu=0, R=1\`, spectral SVD, the following",
+        "For :math:`n=48, d=2, \\mu=0, R=1`, spectral SVD, the following",
         "millisecond values are medians of the two recorded seeds:",
         "",
         ".. list-table:: Seventeen-point grid timings",
@@ -300,7 +300,7 @@ def docs(index, parity):
             vals.append(number(value_ms(row))+" ms"
                         if row["both_valid"] else "N/A")
         lines += [
-            "   * - "+criterion.upper(),
+            "   * - "+("AICc" if criterion == "aicc" else criterion.upper()),
             "     - "+vals[0],
             "     - "+vals[1],
             "     - "+vals[2],
