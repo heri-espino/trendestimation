@@ -1,0 +1,111 @@
+name: Integrate measured Windows full S experiment into Springer paper and site
+
+on:
+  push:
+    branches: [research/windows-full-80640-paper-site]
+    paths:
+      - 'paper/benchmarks/report_windows_full_s.py'
+      - 'paper/sections/windows_full_s_results.tex'
+      - 'docs/windows_full_s_results.rst'
+      - 'tests/test_windows_full_s_analysis.py'
+      - '.github/workflows/windows-full-s-publication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-full-s-publication-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  analysis-and-publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned AwesomeFigures and manuscript toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk
+          python -m pip install -e '.[dev,docs,plot]'
+          python -m pip install -r paper/requirements.txt
+      - name: Lint, inspect Windows inputs, and check complete original design
+        run: |
+          python -m ruff check paper/benchmarks/report_windows_full_s.py tests/test_windows_full_s_analysis.py
+          python -m pytest -q tests/test_windows_full_s_analysis.py
+          python paper/benchmarks/report_windows_full_s.py --summaries-only
+      - name: Render Windows-specific AwesomeFigures from uploaded CSVs
+        run: |
+          python paper/benchmarks/report_windows_full_s.py
+      - name: Validate actual provenance and vector outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('paper/benchmarks/windows_full_s_analysis/validation.json')
+          data=json.loads(path.read_text(encoding='utf-8'))
+          assert data['raw_rows']==80640
+          assert data['two_seed_design_cells']==40320
+          assert data['repeats']==7 and data['blas_threads']==1
+          assert data['matched_valid_seed_pairs']>0
+          assert data['maximum_selected_s_disagreement']<=1e-6
+          assert data['platform'].startswith('Windows')
+          stems=('windows_full_s_workloads','windows_full_s_grid_coordinates',
+                 'windows_full_s_reuse_d','windows_full_s_bounded',
+                 'windows_full_s_means')
+          for name in stems:
+              p=Path('paper/figures')/(name+'.pdf')
+              s=Path('paper/figures')/(name+'.svg')
+              assert p.is_file() and p.read_bytes().startswith(b'%PDF-')
+              assert s.is_file() and '<svg' in s.read_text(encoding='utf-8')
+          print('Validated real Windows source and 5 AwesomeFigures PDF/SVG pairs')
+          PY
+      - name: Regenerate other Springer figure prerequisites
+        run: |
+          python paper/build.py --figures
+      - name: Strict Sphinx site with new figures and measured tables
+        env:
+          TRENDESTIMATION_DOCS_EXECUTION: 'off'
+        run: |
+          python -m sphinx -W --keep-going -b html docs build/site
+      - name: Build Springer PDF and flat submission ZIP
+        run: |
+          python paper/build.py --pdf --package
+      - name: Preserve raw data, derived evidence, vector artwork and compiled paper
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f paper/benchmarks/windows_full_s_analysis/*.csv
+          git add -f paper/benchmarks/windows_full_s_analysis/validation.json
+          git add paper/sections/windows_full_s_generated.tex docs/windows_full_s_generated.rst
+          git add -f paper/figures/windows_full_s_*.pdf paper/figures/windows_full_s_*.svg
+          git add -f paper/main.pdf paper/computational-statistics-submission.zip
+          if git diff --cached --quiet; then
+            echo 'Everything is already preserved'
+          else
+            git commit -m 'results: integrate full 80640-cell Windows study and AwesomeFigures into manuscript'
+            git fetch origin research/windows-full-80640-paper-site
+            git -c rebase.autoStash=true rebase origin/research/windows-full-80640-paper-site
+            git push origin HEAD:research/windows-full-80640-paper-site
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-full-s-80640-publication
+          path: |
+            paper/benchmarks/windows_full_s_analysis/
+            paper/figures/windows_full_s_*.pdf
+            paper/figures/windows_full_s_*.svg
+            paper/main.pdf
+            paper/computational-statistics-submission.zip
+            build/site/
+          retention-days: 30
