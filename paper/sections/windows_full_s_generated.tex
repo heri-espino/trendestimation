@@ -1,0 +1,34 @@
+% AUTO-GENERATED FROM TWO RECORDED WINDOWS SEEDS; DO NOT EDIT VALUES
+\begin{table}[tbp]
+\centering
+\caption{Author's Windows full-run median complete 17-point grid
+selection times (milliseconds) for two independent recorded seeds,
+$n=48$, $d=2$, fixed $\mu=0$, $R=1$, spectral SVD,
+one BLAS thread and seven timing repetitions.
+Premapped $S\to\lambda$ includes one complete grid conversion.
+Independent log-$\lambda$ has different interior nodes.
+Cells are shown only where both seeds are numerically valid.}
+\label{tab:windows-full-search}
+\begin{tabular}{lrrr}
+\toprule
+Criterion & Native $S$ & Premapped $\lambda$ & Log-$\lambda$ \\
+\midrule
+CV & 2.004 & 1.879 & 0.545 \\
+GCV & 1.851 & 1.800 & 0.426 \\
+AICC & 1.887 & 1.810 & 0.458 \\
+BIC & 2.016 & 1.810 & 0.449 \\
+MLE & 3.477 & 2.035 & 0.515 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+When reusing exactly one pretranslated candidate grid across all five criteria, the measured native-$S$ total was 11.234\,ms and the shared $S\to\lambda$ mapping plus five backend-only searches took 3.980\,ms (descriptive ratio 2.823). This accounting charges grid inversion exactly once, not once per statistical criterion.
+
+The $80\,640$ original author-host measurements and machine
+metadata are preserved under
+\texttt{paper/benchmarks/results/full\_s\_search\_modes/}.
+The Windows study covers $n=24,48$, $d=0,\ldots,5$,
+$\mu=0,0.15$, $R=1,3,8$, seven backends, five criteria,
+and cold versus shared backend preparation.
+MLE at $d=0$ remains not applicable. At $S=1$
+the $\lambda=\infty$ limit is evaluated analytically.
