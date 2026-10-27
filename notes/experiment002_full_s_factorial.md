@@ -443,3 +443,37 @@ python -m sphinx -W --keep-going -b html docs build/site
 All derived outputs, compiler artifacts, metadata, tests, and
 next research steps must be committed and pushed before an
 ephemeral VM is discarded.
+
+
+
+## 12. Marp lecture integration (2026-10-27)
+
+Professor research lecture source:
+`slides/professor_lecture/main.md`, chapter X-D, with five
+vector illustrations staged by `slides/professor_lecture/windows_full_results.py`
+from the EXACT paper SVGs. Manifest includes SHA-256 hashes and
+explicitly labels the originating Windows 80,640-cell run.
+No new numerical observations are synthesized.
+The lecture distinguishes complete 17-target grid searches,
+single scores, cold/warm R=8 experiments, bounded local
+optimization, and proper equal-candidate S-to-lambda parity.
+It records illustrative n=48, d=2, mu=0 timings
+(CV 2.004/1.879ms, GCV 1.851/1.800ms, AICc 1.887/1.810ms,
+BIC 2.016/1.810ms, MLE 3.477/2.035ms) and the
+11.234ms native-versus-3.980ms once-mapped combined five-criterion
+comparison. The independent log-lambda grid does NOT visit
+the same interior candidate set.
+
+Compile from root without re-running the expensive experiment:
+
+```powershell
+conda activate trendestimation
+python -m pip install -r paper/requirements.txt
+python paper/benchmarks/report_windows_full_s.py
+python paper/build.py --figures --pdf --package
+powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
+```
+
+The paper PDF is already versioned in GitHub. New local PDF builds
+should be committed/pushed, retaining all upstream data and source
+code; do not stage unrelated cache or licensed literature.
