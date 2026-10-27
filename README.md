@@ -249,6 +249,10 @@ study-run directory. No source code or Marp presentation branch is changed.
 For details and safety restrictions, see
 [Publishing research outputs](docs/publishing-research-outputs.md).
 
+## Future projects (not part of the library API)
+
+- [Smoothness-integrated trend comparison](future_projects/smoothness_integrated_trend_comparison/README.md): a separate, exploratory two-column LaTeX research note on global and rolling Hilbert-space trend distances, fixed or nonzero difference drift, level/shape decomposition, and a proposed change-point extension. **Not yet implemented or validated.**
+
 ## Development
 
 ```bash
