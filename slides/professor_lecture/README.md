@@ -1,3 +1,72 @@
+## Latest: complete Windows study and local paper + Marp rebuild
+
+**New chapter X-D:** The professor's Marp research notebook now includes
+the **80,640-cell author-run Windows experiment** rather than relying only
+on early Linux quick runs or the incomplete 3×4×3 classroom factorial.
+
+The new module covers $n=24,48$, $d=0,\ldots,5$, fixed reference-difference
+means 0 and .15, all seven numerical backends, five statistical criteria,
+17 smoothness targets including the exact $S=1$ limit, $R=1,3,8$,
+cold and shared preprocessing, and bounded local continuous optimization.
+
+It uses **five measured AwesomeFigures vectors** from
+`paper/figures/windows_full_s_*.svg` copied deterministically to
+`figures/60_windows_*.svg` through `windows_full_results.py`.
+The generated figure manifest records the original path and SHA-256.
+The lecture generator **does not recompute** any of the 80,640 measured
+searches; it simply uses already published vectors and other existing
+figure recipes.
+
+The experimental methods have distinct interpretation:
+**native S and pretranslated S-to-lambda** score identical candidates;
+**independently log-spaced lambda** has different interior targets;
+bounded minimizers in either coordinate are **local**, not certified
+global. The Windows-host times must not be pooled with the earlier
+GitHub-Linux quick reference.
+
+### Compile paper and lecture locally (Windows, repository root)
+
+```powershell
+git switch main
+git pull --ff-only origin main
+conda activate trendestimation
+python -m pip install -e ".[dev,docs,plot]"
+python -m pip install -r paper/requirements.txt
+
+# Uses committed Windows raw CSV: does NOT rerun the full experiment
+python paper/benchmarks/report_windows_full_s.py
+python paper/build.py --figures --pdf --package
+
+# Requires Node.js; PDF requires Chrome or Chromium
+powershell -ExecutionPolicy Bypass -File slides/professor_lecture/build.ps1
+```
+
+**Local requirements:** MiKTeX/TeX Live, latexmk and pdflatex for the
+paper and exact AwesomeFigures Springer font layout; Node.js and
+Chrome/Chromium for Marp PDF. If TeX is installed in a conda
+environment, activate that environment before running the commands.
+
+Results are `paper/main.pdf`, `paper/computational-statistics-submission.zip`,
+`slides/professor_lecture/main.pdf` and `main.html`.
+The PDF is already committed in the repository, but to publish a
+*newly compiled local* copy, use a separate generated-output branch
+via `python scripts/publish_generated_outputs.py --publish`
+(the script checks for uncommitted tracked edits), or explicitly
+stage just those generated files and push after review.
+
+```powershell
+git add -f paper/main.pdf paper/computational-statistics-submission.zip slides/professor_lecture/main.pdf slides/professor_lecture/main.html
+git commit -m "docs: refresh local Springer and Marp compiled publications"
+git push
+```
+
+The two pdfs should not require rerunning any heavy experiment.
+See `notes/experiment002_full_s_factorial.md` and
+`docs/windows_full_s_results.rst` for scientific provenance.
+
+---
+
+
 # Professor research lecture — trendestimation
 
 An extensive, mathematical **Marp research notebook**, not a short conference
@@ -31,9 +100,9 @@ https://trendestimation.github.io/trendestimation/smoothness_coordinate.html
 The normalized index is conditional trace smoothness, **not**
 forecast confidence or a percentage of noise removed. Neither
 bounded coordinates nor numerical inversion establish faster
-optimization. The existing host solver benchmarks do not compare
-end-to-end `S` versus `log(lambda)` searches; that experiment
-remains a future task. All 49 figure recipes and existing measured
+optimization. That original module predates the independently measured full Windows
+search-coordinate study now included in **chapter X-D**; the complete
+author-run data and their figures are archived and verified. All 49 figure recipes and existing measured
 data remain unchanged.
 
 ## Factorial computational comparison: 3 × 4 × 3, plus released selectors
@@ -132,8 +201,8 @@ bash slides/professor_lecture/build.sh --html-only
 This emits slides/professor_lecture/main.html and main.pdf alongside
 main.md and theme.css, with local SVGs under figures/. PDF export requires
 Chrome/Chromium and its OS libraries. HTML export works without PDF.
-Files are Git-ignored so commits contain editable Markdown, CSS, Python
-figure recipes, and build instructions — not opaque exports.
+The generated HTML/PDF and figures are normally Git-ignored by default,
+but reviewed publication outputs can be explicitly force-added and committed.
 The relative SVG paths mean that when sharing main.html, you must also
 copy the figures/ folder.
 
