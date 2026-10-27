@@ -157,3 +157,15 @@ on a common score scale. Controlled smoothness is NOT a sixth
 optimization criterion. Extrapolation curves are anchored local
 polynomials of historical trends, not validated probabilistic
 forecasts. Holdout losses use one historical origin only.
+
+
+## Final one-run Windows solver and inversion study
+
+To finish the two outstanding computational benchmarks, including
+paired seed-level solver uncertainty and Brent/Newton/secant/bisection
+accuracy and runtime, use the single-command VM protocol in
+[FINAL_VM_README.md](FINAL_VM_README.md). It writes all raw trials,
+validity checks, plots, tables, environment metadata and Springer PDF
+inside the tracked repository so ordinary `git add .`, `git commit`,
+and `git push` preserve the complete evidence. The existing
+80,640-search Windows experiment is reused, not rerun.
