@@ -80,6 +80,10 @@ jobs:
             echo "No changes in render-only output."
           else
             git commit -m "paper: archive expanded SNCS manuscript tables and figures from preserved results"
+            # Other agents may have pushed documentation since this run started.
+            # Rebase the render-only commit; never force-push the research branch.
+            git fetch origin "${{ github.ref_name }}"
+            git rebase "origin/${{ github.ref_name }}"
             git push origin "HEAD:${{ github.ref_name }}"
           fi
       - uses: actions/upload-artifact@v4
