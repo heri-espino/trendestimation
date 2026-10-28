@@ -456,11 +456,15 @@ def run(preset="smoke",seed=20261028,blas_threads=1,
             f"Collected {len(raw)} phase records, {len(full)} workflows.\n",
             encoding="utf-8",
         )
-        if raw: csv_write(run_dir/"partial_phases.csv",raw)
-        if full: csv_write(run_dir/"partial_workflows.csv",full)
-        if quality: csv_write(run_dir/"partial_validation.csv",quality)
+        if raw:
+            csv_write(run_dir/"partial_phases.csv",raw)
+        if full:
+            csv_write(run_dir/"partial_workflows.csv",full)
+        if quality:
+            csv_write(run_dir/"partial_validation.csv",quality)
         if publish_results:
-            try: publish(run_dir)
+            try:
+                publish(run_dir)
             except Exception as e:
                 print(f"Could not push partial results: {e}",file=sys.stderr)
         raise
