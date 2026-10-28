@@ -6,7 +6,6 @@ paper dependencies in the dedicated publication workflow; core CI can skip.
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -48,6 +47,9 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
         assert target.is_file() and target.stat().st_size > 1000
         report = json.loads(target.with_suffix(".typography.json").read_text())
         assert report["font_backend"] == "pdfLaTeX PGF-generated vector PDF"
+        assert report["typography_provenance"] == "exact-tex-preamble"
+        assert report["pdf_fonts"] and all(font["embedded"] for font in report["pdf_fonts"])
+        assert report["pdf_sha256"]
         assert report["font_family"] == layout.font_family
         assert report["body_font_pt"] == layout.fontsize_pt
         assert report["inclusion_fraction"] == fraction
@@ -70,9 +72,9 @@ def test_master_renderer_checks_each_cited_figures_tex_font():
     )
     theme = (HERE/"contrast_theme.py").read_text(encoding="utf-8")
     assert "af.inspect_latex(" in theme
-    assert "af.latex_style(" in theme
-    assert 'backend="pgf"' in theme
-    assert "pub.fit(fig," in theme
-    assert "pub.audit(fig)" in theme
-    assert "savefig.bbox" in theme
+    assert "with af.paper(" in theme
+    assert "publication.savefig(" in theme
+    assert "record.pdf_fonts" in theme
+    assert "record.typography" in theme
+    assert "af.audit_figure(" in theme
     assert "sncs_main.tex" in theme
