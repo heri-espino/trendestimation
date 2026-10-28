@@ -1,0 +1,248 @@
+% Short ORIGINAL RESEARCH article track, adapted for SN Computer Science.
+% This file does NOT replace the archival full paper in main.tex.
+% Rebuild the figures from cached CSV/JSON; no benchmarks are rerun.
+\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{url}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{\operatorname{tr}}
+\begin{document}
+\title[Efficient penalized trend computation]{Computational trade-offs in penalized least-squares trend estimation: normalized smoothness, numerical inversion, and solver reuse}
+\author*[1]{\fnm{Heriberto} \sur{Espino-Montelongo}}
+\author[1]{\fnm{Daniela} \sur{Cort\'es-Toto}}
+\affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
+ \orgaddress{\city{San Andr\'es Cholula},\state{Puebla},\country{Mexico}}}
+
+\abstract{Penalized least-squares (PLS) trend smoothing has well-established statistical foundations, but the relative cost of selecting a smoothing parameter depends on the linear-algebra backend, reusability, and parameterization. We present a reproducible comparison organized around the normalized trace smoothness coordinate $S\in[0,1]$, with arbitrary finite-difference order and a fixed or data-derived reference difference mean. The computational study distinguishes complete parameter searches from individual trend fits and $S$-inversion calls. It combines a previously archived 80,640-trial comparison, a paired solver experiment with seed-level bootstrap intervals and multiplicity-adjusted tests, and a float64 comparison of Brent, safeguarded Newton, safeguarded secant, and bisection. End-to-end rankings vary with workload and preparation reuse; inversion performance additionally depends on distance to the smoothness boundaries. Frozen monthly atmospheric CO$_2$ and federal funds observations illustrate CV, GCV, AICc, BIC, conditional Gaussian profile likelihood, and prescribed smoothness for four difference orders. All experiments and figures can be regenerated independently from archived measurements. The results support workload-specific numerical choices rather than a universally best solver or forecasting rule.}
+\keywords{penalized least squares, Whittaker--Henderson smoother, numerical algorithms, smoothness inversion, reproducible benchmarking, time series}
+\maketitle
+
+\section{Introduction}\label{sec:sncs-intro}
+Trend smoothing is useful when a noisy observed sequence contains
+persistent behavior that must be isolated from short-term variation.
+The finite-difference penalized least-squares (PLS) model goes back to
+Whittaker and subsequent developments, including Guerrero's formulation
+with reference differences \cite{whittaker1923graduation,guerrero2007penalized}.
+Selecting the penalty by CV, GCV, AICc, or BIC is well studied
+\cite{cortes2017smoothness}, as are structured algorithms for
+Whittaker--Henderson problems \cite{weinert2007wh}.
+Our aim is \emph{not} to claim the penalty or its spectral representation
+as new. Instead, we quantify the engineering trade-offs that occur
+when penalties must be repeatedly evaluated, smoothness must be
+specified on a common scale, and numerical results must be checked.
+
+The experimental presentation follows the distinction between
+\emph{runtime and quality} used in comparisons of inference algorithms,
+including Berns et al.\ \cite{berns2022automated}.
+Gauss et al.\ \cite{gauss2021skeleton} provide a complementary example
+of evaluating smoothing choices against competing performance
+requirements, and Cardoso et al.\ \cite{cardoso2025novelty} exemplify
+an explicit algorithmic workflow and comparisons against alternatives.
+Those studies address different models; their numerical conclusions
+are \emph{not} transferred to PLS.
+
+Our contributions are: (i) a common trace-normalized smoothness
+coordinate and an explicit inversion-comparison protocol;
+(ii) matched-workload measurements of dense, spectral and banded
+backends, including paired uncertainty for full-curve evaluation;
+and (iii) a reproducible software and graphical study that
+preserves numerical outputs independently of figure rendering.
+Forecast extensions are illustrative, not a separate forecasting
+algorithm.
+
+\section{Penalized trends and computational coordinates}\label{sec:sncs-method}
+For equally spaced $y\in\R^n$, let $D_d\in\R^{(n-d)\times n}$
+denote the $d$th forward-difference operator, with $1\le d<n$.
+For a given $\lambda\ge0$ and reference mean $\mu\in\R$,
+\begin{equation}\label{eq:sncs-pls}
+\widehat\tau_{\lambda,\mu}
+=\arg\min_{\tau\in\R^n}
+\left\{\|y-\tau\|_2^2+
+ \lambda\|D_d\tau-\mu\mathbf1\|_2^2\right\}.
+\end{equation}
+Writing $Q_d=D_d^\top D_d$, the unique finite-penalty solution is
+\begin{equation}\label{eq:sncs-fit}
+\widehat\tau_{\lambda,\mu}=
+ (I+\lambda Q_d)^{-1}
+ (y+\lambda\mu D_d^\top\mathbf1).
+\end{equation}
+Since $D_d$ has rank $n-d$, $Q_d$ has $d$ zero eigenvalues.
+The null space contains sampled polynomials of degree less than $d$.
+For positive eigenvalues $\delta_1,\ldots,\delta_{n-d}$
+of $Q_d$, the smoother matrix
+$H_\lambda=(I+\lambda Q_d)^{-1}$
+has $\tr(H_\lambda)=d+\sum_j(1+\lambda\delta_j)^{-1}$.
+Thus the normalized index
+\begin{equation}\label{eq:sncs-smoothness}
+S(\lambda)=\frac{n-\tr(H_\lambda)}{n-d}
+ =\frac1{n-d}\sum_{j=1}^{n-d}
+   \frac{\lambda\delta_j}{1+\lambda\delta_j}
+\end{equation}
+maps $[0,\infty]$ onto $[0,1]$. For finite positive $\lambda$,
+\[
+ S'(\lambda)=\frac1{n-d}\sum_j
+ \frac{\delta_j}{(1+\lambda\delta_j)^2}>0.
+\]
+Hence each $s\in(0,1)$ has a unique $\lambda=S^{-1}(s)$.
+The exact endpoints are $S^{-1}(0)=0$ and $S^{-1}(1)=\infty$.
+Evaluating the complementary expression for $1-S$ avoids cancellation
+when $s$ approaches one.
+
+For fixed $\mu$, the public implementation supports leave-one-out
+CV, GCV, AICc, BIC, conditional Gaussian profile likelihood (MLE),
+and controlled $S$. The first five optimize distinct objectives,
+while controlled $S$ is a \emph{prescribed target}, not a criterion.
+When $\mu=\overline{D_dy}$ is used, the reported CV and MLE
+calculations condition on the data-derived reference;
+they do not refit $\mu$ inside each deletion or jointly maximize
+$(\lambda,\mu)$. Different selectors evaluated on the
+\emph{same} finite grid are comparable as selection policies,
+but boundary optima do not establish global minimizers.
+
+\section{Numerical experiments}\label{sec:sncs-experiments}
+We separate \emph{full curve reconstruction}, \emph{scalar
+criterion evaluation}, \emph{repeated parameter selection}, and
+\emph{one inverse calculation}. Comparing timings across these
+tasks would be misleading: a reused SVD incurs a one-time
+factorization but enables many fast spectral evaluations;
+a banded Cholesky solve avoids that dense preprocessing for
+an isolated fit \cite{weinert2007wh}.
+
+\subsection{End-to-end computation and statistical uncertainty}
+The archived author-run Windows factorial experiment comprises
+80,640 recorded parameter-search trials, seven backends,
+five criteria, $d=0,\ldots,5$, two reference-mean settings,
+and distinct reuse scenarios. A second paired study compares
+full SVD, symmetric eigendecomposition, and \emph{actual banded
+Cholesky} for end-to-end preparation plus full-trend fits.
+The latter uses independent simulated-data seeds and
+randomized technical timing blocks. One median per independent
+seed is the inferential unit. Geometric mean paired time ratios
+are obtained from seed-level log ratios, with 95\% \emph{pointwise}
+bootstrap intervals and two-sided sign-flip tests adjusted by Holm
+over the declared family. Technical repetitions are not
+independent observations; performance remains host- and workload-specific.
+
+\begin{table}[tbp]
+\centering\footnotesize
+\caption{Measured paired runtime ratios for SVD over banded
+Cholesky. Values above one favor banded Cholesky, and below
+one favor SVD. The displayed intervals are pointwise; Holm
+$p$ values refer to the recorded multiple-comparison family.
+$M$ denotes the number of fitted penalties.}
+\label{tab:sncs-solvers}
+\input{final_solver_inference_table.tex}
+\end{table}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.96\linewidth]{figures/final_solver_inference.pdf}
+\caption{Paired solver speed ratios with seed-bootstrap intervals
+for the selected full-trend workloads. The horizontal reference
+denotes equal end-to-end time.}
+\label{fig:sncs-solvers}
+\end{figure}
+
+\subsection{Numerical inversion of normalized smoothness}
+Using a prepared spectral smoother, we compare Brent's method
+\cite{brent1971zero}, safeguarded Newton, safeguarded secant,
+and bisection on 11 target smoothness values from $10^{-14}$
+through $1-10^{-14}$, lengths $n=30,60,120$ and orders
+$d=0,1,2,3$. Per-target randomized complete blocks record
+latency, iterations, function evaluations, convergence failures
+and relative \emph{tail} error. The $d=0$ analytic inverse is
+excluded from numerical-root speed comparisons. These timings
+exclude initial spectral factorization; speed cannot replace
+an accuracy or convergence check.
+
+\begin{table}[tbp]
+\centering\footnotesize
+\caption{Measured inversion costs for two target smoothness
+values; the full grid and failure records are archived.
+Time is in microseconds and the last column checks the
+smaller smoothness tail.}
+\label{tab:sncs-inversion}
+\input{final_inversion_table.tex}
+\end{table}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.96\linewidth]{figures/final_inversion_speed.pdf}
+\caption{Measured float64 inversion time across
+$\operatorname{logit}(S)$ for the four root finders.
+The source archive also reports every convergence failure
+and the actual attained smoothness accuracy.}
+\label{fig:sncs-inversion}
+\end{figure}
+
+\section{Case study: contemporary monthly data}\label{sec:sncs-data}
+Two frozen public series provide contrasting use cases:
+441 monthly Mauna Loa CO$_2$ observations (January 1990--September
+2026) and 201 US monthly effective federal funds rates
+(January 2010--September 2026)
+\cite{noaa2026mlo,fred2026fedfunds}.
+For $d=1,2,3,4$ and $\mu=0$ or
+$\mu=\overline{D_dy_{\rm train}}$, we report selected
+$(\lambda,S)$ and a single 12-month historical holdout
+for CV, GCV, AICc, BIC, conditional MLE, and controlled
+$S=0.86$. The 29 candidate $S$ values used by optimized
+selectors are the same within each configuration.
+Neither the selected $S$ nor a low in-sample score implies
+a better held-out extrapolation.
+
+\begin{figure}[tbp]
+\centering
+\IfFileExists{figures/sncs_compact_dashboard.pdf}{%
+\includegraphics[width=\linewidth]{figures/sncs_compact_dashboard.pdf}
+}{\fbox{Render archived summary dashboard with sncs_dashboard.py.}}
+\caption{Compact archived-data dashboard: conditional selection
+and one-origin holdout errors by method and difference
+order on two monthly series. Rows and numerical values
+are from the saved result JSON, without retuning methods.
+Full $4\times6$ panels for each reference mean, including
+future trend-only extensions, are supplied online.}
+\label{fig:sncs-dashboard}
+\end{figure}
+
+The continuation outside the observed window uses a separately
+specified locally fitted polynomial, anchored at the
+last smoothed value; PLS is a two-sided smoother and
+does not intrinsically forecast. CO$_2$ seasonality and
+policy-driven rate changes are not modeled, so the
+single-origin errors are diagnostics, not a statistically
+validated ranking of future forecasts.
+
+\section{Discussion and conclusion}\label{sec:sncs-conclusion}
+The key engineering conclusion is conditional, not absolute:
+spectral reuse can be advantageous for repeated
+criterion calculations, while specialized banded solvers
+can be preferable for other reconstruction workloads.
+The measured solver ratios and inversion costs depend on
+data length, penalty order, number of evaluations, reuse,
+numerical tolerance, and host architecture.
+A normalized smoothness coordinate permits interpretable
+cross-order comparisons but introduces inversion costs.
+Observed selector differences do not, by themselves,
+demonstrate an improved forecasting methodology.
+The complete 80,640-trial factorial outputs, raw seed-level
+paired timings, full inversion targets, and high-resolution
+case dashboards are maintained as reproducible supplementary
+material rather than repeated in the main article.
+
+\section*{Declarations}
+\noindent\textbf{Funding and competing interests.}
+To be completed and verified by the coauthors before submission.
+
+\noindent\textbf{Data availability.}
+Frozen NOAA and FRED observations, selection-result JSONs,
+timing CSVs, uncertainty analyses, and rendering manifests
+are archived in the companion repository.
+\noindent\textbf{Code availability.}
+\url{https://github.com/heri-espino/trendestimation}.
+A permanently archived tagged release should be cited on submission.
+\noindent\textbf{Author contributions.}
+To be agreed by the coauthors.
+\bibliography{bibliografia}
+\end{document}
