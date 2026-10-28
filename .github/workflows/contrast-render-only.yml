@@ -42,6 +42,12 @@ jobs:
       - name: Restyle all standalone submission figures without rerunning experiments
         run: |
           python paper/computational-statistics-submission/render_all_figures.py --scope submission --no-pdf
+      - name: Compile Springer manuscript with the restored contrast figures
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/computational-statistics-submission
+          root_file: main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error
       - name: Commit PDF SVG PNG files, style and checksum manifest
         run: |
           git config user.name "github-actions[bot]"
@@ -50,6 +56,7 @@ jobs:
           git add -f paper/computational-statistics-submission/dashboard_summary_table.tex
           git add -f paper/computational-statistics-submission/current_examples_table.tex
           git add -f paper/computational-statistics-submission/figure_render_manifest.json
+          git add -f paper/computational-statistics-submission/main.pdf
           if git diff --cached --quiet; then
             echo "Already rendered from identical inputs and palette."
           else
@@ -62,4 +69,5 @@ jobs:
           path: |
             paper/computational-statistics-submission/figures/
             paper/computational-statistics-submission/figure_render_manifest.json
+            paper/computational-statistics-submission/main.pdf
           retention-days: 30
