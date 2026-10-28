@@ -53,7 +53,8 @@ def test_theme_uses_real_awesomefigures_apis(monkeypatch, tmp_path):
     assert styles and styles[0][0][0] == "elegante"
     assert styles[0][1]["palette"] == "okabe-ito"
     assert len(theme.SCHEME) == 8
-    assert theme.SCHEME[0]["color"] == af.color_palette("okabe-ito", as_hex=True)[0]
+    from matplotlib.colors import to_hex
+    assert to_hex(theme.SCHEME[0]["color"]).upper() == af.color_palette("okabe-ito", as_hex=True)[0]
     assert theme.named_colormap("cividis") is not None
     assert maps == ["cividis"]
 
