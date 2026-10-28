@@ -1,0 +1,34 @@
+{
+  "operation": "render-only",
+  "source_sha256": {
+    "paper/benchmarks/windows_full_s_analysis/selected_s.csv": "ba99d9416a6c8d340be2274fd4c9140f15924a5f4563860f7f3b967aef94a9ae",
+    "paper/benchmarks/full_s_reference/s_lambda_grid.csv": "c7063a129987cdcffc934b36b91e2570ef459c9924ae554db21e76da89f1dbba",
+    "paper/computational-statistics-submission/research/final_vm/solver/analysis/paired_comparisons.csv": "bf0710a47bff8d0870116f2206fb8f780c3d263ed2a8bcc41a0ffe1fccf88e3a",
+    "paper/computational-statistics-submission/research/final_vm/inversion/summary.csv": "5966cb65701212c88de9e9e25d307a1a4b70a8aff8bd298a7c6c858e12e69488",
+    "paper/computational-statistics-submission/data/co2_full_dashboards.json": "aee773f150fe4dd54f24dc10c42ee00cd6a779e43803cc4ea718db6991f275b6",
+    "paper/computational-statistics-submission/data/fedfunds_full_dashboards.json": "f278819ea588d604e3c6424e29580ee8ba38e6d4eacd4948273775c06b29c3c4",
+    "paper/computational-statistics-submission/data/noaa_mlo_monthly_1990_2026_09.csv": "67c8f770f25f5a55b23457366e7d0cb50af9920f2677c6af7de8436e75dc133c",
+    "paper/computational-statistics-submission/data/fred_fedfunds_2010_2026_09.csv": "422f11bd67710be8fe1ea1ec133920ec012c55505184011be6c27dba491e6917"
+  },
+  "unchanged": true,
+  "tables": [
+    "paper/computational-statistics-submission/sncs_coordinate_methods_table.tex",
+    "paper/computational-statistics-submission/sncs_solver_orders_table.tex",
+    "paper/computational-statistics-submission/sncs_realdata_table.tex"
+  ],
+  "figures": [
+    "paper/computational-statistics-submission/figures/sncs_coordinate_methods.pdf",
+    "paper/computational-statistics-submission/figures/sncs_coordinate_methods.svg",
+    "paper/computational-statistics-submission/figures/sncs_coordinate_methods.png",
+    "paper/computational-statistics-submission/figures/sncs_observed_trends.pdf",
+    "paper/computational-statistics-submission/figures/sncs_observed_trends.svg",
+    "paper/computational-statistics-submission/figures/sncs_observed_trends.png",
+    "paper/computational-statistics-submission/figures/sncs_orders_trends.pdf",
+    "paper/computational-statistics-submission/figures/sncs_orders_trends.svg",
+    "paper/computational-statistics-submission/figures/sncs_orders_trends.png",
+    "paper/computational-statistics-submission/figures/sncs_smoothness_mapping.pdf",
+    "paper/computational-statistics-submission/figures/sncs_smoothness_mapping.svg",
+    "paper/computational-statistics-submission/figures/sncs_smoothness_mapping.png"
+  ],
+  "notes": "Archived solver, mapping, selection and timing results only. PLS curves reconstructed deterministically at saved lambda and mu; no criterion optimization, root inversion or benchmark performed. Native S and mapped S-to-lambda share penalty candidates, whereas the independent log-lambda grid differs."
+}
