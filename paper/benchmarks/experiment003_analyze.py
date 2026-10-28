@@ -225,7 +225,7 @@ def write(run_dir):
         if p.name=="ANALYSIS.md" or p.name in images
     }
     (directory/"manifest.json").write_text(
-        json.dumps(checks,indent=2)+"\n",encoding="utf-8")
+        json.dumps(checks,indent=2)+"\n",encoding="utf-8",
     )
     print(f"[experiment003] Saved {len(images)} AwesomeFigures images; "
           "all numerical CSV checksums unchanged.",flush=True)
