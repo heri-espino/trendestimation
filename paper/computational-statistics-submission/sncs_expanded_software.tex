@@ -18,23 +18,26 @@ a penalty and then fit; alternatively, a criterion selects
 the penalty on either coordinate. The following minimal
 example shows both workflows and the values returned:
 \begin{quote}
-\begin{minipage}{.95\linewidth}
-\ttfamily\footnotesize
+\begin{verbatim}
 from trendestimation import TrendSmoother, select_lambda
 
 smoother = TrendSmoother(len(y), order=2)
 
-\# Choose a physically interpretable smoothness target\\
-lam = smoother.lambda_for_smoothness(0.86)\\
-controlled = smoother.fit(y, lambda\_=lam, mu=0.0)\\
+# Prescribe normalized smoothness
+lam = smoother.lambda_for_smoothness(0.86)
+controlled = smoother.fit(y, lambda_=lam, mu=0.0)
 print(controlled.smoothness)
 
-\# Or use an existing criterion, searched in S coordinates\\
-chosen = select_lambda(smoother, y, criterion="gcv",\\
-\phantom{chosen = select_lambda(}mu=0.0, search\_space="smoothness")\\
-trend = smoother.fit(y, lambda\_=chosen.lambda\_, mu=0.0).trend\\
-print(chosen.lambda\_, chosen.smoothness)
-\end{minipage}
+# Or select an existing criterion in S coordinates
+chosen = select_lambda(
+    smoother, y, criterion="gcv", mu=0.0,
+    search_space="smoothness",
+)
+trend = smoother.fit(
+    y, lambda_=chosen.lambda_, mu=0.0,
+).trend
+print(chosen.lambda_, chosen.smoothness)
+\end{verbatim}
 \end{quote}
 The criterion itself is unchanged; \texttt{search\_space}
 chooses the numerical coordinate of its candidate search.
