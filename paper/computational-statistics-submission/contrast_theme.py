@@ -108,9 +108,12 @@ def save_figure(fig, path: str | Path, *, dpi: int = 180, strict: bool = False):
     return target
 
 
-def provenance() -> dict:
-    """Report the exact reproducibility contract for a figure manifest."""
-    require_awesomefigures()
+def provenance(*, strict: bool = False) -> dict:
+    """Report the plotting backend; publication builds require AwesomeFigures."""
+    if strict:
+        require_awesomefigures()
+    if af is None:
+        return {"library": "matplotlib-preview-only", "paper_extras_installed": False}
     return {
         "library": "awesomefigures",
         "library_version": af.__version__,
