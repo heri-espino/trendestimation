@@ -51,7 +51,7 @@ def commands(scope: str = "journal") -> list[tuple[str, ...]]:
             cli, str(HERE / "render_all_figures.py"),
             "--scope", "all" if scope == "all" else "submission", "--no-pdf",
         ),
-        (cli, "paper/benchmarks/report_windows_full_s.py"),
+        (cli, "paper/benchmarks/report_windows_full_s.py", "--images-only"),
         (cli, str(HERE / "sncs_expand_results.py")),
     ]
     for mode in ("zero", "data"):
@@ -107,9 +107,10 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
         subprocess.run(command, cwd=ROOT, check=True, env=env)
     after = {str(path.relative_to(ROOT)): sha256(path) for path in SOURCE_ARCHIVE}
     if before != after:
+        altered = sorted(name for name in before if before[name] != after[name])
         raise RuntimeError(
-            "A protected archived numerical source changed while drawing. "
-            "Do not commit outputs until the numeric archive is restored."
+            "Protected numerical sources changed while rendering; do not commit: "
+            + ", ".join(altered)
         )
     referenced = mentioned_figures()
     missing = sorted(name for name in referenced if not (PLOT_ROOT / name).is_file())
