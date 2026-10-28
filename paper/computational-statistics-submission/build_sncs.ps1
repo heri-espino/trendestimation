@@ -53,8 +53,8 @@ function Invoke-Checked([string]$executable, [string[]]$arguments) {
 
 function Check-PDF() {
     if (-not (Test-Path -LiteralPath $pdf -PathType Leaf)) {
-        throw "Build command ended but did NOT create sncs_main.pdf. " +
-              "Check the TeX installation and sncs_main.log (if present)."
+        throw ("Build command ended but did NOT create sncs_main.pdf. " +
+               "Check the TeX installation and sncs_main.log (if present).")
     }
     $size = (Get-Item -LiteralPath $pdf).Length
     if ($size -lt 1000) {
@@ -95,17 +95,17 @@ Push-Location $here
 try {
     if ($latexmk -and $perl -and -not $Direct) {
         Write-Host "[sncs] Compiling with latexmk." -ForegroundColor Cyan
-        Invoke-Checked $latexmk @("-pdf", "-gg", "-interaction=nonstopmode",
+        Invoke-Checked -executable $latexmk -arguments @("-pdf", "-gg", "-interaction=nonstopmode",
                                   "-file-line-error", "-halt-on-error",
                                   "sncs_main.tex")
     } else {
         Write-Host "[sncs] Using direct pdflatex + bibtex fallback." -ForegroundColor Yellow
-        Invoke-Checked $pdflatex @("-interaction=nonstopmode", "-file-line-error",
+        Invoke-Checked -executable $pdflatex -arguments @("-interaction=nonstopmode", "-file-line-error",
                                     "-halt-on-error", "sncs_main.tex")
-        Invoke-Checked $bibtex @("sncs_main")
-        Invoke-Checked $pdflatex @("-interaction=nonstopmode", "-file-line-error",
+        Invoke-Checked -executable $bibtex -arguments @("sncs_main")
+        Invoke-Checked -executable $pdflatex -arguments @("-interaction=nonstopmode", "-file-line-error",
                                     "-halt-on-error", "sncs_main.tex")
-        Invoke-Checked $pdflatex @("-interaction=nonstopmode", "-file-line-error",
+        Invoke-Checked -executable $pdflatex -arguments @("-interaction=nonstopmode", "-file-line-error",
                                     "-halt-on-error", "sncs_main.tex")
     }
     Check-PDF
