@@ -146,6 +146,12 @@ def _tex_safe_labels(fig):
             for symbol, command in translations.items():
                 part = part.replace(symbol, command if i % 2 else "$" + command + "$")
             if i % 2 == 0:
+                # PGF passes text labels through the manuscript TeX engine.
+                # Escape literal TeX metacharacters outside $...$ math,
+                # while retaining the scientific difference-operator notation.
+                import re
+                part = re.sub(r"(?<!\\)([_%&#])", r"\\\1", part)
+                part = part.replace(r"D\_d", r"\ensuremath{D_d}")
                 part = part.replace("–", "--").replace("—", "---").replace("−", "-")
             parts[i] = part
         adjusted = "$".join(parts)
