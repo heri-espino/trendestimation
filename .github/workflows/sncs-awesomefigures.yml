@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sncs-awesomefigures-\${{ github.ref }}
+  group: sncs-awesomefigures-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -77,13 +77,13 @@ jobs:
             echo "All paper figures already match the frozen results and AwesomeFigures style."
           else
             git commit -m "paper: regenerate all SNCS figures with pinned AwesomeFigures"
-            git fetch origin "\${{ github.ref_name }}"
-            git rebase "origin/\${{ github.ref_name }}"
-            git push origin "HEAD:\${{ github.ref_name }}"
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase "origin/$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: sncs-awesomefigures-\${{ github.run_id }}
+          name: sncs-awesomefigures-${{ github.run_id }}
           path: |
             paper/computational-statistics-submission/sncs_main.pdf
             paper/computational-statistics-submission/figures/
