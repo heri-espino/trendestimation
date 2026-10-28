@@ -38,7 +38,6 @@ import math
 import os
 import platform
 import random
-import re
 import subprocess
 import sys
 from collections import defaultdict
@@ -69,13 +68,17 @@ PHASES = (
 )
 PRESETS = {
     "smoke": ([(48, 2, 5, 2)], [0.0], 1, 1),
-    "quick": ([(128, 2, 11, 4), (256, 2, 21, 4)], [0.0, 0.15], 2, 3),
-    "full": ([(256, 2, 21, 6), (512, 2, 21, 6),
-              (1024, 2, 41, 6), (512, 1, 21, 6),
-              (512, 3, 21, 6)], [0.0, 0.15], 3, 5),
+    "quick": ([(128, 2, 11, 4), (256, 2, 11, 4),
+               (256, 2, 1, 4), (256, 2, 21, 4)], [0.0, 0.15], 2, 3),
+    "full": ([(256, 2, 21, 4), (512, 2, 21, 4),
+              (1024, 2, 21, 4), (512, 2, 1, 4),
+              (512, 2, 81, 4), (512, 1, 21, 4),
+              (512, 3, 21, 4), (512, 2, 21, 1),
+              (512, 2, 21, 12)], [0.0, 0.15], 3, 4),
     # Larger n clearly separates asymptotic trends but SVD is expensive.
-    "large": ([(1024, 2, 41, 8), (1536, 2, 41, 8),
-               (2048, 2, 21, 4)], [0.0, 0.15], 2, 3),
+    "large": ([(1024, 2, 21, 4), (1536, 2, 21, 4),
+               (2048, 2, 21, 4), (1024, 2, 81, 4)],
+              [0.0, 0.15], 2, 3),
 }
 
 
@@ -191,7 +194,7 @@ def chol_curves(y, reference, bands, lambdas, factors=None):
 
 def spectral_curves(model, y, mu, lambdas):
     # Real spectral computation, project each series once for all M curves.
-    observed, _, reference, coordinates = model._prepare(y, mu)
+    _, _, reference, coordinates = model._prepare(y, mu)
     last=None
     for lam in lambdas:
         alpha=model._attenuation(float(lam))
@@ -201,7 +204,7 @@ def spectral_curves(model, y, mu, lambdas):
 
 def gcv_scores(model, y, mu, lambdas):
     """Classical fixed-mu spectral GCV: RSS, EDF, identical penalties."""
-    observed, _, reference, coordinates=model._prepare(y,mu)
+    _, _, _, coordinates=model._prepare(y,mu)
     squared=coordinates*coordinates
     n=model.n
     scores=[]
@@ -381,6 +384,9 @@ def run(preset="smoke",seed=20261028,blas_threads=1,
     }
     raw,full,quality=[],[],[]
     try:
+        (run_dir/"environment.json").write_text(
+            json.dumps(metadata,indent=2)+"\n",encoding="utf-8"
+        )
         with threadpool_limits(limits=blas_threads):
             metadata["threads"]=threadpool_info()
             total=len(cases)*len(mus)*seeds*repeats
@@ -413,6 +419,12 @@ def run(preset="smoke",seed=20261028,blas_threads=1,
                   aggregate(raw,key+["phase"],"seconds"))
         csv_write(run_dir/"workflow_summary.csv",
                   aggregate(full,key+["workflow"],"seconds"))
+        # Median technical timing within each independent data seed;
+        # this is the valid unit for any subsequent cross-seed inference.
+        csv_write(run_dir/"seed_level_workflows.csv",
+                  aggregate(full,key+["seed","workflow"],"seconds"))
+        csv_write(run_dir/"seed_level_phases.csv",
+                  aggregate(raw,key+["seed","phase"],"seconds"))
         metadata["raw_phase_rows"]=len(raw)
         metadata["workflow_rows"]=len(full)
         metadata["max_abs_trend_error"]=max(x["max_abs_trend_error"]
