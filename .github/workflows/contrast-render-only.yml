@@ -6,6 +6,10 @@ on:
       - feature/contrast-render-only-figures
     paths:
       - "paper/computational-statistics-submission/*.py"
+      - "paper/figures/render_awesomefigures.py"
+      - "paper/figures/render_full_s_factorial.py"
+      - "paper/figures/render_full_s_search_modes.py"
+      - "paper/figures/render_mle_benchmarks.py"
       - "tests/test_contrast_render_only.py"
       - ".github/workflows/contrast-render-only.yml"
   workflow_dispatch:
