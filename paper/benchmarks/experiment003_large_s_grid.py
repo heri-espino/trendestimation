@@ -351,7 +351,7 @@ def publish(run_dir):
 
 
 def run(preset="smoke",seed=20261028,blas_threads=1,
-        run_dir=None,publish_results=False):
+        run_dir=None,publish_results=False,analyze=True):
     if preset not in PRESETS:
         raise ValueError("Unknown preset")
     if blas_threads<1:
@@ -441,6 +441,11 @@ def run(preset="smoke",seed=20261028,blas_threads=1,
         )
         print(f"[experiment003] COMPLETE — {len(raw)} raw phase rows; "
               f"{len(full)} derived workflow rows; folder: {run_dir}",flush=True)
+        if analyze:
+            subprocess.run([
+                sys.executable, str(Path(__file__).with_name("experiment003_analyze.py")),
+                "--run-dir", str(run_dir),
+            ], cwd=ROOT, check=True)
         if publish_results:
             publish(run_dir)
         return run_dir
@@ -467,13 +472,16 @@ def main():
     parser.add_argument("--seed",type=int,default=20261028)
     parser.add_argument("--blas-threads",type=int,default=1)
     parser.add_argument("--run-dir",type=Path,default=None)
+    parser.add_argument("--skip-analysis",action="store_true",
+                        help="CI smoke check without AwesomeFigures plotting")
     parser.add_argument("--publish",dest="publish",action="store_true",
                         help="Commit and push generated artifacts on current feature branch")
     parser.add_argument("--no-publish",dest="publish",action="store_false")
     parser.set_defaults(publish=False)
     opts=parser.parse_args()
     run(preset=opts.preset,seed=opts.seed,blas_threads=opts.blas_threads,
-        run_dir=opts.run_dir,publish_results=opts.publish)
+        run_dir=opts.run_dir,publish_results=opts.publish,
+        analyze=not opts.skip_analysis)
 
 
 if __name__=="__main__":
