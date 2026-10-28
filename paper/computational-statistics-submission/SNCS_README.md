@@ -203,12 +203,13 @@ On Windows, with an up-to-date checkout of the publication branch:
 conda activate trendestimation
 python -m pip install -e ".[dev,plot]"
 python -m pip install -r paper/requirements.txt
+Get-Command pdflatex -All  # TeX is required even for journal-only exports
 
 # All figures cited by the SN Computer Science paper, including
 # full 4-by-6 supplementary dashboards. NO EXPERIMENTS RERUN.
 python paper/computational-statistics-submission/rerender_awesomefigures.py
 
-# Include older full-manuscript figures as well. Requires MiKTeX/pdflatex.
+# Include older full-manuscript figure families too (also needs TeX).
 python paper/computational-statistics-submission/rerender_awesomefigures.py --scope all
 
 # Build the expanded SN Computer Science manuscript
