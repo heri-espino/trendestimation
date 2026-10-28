@@ -24,6 +24,7 @@ import numpy as np
 from contrast_theme import (
     apply, INK, OBSERVED, TREND, GRID,
     METHODS as METHOD_COLORS, ORDER_COLORS, ORDER_MARKERS,
+    save_figure, provenance, SERIES as CONTRAST_SERIES,
 )
 from make_current_examples import load_series
 from sncs_dashboard import read_results, METHODS, ORDERS
@@ -71,7 +72,7 @@ def _save(fig:plt.Figure,name:str)->list[str]:
     files=[]
     for ext in ("pdf","svg","png"):
         dest=FIGURES/(name+"."+ext)
-        fig.savefig(dest,dpi=180,bbox_inches="tight",facecolor="white")
+        save_figure(fig,dest,dpi=180)
         files.append(str(dest.relative_to(ROOT)))
     plt.close(fig)
     return files
@@ -110,8 +111,9 @@ def search_coordinates()->tuple[str,list[str]]:
     result=_tex("sncs_coordinate_methods_table.tex",body)
     apply()
     fig,axes=plt.subplots(1,2,figsize=(12,4.2),layout="constrained")
-    colors={"native_s":"#0072B2","mapped_s_lambda":"#009E73",
-            "native_log_lambda":"#D55E00"}
+    colors={"native_s":CONTRAST_SERIES[0],
+            "mapped_s_lambda":CONTRAST_SERIES[2],
+            "native_log_lambda":CONTRAST_SERIES[4]}
     for ax,mu in zip(axes,(0,.15)):
         subset=[r for r in chosen if np.isclose(float(r["mu"]),mu)]
         x=np.arange(5)
@@ -282,6 +284,7 @@ def render()->dict:
         raise RuntimeError("Archived experiment changed during figure rendering")
     report={"operation":"render-only","source_sha256":before,"unchanged":True,
             "tables":tables,"figures":figures,
+            "awesomefigures": provenance(),
             "notes":(
                 "Archived solver, mapping, selection and timing results only. "
                 "PLS curves reconstructed deterministically at saved lambda and mu; "
