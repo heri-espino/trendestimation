@@ -6,13 +6,11 @@ import argparse
 import csv
 import hashlib
 import json
-from collections import defaultdict
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
 
 try:
     import awesomefigures as af
