@@ -73,6 +73,10 @@ jobs:
           git add -f paper/computational-statistics-submission/figure_render_manifest.json
           git add -f paper/computational-statistics-submission/sncs_expanded_render_manifest.json
           git add -f paper/computational-statistics-submission/sncs_main.pdf
+          # Render-only scripts also update existing tracked tables and derived plots.
+          # Stage them before rebasing so the working tree is clean and no generated
+          # research asset is silently discarded from the ephemeral CI runner.
+          git add -u
           if git diff --cached --quiet; then
             echo "All paper figures already match the frozen results and AwesomeFigures style."
           else
