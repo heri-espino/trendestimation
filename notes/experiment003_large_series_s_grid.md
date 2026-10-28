@@ -1,6 +1,7 @@
 # Experiment003 — large-series smoothness-grid preparation and reuse
 
-Status: **new study designed, code available; Windows full/large measurements pending**.
+Status: **author-Windows execution only; full/large measurements pending**.
+Automatic CI benchmarking has been removed at the owner's request.
 Do not replace existing Experiment001/002 numerical archives with smoke output.
 
 ## Scientific questions
@@ -89,7 +90,7 @@ unit for inferential comparisons. No significance claims are made from
 this small experimental design. The larger runs can be expensive because
 real full SVD is performed; begin with quick/full and record walltime.
 
-These are **new** experiments, not rerenders of previous archived runs.
+These are **new** experiments, not rerenders of previous archived runs. **No GitHub Actions verification is required**: run the smoke tests and benchmarks directly in your local Conda environment.
 Do not claim their timings exist before running them on the intended VM.
 
 ## Windows PowerShell: validation and real experiments
@@ -98,8 +99,8 @@ Work on branch \`experiment003/large-series-s-grid-caching\` and use:
 
 \`\`\`powershell
 git fetch origin
-git switch experiment003/large-series-s-grid-caching
-git pull --ff-only origin experiment003/large-series-s-grid-caching
+git worktree add -b experiment003/windows-local ..\trendestimation-exp003 origin/experiment003/large-series-s-grid-caching
+Set-Location ..\trendestimation-exp003
 
 conda activate trendestimation
 python -m pip install -e ".[dev,plot]"
@@ -108,7 +109,10 @@ python -m pip install -r paper/requirements.txt
 # Only verifies correctness; tiny 48-point study
 python -m pytest -q tests/test_experiment003_large_s_grid.py
 
-# The real author-workstation experimental campaigns:
+# Small local pilot; already generates plots and automatically publishes results:
+python paper/benchmarks/experiment003_large_s_grid.py --preset quick --publish
+
+# The larger author-workstation experimental campaigns:
 python paper/benchmarks/experiment003_large_s_grid.py --preset full --publish
 python paper/benchmarks/experiment003_large_s_grid.py --preset large --publish
 \`\`\`
