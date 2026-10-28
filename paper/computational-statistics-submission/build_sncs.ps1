@@ -27,7 +27,7 @@ $log = Join-Path $here "sncs_main.log"
 
 function Assert-File([string]$file, [string]$label) {
     if (-not (Test-Path -LiteralPath $file -PathType Leaf)) {
-        throw "Missing $label: $file"
+        throw "Missing ${label}: $file"
     }
 }
 
