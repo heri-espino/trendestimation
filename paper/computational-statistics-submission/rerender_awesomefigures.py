@@ -94,7 +94,7 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
             "scope": scope,
             "source_sha256": before,
             "commands": [list(command) for command in planned],
-            "awesomefigures": provenance(),
+            "awesomefigures": provenance(strict=True),
             "dry_run": True,
         }
     for command in planned:
