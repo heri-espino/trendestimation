@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from contrast_theme import (
     apply as apply_contrast, METHODS as METHOD_COLORS,
-    SERIES as CONTRAST_SERIES, INK, MUTED, GRID,
+    SERIES as CONTRAST_SERIES, INK, MUTED, GRID, save_figure,
 )
 apply_contrast()
 
@@ -135,7 +135,7 @@ def _inversion(rows:list[dict]) -> dict:
     ax.grid(alpha=.22)
     ax.legend(frameon=False,ncol=2)
     for suffix in ("pdf","svg","png"):
-        fig.savefig(PLOTS/f"final_inversion_speed.{suffix}",dpi=160)
+        save_figure(fig,PLOTS/f"final_inversion_speed.{suffix}",dpi=160)
     plt.close(fig)
     return {"n":n,"d":d,"failed_trials":
             int(sum(int(r["failures"]) for r in valid)),
@@ -193,7 +193,7 @@ def _solvers(timing:list[dict], comparisons:list[dict]) -> dict:
            ylabel="Geometric mean total-time ratio SVD / BChol")
     ax.grid(axis="y",alpha=.22)
     for suffix in ("pdf","svg","png"):
-        fig.savefig(PLOTS/f"final_solver_inference.{suffix}",dpi=160,bbox_inches="tight")
+        save_figure(fig,PLOTS/f"final_solver_inference.{suffix}",dpi=160)
     plt.close(fig)
     valid_p=[r for r in comparisons if r["p_holm_familywise"] not in (None,"")]
     sig=sum(float(r["p_holm_familywise"])<.05 for r in valid_p)
