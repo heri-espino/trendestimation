@@ -26,7 +26,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from contrast_theme import apply, INK, GRID, METHODS as METHOD_COLORS
+from contrast_theme import (apply, INK, GRID, METHODS as METHOD_COLORS,
+                            save_figure, named_colormap)
 
 HERE=Path(__file__).resolve().parent
 DATA=HERE/"data"
@@ -97,7 +98,7 @@ def as_matrix(payload:dict,mode:str,metric:str)->np.ndarray:
 
 def _annotated_map(ax,values:np.ndarray,title:str,cmap:str,format_string:str,
                    *,vmin:float|None=None,vmax:float|None=None) -> None:
-    image=ax.imshow(values,aspect="auto",cmap=cmap,vmin=vmin,vmax=vmax)
+    image=ax.imshow(values,aspect="auto",cmap=named_colormap(cmap),vmin=vmin,vmax=vmax)
     ax.set_title(title,fontsize=11,weight="bold",pad=8)
     ax.set_xticks(np.arange(len(METHODS)),LABELS,fontsize=8)
     ax.set_yticks(np.arange(len(ORDERS)),[f"d={d}" for d in ORDERS],fontsize=9)
@@ -149,7 +150,7 @@ def plot_compact(dataset_left:str="co2_full",dataset_right:str="fedfunds_full",
     out=[]
     for ext in (".pdf",".svg",".png"):
         dst=FIGURES/(basename+ext)
-        fig.savefig(dst,dpi=180,bbox_inches="tight",facecolor="white")
+        save_figure(fig,dst,dpi=180)
         out.append(dst)
     plt.close(fig)
     if _hash(DATA/f"{dataset_left}_dashboards.json")!=hleft or (
@@ -187,7 +188,7 @@ def plot_tradeoff(dataset:str="co2_full",mu:str="zero")->list[Path]:
     out=[]
     for suffix in (".pdf",".svg",".png"):
         path=FIGURES/(basename+suffix)
-        fig.savefig(path,dpi=180,bbox_inches="tight",facecolor="white")
+        save_figure(fig,path,dpi=180)
         out.append(path)
     plt.close(fig)
     if _hash(DATA/f"{dataset}_dashboards.json")!=before:
