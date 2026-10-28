@@ -30,5 +30,20 @@
     "paper/computational-statistics-submission/figures/sncs_smoothness_mapping.svg",
     "paper/computational-statistics-submission/figures/sncs_smoothness_mapping.png"
   ],
+  "awesomefigures": {
+    "library": "awesomefigures",
+    "library_version": "0.1.0",
+    "source": "https://github.com/awesomefigures/awesomefigures",
+    "source_commit": "54c8bf2374551fa39428f47f69580b4822d4b938",
+    "style": "elegante",
+    "palette": "okabe-ito",
+    "font": "DejaVu Sans",
+    "apis": [
+      "awesomefigures.set_style",
+      "awesomefigures.plot_scheme",
+      "awesomefigures.named_colormap",
+      "awesomefigures.save_figure"
+    ]
+  },
   "notes": "Archived solver, mapping, selection and timing results only. PLS curves reconstructed deterministically at saved lambda and mu; no criterion optimization, root inversion or benchmark performed. Native S and mapped S-to-lambda share penalty candidates, whereas the independent log-lambda grid differs."
 }
