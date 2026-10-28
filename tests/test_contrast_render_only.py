@@ -76,7 +76,7 @@ def test_archived_record_is_rejected_when_s_changed():
     cached=json.loads((HERE/"data/co2_recent_dashboards.json").read_text())
     corrupted=deepcopy(cached)
     corrupted["records"]["zero"]["d2_cv"]["s"]=.99999
-    with pytest.raises(ArithmeticError,match="smoothness"):
+    with pytest.raises(ArithmeticError,match="normalized S"):
         mod._from_archived_selection(dates,y,"zero",corrupted)
 
 
