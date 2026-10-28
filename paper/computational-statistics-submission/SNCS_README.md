@@ -277,3 +277,34 @@ git push
 
 This step renders from archived numerical CSV/JSON only; it performs no
 parameter retuning, new simulation, or timing experiment.
+
+## 2026-10-28 — document-aware AwesomeFigures regeneration
+
+The pinned AwesomeFigures revision is
+`a9760351c1f72ccf7a1a2ef2ff14136d6e280d88`
+(merged upstream PR #4). Paper rendering now uses the high-level
+`af.paper(sncs_main.tex)` interface, rather than manually coordinating
+`latex_style`, PGF backend settings, and physical document-width fitting.
+
+Run from the repository root in PowerShell (MiKTeX/pdflatex required):
+
+~~~powershell
+git fetch origin
+git switch feature/sncs-awesomefigures-auto-publication
+git pull --ff-only
+conda activate trendestimation
+python -m pip install -r paper/requirements.txt
+python paper/computational-statistics-submission/rerender_awesomefigures.py --scope journal
+powershell -ExecutionPolicy Bypass -File .\paper\computational-statistics-submission\build_sncs.ps1
+Start-Process .\paper\computational-statistics-submission\sncs_main.pdf
+~~~
+
+Each PDF cited by the manuscript must have `exact-tex-preamble`
+provenance and an embedded-font audit in `figures/*.typography.json`.
+The `*.pgf` intermediates are archived. SVG and PNG are preview-only.
+See `awesomefigures_render_manifest.json` for source-file SHA-256
+verification and figure-coverage results.
+
+Only archived data and fixed saved parameters are used. No statistical
+experiments, model selections, optimizations, simulations, or benchmark
+timings are rerun. Multi-panel figures still merit visual inspection.
