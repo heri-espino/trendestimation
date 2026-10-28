@@ -46,17 +46,42 @@ python paper/computational-statistics-submission/sncs_dashboard.py --mu data
 # Interactive supplementary research browser
 streamlit run paper/computational-statistics-submission/sncs_dashboard_app.py
 
-# Compile the shorter manuscript (MiKTeX and latexmk needed)
-Push-Location paper/computational-statistics-submission
-latexmk -pdf -interaction=nonstopmode -halt-on-error sncs_main.tex
-Pop-Location
-Start-Process .\paper\computational-statistics-submission\sncs_main.pdf
+# Compile the shorter manuscript and ASSERT the PDF exists.
+# Works with MiKTeX + pdflatex/BibTeX; latexmk+Perl is optional.
+powershell -ExecutionPolicy Bypass -File .\paper\computational-statistics-submission\build_sncs.ps1
 
 # Commit paper, figures, dashboard code, provenance, and compiled PDF.
 git add .
 git commit -m "paper: render concise SNCS article and cached-data dashboards"
 git push
 ~~~
+
+### If the PDF did not appear
+
+Earlier Windows runs showed `latexmk` returning **no visible output**,
+even though `sncs_main.pdf` did not exist; checking only `$LASTEXITCODE`
+was therefore insufficient. The new `build_sncs.ps1`:
+
+1. Checks all required figures, Springer class, BibTeX file and tables.
+2. Displays exactly which `pdflatex`, `bibtex`, `latexmk`, and `perl`
+   binaries are found in PATH.
+3. Prefers `latexmk -gg` if both latexmk and Perl exist. Otherwise it
+   executes `pdflatex`, `bibtex`, and two further LaTeX passes directly.
+4. **Fails if the PDF does not exist or is empty**, prints the last 55
+   lines of `sncs_main.log`, and opens the PDF only after success.
+
+No admin rights are required to install MiKTeX for the current Windows
+user. If needed, install Perl into Conda with
+`conda install -c conda-forge perl`, or use the direct fallback
+without Perl. When diagnosing TeX PATH, run:
+
+~~~powershell
+Get-Command latexmk,pdflatex,bibtex,perl -All -ErrorAction SilentlyContinue |
+    Select-Object Name,CommandType,Source
+Test-Path .\paper\computational-statistics-submission\sncs_main.pdf
+~~~
+
+Only compile/render code runs; the completed benchmarks remain untouched.
 
 `sncs_dashboard.py` produces `figures/sncs_compact_dashboard.pdf`,
 SVG and PNG, and the supplementary `sncs_tradeoff_*.{pdf,svg,png}`.
