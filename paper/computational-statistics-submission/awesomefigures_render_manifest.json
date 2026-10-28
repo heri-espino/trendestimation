@@ -8,7 +8,9 @@
     "source_commit": "54c8bf2374551fa39428f47f69580b4822d4b938",
     "style": "elegante",
     "palette": "okabe-ito",
-    "font": "DejaVu Sans",
+    "preview_font": "DejaVu Sans",
+    "publication_pdf_font": "measured TeX manuscript font, embedded via PGF/PDF",
+    "typography": "af.inspect_latex + af.latex_style + PublicationStyle.fit/audit",
     "apis": [
       "awesomefigures.set_style",
       "awesomefigures.plot_scheme",
@@ -40,6 +42,17 @@
   },
   "no_benchmarks_or_selectors_rerun": true,
   "compiled_pdf": false,
+  "publication_typography": {
+    "manuscript": "paper/computational-statistics-submission/sncs_main.tex",
+    "textwidth_pt": 372.0,
+    "columnwidth_pt": 372.0,
+    "body_font_pt": 10.03749,
+    "font_family": "cmr",
+    "font_name": "cmr10",
+    "exact_tex_pdf": true,
+    "audited_pdf_files": 55,
+    "manuscript_pdf_audit_covered": 11
+  },
   "figure_files": [
     "paper/computational-statistics-submission/figures/co2_full_controlled_orders.pdf",
     "paper/computational-statistics-submission/figures/co2_full_controlled_orders.png",
@@ -222,6 +235,11 @@
       "--scope",
       "submission",
       "--no-pdf"
+    ],
+    [
+      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "paper/benchmarks/report_windows_full_s.py",
+      "--images-only"
     ],
     [
       "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",

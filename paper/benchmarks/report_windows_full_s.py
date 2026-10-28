@@ -335,9 +335,25 @@ def images(index):
         return value_ms(r) if r["both_valid"] else np.nan
 
     def save(pub, fig, name):
-        with plt.rc_context({"svg.fonttype":"none"}):
-            fig.savefig(output/(name+".svg"), format="svg")
-        style["_save"](pub,fig,output/(name+".pdf"))
+        # In SNCS publication mode, these figures must be re-exported at
+        # their *actual* .48 of the line width (or full-width) manuscript size.
+        # The older general manuscript figures have different dimensions.
+        import os
+        if os.environ.get("TRENDESTIMATION_TEX_FIGURES") == "1":
+            import sys
+            theme_dir = PAPER / "computational-statistics-submission"
+            if str(theme_dir) not in sys.path:
+                sys.path.insert(0, str(theme_dir))
+            from contrast_theme import save_figure
+            target = theme_dir / "figures"
+            target.mkdir(parents=True, exist_ok=True)
+            save_figure(fig, target / (name + ".pdf"), dpi=180, strict=True)
+            save_figure(fig, target / (name + ".svg"), dpi=180, strict=True)
+            plt.close(fig)
+        else:
+            with plt.rc_context({"svg.fonttype":"none"}):
+                fig.savefig(output/(name+".svg"), format="svg")
+            style["_save"](pub,fig,output/(name+".pdf"))
         fig_names.append(name)
 
     with style["publication_context"]() as pub:
@@ -448,11 +464,18 @@ def images(index):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--summaries-only",action="store_true")
+    parser.add_argument("--images-only",action="store_true",
+                        help="Render from archived raw measurements only; DO NOT overwrite CSV/JSON/text reports.")
     args=parser.parse_args()
     raw,prep,env=load()
     rows,buckets=summarize(raw)
     index={tuple(r[k] for k in KEYS):r for r in rows}
     parity=check_parity(buckets)
+    if args.images_only:
+        names=images(index)
+        print(json.dumps({"source_raw_rows":len(raw),"figures":names,
+                          "saved_numerical_sources_untouched":True},indent=2),flush=True)
+        return
     DEST.mkdir(parents=True,exist_ok=True)
     write_csv(DEST/"two_seed_aggregates.csv",rows)
     write_csv(DEST/"paired_grid_costs.csv",comparative_rows(index,prep))

@@ -6,9 +6,10 @@ PowerShell (repository root):
     python -m pip install -r paper/requirements.txt
     python paper/computational-statistics-submission/rerender_awesomefigures.py
 
-Use --scope all for legacy paper/figures/ (needs pdflatex for exact font
-measurements); the default --scope journal covers every SNCS figure and
-archived 4x6 supplementary dashboard without requiring TeX.
+Both scopes REQUIRE pdflatex/MiKTeX for the actual Springer document
+font and physical sizes. The default --scope journal covers every SNCS
+figure and archived 4x6 supplementary dashboard. --scope all also
+renders legacy paper/figures/ at its own publication dimensions.
 Then compile sncs_main.tex with build_sncs.ps1, or use the GitHub CI workflow.
 """
 from __future__ import annotations
@@ -16,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -49,6 +51,7 @@ def commands(scope: str = "journal") -> list[tuple[str, ...]]:
             cli, str(HERE / "render_all_figures.py"),
             "--scope", "all" if scope == "all" else "submission", "--no-pdf",
         ),
+        (cli, "paper/benchmarks/report_windows_full_s.py", "--images-only"),
         (cli, str(HERE / "sncs_expand_results.py")),
     ]
     for mode in ("zero", "data"):
@@ -81,11 +84,11 @@ def mentioned_figures() -> set[str]:
 
 def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
     require_awesomefigures()
-    if scope == "all" and not dry_run and shutil.which("pdflatex") is None:
+    if not dry_run and shutil.which("pdflatex") is None:
         raise RuntimeError(
-            "Full paper/figures rendering requires pdflatex on PATH. "
-            "For the entire SN Computer Science article without TeX, "
-            "use --scope journal; use --scope all with MiKTeX/TeX Live."
+            "Exact SN Computer Science fonts and sizes require pdflatex on PATH "
+            "even with --scope journal. Install MiKTeX or TeX Live; there is "
+            "no silent DejaVu fallback for publication PDFs."
         )
     before = {str(path.relative_to(ROOT)): sha256(path) for path in SOURCE_ARCHIVE}
     planned = commands(scope)
@@ -99,18 +102,31 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
         }
     for command in planned:
         print("[AwesomeFigures archived-only]", " ".join(command), flush=True)
-        subprocess.run(command, cwd=ROOT, check=True)
+        env = os.environ.copy()
+        env["TRENDESTIMATION_TEX_FIGURES"] = "1"
+        subprocess.run(command, cwd=ROOT, check=True, env=env)
     after = {str(path.relative_to(ROOT)): sha256(path) for path in SOURCE_ARCHIVE}
     if before != after:
+        altered = sorted(name for name in before if before[name] != after[name])
         raise RuntimeError(
-            "A protected archived numerical source changed while drawing. "
-            "Do not commit outputs until the numeric archive is restored."
+            "Protected numerical sources changed while rendering; do not commit: "
+            + ", ".join(altered)
         )
     referenced = mentioned_figures()
     missing = sorted(name for name in referenced if not (PLOT_ROOT / name).is_file())
     if missing:
         raise FileNotFoundError(
             f"SNCS manuscript figure dependencies not available: {missing}"
+        )
+    from contrast_theme import latex_layout
+    measured = latex_layout()
+    audit_files = sorted(PLOT_ROOT.glob("*.typography.json"))
+    covered = {p.name.removesuffix(".typography.json") + ".pdf" for p in audit_files}
+    unverified = sorted(set(referenced) - covered)
+    if unverified:
+        raise RuntimeError(
+            "The manuscript cites PDFs not exported with measured TeX fonts: "
+            + repr(unverified)
         )
     files = sorted(
         str(p.relative_to(ROOT))
@@ -133,6 +149,17 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
         "source_sha256": before,
         "no_benchmarks_or_selectors_rerun": True,
         "compiled_pdf": False,
+        "publication_typography": {
+            "manuscript": str(HERE.relative_to(ROOT) / "sncs_main.tex"),
+            "textwidth_pt": measured.textwidth_pt,
+            "columnwidth_pt": measured.columnwidth_pt,
+            "body_font_pt": measured.fontsize_pt,
+            "font_family": measured.font_family,
+            "font_name": measured.font_name,
+            "exact_tex_pdf": True,
+            "audited_pdf_files": len(audit_files),
+            "manuscript_pdf_audit_covered": len(covered & referenced),
+        },
         "figure_files": files,
         "manuscript_referenced_figures": sorted(referenced),
         "commands": [list(command) for command in planned],
