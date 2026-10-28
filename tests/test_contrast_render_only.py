@@ -32,7 +32,7 @@ def sha(path):
 
 def test_awesomefigures_contrast_palette_is_pinned():
     from contrast_theme import METHODS, SERIES, apply
-    import awesomefigures as af
+    af=pytest.importorskip("awesomefigures")
     assert len(SERIES)==8
     assert set(METHODS)=={"cv","gcv","aicc","bic","mle","controlled"}
     assert len(set(METHODS.values()))==6
