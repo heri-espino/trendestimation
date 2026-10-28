@@ -1,0 +1,14 @@
+\begin{tabular}{llrrrr}
+\toprule
+$S$ & Inversion method & Median $\mu$s & Fail / trials & Iterations & Max rel. tail error \\
+\midrule
+.5 & brentq & 91.50 & 0/35 & 10.0 & 1.8e-15 \\
+.5 & newton & 88.30 & 0/35 & 5.0 & 2.2e-16 \\
+.5 & secant & 157.70 & 0/35 & 24.0 & 1.1e-15 \\
+.5 & bisect & 292.00 & 0/35 & 45.0 & 1.4e-13 \\
+.99 & brentq & 93.70 & 0/35 & 11.0 & 3.3e-14 \\
+.99 & newton & 118.60 & 0/35 & 8.0 & 0 \\
+.99 & secant & 162.80 & 0/35 & 26.0 & 1.7e-13 \\
+.99 & bisect & 282.00 & 0/35 & 45.0 & 7.7e-14 \\
+\bottomrule
+\end{tabular}
