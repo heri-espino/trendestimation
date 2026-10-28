@@ -128,6 +128,18 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
             "The manuscript cites PDFs not exported with measured TeX fonts: "
             + repr(unverified)
         )
+    # Verify real TeX provenance from the new AwesomeFigures publication API,
+    # not just the presence of a sidecar with a familiar filename.
+    for name in referenced:
+        path = PLOT_ROOT / name.replace(".pdf", ".typography.json")
+        report = json.loads(path.read_text(encoding="utf-8"))
+        if report.get("typography_provenance") != "exact-tex-preamble":
+            raise RuntimeError(f"{name} was not rendered with the manuscript preamble")
+        fonts = report.get("pdf_fonts", [])
+        if not fonts or not all(item.get("embedded") for item in fonts):
+            raise RuntimeError(f"{name} has missing or unembedded TeX fonts")
+        if report.get("audit_warnings"):
+            print(f"[AwesomeFigures audit] {name}: {report['audit_warnings']}", flush=True)
     files = sorted(
         str(p.relative_to(ROOT))
         for p in PLOT_ROOT.iterdir()
@@ -157,10 +169,12 @@ def run(*, scope: str = "journal", dry_run: bool = False) -> dict:
             "font_family": measured.font_family,
             "font_name": measured.font_name,
             "exact_tex_pdf": True,
+            "backend": "af.paper (exact-tex-preamble)",
             "audited_pdf_files": len(audit_files),
             "manuscript_pdf_audit_covered": len(covered & referenced),
         },
         "figure_files": files,
+        "pgf_intermediates": sorted(str(p.relative_to(ROOT)) for p in PLOT_ROOT.glob("*.pgf")),
         "manuscript_referenced_figures": sorted(referenced),
         "commands": [list(command) for command in planned],
     }
