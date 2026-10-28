@@ -67,6 +67,7 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
 def test_springer_tex_declares_mathdefault_for_logarithmic_pgf_ticks():
     tex = (HERE / "sncs_main.tex").read_text(encoding="utf-8")
     assert r"\providecommand{\mathdefault}[1]{#1}" in tex
+    assert r"\graphicspath{{figures/}}" in tex
 
 
 def test_master_renderer_checks_each_cited_figures_tex_font():
