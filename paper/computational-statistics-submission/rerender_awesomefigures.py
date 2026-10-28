@@ -6,9 +6,10 @@ PowerShell (repository root):
     python -m pip install -r paper/requirements.txt
     python paper/computational-statistics-submission/rerender_awesomefigures.py
 
-Use --scope all for legacy paper/figures/ (needs pdflatex for exact font
-measurements); the default --scope journal covers every SNCS figure and
-archived 4x6 supplementary dashboard without requiring TeX.
+Both scopes REQUIRE pdflatex/MiKTeX for the actual Springer document
+font and physical sizes. The default --scope journal covers every SNCS
+figure and archived 4x6 supplementary dashboard. --scope all also
+renders legacy paper/figures/ at its own publication dimensions.
 Then compile sncs_main.tex with build_sncs.ps1, or use the GitHub CI workflow.
 """
 from __future__ import annotations
