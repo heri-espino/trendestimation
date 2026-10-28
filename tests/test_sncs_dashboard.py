@@ -38,7 +38,10 @@ def test_short_paper_preserves_archival_article():
         assert "@article{"+ref in (HERE/"bibliografia.bib").read_text()
     assert r"\input{dashboard_applications.tex}" in old
     assert r"\input{dashboard_applications.tex}" not in short
-    assert "sncs_compact_dashboard.pdf" in short
+    assert r"\input{sncs_expanded_applications.tex}" in short
+    assert "sncs_compact_dashboard.pdf" in (
+        HERE/"sncs_expanded_applications.tex"
+    ).read_text(encoding="utf-8")
 
 
 def test_archived_results_are_complete_and_consistent():
