@@ -3,6 +3,8 @@
 % Rebuild the figures from cached CSV/JSON; no benchmarks are rerun.
 \documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
 \usepackage{graphicx}
+% Resolve image layers emitted beside PGF files by AwesomeFigures.
+\graphicspath{{figures/}}
 \usepackage{amsmath,amssymb,amsfonts}
 % Matplotlib/PGF scientific-notation ticks use this TeX math macro.
 % Safe compatibility definition for the manuscript-preamble PDF exporter.
