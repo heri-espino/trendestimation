@@ -464,11 +464,18 @@ def images(index):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--summaries-only",action="store_true")
+    parser.add_argument("--images-only",action="store_true",
+                        help="Render from archived raw measurements only; DO NOT overwrite CSV/JSON/text reports.")
     args=parser.parse_args()
     raw,prep,env=load()
     rows,buckets=summarize(raw)
     index={tuple(r[k] for k in KEYS):r for r in rows}
     parity=check_parity(buckets)
+    if args.images_only:
+        names=images(index)
+        print(json.dumps({"source_raw_rows":len(raw),"figures":names,
+                          "saved_numerical_sources_untouched":True},indent=2),flush=True)
+        return
     DEST.mkdir(parents=True,exist_ok=True)
     write_csv(DEST/"two_seed_aggregates.csv",rows)
     write_csv(DEST/"paired_grid_costs.csv",comparative_rows(index,prep))
