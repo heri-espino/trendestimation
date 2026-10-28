@@ -1,0 +1,66 @@
+name: SN Computer Science short paper and cached figures
+
+on:
+  push:
+    branches:
+      - paper/sncs-concise-cached-dashboards
+    paths:
+      - "paper/computational-statistics-submission/sncs_*"
+      - "paper/computational-statistics-submission/bibliografia.bib"
+      - "tests/test_sncs_dashboard.py"
+      - ".github/workflows/sncs-paper.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install existing numerical and plotting dependencies
+        run: python -m pip install -e ".[dev,plot]"
+      - name: Verify cached-data-only dashboard and short manuscript
+        run: python -m pytest -q tests/test_sncs_dashboard.py
+      - name: Regenerate paper dashboard without optimization
+        run: python paper/computational-statistics-submission/sncs_dashboard.py --summary-only
+
+  compile-manual:
+    if: github.event_name == 'workflow_dispatch'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install plotting dependency
+        run: python -m pip install -e ".[plot]"
+      - name: Generate the dashboard (archived input only)
+        run: python paper/computational-statistics-submission/sncs_dashboard.py --summary-only
+      - name: Compile short Springer manuscript
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/computational-statistics-submission
+          root_file: sncs_main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sncs-short-paper-${{ github.run_id }}
+          path: |
+            paper/computational-statistics-submission/sncs_main.pdf
+            paper/computational-statistics-submission/figures/sncs_compact_dashboard.pdf
+            paper/computational-statistics-submission/figures/sncs_compact_dashboard.svg
+            paper/computational-statistics-submission/figures/sncs_compact_dashboard.png
+          retention-days: 14
