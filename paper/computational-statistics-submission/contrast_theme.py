@@ -151,7 +151,7 @@ def _tex_safe_labels(fig):
                 # while retaining the scientific difference-operator notation.
                 import re
                 part = re.sub(r"(?<!\\)([_%&#])", r"\\\1", part)
-                part = part.replace(r"D\_d", r"\ensuremath{D_d}")
+                part = part.replace(r"D\_d", r"$D_d$")
                 part = part.replace("–", "--").replace("—", "---").replace("−", "-")
             parts[i] = part
         adjusted = "$".join(parts)
