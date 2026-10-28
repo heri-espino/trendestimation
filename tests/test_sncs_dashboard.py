@@ -3,14 +3,12 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
-import json
 import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import numpy as np
-import pytest
 
 HERE=Path(__file__).resolve().parents[1]/"paper/computational-statistics-submission"
 sys.path.insert(0,str(HERE))
