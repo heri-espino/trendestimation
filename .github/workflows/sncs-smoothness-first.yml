@@ -1,0 +1,84 @@
+name: SNCS S-first computational paper (render-only)
+
+on:
+  push:
+    branches:
+      - feature/smoothness-first-computation-paper
+    paths:
+      - "src/trendestimation/core.py"
+      - "src/trendestimation/__init__.py"
+      - "paper/computational-statistics-submission/sncs_*.tex"
+      - "tests/test_fit_smoothness_api.py"
+      - ".github/workflows/sncs-smoothness-first.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sncs-smoothness-first
+  cancel-in-progress: true
+
+jobs:
+  verify-and-compile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install existing library and test dependencies
+        run: |
+          python -m pip install -e ".[dev,plot]"
+      - name: Check additive API parity and paper references (no benchmarks)
+        run: |
+          python -m pytest -q tests/test_fit_smoothness_api.py
+          python -m ruff check src tests/test_fit_smoothness_api.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("paper/computational-statistics-submission")
+          main=(p/"sncs_main.tex").read_text()
+          assert r"\input{sncs_computational_tradeoffs.tex}" in main
+          detail=(p/"sncs_computational_tradeoffs.tex").read_text()
+          assert "11.234" in detail and "3.980" in detail
+          assert "1.554" in detail and "0.419" in detail
+          assert "fit_smoothness" in (Path("src/trendestimation/__init__.py").read_text())
+          PY
+      - name: Compile Springer paper using archived figures only
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/computational-statistics-submission
+          root_file: sncs_main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - name: Verify PDF and unchanged archived numerical results
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("paper/computational-statistics-submission")
+          assert (p/"sncs_main.pdf").stat().st_size > 100_000
+          assert (p/"research/final_vm/solver/analysis/paired_comparisons.csv").exists()
+          assert Path("paper/benchmarks/windows_full_s_analysis/selected_s.csv").exists()
+          print("Compiled existing-result manuscript; no simulations, searches or timing benchmarks run.")
+          PY
+      - name: Commit compiled manuscript on feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/computational-statistics-submission/sncs_main.pdf
+          if git diff --cached --quiet; then
+            echo "PDF unchanged."
+          else
+            git commit -m "paper: archive compiled S-first computational analysis from prior benchmark results"
+            git fetch origin feature/smoothness-first-computation-paper
+            git rebase origin/feature/smoothness-first-computation-paper
+            git push origin HEAD:feature/smoothness-first-computation-paper
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sncs-s-first-computational-paper
+          path: paper/computational-statistics-submission/sncs_main.pdf
+          retention-days: 30
