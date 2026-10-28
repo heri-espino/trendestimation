@@ -88,7 +88,6 @@ jobs:
           assert "CMR" in listing or "LMRoman" in listing, listing
           print("TeX font glyphs confirmed in plotted PDF")
           PY
-          PY
       - name: Commit updated figures, figure manifests and compiled PDF
         run: |
           git config user.name "github-actions[bot]"
