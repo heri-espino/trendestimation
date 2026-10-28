@@ -379,6 +379,41 @@ class TrendSmoother:
         }
         return lam
 
+    def fit_smoothness(
+        self,
+        y,
+        *,
+        smoothness: float,
+        mu: MeanMode = 0.0,
+        method: str = "auto",
+        tol: float = 1e-12,
+        maxiter: int = 100,
+    ) -> FitResult:
+        """Fit using normalized smoothness instead of an exposed penalty.
+
+        Parameters
+        ----------
+        y : array_like
+            Observed one-dimensional series.
+        smoothness : float
+            Target normalized smoothness in [0, 1].
+        mu : float or {"data"}, default=0.0
+            Reference difference mean, as in :meth:`fit`.
+        method, tol, maxiter
+            Parameters forwarded to :meth:`lambda_for_smoothness`.
+
+        Notes
+        -----
+        This is a user-facing reparameterization of the *same* penalized
+        least-squares estimator. It does not remove the internal lambda
+        solve. Reuse this TrendSmoother instance (and, for grids, cache
+        the resulting lambda values) to amortize spectral preprocessing.
+        """
+        penalty = self.lambda_for_smoothness(
+            smoothness, method=method, tol=tol, maxiter=maxiter,
+        )
+        return self.fit(y, lambda_=penalty, mu=mu)
+
     def fit(self, y, *, lambda_: float, mu: MeanMode = 0.0) -> FitResult:
         """Fit a finite-difference penalized least-squares trend.
 
@@ -449,3 +484,31 @@ def fit_trend(y, *, order: int = 2, lambda_: float = 1600.0, mu: MeanMode = 0.0)
     if values.ndim != 1:
         raise ValueError("y must be one-dimensional.")
     return TrendSmoother(len(values), order).fit(values, lambda_=lambda_, mu=mu)
+
+def fit_smoothness(
+    y,
+    *,
+    smoothness: float,
+    order: int = 2,
+    mu: MeanMode = 0.0,
+    method: str = "auto",
+    tol: float = 1e-12,
+    maxiter: int = 100,
+) -> FitResult:
+    """Fit a PLS trend while specifying only normalized smoothness.
+
+    The penalty is computed internally by inverting Guerrero-inspired
+    normalized smoothness. For repeated fits, reuse `TrendSmoother`
+    rather than repeating its O(n^3) spectral preprocessing.
+    """
+    values = np.asarray(y)
+    if values.ndim != 1:
+        raise ValueError("y must be one-dimensional.")
+    return TrendSmoother(len(values), order).fit_smoothness(
+        values,
+        smoothness=smoothness,
+        mu=mu,
+        method=method,
+        tol=tol,
+        maxiter=maxiter,
+    )
