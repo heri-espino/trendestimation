@@ -21,6 +21,10 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
   **spectral default for CV/GCV/AICc/BIC/MLE selection**, EDF, and normalized smoothness.
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
+- Smoothness-first fitting with `fit_smoothness(y, smoothness=0.86, order=2)`
+  or `TrendSmoother.fit_smoothness(...)`, which hides the internal lambda
+  inversion without changing the classical PLS estimator. The existing
+  lambda API remains supported for compatibility.
 - Optional parameter search in either penalty **lambda** (existing default)
   or bounded, normalized **smoothness S in [0, 1]**. Classical CV supports
   analytical derivative refinement in both coordinates; other criteria

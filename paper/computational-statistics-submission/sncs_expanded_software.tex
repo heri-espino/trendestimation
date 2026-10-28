@@ -46,10 +46,15 @@ The returned \texttt{lambda\_} can be passed to
 trace-normalized attained value. The implementation
 also returns the evaluated penalty grid, scores, and
 requested coordinate grid for auditing.
-The current default public \texttt{TrendSmoother} uses
-the reusable spectral backend; the benchmarked dense
-and banded variants are not all automatic public
-defaults selected by a benchmark ranking.
+The established public \texttt{TrendSmoother} uses
+the reusable spectral backend for criterion selection and
+smoothness inversion. The distinct fit-only convenience
+\texttt{fit\_penalized} defaults to a banded Cholesky backend.
+The new \texttt{fit\_smoothness} convenience uses spectral
+inversion internally and does not claim that the banded
+factorization itself supplies the inverse smoothness map.
+These two public defaults serve different workloads and
+should not be described as one universal fastest solver.
 
 \subsection{Backend differences and caching}
 The seven numerical implementations evaluated in the

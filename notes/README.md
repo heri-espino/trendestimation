@@ -1,5 +1,11 @@
 # Mathematical research notes
 
+- [Smoothness-first solver-cost synthesis](smoothness_first_solver_costs.md):
+  algorithmic complexity, measured full-trend crossover, the cost of
+  pretranslating a shared S grid, and S-only public fitting. This is
+  a synthesis of archived evidence, not a new benchmark experiment.
+
+
 This directory records derivations, mathematical assumptions, boundary cases,
 computational decisions, and reproducibility checks for methods explored in
 `trendestimation`. Notes do not necessarily imply release-quality implementation
