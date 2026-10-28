@@ -39,7 +39,7 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
         ax.plot([0.0, 1.0], [1.0, 0.1], lw=1.3, label="sample")
         ax.set_yscale("log")  # Matplotlib uses \\mathdefault for powers-of-ten ticks.
         ax.set_title("Indexed smoothness: μ → λ")
-        ax.set(xlabel="Time", ylabel="Value")
+        ax.set(xlabel="Time", ylabel="Mean(D_d y)")
         ax.legend()
         target = tmp_path / (name + ".pdf")
         save_figure(fig, target, strict=True)
