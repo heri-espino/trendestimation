@@ -65,15 +65,15 @@ was therefore insufficient. The new `build_sncs.ps1`:
 1. Checks all required figures, Springer class, BibTeX file and tables.
 2. Displays exactly which `pdflatex`, `bibtex`, `latexmk`, and `perl`
    binaries are found in PATH.
-3. Prefers `latexmk -gg` if both latexmk and Perl exist. Otherwise it
-   executes `pdflatex`, `bibtex`, and two further LaTeX passes directly.
+3. By default uses `pdflatex`, `bibtex`, and two further LaTeX passes
+   directly, bypassing potentially silent `latexmk` Windows wrappers.
+   An explicit `-UseLatexmk` switch is available when latexmk and Perl work.
 4. **Fails if the PDF does not exist or is empty**, prints the last 55
    lines of `sncs_main.log`, and opens the PDF only after success.
 
 No admin rights are required to install MiKTeX for the current Windows
 user. If needed, install Perl into Conda with
-`conda install -c conda-forge perl`, or use the direct fallback
-without Perl. When diagnosing TeX PATH, run:
+`conda install -c conda-forge perl`, but it is **not needed** for the default direct build. When diagnosing TeX PATH, run:
 
 ~~~powershell
 Get-Command latexmk,pdflatex,bibtex,perl -All -ErrorAction SilentlyContinue |
