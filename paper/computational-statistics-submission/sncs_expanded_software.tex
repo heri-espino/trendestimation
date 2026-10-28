@@ -1,0 +1,167 @@
+\section{Reproducible Python implementation}
+\label{sec:expanded-software}
+The companion open-source \texttt{trendestimation} Python library
+(version \texttt{0.1.0a0} at the evaluated snapshot) is itself
+a practical outcome: it exposes Guerrero-inspired \emph{smoothness}
+as a controllable coordinate while retaining the conventional
+penalty $\lambda$ for compatibility. We distinguish this
+software design and numerical implementation from the already
+known statistical PLS method and classical selectors.
+We do not claim that this is the first software package for
+Whittaker--Henderson smoothing.
+
+\subsection{Public API and reproducible usage}
+A reusable \texttt{TrendSmoother(n, order=d)} object constructs
+the difference operator and spectral decomposition once.
+The user may prescribe a normalized target $s$, invert it to
+a penalty and then fit; alternatively, a criterion selects
+the penalty on either coordinate. The following minimal
+example shows both workflows and the values returned:
+\begin{quote}
+\begin{minipage}{.95\linewidth}
+\ttfamily\footnotesize
+from trendestimation import TrendSmoother, select_lambda
+
+smoother = TrendSmoother(len(y), order=2)
+
+\# Choose a physically interpretable smoothness target\\
+lam = smoother.lambda_for_smoothness(0.86)\\
+controlled = smoother.fit(y, lambda\_=lam, mu=0.0)\\
+print(controlled.smoothness)
+
+\# Or use an existing criterion, searched in S coordinates\\
+chosen = select_lambda(smoother, y, criterion="gcv",\\
+\phantom{chosen = select_lambda(}mu=0.0, search\_space="smoothness")\\
+trend = smoother.fit(y, lambda\_=chosen.lambda\_, mu=0.0).trend\\
+print(chosen.lambda\_, chosen.smoothness)
+\end{minipage}
+\end{quote}
+The criterion itself is unchanged; \texttt{search\_space}
+chooses the numerical coordinate of its candidate search.
+The returned \texttt{lambda\_} can be passed to
+\texttt{fit}, while \texttt{smoothness} reports the
+trace-normalized attained value. The implementation
+also returns the evaluated penalty grid, scores, and
+requested coordinate grid for auditing.
+The current default public \texttt{TrendSmoother} uses
+the reusable spectral backend; the benchmarked dense
+and banded variants are not all automatic public
+defaults selected by a benchmark ranking.
+
+\subsection{Backend differences and caching}
+The seven numerical implementations evaluated in the
+large factorial are fresh dense solves, cached dense
+solves, general banded solves, dense Cholesky,
+banded Cholesky, symmetric eigendecomposition of
+$Q_d$, and full SVD of $D_d$.
+These are distinct linear algebra backends, \emph{not}
+seven statistically different smoothers.
+
+The full SVD expresses the penalty eigenvalues through
+the squared singular values of $D_d$.
+Once $y$ and a fixed $\mu$ have been projected,
+evaluating traces and degrees of freedom for an additional
+$\lambda$ costs only a sum over eigenvalues.
+For a full reconstructed curve, the transformed spectral
+coefficients must also be mapped back to $n$ coordinates.
+Therefore a single EDF evaluation, one full fitted trend,
+an entire CV grid including leverages, and multiple
+independent searches are different timing problems.
+A banded $I+\lambda Q_d$ admits sparse-band storage
+and specialized factorization, often attractive for
+single fits or larger $n$ \cite{weinert2007wh}.
+
+\begin{table}[tbp]
+\centering\footnotesize
+\caption{Computational activities and what must be charged.
+The table is methodological rather than a measured timing
+ranking. $M$ is the penalty-candidate count and $R$
+the number of series. Reused work must be charged
+once in an end-to-end comparison.}
+\label{tab:expanded-costs}
+\begin{tabular}{p{.19\linewidth}p{.34\linewidth}p{.34\linewidth}}
+\toprule
+Task & Preprocessing and repeated work & Fair comparison criterion\\
+\midrule
+One fixed trend
+& Build $Q_d$ or its band; solve for one $\lambda$
+& Fit and setup time, agreement in $\widehat\tau$\\
+One scalar criterion
+& Compute fitted residuals and required EDF/leverage or likelihood diagnostics
+& Score validity and total evaluation time\\
+Full $M$-point search
+& Prepare backend; evaluate $M$ objective scores
+& Identical candidates, all scores valid\\
+$R$ reused searches
+& Share spectrum, candidate inversions or factorization
+& Charge common preparation once\\
+$S^{-1}(s)$ only
+& Reuse prepared positive eigenvalues; iterate scalar root
+& Tail error, failure rate and microseconds\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Grid reuse and algorithmic workflow}
+Figure~\ref{fig:expanded-schematic} outlines the
+computational workflow. Given $(n,d)$, spectral
+preprocessing depends on the \emph{operator}, not
+on the particular series. A common grid
+$s_1,\ldots,s_M$ can be inverted once,
+cached as $\lambda_1,\ldots,\lambda_M$,
+and shared among selectors and observed series.
+That is different from computing a fresh inverse
+for each criterion evaluation. If the entire grid
+is used only once, its inversion costs must be
+included in the end-to-end timing. For a
+separately spaced log-$\lambda$ grid, the
+candidate points differ, so the selected fit may
+also differ.
+
+\begin{figure}[tbp]
+\centering
+\setlength{\fboxsep}{8pt}
+\fbox{\begin{minipage}{.91\linewidth}
+\centering\small
+{\bfseries Data and difference order $(y,n,d,\mu)$}\\[3pt]
+$\Downarrow$\\[3pt]
+{\bfseries Prepare $D_d$, spectral values or banded factorization}\\[3pt]
+$\Downarrow$\\[3pt]
+\begin{tabular}{p{.43\linewidth}|p{.43\linewidth}}
+\centering \textbf{Controlled $s$}
+&\centering\textbf{Criterion selection}\\
+\centering $s\mapsto\Lambda_d(s)$
+&\centering $s$ grid or $\lambda$ grid\\
+\centering One safeguarded inverse
+&\centering Optional shared inverse grid\\
+\end{tabular}\\[5pt]
+$\Downarrow$\\[3pt]
+{\bfseries Same PLS fit at selected $\lambda$:
+$(\widehat\tau,\lambda,S,\nu_\lambda)$}\\[3pt]
+$\Downarrow$\\[3pt]
+{\bfseries Save raw scores, selections, machine metadata,
+numeric validity, and plots independently}
+\end{minipage}}
+\caption{Reusable software path for controlled smoothness
+and criterion-based selection. Native-$S$ and once-mapped
+$S\to\lambda$ grids are equivalent when their candidates
+match; a separate log-penalty grid generally is not.
+Each panel of the empirical application reads previously
+saved selections without repeating benchmark timings.}
+\label{fig:expanded-schematic}
+\end{figure}
+
+\subsection{Design for independent reproduction}
+The repository separates numerical data production,
+statistical analysis and figure rendering. The
+80,640-trial Windows CSV and environment file, the
+seed-paired solver records, and the scalar root-finding
+results have been committed independently of all
+PDF/SVG/PNG outputs. The plotting scripts verify
+SHA-256 digests of the numeric archive and reconstruct
+curves at \emph{stored} $(\lambda,\mu)$.
+Thus a journal reader may change the color palette or
+replace a figure layout without rerunning data-generating
+simulations or hardware-sensitive timing experiments.
+The independent original draft and complete experiment
+matrices remain available as supplementary material.
