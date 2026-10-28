@@ -111,7 +111,6 @@ WIDTH_FRACTIONS = {
     "final_solver_inference": 0.86,
     "final_inversion_speed": 0.86,
 }
-PGF_PREAMBLE = r"\usepackage{amsmath,amssymb}"
 
 
 @lru_cache(maxsize=1)
@@ -155,56 +154,68 @@ def _tex_safe_labels(fig):
 
 
 def _save_with_latex(fig, target: Path, *, dpi: int) -> Path:
-    """Exact physical sizes and TeX glyphs for manuscript-ready vector PDFs.
+    """Export manuscript-matched figures through AwesomeFigures' high-level API.
 
-    The PDF uses the TeX PGF backend; PNG/SVG are previews with the same size
-    and point hierarchy but their font outlines are not necessarily identical.
+    PDF is compiled with the Springer preamble and verified for real embedded
+    TeX fonts and physical width. SVG/PNG remain explicitly non-exact previews.
+    The pre-existing Matplotlib Figure is supplied unchanged as numerical data;
+    no models, selectors, simulations, or benchmark timings are rerun.
     """
     layout = latex_layout()
     fraction = WIDTH_FRACTIONS.get(target.stem, 1.0)
-    width_inches = layout.width_inches("column") * fraction
-    with af.latex_style(
-        layout, width=width_inches, engine="pdflatex",
-        font="auto", minimum_text_pt=7.0, rasterize=True,
-    ) as pub:
-        if not getattr(fig, "_sncs_latex_layout_prepared", False):
-            _tex_safe_labels(fig)
-            pub.fit(fig, reference_fontsize_pt=10.0)
-            fig._sncs_latex_layout_prepared = True
-        audit = pub.audit(fig)
-        if abs(audit.output_width_pt - audit.expected_width_pt) > 0.5:
-            raise RuntimeError(f"Publication width mismatch: {audit.warnings}")
-        if audit.smallest_text_pt is not None and audit.smallest_text_pt < 6.8:
-            raise RuntimeError(f"Unreadable text at printed size: {audit.warnings}")
-        if target.suffix.lower() == ".pdf":
-            with mpl.rc_context({
-                "pgf.texsystem": "pdflatex", "pgf.rcfonts": False,
-                "pgf.preamble": PGF_PREAMBLE,
-                "savefig.bbox": None, "savefig.pad_inches": 0,
-                "text.usetex": False,
-            }):
-                pub.savefig(fig, target, dpi=dpi, backend="pgf", audit=True)
-            details = {
-                "figure": target.name, "manuscript": PAPER_TEX.name,
-                "textwidth_pt": layout.textwidth_pt,
-                "columnwidth_pt": layout.columnwidth_pt,
-                "body_font_pt": layout.fontsize_pt,
-                "font_family": layout.font_family, "font_name": layout.font_name,
-                "inclusion_fraction": fraction,
-                "export_width_pt": audit.output_width_pt,
-                "minimum_text_pt": audit.smallest_text_pt,
-                "audit_warnings": list(audit.warnings),
-                "font_backend": "pdfLaTeX PGF-generated vector PDF",
-                "awesomefigures_apis": [
-                    "inspect_latex", "latex_style", "PublicationStyle.fit",
-                    "PublicationStyle.audit", "PublicationStyle.savefig",
-                ],
-            }
-            target.with_suffix(".typography.json").write_text(
-                json.dumps(details, indent=2) + "\n", encoding="utf-8"
+    width = rf"{fraction:g}\columnwidth"
+    _tex_safe_labels(fig)
+
+    # af.paper caches TeX inspection and fits already-constructed Matplotlib
+    # figures; the PDF exporter compiles the *actual* manuscript preamble.
+    # Non-strict layout permits old supplementary panels to retain an audit
+    # warning rather than falsely asserting visually perfect multi-panel fit.
+    # The exact PDF geometry and embedded font checks are always enforced.
+    with af.paper(
+        PAPER_TEX, style=STYLE, palette=PALETTE, width=width,
+        engine="pdflatex", minimum_text_pt=7.0, strict=False,
+    ) as publication:
+        publication.savefig(fig, target, width=width, dpi=dpi)
+        record = publication.records[-1]
+
+    if target.suffix.lower() == ".pdf":
+        if record.typography != "exact-tex-preamble":
+            raise RuntimeError("The paper PDF was not exported through the TeX preamble")
+        expected_pt = layout.columnwidth_pt * fraction
+        if record.actual_width_tex_pt is None or abs(record.actual_width_tex_pt - expected_pt) > 0.75:
+            raise RuntimeError(
+                f"Publication PDF width differs from manuscript: {record}"
             )
-        else:
-            pub.savefig(fig, target, dpi=dpi, audit=False)
+        if not record.pdf_fonts or not all(font["embedded"] for font in record.pdf_fonts):
+            raise RuntimeError("Figure PDF does not contain verified embedded TeX fonts")
+        audit = af.audit_figure(
+            fig, layout, width=layout.width_inches("column") * fraction,
+            minimum_text_pt=7.0,
+        )
+        if audit.smallest_text_pt is not None and audit.smallest_text_pt < 6.8:
+            raise RuntimeError(f"Unreadable text at print size: {audit.warnings}")
+        details = {
+            "figure": target.name, "manuscript": PAPER_TEX.name,
+            "textwidth_pt": layout.textwidth_pt,
+            "columnwidth_pt": layout.columnwidth_pt,
+            "body_font_pt": layout.fontsize_pt,
+            "font_family": layout.font_family, "font_name": layout.font_name,
+            "inclusion_fraction": fraction,
+            "export_width_pt": record.actual_width_tex_pt,
+            "minimum_text_pt": audit.smallest_text_pt,
+            "audit_warnings": list(record.warnings),
+            "font_backend": "pdfLaTeX PGF-generated vector PDF",
+            "typography_provenance": record.typography,
+            "pdf_fonts": list(record.pdf_fonts),
+            "pdf_sha256": record.sha256,
+            "awesomefigures_apis": [
+                "paper", "Publication.savefig", "Publication.records",
+                "audit_figure",
+            ],
+        }
+        target.with_suffix(".typography.json").write_text(
+            json.dumps(details, indent=2) + "\n", encoding="utf-8"
+        )
     return target
 
 
@@ -233,16 +244,18 @@ def provenance(*, strict: bool = False) -> dict:
         "library": "awesomefigures",
         "library_version": af.__version__,
         "source": "https://github.com/awesomefigures/awesomefigures",
-        "source_commit": "54c8bf2374551fa39428f47f69580b4822d4b938",
+        "source_commit": "a9760351c1f72ccf7a1a2ef2ff14136d6e280d88",
         "style": STYLE,
         "palette": PALETTE,
         "preview_font": FONT,
         "publication_pdf_font": "measured TeX manuscript font, embedded via PGF/PDF",
-        "typography": "af.inspect_latex + af.latex_style + PublicationStyle.fit/audit",
+        "typography": "af.paper + TeX-preamble exact PDF and embedded-font audit",
         "apis": [
             "awesomefigures.set_style",
             "awesomefigures.plot_scheme",
             "awesomefigures.named_colormap",
             "awesomefigures.save_figure",
+            "awesomefigures.paper",
+            "awesomefigures.Publication.savefig",
         ],
     }
