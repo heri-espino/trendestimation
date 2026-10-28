@@ -9,12 +9,12 @@ timing benchmarks. Accepts invocation from ANY working directory:
   powershell -ExecutionPolicy Bypass -File .\paper\computational-statistics-submission\build_sncs.ps1
 
 Required: local MiKTeX/TeX Live with pdflatex + bibtex.
-Preferred: latexmk + Perl. If latexmk is missing, use pdflatex/bibtex
-directly with enough passes to resolve bibliography and references.
+By default, use pdflatex/bibtex directly, bypassing Windows latexmk
+shim/launcher issues. Use -UseLatexmk only to opt into latexmk+Perl.
 #>
 [CmdletBinding()]
 param(
-    [switch]$Direct,
+    [switch]$UseLatexmk,
     [switch]$NoOpen
 )
 
@@ -93,13 +93,16 @@ Write-Host "[sncs] No optimization or numerical experiments will run."
 
 Push-Location $here
 try {
-    if ($latexmk -and $perl -and -not $Direct) {
-        Write-Host "[sncs] Compiling with latexmk." -ForegroundColor Cyan
+    if ($UseLatexmk) {
+        if (-not $latexmk -or -not $perl) {
+            throw "-UseLatexmk requires both latexmk and Perl on PATH. Omit the switch to use direct pdfLaTeX."
+        }
+        Write-Host "[sncs] Compiling with opt-in latexmk." -ForegroundColor Cyan
         Invoke-Checked -executable $latexmk -arguments @("-pdf", "-gg", "-interaction=nonstopmode",
                                   "-file-line-error", "-halt-on-error",
                                   "sncs_main.tex")
     } else {
-        Write-Host "[sncs] Using direct pdflatex + bibtex fallback." -ForegroundColor Yellow
+        Write-Host "[sncs] Compiling directly with pdflatex + bibtex (no Perl required)." -ForegroundColor Cyan
         Invoke-Checked -executable $pdflatex -arguments @("-interaction=nonstopmode", "-file-line-error",
                                     "-halt-on-error", "sncs_main.tex")
         Invoke-Checked -executable $bibtex -arguments @("sncs_main")
