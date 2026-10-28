@@ -335,9 +335,25 @@ def images(index):
         return value_ms(r) if r["both_valid"] else np.nan
 
     def save(pub, fig, name):
-        with plt.rc_context({"svg.fonttype":"none"}):
-            fig.savefig(output/(name+".svg"), format="svg")
-        style["_save"](pub,fig,output/(name+".pdf"))
+        # In SNCS publication mode, these figures must be re-exported at
+        # their *actual* .48 of the line width (or full-width) manuscript size.
+        # The older general manuscript figures have different dimensions.
+        import os
+        if os.environ.get("TRENDESTIMATION_TEX_FIGURES") == "1":
+            import sys
+            theme_dir = PAPER / "computational-statistics-submission"
+            if str(theme_dir) not in sys.path:
+                sys.path.insert(0, str(theme_dir))
+            from contrast_theme import save_figure
+            target = theme_dir / "figures"
+            target.mkdir(parents=True, exist_ok=True)
+            save_figure(fig, target / (name + ".pdf"), dpi=180, strict=True)
+            save_figure(fig, target / (name + ".svg"), dpi=180, strict=True)
+            plt.close(fig)
+        else:
+            with plt.rc_context({"svg.fonttype":"none"}):
+                fig.savefig(output/(name+".svg"), format="svg")
+            style["_save"](pub,fig,output/(name+".pdf"))
         fig_names.append(name)
 
     with style["publication_context"]() as pub:
