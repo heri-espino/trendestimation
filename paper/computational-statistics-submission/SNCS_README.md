@@ -237,3 +237,42 @@ regenerates and commits the figure assets and an updated SNCS manuscript
 PDF. Core tests may use a simple preview when AwesomeFigures is not
 installed, but the dedicated publication pipeline explicitly requires
 the pinned AwesomeFigures release and fails if it is absent.
+
+
+### Exact Springer Nature fonts and physical figure dimensions
+
+The native publication renderer now uses **af.inspect_latex(sncs_main.tex)**
+and **af.latex_style** to measure the official text width, body font
+size, and TeX font identity from the actual Springer document class.
+It then uses **PublicationStyle.fit** and **audit** to size every PDF
+in its final printed dimensions. The manuscript includes four Windows
+benchmark panels at 48% of text width and two numerical comparisons at
+86%; the other figures use the full text width. Rebuilding at those
+widths avoids shrinking an 11-point plot into illegible small text.
+
+For the actual manuscript PDF, **PublicationStyle.savefig(backend="pgf")**
+runs pdfLaTeX and embeds TeX-native fonts in the vector figures.
+Matplotlib/DejaVu font matching alone is not sufficient. The SVG/PNG
+previews are the same physical layout but are not guaranteed to contain
+the exact TeX font outlines. Per-figure *.typography.json files record
+the measured document font, actual export widths, minimum label sizes,
+and publication audit warnings. All 11 figures referenced by the
+SNCS manuscript must have a successful typography audit.
+
+This now requires MiKTeX/TeX Live **even for --scope journal**; if
+pdflatex is not found, rendering stops rather than silently using the
+wrong font. From a Conda PowerShell in the repository root:
+
+~~~powershell
+Get-Command pdflatex -All
+python -m pip install -r paper/requirements.txt
+python paper\computational-statistics-submission\rerender_awesomefigures.py
+powershell -ExecutionPolicy Bypass -File .\paper\computational-statistics-submission\build_sncs.ps1
+
+git add .
+git commit -m "paper: export SNCS figures at exact Springer LaTeX font and page dimensions"
+git push
+~~~
+
+This step renders from archived numerical CSV/JSON only; it performs no
+parameter retuning, new simulation, or timing experiment.
