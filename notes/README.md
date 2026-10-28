@@ -1,5 +1,11 @@
 # Mathematical research notes
 
+- [Experiment003 Windows findings (28 October 2026)](experiment003_windows_findings_20261028.md):
+  archived quick/full/large observations, matched-grid timing tables,
+  banded-eigenvalues versus full-SVD crossover, grid/factor reuse,
+  numerical parity, experimental limitations, and reproducible source paths.
+
+
 This directory records derivations, mathematical assumptions, boundary cases,
 computational decisions, and reproducibility checks for methods explored in
 `trendestimation`. Notes do not necessarily imply release-quality implementation
