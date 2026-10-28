@@ -15,6 +15,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from contrast_theme import (
+    apply as apply_contrast, METHODS as METHOD_COLORS,
+    SERIES as CONTRAST_SERIES, INK, MUTED, GRID,
+)
+apply_contrast()
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[1]
@@ -108,8 +113,8 @@ def _inversion(rows:list[dict]) -> dict:
     )
 
     fig,ax=plt.subplots(figsize=(7.7,4.4),layout="constrained")
-    colors={"brentq":"#2465ad","newton":"#16948f",
-            "secant":"#ad633a","bisect":"#7853ad"}
+    colors={"brentq":CONTRAST_SERIES[0],"newton":CONTRAST_SERIES[1],
+            "secant":CONTRAST_SERIES[2],"bisect":CONTRAST_SERIES[3]}
     for method in ("brentq","newton","secant","bisect"):
         points=sorted((r for r in selected
                        if r["method"]==method and r["median_us"] is not None),
@@ -122,7 +127,7 @@ def _inversion(rows:list[dict]) -> dict:
             ax.scatter([np.log(float(r["target"])/(1-float(r["target"])))
                         for r in failing],
                        [float(r["median_us"]) for r in failing],
-                       facecolors="none",edgecolors="red",s=70,zorder=5)
+                       facecolors="none",edgecolors=CONTRAST_SERIES[5],s=70,zorder=5)
     ax.set(title=f"Smoothness inversion: n={n}, d={d}, float64",
            xlabel="Logit of target normalized smoothness",
            ylabel="Median successful call time (microseconds)")
@@ -180,8 +185,8 @@ def _solvers(timing:list[dict], comparisons:list[dict]) -> dict:
     low=np.array([float(r["ci95_low"]) for r in relevant])
     upper=np.array([float(r["ci95_high"]) for r in relevant])
     ax.errorbar(xx,ratios,yerr=[ratios-low,upper-ratios],
-                fmt="o",capsize=4,color="#2863aa")
-    ax.axhline(1,ls=":",color="#444")
+                fmt="o",capsize=4,color=CONTRAST_SERIES[0])
+    ax.axhline(1,ls=":",color=INK)
     ax.set_xticks(xx,[f"n={r['n']}, M={r['evaluations']}" for r in relevant],
                   rotation=16)
     ax.set(title="Paired SVD vs banded Cholesky: full trend workloads",

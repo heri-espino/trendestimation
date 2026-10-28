@@ -24,6 +24,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from trendestimation import TrendSmoother, select_lambda
+from contrast_theme import (
+    apply as apply_contrast, METHODS as CONTRAST_METHODS,
+    OBSERVED, INK, TREND, FUTURE, GRID, SERIES as CONTRAST_SERIES,
+    ORDER_MARKERS,
+)
+apply_contrast()
 from make_current_examples import (
     CONTROLLED_S, HORIZON, HOLDOUT, ORDERS, TARGET_S,
     extrapolate_tail, load_series,
@@ -42,10 +48,9 @@ SERIES = (
     ("fedfunds_full", "US effective federal funds rate (%)",
      "fred_fedfunds_2010_2026_09.csv", "value", None),
 )
-PALETTE = {"observed":"#8090a5", "training":"#3a5066",
-           "trend":"#126c93", "future":"#dc7d27", "holdout":"#222a38"}
-METHOD_COLORS = {"cv":"#1d4ed8", "gcv":"#159c9c", "aicc":"#aa55c0",
-                 "bic":"#db8c39", "mle":"#33875c", "controlled":"#cc546a"}
+PALETTE = {"observed": OBSERVED, "training": INK,
+           "trend": TREND, "future": FUTURE, "holdout": INK}
+METHOD_COLORS = CONTRAST_METHODS
 SHORT = {"cv":"CV", "gcv":"GCV", "aicc":"AICc", "bic":"BIC",
          "mle":"MLE", "controlled":f"Controlled S={CONTROLLED_S:.2f}"}
 
@@ -180,7 +185,7 @@ def plot_dashboard(data: dict, dataset: str, title: str, kind: str) -> str:
                 ax.plot([origin, *dates[-HOLDOUT:]],
                         [row["holdout_fit"][-1], *row["holdout_prediction"]],
                         color=PALETTE["future"], ls="--", lw=1.7)
-                ax.axvline(origin, color="#64748b", ls=":", lw=1)
+                ax.axvline(origin, color=GRID, ls=":", lw=1)
                 note = f"RMSE {row['rmse']:.2f}  MAE {row['mae']:.2f}"
             elif kind == "future":
                 visible = 60
@@ -200,7 +205,7 @@ def plot_dashboard(data: dict, dataset: str, title: str, kind: str) -> str:
             if j == 0:
                 ax.set_ylabel(f"d={order}", fontweight="bold", size=12)
             ax.text(.02,.95,note,ha="left",va="top",transform=ax.transAxes,
-                    fontsize=8.4,color="#243b53",
+                    fontsize=8.4,color=INK,
                     bbox={"facecolor":"white","edgecolor":"none","alpha":.82})
             ax.grid(alpha=.16)
             if i != len(ORDERS)-1:
@@ -232,7 +237,8 @@ def plot_summary(data: dict, dataset: str, title: str) -> str:
         for method in SELECTORS:
             values=[records[(order,method)][field] for order in ORDERS]
             ax.plot(ORDERS, values, marker="o", lw=1.7,
-                    color=METHOD_COLORS[method],label=SHORT[method])
+                    color=METHOD_COLORS[method],label=SHORT[method],
+                    ls={"cv":"-","gcv":"--","aicc":"-.","bic":":","mle":"-","controlled":"--"}[method])
         ax.set_title(label, fontsize=12)
         ax.set_xticks(ORDERS)
         ax.set_xlabel("Difference order d")
@@ -295,7 +301,61 @@ def _record_for_json(row: dict) -> dict:
     }
 
 
-def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
+def _from_archived_selection(
+    dates: list[date], observed: np.ndarray, mode: str, cached: dict,
+) -> dict:
+    """Reconstruct plots using FIXED archived parameters; never reselect.
+
+    The stored JSON contains selected lambda, S, numeric mu and both
+    holdout-origin parameters. We only evaluate the corresponding PLS
+    curves and deterministic extrapolations. No search, likelihood,
+    cross-validation, optimizer, timings or benchmarks are executed.
+    """
+    if cached.get("mu_modes") != list(MU_MODES):
+        raise ValueError("Archived mu modes differ from the publication design")
+    if cached.get("orders") != list(ORDERS) or cached.get("methods") != list(SELECTORS):
+        raise ValueError("Archived selection method/order matrix is incomplete")
+    if cached["dates"] != {"start":str(dates[0]),"end":str(dates[-1])}:
+        raise ValueError("Archived dataset dates do not agree with frozen observations")
+    found=cached["records"][mode]
+    if len(found)!=len(ORDERS)*len(SELECTORS):
+        raise ValueError("Missing archived criterion/order cases")
+    train=observed[:-HOLDOUT]
+    records={}
+    for order in ORDERS:
+        full_model=TrendSmoother(len(observed),order=order)
+        train_model=TrendSmoother(len(train),order=order)
+        for criterion in SELECTORS:
+            key=f"d{order}_{criterion}"
+            if key not in found:
+                raise ValueError(f"Archived record missing: {mode}:{key}")
+            row=dict(found[key])
+            if not np.isfinite(float(row["lambda"])) or float(row["lambda"])<=0:
+                raise ValueError(f"Invalid archived penalty for {mode}:{key}")
+            if row["mu_mode"]!=mode or int(row["d"])!=order:
+                raise ValueError(f"Invalid archived case identity: {mode}:{key}")
+            full=full_model.fit(observed,lambda_=float(row["lambda"]),mu=float(row["mu"]))
+            held=train_model.fit(train,lambda_=float(row["holdout_lambda"]),
+                                 mu=float(row["holdout_mu"]))
+            if not np.isclose(full.smoothness,float(row["s"]),atol=2e-7):
+                raise ArithmeticError(f"Archived normalized S does not match: {key}")
+            if not np.isclose(held.smoothness,float(row["holdout_s"]),atol=2e-7):
+                raise ArithmeticError(f"Archived holdout S does not match: {key}")
+            row["conditional_fit"]=np.asarray(full.trend)
+            row["holdout_fit"]=np.asarray(held.trend)
+            row["holdout_prediction"]=extrapolate_tail(held.trend,order,HOLDOUT)
+            row["extrapolation"]=extrapolate_tail(full.trend,order,HORIZON)
+            losses=row["holdout_prediction"]-observed[-HOLDOUT:]
+            if not np.isclose(np.sqrt(np.mean(losses**2)),float(row["rmse"]),atol=1e-7):
+                raise ArithmeticError(f"Holdout RMSE changed for {key}; source changed")
+            if not np.isclose(np.mean(np.abs(losses)),float(row["mae"]),atol=1e-7):
+                raise ArithmeticError(f"Holdout MAE changed for {key}; source changed")
+            records[(order,criterion)]=row
+    return {"mode":mode,"dates":dates,"y":observed,"records":records}
+
+
+def generate(*, datasets: tuple[str,...] | None = None,
+             render_only: bool = False) -> list[dict]:
     DATA.mkdir(parents=True,exist_ok=True)
     outputs=[]
     for slug, title, filename, value_column, recent in SERIES:
@@ -306,16 +366,31 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
             dates, observations=dates[-recent:],observations[-recent:]
         modes={}
         figures=[]
+        archived=None
+        if render_only:
+            existing=DATA/f"{slug}_dashboards.json"
+            if not existing.is_file():
+                raise FileNotFoundError(
+                    f"Missing archived selections: {existing}. "
+                    "Rendering never silently runs new optimization."
+                )
+            archived=json.loads(existing.read_text(encoding="utf-8"))
+            if archived.get("dataset")!=slug or archived.get("source_file")!=filename:
+                raise ValueError("Archived dataset identity does not match frozen CSV")
         for mode in MU_MODES:
             print(f"[dashboard] {slug}: mu={mode}, n={len(observations)}",
                   flush=True)
-            values=analyze(dates,observations,mode)
+            values=(_from_archived_selection(dates,observations,mode,archived)
+                    if render_only else analyze(dates,observations,mode))
             modes[mode]=values
             for kind in ("holdout","future"):
                 figures.append(plot_dashboard(values,slug,title,kind))
             figures.append(plot_summary(values,slug,title))
         figures.append(plot_mu_sensitivity(modes["zero"],modes["data"],
                                            slug,title))
+        if render_only:
+            outputs.append(archived)
+            continue
         json_result={
             "dataset":slug, "title":title,
             "source_file":filename,
@@ -349,6 +424,15 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
 
     if not outputs:
         raise ValueError("No datasets selected")
+    if not render_only:
+        _write_selection_csv(outputs)
+    _write_main_latex_table(outputs)
+    print(f"[dashboard] {'Rendered archived' if render_only else 'Computed'} "
+          f"{len(outputs)} scenarios using AwesomeFigures contrast colors",flush=True)
+    return outputs
+
+
+def _write_selection_csv(outputs: list[dict]) -> None:
     csv_path=DATA/"dashboard_selection_summary.csv"
     with csv_path.open("w",newline="",encoding="utf-8") as fh:
         cols=("dataset","mu_mode","d","criterion","mu","lambda","s",
@@ -366,6 +450,7 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
                             "mu_mode":mode,"d":order,"criterion":method,
                             **{k:record[k] for k in cols[4:]},
                         })
+def _write_main_latex_table(outputs: list[dict]) -> None:
     # Compact main-text comparison: NOAA full record, d=2, both mu modes.
     co2 = next((case for case in outputs if case["dataset"] == "co2_full"), None)
     if co2 is not None:
@@ -390,19 +475,20 @@ def generate(*, datasets: tuple[str,...] | None = None) -> list[dict]:
             "\n".join(latex_rows)+"\n", encoding="utf-8",
         )
 
-    print(f"[dashboard] Wrote {len(outputs)} data scenarios, "
-          f"{len(outputs)*len(MU_MODES)*len(SELECTORS)*len(ORDERS)}"
-          " selection rows and graphics",flush=True)
-    return outputs
-
+ 
 
 def main() -> None:
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset",choices=("all",)+tuple(x[0] for x in SERIES),
                         default="all",help="Subset of case studies for smoke tests")
+    parser.add_argument(
+        "--render-only",action="store_true",
+        help="Restyle plots using saved selected lambda, S, mu, and losses. "
+             "No criterion selection, objective optimization, or benchmark."
+    )
     args=parser.parse_args()
     chosen=None if args.dataset=="all" else (args.dataset,)
-    generate(datasets=chosen)
+    generate(datasets=chosen,render_only=args.render_only)
 
 
 if __name__ == "__main__":

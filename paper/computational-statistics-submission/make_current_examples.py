@@ -28,6 +28,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from trendestimation import TrendSmoother, select_lambda
+from contrast_theme import (
+    apply as apply_contrast, SERIES as CONTRAST_SERIES,
+    ORDER_COLORS, METHODS as METHOD_COLORS, OBSERVED, INK, GRID,
+)
+apply_contrast()
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[1]
@@ -142,10 +147,10 @@ def plot_panel(title: str, dates: list[date], y: np.ndarray,
                fits: dict[tuple[int, str], np.ndarray], prefix: str) -> None:
     fig, ax = plt.subplots(2, 2, figsize=(12, 7.8), sharex=True)
     x = np.array(dates)
-    cs = {1:"#1d4ed8",2:"#0891b2",3:"#a855f7",4:"#e17a32"}
+    cs = ORDER_COLORS
     for i, criterion in enumerate(("cv", "gcv", "aicc", "bic")):
         axis = ax.flat[i]
-        axis.plot(x, y, color="#a0a7b3", lw=.85, label="Observed")
+        axis.plot(x, y, color=OBSERVED, lw=.85, label="Observed")
         for d in ORDERS:
             axis.plot(x, fits[(d, criterion)], lw=1.65,
                       color=cs[d], label=f"d={d}")
@@ -167,18 +172,30 @@ def save(fig: plt.Figure, name: str) -> None:
 
 
 def evaluate(name: str, dates: list[date], observations: np.ndarray,
-             *, recent_months: int | None = None) -> dict:
+             *, recent_months: int | None = None,
+             render_only: bool = False) -> dict:
     if recent_months:
         dates, observations = dates[-recent_months:], observations[-recent_months:]
     n = len(observations)
     tag = ("co2_recent" if recent_months else "co2_full") if "CO2" in name else "fedfunds_full"
     print(f"[paper] {tag}: n={n}, last={dates[-1]}", flush=True)
+    source=None
+    if render_only:
+        filepath=DATA/f"{tag}_results.json"
+        if not filepath.is_file():
+            raise FileNotFoundError(f"Archived plotting selection missing: {filepath}")
+        source=json.loads(filepath.read_text(encoding="utf-8"))
+        if source["n"]!=n or source["last"]!=str(dates[-1]):
+            raise ValueError("Frozen source and archived results do not match")
     fitted: dict[tuple[int,str], np.ndarray] = {}
     selected = {}
     forward = {}
     heldout = {}
     for d in ORDERS:
-        model, info = estimate_candidates(observations, d)
+        model=TrendSmoother(n,order=d)
+        info=( {criterion: dict(source["selection"][f"d{d}_{criterion}"])
+                for criterion in METHODS}
+              if render_only else estimate_candidates(observations,d)[1])
         for criterion in METHODS:
             params = info[criterion]
             trend = model.fit(observations, lambda_=params["lambda"], mu=0.0).trend
@@ -194,11 +211,18 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
         # origin. Historical 12-month losses are diagnostics, not a proof
         # of forecasting validity.
         hist = observations[:-HOLDOUT]
-        train_model, train_info = estimate_candidates(hist, d)
+        train_model=TrendSmoother(len(hist),order=d)
+        train_info=( {criterion:{"lambda":None}
+                      for criterion in METHODS}
+                     if render_only else estimate_candidates(hist,d)[1])
         for criterion in ("cv","gcv","aicc","bic","controlled"):
-            h_lambda = train_info[criterion]["lambda"]
-            trained = train_model.fit(hist, lambda_=h_lambda, mu=0).trend
-            pred = extrapolate_tail(trained,d,HOLDOUT)
+            if render_only:
+                pred=np.asarray(
+                    source["holdout"][f"d{d}_{criterion}"]["forecast"],dtype=float)
+            else:
+                h_lambda = train_info[criterion]["lambda"]
+                trained = train_model.fit(hist, lambda_=h_lambda, mu=0).trend
+                pred = extrapolate_tail(trained,d,HOLDOUT)
             heldout[(d,criterion)] = {
                 "mae": float(np.mean(np.abs(pred-observations[-HOLDOUT:]))),
                 "rmse": float(np.sqrt(np.mean((pred-observations[-HOLDOUT:])**2))),
@@ -208,8 +232,8 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
     plot_panel(name, dates, observations, fitted, tag)
     fig, ax = plt.subplots(figsize=(11, 4.5))
     x = np.array(dates)
-    ax.plot(x, observations, color="#9ca3af", label="Observed", lw=1.0)
-    for d, color in zip(ORDERS, ("#205fd4","#138b94","#9d57c8","#cf8427")):
+    ax.plot(x, observations, color=OBSERVED, label="Observed", lw=1.0)
+    for d, color in zip(ORDERS, CONTRAST_SERIES[:len(ORDERS)]):
         ax.plot(x, fitted[(d, "controlled")], color=color, lw=1.55,
                 label=f"PLS d={d}, S={CONTROLLED_S}")
     ax.set_title(f"{name}: common normalized smoothness, different d")
@@ -248,13 +272,13 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
     visible=min(n,84)
     ax.plot(dates[-visible:], observations[-visible:], c="#9ca3af",
             label="Observed historical", lw=1.1)
-    for d,c in zip(ORDERS,("#205fd4","#138b94","#9d57c8","#cf8427")):
+    for d,c in zip(ORDERS,CONTRAST_SERIES[:len(ORDERS)]):
         ax.plot(dates[-visible:], fitted[(d,"controlled")][-visible:],
                 color=c, lw=1.8, label=f"d={d} fitted")
         ax.plot([dates[-1], *future_dates],
                 [fitted[(d,"controlled")][-1], *forward[str(d)]],
                 color=c, ls="--", lw=1.65, alpha=.85)
-    ax.axvline(dates[-1], color="#444", ls=":", lw=1.0)
+    ax.axvline(dates[-1], color=INK, ls=":", lw=1.0)
     ax.text(dates[-1], ax.get_ylim()[1], " observed cutoff",
             ha="left",va="top",fontsize=8)
     ax.set_title(name+": future LOCAL POLYNOMIAL extension; not a validated forecast")
@@ -267,7 +291,7 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
     fig, ax=plt.subplots(figsize=(11.5,4.5))
     xx=dates[-HOLDOUT:]
     ax.plot(xx,observations[-HOLDOUT:],c="#161616",marker="o",lw=1.2,label="Held-out observed")
-    for d,c in zip(ORDERS,("#205fd4","#138b94","#9d57c8","#cf8427")):
+    for d,c in zip(ORDERS,CONTRAST_SERIES[:len(ORDERS)]):
         ax.plot(xx,heldout[(d,"controlled")]["forecast"],
                 c=c,ls="--",label=f"d={d} predicted at origin")
     ax.set_title(name+": 12-month single-origin holdout (S=0.86)")
@@ -287,6 +311,14 @@ def evaluate(name: str, dates: list[date], observations: np.ndarray,
         "holdout":{f"d{d}_{c}":v for (d,c),v in heldout.items()},
         "scope":"PLS trend extrapolation, not seasonal forecast or prediction intervals",
     }
+    if render_only:
+        for d in ORDERS:
+            for method in METHODS:
+                current=summary["selection"][f"d{d}_{method}"]
+                archived=source["selection"][f"d{d}_{method}"]
+                if not np.isclose(current["s"],archived["s"],atol=2e-7):
+                    raise ArithmeticError("Archived selection smoothness mismatch")
+        return source
     with (DATA/f"{tag}_results.json").open("w",encoding="utf-8") as h:
         json.dump(summary,h,indent=2)
     return summary
@@ -296,7 +328,11 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fetch-fred", action="store_true",
                     help="Replace pinned FRED FEDFUNDS snapshot with new source data")
+    ap.add_argument("--render-only",action="store_true",
+                    help="Replot from pinned result JSON; never call select_lambda")
     args=ap.parse_args()
+    if args.render_only and args.fetch_fred:
+        ap.error("--render-only cannot download or replace data")
     if args.fetch_fred:
         print("[paper] FRED downloaded:",fetch_fred())
     DATA.mkdir(exist_ok=True)
@@ -309,9 +345,12 @@ def main():
     if len(fred_y)!=201 or abs(fred_y[-1]-3.75)>1e-9:
         raise ValueError("FRED FEDFUNDS 201-month Sep 2026 cutoff or value differs")
     out=[
-        evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y),
-        evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y,recent_months=120),
-        evaluate("FRED US effective federal funds rate (percent, NSA)", fred_x,fred_y),
+        evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y,
+                 render_only=args.render_only),
+        evaluate("NOAA Mauna Loa CO2 (ppm)", noaa_x,noaa_y,
+                 recent_months=120,render_only=args.render_only),
+        evaluate("FRED US effective federal funds rate (percent, NSA)", fred_x,fred_y,
+                 render_only=args.render_only),
     ]
     # Compact paper LaTeX table: order d=2 from all three empirical designs.
     lines=[
@@ -348,8 +387,9 @@ def main():
                   "start":r["first"],"end":r["last"]} for r in out],
         "limits":"Forecast paths are descriptive extrapolations; local polynomial order capped at 2. Single-origin 12-month holdout is not a statistically sufficient rolling-origin comparison. Selection scores are in-sample, no causal or climate forecasting inference.",
     }
-    (DATA/"provenance.json").write_text(json.dumps(provenance,indent=2)+"\n",
-                                        encoding="utf-8")
+    if not args.render_only:
+        (DATA/"provenance.json").write_text(json.dumps(provenance,indent=2)+"\n",
+                                            encoding="utf-8")
     print("[paper] Created figures, table, json; source checks passed",flush=True)
 
 
