@@ -36,7 +36,8 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
     for name, fraction in (("sncs_observed_trends", 1.0),
                            ("windows_full_s_workloads", 0.48)):
         fig, ax = plt.subplots(figsize=(9, 4))
-        ax.plot([0.0, 1.0], [1.0, 0.0], lw=1.3, label="sample")
+        ax.plot([0.0, 1.0], [1.0, 0.1], lw=1.3, label="sample")
+        ax.set_yscale("log")  # Matplotlib uses \\mathdefault for powers-of-ten ticks.
         ax.set_title("Indexed smoothness: μ → λ")
         ax.set(xlabel="Time", ylabel="Value")
         ax.legend()
@@ -61,6 +62,11 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
         assert report["export_width_pt"] == pytest.approx(
             layout.columnwidth_pt * fraction, abs=0.6
         )
+
+
+def test_springer_tex_declares_mathdefault_for_logarithmic_pgf_ticks():
+    tex = (HERE / "sncs_main.tex").read_text(encoding="utf-8")
+    assert r"\providecommand{\mathdefault}[1]{#1}" in tex
 
 
 def test_master_renderer_checks_each_cited_figures_tex_font():
