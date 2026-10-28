@@ -10,15 +10,20 @@ from __future__ import annotations
 from cycler import cycler
 import matplotlib as mpl
 
+# AwesomeFigures is an optional *paper-only* extra: core CI tests and
+# the main Python package must remain importable without installing it.
+# When installed, use the exact pinned AwesomeFigures palette. Otherwise
+# use the public standard Okabe-Ito hex values for consistent previews.
+STANDARD_OKABE_ITO = (
+    "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+    "#0072B2", "#D55E00", "#CC79A7", "#000000",
+)
 try:
     import awesomefigures as af
-except ImportError as exc:
-    raise ImportError(
-        "Install the pinned AwesomeFigures release: "
-        "python -m pip install -r paper/requirements.txt"
-    ) from exc
+except ImportError:
+    af = None
 
-CONTRAST = tuple(af.color_palette("okabe-ito", as_hex=True))
+CONTRAST = tuple(af.color_palette("okabe-ito", as_hex=True)) if af else STANDARD_OKABE_ITO
 if len(CONTRAST) < 8:
     raise RuntimeError("AwesomeFigures Okabe–Ito palette unexpectedly short")
 
