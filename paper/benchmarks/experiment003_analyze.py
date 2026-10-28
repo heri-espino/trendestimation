@@ -146,7 +146,6 @@ def write(run_dir):
         images+=save(fig,directory/"preparation_breakdown")
 
     # R varied at constant n,d,M,mu: real reuse crossover.
-    maxn=max(int(v["n"]) for v in work)
     possible=[v for v in work if int(v["d"])==2 and int(v["M"])==21
               and float(v["mu"])==0]
     if possible:
