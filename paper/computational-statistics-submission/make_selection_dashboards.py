@@ -27,7 +27,7 @@ from trendestimation import TrendSmoother, select_lambda
 from contrast_theme import (
     apply as apply_contrast, METHODS as CONTRAST_METHODS,
     OBSERVED, INK, TREND, FUTURE, GRID, SERIES as CONTRAST_SERIES,
-    ORDER_MARKERS,
+    ORDER_MARKERS, save_figure,
 )
 apply_contrast()
 from make_current_examples import (
@@ -151,8 +151,7 @@ def analyze(dates: list[date], series: np.ndarray, mode: str) -> dict:
 def _save(fig: plt.Figure, name: str) -> None:
     FIGURES.mkdir(parents=True, exist_ok=True)
     for extension in ("pdf", "svg", "png"):
-        fig.savefig(FIGURES / f"{name}.{extension}", dpi=170,
-                    bbox_inches="tight", facecolor="white")
+        save_figure(fig, FIGURES / f"{name}.{extension}", dpi=170)
     plt.close(fig)
 
 

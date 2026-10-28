@@ -31,6 +31,7 @@ from trendestimation import TrendSmoother, select_lambda
 from contrast_theme import (
     apply as apply_contrast, SERIES as CONTRAST_SERIES,
     ORDER_COLORS, METHODS as METHOD_COLORS, OBSERVED, INK, GRID,
+    save_figure,
 )
 apply_contrast()
 
@@ -167,7 +168,7 @@ def plot_panel(title: str, dates: list[date], y: np.ndarray,
 def save(fig: plt.Figure, name: str) -> None:
     FIG.mkdir(parents=True, exist_ok=True)
     for extension in ("pdf","svg","png"):
-        fig.savefig(FIG/f"{name}.{extension}", dpi=165, bbox_inches="tight")
+        save_figure(fig, FIG/f"{name}.{extension}", dpi=165)
     plt.close(fig)
 
 

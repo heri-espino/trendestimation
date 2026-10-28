@@ -181,3 +181,59 @@ git push
 
 The complete original manuscript, raw numerical results,
 dashboards and experimental matrices are retained separately.
+
+
+## Rebuild the paper figures with the actual AwesomeFigures library
+
+Source: https://github.com/awesomefigures/awesomefigures
+
+We use the **immutable AwesomeFigures Git commit**
+54c8bf2374551fa39428f47f69580b4822d4b938 pinned by
+paper/requirements.txt, rather than a moving master branch.
+The shared contrast_theme.py now invokes the real public plotting
+functions: af.set_style("elegante", palette="okabe-ito"),
+af.plot_scheme, af.named_colormap and af.save_figure.
+The original seven solver colors and six criterion labels remain
+consistent throughout the manuscript. Styles also provide distinct
+linestyles and markers to distinguish series in grayscale.
+
+On Windows, with an up-to-date checkout of the publication branch:
+
+~~~powershell
+conda activate trendestimation
+python -m pip install -e ".[dev,plot]"
+python -m pip install -r paper/requirements.txt
+
+# All figures cited by the SN Computer Science paper, including
+# full 4-by-6 supplementary dashboards. NO EXPERIMENTS RERUN.
+python paper/computational-statistics-submission/rerender_awesomefigures.py
+
+# Include older full-manuscript figures as well. Requires MiKTeX/pdflatex.
+python paper/computational-statistics-submission/rerender_awesomefigures.py --scope all
+
+# Build the expanded SN Computer Science manuscript
+powershell -ExecutionPolicy Bypass -File .\paper\computational-statistics-submission\build_sncs.ps1
+
+# Persist all new PDFs, SVGs, PNGs and source-hash evidence
+git add .
+git commit -m "paper: regenerate publication figures with pinned AwesomeFigures"
+git push
+~~~
+
+The command verifies all original observations, per-method selectors,
+numerical inversion trials and paired solver timings using SHA-256 before
+and after drawing. A manifest at awesomefigures_render_manifest.json
+records the exact plotting library commit, method, palette and all source
+checksums and figure paths. The diagrams, trend curves, confidence
+intervals, 4-by-6 heatmaps, numerical-order comparisons and S/lambda
+coordinate comparisons are generated from frozen observations and
+archived results. Trend lines are reconstructed only at **already saved**
+lambda and mu. The renderer neither downloads data nor optimizes CV,
+GCV, AICc, BIC or MLE, performs Monte Carlo simulations or reruns any
+timing benchmarks.
+
+A GitHub Actions workflow on the publication PR automatically
+regenerates and commits the figure assets and an updated SNCS manuscript
+PDF. Core tests may use a simple preview when AwesomeFigures is not
+installed, but the dedicated publication pipeline explicitly requires
+the pinned AwesomeFigures release and fails if it is absent.
