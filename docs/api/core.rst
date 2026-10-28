@@ -16,6 +16,8 @@ is generated directly from the library's source docstrings.
 
 .. autofunction:: trendestimation.fit_penalized
 
+.. autofunction:: trendestimation.fit_smoothness
+
 .. autofunction:: trendestimation.fit_trend
 
 .. autofunction:: trendestimation.difference_matrix
