@@ -6,7 +6,6 @@ paper dependencies in the dedicated publication workflow; core CI can skip.
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
