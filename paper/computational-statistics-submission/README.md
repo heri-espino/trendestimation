@@ -157,3 +157,69 @@ on a common score scale. Controlled smoothness is NOT a sixth
 optimization criterion. Extrapolation curves are anchored local
 polynomials of historical trends, not validated probabilistic
 forecasts. Holdout losses use one historical origin only.
+
+
+## Final one-run Windows solver and inversion study
+
+To finish the two outstanding computational benchmarks, including
+paired seed-level solver uncertainty and Brent/Newton/secant/bisection
+accuracy and runtime, use the single-command VM protocol in
+[FINAL_VM_README.md](FINAL_VM_README.md). It writes all raw trials,
+validity checks, plots, tables, environment metadata and Springer PDF
+inside the tracked repository so ordinary `git add .`, `git commit`,
+and `git push` preserve the complete evidence. The existing
+80,640-search Windows experiment is reused, not rerun.
+
+
+## Restyle every figure without re-running experiments
+
+The pinned AwesomeFigures high-contrast Okabe-Ito palette controls the
+submission dashboards and computational figures. Use the render-only
+command to change colors, fonts, markers, layout and vector exports.
+It reads archived NOAA/FRED selections, paired solver results, and
+measured smoothness-inversion results. No CV/GCV/AICc/BIC/MLE selection,
+timing benchmark, simulation grid or data download runs.
+
+### Windows 11 PowerShell
+
+From the repository root with Conda activated:
+
+~~~powershell
+conda activate trendestimation
+python -m pip install -e ".[dev,plot]"
+python -m pip install -r paper/requirements.txt
+
+# Re-render every Springer paper figure family from archived results.
+python paper/computational-statistics-submission/render_all_figures.py --scope all
+
+# Or generate only standalone submission plots, no TeX:
+python paper/computational-statistics-submission/render_all_figures.py --scope submission --no-pdf
+
+# Save generated PDFs, SVGs, PNGs, and provenance manifest:
+git add .
+git commit -m "paper: regenerate contrast figures from archived computed data"
+git push
+~~~
+
+The all-paper renderer also recompiles the standalone Springer manuscript.
+For that mode, install MiKTeX/latexmk/pdflatex on Windows. Use --dry-run
+to preview the exact commands while checking that archived source files
+exist. No timing or statistical-selection experiments are executed.
+
+Existing raw numerical CSVs and JSON stay in the repository under
+paper/benchmarks/ and paper/computational-statistics-submission/research/final_vm/.
+The render-only pipeline checks SHA-256 digests of all protected inputs
+before and after rendering and fails if any source data change.
+A persistent figure_render_manifest.json records the palette,
+source checksums, render commands and all generated asset names.
+Selected lambda, normalized S, holdout mu, RMSE and MAE are validated
+against saved cases before new dashboard plots are drawn.
+
+A new checkout may lack the older derived Mauna Loa 441-month .dat
+plot table. The all-paper renderer generates it once from the frozen
+NOAA observations with fixed smoothness (not a timing experiment or
+criterion optimization), after which it may be committed and reused.
+
+Do not use paper/build.py --all, --benchmarks, or the final VM
+--rerun flag simply to change figure styling. Those commands execute
+experiments or replace numerical results.

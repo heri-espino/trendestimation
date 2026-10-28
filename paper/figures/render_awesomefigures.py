@@ -38,7 +38,13 @@ FIGURES = PAPER / "figures"
 BENCHMARKS = PAPER / "benchmarks" / "results"
 # Never fix physical width independently of the Springer Nature class: af.latex_style
 # probes the real manuscript and derives textwidth/normal font size.
-COLORS = af.color_palette("okabe-ito", as_hex=True)
+# Single palette for EVERY Springer paper figure family.
+# Dashboard, solver/inversion and full-S renderers now share this source.
+import sys as _sys
+_theme_dir = PAPER / "computational-statistics-submission"
+if str(_theme_dir) not in _sys.path:
+    _sys.path.insert(0, str(_theme_dir))
+from contrast_theme import CONTRAST as COLORS
 
 # All charts are vector PDF; only Matplotlib primitives styled by AwesomeFigures.
 # Four-color plots also vary dashes and markers for grayscale legibility.

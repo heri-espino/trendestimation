@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "recorded_utc": "2026-10-28T00:56:36.497916+00:00",
+  "predeclared_study": {
+    "solver_preset": "quick",
+    "data_seeds": 20,
+    "paired_timing_blocks": 5,
+    "inversion_timing_blocks": 35,
+    "blas_threads": 1
+  },
+  "existing_windows_80640_measurements": "reused as archived source, not rerun",
+  "compiled_pdf": true,
+  "python_executable": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\python.exe",
+  "input_and_output_checksums": {
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\raw_measurements.csv": "d2a802edeca0a439297ec5f3bef42d8875aabd405d51e6475d87727ac4f89d75",
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\numerical_accuracy.csv": "7f01c14ad9a6710df11071cec594049e7fe80046d921cfa37593df9a2d357c35",
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\study_metadata.json": "9e79ce08e910894383fae914aee89d7ab1194dc807c98b61836685a28c1fe5dd",
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\analysis\\timing_summary.csv": "2d285c9b440fd30c95f3d1539dab09537b1c4a99ba7d4b1748821865067e814e",
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\analysis\\paired_comparisons.csv": "4259bc0081bb6119a220af4c91a5faf0466b70c35835134631654e6f572c22e6",
+    "paper\\computational-statistics-submission\\research\\final_vm\\solver\\analysis\\analysis_manifest.json": "476ae660ecd56fbce1f0b135798cf779b1d6893a01044007ab7d897755ee6b85",
+    "paper\\computational-statistics-submission\\research\\final_vm\\inversion\\raw_inversions.csv": "65fcff76c1bf9e65477cb5c6409779b5557f0ec30aaf89d41eab5ab44d9b6928",
+    "paper\\computational-statistics-submission\\research\\final_vm\\inversion\\summary.csv": "0313a8127854d1ffabb7c82892f3dc3881a921be053f2ba78e608540ccc50913",
+    "paper\\computational-statistics-submission\\research\\final_vm\\inversion\\environment.json": "0fb2fea0f3d2be16aab76e098a8ae812be0e0103dd384c99d635f52317e43d9b",
+    "paper\\computational-statistics-submission\\research\\final_vm\\final_report_manifest.json": "31205527da6d01f4a8e5064fb047c6aeda77e5daedd423079eb26f5df304bdbb",
+    "paper\\computational-statistics-submission\\final_solver_inference_table.tex": "b535da35a94bcd81d14c3918822e14f5107fa551bd313f029905253ab0e3386f",
+    "paper\\computational-statistics-submission\\final_inversion_table.tex": "38112a29a37e41289c30dd0f28af8708476b973394b270129b267dcc7fc1cfd8",
+    "paper\\computational-statistics-submission\\final_computation_environment.tex": "5673956728b6dc4db5c9ab1a84f37c8e1b0f04f7b87a3d7e56f4f8ed495ffacc",
+    "paper\\computational-statistics-submission\\figures\\final_solver_inference.pdf": "b072074db178822a2f28ed0dc7c79ee5d83367ffc1736f5102ac5666b7da1d5c",
+    "paper\\computational-statistics-submission\\figures\\final_inversion_speed.pdf": "67e2514c45f2d9473d68d2f44bb80fa3eeafb9a9e50b1e9d86c45522ebe49c1c"
+  }
+}

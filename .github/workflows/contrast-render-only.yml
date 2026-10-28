@@ -1,0 +1,77 @@
+name: Re-render archived Springer figures in AwesomeFigures contrast colors
+
+on:
+  push:
+    branches:
+      - feature/contrast-render-only-figures
+    paths:
+      - "paper/computational-statistics-submission/*.py"
+      - "paper/figures/render_awesomefigures.py"
+      - "paper/figures/render_full_s_factorial.py"
+      - "paper/figures/render_full_s_search_modes.py"
+      - "paper/figures/render_mle_benchmarks.py"
+      - "tests/test_contrast_render_only.py"
+      - ".github/workflows/contrast-render-only.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contrast-render-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install existing library and pinned AwesomeFigures
+        run: |
+          python -m pip install -e ".[dev,plot]"
+          python -m pip install -r paper/requirements.txt
+      - name: Regression tests — archived input invariant and no reruns
+        run: python -m pytest -q tests/test_contrast_render_only.py
+      - name: Restyle all standalone submission figures without rerunning experiments
+        run: |
+          python paper/computational-statistics-submission/render_all_figures.py --scope submission --no-pdf
+      - name: Compile Springer manuscript with the restored contrast figures
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/computational-statistics-submission
+          root_file: main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - name: Commit PDF SVG PNG files, style and checksum manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/computational-statistics-submission/figures/
+          git add -f paper/computational-statistics-submission/dashboard_summary_table.tex
+          git add -f paper/computational-statistics-submission/current_examples_table.tex
+          git add -f paper/computational-statistics-submission/figure_render_manifest.json
+          git add -f paper/computational-statistics-submission/main.pdf
+          if git diff --cached --quiet; then
+            echo "Already rendered from identical inputs and palette."
+          else
+            git commit -m "paper(figures): regenerate high-contrast plots from archived experiment results"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: awesomefigures-contrast-${{ github.run_id }}
+          path: |
+            paper/computational-statistics-submission/figures/
+            paper/computational-statistics-submission/figure_render_manifest.json
+            paper/computational-statistics-submission/main.pdf
+          retention-days: 30

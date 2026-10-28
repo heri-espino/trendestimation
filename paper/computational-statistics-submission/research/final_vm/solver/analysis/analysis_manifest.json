@@ -1,0 +1,18 @@
+{
+  "analysis_protocol": "paired_signflip_holm_v1",
+  "raw_sha256": "d2a802edeca0a439297ec5f3bef42d8875aabd405d51e6475d87727ac4f89d75",
+  "metadata_sha256": "9e79ce08e910894383fae914aee89d7ab1194dc807c98b61836685a28c1fe5dd",
+  "alpha": 0.05,
+  "bootstrap": 5000,
+  "signflip_permutations": 20000,
+  "analysis_seed": 1729,
+  "primary_metric": "end_to_end_ns",
+  "methods": [
+    "svd",
+    "eigh",
+    "cholesky"
+  ],
+  "all_primary_comparisons_holm_adjusted": true,
+  "pointwise_ci_not_multiplicity_adjusted": true,
+  "figures_exported": 3
+}

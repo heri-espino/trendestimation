@@ -1,0 +1,316 @@
+{
+  "inversion": {
+    "protocol": "randomized_paired_float64_inverse_v1",
+    "recorded_utc": "2026-10-28T00:56:31.176825+00:00",
+    "git_revision": "2530cf03d2d040b465d13a7e59eb4a8fad887f0d",
+    "sizes": [
+      30,
+      60,
+      120
+    ],
+    "orders": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "targets": [
+      "1e-14",
+      "1e-10",
+      "9.9999999999999995e-07",
+      "0.01",
+      "0.10000000000000001",
+      "0.5",
+      "0.90000000000000002",
+      "0.98999999999999999",
+      "0.99999899999999997",
+      "0.99999999989999999",
+      "0.99999999999999001"
+    ],
+    "methods": [
+      "brentq",
+      "newton",
+      "secant",
+      "bisect"
+    ],
+    "repeats": 35,
+    "randomization_seed": 20261027,
+    "blas_threads_requested": 1,
+    "environment": {
+      "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+      "numpy": "2.4.6",
+      "scipy": "1.17.1",
+      "platform": "Windows-10-10.0.26100-SP0",
+      "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "cpu_count": 32,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libscipy_openblas",
+          "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\numpy.libs\\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+          "version": "0.3.31.188.0",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        },
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libscipy_openblas",
+          "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\scipy.libs\\libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+          "version": "0.3.30",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        }
+      ]
+    },
+    "scientific_limits": "Only float64 arithmetic. Tail error computed with complementary smoothness for s>0.5 to reduce cancellation. No timing hypothesis tests: repeats on one machine are technical, not independent units. Accuracy and failure status take priority over raw speed. d=0 is analytical for all algorithms; do not rank these cases."
+  },
+  "solvers": {
+    "protocol_version": "paired_solver_study_v1",
+    "created_utc": "2026-10-28T00:56:25.781307+00:00",
+    "git_revision": "2530cf03d2d040b465d13a7e59eb4a8fad887f0d",
+    "preset": "quick",
+    "master_seed": 20261025,
+    "independent_seeds": 20,
+    "timing_blocks_per_seed": 5,
+    "single_calls_per_timing": 20,
+    "methods": [
+      "svd",
+      "eigh",
+      "cholesky"
+    ],
+    "workload_cases": [
+      {
+        "case_id": 0,
+        "n": 32,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.0
+      },
+      {
+        "case_id": 1,
+        "n": 32,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.15
+      },
+      {
+        "case_id": 2,
+        "n": 32,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.0
+      },
+      {
+        "case_id": 3,
+        "n": 32,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.15
+      },
+      {
+        "case_id": 4,
+        "n": 32,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.0
+      },
+      {
+        "case_id": 5,
+        "n": 32,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.15
+      },
+      {
+        "case_id": 6,
+        "n": 96,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.0
+      },
+      {
+        "case_id": 7,
+        "n": 96,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.15
+      },
+      {
+        "case_id": 8,
+        "n": 96,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.0
+      },
+      {
+        "case_id": 9,
+        "n": 96,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.15
+      },
+      {
+        "case_id": 10,
+        "n": 96,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.0
+      },
+      {
+        "case_id": 11,
+        "n": 96,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.15
+      },
+      {
+        "case_id": 12,
+        "n": 192,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.0
+      },
+      {
+        "case_id": 13,
+        "n": 192,
+        "order": 2,
+        "evaluations": 1,
+        "mu": 0.15
+      },
+      {
+        "case_id": 14,
+        "n": 192,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.0
+      },
+      {
+        "case_id": 15,
+        "n": 192,
+        "order": 2,
+        "evaluations": 16,
+        "mu": 0.15
+      },
+      {
+        "case_id": 16,
+        "n": 192,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.0
+      },
+      {
+        "case_id": 17,
+        "n": 192,
+        "order": 2,
+        "evaluations": 64,
+        "mu": 0.15
+      },
+      {
+        "case_id": 18,
+        "n": 96,
+        "order": 1,
+        "evaluations": 16,
+        "mu": 0.0
+      },
+      {
+        "case_id": 19,
+        "n": 96,
+        "order": 3,
+        "evaluations": 16,
+        "mu": 0.0
+      },
+      {
+        "case_id": 20,
+        "n": 96,
+        "order": 5,
+        "evaluations": 16,
+        "mu": 0.0
+      }
+    ],
+    "timing_unit": "nanoseconds",
+    "primary_metric": "end_to_end_ns",
+    "inferential_unit": "independent_data_seed_median_across_timing_blocks",
+    "randomized_order": true,
+    "verification_before_timing": true,
+    "environment": {
+      "python": "3.11.17",
+      "numpy": "2.4.6",
+      "scipy": "1.17.1",
+      "platform": "Windows-10-10.0.26100-SP0",
+      "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "logical_cpu_count": 32,
+      "blas_threads_requested": 1,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libscipy_openblas",
+          "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\numpy.libs\\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+          "version": "0.3.31.188.0",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        },
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libscipy_openblas",
+          "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Lib\\site-packages\\scipy.libs\\libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+          "version": "0.3.30",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        }
+      ]
+    },
+    "limitations": "Single host/session: comparisons characterize these workloads and this machine, not universal performance. Multiple blocks on the same seed and hardware are repeated technical measurements, not independent experimental observations. Timing noise can be serially correlated; reproducibility on additional sessions and machines is required before publication-level general claims."
+  },
+  "solver_inference": {
+    "analysis_protocol": "paired_signflip_holm_v1",
+    "raw_sha256": "d2a802edeca0a439297ec5f3bef42d8875aabd405d51e6475d87727ac4f89d75",
+    "metadata_sha256": "9e79ce08e910894383fae914aee89d7ab1194dc807c98b61836685a28c1fe5dd",
+    "alpha": 0.05,
+    "bootstrap": 5000,
+    "signflip_permutations": 20000,
+    "analysis_seed": 1729,
+    "primary_metric": "end_to_end_ns",
+    "methods": [
+      "svd",
+      "eigh",
+      "cholesky"
+    ],
+    "all_primary_comparisons_holm_adjusted": true,
+    "pointwise_ci_not_multiplicity_adjusted": true,
+    "figures_exported": 3
+  },
+  "results": {
+    "inversion": {
+      "n": 120,
+      "d": 2,
+      "failed_trials": 0,
+      "total_trials": 13860
+    },
+    "solvers": {
+      "primary_comparisons": 63,
+      "holm_tested": 63,
+      "holm_significant": 57,
+      "selected_rows": 6
+    }
+  },
+  "archived_windows_80k_figures_copied": [
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_workloads.pdf",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_workloads.svg",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_grid_coordinates.pdf",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_grid_coordinates.svg",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_reuse_d.pdf",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_reuse_d.svg",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_bounded.pdf",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_bounded.svg",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_means.pdf",
+    "paper\\computational-statistics-submission\\figures\\windows_full_s_means.svg"
+  ]
+}
