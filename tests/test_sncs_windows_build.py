@@ -33,3 +33,12 @@ def test_sncs_build_avoids_repeating_numerical_experiments():
         "select_lambda(",
     ):
         assert forbidden not in source
+
+
+def test_windows_string_interpolation_colon_is_not_parsed_as_drive_reference():
+    """PowerShell rejects `$label:` as a variable token in expandable strings."""
+    import re
+
+    source=(PAPER/"build_sncs.ps1").read_text(encoding="utf-8")
+    assert 'throw "Missing ${label}: $file"' in source
+    assert not re.search(r"\$[A-Za-z_][A-Za-z_0-9]*:", source)
