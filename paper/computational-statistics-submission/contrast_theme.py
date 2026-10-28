@@ -236,7 +236,9 @@ def provenance(*, strict: bool = False) -> dict:
         "source_commit": "54c8bf2374551fa39428f47f69580b4822d4b938",
         "style": STYLE,
         "palette": PALETTE,
-        "font": FONT,
+        "preview_font": FONT,
+        "publication_pdf_font": "measured TeX manuscript font, embedded via PGF/PDF",
+        "typography": "af.inspect_latex + af.latex_style + PublicationStyle.fit/audit",
         "apis": [
             "awesomefigures.set_style",
             "awesomefigures.plot_scheme",
