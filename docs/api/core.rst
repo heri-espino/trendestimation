@@ -9,7 +9,7 @@ workload timings and the rationale for these two defaults. This reference
 is generated directly from the library's source docstrings.
 
 .. autoclass:: trendestimation.TrendSmoother
-   :members: fit, smoothness, lambda_for_smoothness, degrees_of_freedom
+   :members: fit, fit_smoothness, smoothness, lambda_for_smoothness, degrees_of_freedom
 
 .. autoclass:: trendestimation.PreparedPLSSolver
    :members: fit, fit_many, stored_bytes
