@@ -1,11 +1,13 @@
-name: Regenerate SNCS figures with pinned AwesomeFigures
+name: Regenerate SNCS figures with document-aware AwesomeFigures
 
 on:
   push:
     branches:
       - fix/sncs-awesomefigures-latex-typography
+      - feature/sncs-awesomefigures-auto-publication
       - main
     paths:
+      - "paper/requirements.txt"
       - "paper/computational-statistics-submission/*.py"
       - "tests/test_native_awesomefigures_paper.py"
       - "tests/test_sncs_latex_typography.py"
@@ -70,13 +72,18 @@ jobs:
           assert (p/"sncs_main.pdf").stat().st_size > 100_000
           m=json.loads((p/"awesomefigures_render_manifest.json").read_text())
           assert m["sources_unchanged"] and m["no_benchmarks_or_selectors_rerun"]
-          assert m["awesomefigures"]["source_commit"] == "54c8bf2374551fa39428f47f69580b4822d4b938"
+          assert m["awesomefigures"]["source_commit"] == "a9760351c1f72ccf7a1a2ef2ff14136d6e280d88"
           assert all((p/"figures"/name).exists() for name in m["manuscript_referenced_figures"])
           assert len(m["figure_files"]) >= 100
           typo = m["publication_typography"]
           assert typo["exact_tex_pdf"] is True
+          assert typo["backend"] == "af.paper (exact-tex-preamble)"
           assert typo["manuscript_pdf_audit_covered"] == len(m["manuscript_referenced_figures"])
           assert typo["audited_pdf_files"] >= len(m["manuscript_referenced_figures"])
+          for fig in m["manuscript_referenced_figures"]:
+            record=json.loads((p/"figures"/fig.replace(".pdf",".typography.json")).read_text())
+            assert record["typography_provenance"] == "exact-tex-preamble"
+            assert record["pdf_fonts"] and all(f["embedded"] for f in record["pdf_fonts"])
           print("VERIFIED",len(m["figure_files"]),"figures;",
                 typo["audited_pdf_files"],"LaTeX-matched PDFs; original data unchanged")
           PY
