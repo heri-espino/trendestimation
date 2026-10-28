@@ -162,7 +162,7 @@ def _save_with_latex(fig, target: Path, *, dpi: int) -> Path:
     """
     layout = latex_layout()
     fraction = WIDTH_FRACTIONS.get(target.stem, 1.0)
-    width_inches = layout.width_inches("text") * fraction
+    width_inches = layout.width_inches("column") * fraction
     with af.latex_style(
         layout, width=width_inches, engine="pdflatex",
         font="auto", minimum_text_pt=7.0, rasterize=True,
