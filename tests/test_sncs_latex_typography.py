@@ -53,11 +53,11 @@ def test_pgf_pdf_width_and_font_match_the_springer_tex(monkeypatch, tmp_path):
         assert report["inclusion_fraction"] == fraction
         assert report["minimum_text_pt"] >= 6.8
         # AF uses TeX pt (72.27/in). PDF pages use PostScript pt (72/in).
-        expected_pdf_pt = layout.textwidth_pt * fraction * 72.0 / 72.27
+        expected_pdf_pt = layout.columnwidth_pt * fraction * 72.0 / 72.27
         actual_pdf_pt = float(pypdf.PdfReader(str(target)).pages[0].mediabox.width)
         assert actual_pdf_pt == pytest.approx(expected_pdf_pt, abs=1.0)
         assert report["export_width_pt"] == pytest.approx(
-            layout.textwidth_pt * fraction, abs=0.6
+            layout.columnwidth_pt * fraction, abs=0.6
         )
 
 
