@@ -96,3 +96,35 @@ These are IN-SAMPLE historical-trend RMSE values, not forecast RMSE.
    eligible-only Pareto fronts on saved raw data, not across hosts.
 5. Develop a single accuracy-versus-time CSDA paper using only
    scientifically admissible and reproducible claims.
+
+## Cross-run reproducibility audit (important)
+
+A SECOND archived quick run from GitHub-hosted Linux was completed at:
+paper/benchmarks/experiment005/runs/quick-hosted-40968294585/.
+Both runs had identical declared design inputs, 110 smoothness nodes,
+NumPy 2.4.6, SciPy 1.17.1, and BLAS thread limit one, but separate
+hosted virtual machines and distinct source commits (the benchmark
+run.py formula was unchanged; analyzer, tests and documentation changed).
+
+First run: 4,262/4,608 fit records and 2,550/3,840 complete-selection
+records met the strict gates.
+Second run: 4,278/4,608 fits and 2,514/3,840 selections passed.
+Matching complete CSV keys, 50 fit statuses and 48 selection statuses
+differed across runs. By method, NO status changes occurred for any of
+the 512 shift-free SVD frozen fits or 1,280 full-S SVD selections;
+the observed flips were concentrated in ill-conditioned primal/dual
+banded solvers and Gram-eigen selection.
+
+This is evidence of sensitivity under near-boundary floating-point
+numerics, NOT proof of the exact mechanism. We cannot yet attribute
+it specifically to CPU hardware, BLAS code paths, initialization
+or an implementation bug. The final study must explicitly record
+CPU model and BLAS library, rerun identical seed configurations on
+the SAME Windows machine as well as additional hosts, and compare
+numerical-failure status stability before statistical synthesis.
+Absolute durations from these two virtual machines are never pooled
+as if they were identical hardware.
+
+The first and second runs remain separate immutable archival datasets.
+Neither was overwritten. This audit strengthens the choice of
+numerically reliable baselines over unqualified fastest-backend claims.
