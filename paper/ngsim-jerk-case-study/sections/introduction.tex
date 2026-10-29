@@ -1,0 +1,15 @@
+\section{Introduction}
+Vehicle longitudinal position is an unusually concrete application of high-order trend extraction: velocity, acceleration and jerk are its first, second and third temporal derivatives. The US Federal Highway Administration's Next Generation Simulation (NGSIM) dataset reports camera-derived vehicle positions every 0.1 seconds \citep{fhwa2016}. Earlier vehicle-trajectory research emphasizes that estimating acceleration from these observations magnifies measurement noise \citep{thiemann2008}; third derivatives amplify it further. This offers an interpretable reason to consider a $d=3$ difference penalty rather than choosing the ubiquitous quadratic-difference $d=2$ merely by tradition.
+
+We study the PLS model of \citet{guerrero2007}, its trace-based smoothness index \citep{guerrero2008} and classical tuning criteria \citep{cortes2017}. The numerical-reliability and computational-complexity companions address generic spectral algorithms; this third paper is an independent, intentionally modest empirical case study. The question is whether smoothness-indexed PLS yields useful historical trends and how an \emph{explicitly separate} local continuation behaves when compared with measured future positions.
+
+The dataset supplies physical position, but not independently measured latent truth or jerk. We never label a smooth jerk plot as the driver's actual acceleration derivative, do not add simulated noise, and distinguish interpolation, selection, extrapolation and out-of-sample verification.
+
+\subsection{The noise amplification motivating third-order smoothing}
+If measurement noise $\varepsilon_t$ has independent variance $\sigma_\varepsilon^2$, third forward differentiation uses stencil $(-1,3,-3,1)$, hence
+\begin{equation}\label{eq:noise}
+\operatorname{Var}\!\left(
+\frac{D_3\varepsilon_t}{(\Delta t)^3}\right)
+=\frac{20\sigma_\varepsilon^2}{(\Delta t)^6}.
+\end{equation}
+With $\Delta t=0.1$\,s, direct third differences can be extremely unstable. Equation~\eqref{eq:noise} is a conditional mathematical illustration, not an empirical noise-variance estimate: camera-tracking errors may be temporally correlated. Regularization suppresses variation but can bias sudden real changes in jerk. Thus plotted derivatives remain \emph{estimates}, not ground truth.
