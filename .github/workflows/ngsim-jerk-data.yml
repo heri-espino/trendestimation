@@ -1,0 +1,51 @@
+name: NGSIM jerk real-data acquisition
+
+on:
+  push:
+    branches:
+      - paper/ngsim-jerk-real-data-20261029
+    paths:
+      - paper/ngsim-jerk-case-study/fetch_ngsim.py
+      - .github/workflows/ngsim-jerk-data.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: ngsim-jerk-realdata
+  cancel-in-progress: true
+
+jobs:
+  acquire-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install numpy
+      - name: Fetch real positions from official FHWA dataset, audit and select
+        run: python paper/ngsim-jerk-case-study/fetch_ngsim.py
+      - name: Archive original-position selected subset and provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ngsim-fhwa-real-position-subset
+          path: paper/ngsim-jerk-case-study/data/
+          if-no-files-found: warn
+      - name: Commit verified public subseries to research branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f paper/ngsim-jerk-case-study/data/ngsim_us101_selected_raw_positions.csv \
+            paper/ngsim-jerk-case-study/data/provenance.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: archive FHWA observed vehicle positions and query provenance [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
