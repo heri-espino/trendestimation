@@ -1,0 +1,74 @@
+name: Experiment004 BIC and high-precision validation
+
+on:
+  push:
+    branches:
+      - research/experiment004-s-accuracy-computation
+    paths:
+      - .github/workflows/experiment004-validation.yml
+      - paper/benchmarks/experiment004/verify_bic_precision.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bic-and-precision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install independently pinned numerical dependencies
+        run: python -m pip install "numpy==2.3.5" "scipy==1.17.0" "mpmath==1.3.0"
+      - name: Verify published BIC and high-precision fit identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="paper/benchmarks/experiment004/runs/validation-hosted-$GITHUB_RUN_ID"
+          echo "EXPERIMENT004_VALIDATION_OUT=$OUT" >> "$GITHUB_ENV"
+          python paper/benchmarks/experiment004/verify_bic_precision.py --digits 85 --out "$OUT"
+          sha256sum paper/benchmarks/experiment004/verify_bic_precision.py > "$OUT/validation_source_sha256.txt"
+          sha256sum paper/benchmarks/experiment004/run_pilot.py > "$OUT/pilot_source_sha256.txt"
+          git rev-parse HEAD > "$OUT/input_commit.txt"
+          python - "$OUT" <<'PY'
+          import csv, json, pathlib, sys
+          directory=pathlib.Path(sys.argv[1])
+          meta=json.loads((directory/"metadata.json").read_text())
+          assert meta["bic_rows"]==224
+          assert meta["high_precision_rows"]==48
+          assert meta["cholesky_failures"]>0
+          assert meta["max_reference_kkt"]<1e-20
+          with (directory/"bic_small_s.csv").open(newline="") as f:
+              rows=list(csv.DictReader(f))
+          assert {int(row["d"]) for row in rows}=={1,2,5,6}
+          for n in (64,128):
+              for d in (1,2,5,6):
+                  for mean in ("fixed_zero","observed_difference"):
+                      selected=[r for r in rows if int(r["n"])==n and int(r["d"])==d and r["mu_policy"]==mean]
+                      a=float(next(r["bic"] for r in selected if float(r["s"])==1e-12))
+                      b=float(next(r["bic"] for r in selected if float(r["s"])==.01))
+                      assert a<b,(n,d,mean,a,b)
+          print("All BIC boundary, high-precision KKT, and convergence QA checks passed")
+          PY
+      - name: Publish archived experiment files as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment004-BIC-highprecision
+          path: paper/benchmarks/experiment004/runs/validation-hosted-*/
+          if-no-files-found: warn
+      - name: Commit reproducible results to the research branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f -- "$EXPERIMENT004_VALIDATION_OUT"
+          git commit -m "experiment004: archive BIC and high-precision QA $GITHUB_RUN_ID [skip ci]"
+          git push origin "HEAD:$GITHUB_REF_NAME"
