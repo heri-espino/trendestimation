@@ -21,6 +21,8 @@ up to additive constants. The objective uses a Gaussian hierarchical assumption;
 
 We compare two mean policies: fixed $\mu=0$ and empirical plug-in $\widehat\mu=\operatorname{mean}(D_dy)$, which is \emph{not} the mean of $y$ when $d\ge1$. Substitution of this estimate into the fixed-$\mu$ scores is a conditional plug-in analysis. In particular, it is not exact leave-one-out CV re-estimating the mean after deletion, an adaptive effective-degrees-of-freedom calculation, or joint Gaussian maximum likelihood. Classical score values are not compared numerically across different criterion definitions.
 
+Classical leave-one-out smoothing scores must not be confused with chronological prediction validation. Time-series CV for kernel smoothing under serial dependence was studied by \citet{hart1994}; dependent-data cross-validation also motivates withholding blocks rather than indiscriminately treating observations as independent \citep{burman1994}. Different validity conditions for autoregressive prediction are analyzed by \citet{bergmeir2018}, while \citet{tashman2000} distinguishes rolling-origin forecasting evaluation from historical in-sample reconstruction. We therefore report the present results as trend recovery and do not claim that their CV scores provide an evaluated multi-step forecasting procedure.
+
 \subsection{Interpolation-boundary divergence of residual-based BIC}\label{sec:bic}
 The BIC expression in \eqref{eq:aicbic} agrees with Eq.~(21) of \citet{cortes2017}. Nevertheless, as $\lambda\downarrow0$ it has an important limiting behavior. Let $c=y-p_\mu$ and suppose $Q_dc\ne0$. Expanding $H_\lambda=(I+\lambda Q_d)^{-1}$ gives
 \begin{align}
