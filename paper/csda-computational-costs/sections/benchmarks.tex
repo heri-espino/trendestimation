@@ -17,9 +17,9 @@ Extended fit/trace studies & Dense fresh/cached, spectral, general banded and Ch
 \end{tabular}
 \end{table*}
 
-The full Windows source resides at
-\texttt{paper/benchmarks/results/full\_s\_search\_modes/},
-with 80,640 raw rows and a separate environment record. A checked analysis yields 40,320 two-seed design cells and verifies exactly 4,484 matched native-$s$/premapped-grid valid seed pairs with \emph{zero difference} in selected smoothness and score. The associated \texttt{windows\_full\_s\_analysis/} folder preserves checks and per-cell paired costs. We use only cells whose complete evaluated grid passed the backend's recorded numerical validation; an implementation that returned a partial grid does not win a speed ranking.
+The complete Windows experiment contains 80,640 raw timing records
+and a separate computing-environment record; precise repository paths and
+checksums are listed in the accompanying \texttt{SOURCE\_AUDIT.md}. A checked analysis yields 40,320 two-seed design cells and verifies exactly 4,484 matched native-$s$/premapped-grid valid seed pairs with \emph{zero difference} in selected smoothness and score. The associated \texttt{windows\_full\_s\_analysis/} folder preserves checks and per-cell paired costs. We use only cells whose complete evaluated grid passed the backend's recorded numerical validation; an implementation that returned a partial grid does not win a speed ranking.
 
 \subsection{Solver families and workloads}
 The seven Windows backends are: fresh dense solve, cached-$Q$ dense solve, general banded solve, dense Cholesky, banded Cholesky, eigendecomposition of $Q_d$ and full SVD of $D_d$. The five criteria are classical fixed-$\mu$ CV, GCV, AICc, residual-based BIC and the implemented conditional marginal-likelihood score. Eight policies cover one point at $s=0.5$ with native/premapped/direct penalties; complete 17-point native-$s$, premapped and independent log-$\lambda$ grids; and bounded \emph{local} optimization in $s$ and $\log\lambda$. All policies are evaluated at $R\in\{1,3,8\}$ and cold/shared preparation. Grid conversion is separately timed; a standalone premapped search charges it once, while reuse across criteria charges it only once across the entire joint workflow.
