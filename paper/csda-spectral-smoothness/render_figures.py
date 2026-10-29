@@ -148,7 +148,7 @@ def solver_accuracy():
     b.set_yticks(y,[""]*len(names));b.invert_yaxis()
     b.set(xlabel="Number of cases (out of 576)",title="Invalid fits")
     b.legend(loc="lower right",fontsize=7,frameon=False)
-    fig.suptitle("Numerical validation, d=5,6",y=1.02,fontsize=10)
+    # Panel titles and the LaTeX caption carry the context; no title outside canvas.
     export(fig,"solver_accuracy")
 
 
