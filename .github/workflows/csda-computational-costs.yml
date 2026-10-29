@@ -3,7 +3,7 @@ name: CSDA computational costs — CAS/PDF and AwesomeFigures
 on:
   push:
     branches:
-      - paper/csda-computational-costs-20261029
+      - paper/csda-s-primary-d3-mle-20261029
     paths:
       - .github/workflows/csda-computational-costs.yml
       - paper/csda-computational-costs/main.tex
@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: csda-computational-20261029
+  group: csda-computational-d3-20261029
   cancel-in-progress: true
 
 permissions:
@@ -68,7 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           python paper/csda-computational-costs/render_figures.py
-          for name in coordinate_map criterion_coordinates workload_scaling reuse_by_d solver_crossover; do
+          for name in coordinate_map derivative_orders criterion_coordinates workload_scaling reuse_by_d solver_crossover; do
             for ext in pdf pgf svg; do
               test -s "paper/csda-computational-costs/figures/$name.$ext"
             done
@@ -79,9 +79,11 @@ jobs:
           p=Path("paper/csda-computational-costs")
           a=json.loads((p/"awesomefigures_latex_manifest.json").read_text())
           b=json.loads((p/"timing_figure_data.json").read_text())
-          assert len(a["figures"])==5
+          assert len(a["figures"])==6
           assert b["windows_source_rows"]==80640
-          assert 2.75<b["five_criterion_joint"]["speedup"]<2.9
+          assert b["five_criterion_joint"]["d"]==3
+          assert 2.75<b["historical_d2_comparator"]["speedup"]<2.9
+          assert (p/"sections"/"generated_d3_timings.tex").is_file()
           for f in a["figures"]:
               assert f["smallest_text_pt"]>=7.0
               expected=(f["body_column_width_pt"] if f["layout"]=="column"
@@ -136,6 +138,7 @@ jobs:
           git reset --mixed "origin/$GITHUB_REF_NAME"
           git add -f -- paper/csda-computational-costs/main.pdf \
             paper/csda-computational-costs/figures/ \
+            paper/csda-computational-costs/sections/generated_d3_timings.tex \
             paper/csda-computational-costs/awesomefigures_latex_manifest.json \
             paper/csda-computational-costs/timing_figure_data.json \
             paper/csda-computational-costs/publication_sha256.txt \

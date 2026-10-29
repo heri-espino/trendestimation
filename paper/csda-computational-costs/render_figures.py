@@ -102,85 +102,149 @@ def coordinate_map():
 
 
 def criterion_coordinates(buckets):
-    n, d, mu, R = 48, 2, 0., 1
-    policies = ("native_s", "mapped_s_lambda", "native_log_lambda")
-    tags = ("Native S", "Premapped S", "Different log-$\\lambda$")
+    """Two STRICTLY matched ways to evaluate the same user-facing S grid."""
+    n, d, mu, R = 48, 3, 0., 1
+    policies = ("native_s", "mapped_s_lambda")
+    tags = ("Repeated S inversion", "One cached S grid")
     values = []
     for policy in policies:
         vals = [
-            1000*median_valid(buckets,d,c,"svd",R,"shared",policy,"total_standalone_s")
+            1000*median_valid(buckets, d, c, "svd", R, "shared",
+                              policy, "total_standalone_s")
             for c in CRITERIA
         ]
         assert all(math.isfinite(x) for x in vals), (policy, vals)
         values.append(vals)
     fig, ax = plt.subplots(figsize=(8.2, 3.25))
-    x = np.arange(5); width = .23
-    for k, (name, color) in enumerate(zip(tags, (BLUE,CYAN,COLORS[4]))):
-        ax.bar(x+(k-1)*width, values[k], width, label=name, color=color)
+    x = np.arange(5); width = .34
+    for k, (name, color) in enumerate(zip(tags, (BLUE, CYAN))):
+        ax.bar(x+(k-.5)*width, values[k], width, label=name, color=color)
     ax.set_xticks(x, ["CV", "GCV", "AICc", "BIC*", "ML"])
-    ax.set_yscale("log")
-    ax.set_ylim(.3, 5.5)
-    ax.set(xlabel="Selection criterion",
-           ylabel="Total elapsed time (ms)",
-           title="One complete 17-point search ($n=48,d=2$)")
-    ax.legend(frameon=False, ncol=3, loc="upper center", fontsize=7)
+    ax.set_ylim(0, max(max(v) for v in values)*1.3)
+    ax.set(xlabel="Criterion (same 17 S candidates; exact endpoints 0 and 1)",
+           ylabel="Total measured time (ms)",
+           title="d=3: identical S-grid, different reuse strategies")
+    ax.legend(frameon=False, ncol=2, loc="upper right", fontsize=8)
     OUT["criterion_coordinate_milliseconds"] = {
-        tags[k]: dict(zip(CRITERIA, values[k])) for k in range(3)
+        tags[k]: dict(zip(CRITERIA, values[k])) for k in range(2)
     }
-    # Shared mapping is paid exactly once, not once per criterion:
+
     mapping = read(RAW / "search_grid_preparation.csv")
-    once = next(1000*float(x["map_once_s"]) for x in mapping
-                if x["n"] == "48" and x["d"] == "2")
+    once = next(1000*float(v["map_once_s"]) for v in mapping
+                if v["n"] == str(n) and v["d"] == str(d))
     backend = [
         1000*median_valid(
-            buckets,d,c,"svd",1,"shared","mapped_s_lambda","total_backend_only_s"
-        )
+            buckets, d, c, "svd", R, "shared", "mapped_s_lambda",
+            "total_backend_only_s")
         for c in CRITERIA
     ]
+    assert all(math.isfinite(x) for x in backend)
     native = sum(values[0])
     mapped = once + sum(backend)
-    assert abs(native-11.234) < .02, native
-    assert abs(mapped-3.980) < .02, mapped
+    assert native > 0 and mapped > 0
+    # Validate that these two policies actually choose exactly the
+    # SAME search candidate; don't assume coordinate agreement.
+    selected = {}
+    for c in CRITERIA:
+        a = median_valid(buckets, d, c, "svd", R, "shared",
+                         "native_s", "selected_s")
+        b = median_valid(buckets, d, c, "svd", R, "shared",
+                         "mapped_s_lambda", "selected_s")
+        assert math.isfinite(a) and abs(a-b) < 1e-12, (c,a,b)
+        selected[c] = a
     OUT["five_criterion_joint"] = {
-        "native_s_ms":native,
-        "premapped_once_ms":mapped,
-        "speedup":native/mapped,
-        "mapping_once_ms":once,
-        "matched_candidate_count":17,
+        "n": n, "d": d, "mu": mu, "R": R,
+        "native_s_ms": native,
+        "premapped_once_ms": mapped,
+        "speedup": native/mapped,
+        "mapping_once_ms": once,
+        "matched_candidate_count": 17,
+        "selected_s": selected,
     }
-    save(fig, "criterion_coordinates")
+    # Keep old d=2 figure's numerical statement as an explicitly
+    # separate, historical comparison, NOT a d=3 measurement.
+    d2_native = sum(
+        1000*median_valid(buckets,2,c,"svd",1,"shared",
+                          "native_s","total_standalone_s")
+        for c in CRITERIA)
+    d2_once = next(1000*float(v["map_once_s"]) for v in mapping
+                   if v["n"]=="48" and v["d"]=="2")
+    d2_backend = sum(
+        1000*median_valid(buckets,2,c,"svd",1,"shared",
+                          "mapped_s_lambda","total_backend_only_s")
+        for c in CRITERIA)
+    assert abs(d2_native-11.234) < .02, d2_native
+    assert abs(d2_once+d2_backend-3.980) < .02
+    OUT["historical_d2_comparator"] = {
+        "n":48,"d":2,"mu":0.,"R":1,
+        "native_s_ms":d2_native,
+        "premapped_once_ms":d2_once+d2_backend,
+        "speedup":d2_native/(d2_once+d2_backend),
+    }
+    # Generate the paper's d=3 table directly from measured raw records.
+    lines = [
+        "% AUTO-GENERATED FROM ARCHIVED WINDOWS DATA; DO NOT EDIT",
+        r"\begin{table*}[t]",
+        r"\caption{Five completed 17-point selection searches for $d=3$, $n=48$, fixed $\mu=0$, SVD, $R=1$. Values are two-seed medians in milliseconds. Both policies evaluate the identical full $S\in[0,1]$ grid; premapped standalone time includes conversion once per criterion.}",
+        r"\label{tab:criteria}\centering",
+        r"\begin{tabular}{lrr}",
+        r"\toprule",
+        r"Criterion & Repeated $S$ inversion & Premapped $S$ grid \\",
+        r"\midrule",
+    ]
+    for i,c in enumerate(CRITERIA):
+        title = {"cv":"CV","gcv":"GCV","aicc":"AICc",
+                 "bic":"Residual BIC","mle":"Profiled Gaussian ML"}[c]
+        lines.append(f"{title} & {values[0][i]:.3f} & {values[1][i]:.3f} \\\\")
+    lines.extend([r"\bottomrule",r"\end{tabular}",r"\end{table*}"])
+    (PAPER/"sections"/"generated_d3_timings.tex").write_text(
+        "\n".join(lines)+"\n", encoding="utf8")
+    save(fig,"criterion_coordinates")
 
 
 def workload_scaling(buckets):
+    """Show valid results only; missing or invalid grids cannot be winners."""
     policies = [
         (1, "single_mapped_s_lambda", "Single $s=0.5$"),
         (1, "mapped_s_lambda", "17-point grid"),
         (8, "mapped_s_lambda", "Eight grids"),
     ]
     fig, ax = plt.subplots(figsize=(8.6, 3.45))
-    counts = 0
+    valid_counts = [0,0,0]
+    method_validity = {}
     for j, (method, label) in enumerate(METHODS):
-        y = [
+        y = np.asarray([
             1000*median_valid(
-                buckets,1,"gcv",method,R,"shared",policy,
+                buckets,3,"gcv",method,R,"shared",policy,
                 "total_standalone_s",
             )
             for R, policy, _ in policies
-        ]
-        if all(np.isfinite(y)):
+        ], dtype=float)
+        valid = np.isfinite(y) & (y > 0)
+        for i,is_valid in enumerate(valid):
+            valid_counts[i] += int(is_valid)
+        method_validity[method] = {
+            "valid": [bool(v) for v in valid],
+            "milliseconds": [float(v) if np.isfinite(v) else None for v in y],
+        }
+        if np.any(valid):
+            # Do NOT join a line across an unmeasured/invalid workload.
             ax.plot(np.arange(3), y,
                     marker=("o","s","^","D")[j%4],
                     ls=("-","--","-.")[j%3], color=COLORS[j],
                     lw=1.4, ms=4, label=label)
-            counts += 1
-    if counts < 3:
-        raise RuntimeError("Insufficient complete numerical validity for plot")
+    if not all(count > 0 for count in valid_counts):
+        raise RuntimeError(
+            "At least one d=3 workload lacks any numerically valid backend: "
+            +str(valid_counts)
+        )
     ax.set_yscale("log")
     ax.set_xticks(range(3), [p[2] for p in policies])
-    ax.set(ylabel="Total time (ms, log scale)",
-           title="GCV: one score, one grid and repeated searches")
+    ax.set(ylabel="Valid complete-workload time (ms, log scale)",
+           title="d=3 GCV: score, full grid, and reused grids")
     ax.legend(frameon=False, ncol=4, fontsize=7, loc="upper center")
-    OUT["workload_valid_backends"] = counts
+    OUT["workload_valid_backends_by_workload"] = valid_counts
+    OUT["workload_backend_validity"] = method_validity
     save(fig, "workload_scaling")
 
 
@@ -220,37 +284,80 @@ def reuse_by_d(buckets):
 
 
 def solver_crossover():
+    """Compare measured higher-order full-curve costs where paired evidence exists."""
     rows=read(BENCH / "solver_study_runs" / "pilot-01" /
               "analysis" / "paired_comparisons.csv")
+    orders=(1,2,3,5)
+    vals={}
+    for r in rows:
+        if (int(r["n"])==96 and r["mu"]=="0.0" and
+            r["method_a"]=="svd" and r["method_b"]=="cholesky" and
+            int(r["evaluations"])==16 and int(r["order"]) in orders):
+            vals[int(r["order"])]=float(r["speedup_a_over_b"])
+    assert set(vals)==set(orders),vals
     fig,ax=plt.subplots(figsize=(8.1,3.25))
-    out = {}
-    for j,M in enumerate((1,16,64)):
-        vals={}
-        for r in rows:
-            if (int(r["order"])==2 and r["mu"]=="0.0" and
-                r["method_a"]=="svd" and r["method_b"]=="cholesky" and
-                int(r["evaluations"])==M and int(r["n"]) in (32,96,192)):
-                vals[int(r["n"])]=float(r["speedup_a_over_b"])
-        assert set(vals)=={32,96,192},(M,vals)
-        x=sorted(vals)
-        ax.plot(x,[vals[v] for v in x],marker=("o","s","^")[j],lw=1.6,
-                color=COLORS[j],label=f"$M={M}$")
-        out[str(M)]=vals
-    ax.axhline(1,color="#878d93",ls=":",lw=.9)
+    x=sorted(vals)
+    ax.plot(x,[vals[k] for k in x],marker="o",lw=1.8,
+            color=BLUE,ms=5.0)
+    ax.axhline(1,color="#878d93",ls=":",lw=.95)
     ax.set_yscale("log")
-    ax.set_xticks([32,96,192])
-    ax.set(xlabel="Series length $n$",
+    ax.set_xticks(list(orders))
+    ax.set(xlabel="Difference order d (d=4 not archived in this paired study)",
            ylabel="SVD / banded Cholesky total time",
-           title="Full fitted trends: 20 paired seeds ($d=2$)")
-    ax.legend(ncol=3,fontsize=7,frameon=False)
-    OUT["paired_solver_ratios"] = out
+           title="16 full curves, n=96, 20 paired seeds")
+    OUT["paired_solver_ratios_d"] = {
+        str(d): vals[d] for d in orders
+    }
     save(fig,"solver_crossover")
+
+
+def derivative_interpretation():
+    """Deterministic physical-position illustration; not runtime data.
+
+    At the S=1 limit, fixed D_d tau=mu*1. When mu=0 this is a
+    polynomial of degree at most d-1; for mu != 0 it is degree d.
+    """
+    n=48
+    t=np.linspace(0,1,n)
+    y=.22+1.25*t-1.9*t*t+1.5*t**3+.11*np.sin(10*np.pi*t)
+    def project(d,mu=0.):
+        k=np.arange(n,dtype=float)
+        # binomial polynomial scaled to the desired time coordinate
+        import scipy.special
+        particular=mu*scipy.special.binom(k,d)
+        A=np.column_stack([t**j for j in range(d)])
+        coeff=np.linalg.lstsq(A,y-particular,rcond=None)[0]
+        return particular+A@coeff
+    # For y's 1.5*t^3 component, the exact discrete third difference is:
+    mu3=1.5*6.0/(n-1)**3
+    fig,(ax,ax2)=plt.subplots(1,2,figsize=(8.4,3.3))
+    for a in (ax,ax2):
+        a.plot(t,y,color="#8e9ba6",lw=1.0,alpha=.65,label="Observed position")
+        a.set(xlabel="Equally spaced time",ylabel="Position")
+    for j,d in enumerate((1,2,3,4)):
+        ax.plot(t,project(d),color=COLORS[j],lw=1.5,
+                label=f"$d={d}$")
+    ax.set_title("S=1, zero mean differences")
+    ax.legend(ncol=2,frameon=False,fontsize=7)
+    ax2.plot(t,project(3,0.),color=BLUE,lw=1.8,label="$d=3, \\mu=0$ (quadratic)")
+    ax2.plot(t,project(3,mu3),color=CYAN,lw=1.8,ls="--",
+             label="$d=3, \\mu\\ne0$ (cubic)")
+    ax2.set_title("Third differences: quadratic vs cubic")
+    ax2.legend(frameon=False,fontsize=7)
+    OUT["derivative_illustration"]={
+        "d3_mu_fixed":mu3,
+        "role":"deterministic algebraic illustration (not timed)",
+        "time_step":1.0/(n-1),
+        "physical_meaning":"third finite difference approximates jerk times step cubed"
+    }
+    save(fig,"derivative_orders")
 
 
 def main():
     configure_publication(PAPER)
     buckets = raw_matrix()
     coordinate_map()
+    derivative_interpretation()
     criterion_coordinates(buckets)
     workload_scaling(buckets)
     reuse_by_d(buckets)

@@ -1,37 +1,25 @@
 \section{Measured computational results}\label{sec:results}
-\subsection{Same statistical grid, different computational paths}
-Table~\ref{tab:criteria} reproduces five \emph{measured} standalone 17-point Windows searches, using the same SVD backend at $n=48,d=2,\mu=0,R=1$. Native-$s$ mapping and one-time pretranslation score the exact same penalties. The latter avoids repeating the scalar inversion inside every scored search, although the table charges its grid conversion once to each \emph{independent} standalone task.
+\subsection{One full $S$-grid, with or without reusable inverse mapping}
+The principal case now uses $n=48,d=3,\mu=0,R=1$, the SVD backend and five selection criteria. Both policies evaluate \emph{exactly the same 17 normalized-smoothness candidates}, including $S=0$ and $S=1$: native-$S$ repeatedly invokes $\Lambda_{n,d}$, whereas the cached policy translates the grid once and reuses its penalties. This is an equal-estimator computational comparison, not a contest between different statistical grids. The recorded two-seed median timing values are inserted automatically from the original Windows CSV, not manually estimated. Although the candidate grid includes $S=0$ and $S=1$, some criterion values at those endpoints can be mathematically undefined (notably residual BIC at interpolation), and those scores are not reinterpreted as admissible optima.
 
-\begin{table*}[t]
-\caption{Two-seed median standalone complete-grid selection time (ms) on the recorded Windows host, one BLAS thread and seven repetitions. The native-$s$ and premapped columns evaluate identical 17-point candidate sets; the log-$\lambda$ column samples different interiors and is not a fixed-estimator speed comparison. Results are descriptive.}
-\label{tab:criteria}\centering
-\begin{tabular}{lrrr}
-\toprule
-Criterion & Native $s$ & Premapped $s\to\lambda$ & Independent log-$\lambda$\\
-\midrule
-CV & 2.004 & 1.879 & 0.545\\
-GCV & 1.851 & 1.800 & 0.426\\
-AICc & 1.887 & 1.810 & 0.458\\
-Residual BIC & 2.016 & 1.810 & 0.449\\
-Conditional marginal ML & 3.477 & 2.035 & 0.515\\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-If the \emph{same one-time candidate translation} is shared across all five criteria, the native-$s$ total from those recorded runs was 11.234 ms, whereas grid translation paid \emph{once} plus five backend-only searches totaled 3.980 ms: a descriptive 2.823-fold reduction for this configuration. It would be incorrect to sum the standalone premapped timings as if each were a separate grid-construction expense in this shared workflow. The effect is specific to the cached application architecture and does \emph{not} establish that $s$ is intrinsically faster than $\lambda$.
+\input{sections/generated_d3_timings}
 
 \begin{figure*}[t]\centering
 \includegraphics[width=\textwidth]{figures/criterion_coordinates.pdf}
-\caption{Completed 17-point criterion searches at $n=48,d=2,\mu=0,R=1$ with full SVD. The premapped and native-$s$ grids contain identical candidate penalties; independent log-$\lambda$ samples different interior candidates and is shown only for workload context. Log-scaled elapsed time in milliseconds; original Windows two-seed medians.}
+\caption{Full $S\in[0,1]$ selection at $d=3$, $n=48$, fixed $\mu=0$ and SVD, with five criteria: repeated on-demand $S\mapsto\lambda$ inversion versus one cached candidate translation. Both policies evaluate identical penalties. Bars are observed two-seed median standalone timing results, including one-time mapping cost in the second policy.}
 \label{fig:coordinates}
 \end{figure*}
 
+In the jointly reused five-criterion $d=3$ workflow, the native-$S$ total was 10.050\,ms, versus 3.767\,ms for one shared mapping plus five backend-only searches (ratio 2.668). In contrast, the premapped column of Table~\ref{tab:criteria} charges the mapping once \emph{per standalone criterion}; summing those values would overcount shared preparation.
+
+For a second, historically reported $d=2$ comparison at the same $n=48,\mu=0,R=1$, the archived five native-$S$ searches total 11.234\,ms, versus 3.980\,ms when the grid is mapped once and shared across five backend-only searches: a descriptive factor of 2.823. These $d=2$ values are \emph{not} relabeled as $d=3$ timings; the new $d=3$ table and plot use their own archived records. Within each difference order, a precomputed grid can be shared across criteria, series and fixed $\mu$ values without altering the PLS estimator.
+
 \subsection{One evaluation, full grid and repeated independent series}
-Figure~\ref{fig:workloads} plots all seven backends at a \emph{single} $s=0.5$ GCV score, one mapped 17-point GCV grid and eight independent full-grid GCV searches, under fixed $n=48,d=1,\mu=0$. It uses the original full-factorial Windows rows and excludes invalid numerical results. The figure makes visible why a one-evaluation ranking need not generalize to selection or reuse workloads: decomposition cost is paid once, while data projections, curve solves and per-candidate trace work scale differently across algorithms.
+Figure~\ref{fig:workloads} plots all seven backends at a \emph{single} $s=0.5$ GCV score, one mapped 17-point GCV grid and eight independent full-grid GCV searches, under fixed $n=48,d=3,\mu=0$. It uses the original full-factorial Windows rows, drawing a timing only where both experimental seeds completed that particular workload with valid numerical scores. Unsuccessful or incomplete cases are missing, not assigned fictitious times. The figure makes visible why a one-evaluation ranking need not generalize to selection or reuse workloads: decomposition cost is paid once, while data projections, curve solves and per-candidate trace work scale differently across algorithms.
 
 \begin{figure*}[t]\centering
 \includegraphics[width=\textwidth]{figures/workload_scaling.pdf}
-\caption{Observed standalone elapsed time for one GCV score ($s=0.5$), one 17-point grid, and eight independent grids, across seven implementations. Data are from the two-seed Windows full factorial with $n=48,d=1,\mu=0$ and shared preparation; only complete valid pairs are displayed. The three workload classes are distinct algorithms, not repeated scalar multiplications of one measured time.}
+\caption{Observed standalone elapsed time for one GCV score ($s=0.5$), one 17-point grid, and eight independent grids, across seven implementations. Data are from the two-seed Windows full factorial with $n=48,d=3,\mu=0$ and shared preparation. All seven methods supplied a valid single-score evaluation, but only two supplied valid complete full-grid and repeated-grid cases at this difficult $d=3$ setting. Points are shown only for workloads with complete numerically valid seed pairs; missing points are not zero elapsed time or a performance win. The three workload classes are distinct algorithms, not repeated scalar multiplications of one measured time.}
 \label{fig:workloads}
 \end{figure*}
 
@@ -47,11 +35,11 @@ Figure~\ref{fig:reuse} shows the recorded ratio of cold to shared backend-only t
 \subsection{Longer series and repeated fitted curves}
 The separate complete-trend benchmark, with $n$ extending to 400 and up to 256 repeated fits, documents substantial changes in winners. For $n=400,d=2,\mu=0$, the ratio of fresh dense to spectral total time was 0.158 at $M=1$ but 28.314 at $M=256$; 0.158 means the dense approach was faster for the single fit, whereas 28.314 means the spectral implementation was faster than the repeatedly fresh dense solver on the larger sweep. Against a properly general banded solver the corresponding ratios were 0.055 and 0.339, so \emph{banded remained faster} in those two recorded workloads. These are host-specific paired cases, not universal crossovers and not five-criterion selections.
 
-The 20-seed independent solver study also finds workload-dependent differences between full SVD, symmetric eigendecomposition and banded Cholesky. Figure~\ref{fig:solver} reports the already archived geometric mean of paired SVD/banded-Cholesky total-time ratios for $d=2,\mu=0$ at three $n$ and $M$. Ratios greater than one favor Cholesky, less than one SVD. For example, at $n=96$, $M=64$, the study estimated an SVD-to-Cholesky ratio 0.959 (pointwise bootstrap interval [0.955,0.964]), while at $n=192$, $M=64$, it was 2.614 ([2.595,2.635]). These values and their uncertainty apply only to that prespecified fit-only design and processor. Pointwise intervals do not supply family-wise testing claims.
+The independent 20-seed solver study also supports comparing higher orders. Figure~\ref{fig:solver} shows the original paired geometric-mean SVD/banded-Cholesky total-runtime ratio at $n=96$, $M=16$ complete fitted curves, fixed $\mu=0$, and orders $d\in\{1,2,3,5\}$. There is \emph{no} paired $d=4$ observation for this exact workload in that source: the figure does not interpolate or fabricate one. A ratio above one favors banded Cholesky and below one SVD. These are \emph{fit-only} timings and do not cover trace, leverage or five-criterion selection.
 
 \begin{figure*}[t]\centering
 \includegraphics[width=\textwidth]{figures/solver_crossover.pdf}
-\caption{Paired, per-seed geometric mean SVD/banded-Cholesky \emph{full-trend} total-time ratio at $d=2,\mu=0$, from the 20-seed solver study. Each line represents $M=1,16,64$ requested complete fits across $n=32,96,192$. A ratio below one favors SVD; above one favors Cholesky. The chart is not a direct runtime comparison of five statistical selection criteria.}
+\caption{Measured paired SVD/banded-Cholesky full-curve total-time ratios across available difference orders at $n=96$, $M=16$ and $\mu=0$. Each order has 20 independent paired data seeds. $d=4$ was not included in this matched solver workload; no result is extrapolated. This is not a criterion-selection benchmark.}
 \label{fig:solver}
 \end{figure*}
 

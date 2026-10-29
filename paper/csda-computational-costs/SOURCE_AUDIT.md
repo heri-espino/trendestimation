@@ -99,3 +99,23 @@ Figure PDFs are generated using the exact CAS template's measured fonts,
 and the original \`paper/csda-spectral-smoothness/publication_style.py\`
 as a starting point, adapted to this companion. TeX PDF + editable PGF
 + SVG previews and hashes are archived by GitHub Actions.
+
+## Presentation revision — October 29, 2026
+
+- Main timing comparison now uses the **same full S grid** at n=48,
+  d=3, fixed mu=0 and R=1 for five criteria. The separate log-lambda
+  policy is retained in source CSVs only as a nonmatched control.
+- The original d=2 case (11.234 ms native versus 3.980 ms pretranslated)
+  remains an explicitly labeled historical reference, never assigned
+  to d=3.
+- The 20-seed full-trend benchmark is visualized across d=1,2,3,5
+  for n=96 and M=16; missing d=4 is left missing.
+- The Gaussian "mle" score in src/trendestimation/likelihood.py
+  profiles sigma_epsilon squared under a Gaussian latent-difference
+  variance model, lambda=sigma_epsilon^2/sigma_eta^2.
+  mu="data" is conditional plug-in, NOT jointly maximized ML.
+- A deterministic S=1 polynomial-fit illustration explains how
+  d=3 implies a quadratic trend when mu=0 and a cubic when
+  the third differences have nonzero fixed mean.
+- The d=3 timing table is generated from original recorded CSV rows;
+  it is not backfilled from plots or the d=2 case.

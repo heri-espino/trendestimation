@@ -29,7 +29,7 @@ _LAYOUT = None
 _PAPER = None
 _COLUMN_INCHES = None
 _MANIFEST = []
-WIDE = frozenset({"criterion_coordinates", "workload_scaling", "reuse_by_d", "solver_crossover"})
+WIDE = frozenset({"criterion_coordinates", "workload_scaling", "reuse_by_d", "solver_crossover", "derivative_orders"})
 
 
 def configure_publication(paper: Path):
@@ -144,8 +144,8 @@ def publication_export(fig, name: str, figures_dir: Path):
 def finish_manifest(paper: Path, figures_dir: Path):
     target = Path(figures_dir)
     names = (
-        "coordinate_map", "criterion_coordinates", "workload_scaling",
-        "reuse_by_d", "solver_crossover",
+        "coordinate_map", "derivative_orders", "criterion_coordinates",
+        "workload_scaling", "reuse_by_d", "solver_crossover",
     )
     if {row["figure"] for row in _MANIFEST} != set(names):
         raise RuntimeError("An expected figure has not been exported.")

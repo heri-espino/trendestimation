@@ -39,6 +39,28 @@ The $Rnr$ term projects each new series once; CV replaces the pertinent $O(r)$ c
 
 The reference-mean policy changes coefficients of the right-hand side, not the spectrum. Fixed $\mu=0$ and fixed $\mu=0.15$ share precisely the same $G_{n,d}$. Estimating $\widehat\mu$ from $D_dy$ adds an $O(nd)$ pass per series; the archived comprehensive Windows run did \emph{not} separately time this data-dependent mean-estimation step.
 
+\subsection{What is actually maximized under the Gaussian ML criterion?}
+The benchmark's label \emph{ML} means profiled Gaussian \emph{marginal} variance-component likelihood, not pointwise maximum likelihood of the fitted curve. It assumes independent observational errors and a Gaussian penalty prior,
+\begin{equation}\label{eq:gauss}
+\begin{aligned}
+y&=\tau+\varepsilon,\quad
+\varepsilon\sim N(0,\sigma_\varepsilon^2I),\\
+D_d\tau-\mu\mathbf1&\sim N(0,\sigma_\eta^2I),\quad
+\lambda=\sigma_\varepsilon^2/\sigma_\eta^2.
+\end{aligned}
+\end{equation}
+The polynomial nullspace is unpenalized and eliminated from the reduced likelihood. On the $r=n-d$ penalized singular coordinates $z_j$, the marginal variances are $\sigma_\varepsilon^2c_j(\lambda)$ with $c_j=1+1/(\lambda\delta_j)$. Profiling the unknown observation variance gives
+\begin{equation}\label{eq:profileml}
+\begin{aligned}
+\widehat\sigma_\varepsilon^2(\lambda)
+&=\frac1r\sum_{j=1}^r z_j^2/c_j(\lambda),\\
+-2\ell_{\rm prof}(\lambda)
+&=r\log\widehat\sigma_\varepsilon^2(\lambda)
+ +\sum_{j=1}^r\log c_j(\lambda)+\mathrm{constant}.
+\end{aligned}
+\end{equation}
+This is a REML-like reduced-coordinate likelihood and it \emph{does} depend on a variance model. After selection, one may also compute $\widehat\sigma_\eta^2=\widehat\sigma_\varepsilon^2/\widehat\lambda$. The benchmark uses fixed $\mu=0$ or $0.15$; any data-derived $\mu=\operatorname{mean}(D_dy)$ would instead constitute a conditional plug-in, \emph{not} joint maximum likelihood over $(\mu,\lambda,\sigma_\varepsilon^2,\sigma_\eta^2)$. For fixed variances and $\lambda$, maximizing the Gaussian posterior in $\tau$ recovers the ordinary PLS trend; that is a \emph{different} optimization from selecting $\lambda$ by marginal ML.
+
 \subsection{Matched versus unmatched coordinate searches}
 We separate \emph{native $s$ grid} (invert each $s_j$ during a search), \emph{premapped $s$ grid} (invert once, pass the identical $\lambda_j$ to the score), and an \emph{independently spaced log-$\lambda$ grid}. Only the first two evaluate the same statistical candidates, and hence they must agree in exact arithmetic. The third may run faster but selects among \emph{different interior penalties}; its search time alone cannot establish an efficiency advantage at equal statistical quality. Continuous bounded optimizers in $s$ and $\log\lambda$ follow different paths and are local searches, not certified global optima. Exact $s=0$ and $s=1$ endpoints are scored analytically.
 

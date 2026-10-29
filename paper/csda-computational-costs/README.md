@@ -49,17 +49,28 @@ figures, SVG previews and SHA256 provenance in the repo.
 
 ## Figures
 
-1. Smoothness-to-penalty correspondence for d=1,...,6 (analytic only).
-2. Five selection criteria under native-S, once-mapped and independent
-   log-lambda grids using original matched Windows timings.
-3. One GCV evaluation, one full grid and eight independent grids across
-   seven solver backends (when the full-grid numerical validity gate passes).
-4. Cold/shared spectral search reuse across d=1,...,5.
-5. Independent 20-seed SVD vs banded-Cholesky full-fit crossover as
-   a function of n and number of fitted curves.
+The main comparison now uses **d=3** and only two statistically matched policies
+on the *same complete* 17-point S grid: native repeated inversion and
+one cached S-to-lambda mapping. The conventional independently sampled
+log-lambda grid remains as a diagnostic in the raw benchmark archive,
+but is not presented as an equivalent or equally interpretable grid.
 
-These are vector figures using CAS LaTeX font measurements via
-AwesomeFigures; their purpose is computation, not a new run of benchmarks.
+1. Normalized smoothness versus internal lambda across d=1,...,6.
+2. Analytical physical-derivative interpretation at S=1: d=1,...,4,
+   including d=3 with fixed zero versus nonzero third differences.
+3. Five criterion timings from original Windows data at d=3,
+   displaying matched full-S grids only. The paired timing table
+   is generated automatically into sections/generated_d3_timings.tex.
+4. One GCV evaluation, full grid and eight independent grids at d=3,
+   across numerically valid solver implementations.
+5. Cold/shared spectral reuse across the archived d=1,...,5 orders.
+6. Independent paired 20-seed SVD versus banded-Cholesky full-fit study
+   across measured d=1,2,3,5 at n=96, M=16. No d=4 interpolation.
+
+The Gaussian likelihood criterion profiles observation-error variance
+under a Gaussian model of the dth differences. It is a reduced-coordinate
+marginal variance-component likelihood, not maximum likelihood of tau
+at a given lambda, nor joint ML estimation of mu when mu='data'.
 
 ## Scientific boundaries
 

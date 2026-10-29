@@ -29,13 +29,13 @@
       "font_name": "ecrm1000",
       "audit_warnings": [],
       "outputs_sha256": {
-        "pdf": "3299d2a728cf0d7798be9b2991668fa055b10dbc76681c3a0186cab18eb1ca74",
+        "pdf": "79503a6058c1750820da8b72528feebe49fd3979093ec2fff79de680fa0394f5",
         "pgf": "9d0e8cf7f5100dabcea0d1d080972a808b94f0c9cdf0b944c3b4186c55ec90bb",
-        "svg": "4a4054e856e71fd8ce2cf9ed7c2ea20ff0de34355fda4ceca2bfbe70a7bf1cd9"
+        "svg": "662bc29e0c7d2b02b0deb9a2030aac8f28f972ad60f7c87263bdaf675d2df2ad"
       }
     },
     {
-      "figure": "criterion_coordinates",
+      "figure": "derivative_orders",
       "layout": "text",
       "document": "main.tex",
       "document_class": "cas-dc (user supplied CAS 2.4)",
@@ -60,9 +60,40 @@
       "font_name": "ecrm1000",
       "audit_warnings": [],
       "outputs_sha256": {
-        "pdf": "86cce4e74c1614c867005933f088a2f47089e66c1033f7e3cb3760d6048a0e27",
-        "pgf": "4d99f0bc8a1676defb9a871b8c5188d2463075ff3a6125e9f24c2926e0cf11ff",
-        "svg": "ae5013218a16c5a6f4a01347b7b1def0dd69f74d206cab068c2d4b3662a6a2fb"
+        "pdf": "6a386c8f188e529d9025703a55ac9f4d7248a0ec192e6abe38a9427d20ad520e",
+        "pgf": "88592f3f35a3b0defa0d091b3a09e4d340ddb38de1152d8b8d5ad9c36b41ae27",
+        "svg": "3f785fe2f8c19a0ef9372b2c4274e64e23e926b113c47aa9efb8db35ef01ee55"
+      }
+    },
+    {
+      "figure": "criterion_coordinates",
+      "layout": "text",
+      "document": "main.tex",
+      "document_class": "cas-dc (user supplied CAS 2.4)",
+      "engine": "pdflatex",
+      "pdf_backend": "PGF (genuine TeX text and mathematics)",
+      "pgf_source": true,
+      "awesomefigures_api": [
+        "set_style",
+        "inspect_latex",
+        "latex_style",
+        "PublicationStyle.fit",
+        "PublicationStyle.audit",
+        "PublicationStyle.savefig"
+      ],
+      "body_column_width_pt": 238.25444,
+      "body_text_width_pt": 494.50888,
+      "columnsep_pt": 18.0,
+      "output_width_pt": 494.50888,
+      "expected_width_pt": 494.50888,
+      "smallest_text_pt": 8.333333333333334,
+      "font_family": "cmr",
+      "font_name": "ecrm1000",
+      "audit_warnings": [],
+      "outputs_sha256": {
+        "pdf": "b38751baeacbbfee6f8474767cae186d07e0b61ad4eb4001b4144699e8254402",
+        "pgf": "89a9bc1b3bd33f1738a04187df375dc113b518e697f50564a589bef56ba36239",
+        "svg": "ece7708232f608df2457b4214ddcc255a6f1c6a47b7476f00ea523fa1ca47027"
       }
     },
     {
@@ -91,9 +122,9 @@
       "font_name": "ecrm1000",
       "audit_warnings": [],
       "outputs_sha256": {
-        "pdf": "af0485ece3c965ef58f2ae2c24051d7aa594339fda6d38f02f25ae3f4ed9fc28",
-        "pgf": "9edb61ce3e3f88eed53c4ece3fad7602b9e3db4306e0d30b0ef52bd0933b99ea",
-        "svg": "747acb8b70818d417ebe96e25d19afe09f771180f7a1ba29f7e5ee4ec19d99aa"
+        "pdf": "de8d76b1927d5e2a9991b5fefa9e02c555c49c9e6e76de77faeefa936649accd",
+        "pgf": "c10ca00976cb459316d69bdcc014fac6629e132c7b33c993e9259d2114eb5aed",
+        "svg": "29168b72c3cd077bdf9af052822f1425dce3c01e8d27b4c88e788020235909d6"
       }
     },
     {
@@ -122,9 +153,9 @@
       "font_name": "ecrm1000",
       "audit_warnings": [],
       "outputs_sha256": {
-        "pdf": "f23841104d13ae3473544d70a8844ef15a1c6223a0bda93b1c56290a72cd7144",
+        "pdf": "62b45d2758f25182a807410c937eed7da795d05680097bd2e8c1e2b6b141e247",
         "pgf": "fe6c8b62efee7d260e2745ee86e971193567914d68739cc80d2cfe4ee786356e",
-        "svg": "24a3d6e7a962c249446241b90fd0f8b9f73744e501105dec842adb02d86d1a10"
+        "svg": "ce267d6e6e51494572536f64a7a5d2bf0e1be734829ae6726eb6eed69729d5b8"
       }
     },
     {
@@ -148,14 +179,14 @@
       "columnsep_pt": 18.0,
       "output_width_pt": 494.50888,
       "expected_width_pt": 494.50888,
-      "smallest_text_pt": 7.777777777777778,
+      "smallest_text_pt": 8.333333333333334,
       "font_family": "cmr",
       "font_name": "ecrm1000",
       "audit_warnings": [],
       "outputs_sha256": {
-        "pdf": "59b49c8bcfca7f163ace90b382fdf078ec8503d7b1a985aa98d6daea8c6f4d7e",
-        "pgf": "0aa35cd5366e5169ace228beb3394c92c4437669c361153a379c24defb23a414",
-        "svg": "5b3b990eeb399ed8389daa8c77754dd780d48f01a640edc10afee5a3fc8d667f"
+        "pdf": "a5a2647b2c7badbd92e91a889b7aab4a5757e0abe061534fcdae4b80ab6b5f06",
+        "pgf": "c6944a48accf4e32e0ea675185fa65f365981c39540bb2893b73f2546b307fb1",
+        "svg": "caff652e182606426c869510da82032618367fa14ff43b25057ccd7e9d708353"
       }
     }
   ]
