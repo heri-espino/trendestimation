@@ -1,0 +1,84 @@
+name: CSDA spectral manuscript — vector figures and PDF
+
+on:
+  push:
+    branches:
+      - paper/csda-spectral-smoothness-20261029
+    paths:
+      - .github/workflows/csda-spectral-paper.yml
+      - paper/csda-spectral-smoothness/main.tex
+      - paper/csda-spectral-smoothness/references.bib
+      - paper/csda-spectral-smoothness/sections/**
+      - paper/csda-spectral-smoothness/render_figures.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render-and-compile:
+    # Deliberately does not use PCAG103A-08.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pinned vector plotting dependencies
+        run: python -m pip install "numpy==2.3.5" "scipy==1.17.0" "matplotlib==3.10.7"
+      - name: Rerender all figures only from archived CSVs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/csda-spectral-smoothness/render_figures.py
+          for f in smoothness_map bic_boundary rmse_criteria solver_accuracy restricted_bic; do
+            test -s "paper/csda-spectral-smoothness/figures/$f.pdf"
+            test -s "paper/csda-spectral-smoothness/figures/$f.svg"
+          done
+      - name: Compile Elsevier manuscript with BibTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/csda-spectral-smoothness
+          root_file: main.tex
+          latexmk_use_xelatex: false
+          args: -pdf -interaction=nonstopmode -file-line-error -halt-on-error
+      - name: Create auditable publication build manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s paper/csda-spectral-smoothness/main.pdf
+          (
+            cd paper/csda-spectral-smoothness
+            sha256sum main.tex references.bib sections/*.tex render_figures.py \
+              figures/*.pdf figures/*.svg main.pdf > publication_sha256.txt
+          )
+          git rev-parse HEAD > paper/csda-spectral-smoothness/source_commit.txt
+      - name: Upload compiled manuscript and vector figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-spectral-smoothness-draft
+          path: |
+            paper/csda-spectral-smoothness/main.pdf
+            paper/csda-spectral-smoothness/main.tex
+            paper/csda-spectral-smoothness/references.bib
+            paper/csda-spectral-smoothness/sections/
+            paper/csda-spectral-smoothness/figures/
+            paper/csda-spectral-smoothness/publication_sha256.txt
+          if-no-files-found: warn
+      - name: Preserve verified PDF and vector graphics in research branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f -- paper/csda-spectral-smoothness/main.pdf \
+            paper/csda-spectral-smoothness/figures/ \
+            paper/csda-spectral-smoothness/publication_sha256.txt \
+            paper/csda-spectral-smoothness/source_commit.txt
+          git commit -m "paper: archive compiled CSDA draft and data-derived vector figures [skip ci]"
+          git push origin "HEAD:$GITHUB_REF_NAME"
