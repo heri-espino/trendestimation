@@ -1,0 +1,32 @@
+% The exact author's Elsevier CAS v2.4 class is copied by the build.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,mathtools,booktabs,graphicx,url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue}
+\newcommand{\R}{\mathbb R}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Jerk-aware PLS on observed vehicle trajectories}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Smoothness-indexed penalized trend estimation on measured vehicle trajectories: jerk, conditional extrapolation and selection-method comparison}
+% Provisional author attribution, pending coauthor approval.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+We apply finite-difference penalized least squares to real, noisy vehicle-position data for which third differences have an interpretable connection to jerk. Five camera-derived longitudinal vehicle segments from the Federal Highway Administration NGSIM US-101 dataset are selected deterministically and sampled at 10 Hz. A normalized smoothness coordinate $S\in[0,1]$ controls polynomial trend regularization for orders $d=1,2,3,4$. Five classical selectors and two mean-difference policies are compared through strictly chronological observations held out for the next 0.5, 1, and 2 seconds; constant-velocity, constant-acceleration and Savitzky--Golay extrapolations provide physical baselines. We explicitly append a local polynomial continuation to the fitted PLS trend: forecasting is not an intrinsic output of PLS. Seven numerical implementations are compared separately for fitting cost and agreement. No future information enters selection, no synthetic data or noise are injected, and no ground-truth jerk measurement is claimed. This is an illustrative and falsifiable physical-data case study rather than a vehicle-control guarantee.
+\end{abstract}
+\begin{keywords}
+Smoothness-indexed trend \sep jerk \sep real-world observations \sep NGSIM \sep penalized least squares \sep forecasting \sep numerical validation
+\end{keywords}
+\maketitle
+\input{sections/introduction}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/discussion}
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
+\end{document}
