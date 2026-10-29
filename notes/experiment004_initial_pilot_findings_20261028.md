@@ -1,6 +1,6 @@
 # Experiment004 — First RMSE and numerical-validity pilot (2026-10-28)
 
-**Status:** Locally executed 20-seed exploratory pilot. No self-hosted runner job launched, no main-paper rewrite, no timing claims. **d=0 excluded** by author decision. The ZIP with the exact execution script and raw result CSVs is presently a conversation attachment and is **not yet committed to this branch**; this distinction is intentional. The local script SHA256 is `25429a88ea98c993f07c64913cd18bfb7c60326082d5d9b9a9a4ce219b229899`.
+**Status:** Locally executed 20-seed exploratory pilot. No self-hosted runner job launched, no main-paper rewrite, no timing claims. **d=0 excluded** by author decision. The exact execution script and an independent **GitHub-hosted** pilot run with raw result CSVs are now committed to this branch. The original local ZIP remains available separately and must not be conflated with the hosted run. The local script SHA256 is `25429a88ea98c993f07c64913cd18bfb7c60326082d5d9b9a9a4ce219b229899`.
 
 ## Design
 
@@ -36,8 +36,19 @@ With fixed zero mu in these simulations, MLE has the lowest average, but the con
 
 This pilot supports studying **numerical conditioning, criterion-domain definitions, and conditional-vs-adaptive mean estimation** before a large timing factorial. It suggests, but does not establish, a CSDA narrative centered on numerical reliability and statistical tradeoffs, with amortized computational costs as a separate contribution.
 
-**Required next actions:** (1) commit/expose the exact runnable source and raw CSV/JSON provenance in a unique GitHub results directory, ideally using a small GitHub-hosted pilot job; (2) reproduce independent formula parity against the package and review the BIC formula; (3) isolate reliable high-S/high-d reference fits before ranking solver timings; (4) review differences between fixed and plug-in mu under exact CV and likelihood assumptions. **Do not start the full self-hosted-runner factorial yet.**
+**Required next actions:** (1) reproduce independent formula parity against the package and review the BIC formula; (2) isolate reliable high-S/high-d reference fits before ranking solver timings; (3) review differences between fixed and plug-in mu under exact CV and likelihood assumptions; (4) analyze the independently hosted raw data before writing journal claims. **Do not start the full self-hosted-runner factorial yet.**
 
 ## Literature/precedent
 
 Weinert (2007), DOI 10.1016/j.csda.2006.11.038; Cortés-Toto et al. (2017), DOI 10.1080/03610918.2015.1005236; Biessy (2026), DOI 10.1017/asb.2025.10061; Garcia (2010), DOI 10.1016/j.csda.2009.09.020 and 2012 corrigendum 10.1016/j.csda.2011.12.001.
+
+## Independent GitHub-hosted reproduction — successful
+
+- Workflow: [Experiment004 pilot, run 40826487736](https://github.com/heri-espino/trendestimation/actions/runs/40826487736), success on `ubuntu-latest` (not the self-hosted PCAG103A-08 runner).
+- Exact script: `paper/benchmarks/experiment004/run_pilot.py`. GitHub-hosted SHA256 **25429a88ea98c993f07c64913cd18bfb7c60326082d5d9b9a9a4ce219b229899**, matching the local source.
+- Raw hosted directory: `paper/benchmarks/experiment004/runs/pilot-hosted-40826487736/` with `pilot_rmse.csv`, `numerical_qa.csv`, `mapping_qa.csv`, `environment.json`, source hash and input-commit marker. The workflow also uploaded an artifact.
+- GitHub's hosted run verified **9,600 RMSE rows**, **192 QA checks**, all **110 S candidates**, and d exactly **1–6**.
+- Hosted numerical-QA statuses: **112 ok, 50 disagreements, 30 factorization failures**. These differ modestly from the local container's **110/56/26**, documenting platform/LAPACK sensitivity rather than a stable machine-independent rank. Hosted maximum S-mapping tail error was **2.13024e-13**; its maximum observed relative fit difference was **1049.54**. Treat these numerical failures as unresolved, not as algorithm rankings.
+- Host: Python 3.11.17, NumPy 2.3.5, SciPy 1.17.0, Linux Azure, OpenBLAS; a single-thread BLAS was selected during measurements, though the metadata snapshot was taken outside that context and reports the restored default threads. This pilot is **not a benchmark timing comparison**.
+
+All comparisons involving `mu_hat=mean(D_d y)` are *conditional plug-in* scores, and high-S selections in unstable regions cannot yet be certified as numerically accurate. The first CSVs are reproducible archived observations, not approved manuscript tables.
