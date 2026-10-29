@@ -1,5 +1,8 @@
 # Experiment004 — Statistical accuracy, numerical reliability, and amortized S-domain computation
 
+> **2026-10-28 scope revision (author-approved):** Exclude **d=0 entirely** from Experiment004. All design, pilot, validation, results, tables and subsequent full factorial run use **d=1,2,3,4,5,6** only. The historical d=0 discussions below document earlier planning and are not active requirements. The initial RMSE pilot is permitted now; large full-factorial runner jobs remain gated on validity review.
+
+
 **Status (2026-10-28): design-only research protocol; no new timing or RMSE results.**
 **Target context:** possible *Computational Statistics & Data Analysis* manuscript.
 **Manuscript status:** do not rewrite or reformat the paper merely because this protocol exists.
