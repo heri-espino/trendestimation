@@ -2,7 +2,9 @@
 \documentclass[a4paper,fleqn]{cas-dc}
 \usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage{graphicx,booktabs,microtype,url}
+\usepackage{graphicx,booktabs,url}
+% The supplied CAS class uses bitmap-sized font variants in front matter;
+% microtype's automatic font expansion can error under pdfLaTeX.
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
 \newcommand{\R}{\mathbb{R}}
