@@ -86,3 +86,36 @@ Score CV using correctly computed leverage diagonals; GCV, BIC and AICc using ED
 - Garcia, D. (2010), Robust smoothing of gridded data in one and higher dimensions with missing values. https://doi.org/10.1016/j.csda.2009.09.020 and 2012 corrigendum https://doi.org/10.1016/j.csda.2011.12.001
 
 **No new manuscript rewrite or larger runner launch before the review gates.**
+
+
+## 2026-10-29 update — numerical-stability study completed
+
+The **576-case** d=5,6, high-S study is complete and independently reproduced on GitHub-hosted Linux; see
+[run 40830375100](https://github.com/heri-espino/trendestimation/actions/runs/40830375100)
+and the exact source/data under
+paper/benchmarks/experiment004/runs/stable-hosted-40830375100/.
+The new note
+notes/experiment004_stable_solvers_and_bic_sensitivity_20261029.md
+is the authoritative interpretation.
+
+**Adopted default for Experiment004 high-d/high-S numerical validation:**
+full spectral SVD **of D itself**, with **shift-free reconstruction** that
+avoids materializing the high-degree polynomial reference. Across 576 matched
+fits versus the 85-digit independent reference, it completed all comparisons
+with maximum relative fit error **5.52e-9**. Scaled QR also completed all 576
+cases with maximum error **3.10e-9**. Standard primal banded Cholesky failed in
+**216/576** cases and exceeded 1e-5 error in **294 of its 360 completed**
+cases. This is a targeted accuracy default, **not** a change to the package's
+global fit-only backend or proof of faster runtime.
+
+**BIC methodology:** Retain the mathematical near-S=0 boundary pathology
+explicitly. Two descriptive 20-seed restricted searches (identical score,
+eligible candidates only) gave mean true-trend RMSE **0.290446** at Smin=0.05
+(all 1,920 searches chose that lower bound) and **0.245280** at Smin=0.10
+(1,535/1,920 chose the bound). For subsequent **sensitivity analyses**, treat
+Smin=0.10 as the provisional restricted BIC configuration, with Smin=0.05 as
+a declared sensitivity check. Neither solves the unrestricted BIC pathology.
+
+The large self-hosted-runner factorial remains deferred pending a fair
+specialized structured-GCV competitor, explicit conditional-mu conventions,
+and a cross-workload backend selection policy.
