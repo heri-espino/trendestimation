@@ -1,0 +1,57 @@
+{
+  "source": "FHWA NGSIM US-101, raw 10Hz recorded longitudinal positions",
+  "data_not_simulated": true,
+  "tracks": 5,
+  "n_train": 80,
+  "origins": [
+    95,
+    140,
+    185
+  ],
+  "horizons": [
+    5,
+    10,
+    20
+  ],
+  "orders": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "aicc",
+    "bic",
+    "mle"
+  ],
+  "mu_policies": [
+    "zero",
+    "sample"
+  ],
+  "s_grid": [
+    0.0,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    0.975,
+    0.99,
+    0.995,
+    1.0
+  ],
+  "bics_min_S": 0.1,
+  "holdout_target": "future measured location (no latent trend ground truth)",
+  "n_forecast_records": 1935,
+  "solver_records": 70,
+  "interpretation": "PLS extrapolation by local polynomial extension; not package native forecast API",
+  "limitations": "overlapping track origins, no p values; plug-in mu conditional criterion not exact reestimated LOOCV; no ground truth jerk"
+}
