@@ -51,10 +51,14 @@ At high $d$, the polynomial reference $p_{\mu,t}=\mu\binom{t-1}{d}$ can be badly
 $D_dp_\mu=\mu\mathbf1=U\Sigma V^\top p_\mu$
 implies $V^\top p_\mu=\mu\Sigma^{-1}U^\top\mathbf1$. Substitution into \eqref{eq:traditional} yields
 \begin{equation}\label{eq:shiftfree}
-\boxed{\widehat\tau_{\lambda,\mu}
-=y-V\left[w\odot(V^\top y)
--\mu\,\frac{w}{\sigma}\odot(U^\top\mathbf1)\right],}
+\begin{aligned}
+\widehat\tau_{\lambda,\mu}
+&=y-V\Bigl[
+  w\odot(V^\top y)\\
+&\qquad-\mu\,(w\oslash\sigma)\odot(U^\top\mathbf1)
+  \Bigr].
+\end{aligned}
 \end{equation}
-where all products and divisions inside brackets are componentwise. This shift-free formula defines exactly the same estimator; it avoids forming and subtracting the potentially huge polynomial reference. At $\lambda=\infty$, setting all $w_j=1$ gives the polynomial-constrained limiting fit without attempting an infinite-penalty matrix factorization.
+where $\odot$ and $\oslash$ denote componentwise multiplication and division, respectively. This shift-free formula defines exactly the same estimator; it avoids forming and subtracting the potentially huge polynomial reference. At $\lambda=\infty$, setting all $w_j=1$ gives the polynomial-constrained limiting fit without attempting an infinite-penalty matrix factorization.
 
 Once the SVD is available, $S_d(\lambda)$ and $\nu_\lambda$ each require $O(r)$ arithmetic, and a full trend evaluation needs $O(nr)$. The dense SVD requires $O(n^3)$-class setup and $O(n^2)$ storage for near-square operators. These are meaningful computational costs compared with methods exploiting banded differences \citep{weinert2007,biessy2026}. We nevertheless select full SVD of $D_d$, rather than eigendecomposition of $D_d^\top D_d$, as our unified accuracy-oriented default: it supports the parameter map, selection criteria and curve reconstruction from one decomposition, and it avoids squaring the singular-value condition number via an explicit Gram matrix.
