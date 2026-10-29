@@ -1,0 +1,37 @@
+\section{Experimental design and reproducibility}\label{sec:design}
+All new experiments exclude order $d=0$.
+
+\subsection{Latent-trend recovery pilot}
+The pilot considers $n\in\{64,128\}$, orders $d=1,\ldots,6$, two synthetic true trends (smooth nonlinear and piecewise linear with slope changes), two error models (independent Gaussian and Gaussian AR(1) with autocorrelation $\phi=0.65$), and 20 independent observation seeds per combination of $n$, trend and noise type. It compares fixed zero reference mean and the observed-difference plug-in. For each observed series and order, five criteria (CV, GCV, AICc, residual-based BIC and profiled Gaussian ML) are evaluated on a shared set of 110 normalized smoothness candidates
+\[
+\{0,0.01,\ldots,0.99,0.995,0.999,0.9995,0.9999,
+0.99999,0.999999,1-10^{-8},1-10^{-10},1-10^{-12},1\}.
+\]
+This yields 9,600 criterion-level selection records, but only 160 independently generated observation series; the same series is reused across orders, means and criteria. These observations must not be counted as independent inferential replicates.
+
+For the known latent trend $\tau^\star$, statistical accuracy is
+\begin{equation}\label{eq:rmse}
+\RMSE(\widehat\tau,\tau^\star)
+=\sqrt{\frac1n\sum_{i=1}^n(\widehat\tau_i-\tau^\star_i)^2}.
+\end{equation}
+This is neither training residual RMSE, which would favor interpolation, nor out-of-sample forecasting error. The within-grid oracle minimizes \eqref{eq:rmse} using the known truth and serves only as a simulation reference.
+
+\subsection{Independent high-precision numerical reference}
+For a separate numerical-validity study we use $n=64,128$, $d=5,6$, both true-trend shapes, both error families, three seeds per generating configuration, both mean policies, and six high-smoothness targets
+$s\in\{0.9,0.99,0.999,0.999999,1-10^{-8},1-10^{-12}\}$. This defines 576 matched estimation problems per numerical implementation. All methods receive the identical $\lambda$, $\mu$, $y$ and $d$.
+
+The independent high-precision reference solves the \emph{dual} equations
+\begin{equation}\label{eq:dual}
+(D_dD_d^\top+\lambda^{-1}I)u=D_dy-\mu\mathbf1,
+\qquad
+\tau_{\mathrm{ref}}=y-D_d^\top u,
+\end{equation}
+using 85-decimal-digit banded arithmetic. The Toeplitz operator admits the exact band formula $(D_dD_d^\top)_{i,i+k}=(-1)^k\binom{2d}{d-k}$ for $0\le k\le d$. We check the original PLS stationarity equations and independently compare the difficult reference cases at 55 and 110 digits. The reported numerical fit error for double-precision solution $\tau_{\mathrm{dbl}}$ is
+\begin{equation}\label{eq:relerror}
+E_{\mathrm{num}}=
+\frac{\|\tau_{\mathrm{dbl}}-\tau_{\mathrm{ref}}\|_2}
+{\max(1,\|\tau_{\mathrm{ref}}\|_2)}.
+\end{equation}
+This is deliberately distinct from latent-trend RMSE.
+
+The experiments were archived after successful GitHub-hosted Linux execution, with run-specific metadata, original output CSVs, source hashes and tested software versions. The RMSE pilot is documented at \url{https://github.com/heri-espino/trendestimation/actions/runs/40826487736}; the multiprecision reference at \url{https://github.com/heri-espino/trendestimation/actions/runs/40828581992}; and the expanded solver/BIC study at \url{https://github.com/heri-espino/trendestimation/actions/runs/40830375100}. All figures are generated from these archived records. The large dedicated self-hosted-machine timing factorial was not executed for this manuscript.
