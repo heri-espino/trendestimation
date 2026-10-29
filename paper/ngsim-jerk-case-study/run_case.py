@@ -38,8 +38,11 @@ def source_tracks():
     path=DATA/"ngsim_us101_selected_raw_positions.csv"
     if not path.is_file():raise RuntimeError("Real FHWA subset absent; never synthesize.")
     provenance=json.loads((DATA/"provenance.json").read_text())
-    if hashlib.sha256(path.read_bytes()).hexdigest()!=provenance["subset_sha256"]:
-        raise RuntimeError("FHWA subset checksum changed.")
+    raw_bytes=path.read_bytes()
+    actual=hashlib.sha256(raw_bytes).hexdigest()
+    canonical_crlf=hashlib.sha256(raw_bytes.replace(b"\r\n",b"\n").replace(b"\n",b"\r\n")).hexdigest()
+    if provenance["subset_sha256"] not in (actual,canonical_crlf):
+        raise RuntimeError("FHWA subset checksum changed beyond Git newline normalization.")
     groups=defaultdict(list)
     with path.open() as f:
         for r in csv.DictReader(f):
