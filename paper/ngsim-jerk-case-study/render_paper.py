@@ -112,8 +112,8 @@ def comparison_figure(summary):
             for j in range(4):
                 ax.text(j,i,f"{z[i,j]:.2f}",ha="center",va="center",
                         fontsize=7,color="white" if np.log10(z[i,j])>.5 else "#162e43")
-    fig.colorbar(im,ax=list(axes),fraction=.028,pad=.025,
-                 label="$\\log_{10}$ RMSE in meters")
+    # Exact RMSE is printed in every cell. A crowded shared colorbar
+    # previously obscured the final d=4 column; omit it entirely.
     export(fig,"criterion_heatmap")
 
 
