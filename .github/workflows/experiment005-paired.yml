@@ -1,0 +1,158 @@
+name: Experiment005 paired accuracy-runtime pilot
+
+on:
+  push:
+    branches:
+      - experiment005/paired-accuracy-runtime
+    paths:
+      - .github/workflows/experiment005-paired.yml
+      - paper/benchmarks/experiment005/run.py
+      - paper/benchmarks/experiment005/analyze.py
+      - tests/test_experiment005_paired.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment005-paired-pilot
+  cancel-in-progress: true
+
+jobs:
+  paired-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install -e ".[dev,plot]"
+          python -m pip install "mpmath==1.3.0" threadpoolctl
+      - name: Test independent numerical methods and run contract
+        shell: bash
+        run: |
+          python -m pytest -q tests/test_experiment005_paired.py
+      - name: Measure errors and timing on the same Linux host
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="paper/benchmarks/experiment005/runs/pilot-hosted-${{ github.run_id }}"
+          python paper/benchmarks/experiment005/run.py --preset smoke --repeats 3 --digits 85 --out "$folder"
+          git rev-parse HEAD > "$folder/input_commit.txt"
+          python paper/benchmarks/experiment005/analyze.py --run "$folder"
+          python - "$folder" <<'PY'
+          import csv,json,sys
+          from pathlib import Path
+          out=Path(sys.argv[1])
+          meta=json.loads((out/"summary.json").read_text())
+          assert meta["fit_rows"]==108,meta
+          assert meta["selection_rows"]==120,meta
+          assert meta["grid_size"]==17
+          assert meta["fit_valid"]>0
+          with (out/"selection_accuracy_timing.csv").open(newline="") as f:
+              rows=list(csv.DictReader(f))
+          assert {r["policy"] for r in rows}=={"native_s","cached_s"}
+          assert {int(r["d"]) for r in rows}=={3,6}
+          print("PAIRED-PILOT",meta["fit_valid"],meta["selection_valid"])
+          PY
+      - name: Upload full original data including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment005-paired-smoke-${{ github.run_id }}
+          path: paper/benchmarks/experiment005/runs/pilot-hosted-${{ github.run_id }}/
+          if-no-files-found: warn
+      - name: Commit successful raw results and metadata
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Repeat from the current branch head when concurrent agent
+          # commits arrive between fetching and publishing. All artifacts
+          # are text CSV/JSON, and this never forces an update.
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git reset --mixed "origin/$GITHUB_REF_NAME"
+            git add -f -- "paper/benchmarks/experiment005/runs/pilot-hosted-${{ github.run_id }}"
+            if git diff --cached --quiet; then
+              echo "Pilot already archived"; exit 0
+            fi
+            git commit -m "experiment005: archive paired pilot from run ${{ github.run_id }} [skip ci]"
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo "Archived successfully"; exit 0
+            fi
+            echo "Concurrent branch update; retrying archive push"
+          done
+          echo "Cannot archive after four fast-forward attempts"
+          exit 1
+
+  paired-quick:
+    # A multi-seed integrated pilot, not the final Windows publication timing.
+    needs: paired-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install reproducible numerical dependencies and plotting
+        shell: bash
+        run: |
+          python -m pip install -e ".[dev,plot]"
+          python -m pip install "mpmath==1.3.0" threadpoolctl
+          python -m pip install -r paper/requirements.txt
+      - name: Run actual paired multi-seed quick experiment and analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="paper/benchmarks/experiment005/runs/quick-hosted-${{ github.run_id }}"
+          python paper/benchmarks/experiment005/run.py --preset quick --repeats 5 --digits 85 --out "$folder"
+          git rev-parse HEAD > "$folder/input_commit.txt"
+          python paper/benchmarks/experiment005/analyze.py --run "$folder"
+          python - "$folder" <<'PY'
+          import json,sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          summary=json.loads((root/"summary.json").read_text())
+          analysis=json.loads((root/"analysis.json").read_text())
+          assert summary["grid_size"]>=100
+          assert summary["fit_rows"]>1000
+          assert summary["selection_rows"]>1000
+          assert len(analysis["fit_groups"])>0
+          assert len(analysis["selection_groups"])>0
+          print("QUICK-PILOT", summary["fit_valid"], summary["selection_valid"])
+          PY
+      - name: Upload all raw results and eligible-only Pareto analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment005-paired-quick-${{ github.run_id }}
+          path: paper/benchmarks/experiment005/runs/quick-hosted-${{ github.run_id }}/
+          if-no-files-found: warn
+      - name: Archive multi-seed joint results without overwriting
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git reset --mixed "origin/$GITHUB_REF_NAME"
+            git add -f -- "paper/benchmarks/experiment005/runs/quick-hosted-${{ github.run_id }}"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "experiment005: archive multi-seed paired accuracy-time run ${{ github.run_id }} [skip ci]"
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          exit 1
