@@ -43,7 +43,6 @@ def test_solver_and_selection_grid_protocol():
     assert m.METHODS==("svd","eigh","banded_cholesky")
     assert m.FIT_METHOD["banded_cholesky"]=="cholesky"
     assert set(m.CRITERIA)=={"cv","gcv","aicc","bic","mle"}
-    from scipy.special import expit
     grid=m.complete_s_grid()
     assert len(grid)==17 and grid[0]==0 and grid[-1]==1
     assert (grid>0).sum()==16
