@@ -84,5 +84,26 @@ jobs:
           git fetch origin "$GITHUB_REF_NAME"
           git reset --mixed "origin/$GITHUB_REF_NAME"
           git add -f -- "$EXPERIMENT005_REPORT"
-          git commit -m "experiment005: archive verified joint accuracy-time report $GITHUB_RUN_ID [skip ci]"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          if git diff --cached --quiet; then
+            echo "Equivalent generated outputs already archived."
+          else
+            git commit -m "experiment005: archive verified joint accuracy-time report $GITHUB_RUN_ID [skip ci]"
+            local_commit="$(git rev-parse HEAD)"
+            if ! git push origin "HEAD:$GITHUB_REF_NAME"; then
+              # A concurrent repository writer can update the branch before
+              # the push response arrives. First check if ours landed.
+              git fetch origin "$GITHUB_REF_NAME"
+              if git merge-base --is-ancestor "$local_commit" "origin/$GITHUB_REF_NAME"; then
+                echo "Archive commit already present on remote."
+              else
+                # Never force-push. Rebase the generated working tree atop
+                # latest branch and retry exactly once without lost files.
+                git reset --mixed "origin/$GITHUB_REF_NAME"
+                git add -f -- "$EXPERIMENT005_REPORT"
+                if ! git diff --cached --quiet; then
+                  git commit -m "experiment005: archive verified joint report after concurrent update [skip ci]"
+                  git push origin "HEAD:$GITHUB_REF_NAME"
+                fi
+              fi
+            fi
+          fi
