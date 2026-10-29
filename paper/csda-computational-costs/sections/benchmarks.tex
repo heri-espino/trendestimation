@@ -1,0 +1,34 @@
+\section{Archived benchmark design and provenance}\label{sec:design}
+This paper analyzes \emph{completed and committed} timing experiments. It does not substitute fitted complexity curves for measured time or combine machine-specific durations from different hosts into a single speedup. The principal dataset was collected on the author's Windows 11 workstation (the environment identifies Windows build 26100) with Python 3.11.17, NumPy 2.4.6, SciPy 1.17.1, OpenBLAS limited to one thread, two experimental seeds and seven timing repetitions per reported configuration.
+
+\begin{table*}[t]
+\caption{Actual coverage of the archived timing studies. The principal full-factorial rows are \emph{not} 80,640 independent trials: they comprise 40,320 design cells and two recorded seeds. Additional repetitions are timed measurement blocks. This table separates which extra data would still be required to claim all requested combinations.}
+\label{tab:design}\centering
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}p{.20\textwidth}p{.48\textwidth}p{.22\textwidth}@{}}
+\toprule
+Corpus & Measured design & Limitation\\
+\midrule
+Full Windows search & $n=24,48$; $d=0,\ldots,5$; $\mu=0,0.15$ fixed; $R=1,3,8$; CV/GCV/AICc/BIC/ML; seven backends; eight search policies; cold/shared setup; 2 seeds; 7 repetitions & No $d=6$ timing or empirical $\widehat\mu=\operatorname{mean}(D_dy)$\\
+20-seed solver study & SVD, dense eigendecomposition, banded Cholesky; $M=1,16,64$ full curves; $n=32,96,192$ plus selected $d=1,3,5$ cells; 20 independent seeds & Fit-only, not five-criterion selection\\
+GCV reuse study & Six solver families; uniform-$s$ versus log-$\lambda$ grid; fixed means $0$ and $0.15$; varied grid sizes and series reuse & GCV only; generally different grid interiors\\
+Extended fit/trace studies & Dense fresh/cached, spectral, general banded and Cholesky alternatives; selected $n$ up to $400$, $M$ up to $256$ & Earlier machine/candidate regimes; not pooled with Windows factorial\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The full Windows source resides at
+\texttt{paper/benchmarks/results/full\_s\_search\_modes/},
+with 80,640 raw rows and a separate environment record. A checked analysis yields 40,320 two-seed design cells and verifies exactly 4,484 matched native-$s$/premapped-grid valid seed pairs with \emph{zero difference} in selected smoothness and score. The associated \texttt{windows\_full\_s\_analysis/} folder preserves checks and per-cell paired costs. We use only cells whose complete evaluated grid passed the backend's recorded numerical validation; an implementation that returned a partial grid does not win a speed ranking.
+
+\subsection{Solver families and workloads}
+The seven Windows backends are: fresh dense solve, cached-$Q$ dense solve, general banded solve, dense Cholesky, banded Cholesky, eigendecomposition of $Q_d$ and full SVD of $D_d$. The five criteria are classical fixed-$\mu$ CV, GCV, AICc, residual-based BIC and the implemented conditional marginal-likelihood score. Eight policies cover one point at $s=0.5$ with native/premapped/direct penalties; complete 17-point native-$s$, premapped and independent log-$\lambda$ grids; and bounded \emph{local} optimization in $s$ and $\log\lambda$. All policies are evaluated at $R\in\{1,3,8\}$ and cold/shared preparation. Grid conversion is separately timed; a standalone premapped search charges it once, while reuse across criteria charges it only once across the entire joint workflow.
+
+The full normalized-$s$ grid includes the exact $s=0$ and $s=1$ endpoints plus near-one finite points through $s=1-10^{-12}$. For large $d$ these correspond to potentially extreme finite penalties; failed factorizations and numerically inaccurate criterion values are explicitly tracked. The Gaussian likelihood used in this corpus was marked \emph{not applicable} for $d=0$. Although that historical run includes order zero, all smoothness theory and the proposed new methodological scope in this manuscript use $1\le d<n$.
+
+For the representative timing table, the original script selected $n=48,d=2,\mu=0,R=1$, SVD, and the median over its two Windows seeds. The log-$\lambda$ grid has 17 points but different interior values, and the continuous policies are not guaranteed global optimizers. No inferential result follows from comparing differently discretized search spaces.
+
+\subsection{Statistical interpretation of runtime measurements}
+A two-seed Windows timing median describes that host and work unit; it is \emph{not} a sample of 80,640 independent processors or experiments. The separate solver study used 20 independent data seeds and paired timings to compute pointwise confidence intervals and Holm-corrected sign-flip tests for prespecified fitted-trend workloads. We report these uncertainty summaries separately rather than apply the study's p-values to the different Windows factorial. Setup, grid preparation and criterion scoring have different accounting boundaries, so their elapsed times must not be summed or divided without matching definitions.
+
+The archived sources also do not contain an end-to-end, all-criteria $d=6$ timing factorial, nor an additional $\widehat\mu=\operatorname{mean}(D_dy)$ timing policy. These are concrete extensions for the final combined paper, not silently filled gaps. The measured numerical-error companion covers $d=6$ but cannot be converted into a runtime observation after the fact.
