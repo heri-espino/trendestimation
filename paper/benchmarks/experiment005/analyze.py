@@ -150,10 +150,11 @@ def figures(summary,run):
     out=run/"figures"
     out.mkdir(exist_ok=True)
     # Accuracy-time on precisely the same frozen-S fit cases.
-    for d in sorted({r["d"] for r in summary["fit_groups"]}):
-        # Keep each DGP distinct: pilot plots use smooth/iid, fixed mu=0.
+    for n,d in sorted({(r["n"],r["d"]) for r in summary["fit_groups"]}):
+        # Every panel is one identical (n,d,shape,noise,mu) case:
+        # comparing raw times across distinct n would be misleading.
         points=[r for r in summary["fit_groups"]
-                if r["d"]==d and r["shape"]=="smooth" and
+                if r["n"]==n and r["d"]==d and r["shape"]=="smooth" and
                 r["noise"]=="iid" and r["mu_policy"]=="fixed_zero"]
         if not points:continue
         fig,ax=plt.subplots(figsize=(6.4,4))
@@ -165,11 +166,11 @@ def figures(summary,run):
         ax.set(xscale="log",yscale="log",
                xlabel="Median complete fit (ms)",
                ylabel="Maximum numerical relative L2 error",
-               title=f"Experiment005: frozen-S paired fit, d={d}")
-        ax.legend(fontsize=6,ncol=2,frameon=False)
+               title=f"Experiment005: paired fit, n={n}, d={d}")
+        ax.legend(fontsize=6,ncol=3,frameon=False,loc="best")
         fig.tight_layout()
-        fig.savefig(out/f"fit_numerical_vs_time_d{d}.pdf")
-        fig.savefig(out/f"fit_numerical_vs_time_d{d}.svg")
+        fig.savefig(out/f"fit_numerical_vs_time_n{n}_d{d}.pdf")
+        fig.savefig(out/f"fit_numerical_vs_time_n{n}_d{d}.svg")
         plt.close(fig)
     return True
 
