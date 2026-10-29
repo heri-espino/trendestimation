@@ -1,0 +1,49 @@
+{
+  "official_url": "https://data.transportation.gov/d/8ect-6jqj",
+  "official_doi": "10.21949/1504477",
+  "query_url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+20&%24order=vehicle_id+ASC%2C+global_time+ASC&%24limit=60000",
+  "rows_from_query": 30940,
+  "source_csv_sha256": "d62446e86905cf5a547b15d89a0dfc383b4f265672627a889b704767144e84c4",
+  "selection_rule": "ascending vehicle_id, then start time; first five with >=200 contiguous 100-ms frames, >=20m positive displacement, >=87% differences >=-1m/s and 99th percentile absolute step speed <65m/s; never scored by forecast",
+  "selected": [
+    {
+      "track_number": 1,
+      "vehicle_id": 1,
+      "start_ms": 1118847869000,
+      "frames": 569,
+      "distance_m": 626.032
+    },
+    {
+      "track_number": 2,
+      "vehicle_id": 1,
+      "start_ms": 1118848770700,
+      "frames": 421,
+      "distance_m": 423.668
+    },
+    {
+      "track_number": 3,
+      "vehicle_id": 2,
+      "start_ms": 1118846980200,
+      "frames": 437,
+      "distance_m": 638.477
+    },
+    {
+      "track_number": 4,
+      "vehicle_id": 2,
+      "start_ms": 1118847864800,
+      "frames": 634,
+      "distance_m": 634.893
+    },
+    {
+      "track_number": 5,
+      "vehicle_id": 2,
+      "start_ms": 1118848766000,
+      "frames": 687,
+      "distance_m": 636.282
+    }
+  ],
+  "subset_sha256": "61a41fd70a4b89cf7e32d4bc2aaf40083ce3ea86bc9b7d1175108bd674d2733e",
+  "units": "raw FHWA Local_Y (feet) -> meters by exact 0.3048; t=0.1s; no artificial noise",
+  "license": "CC BY-SA 3.0 per dataset metadata; attribute FHWA USDOT",
+  "does_not_assert": "Source position is ground-truth jerk, or a safety-certified motion forecast"
+}
