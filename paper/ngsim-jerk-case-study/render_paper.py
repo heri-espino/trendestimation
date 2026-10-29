@@ -53,22 +53,33 @@ def forecast_figure():
     bv=baseline_forecasts(y,20)["constant_velocity"]
     xtrain=np.arange(-len(y)+1,1)*DT
     xfuture=np.arange(1,len(fut)+1)*DT
-    fig,ax=plt.subplots(figsize=(8.35,3.55))
-    ax.scatter(xtrain,y,s=6,color="#8596a7",alpha=.5,label="Measured training position")
-    ax.plot(xfuture,fut,color="#263e53",lw=2.1,label="Measured future position")
+    fig,(ax,bx)=plt.subplots(1,2,figsize=(8.55,3.45),
+                             gridspec_kw={"width_ratios":[1.12,1]})
+    ax.scatter(xtrain[-45:],y[-45:],s=7,color="#8596a7",alpha=.60,
+               label="Recorded training position")
+    ax.plot(xfuture,fut,color="#263e53",lw=2.1,
+            label="Recorded future position")
     ax.axvline(0,color="#a8adb2",ls=":",lw=1)
+    bx.axhline(0,color="#a8adb2",ls=":",lw=1)
     for col,mode in enumerate(("zero","sample")):
-        trend,fore,s=fit_and_ext[mode]
-        ax.plot(xtrain,trend,color=COLORS[col],lw=1.5,
-                label=f"$d=3$, {mode} $\\mu$ ($S={s:.2f}$)")
-        ax.plot(xfuture,fore,color=COLORS[col],ls="--",lw=2.1,
-                label=f"PLS continued: {mode} $\\mu$")
-    ax.plot(xfuture,bv,color=COLORS[3],ls="-.",lw=1.4,
-            label="Constant velocity")
-    ax.set(xlabel="Seconds relative to cutoff (future withheld)",
-           ylabel="Longitudinal displacement (m)",
-           title="Recorded US-101 vehicle 1: one chronological cutoff")
-    ax.legend(ncol=3,frameon=False,fontsize=7,loc="upper left")
+        trend,fore,sv=fit_and_ext[mode]
+        ax.plot(xtrain[-45:],trend[-45:],color=COLORS[col],lw=1.5,
+                label=f"PLS d=3 {mode} $\\mu$ (S={sv:.2f})")
+        ax.plot(xfuture,fore,color=COLORS[col],ls="--",lw=2.0)
+        bx.plot(xfuture,fore-fut,color=COLORS[col],lw=1.65,
+                label=f"PLS {mode} $\\mu$")
+    ax.plot(xfuture,bv,color=COLORS[3],ls="-.",lw=1.6,
+            label="Velocity baseline")
+    bx.plot(xfuture,bv-fut,color=COLORS[3],ls="-.",lw=1.6,
+            label="Velocity baseline")
+    ax.set(xlabel="Time relative to cutoff (s)",
+           ylabel="Longitudinal position (m)",
+           title="Observed track and trend continuation")
+    bx.set(xlabel="Future horizon (s)",
+           ylabel="Forecast minus observed position (m)",
+           title="Visible held-out forecast errors")
+    ax.legend(ncol=2,frameon=False,fontsize=6.6,loc="upper left")
+    bx.legend(frameon=False,fontsize=7,loc="upper left")
     export(fig,"heldout_forecast")
 
 
