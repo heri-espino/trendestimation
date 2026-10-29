@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -26,12 +27,13 @@ except ImportError as exc:
 
 _LAYOUT = None
 _PAPER = None
+_COLUMN_INCHES = None
 _MANIFEST = []
 WIDE = frozenset({"solver_accuracy", "restricted_bic"})
 
 
 def configure_publication(paper: Path):
-    global _LAYOUT, _PAPER
+    global _LAYOUT, _PAPER, _COLUMN_INCHES
     if shutil.which("pdflatex") is None:
         raise RuntimeError("Full TeX-backed figure rendering requires pdflatex.")
     _PAPER = Path(paper)
@@ -49,12 +51,26 @@ def configure_publication(paper: Path):
     _LAYOUT = af.inspect_latex(
         _PAPER / "main.tex", engine="pdflatex", timeout=150
     )
-    if _LAYOUT.columnwidth_pt < 150:
-        raise RuntimeError("CAS LaTeX column-width measurement failed.")
+    if _LAYOUT.textwidth_pt < 350:
+        raise RuntimeError("CAS LaTeX body textwidth measurement failed.")
+    # The CAS front-matter is a full-width title before \maketitle
+    # switches the BODY into two columns. af.inspect_latex(main.tex) may
+    # therefore report columnwidth=textwidth (title-page width).
+    # Read the actual columnsep directly from the supplied CAS class,
+    # then use the LaTeX two-column identity rather than guessing.
+    cls = (_PAPER.parent / "els-cas-templates" / "cas-dc.cls").read_text()
+    match = re.search(r"\bcolumnsep\s*=\s*([0-9.]+)\s*pt\b", cls)
+    if match is None:
+        raise RuntimeError("Cannot locate columnsep in supplied CAS class")
+    gap_pt = float(match.group(1))
+    body_column_pt = (_LAYOUT.textwidth_pt - gap_pt) / 2.0
+    if not 150 < body_column_pt < 300:
+        raise RuntimeError("Measured CAS body column width is implausible.")
+    _COLUMN_INCHES = body_column_pt / 72.27
     print(
         "AwesomeFigures from CAS manuscript: "
         "column={:.2f}pt, text={:.2f}pt, font={}".format(
-            _LAYOUT.columnwidth_pt, _LAYOUT.textwidth_pt,
+            (_COLUMN_INCHES * 72.27), _LAYOUT.textwidth_pt,
             _LAYOUT.font_name,
         ), flush=True,
     )
@@ -66,7 +82,8 @@ def publication_export(fig, name: str, figures_dir: Path):
     target = Path(figures_dir)
     target.mkdir(parents=True, exist_ok=True)
     mode = "text" if name in WIDE else "column"
-    width = _LAYOUT.width_inches(mode)
+    width = (_COLUMN_INCHES if mode == "column"
+             else _LAYOUT.width_inches("text"))
     with af.latex_style(
         _LAYOUT, width=width, engine="pdflatex",
         font="auto", minimum_text_pt=7.0, rasterize=True,
@@ -109,6 +126,9 @@ def publication_export(fig, name: str, figures_dir: Path):
                 "PublicationStyle.fit", "PublicationStyle.audit",
                 "PublicationStyle.savefig",
             ],
+            "body_column_width_pt": _COLUMN_INCHES * 72.27,
+            "body_text_width_pt": _LAYOUT.textwidth_pt,
+            "columnsep_pt": _LAYOUT.textwidth_pt - 2.0 * _COLUMN_INCHES * 72.27,
             "output_width_pt": audit.output_width_pt,
             "expected_width_pt": audit.expected_width_pt,
             "smallest_text_pt": audit.smallest_text_pt,
