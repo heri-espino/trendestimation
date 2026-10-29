@@ -11,10 +11,10 @@ import numpy as np
 HERE=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment005"
 sys.path.insert(0,str(HERE))
 from run import (
-    METHODS, PRESETS, fit_once, prepare_method,
+    METHODS, fit_once, prepare_method,
     stable_reference, run,
-)
-from run_pilot import difference_matrix
+)  # noqa: E402
+from run_pilot import difference_matrix  # noqa: E402
 
 
 def test_all_nine_fitters_match_independent_reference_at_moderate_s():
