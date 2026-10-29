@@ -28,31 +28,33 @@ Profiled Gaussian marginal ML & 0.140633 & 0.178623\\
 The independent high-precision calculation establishes which floating-point methods actually solve the same specified PLS problem reliably in the tested extreme-$s$ regimes. Table~\ref{tab:precision} and Figure~\ref{fig:precision} summarize 576 attempts per implementation. The shift-free full SVD yields maximum observed relative error $5.52\times10^{-9}$ without failed fits or errors above $10^{-5}$. Scaled augmented QR offers an independent comparison with maximum $3.10\times10^{-9}$. Ordinary primal double-precision banded Cholesky fails on 216 cases and returns relative errors above $10^{-5}$ in 294 of its 360 completed cases.
 
 \begin{table*}[t]
-\caption{Maximum relative numerical fitting error versus the independent 85-digit reference. The number of large errors counts \emph{completed} fits exceeding $10^{-5}$; failures are separate. Data comprise 576 matched problems per method.}
+\caption{Numerical comparisons with the independent 85-digit reference, condensed into four paired rows. Every method was attempted on 576 matched problems. The Large/fail column counts completed fits with relative error above $10^{-5}$ and factorization failures, respectively. Results for the additional minimum-norm SVD method remain in the raw archive.}
 \label{tab:precision}\centering
-\begin{tabular}{lrrr}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrr@{\qquad}lrr@{}}
 \toprule
-Double-precision method & Max error & Large errors & Failures\\
+Method & Max.\ error & Large/fail &
+Method & Max.\ error & Large/fail\\
 \midrule
-Full SVD, shift-free & $5.52\times10^{-9}$ & 0 & 0\\
-Scaled augmented QR & $3.10\times10^{-9}$ & 0 & 0\\
-Full SVD, polynomial reference & $3.85\times10^{-6}$ & 0 & 0\\
-Dual SVD & $3.69\times10^{-8}$ & 0 & 0\\
-Stacked least-squares SVD & $1.57\times10^{-5}$ & 12 & 0\\
-Dual banded Cholesky & $1.22\times10^{-1}$ & 302 & 0\\
-Primal banded Cholesky & $6.81\times10^{2}$ & 294 & 216\\
-Eigendecomposition of $D_d^\top D_d$ & $1.45\times10^{2}$ & 484 & 0\\
+Shift-free SVD & $5.52\,10^{-9}$ & 0/0 &
+Scaled QR & $3.10\,10^{-9}$ & 0/0\\
+Polynomial-ref.\ SVD & $3.85\,10^{-6}$ & 0/0 &
+Dual SVD & $3.69\,10^{-8}$ & 0/0\\
+Stacked SVD & $1.57\,10^{-5}$ & 12/0 &
+Dual banded Cholesky & $1.22\,10^{-1}$ & 302/0\\
+Primal banded Cholesky & $6.81\,10^{2}$ & 294/216 &
+Gram eigendecomp.\ & $1.45\,10^{2}$ & 484/0\\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \begin{figure*}[t]\centering
 \includegraphics[width=\textwidth]{figures/solver_accuracy.pdf}
-\caption{High-smoothness solver accuracy and validity on 576 identical parameter-and-data configurations per implementation. Left: worst relative fitting error against the high-precision reference, on a logarithmic axis (dashed $10^{-5}$ acceptance line). Right: finite inaccuracies above threshold and factorization failures, which are not silently discarded.}
+\caption{High-smoothness numerical validation in four paired rows, with two methods per row. Left: maximum relative fit error against the 85-digit reference; right: finite errors above $10^{-5}$ and factorization failures.}
 \label{fig:precision}
 \end{figure*}
 
-This numerical evidence motivates **full SVD of $D_d$ with shift-free reconstruction as the default for this spectral framework**. The scaled QR result is important corroboration, and the conclusion is about validity and accuracy on the tested configurations rather than execution speed. In particular the structure-exploiting Cholesky algorithms of earlier work remain relevant for other conditioning regimes and for performance-sensitive workloads \citep{weinert2007,biessy2026}.
+This numerical evidence motivates \emph{full SVD of $D_d$ with shift-free reconstruction as the default for this spectral framework}. The scaled QR result is important corroboration, and the conclusion is about validity and accuracy on the tested configurations rather than execution speed. In particular the structure-exploiting Cholesky algorithms of earlier work remain relevant for other conditioning regimes and for performance-sensitive workloads \citep{weinert2007,biessy2026}.
 
 \subsection{Restricted residual-BIC sensitivity}
 Applying the unchanged published BIC score on $s\ge0.05$ gives average true-trend RMSE 0.290446, and all 1,920 selections attain the imposed lower limit. Restricting to $s\ge0.10$ gives mean RMSE 0.245280, with 1,535 of 1,920 selections at its lower limit. This is a sensitivity result, not a resolution of the mathematical divergence.

@@ -3,7 +3,7 @@ name: CSDA cas-dc two-column / TeX AwesomeFigures
 on:
   push:
     branches:
-      - paper/csda-cas-dc-awesomefigures-20261029
+      - paper/csda-results-literature-20261029
     paths:
       - .github/workflows/csda-spectral-paper.yml
       - paper/csda-spectral-smoothness/main.tex
@@ -11,7 +11,13 @@ on:
       - paper/csda-spectral-smoothness/sections/**
       - paper/csda-spectral-smoothness/render_figures.py
       - paper/csda-spectral-smoothness/publication_style.py
+      - paper/csda-spectral-smoothness/literature_audit.md
   workflow_dispatch:
+
+# Avoid simultaneous publication runs racing to commit the same generated files.
+concurrency:
+  group: csda-cas-pgflayout-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -134,6 +140,20 @@ jobs:
             paper/csda-spectral-smoothness/publication_sha256.txt \
             paper/csda-spectral-smoothness/template_source_sha256.txt \
             paper/csda-spectral-smoothness/source_commit.txt
-          git commit -m "paper: CAS v2.4 two-column PDF and TeX-authentic AwesomeFigures [skip ci]"
-          git pull --rebase origin "$GITHUB_REF_NAME"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          # Adopt the most recent branch HEAD in the index while keeping
+          # this run's generated working-tree outputs. This avoids rebase
+          # conflicts between independently generated PDF/SVG/PGF assets.
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f -- paper/csda-spectral-smoothness/main.pdf \
+            paper/csda-spectral-smoothness/figures/ \
+            paper/csda-spectral-smoothness/awesomefigures_latex_manifest.json \
+            paper/csda-spectral-smoothness/publication_sha256.txt \
+            paper/csda-spectral-smoothness/template_source_sha256.txt \
+            paper/csda-spectral-smoothness/source_commit.txt
+          if git diff --cached --quiet; then
+            echo "Generated artifacts already match branch; nothing to push."
+          else
+            git commit -m "paper: CAS four-row validation, citations, and TeX figures [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

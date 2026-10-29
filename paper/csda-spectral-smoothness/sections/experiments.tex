@@ -9,6 +9,8 @@ The pilot considers $n\in\{64,128\}$, orders $d=1,\ldots,6$, two synthetic true 
 \]
 This yields 9,600 criterion-level selection records, but only 160 independently generated observation series; the same series is reused across orders, means and criteria. These observations must not be counted as independent inferential replicates.
 
+Simulation against a known underlying trend is also used in recent data-driven calibration of the Hodrick--Prescott smoothing penalty \citep{franke2026}. The present pilot uses a different normalized candidate coordinate and explicitly audits its numerical implementation, but does not claim that choosing a penalty by latent-trend error is new.
+
 For the known latent trend $\tau^\star$, statistical accuracy is
 \begin{equation}\label{eq:rmse}
 \RMSE(\widehat\tau,\tau^\star)
