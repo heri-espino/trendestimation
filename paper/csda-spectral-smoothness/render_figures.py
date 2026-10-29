@@ -15,6 +15,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+from publication_style import configure_publication, publication_export, finish_manifest
+
 PAPER = Path(__file__).resolve().parent
 ROOT = PAPER.parents[1]
 EXPERIMENT = ROOT / "paper" / "benchmarks" / "experiment004" / "runs"
@@ -35,22 +37,11 @@ def readcsv(path):
 
 
 def style():
-    plt.rcParams.update({
-        "font.family":"sans-serif","font.sans-serif":["DejaVu Sans"],
-        "font.size":8,"axes.titlesize":10,"axes.labelsize":9,
-        "axes.spines.top":False,"axes.spines.right":False,
-        "axes.edgecolor":"#b6c2cc","axes.labelcolor":INK,
-        "text.color":INK,"xtick.color":INK,"ytick.color":INK,
-        "axes.grid":False,"figure.facecolor":"white",
-        "savefig.facecolor":"white","pdf.fonttype":42,"svg.fonttype":"none",
-    })
+    configure_publication(PAPER)
 
 
 def export(fig, name):
-    for ext in ("pdf","svg"):
-        fig.savefig(FIGURES/f"{name}.{ext}",bbox_inches="tight",pad_inches=.09)
-    plt.close(fig)
-    print("Saved", name, flush=True)
+    publication_export(fig, name, FIGURES)
 
 
 def smoothness_map():
@@ -67,7 +58,7 @@ def smoothness_map():
     ax.set_xscale("log")
     ax.set(xlabel=r"Internal penalty $\lambda$ (log scale)",
            ylabel=r"Normalized smoothness $S_d(\lambda)$",
-           title=r"Different orders require different penalty scales")
+           title=r"Smoothness across difference orders")
     ax.set_ylim(-.02,1.03)
     ax.axhline(1,ls=":",c=GREY,lw=.75)
     ax.legend(ncol=3,loc="lower right",frameon=False)
@@ -88,7 +79,7 @@ def bic_boundary():
     ax.axvline(.10,ls=":",lw=.9,c="#925e89",label="Smin=.10")
     ax.set(xscale="log",xlabel=r"Normalized smoothness $S$ (log scale)",
            ylabel="Implemented RSS-based BIC",
-           title="The published RSS-based BIC decreases near interpolation")
+           title="RSS-BIC near interpolation")
     ax.legend(ncol=3,fontsize=7,frameon=False,loc="upper left")
     export(fig,"bic_boundary")
 
@@ -112,10 +103,10 @@ def rmse_criteria():
         ax.bar(x+(i-.5)*width,heights,width,color=BLUE if i==0 else CYAN,
                label="Fixed $\\mu=0$" if i==0 else "Plug-in $\\hat\\mu$")
     ax.set_xticks(x,labels)
-    ax.set(ylabel="Mean latent-trend RMSE",title="Exploratory selection accuracy (20 seeded datasets per design cell)")
+    ax.set(ylabel="Mean latent-trend RMSE",title="Mean recovery error")
     ax.set_ylim(0,.36)
     ax.legend(loc="upper left",frameon=False,ncol=2)
-    ax.text(0,-.24,"* RSS-BIC uses the original grid with minimum positive S=.01; unrestricted near-zero limit is ill-posed.",
+    ax.text(0,-.17,"* RSS-BIC: first positive grid S=.01.",
             transform=ax.transAxes,fontsize=7,color=GREY)
     export(fig,"rmse_criteria")
 
@@ -150,14 +141,14 @@ def solver_accuracy():
     a.set_xscale("log")
     a.axvline(1e-5,ls="--",lw=.9,c="#b75e57")
     a.set(xlabel="Maximum relative fit error vs 85-digit reference",
-          title="Accuracy across matched high-S cases")
+          title="Accuracy")
     a.set_xlim(1e-10,1e4)
     b.barh(y,bad,color=CYAN,height=.55,label="Finite error > 1e-5")
     b.barh(y,fails,left=bad,color="#a65c63",height=.55,label="Factorization failure")
     b.set_yticks(y,[""]*len(names));b.invert_yaxis()
-    b.set(xlabel="Number of cases (out of 576)",title="Invalid numerical fits")
+    b.set(xlabel="Number of cases (out of 576)",title="Invalid fits")
     b.legend(loc="lower right",fontsize=7,frameon=False)
-    fig.suptitle("Independent high-precision numerical validation; d=5,6",y=1.02,fontsize=10)
+    # Panel titles and the LaTeX caption carry the context; no title outside canvas.
     export(fig,"solver_accuracy")
 
 
@@ -201,9 +192,10 @@ def main():
     bic_restriction()
     expected=[FIGURES/f"{x}.{ext}" for x in
         ("smoothness_map","bic_boundary","rmse_criteria","solver_accuracy","restricted_bic")
-        for ext in ("pdf","svg")]
+        for ext in ("pdf","svg","pgf")]
     if not all(path.exists() and path.stat().st_size>1000 for path in expected):
         raise RuntimeError("One or more vector figure exports missing")
+    finish_manifest(PAPER, FIGURES)
 
 
 if __name__=="__main__":

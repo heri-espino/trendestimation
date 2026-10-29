@@ -2,7 +2,7 @@
 \subsection{Pilot trend-recovery RMSE}
 Table~\ref{tab:rmse} and Figure~\ref{fig:rmse} summarize the descriptive means over pilot design cells. Under fixed $\mu=0$, profiled marginal ML has the smallest average of these implementations. The 20-seed pilot is too narrow to establish a universal criterion ranking or statistical significance, and mean policies use paired observations. The original BIC positive-grid result is strongly affected by its first admissible $s$ candidate.
 
-\begin{table}[t]
+\begin{table*}[t]
 \caption{Pilot average RMSE against known latent-trend truth; only difference orders 1--6. Residual BIC here uses the original S grid, whose smallest positive point is 0.01, not an unrestricted optimum.}
 \label{tab:rmse}\centering
 \begin{tabular}{lrr}
@@ -16,10 +16,10 @@ RSS-based BIC (positive grid) & 0.297390 & 0.297390\\
 Profiled Gaussian marginal ML & 0.140633 & 0.178623\\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{figure}[t]\centering
-\includegraphics[width=.94\linewidth]{figures/rmse_criteria.pdf}
+\includegraphics[width=\columnwidth]{figures/rmse_criteria.pdf}
 \caption{Mean true-trend recovery RMSE across the exploratory pilot configurations. Lower values indicate better recovery under the particular generating mechanism. BIC's near-interpolation behavior makes its original grid selection nonrepresentative of an unrestricted optimum; comparisons are descriptive, not inferential rankings.}
 \label{fig:rmse}
 \end{figure}
@@ -27,7 +27,7 @@ Profiled Gaussian marginal ML & 0.140633 & 0.178623\\
 \subsection{Numerical stability against 85-digit fitted trends}
 The independent high-precision calculation establishes which floating-point methods actually solve the same specified PLS problem reliably in the tested extreme-$s$ regimes. Table~\ref{tab:precision} and Figure~\ref{fig:precision} summarize 576 attempts per implementation. The shift-free full SVD yields maximum observed relative error $5.52\times10^{-9}$ without failed fits or errors above $10^{-5}$. Scaled augmented QR offers an independent comparison with maximum $3.10\times10^{-9}$. Ordinary primal double-precision banded Cholesky fails on 216 cases and returns relative errors above $10^{-5}$ in 294 of its 360 completed cases.
 
-\begin{table}[t]
+\begin{table*}[t]
 \caption{Maximum relative numerical fitting error versus the independent 85-digit reference. The number of large errors counts \emph{completed} fits exceeding $10^{-5}$; failures are separate. Data comprise 576 matched problems per method.}
 \label{tab:precision}\centering
 \begin{tabular}{lrrr}
@@ -44,21 +44,21 @@ Primal banded Cholesky & $6.81\times10^{2}$ & 294 & 216\\
 Eigendecomposition of $D_d^\top D_d$ & $1.45\times10^{2}$ & 484 & 0\\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
-\begin{figure}[t]\centering
-\includegraphics[width=\linewidth]{figures/solver_accuracy.pdf}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/solver_accuracy.pdf}
 \caption{High-smoothness solver accuracy and validity on 576 identical parameter-and-data configurations per implementation. Left: worst relative fitting error against the high-precision reference, on a logarithmic axis (dashed $10^{-5}$ acceptance line). Right: finite inaccuracies above threshold and factorization failures, which are not silently discarded.}
 \label{fig:precision}
-\end{figure}
+\end{figure*}
 
 This numerical evidence motivates **full SVD of $D_d$ with shift-free reconstruction as the default for this spectral framework**. The scaled QR result is important corroboration, and the conclusion is about validity and accuracy on the tested configurations rather than execution speed. In particular the structure-exploiting Cholesky algorithms of earlier work remain relevant for other conditioning regimes and for performance-sensitive workloads \citep{weinert2007,biessy2026}.
 
 \subsection{Restricted residual-BIC sensitivity}
 Applying the unchanged published BIC score on $s\ge0.05$ gives average true-trend RMSE 0.290446, and all 1,920 selections attain the imposed lower limit. Restricting to $s\ge0.10$ gives mean RMSE 0.245280, with 1,535 of 1,920 selections at its lower limit. This is a sensitivity result, not a resolution of the mathematical divergence.
 
-\begin{figure}[t]\centering
-\includegraphics[width=.96\linewidth]{figures/restricted_bic.pdf}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/restricted_bic.pdf}
 \caption{Restricted residual-BIC sensitivity on the same pilot observations. Left: mean recovery RMSE by reference-mean policy. Right: percentage of searches selecting the explicitly imposed minimum $s$. Counts use 1,920 correlated criterion/order/mean rows per restriction, not independent experiments.}
 \label{fig:restricted}
-\end{figure}
+\end{figure*}
