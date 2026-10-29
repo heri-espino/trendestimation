@@ -14,8 +14,8 @@ cholesky: positive-definite Cholesky factorization in lower band storage
 
 Full SVD and eigh reuse dense spectral bases across penalties; Cholesky
 builds the penalty directly in banded form without a dense n-by-n Q.
-The fit-only convenience interfaces default to banded Cholesky after a
-measured multi-backend fit study. TrendSmoother and select_lambda retain
+The fit-only convenience interfaces now default to full SVD; explicit
+banded Cholesky remains available for timing-sensitive workloads. TrendSmoother and select_lambda retain
 their spectral backend because EDF/smoothness and CV/GCV selection need
 spectral summaries or hat-matrix diagnostics, not just a fitted curve.
 """
@@ -58,9 +58,9 @@ class PreparedPLSSolver:
         Series length, at least one.
     order : int, default=2
         Forward difference order with 0 <= order < n.
-    method : {"svd", "eigh", "cholesky"}, default="cholesky"
-        Solver used for the fitted trend. The default is the banded Cholesky
-        method for fit-only applications. Measured runtimes depend on
+    method : {"svd", "eigh", "cholesky"}, default="svd"
+        Solver used for the fitted trend. The default is full spectral SVD
+        with shift-free trend reconstruction. Measured runtimes depend on
         n, d, the number of fits, and hardware; explicit svd and eigh
         remain supported. Criterion selection and EDF are not computed here.
 
@@ -73,7 +73,7 @@ class PreparedPLSSolver:
     """
 
     def __init__(
-        self, n: int, order: int = 2, *, method: FitBackend = "cholesky",
+        self, n: int, order: int = 2, *, method: FitBackend = "svd",
     ) -> None:
         if (isinstance(n, (bool, np.bool_)) or
                 not isinstance(n, (int, np.integer)) or n < 1):
@@ -90,13 +90,17 @@ class PreparedPLSSolver:
         self.eigenvectors: np.ndarray | None = None
         self.eigenvalues: np.ndarray | None = None
         self.penalty_bands: np.ndarray | None = None
+        self.left_singular_vectors: np.ndarray | None = None
+        self.singular_values: np.ndarray | None = None
 
         if method == "cholesky":
             self.penalty_bands = _penalty_lower_bands(self.n, self.order)
         else:
             D = difference_matrix(self.n, self.order)
             if method == "svd":
-                _, singular, vh = svd(D, full_matrices=True, check_finite=True)
+                left, singular, vh = svd(D, full_matrices=True, check_finite=True)
+                self.left_singular_vectors = left
+                self.singular_values = singular
                 self.eigenvectors = vh.T
                 self.eigenvalues = np.r_[
                     singular * singular, np.zeros(self.order),
@@ -149,6 +153,30 @@ class PreparedPLSSolver:
             raise ValueError("lambda_ must be nonnegative, possibly infinity.")
         if lam == 0:
             return observed.copy()
+
+        if self.method == "svd":
+            # The full SVD supports stable, shift-free PLS reconstruction.
+            # Avoid forming p_mu + H(y-p_mu), which can lose significant
+            # digits when p_mu is a high-degree polynomial.
+            assert self.eigenvectors is not None
+            assert self.left_singular_vectors is not None
+            assert self.singular_values is not None
+            r = self.n - self.order
+            sigma = self.singular_values
+            vectors = self.eigenvectors[:, :r]
+            mean = float(reference[self.order])
+            weights = (
+                np.ones(r, dtype=float) if np.isinf(lam)
+                else np.exp(-np.logaddexp(
+                    0.0, -(np.log(lam) + 2.0 * np.log(sigma)),
+                ))
+            )
+            shift = self.left_singular_vectors.T @ np.ones(r)
+            coordinates = (
+                weights * (vectors.T @ observed)
+                - mean * (weights / sigma) * shift
+            )
+            return observed - vectors @ coordinates
 
         centered = observed - reference
         if self.method == "cholesky":
@@ -215,7 +243,7 @@ class PreparedPLSSolver:
             raise ValueError("lambdas must be nonnegative.")
         observed, reference = self._prepare(y, mu)
         coords = None
-        if self.eigenvectors is not None:
+        if self.eigenvectors is not None and self.method != "svd":
             coords = self.eigenvectors.T @ (observed - reference)
         return np.asarray([
             self._fit_prepared(observed, reference, float(lam), coords)
@@ -228,6 +256,7 @@ class PreparedPLSSolver:
         return sum(
             a.nbytes for a in (
                 self.eigenvectors, self.eigenvalues, self.penalty_bands,
+                self.left_singular_vectors, self.singular_values,
             ) if a is not None
         )
 
@@ -235,13 +264,13 @@ class PreparedPLSSolver:
 def fit_penalized(
     y, *, lambda_: float, order: int = 2,
     mu: float | Literal["data"] = 0.0,
-    method: FitBackend = "cholesky",
+    method: FitBackend = "svd",
 ) -> np.ndarray:
     """Fit one trend with a chosen backend, returning its 1-D values.
 
-    The default uses banded Cholesky for trend-only reconstruction.
-    This is an empirically motivated fit-only choice, not a universal
-    fastest algorithm. Use method="svd" for explicit spectral fitting.
+    The default uses a full SVD and a shift-free spectral fit for
+    numerical consistency. For the banded solver use method="cholesky".
+    No universal fastest-runtime claim is implied.
     Construct PreparedPLSSolver explicitly for repeated penalty fits and
     to amortize the selected backend's setup cost.
 
