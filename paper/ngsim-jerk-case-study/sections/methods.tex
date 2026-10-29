@@ -1,0 +1,36 @@
+\section{Observed data and reproducible design}\label{sec:method}
+\subsection{Camera-derived NGSIM US-101 longitudinal tracks}
+The source is the US DOT/Federal Highway Administration NGSIM vehicle trajectory dataset (DOI: 10.21949/1504477) \citep{fhwa2016}. Its \texttt{Local\_Y} field is the longitudinal front-center vehicle coordinate, recorded in feet; \texttt{Global\_Time} is in milliseconds. We convert feet to meters exactly by 0.3048 and use elapsed time since each segment begins. The official dataset indicates CC BY-SA 3.0; extracted position subsets carry attribution and immutable hashes.
+
+Data are downloaded directly from the USDOT Socrata API using a fixed query for US-101 vehicle identifiers 1--20. After sorting by vehicle and timestamp, a 100-ms gap splits track segments. In deterministic ascending order, the first five segments meeting minimum duration (200 points), displacement (20\,m), and conservative gross-quality thresholds are kept, without looking at forecast accuracy. The original vehicle identifiers may occur in several distinct recording periods; we retain track start timestamps to distinguish them. The complete extraction rule and source SHA-256 digests reside with the research scripts. Raw positions, rather than an already smoothed NGSIM derivative series, are the input.
+
+The windows contain $n=80$ consecutive observations (8\,s), with prediction origins at segment indices 95, 140 and 185. Futures of $h=5,10,20$ frames (0.5, 1 and 2\,s) are withheld chronologically. The 15 origin windows overlap within five recorded segments. Observed held-out position is the error target, \emph{not} unavailable latent noise-free position or actual jerk; aggregate error scores are descriptive and not independent-sample confidence intervals.
+
+\subsection{Smoothness-indexed quadratic trend}
+For forward differences $D_d$ with $d\in\{1,2,3,4\}$, and fixed numeric mean of differences $\mu$, consider
+\begin{equation}\label{eq:pls}
+\widehat\tau_{\lambda,\mu}=
+\arg\min_{\tau\in\R^n}\Bigl\{
+\|y-\tau\|_2^2+
+\lambda\|D_d\tau-\mu\mathbf1\|_2^2
+\Bigr\}.
+\end{equation}
+If $\delta_j>0$ are the $n-d$ positive eigenvalues of $D_d^\top D_d$, the normalized degree-of-smoothing index is
+\begin{equation}\label{eq:S}
+S_d(\lambda)=\frac1{n-d}\sum_{j=1}^{n-d}
+\frac{\lambda\delta_j}{1+\lambda\delta_j}\in[0,1].
+\end{equation}
+It is continuous and strictly increasing for $\lambda>0$, and independent of observed $y$ and fixed $\mu$. We invert $S$ once on the shared 16-point grid, including exact $S=0$ and $S=1$ endpoints, then reuse penalties across methods. No independently spaced log-$\lambda$ grid is a competitor here.
+
+For $d=3$, the finite difference $D_3\tau_t$ divided by $(\Delta t)^3$ approximates physical jerk of a position signal. At $S=1$, fixed $\mu=0$ produces a quadratic trend (constant acceleration), whereas a fixed $\mu\ne0$ produces a cubic trend with approximately constant nonzero jerk. At finite $S$, the estimated third differences can vary over time. The two investigated policies are fixed $\mu=0$ and training-only plug-in $\widehat\mu=\operatorname{mean}(D_dy_{\rm train})$. Conditional CV scores for the latter do not re-estimate $\mu$ after each observation deletion, so cannot be interpreted as exactly refitted LOOCV.
+
+\subsection{Five smoothing criteria}
+On each training window and difference order, we minimize ordinary fixed-$\mu$ observation-deletion CV, generalized CV (GCV), AICc, residual-based BIC and Gaussian profiled marginal likelihood (ML) over the same bounded $S$ candidates. Residual BIC is explicitly restricted to $S\ge0.10$ because its unrestricted interpolation boundary is ill-posed; this is a sensitivity choice, not a theoretical correction. The Gaussian criterion profiles observation variance in a variance-components model with $\lambda=\sigma_\varepsilon^2/\sigma_\eta^2$, treating the polynomial nullspace as a nuisance component. A plug-in $\widehat\mu$ is not joint ML estimation of all variance and mean parameters. As a result, the criterion rows describe \emph{distinct in-sample selectors}, not directly comparable likelihood functions.
+
+\subsection{Extrapolating a trend is a separate forecasting heuristic}
+The public PLS fitting API estimates only the observed-period trend. For every selected fit, we use the final 25 smoothed points and fit a local polynomial of degree $d-1$ after removing the particular solution $\mu\binom{t}{d}$, then extrapolate that polynomial and add the particular solution back at future indices. This imposes the local limiting-$d$ polynomial pattern but \emph{is not} a model-based predictive distribution or an intrinsic TrendEstimation forecasting algorithm. It can fail when the next driver action changes acceleration.
+
+All methods receive identical held-out future positions. Physical comparators are 20-point local linear (constant-velocity) extrapolation, 30-point local quadratic (constant-acceleration) extrapolation, and a 21-point order-three Savitzky--Golay smoother followed by a 20-point local linear continuation \citep{savitzky1964}. Forecast RMSE is the square root of mean squared position errors in meters; MAE is likewise in meters.
+
+\subsection{Separately comparing numerical implementations}
+On the same recorded training windows at $d=3$, $S=0.90$, with both $\mu$ policies, we evaluate seven pathways: full shift-free SVD, fresh dense solve, dense Cholesky, general banded LU, banded Cholesky, symmetric Gram eigendecomposition and dual SVD. Each has three within-run wall-clock repetitions and a numerical fit discrepancy measured against full SVD. These are \emph{one-fit} timings; they do not include the computational cost of evaluating full CV/GCV/AICc/BIC/ML grids. Any failed or nonfinite pathway is reported as unavailable rather than treated as a fast winner.
