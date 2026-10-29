@@ -1,0 +1,42 @@
+% Computational companion to the numerical-reliability CSDA draft.
+% Uses author-provided Elsevier CAS Bundle v2.4, copied verbatim by CI.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx,booktabs,url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\RSS}{\operatorname{RSS}}
+\newcommand{\edf}{\operatorname{edf}}
+\newcommand{\CV}{\operatorname{CV}}
+\newcommand{\GCV}{\operatorname{GCV}}
+\newcommand{\diag}{\operatorname{diag}}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Computation with smoothness-indexed PLS}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Computational costs of smoothness-indexed penalized least squares: spectral reuse, cached grids and solver trade-offs}
+% Provisional authorship and order; confirm together before submission.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
+ city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+Finite-difference penalized least squares is most often tuned through a penalty $\lambda$ whose numerical scale varies with series length and difference order. We study the computational cost of using instead normalized trace smoothness $s\in[0,1]$ for any $1\le d<n$ and a fixed, possibly nonzero, mean of the penalized differences. A singular-value representation gives an invertible $s\leftrightarrow\lambda$ map and permits caching of spectra, data projections and grids across criteria and independent series. We distinguish single fitted curves, single criterion scores, repeated full-grid searches and multi-series reuse, and derive arithmetic and memory complexity for dense solves, dense Cholesky, general banded solves, banded Cholesky, dense eigendecomposition and SVD. We analyze an archived 80,640-row paired Windows benchmark with seven numerical backends, five criteria, eight search policies, two fixed means, two sample sizes and two seeds. In a representative $n=48,d=2$ five-criterion experiment, repeated native-smoothness mapping took 11.234 ms, against 3.980 ms when a mapped grid was shared, a descriptive 2.82-fold reduction. Native-$s$ and pretranslated searches select identically when they evaluate identical penalties; an independent logarithmic penalty grid is not the same statistical candidate set. Separate repeated-fit and 20-seed solver benchmarks show that the fastest method depends on workload and numerical-validity requirements. Timings measure the archived machine and are not universal complexity proofs. This computational companion will ultimately be combined with a separate high-precision study to characterize accuracy--runtime trade-offs.
+\end{abstract}
+\begin{keywords}
+Smoothness index \sep penalized least squares \sep algorithmic complexity \sep caching \sep spectral decomposition \sep computational benchmarking \sep cross-validation
+\end{keywords}
+\maketitle
+\input{sections/foundations}
+\input{sections/algorithms}
+\input{sections/benchmarks}
+\input{sections/results}
+\input{sections/discussion}
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
+\end{document}

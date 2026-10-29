@@ -1,0 +1,149 @@
+name: CSDA computational costs — CAS/PDF and AwesomeFigures
+
+on:
+  push:
+    branches:
+      - paper/csda-computational-costs-20261029
+    paths:
+      - .github/workflows/csda-computational-costs.yml
+      - paper/csda-computational-costs/main.tex
+      - paper/csda-computational-costs/sections/**
+      - paper/csda-computational-costs/references.bib
+      - paper/csda-computational-costs/render_figures.py
+      - paper/csda-computational-costs/publication_style.py
+  workflow_dispatch:
+
+concurrency:
+  group: csda-computational-20261029
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install the author-provided Elsevier CAS compatible TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+      - name: Install AwesomeFigures and pinned plotting dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install "numpy==2.3.5" "scipy==1.17.0" "matplotlib==3.10.7"
+          python -m pip install -r paper/requirements.txt
+          python - <<'PY'
+          import awesomefigures as af
+          for name in ("set_style", "inspect_latex", "latex_style"):
+              assert hasattr(af,name),name
+          print("AwesomeFigures",af.__version__)
+          PY
+      - name: Copy exact user-supplied CAS Bundle v2.4
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$file"
+            cp "paper/els-cas-templates/$file" "paper/csda-computational-costs/$file"
+          done
+          sha256sum paper/els-cas-templates/cas-dc.cls \
+            paper/els-cas-templates/cas-common.sty \
+            paper/els-cas-templates/cas-model2-names.bst \
+            > paper/csda-computational-costs/template_source_sha256.txt
+      - name: Generate five TeX-font PDF/PGF/SVG plots from immutable benchmark CSVs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/csda-computational-costs/render_figures.py
+          for name in coordinate_map criterion_coordinates workload_scaling reuse_by_d solver_crossover; do
+            for ext in pdf pgf svg; do
+              test -s "paper/csda-computational-costs/figures/$name.$ext"
+            done
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("paper/csda-computational-costs")
+          a=json.loads((p/"awesomefigures_latex_manifest.json").read_text())
+          b=json.loads((p/"timing_figure_data.json").read_text())
+          assert len(a["figures"])==5
+          assert b["windows_source_rows"]==80640
+          assert 2.75<b["five_criterion_joint"]["speedup"]<2.9
+          for f in a["figures"]:
+              assert f["smallest_text_pt"]>=7.0
+              expected=(f["body_column_width_pt"] if f["layout"]=="column"
+                        else f["body_text_width_pt"])
+              assert abs(f["output_width_pt"]-expected)<1.0
+          print("Original timing archive and AwesomeFigures widths verified")
+          PY
+      - name: Compile two-column Elsevier manuscript and BibTeX
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/csda-computational-costs
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -17
+          if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
+            echo "Undefined references detected"; exit 1
+          fi
+          sha256sum main.tex references.bib sections/*.tex \
+            render_figures.py publication_style.py figures/*.* \
+            awesomefigures_latex_manifest.json timing_figure_data.json \
+            main.pdf > publication_sha256.txt
+          git rev-parse HEAD > source_commit.txt
+      - name: Upload manuscript, source and editable figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-computational-costs-cas-pdf
+          path: |
+            paper/csda-computational-costs/main.pdf
+            paper/csda-computational-costs/main.tex
+            paper/csda-computational-costs/render_figures.py
+            paper/csda-computational-costs/publication_style.py
+            paper/csda-computational-costs/README.md
+            paper/csda-computational-costs/sections/
+            paper/csda-computational-costs/references.bib
+            paper/csda-computational-costs/figures/
+            paper/csda-computational-costs/awesomefigures_latex_manifest.json
+            paper/csda-computational-costs/timing_figure_data.json
+            paper/csda-computational-costs/publication_sha256.txt
+            paper/csda-computational-costs/template_source_sha256.txt
+            paper/csda-computational-costs/SOURCE_AUDIT.md
+          if-no-files-found: warn
+      - name: Commit verified PDF and PGF figure sources to paper branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f -- paper/csda-computational-costs/main.pdf \
+            paper/csda-computational-costs/figures/ \
+            paper/csda-computational-costs/awesomefigures_latex_manifest.json \
+            paper/csda-computational-costs/timing_figure_data.json \
+            paper/csda-computational-costs/publication_sha256.txt \
+            paper/csda-computational-costs/template_source_sha256.txt \
+            paper/csda-computational-costs/source_commit.txt
+          if git diff --cached --quiet; then
+            echo "Already archived"
+          else
+            git commit -m "paper: archive computing costs PDF and TeX figures [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
