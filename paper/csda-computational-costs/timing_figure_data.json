@@ -1,50 +1,58 @@
 {
   "criterion_coordinate_milliseconds": {
-    "Different log-$\\lambda$": {
-      "aicc": 0.45769999269396067,
-      "bic": 0.4490999854169786,
-      "cv": 0.5451500182971358,
-      "gcv": 0.4259999841451645,
-      "mle": 0.514600018505007
+    "One cached S grid": {
+      "aicc": 1.7236500279977918,
+      "bic": 1.7243500333279371,
+      "cv": 1.8455000245012343,
+      "gcv": 1.7233499675057828,
+      "mle": 1.7757999594323337
     },
-    "Native S": {
-      "aicc": 1.886800047941506,
-      "bic": 2.0157999242655933,
-      "cv": 2.0038000075146556,
-      "gcv": 1.8505999469198287,
-      "mle": 3.4770999918691814
-    },
-    "Premapped S": {
-      "aicc": 1.8102499307133257,
-      "bic": 1.8096499261446297,
-      "cv": 1.8787499284371734,
-      "gcv": 1.8004999146796763,
-      "mle": 2.03484995290637
+    "Repeated S inversion": {
+      "aicc": 2.0236499840393662,
+      "bic": 1.9718000548891723,
+      "cv": 2.057800011243671,
+      "gcv": 1.9583499524742365,
+      "mle": 2.0381499780341983
     }
   },
+  "derivative_illustration": {
+    "d3_mu_fixed": 8.66859944328328e-05,
+    "physical_meaning": "third finite difference approximates jerk times step cubed",
+    "role": "deterministic algebraic illustration (not timed)",
+    "time_step": 0.02127659574468085
+  },
   "five_criterion_joint": {
-    "mapping_once_ms": 1.3385999482125044,
+    "R": 1,
+    "d": 3,
+    "mapping_once_ms": 1.256300020031631,
     "matched_candidate_count": 17,
+    "mu": 0.0,
+    "n": 48,
+    "native_s_ms": 10.049749980680645,
+    "premapped_once_ms": 3.7674499326385558,
+    "selected_s": {
+      "aicc": 0.9000000000000001,
+      "bic": 0.09999999999999215,
+      "cv": 0.9000000000000001,
+      "gcv": 0.9000000000000001,
+      "mle": 0.9000000000000001
+    },
+    "speedup": 2.667520513973292
+  },
+  "historical_d2_comparator": {
+    "R": 1,
+    "d": 2,
+    "mu": 0.0,
+    "n": 48,
     "native_s_ms": 11.234099918510765,
     "premapped_once_ms": 3.9795998600311577,
     "speedup": 2.8229219805085655
   },
-  "paired_solver_ratios": {
-    "1": {
-      "32": 1.5519300291313451,
-      "96": 4.258687915310144,
-      "192": 10.146260541329932
-    },
-    "16": {
-      "32": 0.6720474845997444,
-      "96": 2.0829432552155143,
-      "192": 5.665504668465654
-    },
-    "64": {
-      "32": 0.42146603986203235,
-      "96": 0.9594482729449945,
-      "192": 2.614494473963121
-    }
+  "paired_solver_ratios_d": {
+    "1": 2.1937051509462537,
+    "2": 2.0829432552155143,
+    "3": 1.704493867517553,
+    "5": 1.1589650866764125
   },
   "reuse_ratios": {
     "aicc": [
@@ -92,5 +100,95 @@
   "windows_filters": "n=48, fixed mu=0; shared or cold; two seeds",
   "windows_matched_cells": 40320,
   "windows_source_rows": 80640,
-  "workload_valid_backends": 7
+  "workload_backend_validity": {
+    "banded_cholesky": {
+      "milliseconds": [
+        0.2825999981723726,
+        null,
+        null
+      ],
+      "valid": [
+        true,
+        false,
+        false
+      ]
+    },
+    "dense_cached": {
+      "milliseconds": [
+        0.152900000102818,
+        null,
+        null
+      ],
+      "valid": [
+        true,
+        false,
+        false
+      ]
+    },
+    "dense_cholesky": {
+      "milliseconds": [
+        0.15950005035847425,
+        null,
+        null
+      ],
+      "valid": [
+        true,
+        false,
+        false
+      ]
+    },
+    "dense_fresh": {
+      "milliseconds": [
+        0.15279999934136868,
+        null,
+        null
+      ],
+      "valid": [
+        true,
+        false,
+        false
+      ]
+    },
+    "eigh": {
+      "milliseconds": [
+        0.29594998341053724,
+        1.6691499622538686,
+        3.2771501573733985
+      ],
+      "valid": [
+        true,
+        true,
+        true
+      ]
+    },
+    "general_banded": {
+      "milliseconds": [
+        0.2330500283278525,
+        null,
+        null
+      ],
+      "valid": [
+        true,
+        false,
+        false
+      ]
+    },
+    "svd": {
+      "milliseconds": [
+        0.3338499809615314,
+        1.7233499675057828,
+        4.134500049985945
+      ],
+      "valid": [
+        true,
+        true,
+        true
+      ]
+    }
+  },
+  "workload_valid_backends_by_workload": [
+    7,
+    2,
+    2
+  ]
 }
