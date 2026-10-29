@@ -34,6 +34,25 @@ def test_all_nine_fitters_match_independent_reference_at_moderate_s():
                                   err_msg=f"{method} reference mismatch")
 
 
+def test_exact_smoothness_endpoints_have_independent_references():
+    from run import precise_endpoint
+    n,d=18,3
+    D=difference_matrix(n,d)
+    y=np.random.default_rng(19).normal(size=n)
+    for mu in (0.,.08):
+        zero,k0,status0=precise_endpoint(n,d,y,mu,0.,75)
+        np.testing.assert_array_equal(zero,y)
+        assert status0=="ok" and k0==0.
+        limit,k1,status1=precise_endpoint(n,d,y,mu,float("inf"),75)
+        assert status1=="ok" and k1<1e-18
+        np.testing.assert_allclose(D@limit,mu,atol=1e-10)
+        # The limiting PLS trend is the orthogonal projection of y
+        # onto the affine polynomial-constraint subspace.
+        t=np.arange(n,dtype=float)
+        basis=np.column_stack([t**i for i in range(d)])
+        assert np.max(abs(basis.T@(y-limit)))<1e-8
+
+
 def test_reference_cache_is_independent_and_reused():
     n,d=14,3
     y=np.random.default_rng(87).normal(size=n)
