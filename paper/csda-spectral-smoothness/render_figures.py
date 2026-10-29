@@ -112,44 +112,80 @@ def rmse_criteria():
 
 
 def solver_accuracy():
-    rows=readcsv(STABLE/"stable_solver_precision.csv")
-    names=[
-        ("svd_shift_free","Shift-free SVD"),
-        ("scaled_augmented_qr_gelsy","Scaled QR"),
-        ("svd_polynomial_reference","Original SVD"),
-        ("dual_svd","Dual SVD"),
-        ("scaled_augmented_svd_gelsd","Stacked SVD"),
-        ("dual_banded_cholesky","Dual banded Chol."),
-        ("primal_banded_cholesky","Primal banded Chol."),
-        ("eigh_gram","Gram eigendecomp.")
+    """Four paired rows, retaining results for all eight plotted methods.
+
+    Each row shows two independently validated implementations; values are
+    the same matched 576-case results used in the original paper.
+    """
+    rows = readcsv(STABLE / "stable_solver_precision.csv")
+    pairs = [
+        (("svd_shift_free", "Shift-free SVD"),
+         ("scaled_augmented_qr_gelsy", "Scaled QR")),
+        (("svd_polynomial_reference", "Polynomial SVD"),
+         ("dual_svd", "Dual SVD")),
+        (("scaled_augmented_svd_gelsd", "Stacked SVD"),
+         ("dual_banded_cholesky", "Dual banded Chol.")),
+        (("primal_banded_cholesky", "Primal banded Chol."),
+         ("eigh_gram", "Gram eigendecomp.")),
     ]
-    maxerr=[];fails=[];bad=[]
-    for key,_ in names:
-        records=[r for r in rows if r["method"]==key]
-        finite=np.array([float(r["relative_l2_error"]) for r in records
-                         if r["status"]=="ok"],dtype=float)
-        maxerr.append(max(finite) if len(finite) else np.nan)
-        fails.append(sum(r["status"]!="ok" for r in records))
-        bad.append(sum(x>1e-5 for x in finite))
-    fig,(a,b)=plt.subplots(1,2,figsize=(8.0,3.5),
-                           gridspec_kw={"width_ratios":[1.3,1]})
-    y=np.arange(len(names))
-    a.barh(y,np.maximum(maxerr,1e-16),color=[BLUE,BLUE,CYAN,CYAN,
-        GREY,GREY,GREY,GREY],height=.6)
-    a.set_yticks(y,[name for _,name in names])
-    a.invert_yaxis()
+    stats = {}
+    for pair in pairs:
+        for key, label in pair:
+            sample = [r for r in rows if r["method"] == key]
+            assert len(sample) == 576, (key, len(sample))
+            values = np.asarray([
+                float(r["relative_l2_error"]) for r in sample
+                if r["status"] == "ok"
+            ], dtype=float)
+            stats[key] = {
+                "max": float(np.max(values)),
+                "bad": int(np.sum(values > 1e-5)),
+                "fail": sum(r["status"] != "ok" for r in sample),
+            }
+    fig, (a, b) = plt.subplots(
+        1, 2, figsize=(8.0, 3.35),
+        gridspec_kw={"width_ratios": [1.18, 1.0]},
+    )
+    locs = np.arange(4, dtype=float)
+    shifts = (-.17, .17)
+    colors = (BLUE, CYAN)
+    for col in range(2):
+        for i, pair in enumerate(pairs):
+            key, label = pair[col]
+            y = locs[i] + shifts[col]
+            datum = stats[key]
+            a.barh(y, max(datum["max"], 1e-11), height=.29,
+                   color=colors[col], alpha=.95)
+            b.barh(y, datum["bad"], height=.29,
+                   color=colors[col], alpha=.95)
+            if datum["fail"]:
+                b.barh(y, datum["fail"], height=.29,
+                       left=datum["bad"], color="#a65c63")
+    pair_labels = [
+        "Shift-free / QR",
+        "Polynomial / dual SVD",
+        "Stacked / dual banded",
+        "Primal banded / Gram eig.",
+    ]
+    for ax in (a, b):
+        ax.set_yticks(locs, pair_labels)
+        ax.invert_yaxis()
+        ax.set_ylim(3.62, -.62)
+        ax.tick_params(axis="y", length=0)
     a.set_xscale("log")
-    a.axvline(1e-5,ls="--",lw=.9,c="#b75e57")
-    a.set(xlabel="Maximum relative fit error vs 85-digit reference",
-          title="Accuracy")
-    a.set_xlim(1e-10,1e4)
-    b.barh(y,bad,color=CYAN,height=.55,label="Finite error > 1e-5")
-    b.barh(y,fails,left=bad,color="#a65c63",height=.55,label="Factorization failure")
-    b.set_yticks(y,[""]*len(names));b.invert_yaxis()
-    b.set(xlabel="Number of cases (out of 576)",title="Invalid fits")
-    b.legend(loc="lower right",fontsize=7,frameon=False)
-    # Panel titles and the LaTeX caption carry the context; no title outside canvas.
-    export(fig,"solver_accuracy")
+    a.axvline(1e-5, color="#aa5d57", linestyle="--", lw=.95)
+    a.set_xlim(1e-10, 1e4)
+    a.set(xlabel="Largest relative fit error", title="Accuracy")
+    b.set_xlim(0, 570)
+    b.set(xlabel="Number of cases (of 576)", title="Large error / failure")
+    # Color refers to first/second method in each of the four paired rows.
+    from matplotlib.patches import Patch
+    b.legend(handles=[
+        Patch(facecolor=BLUE, label="First"),
+        Patch(facecolor=CYAN, label="Second"),
+        Patch(facecolor="#a65c63", label="Failed"),
+    ], loc="lower right", ncol=3, fontsize=7, frameon=False)
+    export(fig, "solver_accuracy")
 
 
 def bic_restriction():
