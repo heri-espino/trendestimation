@@ -55,8 +55,8 @@ lambda is a numerical implementation detail, not the user-facing axis.
 | Preset | n | d | shapes/noise | Independent seeds | Full S grid |
 | --- | --- | --- | --- | --- | --- |
 | smoke | 24 | 3,6 | smooth, iid | 1 | 17 nodes |
-| quick | 32,64 | 1,3,5,6 | smooth/kink, iid/AR1 | 2 | 109 nodes |
-| full | 48,96,128 | 1,2,3,4,5,6 | smooth/kink, iid/AR1 | 10 | 109 nodes |
+| quick | 32,64 | 1,3,5,6 | smooth/kink, iid/AR1 | 2 | 110 nodes |
+| full | 48,96,128 | 1,2,3,4,5,6 | smooth/kink, iid/AR1 | 10 | 110 nodes |
 
 Both fixed mu=0 and observed-difference plug-in are included throughout.
 The nine fit methods are the original Experiment004 METHODS and are
@@ -102,6 +102,13 @@ Results from Linux CI and Windows cannot be pooled as host-independent times.
 After smoke/quick, compute **eligible-only** accuracy–runtime Pareto
 frontiers and paired bootstrap confidence intervals across independent
 replicates, separately by workload, n, d, noise and mu policy. Do not
-interpret 109 grid nodes as 109 independent replicates. Report numerical
+interpret 110 grid nodes as 109 independent replicates. Report numerical
 failure frequency as a third axis. Only after these results are audited
 should the two CSDA manuscripts be combined.
+
+### First paired evidence
+
+See RESULTS_PILOT.md and the archived quick-hosted-40967124055 run.
+The script analyze.py writes eligible-only Pareto summaries and
+AwesomeFigures vector PDF/SVG plots from the saved CSVs. Its plots
+compare only identical n,d,trend shape,noise and mu conditions.
