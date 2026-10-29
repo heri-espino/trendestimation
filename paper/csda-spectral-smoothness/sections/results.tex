@@ -54,7 +54,7 @@ Gram eigendecomp.\ & $1.45\,10^{2}$ & 484/0\\
 \label{fig:precision}
 \end{figure*}
 
-This numerical evidence motivates **full SVD of $D_d$ with shift-free reconstruction as the default for this spectral framework**. The scaled QR result is important corroboration, and the conclusion is about validity and accuracy on the tested configurations rather than execution speed. In particular the structure-exploiting Cholesky algorithms of earlier work remain relevant for other conditioning regimes and for performance-sensitive workloads \citep{weinert2007,biessy2026}.
+This numerical evidence motivates \emph{full SVD of $D_d$ with shift-free reconstruction as the default for this spectral framework}. The scaled QR result is important corroboration, and the conclusion is about validity and accuracy on the tested configurations rather than execution speed. In particular the structure-exploiting Cholesky algorithms of earlier work remain relevant for other conditioning regimes and for performance-sensitive workloads \citep{weinert2007,biessy2026}.
 
 \subsection{Restricted residual-BIC sensitivity}
 Applying the unchanged published BIC score on $s\ge0.05$ gives average true-trend RMSE 0.290446, and all 1,920 selections attain the imposed lower limit. Restricting to $s\ge0.10$ gives mean RMSE 0.245280, with 1,535 of 1,920 selections at its lower limit. This is a sensitivity result, not a resolution of the mathematical divergence.
