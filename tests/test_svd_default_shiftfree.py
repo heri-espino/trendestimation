@@ -20,7 +20,7 @@ def test_full_svd_default_matches_independent_scaled_qr(order, mean_mode):
     # Independent scaled, rectangular QR formulation of the same PLS.
     weight = np.sqrt(1.0 / lam)
     stacked = np.vstack((smoother.D, weight * np.eye(n)))
-    rhs = np.r_(np.full(n-order, mu), weight*y)
+    rhs = np.r_[np.full(n-order, mu), weight*y]
     reference = lstsq(
         stacked, rhs, cond=1e-15, lapack_driver="gelsy",
     )[0]
