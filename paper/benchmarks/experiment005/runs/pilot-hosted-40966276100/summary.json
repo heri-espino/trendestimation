@@ -1,0 +1,107 @@
+{
+  "experiment": "experiment005_joint_accuracy_runtime",
+  "preset": "pilot",
+  "purpose": "same-data same-penalty paired accuracy and elapsed time",
+  "created_utc": "2026-10-29T22:30:15.811025+00:00",
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "blas_threads": 1,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 4,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 4,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "repeats": 3,
+  "digits": 85,
+  "reference_tolerance": 1e-05,
+  "n": [
+    32,
+    64
+  ],
+  "d": [
+    2,
+    3,
+    5,
+    6
+  ],
+  "S": [
+    0.0,
+    0.1,
+    0.2,
+    0.30000000000000004,
+    0.4,
+    0.5,
+    0.6000000000000001,
+    0.7000000000000001,
+    0.8,
+    0.9,
+    0.95,
+    0.99,
+    0.999,
+    0.9999,
+    0.999999,
+    0.999999999999,
+    1.0
+  ],
+  "mu_policies": [
+    "fixed_zero",
+    "observed_difference"
+  ],
+  "methods": [
+    "svd",
+    "eigh",
+    "banded_cholesky"
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "aicc",
+    "bic",
+    "mle"
+  ],
+  "fit_rows": 3264,
+  "selection_rows": 960,
+  "reference_rows": 1088,
+  "selection_status_counts": {
+    "failed": 200,
+    "invalid_complete_grid": 183,
+    "selected_fit_inaccurate": 5,
+    "valid": 572
+  },
+  "elapsed_seconds": 9.901439093,
+  "scope": [
+    "Trend recovery RMSE, not forecast RMSE.",
+    "BIC restricts S>=0.10; sensitivity to 0.05 deferred.",
+    "Observed-difference mu is a conditional plug-in.",
+    "85-digit checks freeze float64 lambda, mu, y and exclude timing.",
+    "Endpoint validation is analytical, not independent multiprecision.",
+    "Score-only and fit-only timing stages are measured separately.",
+    "Assembled cold totals are sums of measured stages, not a new wall-clock sample.",
+    "Invalid complete grids and selected-fit discrepancies cannot win time ranking.",
+    "Do not compare differently spaced lambda candidate sets.",
+    "Baseline spectral score audit is outside timed blocks."
+  ],
+  "fit_accuracy_runtime.csv_sha256": "7acb220ca04365f5dc240f0dce80b8a41176abd73d9aeac9daa54445dabb1225",
+  "selection_accuracy_runtime.csv_sha256": "9e3fa7a75fa93f80bf1b3c7dcdb5ad0fba4a6d12797417039e25dbbf425a3de5",
+  "setup_and_mapping.csv_sha256": "2c567604738971ef142399f3097512243bcf8756f82161c3c40729a095410750",
+  "reference_checks.csv_sha256": "6c8f3125bf46210a6c8f02068c30c51bec7304e14f24ef5e60b4e0047afe5e73"
+}
