@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: experiment005-paired-pilot
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   paired-smoke:
@@ -73,12 +73,21 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin "$GITHUB_REF_NAME"
-          git reset --mixed "origin/$GITHUB_REF_NAME"
-          git add -f -- "paper/benchmarks/experiment005/runs/pilot-hosted-${{ github.run_id }}"
-          if git diff --cached --quiet; then
-            echo "pilot already preserved"
-          else
+          # Repeat from the current branch head when concurrent agent
+          # commits arrive between fetching and publishing. All artifacts
+          # are text CSV/JSON, and this never forces an update.
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git reset --mixed "origin/$GITHUB_REF_NAME"
+            git add -f -- "paper/benchmarks/experiment005/runs/pilot-hosted-${{ github.run_id }}"
+            if git diff --cached --quiet; then
+              echo "Pilot already archived"; exit 0
+            fi
             git commit -m "experiment005: archive paired pilot from run ${{ github.run_id }} [skip ci]"
-            git push origin "HEAD:$GITHUB_REF_NAME"
-          fi
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo "Archived successfully"; exit 0
+            fi
+            echo "Concurrent branch update; retrying archive push"
+          done
+          echo "Cannot archive after four fast-forward attempts"
+          exit 1
