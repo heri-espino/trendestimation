@@ -13,10 +13,7 @@ HERE=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment005"
 sys.path.insert(0,str(HERE))
 # mpmath is a paper-only dependency; core CI may omit it.
 pytest.importorskip("mpmath")
-from run import (
-    METHODS, fit_once, prepare_method,
-    stable_reference, run,
-)  # noqa: E402
+from run import METHODS, fit_once, prepare_method, stable_reference, run  # noqa: E402
 from run_pilot import difference_matrix  # noqa: E402
 
 
