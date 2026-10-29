@@ -163,7 +163,8 @@ def analyze(source,output):
     ax.set(xlabel="Difference order d",
            ylabel="Valid complete selections (%)",
            title="All 17 smoothness targets required for a valid result")
-    ax.legend(frameon=False,fontsize=7,ncol=3,loc="upper center")
+    ax.legend(frameon=False,fontsize=7,ncol=3,loc="lower center",
+              bbox_to_anchor=(.5,-.34))
     export(fig,figures,"complete_grid_validity")
 
     # Figure 3: matched-admissible SVD/eigh timings by order. Banded omitted
@@ -174,14 +175,16 @@ def analyze(source,output):
             field(e,"warm_selection_ms"),field(s,"warm_selection_ms")))
     fig,ax=plt.subplots(figsize=(7.3,3.5))
     for j,m in enumerate(("svd","eigh")):
-        xs=[];ys=[]
-        for d in ORDERS:
-            arr=by_d[d]
-            if not arr:
-                continue
-            xs.append(d)
-            ys.append(statistics.median(pair[1 if m=="svd" else 0]
-                                        for pair in arr))
+        xs=list(range(min(ORDERS),max(ORDERS)+1))
+        ys=[]
+        for d in xs:
+            arr=by_d.get(d,[])
+            ys.append(
+                statistics.median(pair[1 if m=="svd" else 0]
+                                  for pair in arr)
+                if arr else float("nan")
+            )
+        # Explicit NaN at d=4 prevents interpolating a non-measured order.
         ax.plot(xs,ys,marker="o" if m=="svd" else "s",
                 color=COLORS[m],lw=1.8,label=LABEL[m])
     ax.set_xticks(ORDERS)
