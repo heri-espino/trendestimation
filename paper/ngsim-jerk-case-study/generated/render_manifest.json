@@ -1,0 +1,17 @@
+{
+  "source": "official US DOT FHWA NGSIM, 5 fixed noncherry-picked real tracks",
+  "plots": 5,
+  "panels_data": "archived forecast/selection/solver rows",
+  "no_independent_true_jerk": true,
+  "no_synthetic_values": true,
+  "future_horizons_s": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "table_files": [
+    "forecast_table.tex",
+    "solver_table.tex",
+    "empirical_summary.tex"
+  ]
+}
