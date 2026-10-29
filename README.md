@@ -16,9 +16,11 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
 - Zero, fixed nonzero, and Guerrero (2007) observed-difference plug-in reference means (`mu="data"`).
 - Alternative full-trend reconstruction backends (SVD, dense symmetric eigendecomposition,
   and banded Cholesky) with matched reproducible benchmarks via
-  `PreparedPLSSolver` / `fit_penalized`. Their **fit-only default is banded
-  Cholesky**; these return trends only, without replacing the established
-  **spectral default for CV/GCV/AICc/BIC/MLE selection**, EDF, and normalized smoothness.
+  `PreparedPLSSolver` / `fit_penalized`. Their **fit-only default is now full
+  spectral SVD with shift-free reconstruction** for a unified numerical
+  formulation; banded Cholesky remains selectable explicitly for fitting
+  workloads where dense spectral setup is too costly. CV/GCV/AICc/BIC/MLE
+  selection, EDF, and normalized smoothness continue to use spectral methods.
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
 - Optional parameter search in either penalty **lambda** (existing default)
@@ -53,6 +55,26 @@ not an exact leave-one-out refit of this plug-in mean. The Gaussian MLE
 criterion permits mu="data", but then conditions on the empirical plug-in
 rather than performing joint maximum likelihood over mu and lambda.
 Reported effective degrees of freedom likewise condition on mu.
+
+
+## Elsevier CSDA working manuscript (research draft)
+
+A separate source, reproducible archival-data figure generator, and compiled
+Elsevier-format PDF are maintained under
+[`paper/csda-spectral-smoothness/`](paper/csda-spectral-smoothness/).
+Its working title is *A spectral framework for smoothness-indexed penalized
+least-squares trend estimation: numerical reliability and criterion selection*.
+This manuscript documents the order-1-through-6 Experiment004 pilot,
+85-decimal-digit numerical reference, shift-free SVD, and the mathematical
+interpolation-boundary limitation of the RSS-based BIC formula. It treats
+restricted BIC at S>=0.10 and S>=0.05 as sensitivity analyses, not a repaired
+criterion; the pilot does not establish universal RMSE or runtime rankings.
+The older Springer working manuscripts are retained unchanged.
+
+**Default-policy note:** full SVD is selected for mathematical unity and observed
+accuracy at high order and high smoothness, not because it is universally the
+fastest method. The API still supports explicit `method="cholesky"` and
+`method="eigh"` for comparative research.
 
 ## Installation
 
