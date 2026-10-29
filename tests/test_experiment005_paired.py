@@ -7,9 +7,12 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 HERE=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment005"
 sys.path.insert(0,str(HERE))
+# mpmath is a paper-only dependency; core CI may omit it.
+pytest.importorskip("mpmath")
 from run import (
     METHODS, fit_once, prepare_method,
     stable_reference, run,
