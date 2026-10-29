@@ -270,7 +270,7 @@ def backend_validation(tracks,models):
                     err=float(np.linalg.norm(pred-ref)/max(np.linalg.norm(ref),1e-12))
                     rows.append({"track":tr,"mu_policy":mode,"method":name,
                         "S":float(S_GRID[k]),"d":d,"median_ms":float(np.median(measurements)*1000),
-                        "relative_fit_error":err,"valid":np.isfinite(err)})
+                        "relative_fit_error":err,"valid":bool(np.isfinite(err))})
                 except Exception as exc:
                     rows.append({"track":tr,"mu_policy":mode,"method":name,
                         "S":float(S_GRID[k]),"d":d,"valid":False,
