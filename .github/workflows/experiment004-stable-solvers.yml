@@ -1,0 +1,74 @@
+name: Experiment004 stable solvers and restricted BIC
+
+on:
+  push:
+    branches:
+      - research/experiment004-s-accuracy-computation
+    paths:
+      - .github/workflows/experiment004-stable-solvers.yml
+      - paper/benchmarks/experiment004/verify_stable_solvers.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  numerical-validation:
+    # Deliberately uses GitHub-hosted Linux; never PCAG103A-08.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pinned scientific dependencies
+        run: python -m pip install "numpy==2.3.5" "scipy==1.17.0" "mpmath==1.3.0" "threadpoolctl==3.7.0"
+      - name: Run 576-case reference and restricted BIC analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="paper/benchmarks/experiment004/runs/stable-hosted-$GITHUB_RUN_ID"
+          echo "EXPERIMENT004_STABLE_OUT=$OUT" >> "$GITHUB_ENV"
+          python paper/benchmarks/experiment004/verify_stable_solvers.py \
+            --precision-seeds 3 --bic-seeds 20 --digits 85 --out "$OUT"
+          git rev-parse HEAD > "$OUT/input_commit.txt"
+          sha256sum paper/benchmarks/experiment004/{run_pilot.py,verify_bic_precision.py,verify_stable_solvers.py} > "$OUT/source_sha256.txt"
+          python - "$OUT" <<'PY'
+          import csv, json, pathlib, sys
+          output=pathlib.Path(sys.argv[1])
+          metadata=json.loads((output/"summary.json").read_text())
+          assert metadata["precision_rows"]==5184
+          assert metadata["bic_rows"]==3840
+          methods=metadata["methods"]
+          assert methods["svd_shift_free"]["failures"]==0
+          assert methods["svd_shift_free"]["max_relative_error"]<1e-5
+          assert methods["scaled_augmented_qr_gelsy"]["failures"]==0
+          assert methods["scaled_augmented_qr_gelsy"]["max_relative_error"]<1e-5
+          assert methods["primal_banded_cholesky"]["failures"]>0
+          assert metadata["restricted_bic"]["0.05"]["boundary_selected"]==1920
+          with (output/"stable_solver_precision.csv").open(newline="") as f:
+              rows=list(csv.DictReader(f))
+          assert {int(x["d"]) for x in rows}=={5,6}
+          assert max(float(x["reference_kkt_max"]) for x in rows)<1e-20
+          print("All high-precision and restricted-BIC verification gates passed")
+          PY
+      - name: Upload complete pilot artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment004-stable-solvers
+          path: paper/benchmarks/experiment004/runs/stable-hosted-*/
+          if-no-files-found: warn
+      - name: Archive results in separate research branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f -- "$EXPERIMENT004_STABLE_OUT"
+          git commit -m "experiment004: archive stable-solver and restricted BIC QA $GITHUB_RUN_ID [skip ci]"
+          git push origin "HEAD:$GITHUB_REF_NAME"
