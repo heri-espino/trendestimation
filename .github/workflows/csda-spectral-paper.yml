@@ -3,7 +3,7 @@ name: CSDA cas-dc two-column / TeX AwesomeFigures
 on:
   push:
     branches:
-      - paper/csda-cas-dc-awesomefigures-20261029
+      - paper/csda-results-literature-20261029
     paths:
       - .github/workflows/csda-spectral-paper.yml
       - paper/csda-spectral-smoothness/main.tex
@@ -11,6 +11,7 @@ on:
       - paper/csda-spectral-smoothness/sections/**
       - paper/csda-spectral-smoothness/render_figures.py
       - paper/csda-spectral-smoothness/publication_style.py
+      - paper/csda-spectral-smoothness/literature_audit.md
   workflow_dispatch:
 
 permissions:
