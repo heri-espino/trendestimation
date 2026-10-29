@@ -1,4 +1,6 @@
-\documentclass[preprint,12pt,authoryear]{elsarticle}
+% Uses the exact user-supplied Elsevier CAS Bundle v2.4 in ../els-cas-templates
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{graphicx,booktabs,microtype,url}
 \usepackage{hyperref}
@@ -11,25 +13,30 @@
 \newcommand{\RMSE}{\operatorname{RMSE}}
 \newtheorem{proposition}{Proposition}
 \begin{document}
-\begin{frontmatter}
-\title{A spectral framework for smoothness-indexed penalized least-squares trend estimation: numerical reliability and criterion selection}
-% Authorship/order/correspondence require coauthor approval before submission.
-\author[udlap]{Heriberto Espino-Montelongo}
-\author[udlap]{Daniela Cort\'es-Toto}
-\address[udlap]{Universidad de las Am\'ericas Puebla, San Andr\'es Cholula, Puebla, Mexico}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Spectral smoothness-indexed PLS trends}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{A spectral framework for smoothness-indexed penalized least-squares trend estimation: numerical reliability and criterion selection}
+% Author ordering, correspondence and declarations require coauthor confirmation.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
+ city={San Andr\'es Cholula}, state={Puebla}, country={Mexico}}
 \begin{abstract}
 Finite-difference penalized least-squares smoothing is conventionally parameterized by a nonnegative penalty whose scale depends on the difference order. We examine normalized trace smoothness $s\in[0,1]$ as an interpretable coordinate for this established estimator. A full singular-value decomposition (SVD) of the difference operator supports smoothness inversion, degrees of freedom, classical selection criteria and fitted trends. We derive an algebraically equivalent shift-free spectral reconstruction that avoids the potentially ill-scaled polynomial reference vector associated with nonzero mean differences. We identify a boundary divergence of a published residual-based BIC expression as smoothing approaches interpolation and report explicitly restricted-domain sensitivity analyses. A pilot simulation evaluates five criteria by recovery error against known latent trends. An independent 85-decimal-digit reference validates 576 high-smoothness configurations per solver: shift-free SVD has maximum observed relative fitting error $5.52\times10^{-9}$ without failures, whereas ordinary primal double-precision banded Cholesky exhibits large errors and failed factorizations in the tested regime. We adopt full spectral SVD as the accuracy-oriented default while emphasizing its dense preparation cost. Results are exploratory numerical and statistical validations, not universal performance rankings.
 \end{abstract}
-\begin{keyword}
+\begin{keywords}
 Penalized least squares \sep smoothness index \sep SVD \sep trend estimation \sep cross-validation \sep numerical conditioning \sep BIC
-\end{keyword}
-\end{frontmatter}
+\end{keywords}
+\maketitle
 \input{sections/introduction}
 \input{sections/spectral_theory}
 \input{sections/criteria}
 \input{sections/experiments}
 \input{sections/results}
 \input{sections/discussion}
-\bibliographystyle{elsarticle-harv}
+\bibliographystyle{cas-model2-names}
 \bibliography{references}
 \end{document}
