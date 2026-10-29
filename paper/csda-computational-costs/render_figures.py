@@ -203,35 +203,48 @@ def criterion_coordinates(buckets):
 
 
 def workload_scaling(buckets):
+    """Show valid results only; missing or invalid grids cannot be winners."""
     policies = [
         (1, "single_mapped_s_lambda", "Single $s=0.5$"),
         (1, "mapped_s_lambda", "17-point grid"),
         (8, "mapped_s_lambda", "Eight grids"),
     ]
     fig, ax = plt.subplots(figsize=(8.6, 3.45))
-    counts = 0
+    valid_counts = [0,0,0]
+    method_validity = {}
     for j, (method, label) in enumerate(METHODS):
-        y = [
+        y = np.asarray([
             1000*median_valid(
                 buckets,3,"gcv",method,R,"shared",policy,
                 "total_standalone_s",
             )
             for R, policy, _ in policies
-        ]
-        if all(np.isfinite(y)):
+        ], dtype=float)
+        valid = np.isfinite(y) & (y > 0)
+        for i,is_valid in enumerate(valid):
+            valid_counts[i] += int(is_valid)
+        method_validity[method] = {
+            "valid": [bool(v) for v in valid],
+            "milliseconds": [float(v) if np.isfinite(v) else None for v in y],
+        }
+        if np.any(valid):
+            # Do NOT join a line across an unmeasured/invalid workload.
             ax.plot(np.arange(3), y,
                     marker=("o","s","^","D")[j%4],
                     ls=("-","--","-.")[j%3], color=COLORS[j],
                     lw=1.4, ms=4, label=label)
-            counts += 1
-    if counts < 3:
-        raise RuntimeError("Insufficient complete numerical validity for plot")
+    if not all(count > 0 for count in valid_counts):
+        raise RuntimeError(
+            "At least one d=3 workload lacks any numerically valid backend: "
+            +str(valid_counts)
+        )
     ax.set_yscale("log")
     ax.set_xticks(range(3), [p[2] for p in policies])
-    ax.set(ylabel="Total time (ms, log scale)",
-           title="d=3 GCV: one score, grid and reuse")
+    ax.set(ylabel="Valid complete-workload time (ms, log scale)",
+           title="d=3 GCV: score, full grid, and reused grids")
     ax.legend(frameon=False, ncol=4, fontsize=7, loc="upper center")
-    OUT["workload_valid_backends"] = counts
+    OUT["workload_valid_backends_by_workload"] = valid_counts
+    OUT["workload_backend_validity"] = method_validity
     save(fig, "workload_scaling")
 
 
