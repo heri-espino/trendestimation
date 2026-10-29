@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/experiment005-paired.yml
       - paper/benchmarks/experiment005/run.py
+      - paper/benchmarks/experiment005/analyze.py
       - tests/test_experiment005_paired.py
   workflow_dispatch:
 
