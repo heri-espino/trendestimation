@@ -117,7 +117,10 @@ class TrendSmoother:
     def __init__(self, n: int, order: int = 2):
         self.D = difference_matrix(n, order)
         self.n, self.order = int(n), int(order)
-        _, singular, vh = svd(self.D, full_matrices=True, check_finite=True)
+        left, singular, vh = svd(self.D, full_matrices=True, check_finite=True)
+        self._left_singular_vectors = left
+        self._singular_values = singular
+        self._mean_shift_coordinates = (left.T @ np.ones(self.n - self.order)) / singular
         self.eigenvectors = vh.T
         self.eigenvalues = np.r_[singular**2, np.zeros(self.order)]
         self._basis_squares = self.eigenvectors**2
@@ -152,6 +155,13 @@ class TrendSmoother:
             raise ValueError("mu must be finite.")
         reference = self._reference(value)
         coordinates = self.eigenvectors.T @ (y - reference)
+        # The positive spectral coordinates are formed without subtracting a
+        # potentially enormous degree-d polynomial reference; see the
+        # shift-free reconstruction in the CSDA working manuscript.
+        r = self.n - self.order
+        coordinates[:r] = (
+            self.eigenvectors[:, :r].T @ y - value * self._mean_shift_coordinates
+        )
         return y, value, reference, coordinates
 
     def degrees_of_freedom(self, lambda_: float) -> float:
@@ -408,7 +418,18 @@ class TrendSmoother:
         """
         observed, value, reference, coords = self._prepare(y, mu)
         alpha = self._attenuation(lambda_)
-        trend = reference + self.eigenvectors @ (alpha * coords)
+        lam = float(lambda_)
+        r = self.n - self.order
+        if lam == 0.0:
+            weights = np.zeros(r, dtype=float)
+        elif math.isinf(lam):
+            weights = np.ones(r, dtype=float)
+        else:
+            z = math.log(lam) + self._log_positive_eigenvalues
+            weights = np.exp(-np.logaddexp(0.0, -z))
+        # Algebraically identical PLS fit, but avoids reference + H(y-reference)
+        # cancellation for high d and near-unit smoothness.
+        trend = observed - self.eigenvectors[:, :r] @ (weights * coords[:r])
         return FitResult(
             trend=trend,
             residual=observed - trend,
