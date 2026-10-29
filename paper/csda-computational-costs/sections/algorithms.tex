@@ -1,0 +1,45 @@
+\section{Algorithmic time and storage complexity}\label{sec:complexity}
+Let $n$ be series length, $d$ difference order, $r=n-d$, $K$ penalty candidates, $R$ observed series, $C$ scoring criteria and $I$ root-solver evaluations per requested $s$. All big-$O$ statements are arithmetic models, not measured wall-clock rates. The penalty matrix $Q_d=D_d^\top D_d$ has half-bandwidth $d$.
+
+\subsection{Factorization and one complete fitted curve}
+Full SVD of the $r\times n$ difference matrix requires $O(nr^2)$ time and $O(nr)$ storage, or $O(n^3)$ and $O(n^2)$ respectively when $d$ is small relative to $n$. Dense symmetric eigendecomposition of $Q_d$ also has cubic time and quadratic storage; forming $Q_d$ can exacerbate spectral conditioning. After spectral setup a full fitted curve uses $O(nr)$ products. Dense general solves and dense Cholesky require $O(n^3)$ per new penalty. General banded solving and banded Cholesky can factor in $O(nd^2)$ and use $O(nd)$ storage, followed by $O(nd)$ triangular or back substitution. Thus structured methods can be substantially faster for a \emph{single fit}; Cholesky and general banded LU must not be conflated.
+
+\subsection{Criterion evaluation is not the same as fitting}
+For a fixed $\lambda$, the conditional effective degrees of freedom are $\nu(\lambda)=d+\sum_j(1+\lambda\delta_j)^{-1}$ and normalized smoothness is \eqref{eq:S}, both computed in $O(r)$ after spectral preparation. A projected observation $z=V^\top(y-p_\mu)$ costs $O(nr)$ once, after which $\RSS(\lambda)=\sum_j w_j(\lambda)^2 z_j^2$ and the conditional GCV, AICc, BIC and profiled Gaussian marginal likelihood require $O(r)$ spectral sums per candidate. Classical fixed-$\mu$ LOOCV also requires leverages $(H_\lambda)_{ii}$ and residuals: calculating both using stored right singular vectors costs $O(nr)$ per penalty. This is \emph{conditional observation-weight deletion}, not rolling-origin forecast validation, and empirical plug-in $\widehat\mu=\operatorname{mean}(D_dy)$ would not have the same exact leave-one-out interpretation without refitting that mean.
+
+Nonspectral methods may fit quickly while incurring additional exact EDF and leverage work. Simply solving $n$ banded right-hand sides to obtain inverse diagonals costs up to $O(n^2d)$ beyond the $O(nd^2)$ factorization; specialized selected-inverse or structured algorithms can improve this \citep{weinert2007,biessy2026}. We distinguish the actual timed implementations from these more specialized competitors and avoid advertising a fit-only cost as an end-to-end CV-selection cost.
+
+\begin{table*}[t]\caption{Dominant arithmetic for the implemented algorithm families. Costs are conditional on fixed $\mu$ and known finite $\lambda$. EDF and CV entries for nonspectral methods are not interchangeable with their fit cost. We state $r=n-d$ and assume a dense spectral basis is retained.}\label{tab:complexity}\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Method & Decomposition/setup & One fit & EDF/GCV & LOOCV & Memory\\
+\midrule
+Fresh dense solve & $O(nd^2)$ & $O(n^3)$ & $O(n^3)$ & $O(n^3)$ & $O(n^2)$\\
+Cached dense solve & $O(nd^2)$ & $O(n^3)$ & $O(n^3)$ & $O(n^3)$ & $O(n^2)$\\
+Dense Cholesky & $O(nd^2)$ & $O(n^3)$ & $O(n^3)$ & $O(n^3)$ & $O(n^2)$\\
+General banded LU & $O(nd^2)$ & $O(nd^2)$ & method-specific & method-specific & $O(nd)$\\
+Banded Cholesky & $O(nd^2)$ & $O(nd^2)$ & method-specific & method-specific & $O(nd)$\\
+Dense eigendecomposition & $O(n^3)$ & $O(n^2)$ & $O(n)$ & $O(n^2)$ & $O(n^2)$\\
+Full SVD of $D_d$ & $O(nr^2)$ & $O(nr)$ & $O(r)$ & $O(nr)$ & $O(nr)$\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+For dense direct methods, EDF and LOOCV may be computed using a factorization and many right-hand sides; the displayed cubic bound reflects this full operation. A properly implemented banded selected inverse is not necessarily governed by the straightforward many-right-hand-side cost. These costs exclude software-level allocation and numerical conditioning, both measured or audited separately.
+
+\subsection{How pretranslation and grid reuse change total work}
+With the singular values cached, one inverse $s\mapsto\lambda$ is a monotone scalar root problem in $\log\lambda$ whose function calls each take $O(r)$, so $K$ targets with $I$ iterations cost $O(KIr)$ beyond the SVD. Let the set $G_{n,d}=\{\Lambda_{n,d}(s_j):1\le j\le K\}$ be cached. It depends neither on the current series nor on the fixed mean of differences. The same grid can be reused across $C$ criteria and $R$ new series.
+
+For GCV/AICc/BIC/ML-style spectral selections, an illustrative amortized cost is
+\begin{equation}\label{eq:cost}
+T_{\mathrm{SVD}}=O(nr^2+KIr+Rnr+RCKr).
+\end{equation}
+The $Rnr$ term projects each new series once; CV replaces the pertinent $O(r)$ candidate term by $O(nr)$. A cold approach that re-inverts $s$ at every criterion or re-decomposes for each series incurs additional repeated work. Likewise, a banded Cholesky implementation that caches the same $K$ factors across $R$ series may incur $O(Knd^2+RKnd)$ fitting arithmetic, \emph{before} trace/leverage computation. This is why different setup/reuse policies can reverse a timing winner.
+
+The reference-mean policy changes coefficients of the right-hand side, not the spectrum. Fixed $\mu=0$ and fixed $\mu=0.15$ share precisely the same $G_{n,d}$. Estimating $\widehat\mu$ from $D_dy$ adds an $O(nd)$ pass per series; the archived comprehensive Windows run did \emph{not} separately time this data-dependent mean-estimation step.
+
+\subsection{Matched versus unmatched coordinate searches}
+We separate \emph{native $s$ grid} (invert each $s_j$ during a search), \emph{premapped $s$ grid} (invert once, pass the identical $\lambda_j$ to the score), and an \emph{independently spaced log-$\lambda$ grid}. Only the first two evaluate the same statistical candidates, and hence they must agree in exact arithmetic. The third may run faster but selects among \emph{different interior penalties}; its search time alone cannot establish an efficiency advantage at equal statistical quality. Continuous bounded optimizers in $s$ and $\log\lambda$ follow different paths and are local searches, not certified global optima. Exact $s=0$ and $s=1$ endpoints are scored analytically.
+
+The classical residual-based BIC expression has a divergent interpolation boundary; our numerical companion studies this limitation. Here BIC timings are purely computational and do not imply the unrestricted criterion is statistically well-posed.
