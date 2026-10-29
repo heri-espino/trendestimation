@@ -82,12 +82,9 @@ def prepare_method(method, n, d, D):
         return svd(D, full_matrices=False, check_finite=False)
     if method == "dual_banded_cholesky":
         return np.array([
-            (-1)**k * math.comb(2*d,d-k) * np.ones(n-d-k)
+            np.full(n-d, (-1)**k*math.comb(2*d,d-k), dtype=float)
             for k in range(d+1)
-        ],dtype=object) if False else np.array(
-            [np.full(n-d, (-1)**k*math.comb(2*d,d-k), dtype=float)
-             for k in range(d+1)]
-        )
+        ])
     if method == "primal_banded_cholesky":
         return penalty_bands(n,d)
     if method == "eigh_gram":
@@ -104,7 +101,7 @@ def prepare_method(method, n, d, D):
 def fit_once(method, prepared, D, y, mu, lam):
     """Nine distinct Experiment004 fit implementations at ONE fixed lambda."""
     n = len(y)
-    d = D.shape[0] and n-D.shape[0]
+    d = n-D.shape[0]
     if not np.isfinite(lam) or lam<=0:
         raise ValueError("fit comparison uses positive finite lambda")
     if method in ("svd_polynomial_reference","svd_shift_free",
@@ -411,8 +408,9 @@ def run(out,preset,repeats,digits,seed_offset=0):
                                                             result["selection_seconds"]+elapsed)
                                                         row["status"]=(
                                                             "ok" if result["full_grid_valid"] and
-                                                            (high is None or ref_status=="ok" and
-                                                             float(row["numerical_relative_l2_error"])<=1e-5)
+                                                            ref_status=="ok" and
+                                                            row["numerical_relative_l2_error"]!="" and
+                                                            float(row["numerical_relative_l2_error"])<=1e-5
                                                             else "invalid_or_unverified")
                                                 except (ValueError,ArithmeticError,OverflowError,
                                                         FloatingPointError,np.linalg.LinAlgError) as e:
