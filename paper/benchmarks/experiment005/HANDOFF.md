@@ -26,8 +26,9 @@ It does not claim that numerical-error RMSE is forecasting RMSE.
 - Validity checks the COMPLETE grid, not merely the selected point.
 - The current criterion QA is relative to double-SVD scores, NOT
   high-precision score truth.
-- Exact endpoint trends have no independently certified MP accuracy;
-  mark them unverified in the joint frontier.
+- Exact S=0 is independently known to be y, and S=1 is certified by
+  multiprecision constrained polynomial QR and KKT checks, separate
+  from the finite-lambda dual-banded reference.
 - BIC S>=0.10 is a documented boundary sensitivity restriction.
 - No code in the public trendestimation library is altered.
 
