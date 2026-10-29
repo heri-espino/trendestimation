@@ -1,0 +1,41 @@
+\section{Real-data results and comparisons}
+\subsection{One held-out trajectory and its fitted jerk}
+Figure~\ref{fig:forecast} shows a predeclared chronological cutoff of the first real US-101 vehicle segment. The original recorded positions, smooth in-sample trend and extrapolated future are shown separately. Predictions are made without seeing the future; the PLS fit itself contains no built-in forecast model.
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/heldout_forecast.pdf}
+\caption{Measured training and future longitudinal position, with $d=3$ GCV-selected PLS trends under zero and training-derived means and their local-polynomial continuations. The observed future is withheld during estimation.}
+\label{fig:forecast}
+\end{figure*}
+Third differences have meaningful units only after dividing by the cubed 0.1-s sampling interval. Figure~\ref{fig:jerk} illustrates strong differentiation noise in the original position and the smaller, regularized jerk proxy of the selected PLS trend. Neither derivative is independently observed true jerk.
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/jerk_comparison.pdf}
+\caption{Direct and PLS-smoothed third differences of the same measured US-101 position segment. Panel axes have different scales; reduced amplitude after smoothing does not establish physical accuracy.}
+\label{fig:jerk}
+\end{figure*}
+
+\subsection{Five criteria, four orders and both mean policies}
+Table~\ref{tab:forecast} reports genuinely held-out position RMSE at the one-second horizon for the main PLS orders and physical baselines; Figure~\ref{fig:criteria} provides the complete $d=1,\ldots,4$ by five-criterion comparison for both $\mu=0$ and training-data plug-in mean of differences. Every method is scored against the same recorded future positions, not an unavailable noise-free latent trend.
+\input{generated/forecast_table}
+\input{generated/empirical_summary}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/criterion_heatmap.pdf}
+\caption{Held-out one-second position RMSE in meters (printed values) across all four orders and all five criteria; $\mu$ policies are separated. Colors represent log-RMSE for display, not significance. BIC was restricted to $S\ge0.10$.}
+\label{fig:criteria}
+\end{figure*}
+
+\subsection{Extrapolation horizon and physical baselines}
+The experiment evaluates $h=5,10,20$ future 100-ms frames rather than labeling in-sample fitted values as forecasts. Figure~\ref{fig:horizons} compares selected $d=2,d=3$ PLS continuations with constant-velocity, constant-acceleration and Savitzky--Golay physical baselines. Smooth historical fits can extrapolate poorly if acceleration changes abruptly.
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/forecast_horizons.pdf}
+\caption{Chronological 0.5, 1 and 2-second position errors across 15 overlapping track-origin windows; comparisons use future measured camera-derived position, not latent truth.}
+\label{fig:horizons}
+\end{figure*}
+
+\subsection{All seven numerical fitting pathways}
+For completeness, we separately compare shift-free full SVD, dense solve, dense Cholesky, general banded LU, banded Cholesky, symmetric Gram eigendecomposition and dual SVD using the same observed windows at $d=3,S=0.9$. Table~\ref{tab:solver} and Figure~\ref{fig:backend} give fit-only median timings and relative fit discrepancies against SVD. This is a numerical calculation study, not a five-criterion selection runtime study or a measurement of physical jerk accuracy.
+\input{generated/solver_table}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{figures/backend_comparison.pdf}
+\caption{Fit-only elapsed milliseconds and relative numerical discrepancies on real recorded positions under two $\mu$ policies. Numerical fit differences are not statistical forecast errors.}
+\label{fig:backend}
+\end{figure*}
