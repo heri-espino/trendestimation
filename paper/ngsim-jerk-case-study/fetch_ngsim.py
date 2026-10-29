@@ -25,9 +25,9 @@ BASE="https://data.transportation.gov/resource/8ect-6jqj.csv"
 FIELDS="vehicle_id,frame_id,global_time,local_y,local_x,location"
 QUERY={
     "$select":FIELDS,
-    "$where":"location = 'us-101' AND vehicle_id >= 1 AND vehicle_id <= 120",
+    "$where":"location = 'us-101' AND vehicle_id >= 1 AND vehicle_id <= 20",
     "$order":"vehicle_id ASC, global_time ASC",
-    "$limit":"70000",
+    "$limit":"60000",
 }
 URL=BASE+"?"+urllib.parse.urlencode(QUERY)
 DT=0.1
