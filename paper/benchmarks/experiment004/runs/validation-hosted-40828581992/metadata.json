@@ -1,0 +1,37 @@
+{
+  "experiment": "experiment004_bic_and_precision_validation",
+  "date_utc": "2026-10-29T06:20:29.141800+00:00",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "mpmath": "1.3.0",
+  "host": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "decimal_digits": 85,
+  "elapsed_seconds": 0.9495705129999976,
+  "bic_rows": 224,
+  "high_precision_rows": 48,
+  "convergence_cases": 3,
+  "d_values": [
+    1,
+    2,
+    5,
+    6
+  ],
+  "n_values": [
+    64,
+    128
+  ],
+  "mu_policies": [
+    "fixed_zero",
+    "observed_difference"
+  ],
+  "fixed_input_note": "Synthetic smooth-trend iid-noise seed=0 from original Experiment004; lambda and mu are frozen float64 inputs.",
+  "max_spectral_error": 3.794072366307114e-06,
+  "max_finite_banded_error": 681.3891048377933,
+  "cholesky_failures": 18,
+  "max_reference_kkt": 2.218059140554348e-47,
+  "note": "BIC follows Cortes-Toto 2017 Eq.21. The low-S BIC limit diverges to negative infinity when RSS is nonzero for positive lambda. These are *fit* comparisons, not selected-parameter or out-of-sample prediction claims.",
+  "bic_small_s.csv_sha256": "edc808f1f17fd9f534b6f00415aa74fd41a83b63003d19b702342bfad530b81a",
+  "high_precision.csv_sha256": "e52a3df184e2b37b1c097bb9f682b93864b9c2e9d8ae58c9bebb3ae784701dac",
+  "precision_convergence.csv_sha256": "7b1626166a8738fa07ec90586914d00552cfc2d05f6b46ab47bd936537b4addd"
+}

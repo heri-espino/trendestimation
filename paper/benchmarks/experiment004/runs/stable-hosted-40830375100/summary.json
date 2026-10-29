@@ -1,0 +1,135 @@
+{
+  "experiment": "experiment004_stable_double_precision_validation",
+  "created_utc": "2026-10-29T06:38:16.106426+00:00",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "mpmath": "1.3.0",
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "precision_seeds": 3,
+  "bic_seeds": 20,
+  "decimal_digits": 85,
+  "elapsed_seconds": 7.3732391089999965,
+  "precision_rows": 5184,
+  "bic_rows": 3840,
+  "methods": {
+    "svd_polynomial_reference": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 0,
+      "max_relative_error": 3.850826174058407e-06,
+      "median_relative_error": 2.901857983532309e-10
+    },
+    "svd_shift_free": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 0,
+      "max_relative_error": 5.517405111407149e-09,
+      "median_relative_error": 2.9219339680504097e-11
+    },
+    "svd_min_norm_reference": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 0,
+      "max_relative_error": 5.517405071396097e-09,
+      "median_relative_error": 3.479066549101353e-11
+    },
+    "scaled_augmented_qr_gelsy": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 0,
+      "max_relative_error": 3.098615213700755e-09,
+      "median_relative_error": 2.7969816165501436e-11
+    },
+    "scaled_augmented_svd_gelsd": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 12,
+      "max_relative_error": 1.570405448699901e-05,
+      "median_relative_error": 1.220374472725007e-09
+    },
+    "dual_svd": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 0,
+      "max_relative_error": 3.691712005805145e-08,
+      "median_relative_error": 1.7604955822533012e-10
+    },
+    "dual_banded_cholesky": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 302,
+      "max_relative_error": 0.12224637154673958,
+      "median_relative_error": 1.7808765028260986e-05
+    },
+    "primal_banded_cholesky": {
+      "cases": 576,
+      "failures": 216,
+      "errors_above_1e_5": 294,
+      "max_relative_error": 681.3895654211092,
+      "median_relative_error": 0.03655650935498792
+    },
+    "eigh_gram": {
+      "cases": 576,
+      "failures": 0,
+      "errors_above_1e_5": 484,
+      "max_relative_error": 144.5456955485749,
+      "median_relative_error": 0.0023223629784807224
+    }
+  },
+  "restricted_bic": {
+    "0.05": {
+      "cases": 1920,
+      "mean_rmse": 0.2904462166214589,
+      "boundary_selected": 1920,
+      "mean_by_mu": {
+        "fixed_zero": 0.29044562666353246,
+        "observed_difference": 0.2904468065793855
+      }
+    },
+    "0.1": {
+      "cases": 1920,
+      "mean_rmse": 0.24528023885200928,
+      "boundary_selected": 1535,
+      "mean_by_mu": {
+        "fixed_zero": 0.23421730714477,
+        "observed_difference": 0.25634317055924855
+      }
+    }
+  },
+  "study_default": "full SVD of D with shift-free spectral reconstruction",
+  "not_global_fit_default": true,
+  "numerical_criterion_tolerance": 1e-05,
+  "special_conditions": [
+    "Difference orders d=1..6; d=0 excluded.",
+    "High precision compares FITS at frozen float64 lambda and mu.",
+    "Restricted BIC is a sensitivity analysis, not a new statistical criterion.",
+    "All methods use the same penalty candidate for each matched QA case.",
+    "No execution-time ranking: this is a correctness validation.",
+    "The high-S SVD reference is not yet the global library fit default."
+  ],
+  "threadpools_after_run": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 4,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 4,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "stable_solver_precision.csv_sha256": "b28fc54d3f5cc77a7dd100806d831592bc24433411ff967bbe1ddd2fc590d0e2",
+  "restricted_bic_rmse.csv_sha256": "77c735fa28b9819308483cbe5d137c27c8efbd602892db92f5d7d5e32b7526b2"
+}
