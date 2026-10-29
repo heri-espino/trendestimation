@@ -36,9 +36,10 @@ lambda is a numerical implementation detail, not the user-facing axis.
 - Criterion validity: every candidate matches the SVD double-precision
   library to relative tolerance 1e-5; this is not a high-precision proof
   of the criterion itself.
-- At S=0 and S=1 the exact limiting trend is used. Those selected
-  endpoints are NOT independently MP-verified and therefore cannot be
-  treated as certified points in the accuracy/runtime frontier.
+- Exact endpoints are independently certified: S=0 has reference
+  tau=y, and S=1 uses multiprecision constrained polynomial QR
+  with both moment optimality and D_d tau=mu constraints checked.
+  These exact endpoint references are computed OUTSIDE timing.
 - BIC uses S>=0.10 as a sensitivity restriction, not a repaired model.
 - Observed-difference mean = mean(D_d y) is a conditional empirical
   plug-in, not joint Gaussian MLE of mu.
