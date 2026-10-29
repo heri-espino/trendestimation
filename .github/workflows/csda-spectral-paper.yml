@@ -81,4 +81,5 @@ jobs:
             paper/csda-spectral-smoothness/publication_sha256.txt \
             paper/csda-spectral-smoothness/source_commit.txt
           git commit -m "paper: archive compiled CSDA draft and data-derived vector figures [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
