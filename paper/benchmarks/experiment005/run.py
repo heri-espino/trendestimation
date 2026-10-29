@@ -150,10 +150,49 @@ def fit_once(method, prepared, D, y, mu, lam):
     raise ValueError(method)
 
 
+def precise_endpoint(n,d,y,mu,lam,digits):
+    """Independent exact endpoint reference, with analytical constraint QA.
+
+    S=0: interpolation exactly y.
+    S=1: minimize ||y-tau|| over D_d tau = mu*1, parameterized
+    as a degree-(d-1) polynomial plus mu*binomial(i,d).
+    Multiprecision QR avoids the shifted high-degree double polynomial.
+    """
+    if lam==0:
+        return np.asarray(y,dtype=float).copy(),0.,"ok"
+    with mpmath.workdps(digits):
+        yy=[mpmath.mpf(float(a)) for a in y]
+        mm=mpmath.mpf(float(mu))
+        z=[mpmath.mpf(2*i-(n-1))/(n-1) for i in range(n)]
+        A=mpmath.matrix([[t**j for j in range(d)] for t in z])
+        target=mpmath.matrix([
+            yy[i]-mm*mpmath.binomial(i,d) for i in range(n)
+        ])
+        coeff,_=mpmath.qr_solve(A,target)
+        fitted=[
+            mpmath.fsum(A[i,j]*coeff[j] for j in range(d))
+            +mm*mpmath.binomial(i,d) for i in range(n)
+        ]
+        residual=[yy[i]-fitted[i] for i in range(n)]
+        gradient=max(
+            abs(mpmath.fsum(A[i,j]*residual[i] for i in range(n)))
+            for j in range(d))
+        stencil=[(-1)**(d-j)*math.comb(d,j) for j in range(d+1)]
+        penalty=max(
+            abs(mpmath.fsum(stencil[j]*fitted[i+j] for j in range(d+1))-mm)
+            for i in range(n-d))
+        kkt=float(max(gradient,penalty))
+        return np.asarray([float(x) for x in fitted]),kkt,(
+            "ok" if kkt<1e-18 else "limit_qa_failure")
+
+
 def stable_reference(n,d,y,mu,lam,digits,cache):
     """Independent 85-digit banded dual; NOT charged to method runtime."""
     if lam==0 or np.isposinf(lam):
-        return None, None, "endpoint_unverified_by_mp"
+        key=(float(mu),float(lam))
+        if key not in cache:
+            cache[key]=precise_endpoint(n,d,y,mu,lam,digits)
+        return cache[key]
     key=(float(mu),float(lam))
     if key not in cache:
         try:
@@ -280,6 +319,7 @@ def run(out,preset,repeats,digits,seed_offset=0):
     targets=complete_s_grid() if preset=="smoke" else pilot.S_GRID
     assert targets[0]==0 and targets[-1]==1
     with threadpool_limits(limits=1):
+        measured_threadpools=threadpool_info()
         for n in config["ns"]:
             for d in config["orders"]:
                 D=pilot.difference_matrix(n,d)
@@ -435,8 +475,9 @@ def run(out,preset,repeats,digits,seed_offset=0):
         "grid_size":len(targets),
         "high_s_sentinels":list(config["high_s"]),
         "repeats":repeats,"decimal_digits":digits,
-        "high_precision_reference":"independent mp banded dual, frozen float64 lambda and mu",
+        "high_precision_reference":"independent mp banded dual at finite lambda; mp constrained polynomial QR at S=1; exact y at S=0",
         "reference_outside_timers":True,
+        "mp_endpoint_policy":"S=1 constrained multiprecision polynomial QR; S=0 y exactly",
         "statistical_error":"RMSE to known in-sample latent trend, not forecasting",
         "numerical_error":"relative L2 versus 85-digit reference at same frozen lambda",
         "score_validity":"all finite candidates compared to spectral double reference outside timer",
@@ -444,7 +485,7 @@ def run(out,preset,repeats,digits,seed_offset=0):
         "setup_note":"Some selection and fit helper structures are separately created; cold sum intentionally charges both.",
         "invalid_policy":"No method with incomplete or discrepant criterion grid qualifies as winner.",
         "bic_policy":"S>=0.10 restricted sensitivity; not a repaired criterion",
-        "blas_threads":1,"threadpools":threadpool_info(),
+        "blas_threads":1,"threadpools":measured_threadpools,
         "platform":platform.platform(),"python":sys.version,
         "numpy":np.__version__,"scipy":scipy.__version__,
         "mpmath":mpmath.__version__,
