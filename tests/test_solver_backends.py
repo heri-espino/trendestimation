@@ -104,11 +104,11 @@ def test_invalid_penalties_and_data():
         solver.fit_many(y, [np.nan])
 
 
-def test_default_banded_cholesky_for_fit_only_and_spectral_selection():
+def test_default_full_svd_for_fit_only_and_spectral_selection():
     y = np.random.default_rng(18).normal(size=27)
     modern = PreparedPLSSolver(len(y), order=2)
     current = TrendSmoother(len(y), order=2)
-    assert modern.method == "cholesky"
+    assert modern.method == "svd"
     assert_allclose(modern.fit(y, lambda_=8.0, mu=0.15),
                     current.fit(y, lambda_=8.0, mu=0.15).trend,
                     rtol=2e-7, atol=2e-7)

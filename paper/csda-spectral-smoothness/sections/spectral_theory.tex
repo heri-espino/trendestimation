@@ -1,0 +1,60 @@
+\section{Finite-difference PLS and the smoothness coordinate}\label{sec:theory}
+For observations $y\in\R^n$, let $D_d\in\R^{(n-d)\times n}$ be the order-$d$ forward-difference operator, where $1\le d<n$. For a fixed reference mean $\mu$ of the $d$th differences, define
+\begin{equation}\label{eq:pls}
+\widehat\tau_{\lambda,\mu}
+=\arg\min_{\tau\in\R^n}\left\{
+\|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf1\|_2^2\right\}.
+\end{equation}
+With $Q_d=D_d^\top D_d$, $H_\lambda=(I+\lambda Q_d)^{-1}$ and $p_{\mu,t}=\mu\binom{t-1}{d}$ for $t=1,\ldots,n$, $D_dp_\mu=\mu\mathbf1$ and
+\begin{equation}\label{eq:affine}
+\widehat\tau_{\lambda,\mu}=p_\mu+H_\lambda(y-p_\mu).
+\end{equation}
+The nullspace of $D_d$ has dimension $d$, consisting of discrete polynomials of degree at most $d-1$. For fixed $\mu$, the conditional effective degrees of freedom are $\nu_\lambda=\tr(H_\lambda)$; data-dependent estimation of $\mu$ is not included in this trace.
+
+Write the reduced SVD $D_d=U\Sigma V^\top$, where $r=n-d$, $U\in\R^{r\times r}$ is orthogonal, $V\in\R^{n\times r}$ has orthonormal columns and $\Sigma=\diag(\sigma_1,\ldots,\sigma_r)$ with $\sigma_j>0$. Let $\delta_j=\sigma_j^2$. We use
+\begin{equation}\label{eq:s}
+S_d(\lambda)=\frac{n-\nu_\lambda}{n-d}
+=\frac1r\sum_{j=1}^{r}\frac{\lambda\delta_j}{1+\lambda\delta_j}.
+\end{equation}
+This is normalized to $[0,1]$, unlike the earlier index with denominator $n$ \citep{guerrero2008,cortes2017}.
+
+\begin{proposition}\label{prop:map}
+For $1\le d<n$, $S_d$ is strictly increasing and continuous on $[0,\infty)$, with $S_d(0)=0$ and $\lim_{\lambda\to\infty}S_d(\lambda)=1$. Hence its inverse $\Lambda_d(s)$ is unique for every $0<s<1$.
+\end{proposition}
+\begin{proof}
+The nonzero singular values imply
+\[
+S_d'(\lambda)=\frac1r\sum_{j=1}^{r}
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.
+\]
+Termwise continuity and the limiting values give the result.
+\end{proof}
+
+For a criterion $C(\lambda)$ conditional on fixed $\mu$, define $\widetilde C(s)=C(\Lambda_d(s))$. Their global minimizer sets correspond in exact arithmetic, provided the same admissible endpoints and definitions are retained. Moreover,
+\begin{equation}\label{eq:chain}
+\frac{d\widetilde C}{ds}
+=\frac{dC/d\log\lambda}{dS_d/d\log\lambda},
+\qquad
+\frac{dS_d}{d\log\lambda}
+=\frac1r\sum_j
+\frac{\lambda\delta_j}{(1+\lambda\delta_j)^2}.
+\end{equation}
+The denominator tends to zero at both endpoints. Thus searching the bounded interval does not remove numerical conditioning or guarantee global optimality. Our numerical interface inverts $s$ in $\log\lambda$ with spectral evaluations, and treats $s=0$ and $s=1$ as exact limiting values.
+
+\section{A unified full-SVD implementation}\label{sec:svd}
+Let $w_j(\lambda)=\lambda\sigma_j^2/(1+\lambda\sigma_j^2)$, evaluated stably through $\log\lambda+2\log\sigma_j$, and let $w=(w_1,\ldots,w_r)^\top$. Since $I-H_\lambda=V\diag(w)V^\top$, the conventional affine reconstruction is
+\begin{equation}\label{eq:traditional}
+\widehat\tau_{\lambda,\mu}
+=y-V\diag(w)V^\top(y-p_\mu).
+\end{equation}
+At high $d$, the polynomial reference $p_{\mu,t}=\mu\binom{t-1}{d}$ can be badly scaled. The identity
+$D_dp_\mu=\mu\mathbf1=U\Sigma V^\top p_\mu$
+implies $V^\top p_\mu=\mu\Sigma^{-1}U^\top\mathbf1$. Substitution into \eqref{eq:traditional} yields
+\begin{equation}\label{eq:shiftfree}
+\boxed{\widehat\tau_{\lambda,\mu}
+=y-V\left[w\odot(V^\top y)
+-\mu\,\frac{w}{\sigma}\odot(U^\top\mathbf1)\right],}
+\end{equation}
+where all products and divisions inside brackets are componentwise. This shift-free formula defines exactly the same estimator; it avoids forming and subtracting the potentially huge polynomial reference. At $\lambda=\infty$, setting all $w_j=1$ gives the polynomial-constrained limiting fit without attempting an infinite-penalty matrix factorization.
+
+Once the SVD is available, $S_d(\lambda)$ and $\nu_\lambda$ each require $O(r)$ arithmetic, and a full trend evaluation needs $O(nr)$. The dense SVD requires $O(n^3)$-class setup and $O(n^2)$ storage for near-square operators. These are meaningful computational costs compared with methods exploiting banded differences \citep{weinert2007,biessy2026}. We nevertheless select full SVD of $D_d$, rather than eigendecomposition of $D_d^\top D_d$, as our unified accuracy-oriented default: it supports the parameter map, selection criteria and curve reconstruction from one decomposition, and it avoids squaring the singular-value condition number via an explicit Gram matrix.

@@ -76,7 +76,7 @@ def test_paper_and_website_register_benchmarks():
 def test_fit_only_default_keeps_selection_spectral_and_accurate():
     y = np.random.default_rng(123).normal(size=38)
     fit_only = PreparedPLSSolver(len(y), order=3)
-    assert fit_only.method == "cholesky"
+    assert fit_only.method == "svd"
     spectral = TrendSmoother(len(y), order=3)
     for mu in (0.0, 0.15):
         fitted = fit_penalized(y, lambda_=12.0, order=3, mu=mu)
