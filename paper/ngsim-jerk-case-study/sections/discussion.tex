@@ -1,0 +1,16 @@
+\section{Discussion and conclusions}
+The observed vehicle positions illustrate why model difference order, reference mean and extrapolation method must be kept distinct. For a position series, $d=3$ has a direct relation to the third temporal derivative---jerk---but neither the raw third difference nor its smoothed counterpart is an independent physical reference signal. A smooth-looking jerk series can still underrepresent actual sudden driver maneuvers.
+
+The normalized coordinate $S\in[0,1]$ solves an important interpretability problem: it has consistent meaning across difference orders, regardless of the scale of the internal penalty $\lambda$, and its inverse map does not depend on the fixed mean of differences. The user-facing selection grid is always expressed in $S$, not an arbitrary independently sampled log-$\lambda$ coordinate. Pretranslation and reuse are computational optimizations, not new statistical models.
+
+The principal practical conclusion must be qualified. A favorable GCV-selected $d=3$ one-second held-out result in this restricted sample is a descriptive illustration and cannot establish generalized vehicle-prediction superiority. The fifteen training/holdout origins overlap within five recorded segments and do not justify naive independent-window inference. Selection criteria may yield nearly identical smooth trends, and the observed position itself includes unmeasured camera noise.
+
+The training-data mean-difference policy uses no future information, but CV scores computed conditionally on that plug-in mean are not exact re-estimated LOOCV. Profiled Gaussian marginal likelihood requires variance assumptions; it is not point-estimator MLE for $\tau$ or joint ML estimation of $\mu$. Restricted residual BIC remains an exploratory constrained criterion because the original unrestricted interpolation boundary is mathematically pathological.
+
+Our extrapolation is an explicit local polynomial applied to the historical PLS fit. It is \emph{not} a predictive distribution, and it cannot anticipate unobserved changes in acceleration, traffic interactions or lane changes. Future research requires independent maneuvers, substantially more vehicles, genuine measurement-error characterization, and a dedicated dynamic/state-space forecast comparison. The seven fitting backends are benchmarked for single-curve cost and numerical agreement; complete-selection runtime and independent multiprecision accuracy are addressed by companion studies.
+
+\section*{Reproducibility and data rights}
+The US DOT/FHWA NGSIM dataset (DOI: 10.21949/1504477) is credited as the sole source of observed positions; the dataset portal identifies a CC BY-SA 3.0 license. Source query and extraction rules, tracked vehicle identifiers, segment starting timestamps, immutable checksums, chronological forecast rows, solver diagnostics, source-generation scripts and editable PGF vector figures are preserved under the case-study directory. The original official-position subset has not been artificially contaminated or pre-smoothed. Figure-derived jerk is explicitly estimated rather than observed.
+
+\section*{Declarations}
+This is an illustrative research draft. Authorship, correspondence, funding, conflicts and any journal submission require coauthor review and agreement.

@@ -1,0 +1,60 @@
+name: NGSIM jerk real-data chronological forecast experiment
+
+on:
+  push:
+    branches:
+      - paper/ngsim-jerk-real-data-20261029
+    paths:
+      - paper/ngsim-jerk-case-study/run_case.py
+      - .github/workflows/ngsim-jerk-analysis.yml
+      - paper/ngsim-jerk-case-study/data/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: ngsim-jerk-case-analysis
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install project and numerical requirements
+        run: |
+          python -m pip install -e .
+      - name: Run authentic observed-position rolling holdouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/ngsim-jerk-case-study/run_case.py
+          test -s paper/ngsim-jerk-case-study/results/forecast_rows.json
+          test -s paper/ngsim-jerk-case-study/results/solver_validation.json
+      - name: Upload all source-linked observations and outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ngsim-jerk-real-data-forecast-results
+          path: |
+            paper/ngsim-jerk-case-study/data/
+            paper/ngsim-jerk-case-study/results/
+          if-no-files-found: warn
+      - name: Commit empirical results, never raw synthetic replacements
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f paper/ngsim-jerk-case-study/results/
+          if ! git diff --cached --quiet; then
+            git commit -m "research: archive observed NGSIM rolling holdouts and solver audits [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

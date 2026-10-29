@@ -1,0 +1,17 @@
+% GENERATED FROM REAL NGSIM FITTING BENCHMARK
+\begin{table*}[t]
+\caption{Same observed position windows, seven fit-only numerical backends, $d=3$, $S=0.90$. Median runtime is across 10 model/mean cases, each with three within-run timing repetitions; maximum relative fit error uses full SVD as the numerical baseline. Hardware-specific values do not predict criterion-selection timing.}
+\label{tab:solver}\centering
+\begin{tabular}{lrrr}\toprule
+Solver & Valid cases & Median fit time (ms) & Max.\ relative discrepancy \\
+\midrule
+Full SVD & 10 & 0.0423 & 0.00e+00 \\
+Dense LU & 10 & 0.0566 & 1.38e-12 \\
+Dense Cholesky & 10 & 0.0401 & 1.65e-12 \\
+Banded LU & 10 & 0.2047 & 1.27e-12 \\
+Banded Cholesky & 10 & 0.0192 & 1.07e-12 \\
+Gram eigendecomp. & 10 & 0.4226 & 3.26e-12 \\
+Dual SVD & 10 & 0.6657 & 2.62e-17 \\
+\bottomrule
+\end{tabular}
+\end{table*}

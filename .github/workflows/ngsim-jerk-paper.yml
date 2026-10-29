@@ -1,0 +1,127 @@
+name: NGSIM real-vehicle jerk PLS publication
+
+on:
+  push:
+    branches:
+      - paper/ngsim-jerk-real-data-20261029
+    paths:
+      - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/**
+      - paper/ngsim-jerk-case-study/render_paper.py
+      - paper/ngsim-jerk-case-study/publication_style.py
+      - paper/ngsim-jerk-case-study/references.bib
+      - .github/workflows/ngsim-jerk-paper.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: ngsim-jerk-publication
+  cancel-in-progress: true
+
+jobs:
+  compile-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install author CAS pdfLaTeX and bibliographic software
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+      - name: Install library and AwesomeFigures publication renderer
+        run: |
+          python -m pip install -e .
+          python -m pip install -r paper/requirements.txt
+          python - <<'PY'
+          import awesomefigures as af
+          assert hasattr(af, "inspect_latex") and hasattr(af, "latex_style")
+          print("AwesomeFigures",af.__version__)
+          PY
+      - name: Use exactly author-provided CAS v2.4 class
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            cp "paper/els-cas-templates/$f" "paper/ngsim-jerk-case-study/$f"
+          done
+      - name: Generate tables and TeX-native AwesomeFigures from real archived scores
+        run: |
+          set -euo pipefail
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/ngsim-jerk-case-study/render_paper.py
+          for f in heldout_forecast jerk_comparison criterion_heatmap forecast_horizons backend_comparison; do
+            for ext in pdf pgf svg; do
+              test -s "paper/ngsim-jerk-case-study/figures/$f.$ext"
+            done
+          done
+          test -s paper/ngsim-jerk-case-study/generated/forecast_table.tex
+          test -s paper/ngsim-jerk-case-study/generated/solver_table.tex
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("paper/ngsim-jerk-case-study")
+          m=json.loads((p/"awesomefigures_latex_manifest.json").read_text())
+          raw=json.loads((p/"results/run_manifest.json").read_text())
+          a=json.loads((p/"data/provenance.json").read_text())
+          assert len(m["figures"])==5
+          assert len(a["selected"])==5 and raw["tracks"]==5
+          assert raw["data_not_simulated"] and raw["solver_records"]==70
+          for item in m["figures"]:
+              assert item["smallest_text_pt"]>=7.
+              assert item["layout"]=="text"
+          print("Verified real NGSIM provenance and all five PGF publications")
+          PY
+      - name: Compile standalone real-data two-column case study
+        run: |
+          set -euo pipefail
+          cd paper/ngsim-jerk-case-study
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -19
+          if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
+            echo "Undefined bibliography"; exit 1
+          fi
+          sha256sum main.tex references.bib sections/*.tex generated/*.tex \
+            figures/*.pdf figures/*.pgf render_paper.py run_case.py \
+            data/*.csv data/*.json results/*.json main.pdf > publication_sha256.txt
+      - name: Upload fully reproducible LaTeX and PDF package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ngsim-jerk-real-data-cas-manuscript
+          path: |
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/main.tex
+            paper/ngsim-jerk-case-study/sections/
+            paper/ngsim-jerk-case-study/generated/
+            paper/ngsim-jerk-case-study/figures/
+            paper/ngsim-jerk-case-study/references.bib
+            paper/ngsim-jerk-case-study/render_paper.py
+            paper/ngsim-jerk-case-study/run_case.py
+            paper/ngsim-jerk-case-study/fetch_ngsim.py
+            paper/ngsim-jerk-case-study/data/
+            paper/ngsim-jerk-case-study/results/
+            paper/ngsim-jerk-case-study/awesomefigures_latex_manifest.json
+            paper/ngsim-jerk-case-study/publication_sha256.txt
+          if-no-files-found: warn
+      - name: Commit PDF, vectors and generated results to paper branch
+        if: success()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f paper/ngsim-jerk-case-study/main.pdf \
+            paper/ngsim-jerk-case-study/figures/ \
+            paper/ngsim-jerk-case-study/generated/ \
+            paper/ngsim-jerk-case-study/awesomefigures_latex_manifest.json \
+            paper/ngsim-jerk-case-study/publication_sha256.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "paper: publish measured NGSIM jerk forecasts with TeX vector figures [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
