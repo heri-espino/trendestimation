@@ -88,7 +88,7 @@ def rmse_criteria():
     rows=readcsv(PILOT/"pilot_rmse.csv")
     criteria=["cv","gcv","aicc","bic","mle"]
     means=["fixed_zero","observed_difference"]
-    labels=["CV","GCV","AICc","RSS-BIC*","Profile ML"]
+    labels=["CV","GCV","AICc","BIC*","ML"]
     val={}
     for mode in means:
         for c in criteria:
@@ -106,8 +106,6 @@ def rmse_criteria():
     ax.set(ylabel="Mean latent-trend RMSE",title="Mean recovery error")
     ax.set_ylim(0,.36)
     ax.legend(loc="upper left",frameon=False,ncol=2)
-    ax.text(0,-.17,"* RSS-BIC: first positive grid S=.01.",
-            transform=ax.transAxes,fontsize=7,color=GREY)
     export(fig,"rmse_criteria")
 
 
@@ -184,7 +182,7 @@ def solver_accuracy():
         Patch(facecolor=BLUE, label="First"),
         Patch(facecolor=CYAN, label="Second"),
         Patch(facecolor="#a65c63", label="Failed"),
-    ], loc="lower right", ncol=3, fontsize=7, frameon=False)
+    ], loc="upper right", ncol=3, fontsize=7, frameon=False)
     export(fig, "solver_accuracy")
 
 
