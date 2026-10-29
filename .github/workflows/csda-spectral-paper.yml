@@ -1,15 +1,16 @@
-name: CSDA spectral manuscript — vector figures and PDF
+name: CSDA cas-dc two-column / TeX AwesomeFigures
 
 on:
   push:
     branches:
-      - paper/csda-spectral-smoothness-20261029
+      - paper/csda-cas-dc-awesomefigures-20261029
     paths:
       - .github/workflows/csda-spectral-paper.yml
       - paper/csda-spectral-smoothness/main.tex
       - paper/csda-spectral-smoothness/references.bib
       - paper/csda-spectral-smoothness/sections/**
       - paper/csda-spectral-smoothness/render_figures.py
+      - paper/csda-spectral-smoothness/publication_style.py
   workflow_dispatch:
 
 permissions:
@@ -17,9 +18,9 @@ permissions:
 
 jobs:
   render-and-compile:
-    # Deliberately does not use PCAG103A-08.
+    # Small publication build; does not occupy dedicated self-hosted runner.
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,49 +28,92 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install pinned vector plotting dependencies
-        run: python -m pip install "numpy==2.3.5" "scipy==1.17.0" "matplotlib==3.10.7"
-      - name: Rerender all figures only from archived CSVs
+      - name: Install CAS-compatible LaTeX engine
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk
+      - name: Install AwesomeFigures pinned publication API and plotting stack
+        run: |
+          python -m pip install "numpy==2.3.5" "scipy==1.17.0" "matplotlib==3.10.7"
+          python -m pip install -r paper/requirements.txt
+          python - <<'PY'
+          import awesomefigures as af
+          for api in ("set_style", "inspect_latex", "latex_style"):
+              assert hasattr(af,api),api
+          print("AwesomeFigures",af.__version__)
+          PY
+      - name: Use exactly the author-supplied CAS Bundle v2.4
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$file"
+            cp "paper/els-cas-templates/$file" "paper/csda-spectral-smoothness/$file"
+          done
+          sha256sum paper/els-cas-templates/cas-dc.cls \
+            paper/els-cas-templates/cas-common.sty \
+            paper/els-cas-templates/cas-model2-names.bst \
+            > paper/csda-spectral-smoothness/template_source_sha256.txt
+      - name: Rebuild five PDF/PGF/SVG figures with measured CAS LaTeX fonts
         shell: bash
         run: |
           set -euo pipefail
           python paper/csda-spectral-smoothness/render_figures.py
           for f in smoothness_map bic_boundary rmse_criteria solver_accuracy restricted_bic; do
-            test -s "paper/csda-spectral-smoothness/figures/$f.pdf"
-            test -s "paper/csda-spectral-smoothness/figures/$f.svg"
+            for ext in pdf pgf svg; do
+              test -s "paper/csda-spectral-smoothness/figures/$f.$ext"
+            done
           done
-      - name: Compile Elsevier manuscript with BibTeX
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: paper/csda-spectral-smoothness
-          root_file: main.tex
-          latexmk_use_xelatex: false
-          args: -pdf -interaction=nonstopmode -file-line-error -halt-on-error
-      - name: Create auditable publication build manifest
+          test -s paper/csda-spectral-smoothness/awesomefigures_latex_manifest.json
+      - name: Compile two-column CAS LaTeX manuscript and references
         shell: bash
         run: |
           set -euo pipefail
-          test -s paper/csda-spectral-smoothness/main.pdf
+          cd paper/csda-spectral-smoothness
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -18
+      - name: Verify CAS PDF geometry and manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("paper/csda-spectral-smoothness")
+          text=(p/"main.tex").read_text()
+          assert r"\documentclass[a4paper,fleqn]{cas-dc}" in text
+          x=json.loads((p/"awesomefigures_latex_manifest.json").read_text())
+          assert len(x["figures"])==5
+          assert [r["layout"] for r in x["figures"] if r["figure"] in ("solver_accuracy","restricted_bic")] == ["text","text"]
+          assert all(r["backend_pdf"] if "backend_pdf" in r else r["pdf_backend"]=="PGF (genuine TeX text and mathematics)" for r in x["figures"])
+          print("Verified exact CAS class and five native TeX figure exports")
+          PY
           (
             cd paper/csda-spectral-smoothness
-            sha256sum main.tex references.bib sections/*.tex render_figures.py \
-              figures/*.pdf figures/*.svg main.pdf > publication_sha256.txt
+            sha256sum main.tex references.bib sections/*.tex \
+              render_figures.py publication_style.py figures/*.* main.pdf \
+              awesomefigures_latex_manifest.json > publication_sha256.txt
           )
           git rev-parse HEAD > paper/csda-spectral-smoothness/source_commit.txt
-      - name: Upload compiled manuscript and vector figures
+      - name: Upload compiled CAS paper and editable LaTeX figures
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: csda-spectral-smoothness-draft
+          name: csda-cas-double-column-tex-figures
           path: |
             paper/csda-spectral-smoothness/main.pdf
             paper/csda-spectral-smoothness/main.tex
             paper/csda-spectral-smoothness/references.bib
             paper/csda-spectral-smoothness/sections/
             paper/csda-spectral-smoothness/figures/
+            paper/csda-spectral-smoothness/awesomefigures_latex_manifest.json
             paper/csda-spectral-smoothness/publication_sha256.txt
+            paper/csda-spectral-smoothness/template_source_sha256.txt
           if-no-files-found: warn
-      - name: Preserve verified PDF and vector graphics in research branch
+      - name: Commit verified PDF and editable TeX vectors to paper branch
         if: success()
         shell: bash
         run: |
@@ -78,8 +122,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f -- paper/csda-spectral-smoothness/main.pdf \
             paper/csda-spectral-smoothness/figures/ \
+            paper/csda-spectral-smoothness/awesomefigures_latex_manifest.json \
             paper/csda-spectral-smoothness/publication_sha256.txt \
+            paper/csda-spectral-smoothness/template_source_sha256.txt \
             paper/csda-spectral-smoothness/source_commit.txt
-          git commit -m "paper: archive compiled CSDA draft and data-derived vector figures [skip ci]"
+          git commit -m "paper: CAS v2.4 two-column PDF and TeX-authentic AwesomeFigures [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
