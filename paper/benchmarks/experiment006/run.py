@@ -331,14 +331,16 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                             if evaluator.hybrid.structured is not None:
                                 evaluator.hybrid.structured._factors.clear()
                             evaluator.hybrid._band_factors.clear()
-                        reuse=nr>1 and M<1000 and method!="spectral_svd"
+                        reuse=nr>1 and method!="spectral_svd"
                         # Cache only if a full collection of retained factors
                         # fits in the explicitly reported memory budget.
                         if reuse and method=="naive_inverse":
                             reuse=M*n*n*8<max_dense_bytes//2
                         if reuse and (method=="banded_cholesky" or
                                       method in HYBRID_METHODS):
-                            reuse=M*n*(d+1)*8*2<max_dense_bytes//2
+                            # A conservative 4x multiplier includes
+                            # selected inverse plus opaque LU/CHOLMOD factors.
+                            reuse=M*n*(d+1)*8*4<max_dense_bytes//2
                         scores=[]
                         tscore=0.
                         calls=0
