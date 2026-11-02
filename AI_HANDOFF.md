@@ -133,3 +133,36 @@ The first two-repetition pilot is insufficient to establish any
 general fastest-method ranking or amortization exponent. Continue
 only with bounded research slices and versioned results branches;
 never merge other agents' work.
+
+## Experiment006 verified high-order accuracy and guarded fallback (2026-11-02)
+
+Numerical audit (non-admin Conda PCAG103A-08, Python stdlib Decimal,
+85 digits, separate 55-digit convergence check):
+https://github.com/heri-espino/trendestimation/actions/runs/41439239921
+Permanent branch: results/experiment006-highd-41439239921.
+
+28 cases/backend: n=128, d=5/6, mu=.15, 2 frozen seeds,
+S=.75,.85,.90,.91,.95,.99,1. Shift-free SVD accurate 28/28
+(relative forward error <=6.18e-9); primal banded Cholesky 16/28
+(12 inaccurate, worst error 21.24); sparse SuperLU 22/28
+(6 inaccurate, worst 6.86e-2); FFT PCG 14/28 accepted
+(14 rejected by strict independent convergence check). No claim
+that a small KKT residual guarantees forward accuracy.
+
+The new explicit guarded_svd_cholesky policy selects actual full
+shift-free SVD for d>=5 and banded Cholesky for d<=4, correctly
+accounting for spectral setup/time. It is subject to dense
+memory/runtime gates; it does NOT solve high-d at n=131072.
+Tests/test_experiment006_highd_guard.py cross-checks independent
+85-digit reference. Successful guarded runner pilot:
+https://github.com/heri-espino/trendestimation/actions/runs/41439589986
+results/experiment006-selfhosted-41439589986;
+first slice 80/80 valid and second high-d slice 56/80
+(16 new guarded rows all valid, 24 preexisting failures retained).
+
+The original 24 failures remain scientifically relevant and
+must not become falsely successful via looser tolerances. A robust
+large-n high-d/very-high-S structured algorithm is still open.
+The new evidence supports merging tested research scaffolding
+as a *working experiment*, not asserting a universal computational
+winner or completed full factorial.
