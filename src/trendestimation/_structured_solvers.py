@@ -59,13 +59,21 @@ class StructuredSystem:
             self.Q = (self.D.T @ self.D).tocsc()
             if method == "sparse_cholesky":
                 try:
-                    from sksparse.cholmod import cholesky
-                except ImportError as exc:
-                    raise ImportError(
-                        "Sparse Cholesky requires optional scikit-sparse "
-                        "(SuiteSparse CHOLMOD); SciPy sparse LU is different."
-                    ) from exc
-                self.cholmod = cholesky
+                    # New scikit-sparse 0.5: cho_factor returns a factor
+                    # object with .solve(). The cholesky() function now
+                    # returns a matrix or (matrix, permutation) tuple.
+                    from sksparse.cholmod import cho_factor as cholmod_factor
+                except ImportError:
+                    try:
+                        # scikit-sparse 0.4: cholesky returned a Factor
+                        # object with .solve_A().
+                        from sksparse.cholmod import cholesky as cholmod_factor
+                    except ImportError as exc:
+                        raise ImportError(
+                            "Sparse Cholesky requires optional scikit-sparse "
+                            "(SuiteSparse CHOLMOD); SciPy sparse LU is different."
+                        ) from exc
+                self.cholmod = cholmod_factor
             if method == "banded_lu":
                 self.bands = np.zeros((2*d+1,n),float)
                 coo = self.Q.tocoo()
@@ -106,7 +114,8 @@ class StructuredSystem:
                           if self.method == "sparse_lu" else self.cholmod(A))
                 if self.factor_cache:
                     self._factors[lam] = factor
-            x = factor.solve_A(rhs) if self.method=="sparse_cholesky" else factor.solve(rhs)
+            x = (factor.solve_A(rhs) if hasattr(factor, "solve_A")
+                 else factor.solve(rhs))
         else:
             D = self.D
             A = LinearOperator((self.n,self.n),
