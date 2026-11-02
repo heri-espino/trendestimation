@@ -1,6 +1,7 @@
 """Experiment007 correctness and provenance contracts."""
 from __future__ import annotations
 
+import importlib.util
 import sys
 from pathlib import Path
 
@@ -9,8 +10,19 @@ import pytest
 
 ROOT=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment007"
 sys.path.insert(0,str(ROOT))
-from run import (N_LEVELS,D_LEVELS,S_LEVELS,WORKLOADS,make_series,  # noqa: E402
-                 fitted_mu,run)
+# Experiment006 also provides a module named run.py. Import by explicit
+# spec to avoid pytest's shared sys.modules['run'] module collision.
+spec=importlib.util.spec_from_file_location("experiment007_fitting_run",ROOT/"run.py")
+assert spec is not None and spec.loader is not None
+module=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+N_LEVELS=module.N_LEVELS
+D_LEVELS=module.D_LEVELS
+S_LEVELS=module.S_LEVELS
+WORKLOADS=module.WORKLOADS
+make_series=module.make_series
+fitted_mu=module.fitted_mu
+run=module.run
 from summarize import analyze  # noqa: E402
 
 
