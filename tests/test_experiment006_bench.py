@@ -40,7 +40,10 @@ def test_full_factorial_plan_explicitly_contains_requested_extremes():
             assert row["status"]!="eligible"
         if row["method"]=="pcg_fft":
             found_unavailable=True
-            assert row["status"]=="fit_only_not_complete_criterion"
+            if row["mu"]=="data" and row["criterion"]!="mle":
+                assert row["status"]=="statistical_not_applicable"
+            else:
+                assert row["status"]=="fit_only_not_complete_criterion"
         if row["mu"]=="data" and row["criterion"]=="cv":
             assert row["status"]=="statistical_not_applicable"
     assert found_small and found_large and found_unavailable
