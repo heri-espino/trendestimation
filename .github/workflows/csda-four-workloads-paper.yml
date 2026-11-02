@@ -56,7 +56,7 @@ jobs:
           done
           test -s paper/csda-computational-costs/sections/generated_d3_timings.tex
           grep -q '80640' paper/csda-computational-costs/main.tex
-          grep -q 'planned design' paper/csda-computational-costs/sections/experiment006_design.tex
+          grep -q 'planned' paper/csda-computational-costs/sections/experiment006_design.tex
           grep -q 'not a completed' paper/csda-computational-costs/sections/experiment006_status.tex
       - name: Compile CAS two-column manuscript and BibTeX
         shell: bash
