@@ -18,4 +18,58 @@ Our first hypothesis is that a banded Cholesky plus selected-inverse pipeline wi
 
 For the full factorial, the primary observed response is end-to-end time in seconds, conditional on numerical correctness. Secondary responses are setup time, one-time mapping time, score time, peak memory, number of root solves, number of PCG iterations and the fraction of ineligible or failed attempts. When the naive dense baseline cannot run, a speedup against that baseline is \emph{undefined}; it must never be replaced with a synthetic time predicted from $O(n^3)$. Mean and confidence intervals are reported across independent paired blocks rather than treating tightly correlated inner-loop stopwatch samples as independent observations.
 
+
+\subsection{Independent high-order numerical audit (completed pilot)}
+A distinct, immutable Experiment006 audit on the Windows self-hosted
+\texttt{PCAG103A-08} runner compared fixed-$\mu$ PLS fits with an
+independent 85-decimal-digit dual banded-Cholesky reference, including
+a 55-versus-85-digit precision-convergence check. The source and
+all 112 backend-level observations are preserved in GitHub branch
+\texttt{results/experiment006-highd-41439239921}, Actions run
+\texttt{41439239921}. Its factor levels were $n=128$,
+$d\in\{5,6\}$, $\mu=0.15$, two independent frozen seeds, and
+$s\in\{0.75,0.85,0.90,0.91,0.95,0.99,1\}$.
+The numerical validity threshold here is relative \emph{forward error}
+at most $10^{-6}$ against the independent high-precision fit,
+not an arbitrary double-precision normal-equation residual.
+
+\begin{table}[t]
+\caption{Independent high-order fitted-trend accuracy audit ($n=128$,
+fixed $\mu=0.15$). A method rejected by its own convergence check is
+not counted as a valid fit. These are accuracy observations, not speed
+rankings.}
+\label{tab:experiment006-highd}
+\centering
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Fit backend & Valid/28 & Rejected/28 & Largest rel. error\\
+\midrule
+Shift-free full SVD & 28 & 0 & $6.18\times10^{-9}$\\
+Banded Cholesky & 16 & 12 inaccurate & $21.24$\\
+Sparse LU & 22 & 6 inaccurate & $6.86\times10^{-2}$\\
+FFT PCG & 14 & 14 nonconverged & $7.64\times10^{-12}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The audit demonstrates why a small double-precision KKT residual does
+\emph{not} establish a small forward error at high difference order and
+high smoothness. Consequently, Experiment006 now exposes an explicitly
+named \texttt{guarded\_svd\_cholesky} benchmark policy: shift-free full
+SVD for $d\geq5$, and banded Cholesky for $d\leq4$.
+Its SVD setup and memory costs are fully included; dense resource
+guards make it ineligible at very large $n$. This policy is empirically
+supported in the present restricted $n=128$ audit, not a universal
+large-series stable solution.
+
+The subsequent guarded Windows pilot, Actions run
+\texttt{41439589986}, preserved 80/80 valid observations in the
+$d=2$, $\mu=0$ GCV slice, and 56/80 valid observations in the
+$d=6$, $\mu=0.15$ CV slice. The 16 newly added guarded observations
+were valid, while the prior 24 failures from unguarded methods were
+retained. Neither this pilot nor the independent accuracy audit
+supplies the requested seven-length complete factorial or
+publication-grade speedup confidence intervals.
+
 This distinction also guides manuscript revision. Future Experiment006 results will be inserted only after their raw timing CSV, environment metadata, numerical validity summary, and source revision have been committed to the repository. Until then, the present document is a mathematically developed \emph{working draft} with a completed historical benchmark, not a completed seven-length computational study.
