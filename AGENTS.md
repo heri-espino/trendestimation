@@ -73,3 +73,32 @@ versus d>=5 switch was a small-n guard, not an optimal policy.
 Review experiment007/README.md and tests before changing any
 backend policy. Separate fit-only results from whole-criterion
 CV/GCV/BIC/AICc/MLE costs; no invalid QA cell may be ranked.
+
+
+## Experiment008 complete-criterion timing factorial
+
+The user requested computation-time research ONLY, not RMSE:
+n=64/128/256/512/1024/16384/131072, all d=1..6, mu zero
+versus actual observed-difference mean mu='data', fixed nonzero
+reference as a control, two amplitudes, CV/GCV/BIC/AICc/MLE,
+four S grids M=100/1000/10000/100000 INCLUDING exact S=1,
+all four one/multiple S x one/multiple series workloads,
+direct_s versus pretranslated mapped_lambda, and naive explicit
+dense inverse versus actual complete-criterion solvers/hybrids.
+
+Research source and metadata:
+paper/benchmarks/experiment008/{README.md,run_batches.py}.
+Windows runner action: .github/workflows/experiment008-full-factorial.yml
+and large-series action .github/workflows/experiment008-large-series.yml.
+Use existing nonadmin conda env 'trendestimation' (no installations).
+The compressed full Cartesian manifest is a PLAN, not fabricated
+measurements. Actual time rows, failures and ineligibilities must
+be kept distinct and pushed to results/experiment008-* branches.
+
+Experiment008 opts into conditional plug-in mu='data' criteria for
+computation timing. It is NOT fully refitted LOOCV or a new statistical
+definition. The old main API behavior remains unchanged without the
+explicit conditional_data_mu=True keyword in run_slice.
+Never claim naive inverse at n=131072 is a feasible comparison:
+one dense float64 n-by-n matrix is 128 GiB, before factorization.
+Do not merge until actual results, numerical checks and CI are verified.
