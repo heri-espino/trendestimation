@@ -76,6 +76,42 @@ accuracy at high order and high smoothness, not because it is universally the
 fastest method. The API still supports explicit `method="cholesky"` and
 `method="eigh"` for comparative research.
 
+## Additional structured and iterative fit-only solvers (Experiment005)
+
+The existing \`cholesky\` backend is genuinely **banded Cholesky**. Additional
+explicit fit-only methods are \`banded_lu\` (general banded LU), \`sparse_lu\`
+(SciPy SuperLU), \`sparse_cholesky\` (optional SuiteSparse CHOLMOD through
+scikit-sparse), and \`pcg\` (matrix-free conjugate gradient with \`fft\`,
+\`dst\`, \`jacobi\` or \`none\` preconditioning). The generic SciPy sparse
+solver is *not* CHOLMOD. CHOLMOD is never silently replaced by LU.
+
+For example:
+
+\`\`\`python
+from trendestimation import PreparedPLSSolver
+model = PreparedPLSSolver(1000, order=2, method="pcg",
+                          preconditioner="fft", cg_rtol=1e-9)
+trend = model.fit(observed_y, lambda_=100.0, mu="data")
+print(model.cg_iterations, model.cg_relative_residual)
+
+# Reuse a factor across multiple series with the identical n,d,lambda:
+sparse = PreparedPLSSolver(1000, 2, method="sparse_lu", factor_cache=True)
+trend1 = sparse.fit(observed_y, lambda_=100., mu=0.0)
+trend2 = sparse.fit(second_y, lambda_=100., mu=0.15)
+print(sparse.cached_factor_count)
+\`\`\`
+
+PCG must converge to the requested numerical tolerance or raises an error.
+FFT/DST preconditioners impose *surrogate* boundary conditions; their
+iteration count is not guaranteed small, particularly for extreme penalties.
+The full spectral SVD remains the default for fit-only methods and is
+required by the current normalized S, EDF and selection machinery.
+These additions do not automatically calculate CV, GCV, BIC or MLE.
+
+See [Experiment005](paper/benchmarks/experiment005/README.md) for the
+manual paired large-series benchmark, failure reporting and memory/initial
+setup accounting. **No unmeasured speedup is claimed.**
+
 ## Installation
 
 Python 3.10 or newer. From the root of a checkout:
