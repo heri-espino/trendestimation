@@ -69,3 +69,20 @@ a compiled selected-inverse kernel and adaptive high-precision S-grid
 mapping, statistically fair paired CPU timings and analysis of
 measured scaling versus theory. This is a draft research PR, not a
 claim of final computational superiority.
+
+## Experiment006 hybrid criterion extension (latest)
+
+The experiment006 runner now includes six *explicitly named* complete
+hybrid pipelines: banded_lu_banded_trace, sparse_lu_banded_trace,
+sparse_cholesky_banded_trace, pcg_fft_banded_trace,
+pcg_dst_banded_trace and pcg_jacobi_banded_trace. They add real
+sparse/iterative fits PLUS an exact banded selected-inverse trace/
+leverage/determinant diagnostic, with both components counted.
+No hybrid is advertised as an intrinsic sparse-only exact CV implementation.
+Pure Experiment005 methods still lack standalone criterion diagnostics.
+
+The grid reuse cache is gated by estimated resident memory rather than an
+arbitrary 1000-point limit; CHOLMOD remains optional and unavailable cases
+are explicitly recorded. New parity tests test the resulting complete
+criteria against independent SVD for d=1,2,3,6. The PR is draft #95.
+The corrected Windows benchmark and complete timing tensor have NOT run.
