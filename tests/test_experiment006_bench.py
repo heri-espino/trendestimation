@@ -1,7 +1,6 @@
 """Experiment006 end-to-end smoke tests: axes, actual timings, preservation."""
 from __future__ import annotations
 
-import csv
 import sys
 from pathlib import Path
 
