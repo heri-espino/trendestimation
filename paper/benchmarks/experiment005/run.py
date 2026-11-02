@@ -113,6 +113,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                     solver = None
                 for lam in penalties:
                     truth = reference.fit(y,lambda_=lam,mu=mu)
+                    reference_residual = direct_residual(y,truth,lam,d,mu)
                     for repeat in range(repeats):
                         cache_hit = bool(
                             solver is not None and (
@@ -130,6 +131,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                                 "setup_s":prep,"fit_s":float("nan"),
                                 "max_abs_error":float("nan"),
                                 "relative_residual":float("nan"),
+                                "reference_residual":reference_residual,
                                 "pcg_iterations":None,
                                 "stored_bytes":None,
                                 "cached_factors":None,
@@ -144,8 +146,9 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                             rel=direct_residual(y,actual,lam,d,mu)
                             # These are quality gates; errors are not removed
                             # from the saved raw measurements.
-                            status=("ok" if error<=2e-6 and rel<=2e-7
-                                    else "invalid_numerics")
+                            status=("reference_unreliable" if reference_residual>2e-7
+                                    else ("ok" if error<=2e-6 and rel<=2e-7
+                                          else "invalid_numerics"))
                         except (ValueError, ArithmeticError, OverflowError,
                                 np.linalg.LinAlgError) as exc:
                             elapsed=perf_counter()-started
@@ -157,6 +160,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                             "setup_s":prep,"fit_s":elapsed,
                             "max_abs_error":error,
                             "relative_residual":rel,
+                            "reference_residual":reference_residual,
                             "pcg_iterations":solver.cg_iterations,
                             "stored_bytes":solver.stored_bytes,
                             "cached_factors":solver.cached_factor_count,
@@ -204,6 +208,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
         f"- Preset: {preset}; attempted measurements: {len(rows)}\n"
         f"- Numerically valid measurements: {sum(r['status']=='ok' for r in rows)}\n"
         "- All failures remain in raw_measurements.csv.\n"
+        "- Cases with high reference residual are flagged, not ranked.\n"
         "- First fit, subsequent cache hits, and end-to-end repeated costs are separate.\n"
         "- Timing ranks must use only cases with complete valid repetitions.\n"
         "- The original statistical-selection experiment remains separate.\n",
