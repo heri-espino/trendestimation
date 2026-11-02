@@ -86,3 +86,50 @@ arbitrary 1000-point limit; CHOLMOD remains optional and unavailable cases
 are explicitly recorded. New parity tests test the resulting complete
 criteria against independent SVD for d=1,2,3,6. The PR is draft #95.
 The corrected Windows benchmark and complete timing tensor have NOT run.
+
+## Experiment006 Windows runner operational handoff — 2026-11-02
+
+The university Windows PC `PCAG103A-08` is NON-ADMIN. Its Conda installation
+is `C:\Users\175199\AppData\Local\miniconda3`, and the **required**
+environment is `trendestimation`, not the separate `trend-estimation`.
+Do not use `actions/setup-python`, `pip install`, or `conda create`
+on this machine. Use the already-tested workflow
+`.github/workflows/experiment006-selfhosted-pilot.yml` with
+`conda run --no-capture-output -n trendestimation python ...`,
+Windows PowerShell (`shell: powershell`) and repository `src` on PYTHONPATH.
+
+Failed attempts #41430441159 (missing pwsh) and #41430529868
+(setup-python provisioning) did NOT measure solver performance.
+The corrected workflow succeeded:
+https://github.com/heri-espino/trendestimation/actions/runs/41437886131
+No Python or package installation occurred. Existing numerical tests passed.
+
+**Actual permanent results** are in
+`results/experiment006-selfhosted-41437886131`, not only in ephemeral
+runner output; additionally GitHub artifact ID 13136414474 captures
+the raw files. The measured experiment source was commit
+`05edb60c5e9540eecd0a9222dd144a6d1fbd703a`.
+
+Pilot001: n=64, d=2, mu=0, low-amplitude GCV, grid M=100,
+R=2 and 2 repetitions. 64/64 rows succeeded (4 backends).
+Pilot002: n=128, d=6, mu=.15, high-amplitude ordinary CV,
+grid M=100, R=2 and 2 repetitions. Only 40/64 rows succeeded:
+24 rows marked `numerical_failed` (eight each for
+banded_cholesky, sparse_lu_banded_trace and pcg_fft_banded_trace).
+The high-order full-grid failures arise from KKT backward-error
+checks near 1.18e-7–1.30e-7 for banded/sparse and PCG
+relative-residual checks ~6.1e-9–8.9e-9. The full spectral SVD
+returned 16/16 valid rows for this limited pilot.
+
+The GitHub Actions job concluded successfully because it retained
+and reported invalid numerical cells; this is **not** scientific
+certification of all backends. Never count a partial high-order grid
+as an acceptable timing winner. Before a larger timing factorial,
+validate all d=6/high-S methods against the high-precision reference,
+then decide numerical residual tolerances and which algorithms to
+exclude or improve. Do not silently relax tolerances.
+
+The first two-repetition pilot is insufficient to establish any
+general fastest-method ranking or amortization exponent. Continue
+only with bounded research slices and versioned results branches;
+never merge other agents' work.
