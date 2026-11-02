@@ -152,11 +152,38 @@ def compare(records,models,mode,heldout):
             accuracy_reference=r["cholesky"]["ref"]))
     valid_test=[x for x in rows if x["set"]=="holdout" and
                 x["empirical_winner"]!="not_comparable"]
+    distribution={w:sum(x["empirical_winner"]==w for x in valid_test)
+                  for w in ("svd","cholesky")}
+    training=[x for x in rows if x["set"]=="training" and
+              x["empirical_winner"]!="not_comparable"]
     outcome=dict(mode=mode,holdout_n=heldout,paired_comparable=len(valid_test),
                  predicted_correct=sum(x["correct"] is True for x in valid_test),
                  accuracy=(sum(x["correct"] is True for x in valid_test)/len(valid_test)
-                           if valid_test else None))
+                           if valid_test else None),
+                 heldout_true_winners=distribution,
+                 heldout_has_both_classes=all(v>0 for v in distribution.values()),
+                 training_paired_comparable=len(training),
+                 training_correct=sum(x["correct"] is True for x in training),
+                 caveat=("A holdout consisting of only one winning class "
+                         "does NOT establish accurate prediction of a switching "
+                         "boundary, even if every label is predicted correctly."))
     return rows,outcome
+
+
+def break_even_candidates(models,mode,n,d,R):
+    """Solve the calibrated affine-in-M crossing, without grid search.
+
+    The nonnegative fitted coefficients cannot by themselves certify
+    correctness or the existence of a physical positive crossover.
+    """
+    def delta(M):
+        return (predict(models,mode,"svd",n,d,M,R)-
+                predict(models,mode,"cholesky",n,d,M,R))
+    intercept=delta(0.)
+    slope=delta(1.)-intercept
+    if slope>=0.:
+        return None
+    return max(0.,-intercept/slope)
 
 
 def theoretical_surface(models,mode):
@@ -177,6 +204,7 @@ def theoretical_surface(models,mode):
                     values.append(dict(mode=mode,n=n,d=d,M=M,R=R,
                         predicted_svd_s=ps,predicted_cholesky_s=pc,
                         predicted_winner=("svd" if ps<pc else "cholesky"),
+                        break_even_M=break_even_candidates(models,mode,n,d,R),
                         ratio_svd_over_cholesky=ps/pc if pc>0 else float("nan"),
                         svd_memory_runtime_gate=memory_ok,
                         within_measured_n_support=support,
