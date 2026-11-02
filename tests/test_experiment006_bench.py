@@ -11,6 +11,7 @@ HERE=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment006"
 sys.path.insert(0,str(HERE))
 from run import grid_of_s, run_slice, memory_budget_status, SCENARIOS  # noqa: E402
 from plan import manifest  # noqa: E402
+from analyze import aggregate  # noqa: E402
 
 
 def test_exact_requested_grids_include_analytic_S_one():
@@ -85,6 +86,11 @@ def test_four_workloads_are_truly_timed_with_matched_s_grid(tmp_path):
                   methods=("banded_cholesky",),repeats=1,R=2,
                   output=path)
     assert len(summary)==2*len(SCENARIOS)*2
+    assert (path/"paired_speedups.csv").is_file()
+    analysis_path=tmp_path/"analysis"
+    aggregate(path,analysis_path)
+    assert (analysis_path/"timing_aggregates.csv").is_file()
+    assert (analysis_path/"empirical_complexity_exponents.csv").is_file()
 
 
 def test_mle_plug_in_only_and_invalid_metadata(tmp_path):
