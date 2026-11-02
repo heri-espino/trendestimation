@@ -195,6 +195,26 @@ $U$ is orthogonal and $\one_r\ne0$, so $\Delta(s)>0$.
 The endpoint values follow from Theorem~\ref{thm:plugin}.
 \end{proof}
 
+\begin{corollary}[Degenerate one-difference case]\label{cor:plugin-r1}
+If $r=n-d=1$ and $\widehat\mu(y)=D_dy$, then
+$\widehat\tau_{s,\widehat\mu(y)}=y$ for \emph{every}
+$s\in[0,1]$. In particular, the full plug-in trace
+is $n$, even though the conditional trace equals $n-s$.
+\end{corollary}
+\begin{proof}
+For $\tau=y$ the residual in \eqref{eq:objective} is zero,
+and the penalty $D_dy-\widehat\mu(y)$ also vanishes.
+Thus $J_{\lambda,\widehat\mu(y)}(y)=0$ for every finite
+$\lambda\ge0$, the global minimum of the nonnegative
+objective. Uniqueness from Theorem~\ref{thm:pls}
+gives $\widehat\tau=y$. The limit $s=1$ is also $y$
+by continuity; differentiating the identity map gives trace $n$.
+Alternatively, since there is only one positive spectral
+weight, Theorem~\ref{thm:plugin} gives
+$\Delta(s)=w_1(s)=s$ and
+$\nu_{\rm plug}(s)=n-s+s=n$.
+\end{proof}
+
 \begin{remark}[Degrees of freedom versus statistical claims]
 The trace $\tr(T_s)$ is the exact divergence of the
 linear fitted-value map for a fixed $s$.
