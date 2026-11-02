@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: experiment008-selfhosted-full-criterion
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   paired-computational-timings:
@@ -55,9 +55,9 @@ jobs:
         run: |
           $dest = "paper/benchmarks/experiment008/runs/selfhosted-$env:GITHUB_RUN_ID-${{ matrix.batch }}"
           $preset = '${{ matrix.batch }}'
-          if ($preset -eq 'pilot') { $limit = 24; $seconds = 600 }
-          else { $limit = 100; $seconds = 1100 }
-          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment008/run_batches.py --preset $preset --repeats 2 --series-count 2 --max-work 30000000 --max-slices $limit --max-seconds $seconds --output $dest
+          if ($preset -eq 'pilot') { $limit = 24; $seconds = 300 }
+          else { $limit = 100; $seconds = 600 }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment008/run_batches.py --preset $preset --repeats 2 --series-count 2 --max-work 30000000 --max-slices $limit --max-seconds $seconds --per-slice-seconds 45 --output $dest
           if ($LASTEXITCODE -ne 0) { throw 'Actual benchmark stopped; partial data will still be archived' }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dest/requirements-resolved.txt" -Encoding utf8
           Get-Content "$dest/batch_summary.json"
