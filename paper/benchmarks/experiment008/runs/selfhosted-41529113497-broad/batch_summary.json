@@ -1,0 +1,19 @@
+{
+  "actual_completed_slices": 58,
+  "observed_slices_with_raw_csv": 48,
+  "total_candidate_slices": 2424,
+  "planned_factorial_rows": 252000,
+  "planned_resource_status_counts": {
+    "eligible": 111600,
+    "budget_exceeded": 120000,
+    "infeasible_naive_runtime": 3600,
+    "infeasible_dense_memory": 16800
+  },
+  "slice_status_counts": {
+    "completed_with_recorded_cells": 48,
+    "slice_timeout_no_credible_time": 10,
+    "not_executed_batch_limit": 2366
+  },
+  "seconds": 637.5035722998437,
+  "note": "Every plan row is a requested combination, NOT an observed computing time. Actual timings are ONLY in slice raw_times.csv with status=ok. The n=131072 naive inverse is infeasible. All 4 workloads, both coordinate policies, all five criteria, mean policies and exact S=1 are represented without fabricated measurements."
+}
