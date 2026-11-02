@@ -1,0 +1,21 @@
+\section{Evidence status and pre-registered comparisons}\label{sec:status}
+This section fixes the separation between historical measurements and the prospective experiment. The archived Windows timing corpus in Section~\ref{sec:results} covers $n=24,48$ and $d\leq5$, whereas Experiment006 expands to seven series lengths and all six positive difference orders. The two data sources must not be pooled into one purported factorial cell or used to construct an unmeasured empirical complexity exponent.
+
+\begin{table*}[t]\caption{Evidence classification as of this manuscript version. A green software test or successful small pilot does not establish the full-factorial timings. In particular, the only historical joint five-criterion timings here are from $n=48$.}\label{tab:coverage}\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{.24\textwidth}p{.32\textwidth}p{.35\textwidth}@{}}\toprule
+Question & Available evidence & Remaining evidence needed\\\midrule
+Matched $S$ versus translated-$\lambda$ grids & 4,484 valid matched two-seed cases in historical Windows source; equal selected candidates and scores & All requested $M$, $n$, $d$, fixed-$\mu$ and amplitude regimes\\
+Five-criterion reuse across the same mapped grid & Historical $n=48,d=2,3$, fixed $\mu=0$, SVD cases & Repeated criteria and series at large $n$ including nonzero $\mu$\\
+Single fit versus repeated fits & Historical full-fit sweeps and separate 20-seed solver study & Direct full-criterion comparisons with the same candidate grids and hardware\\
+Sparse, banded and iterative complete criteria & Implemented reference pipelines and mathematical parity tests in Experiment006 research code & Repeated, paired end-to-end timings and numerical validation on PCAG103A-08\\
+Maximum smoothness $S=1$ and $d=6$ & Analytic limit and selected-inverse verification for small $n$ & High-order independent accuracy checks at larger $n$ and high data magnitude\\
+Asymptotic scaling vs measured exponents & Derived arithmetic/storage bounds & Three or more measured $n$ levels per comparable factor cell, confidence intervals and clear resource-ineligible statuses\\
+\bottomrule\end{tabular}
+\end{table*}
+
+Our first hypothesis is that a banded Cholesky plus selected-inverse pipeline will avoid the quadratic memory and cubic setup costs of full dense spectral or inverse-based approaches when $d$ is fixed. The second is that full SVD will become competitive in configurations with enough repeated candidate scores to amortize its initial decomposition. The third is that one-time translation of a fixed $S$ grid will reduce mapping overhead across independently observed series, with identical selected $S$ values for complete, valid matched grids. The fourth is that higher orders, strong smoothness and nonzero reference means can change the numerical failure pattern enough that a raw elapsed-time ranking becomes misleading without an accuracy gate. These are \emph{testable research hypotheses}, not conclusions extrapolated to unmeasured factor levels.
+
+For the full factorial, the primary observed response is end-to-end time in seconds, conditional on numerical correctness. Secondary responses are setup time, one-time mapping time, score time, peak memory, number of root solves, number of PCG iterations and the fraction of ineligible or failed attempts. When the naive dense baseline cannot run, a speedup against that baseline is \emph{undefined}; it must never be replaced with a synthetic time predicted from $O(n^3)$. Mean and confidence intervals are reported across independent paired blocks rather than treating tightly correlated inner-loop stopwatch samples as independent observations.
+
+This distinction also guides manuscript revision. Future Experiment006 results will be inserted only after their raw timing CSV, environment metadata, numerical validity summary, and source revision have been committed to the repository. Until then, the present document is a mathematically developed \emph{working draft} with a completed historical benchmark, not a completed seven-length computational study.
