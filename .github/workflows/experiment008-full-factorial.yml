@@ -1,0 +1,86 @@
+name: Experiment008 complete-criterion timing tensor on PCAG103A-08
+
+on:
+  push:
+    branches: [research/experiment008-full-factorial-timing]
+    paths:
+      - .github/workflows/experiment008-full-factorial.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment008-selfhosted-full-criterion
+  cancel-in-progress: false
+
+jobs:
+  paired-computational-timings:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        batch: [pilot, broad]
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONPATH: ${{ github.workspace }}\src
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - name: Check out reproducible source
+        uses: actions/checkout@v4
+      - name: Verify designated nonadmin Windows runner and Conda
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Conda not found' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import numpy,scipy,threadpoolctl; print('Conda environment validated, no installation')"
+          if ($LASTEXITCODE -ne 0) { throw 'Required packages missing; not modifying university machine' }
+      - name: Run pre-existing criterion and numeric parity tests
+        run: |
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment006_selected_inverse.py tests/test_experiment006_bench.py tests/test_experiment006_hybrid_criteria.py
+          if ($LASTEXITCODE -ne 0) { throw 'Numerical prerequisite tests failed' }
+      - name: Execute actual four-workload full-criterion time measurements
+        id: measurement
+        run: |
+          $dest = "paper/benchmarks/experiment008/runs/selfhosted-$env:GITHUB_RUN_ID-${{ matrix.batch }}"
+          $preset = '${{ matrix.batch }}'
+          if ($preset -eq 'pilot') { $limit = 24; $seconds = 600 }
+          else { $limit = 100; $seconds = 1100 }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment008/run_batches.py --preset $preset --repeats 2 --series-count 2 --max-work 30000000 --max-slices $limit --max-seconds $seconds --output $dest
+          if ($LASTEXITCODE -ne 0) { throw 'Actual benchmark stopped; partial data will still be archived' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dest/requirements-resolved.txt" -Encoding utf8
+          Get-Content "$dest/batch_summary.json"
+      - name: Upload full requested manifest and all actual timing CSVs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment008-${{ matrix.batch }}-${{ github.run_id }}
+          path: paper/benchmarks/experiment008/runs/selfhosted-${{ github.run_id }}-${{ matrix.batch }}/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Permanently commit raw timing evidence on dedicated results branch
+        if: always()
+        run: |
+          $dir = "paper/benchmarks/experiment008/runs/selfhosted-$env:GITHUB_RUN_ID-${{ matrix.batch }}"
+          if (!(Test-Path "$dir/batch_manifest.json")) {
+            Write-Host 'No source measurements to archive'
+            exit 0
+          }
+          $archive = "results/experiment008-$env:GITHUB_RUN_ID-${{ matrix.batch }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          git add -f -- $dir
+          git commit -m "experiment008: archive ${{ matrix.batch }} raw criterion timing tensor run $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit results' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not push results' }
+          Write-Host "Saved all actual results to $archive"
