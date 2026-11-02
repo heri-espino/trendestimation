@@ -1,0 +1,166 @@
+\section{A direct smoothness-constrained weight representation}\label{sec:weights}
+
+Fix any reference $\delta_*>0$ and put
+\[
+a_j=\delta_j/\delta_*>0,\qquad
+\alpha_j=\log a_j,\qquad
+\expit(z)=\frac{1}{1+e^{-z}}.
+\]
+For $u\in(0,1)$ define the \emph{coupled spectral-weight family}
+\begin{equation}\label{eq:weights-u}
+w_j(u)=\frac{a_ju}{1-u+a_ju},\quad
+G_u(u)=\frac1r\sum_{j=1}^r w_j(u).
+\end{equation}
+This is not a free $r$-dimensional collection of weights: the common scalar $u$ couples all directions.
+
+\begin{theorem}[Characterization of the PLS spectral family]\label{thm:odds}
+For $w\in(0,1)^r$, the following statements are equivalent:
+\begin{enumerate}
+\item There exists $\lambda>0$ such that
+$w_j=\lambda\delta_j/(1+\lambda\delta_j)$ for every $j$.
+\item All numbers $w_j/[\delta_j(1-w_j)]$ are equal.
+\item There exists $u\in(0,1)$ for which \eqref{eq:weights-u} holds.
+\end{enumerate}
+The associated $\lambda$ and $u$ are unique. Arbitrarily setting all $w_j=s$ is a PLS filter for an interior $s$ only if all positive $\delta_j$ are equal.
+\end{theorem}
+\begin{proof}
+If (i) holds, direct rearrangement yields
+$w_j/(1-w_j)=\lambda\delta_j$, proving (ii).
+If (ii) holds, write the positive common value as $\lambda$;
+solving $w_j=\lambda\delta_j(1-w_j)$ gives (i).
+Under (i) let $u=\lambda\delta_*/(1+\lambda\delta_*)$.
+Then $u/(1-u)=\lambda\delta_*$, and
+\[
+\frac{a_ju}{1-u+a_ju}
+=\frac{\lambda\delta_j}{1+\lambda\delta_j},
+\]
+which is (iii). Conversely, under (iii), the positive number
+$\lambda=u/[\delta_*(1-u)]$ gives (i).
+Each inverse formula is injective, proving uniqueness.
+Finally, if every $w_j=s\in(0,1)$, condition (ii) says
+$s/[(1-s)\delta_j]$ is independent of $j$; hence the $\delta_j$
+must coincide. The converse is immediate.
+\end{proof}
+
+\begin{theorem}[Unique direct-$S$ solution and explicit root bracket]\label{thm:root}
+For every target $0<s<1$, there exists a unique $u_s\in(0,1)$
+such that $G_u(u_s)=s$. Equivalently, with
+\[
+x=\logit(u)=\log\!\left(\frac{u}{1-u}\right),\qquad
+G(x)=\frac1r\sum_{j=1}^r\expit(x+\alpha_j),
+\]
+the equation $G(x_s)=s$ has one solution on the real line, satisfying
+\begin{equation}\label{eq:bracket}
+\logit(s)-\max_j\alpha_j
+\ \le x_s\le\
+\logit(s)-\min_j\alpha_j.
+\end{equation}
+The weights $w_j(s)=\expit(x_s+\alpha_j)$ attain exact mean $s$.
+The closed extensions are $w_j(0)=0$ and $w_j(1)=1$.
+\end{theorem}
+\begin{proof}
+Each function $u\mapsto w_j(u)$ is continuous on $[0,1]$,
+takes the values zero and one at the respective endpoints, and
+has derivative
+\[
+w'_j(u)=\frac{a_j}{(1-u+a_ju)^2}>0.
+\]
+Thus their average is a continuous strictly increasing bijection
+from $[0,1]$ to $[0,1]$, proving existence and uniqueness.
+In log-odds coordinates,
+\[
+G'(x)=\frac1r\sum_{j=1}^r
+\expit(x+\alpha_j)[1-\expit(x+\alpha_j)]>0.
+\]
+Set $x_-=\logit(s)-\max_j\alpha_j$.
+For every $j$,
+$x_-+\alpha_j\le\logit(s)$, so
+$\expit(x_-+\alpha_j)\le s$, hence $G(x_-)\le s$.
+Similarly, at
+$x_+=\logit(s)-\min_j\alpha_j$, every term is at least $s$,
+and $G(x_+)\ge s$. Strict monotonicity gives
+$x_-\le x_s\le x_+$. Substitution gives the asserted weights.
+The endpoint extensions follow by letting $x$ tend to
+$-\infty$ and $+\infty$.
+\end{proof}
+
+\begin{remark}[The hidden penalty coordinate]\label{rem:implicit}
+The scalar root is \emph{not} an entirely new parameterization:
+from the proof of Theorem~\ref{thm:odds},
+\begin{equation}\label{eq:implicit}
+\lambda=\frac{e^{x_s}}{\delta_*},\qquad
+x_s=\log\lambda+\log\delta_*.
+\end{equation}
+The algorithm need not evaluate the right side of \eqref{eq:implicit}
+to form the trend, but a one-dimensional implicit inversion remains.
+Replacing a stable log-$\lambda$ root solve by $x$ shifts its argument
+by a constant. A speed or stability advantage therefore cannot follow
+from the change of root coordinate alone.
+\end{remark}
+
+\begin{theorem}[Exact reconstruction for arbitrary fixed difference mean]\label{thm:reconstruction}
+For fixed $y$, $\mu$ and $s\in[0,1]$, let $w(s)$ be the weights of
+Theorem~\ref{thm:root}, including its endpoint extensions. Define
+$c_\mu=V^\top y-\mu\Sigma^{-1}U^\top\one_r$.
+Then
+\begin{equation}\label{eq:direct-fit}
+\widehat\tau_{s,\mu}
+=y-V\diag(w(s))c_\mu
+=y-V\left[
+w(s)\odot(V^\top y)
+-\mu\,(w(s)\oslash\sigma)\odot(U^\top\one_r)
+\right].
+\end{equation}
+For each interior $s$, this is \emph{exactly} the unique minimizer
+of \eqref{eq:objective} at $\lambda=\Lambda_d(s)$. No explicit
+$\lambda$ or matrix inverse is required to evaluate \eqref{eq:direct-fit}
+once the weights and SVD are available.
+At $s=0$, $\widehat\tau_{0,\mu}=y$. At $s=1$,
+\begin{equation}\label{eq:limit}
+\widehat\tau_{1,\mu}
+=(I_n-VV^\top)y+\mu V\Sigma^{-1}U^\top\one_r,
+\end{equation}
+the unique least-squares projection of $y$ onto
+$\{\tau:D_d\tau=\mu\one_r\}$.
+\end{theorem}
+\begin{proof}
+Project the normal equation \eqref{eq:normal} into
+$\Ran(V)$ and its orthogonal complement. Write
+$z=V^\top\widehat\tau$ and $z_y=V^\top y$.
+Since $D_d^\top\one_r=V\Sigma U^\top\one_r$, the normal equation
+in the $j$th right singular direction is
+\[
+(1+\lambda\sigma_j^2)z_j
+=z_{y,j}+\lambda\mu\sigma_j(U^\top\one_r)_j.
+\]
+Solving and rearranging yields
+\[
+z_j=z_{y,j}-
+\frac{\lambda\sigma_j^2}{1+\lambda\sigma_j^2}
+\left(z_{y,j}-\frac{\mu}{\sigma_j}(U^\top\one_r)_j\right).
+\]
+The orthogonal complement component is unchanged from $y$,
+because $D_d$ vanishes there. Theorems~\ref{thm:odds} and
+\ref{thm:root} identify the coefficient as $w_j(s)$ for
+$\lambda=\Lambda_d(s)$, proving \eqref{eq:direct-fit}.
+At $s=0$ all weights vanish. At $s=1$ all weights equal one
+and \eqref{eq:limit} follows. The latter vector is feasible:
+multiplying by $D_d=U\Sigma V^\top$ gives
+$D_d\widehat\tau_{1,\mu}=\mu UU^\top\one_r=\mu\one_r$.
+Every other feasible $\tau$ has the form
+$\widehat\tau_{1,\mu}+v$ with $v\in\Nul(D_d)$;
+$\widehat\tau_{1,\mu}-y=-V c_\mu$ lies in
+$\Nul(D_d)^\perp$. By the Pythagorean identity, adding a
+nonzero feasible direction increases squared distance to $y$,
+proving uniqueness of the projection.
+\end{proof}
+
+\begin{corollary}[One-dimensional penalized spectrum]\label{cor:r1}
+If $r=n-d=1$, the unique weight is $w_1(s)=s$ for all
+$s\in[0,1]$. No scalar root solve is needed:
+$\widehat\tau_{s,\mu}=y-sVc_\mu$.
+\end{corollary}
+\begin{proof}
+The average of a single weight equals the weight itself.
+Apply \eqref{eq:direct-fit}.
+\end{proof}
