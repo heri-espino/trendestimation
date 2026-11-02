@@ -89,6 +89,15 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
                         else float(spectral.lambda_for_smoothness(s)))
                          for s in s_levels}
                 sref=PreparedPLSSolver(n,d,method="svd")
+                # Prepare each backend ONCE for numerical validation.
+                # Otherwise thousands of redundant dense SVD factorizations
+                # would make a correctness audit needlessly expensive.
+                qa_solvers={}
+                for name in methods:
+                    try:
+                        qa_solvers[name]=solver(n,d,name,False)
+                    except (ValueError,ImportError) as exc:
+                        qa_solvers[name]=exc
                 for scale in scales:
                     for seed in seeds:
                         series=[make_series(n,d,scale,seed*11+k)
@@ -120,7 +129,9 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
                                         ref_kkt=float("nan")
                                     for method in methods:
                                         try:
-                                            candidate=solver(n,d,method,False)
+                                            candidate=qa_solvers[method]
+                                            if isinstance(candidate,Exception):
+                                                raise candidate
                                             fit=candidate.fit(y,lambda_=lam,
                                                               mu=("data" if policy=="data" else 0.))
                                             error=float(np.linalg.norm(fit-reference)/
@@ -153,6 +164,8 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
                                     targets=s_levels
                                 yy=[series[k][0] for k in range(n_series)]
                                 for method in methods:
+                                    setup=fit_time=0.0
+                                    fit_start=None
                                     try:
                                         t0=perf_counter()
                                         prepar=solver(n,d,method,cache=(n_series>1))
@@ -170,7 +183,7 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
                                     except (ArithmeticError,ValueError,
                                             OverflowError,np.linalg.LinAlgError,
                                             ImportError,MemoryError) as exc:
-                                        fit_time=perf_counter()-fit_start if "fit_start" in locals() else 0.
+                                        fit_time=perf_counter()-fit_start if fit_start is not None else 0.
                                         state="solver_failed"
                                         comment=f"{type(exc).__name__}: {exc}"[:220]
                                         cached=0
