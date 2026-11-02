@@ -1,0 +1,65 @@
+name: Experiment006 high-order 85-digit numerical audit
+
+on:
+  push:
+    branches: [research/experiment006-full-computational-factorial]
+    paths:
+      - .github/workflows/experiment006-highd-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment006-highd-pcag103a08
+  cancel-in-progress: false
+
+jobs:
+  high-d-qa:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONPATH: ${{ github.workspace }}\src
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert intended non-admin runner and existing Conda environment
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner' }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Conda not installed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import decimal,scipy,numpy; print('Existing Conda environment available; decimal precision supported')"
+          if ($LASTEXITCODE -ne 0) { throw 'Existing Conda environment unavailable; no installation attempted' }
+      - name: Independent high-order 85-digit numerical QA
+        run: |
+          $dest = "paper/benchmarks/experiment006/runs/highd-$env:GITHUB_RUN_ID"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment006/audit_high_d.py --output $dest
+          if ($LASTEXITCODE -ne 0) { throw 'Independent high-order numerical audit failed' }
+          Get-Content "$dest/metadata.json"
+      - name: Upload immutable audit observations even if partial
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment006-highd-${{ github.run_id }}
+          path: paper/benchmarks/experiment006/runs/highd-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit numerical truth to an isolated results branch
+        if: always()
+        run: |
+          $dir = "paper/benchmarks/experiment006/runs/highd-$env:GITHUB_RUN_ID"
+          if (!(Test-Path -LiteralPath "$dir/metadata.json")) { exit 0 }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          $branch = "results/experiment006-highd-$env:GITHUB_RUN_ID"
+          git switch -c $branch
+          git add -f -- $dir
+          git commit -m "experiment006: archive 85-digit high-order audit $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit audit' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not push audit branch' }

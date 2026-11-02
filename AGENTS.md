@@ -38,3 +38,26 @@ banded-LU and PCG parity benchmark and run presets. Python tests:
 
 Large timing presets are manual on a designated machine; CI does not
 establish universal performance rankings. See AI_HANDOFF.md for status.
+
+
+## Experiment006 repository-first rules
+
+For any experiment006 work first inspect README.md, this AGENTS.md,
+AI_HANDOFF.md, paper/benchmarks/experiment006/README.md, actual source,
+tests and current draft PR #95. Preserve all previous experiments.
+Keep source, numerical validation, full-factorial manifest and measured
+results in Git. Use independent branches/worktrees for Windows runs.
+The primary outcomes are computation time, memory, exactness and
+failure status. No trend RMSE claims. The three implemented complete
+criterion pipelines must not be conflated with Experiment005 fit-only
+solvers; missing methods remain explicitly not implemented. High-order
+nonzero-mu regimes and S=1 require independent numerical auditing.
+Never merge without explicit user authorization.
+
+## Experiment006 hybrid scientific contract (latest)
+
+Six hybrid sparse/iterative plus banded selected-inverse diagnostic
+pipelines have been added to the Experiment006 runner. Compare their
+full measured cost including every factorization, not just their trend
+fit time. Check tests/test_experiment006_hybrid_criteria.py before
+interpreting speed rankings. No unrecorded timing or numerical results.
