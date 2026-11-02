@@ -61,3 +61,15 @@ pipelines have been added to the Experiment006 runner. Compare their
 full measured cost including every factorization, not just their trend
 fit time. Check tests/test_experiment006_hybrid_criteria.py before
 interpreting speed rankings. No unrecorded timing or numerical results.
+
+
+## Experiment007 — observed-difference mean frontier
+
+Experiment007 independently measures mu='data'=mean(D_d y), never
+manually assigned an arbitrary mu. It keeps mu=0 as a control,
+records synthetic latent-trend mean(D_d tau_true) only as an oracle
+diagnostic, and does not use this oracle for fitting. The d<=4
+versus d>=5 switch was a small-n guard, not an optimal policy.
+Review experiment007/README.md and tests before changing any
+backend policy. Separate fit-only results from whole-criterion
+CV/GCV/BIC/AICc/MLE costs; no invalid QA cell may be ranked.
