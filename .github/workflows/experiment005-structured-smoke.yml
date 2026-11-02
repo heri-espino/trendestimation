@@ -1,0 +1,75 @@
+name: Experiment005 structured-solvers smoke
+
+on:
+  push:
+    branches: [feature/experiment005-structured-solvers]
+    paths:
+      - src/trendestimation/_structured_solvers.py
+      - src/trendestimation/solvers.py
+      - tests/test_experiment005_structured_solvers.py
+      - paper/benchmarks/experiment005/run.py
+      - .github/workflows/experiment005-structured-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment005-smoke
+  cancel-in-progress: true
+
+jobs:
+  scientific-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package and scientific test dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Validate direct/iterative numerical parity and convergence
+        run: python -m pytest tests/test_experiment005_structured_solvers.py -q
+      - name: Run actual paired smoke on hosted runner
+        run: |
+          python paper/benchmarks/experiment005/run.py \
+            --preset smoke --repeats 3 \
+            --output paper/benchmarks/experiment005/runs/hosted-smoke
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          p=Path("paper/benchmarks/experiment005/runs/hosted-smoke")
+          rows=list(csv.DictReader((p/"raw_measurements.csv").open()))
+          assert rows
+          assert all(x["status"] == "ok" for x in rows if
+                     x["method"] in ("cholesky","banded_lu","sparse_lu","sparse_lu_cached"))
+          assert any(x["method"] == "pcg_fft" for x in rows)
+          assert (p/"environment.json").is_file()
+          print("Recorded actual attempts:",len(rows))
+          from collections import Counter
+          print(Counter(x["status"].split(":")[0] for x in rows))
+          PY
+      - name: Upload complete raw measurement and environment archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment005-structured-smoke-raw
+          path: paper/benchmarks/experiment005/runs/hosted-smoke/
+          if-no-files-found: warn
+      - name: Preserve measured hosted smoke evidence on the feature branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f paper/benchmarks/experiment005/runs/hosted-smoke/
+          if git diff --cached --quiet; then
+            echo "All scientific results already committed"
+          else
+            git commit -m "experiment005: archive hosted parity-and-timing smoke [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
