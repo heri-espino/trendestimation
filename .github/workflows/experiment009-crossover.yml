@@ -1,0 +1,56 @@
+name: Experiment009 theoretical and calibrated solver crossover surfaces
+
+on:
+  push:
+    branches: [research/experiment009-cost-crossover-surface]
+    paths:
+      - .github/workflows/experiment009-crossover.yml
+      - paper/benchmarks/experiment009/**
+      - tests/test_experiment009_crossover.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  theory-versus-empirical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install analysis dependencies on ephemeral hosted runner
+        run: python -m pip install numpy scipy matplotlib pytest
+      - name: Validate mathematical surfaces and source provenance
+        run: python -m pytest -q tests/test_experiment009_crossover.py
+      - name: Generate calibrated crossover surfaces and vector figures
+        run: |
+          dir=paper/benchmarks/experiment009/runs/hosted-${{ github.run_id }}
+          python paper/benchmarks/experiment009/crossover.py --output "$dir"
+          python -m pip freeze > "$dir/requirements-resolved.txt"
+          cat "$dir/calibration.json"
+      - name: Upload numerical results and figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment009-crossover-${{ github.run_id }}
+          path: paper/benchmarks/experiment009/runs/hosted-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve figures and numerical results on immutable results branch
+        if: success()
+        run: |
+          dir=paper/benchmarks/experiment009/runs/hosted-${{ github.run_id }}
+          branch=results/experiment009-crossover-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -f -- "$dir"
+          git commit -m "experiment009: archive calibrated crossover surfaces and heldout validation ${{ github.run_id }}"
+          git push origin "HEAD:refs/heads/$branch"
