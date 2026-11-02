@@ -1,0 +1,40 @@
+{
+  "experiment": "experiment006_high_d_forward_error_audit",
+  "created_utc": "2026-11-02T11:45:14.535655+00:00",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "decimal_digits": 85,
+  "numpy": "2.4.6",
+  "n": 128,
+  "orders": [
+    5,
+    6
+  ],
+  "s_targets": [
+    0.75,
+    0.85,
+    0.9,
+    0.91,
+    0.95,
+    0.99,
+    1.0
+  ],
+  "seeds": [
+    20261103,
+    20261104
+  ],
+  "high_precision_digits": 85,
+  "rows": 112,
+  "status_counts": {
+    "svd:valid": 28,
+    "cholesky:valid": 16,
+    "sparse_lu:valid": 22,
+    "pcg:valid": 14,
+    "pcg:solver_failed": 14,
+    "cholesky:inaccurate": 12,
+    "sparse_lu:inaccurate": 6
+  },
+  "elapsed_seconds": 0.28925550007261336,
+  "source_sha256": "edacc5a2e8afe04a5cd3a103dd8599b037ac55b03fd2b8e15ad549ab306eb134",
+  "note": "Numerical accuracy compared to independent 85-digit dual normal equations and 55-digit convergence check; this is NOT statistical trend RMSE or a runtime ranking. KKT residuals alone are not forward-error certificates."
+}
