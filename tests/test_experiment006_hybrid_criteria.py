@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from trendestimation import PreparedPLSSolver, TrendSmoother, score_lambda, difference_matrix
+from trendestimation import TrendSmoother, score_lambda, difference_matrix
 
 DIR=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment006"
 sys.path.insert(0,str(DIR))
