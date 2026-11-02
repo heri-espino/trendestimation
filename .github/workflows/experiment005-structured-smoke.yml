@@ -35,11 +35,11 @@ jobs:
         run: |
           python paper/benchmarks/experiment005/run.py \
             --preset smoke --repeats 3 \
-            --output paper/benchmarks/experiment005/runs/hosted-smoke
+            --output paper/benchmarks/experiment005/runs/hosted-smoke-v2
           python - <<'PY'
           import csv, json
           from pathlib import Path
-          p=Path("paper/benchmarks/experiment005/runs/hosted-smoke")
+          p=Path("paper/benchmarks/experiment005/runs/hosted-smoke-v2")
           rows=list(csv.DictReader((p/"raw_measurements.csv").open()))
           assert rows
           assert all(x["status"] == "ok" for x in rows if
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: experiment005-structured-smoke-raw
-          path: paper/benchmarks/experiment005/runs/hosted-smoke/
+          path: paper/benchmarks/experiment005/runs/hosted-smoke-v2/
           if-no-files-found: warn
       - name: Preserve measured hosted smoke evidence on the feature branch
         if: success()
@@ -66,7 +66,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "$GITHUB_REF_NAME"
           git reset --mixed "origin/$GITHUB_REF_NAME"
-          git add -f paper/benchmarks/experiment005/runs/hosted-smoke/
+          git add -f paper/benchmarks/experiment005/runs/hosted-smoke-v2/
           if git diff --cached --quiet; then
             echo "All scientific results already committed"
           else
