@@ -1,0 +1,54 @@
+name: Experiment008 fast hosted real criterion timings
+
+on:
+  push:
+    branches: [research/experiment008-full-factorial-timing]
+    paths: [.github/workflows/experiment008-hosted-fast.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  hosted-real-timings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare isolated GitHub-hosted Python environment
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest threadpoolctl
+      - name: Run real bounded full-criterion timing and save all statuses
+        run: |
+          dest=paper/benchmarks/experiment008/runs/hosted-${{ github.run_id }}
+          python paper/benchmarks/experiment008/run_batches.py --preset pilot --repeats 2 --series-count 2 --max-work 30000000 --max-slices 24 --max-seconds 240 --per-slice-seconds 20 --output "$dest"
+          python -m pip freeze > "$dest/requirements-resolved.txt"
+          cat "$dest/batch_summary.json"
+      - name: Upload actual measured data and complete factorial plan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment008-hosted-${{ github.run_id }}
+          path: paper/benchmarks/experiment008/runs/hosted-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit actual measurements on a separate immutable branch
+        if: always()
+        run: |
+          dir=paper/benchmarks/experiment008/runs/hosted-${{ github.run_id }}
+          if [ ! -f "$dir/batch_manifest.json" ]; then exit 0; fi
+          branch=results/experiment008-hosted-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -f -- "$dir"
+          git commit -m "experiment008: archive actual hosted complete-criterion timings ${{ github.run_id }}"
+          git push origin "HEAD:refs/heads/$branch"
