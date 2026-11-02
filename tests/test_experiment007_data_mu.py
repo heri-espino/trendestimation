@@ -11,6 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment007"
 sys.path.insert(0,str(ROOT))
 from run import (N_LEVELS,D_LEVELS,S_LEVELS,WORKLOADS,make_series,  # noqa: E402
                  fitted_mu,run)
+from summarize import analyze  # noqa: E402
 
 
 def test_default_is_observed_difference_mean_not_manually_assigned():
@@ -49,6 +50,11 @@ def test_observed_mu_and_solvers_measured_without_oracle_leakage(tmp_path):
     assert (output/"raw_times.csv").is_file()
     assert (output/"forward_accuracy.csv").is_file()
     assert (output/"metadata.json").is_file()
+    status,timing,winners=analyze(output)
+    assert len(status)>0 and len(timing)>0 and len(winners)>0
+    assert (output/"accuracy_by_nd.csv").is_file()
+    assert (output/"provisional_winners.csv").is_file()
+    assert (output/"RESULTS.md").is_file()
     with pytest.raises(FileExistsError):
         run(output,n_levels=(64,),d_levels=(2,),high_precision=False)
 
