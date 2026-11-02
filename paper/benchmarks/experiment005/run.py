@@ -33,6 +33,7 @@ from trendestimation import PreparedPLSSolver
 HERE = Path(__file__).resolve().parent
 METHODS = (
     ("cholesky", {}),
+    ("cholesky_cached", {"method": "cholesky", "factor_cache": True}),
     ("banded_lu", {}),
     ("sparse_lu", {}),
     ("sparse_lu_cached", {"method": "sparse_lu", "factor_cache": True}),
@@ -114,9 +115,13 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                     truth = reference.fit(y,lambda_=lam,mu=mu)
                     for repeat in range(repeats):
                         cache_hit = bool(
-                            solver is not None and solver.structured is not None
-                            and solver.structured.factor_cache
-                            and lam in solver.structured._factors
+                            solver is not None and (
+                                (method == "cholesky" and
+                                 lam in solver._band_factors) or
+                                (solver.structured is not None and
+                                 solver.structured.factor_cache and
+                                 lam in solver.structured._factors)
+                            )
                         )
                         if solver is None:
                             rows.append({
