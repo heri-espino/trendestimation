@@ -240,6 +240,76 @@ class BandedTrace:
                     solve_s=t2-t1,diagnostics_s=t3-t2,
                     selected_s=s,backward_error=back)
 
+
+    def score_external(self,y,tau,lam,mu,criterion,*,factor=None,selected=None):
+        """Score an external backend fit using exact banded conditional diagnostics.
+
+        A hybrid method explicitly pays for its own fit *and* the banded
+        Cholesky selected-inverse trace/leverage/likelihood diagnostics.
+        No expensive computation is silently borrowed from the baseline.
+        """
+        y=np.asarray(y,dtype=float)
+        tau=np.asarray(tau,dtype=float)
+        if y.shape!=(self.n,) or tau.shape!=(self.n,):
+            raise ValueError("Invalid external fit dimension")
+        if lam==0:
+            return float("inf")
+        if np.isposinf(lam):
+            return self._limit(y,mu,criterion)["score"]
+        L=self.factor(lam) if factor is None else factor
+        z=selected_inverse(L) if selected is None else selected
+        edf=float(np.sum(z[0]))
+        if not self.d-1e-5<=edf<=self.n+1e-5:
+            raise ArithmeticError("External criterion invalid EDF")
+        dy=np.asarray(self.D@tau).ravel()
+        residual=lam*np.asarray(self.D.T@(dy-mu)).ravel()
+        rhs=y+lam*mu*self.shift
+        back=float(np.linalg.norm(y-tau-residual)/
+                   max(1.,np.linalg.norm(y),np.linalg.norm(rhs)))
+        if not np.isfinite(back) or back>1e-7:
+            raise ArithmeticError(f"External fit fails PLS KKT: {back}")
+        rss=float(residual@residual)
+        n=self.n
+        if criterion=="cv":
+            denominator=self.inverse_deficit_diagonal(lam,z)
+            if np.any(denominator<=0) or not np.all(np.isfinite(denominator)):
+                raise ArithmeticError("External LOOCV diagonal invalid")
+            score=float(np.mean((residual/denominator)**2))
+        elif criterion=="gcv":
+            den=1-edf/n
+            score=(rss/n)/(den*den) if den>1e-10 else float("inf")
+        elif criterion in ("bic","aicc"):
+            eps=np.finfo(float).eps*max(1.,float(y@y))
+            if rss<=eps:
+                score=float("inf")
+            else:
+                base=float(np.log(rss/n))
+                if criterion=="bic":
+                    score=base+edf*np.log(n)/n
+                else:
+                    den=n-edf-2.
+                    score=(base+(2*edf+1)/den
+                           if den>0 else float("inf"))
+        elif criterion=="mle":
+            m=n-self.d
+            gram=np.zeros((self.d+1,m),dtype=float)
+            for k in range(self.d+1):
+                gram[k,:m-k]=(-1)**k*comb(2*self.d,self.d-k)
+            gram[0]+=1/lam
+            fdual=cholesky_banded(gram,lower=True,check_finite=False)
+            e=np.asarray(self.D@y).ravel()-mu
+            v=cho_solve_banded((fdual,True),e,check_finite=False)
+            weighted=float(e@v)
+            if weighted<=0 or not np.isfinite(weighted):
+                raise ArithmeticError("External MLE quadratic invalid")
+            score=(m*np.log(weighted/m)+
+                   2.*float(np.log(L[0]).sum())-m*np.log(lam))
+        else:
+            raise ValueError("Unknown criterion")
+        if np.isnan(score):
+            raise ArithmeticError("External criterion returned NaN")
+        return float(score)
+
     def _limit(self,y,mu,criterion):
         """Analytical S=1 projection; validate numerical difference constraint."""
         n,d=self.n,self.d
