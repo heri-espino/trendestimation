@@ -248,8 +248,8 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
     if criterion not in CRITERIA:raise ValueError("Unknown criterion")
     if isinstance(mu,str) and mu!="data":
         raise ValueError("mu must be numeric or 'data'")
-    if mu=="data" and criterion!="mle":
-        raise ValueError("mu='data' supported only for conditional MLE")
+    if mu=="data" and criterion!="mle" and not conditional_data_mu:
+        raise ValueError("mu='data' with fixed-mean criteria requires conditional_data_mu=True; scores are CONDITIONAL plug-in, not refitted CV")
     if denominator not in GRID_DENOMINATORS:
         raise ValueError("Invalid grid")
     if repeats<1 or R<2 or threads<1:raise ValueError("Bad repeat/R/threads")
@@ -465,6 +465,11 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
             f.write("n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup\n")
     meta=dict(
         n=n,d=d,mu=mu,amplitude=amplitude,criterion=criterion,
+        mean_policy_note=(
+            "conditional_plugin_not_refitted" if mu=="data" and criterion!="mle"
+            else "conditional_plugin_mle" if mu=="data"
+            else "fixed_numeric_reference_mean"
+        ),
         denominator=denominator,methods=list(methods),R=R,
         repeats=repeats,policies=list(POLICIES),scenarios=list(SCENARIOS),
         exact_S_one=True,grid_starts_at_positive_s=True,
