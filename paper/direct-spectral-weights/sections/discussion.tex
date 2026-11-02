@@ -1,0 +1,137 @@
+\section{Discussion, falsifiable claims and research agenda}\label{sec:discussion}
+
+\subsection{What has been proved}
+The PLS objective \eqref{eq:objective} is unchanged.
+Theorem~\ref{thm:odds} characterizes exactly which shrinkage
+weights belong to a single quadratic-penalty family;
+Theorem~\ref{thm:root} proves a unique scalar root for
+every prescribed interior $s$ and provides a finite bracket;
+Theorem~\ref{thm:reconstruction} proves exact equivalence
+between penalty-based and direct-weight fits, including
+fixed nonzero means of differences and both endpoints.
+Theorem~\ref{thm:sensitivity} quantifies sensitivity and
+separates weight stability from scalar-root conditioning.
+Theorem~\ref{thm:plugin} supplies the full Jacobian trace
+when the difference mean is computed from the observations.
+The results are algebraic consequences of an established
+linear smoother. Their formal presentation is not evidence
+that every identity is historically novel.
+
+\subsection{Why using weights can nevertheless be useful}
+For an interior target $s$ and a known positive spectrum,
+the weight representation computes all shrinkage factors
+from a finite scalar $x$. In exact arithmetic,
+$\lambda=\exp(x)/\delta_*$ from \eqref{eq:implicit};
+the direct-weight fitting path has no need to evaluate
+that expression. It may therefore be possible to
+reconstruct a trend in a regime where $\lambda$ itself
+cannot be represented as a finite floating-point
+number, provided the singular values and the weight
+root remain numerically resolvable. This is a \emph{conditional
+representation advantage}, not a universal proof of
+greater numerical accuracy. If the smallest singular
+values have already been corrupted or lost to underflow,
+the method cannot recover that information.
+
+Caching $w(s)$ for repeated series with identical $(n,d,s)$
+also avoids repeated inversion. An equally optimized
+penalty-based implementation can cache the same weights,
+so no intrinsic asymptotic advantage follows from the
+new interface. The correct comparison distinguishes
+(i) initial SVD cost, (ii) scalar inversion, (iii) repeated
+full-vector reconstruction, (iv) memory, and (v) failed
+or inaccurate candidate fits. Prior structured
+Whittaker--Henderson algorithms must remain in the
+comparison \citep{weinert2007,biessy2026}.
+
+\subsection{Proposed Experiment006: a falsifiable validation}
+A later \emph{separately numbered} experiment should
+compare three implementations on identical inputs:
+(A) stable log-$\lambda$ inversion followed by
+shift-free spectral fitting; (B) the present direct
+log-odds weight fit; and (C) the direct-weight path
+with cached weights and repeated observations.
+Use $d=1,\ldots,6$, multiple $n$ values,
+fixed $\mu=0$ and fixed nonzero $\mu$, as well
+as the separately labeled observed-difference
+plug-in. Cover an interior $s$ grid and attainable
+values near zero and one.
+
+At every identical $(n,d,s,\mu,y)$,
+measure total and phase-separated time, root
+evaluations, allocation and peak memory,
+attained smoothness, method failure, numerical
+relative error against an independent
+high-precision \emph{same-estimator} reference,
+and statistical error against known latent trends
+when synthetic truth is available. Include the
+same scalar precision tolerance and a
+cache-equivalent penalty-based baseline.
+Block independent replicates by simulated
+series and machine run; do not treat hundreds
+of $s$-grid points as independent samples.
+Failure counts should remain in the raw data.
+A direct-weight advantage would be supported by
+matched measurements and high-precision accuracy
+at the same requested $s$, not by an isolated
+microbenchmark or a faster result from a
+different candidate grid.
+
+Two especially testable predictions are:
+(i) a direct-weight path may avoid forming an
+overflowing $\lambda$ in some high-order,
+high-smoothness cases where the log-singular
+spectrum remains usable; and (ii) caching weights
+will be most beneficial when one $(n,d,s)$
+configuration is reused across many observations.
+Neither prediction is claimed as verified here.
+An equally optimized log-$\lambda$ and weight-cache
+baseline might match both outcomes.
+
+\subsection{Limits and scope for a standalone paper}
+Our results concern unweighted, equally indexed
+finite differences and quadratic penalties.
+They do not establish a theory of irregular
+observation spacings, time-varying smoothness,
+$\ell_1$ trend filtering, generalized likelihoods,
+or a new forecast-selection criterion.
+The smoothness coordinate is a normalized
+\emph{conditional trace index}; when $\mu$
+is estimated from data the full fitted-value
+Jacobian has the additional term in
+\eqref{eq:edf-plug}. If $s$ is selected from
+the data, its adaptive effect requires
+further analysis. A bounded parameter interval
+does not imply a globally well-conditioned
+inverse or a globally optimal finite search.
+
+\section{Conclusion}
+A PLS trend can be reconstructed by solving
+one monotone scalar equation for a coupled vector
+of spectral weights and applying a shift-free SVD
+formula, without explicitly calculating the
+penalty coefficient in the fitted-trend path.
+The estimator, its shrinkage family, and the
+implicit scalar inversion remain those of the
+classical penalized problem. The exact
+endpoint projection, sensitivity bound and
+plug-in degrees-of-freedom correction help
+clarify what prescribing $s\in[0,1]$
+mathematically controls. Whether this direct
+execution path is preferable in practice
+is an open empirical question for the
+proposed paired precision--runtime benchmark.
+
+\section*{Software and evidence status}
+The current implementation is maintained in
+\url{https://github.com/heri-espino/trendestimation},
+module \texttt{src/trendestimation/smoothness\_weights.py};
+existing equivalence tests reside in
+\texttt{tests/test\_spectral\_smoothness\_weights.py}.
+This document is a theory-first research
+draft. Its theorems have proofs, but no new
+runtime or statistical Monte Carlo measurements
+were conducted for the manuscript.
+Authorship, journal target and statistical
+claims are provisional pending independent
+coauthor review.
