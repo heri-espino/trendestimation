@@ -44,7 +44,8 @@ def test_reused_hybrid_factor_and_trace_match_uncached():
         a=backend.evaluate(y,0.15,1.1,criterion,reuse_factor=True)
         b=backend.evaluate(y,0.15,1.1,criterion,reuse_factor=False)
         np.testing.assert_allclose(a,b,rtol=1e-9,atol=1e-9)
-    assert backend.banded.trace_calls>0
+    assert 1.1 in backend._cache
+    assert backend.hybrid.cached_factor_count==1
 
 
 def test_complete_hybrid_names_explicitly_pair_a_fit_with_diagnostics():
