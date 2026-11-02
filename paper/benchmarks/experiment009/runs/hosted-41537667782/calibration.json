@@ -1,0 +1,95 @@
+{
+  "source_fit": "results/experiment007-selfhosted-41510943429",
+  "source_full": "results/experiment008-41529113497-broad",
+  "important_limitations": "All fitted constants are platform-specific and descriptive. Fit-only and AICc full-criterion are separate experiments. No SVD-proxy comparison is independent forward-error proof. The AICc benchmark includes common S->lambda mapper setup. Predictions for n beyond training/observed lengths are unvalidated. Numerical reliability must gate a production switch. Other criteria and mapping options need their own calibration.",
+  "models": [
+    {
+      "mode": "fit",
+      "coefficient_fit_ns": [
+        64,
+        128
+      ],
+      "heldout_n": 256,
+      "sample_records": 288,
+      "training_examples": {
+        "svd": 192,
+        "cholesky": 142
+      },
+      "coefficients": {
+        "svd": [
+          0.00031772058264845364,
+          0.0008207755424346998,
+          0.0,
+          0.0001861277495874453
+        ],
+        "cholesky": [
+          0.0001640992986405259,
+          9.396265790640521e-05,
+          0.0,
+          0.0001378462499240682
+        ]
+      },
+      "theoretical_features": "n^3 setup + R n^2 projection + MR n^2 full fits",
+      "validation": {
+        "mode": "fit",
+        "holdout_n": 256,
+        "paired_comparable": 61,
+        "predicted_correct": 61,
+        "accuracy": 1.0,
+        "heldout_true_winners": {
+          "svd": 0,
+          "cholesky": 61
+        },
+        "heldout_has_both_classes": false,
+        "training_paired_comparable": 142,
+        "training_correct": 137,
+        "caveat": "A holdout consisting of only one winning class does NOT establish accurate prediction of a switching boundary, even if every label is predicted correctly."
+      }
+    },
+    {
+      "mode": "aicc",
+      "coefficient_fit_ns": [
+        64,
+        128,
+        256
+      ],
+      "heldout_n": 512,
+      "sample_records": 96,
+      "training_examples": {
+        "svd": 66,
+        "cholesky": 66
+      },
+      "coefficients": {
+        "svd": [
+          0.0041169097819850585,
+          0.0012389604382357356,
+          0.0,
+          0.0042402682432410325
+        ],
+        "cholesky": [
+          0.006707935597651499,
+          0.0010785750343988959,
+          0.0,
+          0.013488690220168582,
+          0.011132845847512183
+        ]
+      },
+      "theoretical_features": "AICc includes shared n^3 mapper preparation for n<=512",
+      "validation": {
+        "mode": "aicc",
+        "holdout_n": 512,
+        "paired_comparable": 8,
+        "predicted_correct": 8,
+        "accuracy": 1.0,
+        "heldout_true_winners": {
+          "svd": 0,
+          "cholesky": 8
+        },
+        "heldout_has_both_classes": false,
+        "training_paired_comparable": 60,
+        "training_correct": 46,
+        "caveat": "A holdout consisting of only one winning class does NOT establish accurate prediction of a switching boundary, even if every label is predicted correctly."
+      }
+    }
+  ]
+}
