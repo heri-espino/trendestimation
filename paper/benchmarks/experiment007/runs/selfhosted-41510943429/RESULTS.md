@@ -2,7 +2,7 @@
 
 This report is generated exclusively from the archived actual timing
 and numerical validation files. This is a **fit-only** pilot with
-**two seeds**, not a complete statistical-criterion benchmark.
+**12 independent seed blocks**, with **3 cold timing repetitions per block**; not a complete statistical-criterion benchmark.
 
 Primary mean: mu='data'=mean(np.diff(y,n=d)) computed independently
 for each observed series. Fixed mu=0 is a control, not the default.
@@ -22,7 +22,7 @@ for each observed series. Fixed mu=0 is a control, not the default.
 | grid_three_series | 15 | 15 | 4 | 2 | 0 |
 
 These are **not** universal optimal dimension switches: they combine
-only n=64/128/256, two seeds and limited S-grid sizes. The sampled
+only n=64/128/256, 12 seed blocks and limited S-grid sizes. The sampled
 fixed mu=0 and data-derived mean policies must not be conflated.
 Speed rankings exclude an entire method×workload×seed block if
 even one candidate failed numerical agreement, rather than counting
@@ -38,3 +38,7 @@ that oracle. No complete cell is independently certified at all S.
 Do not replace the package default with a rule inferred from this
 pilot; collect additional independent precision references, more
 seeds and larger series, and time full criterion computations first.
+
+## Provenance correction
+
+This summary previously contained a hard-coded two-seed description from the initial pilot report generator. The recorded metadata.json and raw CSVs establish **12 seeds** and **3 cold timing repetitions** for this run. Only the explanatory wording in RESULTS.md was corrected; all numerical CSV measurements, metadata, and their content hashes remain unchanged. The report generator has been fixed for subsequent runs.
