@@ -1,0 +1,9 @@
+iniconfig==2.3.1
+numpy==2.4.6
+packaging==26.3
+pluggy==1.7.0
+Pygments==2.21.0
+pytest==9.2.0
+scipy==1.17.1
+threadpoolctl==3.7.0
+-e git+https://github.com/heri-espino/trendestimation@cee90e876c6d5e1b6da2f674ff5085efddf2ba1b#egg=trendestimation
