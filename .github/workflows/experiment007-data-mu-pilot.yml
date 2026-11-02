@@ -1,0 +1,80 @@
+name: Experiment007 observed-mu crossover validation on PCAG103A-08
+
+on:
+  push:
+    branches: [research/experiment007-data-mu-backend-frontier]
+    paths:
+      - .github/workflows/experiment007-data-mu-pilot.yml
+      - paper/benchmarks/experiment007/**
+      - paper/benchmarks/experiment006/audit_high_d.py
+      - tests/test_experiment007_data_mu.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment007-data-mu-pcag103a08
+  cancel-in-progress: false
+
+jobs:
+  observed-mu-paired-pilot:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONPATH: ${{ github.workspace }}\src
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify designated non-admin runner and existing Conda
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Incorrect Windows runner' }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Existing Conda unavailable' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import numpy,scipy,pytest,threadpoolctl; print('Existing environment ready, no installs')"
+          if ($LASTEXITCODE -ne 0) { throw 'Existing Conda packages missing; do not install automatically' }
+      - name: Verify mu=data calculations and four workloads
+        run: |
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment007_data_mu.py
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment007 parity tests failed' }
+      - name: Run 12-seed three-cold-repeat validation across 3 lengths and 6 orders
+        id: pilot
+        run: |
+          $dir = "paper/benchmarks/experiment007/runs/selfhosted-$env:GITHUB_RUN_ID"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment007/run.py --preset confirm --output $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment007 pilot did not complete' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment007/summarize.py --run-dir $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment007 crossover QA analysis failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dir/requirements-resolved.txt" -Encoding utf8
+          Get-Content "$dir/metadata.json"
+      - name: Upload complete and partial research outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment007-PCAG103A-08-${{ github.run_id }}
+          path: paper/benchmarks/experiment007/runs/selfhosted-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve measurements on results-only branch
+        if: always()
+        run: |
+          $dir = "paper/benchmarks/experiment007/runs/selfhosted-$env:GITHUB_RUN_ID"
+          if (!(Test-Path "$dir/metadata.json")) {
+            Write-Host 'No completed metadata to archive'; exit 0
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          $archive = "results/experiment007-selfhosted-$env:GITHUB_RUN_ID"
+          git switch -c $archive
+          git add -f -- $dir
+          git commit -m "experiment007: archive observed-mu numerical and timing data $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed results commit' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed results push' }

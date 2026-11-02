@@ -24,7 +24,6 @@ from scipy.linalg import cho_solve_banded
 
 from trendestimation import TrendSmoother, PreparedPLSSolver
 from selected_inverse import BandedTrace
-from run import sample
 
 
 def _decimal_linear_solve(matrix, vector):
@@ -138,6 +137,7 @@ def native_kkt_error(y, fit, d, mu, lam, D):
 def audit(output:Path, *,digits=85, n=128, orders=(5,6),
           levels=(.75,.85,.9,.91,.95,.99,1.), seeds=(20261103,20261104)):
     from time import perf_counter
+    from run import sample  # local import: allows reuse of the Decimal oracle
     if output.exists():
         raise FileExistsError(f"Do not overwrite archived numerical QA: {output}")
     output.mkdir(parents=True)

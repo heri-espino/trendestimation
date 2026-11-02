@@ -198,3 +198,48 @@ the Experiment006 results-only branch after a successful runner run.
 Keep machine-specific timings and conditional performance conclusions
 explicit. Confirm author order, coauthor consent, and citation metadata
 before submission. The full factorial is NOT completed.
+
+
+## Experiment007 — empirically locate backend switching surfaces for mu='data'
+
+Research PR #97 (branch research/experiment007-data-mu-backend-frontier).
+User correctly questioned the previous d-only guarded rule. No
+production automatic backend selection is changed. Review
+paper/benchmarks/experiment007/README.md and source under that folder.
+
+The *primary* practical reference mean is mu='data',
+mu_hat=mean(np.diff(y,n=d)), computed separately for every observed
+series. Fixed mu=0 is retained ONLY as a controlled comparison;
+no fixed arbitrary mu=.15 is used in this new experiment.
+The mean of differences of known synthetic latent tau_true is an
+oracle diagnostic, never passed to any solver.
+A jointly optimized mu=mean(D tau_hat) is a DIFFERENT centered
+penalty and requires independent theory and smoothness normalization.
+
+The first successful Windows pilot on PCAG103A-08 (existing Conda
+trendestimation, no installations) was:
+https://github.com/heri-espino/trendestimation/actions/runs/41510249404
+Results on branch results/experiment007-selfhosted-41510249404.
+It produced 2304 fit-only timing rows and 12096 per-fit QA rows.
+A script joined every method/time block to all required S and series
+accuracy results; 1893/2304 timing rows were eligible for
+PROVISIONAL descriptive comparison. Only 512 of 12096 QA records
+used an independent 85-digit decimal reference, for selected
+n<=128, high-d, high-S cells; remaining SVD proxy matches are
+not certified forward accuracy.
+
+First provisional mu='data' 7-S/3-series winners varied with n,
+d and amplitude, contradicting any justified d-only switch:
+d1-2 Cholesky across n=64/128/256; d3 switches among Cholesky,
+SVD and sparse LU by n and scale; d4 among SVD, sparse LU and PCG;
+d5-6 SVD often wins by being the only complete accurate method.
+This is TWO-SEED exploratory evidence; e.g. a 1–3% PCG speed
+advantage at n=256,d=4 is not a justified production choice.
+
+The current runner workflow also has a 12-seed, three-repeat,
+counterbalanced-method-order confirmation preset, with each
+new run in its own results-only branch. Do not merge or set an
+automatic default until this evidence and full criterion
+requirements are reviewed. The five standard fixed-mu statistical
+criterion formulae are not automatically the correct data-refitted
+criteria for mu='data'.
