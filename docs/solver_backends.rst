@@ -66,9 +66,9 @@ each positive penalty.
 SVD. The alternative backend interface computes **only the fitted
 trend**, without silently performing expensive spectral work.
 Cholesky does not automatically yield exact LOOCV leverages or EDF.
-The **fit-only default method is now** ``cholesky`` (banded Cholesky),
-informed by comparative full-trend runtime measurements. This is not
-a universal speed guarantee. The spectral SVD remains the default for
+The **fit-only default method remains** ``svd`` for numerical consistency.
+Banded Cholesky is explicitly selectable for efficient direct fits;
+no universal speed winner is assumed. The spectral SVD remains the default for
 ``TrendSmoother``, ``fit_trend``, and ``select_lambda``: exact EDF,
 normalized smoothness and CV/GCV/AICc/BIC/MLE scoring require additional
 diagnostics that a single banded Cholesky fit does not supply.
@@ -136,3 +136,42 @@ Holm correction and paper/Marp output, see
 
 See :doc:`benchmarks` for the existing banded comparison, and
 :doc:`handbook/pls` for the PLS mathematical theory.
+
+
+New sparse and iterative research backends
+------------------------------------------
+
+Experimental fit-only methods: ``banded_lu`` (general banded LAPACK),
+``sparse_lu`` (SciPy SuperLU), ``sparse_cholesky`` (true CHOLMOD via
+optional scikit-sparse), and ``pcg`` (matrix-free conjugate gradient).
+PCG provides ``preconditioner='fft'``, ``'dst'``, ``'jacobi'``, or
+``'none'``, along with numerical tolerance and maximum iteration settings.
+
+.. code-block:: python
+
+   from trendestimation import PreparedPLSSolver
+   model = PreparedPLSSolver(1000, 2, method='pcg',
+                             preconditioner='fft', cg_rtol=1e-9)
+   fit = model.fit(y, lambda_=100., mu='data')
+   print(model.cg_iterations, model.cg_relative_residual)
+
+   reused = PreparedPLSSolver(1000, 2, method='sparse_lu',
+                               factor_cache=True)
+   fit1 = reused.fit(y1, lambda_=100., mu=0.)
+   fit2 = reused.fit(y2, lambda_=100., mu=.15)
+   print(reused.cached_factor_count)
+
+The finite-penalty RHS is formed directly as
+:math:`y+\lambda\mu D_d^\top\mathbf 1`, with no high-degree
+polynomial cancellation. FFT/DST preconditioners use surrogate boundary
+conditions and are NOT exact natural-boundary eigenvectors. Failed PCG
+convergence raises rather than silently falling back to another method.
+
+CHOLMOD is an optional external dependency; SciPy ``spsolve`` and
+``splu`` do not automatically provide sparse Cholesky. Existing SVD
+smoothness-index inversion, EDF, CV/GCV/AICc/BIC/MLE selection and the
+full-SVD default remain unchanged. Fit-only timings cannot be used as
+complete-criterion selection timings.
+
+The reproducible parity and timing study lives under
+``paper/benchmarks/experiment005/``.
