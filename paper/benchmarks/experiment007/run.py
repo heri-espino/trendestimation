@@ -20,6 +20,7 @@ import os
 import platform
 import sys
 from collections import Counter
+from statistics import median
 from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
@@ -71,7 +72,8 @@ def solver(n,d,method,cache):
 
 def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
         s_levels=S_LEVELS,scales=SCALES,policies=POLICIES,
-        methods=METHODS,high_precision=True,threads=1):
+        methods=METHODS,high_precision=True,threads=1,timing_repeats=1):
+    if timing_repeats<1:raise ValueError("timing_repeats must be >=1")
     if output.exists():raise FileExistsError(f"Refusing to overwrite results: {output}")
     output.mkdir(parents=True)
     raw=[]
@@ -159,36 +161,57 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
                                             cg_iterations=cg_iter,
                                             cg_relative_residual=cg_res,
                                             exception=info))
-                            for workload,targets,n_series in WORKLOADS:
+                            for workload_index,(workload,targets,n_series) in enumerate(WORKLOADS):
                                 if "grid" in workload:
                                     targets=s_levels
                                 yy=[series[k][0] for k in range(n_series)]
-                                for method in methods:
-                                    setup=fit_time=0.0
-                                    fit_start=None
-                                    try:
-                                        t0=perf_counter()
-                                        prepar=solver(n,d,method,cache=(n_series>1))
-                                        setup=perf_counter()-t0
-                                        fit_start=perf_counter()
-                                        for y in yy:
-                                            for s in targets:
-                                                _=prepar.fit(
-                                                    y,lambda_=lambdas[s],
-                                                    mu=("data" if policy=="data" else 0.))
-                                        fit_time=perf_counter()-fit_start
-                                        state="ok"
-                                        comment=""
-                                        cached=prepar.cached_factor_count
-                                    except (ArithmeticError,ValueError,
-                                            OverflowError,np.linalg.LinAlgError,
-                                            ImportError,MemoryError) as exc:
-                                        fit_time=perf_counter()-fit_start if fit_start is not None else 0.
+                                # Counterbalance call-order effects across
+                                # independent seed blocks; all algorithms see
+                                # identical observations and S candidates.
+                                method_order=np.random.default_rng(
+                                    np.random.SeedSequence([
+                                        7007,n,d,seed,workload_index,
+                                        int(scale=="high"),int(policy=="data")
+                                    ])).permutation(methods)
+                                for method in method_order:
+                                    trials=[]
+                                    comment=""
+                                    cached=0
+                                    state="ok"
+                                    for _repeat in range(timing_repeats):
+                                        setup=fit_time=0.0
+                                        fit_start=None
+                                        try:
+                                            t0=perf_counter()
+                                            prepar=solver(n,d,method,cache=(n_series>1))
+                                            setup=perf_counter()-t0
+                                            fit_start=perf_counter()
+                                            for y in yy:
+                                                for s in targets:
+                                                    _=prepar.fit(
+                                                        y,lambda_=lambdas[s],
+                                                        mu=("data" if policy=="data" else 0.))
+                                            fit_time=perf_counter()-fit_start
+                                            cached=prepar.cached_factor_count
+                                            trials.append((setup,fit_time))
+                                        except (ArithmeticError,ValueError,
+                                                OverflowError,np.linalg.LinAlgError,
+                                                ImportError,MemoryError) as exc:
+                                            state="solver_failed"
+                                            comment=f"{type(exc).__name__}: {exc}"[:220]
+                                            break
+                                    if trials:
+                                        # Median of *independent cold*
+                                        # setup+work phases from same seed.
+                                        chosen=min(trials,key=lambda item:
+                                            abs(sum(item)-median(sum(x) for x in trials)))
+                                        setup,fit_time=chosen
+                                    else:
+                                        setup=fit_time=0.
+                                    if len(trials)!=timing_repeats:
                                         state="solver_failed"
-                                        comment=f"{type(exc).__name__}: {exc}"[:220]
-                                        cached=0
                                     raw.append(dict(n=n,d=d,scale=scale,
-                                        mu_policy=policy,seed=seed,method=method,
+                                        mu_policy=policy,seed=seed,method=str(method),
                                         workload=workload,M=len(targets),R=n_series,
                                         setup_s=setup,total_fit_s=fit_time,
                                         cold_total_s=setup+fit_time,
@@ -210,7 +233,8 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
               n_levels=list(n_levels),d_levels=list(d_levels),
               scales=list(scales),policies=list(policies),
               methods=list(methods),smoothness=list(s_levels),
-              seeds=list(seeds),threads=threads,
+              seeds=list(seeds),threads=threads,timing_repeats=timing_repeats,
+              timing_method_order='seeded_permutation',
               numerical_reference=("85-digit independent decimal for "
                  "n<=128 d>=5 S>=.9 first series only; elsewhere SVD proxy"),
               python=sys.version,numpy=np.__version__,scipy=scipy.__version__,
@@ -230,11 +254,13 @@ def run(output:Path,*,n_levels=N_LEVELS,d_levels=D_LEVELS,seeds=(0,1),
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output",required=True,type=Path)
-    parser.add_argument("--preset",choices=("smoke","pilot"),default="smoke")
+    parser.add_argument("--preset",choices=("smoke","pilot","confirm"),default="smoke")
     args=parser.parse_args()
     if args.preset=="smoke":
         run(args.output,n_levels=(64,),d_levels=(2,6),
             seeds=(0,),s_levels=(.5,.9,.99,1.),scales=("low",),
             high_precision=True)
+    elif args.preset=="confirm":
+        run(args.output,seeds=tuple(range(12)),timing_repeats=3)
     else:
         run(args.output)
