@@ -66,3 +66,15 @@ run directories. Do not commit proprietary input datasets or secrets.
 The project has not recorded timing results for these new implementations
 until this experiment actually runs on the designated host. CI tests parity
 and small-scale operations, not large benchmark speed.
+
+## Initial hosted smoke accounting correction
+
+The first automatically archived `runs/hosted-smoke/` used a median of
+three repeated solves, mixing the initial sparse factorization with
+subsequent cache hits. Its raw data and original summary remain preserved
+for audit but its one-number cached-sparse median is **not** a fair
+cold-start comparison. The corrected `runs/hosted-smoke-v2/` separates
+first-cold-fit time, warm-cache-hit median, total repeated solves and
+setup-plus-total time. Only the second format should support any
+cold-versus-warm statement. These are tiny n=36 hosted smoke timings,
+not a benchmark of the author's Windows machine or of d=6.
