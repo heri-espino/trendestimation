@@ -127,3 +127,22 @@ def test_no_dense_n_by_n_structure_and_validation():
         PreparedPLSSolver(30,2,method="pcg",cg_rtol=-1)
     with pytest.raises(ValueError):
         fit_penalized(np.ones(30),method="sparse_lu",lambda_=-2)
+
+
+def test_banded_cholesky_factor_cache_same_lambda_different_mean():
+    n=51
+    rng=np.random.default_rng(117)
+    y=rng.normal(size=n)
+    fitter=PreparedPLSSolver(n,2,method="cholesky",factor_cache=True)
+    assert fitter.cached_factor_count==0
+    a=fitter.fit(y,lambda_=11.,mu=0.0)
+    assert fitter.cached_factor_count==1
+    b=fitter.fit(y,lambda_=11.,mu=0.2)
+    assert fitter.cached_factor_count==1
+    assert np.linalg.norm(a-b)>1e-4
+    truth=PreparedPLSSolver(n,2,method="cholesky").fit(
+        y,lambda_=11.,mu=0.2)
+    assert_allclose(b,truth,atol=1e-9)
+    fitter.fit(y,lambda_=9.,mu=0.0)
+    assert fitter.cached_factor_count==2
+    assert fitter.stored_bytes>8*(2+1)*n
