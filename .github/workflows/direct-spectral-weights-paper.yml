@@ -1,0 +1,106 @@
+name: Direct spectral weights — CAS theorem draft
+
+on:
+  push:
+    branches:
+      - paper/direct-spectral-weights-theory-20261101
+    paths:
+      - .github/workflows/direct-spectral-weights-paper.yml
+      - paper/direct-spectral-weights/main.tex
+      - paper/direct-spectral-weights/sections/**
+      - paper/direct-spectral-weights/references.bib
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: direct-spectral-weights-theory
+  cancel-in-progress: true
+
+jobs:
+  compile-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install Elsevier CAS-compatible TeX distribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern \
+            latexmk poppler-utils
+      - name: Copy exactly the user-provided CAS class and bibliography style
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/direct-spectral-weights/$f"
+          done
+          sha256sum paper/els-cas-templates/cas-dc.cls \
+            paper/els-cas-templates/cas-common.sty \
+            paper/els-cas-templates/cas-model2-names.bst \
+            > paper/direct-spectral-weights/template_sha256.txt
+      - name: Compile full theorem/proof manuscript and BibTeX
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/direct-spectral-weights
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -17
+          if grep -Eq 'Citation .* undefined|There were undefined references|Reference .* undefined' main.log; then
+            echo "Unresolved references/citations"; exit 1
+          fi
+          pdftotext main.pdf main-extracted.txt
+          for term in "Exact reconstruction" "Exact plug-in smoother" \
+                     "Residual-to-trend" "Conclusion"; do
+            grep -Fqi "$term" main-extracted.txt
+          done
+          sha256sum main.tex sections/*.tex references.bib \
+            main.pdf PROOF_AUDIT.md > publication_sha256.txt
+          git rev-parse HEAD > source_commit.txt
+      - name: Upload complete LaTeX and verified PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: direct-spectral-weights-theory-pdf
+          path: |
+            paper/direct-spectral-weights/main.pdf
+            paper/direct-spectral-weights/main.tex
+            paper/direct-spectral-weights/sections/
+            paper/direct-spectral-weights/references.bib
+            paper/direct-spectral-weights/README.md
+            paper/direct-spectral-weights/PROOF_AUDIT.md
+            paper/direct-spectral-weights/HANDOFF.md
+            paper/direct-spectral-weights/main.log
+            paper/direct-spectral-weights/main.bbl
+            paper/direct-spectral-weights/publication_sha256.txt
+            paper/direct-spectral-weights/template_sha256.txt
+            paper/direct-spectral-weights/source_commit.txt
+          if-no-files-found: warn
+      - name: Archive compiled manuscript on manuscript branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f -- paper/direct-spectral-weights/main.pdf \
+            paper/direct-spectral-weights/publication_sha256.txt \
+            paper/direct-spectral-weights/template_sha256.txt \
+            paper/direct-spectral-weights/source_commit.txt
+          if git diff --cached --quiet; then
+            echo "Manuscript PDF already archived"
+          else
+            git commit -m "paper: archive theorem draft CAS PDF [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
