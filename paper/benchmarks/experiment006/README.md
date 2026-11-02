@@ -38,7 +38,7 @@ Classical CV and the other fixed-mu scores are not exact refit estimators when m
 ## Run on Windows PowerShell, keeping other agents' work untouched
 
     git fetch origin
-    git worktree add ..\trendestimation-exp006 origin/research/experiment006-full-computational-factorial
+    git worktree add -b experiment006/windows-local ..\trendestimation-exp006 origin/research/experiment006-full-computational-factorial
     Set-Location ..\trendestimation-exp006
     conda activate trendestimation
     python -m pip install -e ".[dev]"
@@ -56,7 +56,7 @@ Run one larger paired experiment slice:
 
     python paper\benchmarks\experiment006\run.py --preset slice --n 256 --d 3 --mu 0.15 --amplitude high --criterion gcv --grid-denominator 1000 --methods banded_cholesky,spectral_svd,naive_inverse --repeats 7 --series-count 8 --output paper\benchmarks\experiment006\runs\windows001\n256_d3_gcv_high
 
-Outputs: raw_times.csv, summary.csv and environment.json, with actual timing observations, status, machine/BLAS versions, seed, source checksum and Git revision. Commit and push all measured outputs from the dedicated worktree; never overwrite previous runs or leave authoritative results only in chat. Do not add credentials or licensed source PDFs.
+Outputs: raw_times.csv, summary.csv, paired_speedups.csv and environment.json, with actual timing observations, status, machine/BLAS versions, seed, source checksum and Git revision. Commit and push all measured outputs from the dedicated worktree; never overwrite previous runs or leave authoritative results only in chat. Do not add credentials or licensed source PDFs.
 
 ## Unfinished publication gates
 
@@ -68,3 +68,21 @@ Outputs: raw_times.csv, summary.csv and environment.json, with actual timing obs
 6. Confirm literature novelty: Guerrero (2007,2008) already introduced the percentage-of-smoothness parameter; Weinert (2007) already established fast Whittaker-Henderson GCV algorithms. Do not claim first use of S.
 
 References: Guerrero (2007), DOI 10.1016/j.spl.2007.03.006; Guerrero (2008), DOI 10.1111/j.1751-5823.2008.00047.x; Cortes-Toto et al. (2017), DOI 10.1080/03610918.2015.1005236; Weinert (2007), DOI 10.1016/j.csda.2006.11.038.
+
+## After the Windows runs
+
+Save the local results in the independent experiment006/windows-local branch:
+
+    git add paper/benchmarks/experiment006/runs/windows001
+    git commit -m "experiment006: archive paired computational timing data"
+    git push -u origin experiment006/windows-local
+
+The full dataset is represented as a **long-form tensor** with explicitly
+named factor axes, not a giant dense n-dimensional NumPy array. A row with
+infeasible or incomplete status is a scientifically important observation.
+The first implemented timing summary reports mean, median, standard
+deviation, a seeded 95% bootstrap interval for the mean (when >=2
+independent repeats complete), and paired speedup against explicit
+inversion where the latter is feasible. These are conditional on the
+selected host, threading settings, and run protocol; bootstrap of timing
+repetitions alone does not prove universal speed superiority.
