@@ -50,6 +50,8 @@ jobs:
           $dir = "paper/benchmarks/experiment007/runs/selfhosted-$env:GITHUB_RUN_ID"
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment007/run.py --preset pilot --output $dir
           if ($LASTEXITCODE -ne 0) { throw 'Experiment007 pilot did not complete' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment007/summarize.py --run-dir $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment007 crossover QA analysis failed' }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dir/requirements-resolved.txt" -Encoding utf8
           Get-Content "$dir/metadata.json"
       - name: Upload complete and partial research outputs
