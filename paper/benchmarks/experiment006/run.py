@@ -37,12 +37,16 @@ import scipy
 from scipy.special import binom
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from trendestimation import TrendSmoother
+from trendestimation import TrendSmoother, PreparedPLSSolver
 from trendestimation.core import difference_matrix
 from trendestimation.criteria import _score_from_coordinates
 from selected_inverse import BandedTrace, selected_inverse
 
-METHODS=("naive_inverse","spectral_svd","banded_cholesky")
+HYBRID_METHODS=(
+    "banded_lu_banded_trace","sparse_lu_banded_trace",
+    "sparse_cholesky_banded_trace","pcg_fft_banded_trace",
+    "pcg_dst_banded_trace","pcg_jacobi_banded_trace")
+METHODS=("naive_inverse","spectral_svd","banded_cholesky")+HYBRID_METHODS
 CRITERIA=("cv","gcv","bic","aicc","mle")
 POLICIES=("direct_s","mapped_lambda")
 SCENARIOS=("one_s_one_series","grid_one_series",
@@ -145,7 +149,20 @@ class Evaluator:
     def __init__(self,n,d,method):
         self.n,self.d,self.method=n,d,method
         self.spectral=(TrendSmoother(n,d) if method=="spectral_svd" else None)
-        self.banded=(BandedTrace(n,d) if method=="banded_cholesky" else None)
+        self.banded=(BandedTrace(n,d) if (
+            method=="banded_cholesky" or method in HYBRID_METHODS
+        ) else None)
+        self.hybrid=None
+        if method in HYBRID_METHODS:
+            if method.startswith("pcg_"):
+                pc=method.split("_")[1]
+                self.hybrid=PreparedPLSSolver(
+                    n,d,method="pcg",preconditioner=pc,
+                    cg_rtol=1e-9,cg_maxiter=min(5000,10*n))
+            else:
+                self.hybrid=PreparedPLSSolver(
+                    n,d,method=method.removesuffix("_banded_trace"),
+                    factor_cache=False)
         self.Q=None
         if method=="naive_inverse":
             D=difference_matrix(n,d)
@@ -174,6 +191,15 @@ class Evaluator:
                     self._cached_diagnostics[lam]=chosen
                 L=self._cache[lam]
                 z=self._cached_diagnostics[lam]
+            if self.hybrid is not None:
+                if np.isposinf(lam):
+                    return self.banded.fit_stats(
+                        y,lam,mu,criterion)["score"]
+                if self.hybrid.structured is not None:
+                    self.hybrid.structured.factor_cache=reuse_factor
+                tau=self.hybrid.fit(y,lambda_=lam,mu=mu)
+                return self.banded.score_external(
+                    y,tau,lam,mu,criterion,factor=L,selected=z)
             return self.banded.fit_stats(
                 y,lam,mu,criterion,factor=L,selected=z)["score"]
         H=None
@@ -251,7 +277,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                     evaluator=Evaluator(n,d,method)
                     setup_s=perf_counter()-t0+mapper_setup_s
                 except (ValueError,ArithmeticError,np.linalg.LinAlgError,
-                        MemoryError) as exc:
+                        MemoryError,ImportError) as exc:
                     setup_s=perf_counter()-t0+mapper_setup_s
                     failure="setup_failed_"+type(exc).__name__
                 else:
@@ -301,12 +327,17 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                         map_s=perf_counter()-tmap if mapped is not None else 0.
                         evaluator._cache.clear()
                         evaluator._cached_diagnostics.clear()
+                        if evaluator.hybrid is not None:
+                            if evaluator.hybrid.structured is not None:
+                                evaluator.hybrid.structured._factors.clear()
+                            evaluator.hybrid._band_factors.clear()
                         reuse=nr>1 and M<1000 and method!="spectral_svd"
                         # Cache only if a full collection of retained factors
                         # fits in the explicitly reported memory budget.
                         if reuse and method=="naive_inverse":
                             reuse=M*n*n*8<max_dense_bytes//2
-                        if reuse and method=="banded_cholesky":
+                        if reuse and (method=="banded_cholesky" or
+                                      method in HYBRID_METHODS):
                             reuse=M*n*(d+1)*8*2<max_dense_bytes//2
                         scores=[]
                         tscore=0.
