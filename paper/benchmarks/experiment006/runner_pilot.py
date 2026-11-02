@@ -36,7 +36,7 @@ def main() -> None:
                 denominator=100,
                 methods=(
                     "naive_inverse", "spectral_svd", "banded_cholesky",
-                    "sparse_lu_banded_trace",
+                    "guarded_svd_cholesky", "sparse_lu_banded_trace",
                 ),
                 repeats=2, R=2, threads=1, seed=20261102,
                 max_work=3e8,
@@ -49,7 +49,8 @@ def main() -> None:
                 denominator=100,
                 methods=(
                     "spectral_svd", "banded_cholesky",
-                    "sparse_lu_banded_trace", "pcg_fft_banded_trace",
+                    "guarded_svd_cholesky", "sparse_lu_banded_trace",
+                    "pcg_fft_banded_trace",
                 ),
                 repeats=2, R=2, threads=1, seed=20261103,
                 max_work=3e8,
