@@ -3,7 +3,10 @@ name: Experiment008 fast hosted real criterion timings
 on:
   push:
     branches: [research/experiment008-full-factorial-timing]
-    paths: [.github/workflows/experiment008-hosted-fast.yml]
+    paths:
+      - .github/workflows/experiment008-hosted-fast.yml
+      - paper/benchmarks/experiment008/run_batches.py
+      - paper/benchmarks/experiment006/run.py
   workflow_dispatch:
 
 permissions:
