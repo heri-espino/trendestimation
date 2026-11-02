@@ -1,0 +1,88 @@
+name: Experiment006 bounded pilot on PCAG103A-08
+
+on:
+  push:
+    branches: [research/experiment006-full-computational-factorial]
+    paths:
+      - .github/workflows/experiment006-selfhosted-pilot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment006-pcag103a08
+  cancel-in-progress: false
+
+jobs:
+  windows-paired-pilot:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - name: Check out isolated Experiment006 research source
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Require exactly the PCAG103A-08 runner
+        run: |
+          Write-Host "Runner name: $env:RUNNER_NAME"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') {
+            throw 'Wrong self-hosted runner, expected PCAG103A-08'
+          }
+      - name: Set up isolated Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install research and test dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest threadpoolctl
+      - name: Validate full criterion numerical parity
+        run: |
+          python -m pytest -q tests/test_experiment006_selected_inverse.py tests/test_experiment006_bench.py tests/test_experiment006_hybrid_criteria.py
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment006 numerical tests failed' }
+      - name: Run two bounded paired Windows pilot slices
+        id: pilot
+        run: |
+          $dest = "paper/benchmarks/experiment006/runs/selfhosted-$env:GITHUB_RUN_ID"
+          python paper/benchmarks/experiment006/runner_pilot.py --output-root $dest
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment006 pilot failed' }
+          python -m pip freeze | Out-File -FilePath "$dest/requirements-resolved.txt" -Encoding utf8
+          Get-Content "$dest/RESULTS.md"
+      - name: Upload all measurements even if pilot fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment006-PCAG103A-08-${{ github.run_id }}
+          path: paper/benchmarks/experiment006/runs/selfhosted-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Permanently archive results on distinct results-only branch
+        if: always() && steps.checkout.outcome == 'success'
+        run: |
+          $dest = "paper/benchmarks/experiment006/runs/selfhosted-$env:GITHUB_RUN_ID"
+          if (!(Test-Path "$dest/RESULTS.md")) {
+            Write-Host 'No results recorded to archive.'
+            exit 0
+          }
+          $archive = "results/experiment006-selfhosted-$env:GITHUB_RUN_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          git add -f -- $dest
+          git commit -m "experiment006: archive PCAG103A-08 paired pilot $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Git commit failed' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Git push failed' }
+          Write-Host "Archived results to $archive"
