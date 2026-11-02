@@ -113,6 +113,11 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                 for lam in penalties:
                     truth = reference.fit(y,lambda_=lam,mu=mu)
                     for repeat in range(repeats):
+                        cache_hit = bool(
+                            solver is not None and solver.structured is not None
+                            and solver.structured.factor_cache
+                            and lam in solver.structured._factors
+                        )
                         if solver is None:
                             rows.append({
                                 "n":n,"d":d,"mu":str(mu),"lambda":lam,
@@ -122,7 +127,8 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                                 "relative_residual":float("nan"),
                                 "pcg_iterations":None,
                                 "stored_bytes":None,
-                                "cached_factors":None,"status":init_status,
+                                "cached_factors":None,
+                                "cache_hit":False,"status":init_status,
                             })
                             continue
                         started=perf_counter()
@@ -149,7 +155,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
                             "pcg_iterations":solver.cg_iterations,
                             "stored_bytes":solver.stored_bytes,
                             "cached_factors":solver.cached_factor_count,
-                            "status":status,
+                            "cache_hit":cache_hit,"status":status,
                         })
             print(f"[{ci+1}/{len(cases(preset))}] n={n}, d={d}, mu={mu}",
                   flush=True)
@@ -168,11 +174,20 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
     for (n,d,mu,lam,method),group in groups.items():
         complete = all(r["status"]=="ok" for r in group)
         times=[r["fit_s"] for r in group if r["status"]=="ok"]
+        warm = [r["fit_s"] for r in group if
+                r["status"] == "ok" and r["cache_hit"]]
+        setup = group[0]["setup_s"]
         summary.append(dict(
             n=n,d=d,mu=mu,lambda_=lam,method=method,
             valid=complete,valid_repetitions=len(times),
             median_fit_s=float(np.median(times)) if complete else float("nan"),
-            initial_setup_s=group[0]["setup_s"],
+            first_cold_fit_s=group[0]["fit_s"] if complete else float("nan"),
+            warm_cached_median_s=(
+                float(np.median(warm)) if complete and warm else float("nan")),
+            full_repeated_fit_s=sum(times) if complete else float("nan"),
+            setup_plus_repeated_fit_s=(
+                setup+sum(times) if complete else float("nan")),
+            initial_setup_s=setup,
             max_error=max((r["max_abs_error"] for r in group if
                            np.isfinite(r["max_abs_error"])),default=float("nan")),
         ))
@@ -184,6 +199,7 @@ def run(preset="smoke", *, repeats=2, threads=1, seed=20261102, output=None):
         f"- Preset: {preset}; attempted measurements: {len(rows)}\n"
         f"- Numerically valid measurements: {sum(r['status']=='ok' for r in rows)}\n"
         "- All failures remain in raw_measurements.csv.\n"
+        "- First fit, subsequent cache hits, and end-to-end repeated costs are separate.\n"
         "- Timing ranks must use only cases with complete valid repetitions.\n"
         "- The original statistical-selection experiment remains separate.\n",
         encoding="utf8",
