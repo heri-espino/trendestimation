@@ -1,0 +1,495 @@
+[
+  {
+    "n": 64,
+    "d": 1,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 0,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 3.2718460310000097,
+    "result_folder": "slices/00000_n64_d1_0_low_cv_M100",
+    "row_status_counts": {
+      "ok": 72,
+      "budget_exceeded": 4
+    },
+    "measured_rows": 72
+  },
+  {
+    "n": 64,
+    "d": 2,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 1,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7654262239999952,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '64', '--d', '2', '--mu', 'data', '--amplitude', 'low', '--criterion', 'gcv', '--grid-denominator"
+  },
+  {
+    "n": 64,
+    "d": 3,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 2,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 20.008086332999994,
+    "reason": "Per-slice 20s execution ceiling"
+  },
+  {
+    "n": 64,
+    "d": 4,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 3,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7654976149999868,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '64', '--d', '4', '--mu', 'data', '--amplitude', 'high', '--criterion', 'aicc', '--grid-denominat"
+  },
+  {
+    "n": 64,
+    "d": 5,
+    "criterion": "mle",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 4,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 4.875438231999993,
+    "result_folder": "slices/00004_n64_d5_0_low_mle_M100",
+    "row_status_counts": {
+      "ok": 64,
+      "budget_exceeded": 4,
+      "numerical_failed": 8
+    },
+    "measured_rows": 64
+  },
+  {
+    "n": 64,
+    "d": 6,
+    "criterion": "cv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 5,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.765476016000008,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '64', '--d', '6', '--mu', 'data', '--amplitude', 'low', '--criterion', 'cv', '--grid-denominator'"
+  },
+  {
+    "n": 128,
+    "d": 1,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 6,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 20.008421576000018,
+    "reason": "Per-slice 20s execution ceiling"
+  },
+  {
+    "n": 128,
+    "d": 2,
+    "criterion": "bic",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 7,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7655775270000049,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '128', '--d', '2', '--mu', 'data', '--amplitude', 'high', '--criterion', 'bic', '--grid-denominat"
+  },
+  {
+    "n": 128,
+    "d": 3,
+    "criterion": "aicc",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 8,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 4.674562889999976,
+    "result_folder": "slices/00008_n128_d3_0_low_aicc_M100",
+    "row_status_counts": {
+      "ok": 64,
+      "budget_exceeded": 4,
+      "numerical_failed": 8
+    },
+    "measured_rows": 64
+  },
+  {
+    "n": 128,
+    "d": 4,
+    "criterion": "mle",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 9,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 20.008991054999996,
+    "reason": "Per-slice 20s execution ceiling"
+  },
+  {
+    "n": 128,
+    "d": 5,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 10,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.9163328299999876,
+    "result_folder": "slices/00010_n128_d5_0_high_cv_M10000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 20
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 128,
+    "d": 6,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 11,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7654813180000133,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '128', '--d', '6', '--mu', 'data', '--amplitude', 'high', '--criterion', 'gcv', '--grid-denominat"
+  },
+  {
+    "n": 256,
+    "d": 1,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 12,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 3.0711272810000025,
+    "result_folder": "slices/00012_n256_d1_0_low_bic_M100",
+    "row_status_counts": {
+      "budget_exceeded": 8,
+      "ok": 48
+    },
+    "measured_rows": 48
+  },
+  {
+    "n": 256,
+    "d": 2,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 13,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7654383279999877,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '256', '--d', '2', '--mu', 'data', '--amplitude', 'low', '--criterion', 'aicc', '--grid-denominat"
+  },
+  {
+    "n": 256,
+    "d": 3,
+    "criterion": "mle",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 14,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.8661698200000103,
+    "result_folder": "slices/00014_n256_d3_0_high_mle_M10000",
+    "row_status_counts": {
+      "budget_exceeded": 20,
+      "ok": 24
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 256,
+    "d": 4,
+    "criterion": "cv",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 15,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7654832380000016,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '256', '--d', '4', '--mu', 'data', '--amplitude', 'high', '--criterion', 'cv', '--grid-denominato"
+  },
+  {
+    "n": 256,
+    "d": 5,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 16,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 7.478905250999986,
+    "result_folder": "slices/00016_n256_d5_0_low_gcv_M100",
+    "row_status_counts": {
+      "budget_exceeded": 8,
+      "ok": 32,
+      "numerical_failed": 16
+    },
+    "measured_rows": 32
+  },
+  {
+    "n": 256,
+    "d": 6,
+    "criterion": "bic",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 17,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7655431000000021,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '256', '--d', '6', '--mu', 'data', '--amplitude', 'low', '--criterion', 'bic', '--grid-denominato"
+  },
+  {
+    "n": 512,
+    "d": 1,
+    "criterion": "aicc",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 18,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 20.009150638999984,
+    "reason": "Per-slice 20s execution ceiling"
+  },
+  {
+    "n": 512,
+    "d": 3,
+    "criterion": "mle",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 19,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 1.0668246789999785,
+    "result_folder": "slices/00019_n512_d3_data_high_mle_M100000",
+    "row_status_counts": {
+      "budget_exceeded": 20,
+      "ok": 24
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 512,
+    "d": 6,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 20,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 20.013644529000004,
+    "reason": "Per-slice 20s execution ceiling"
+  },
+  {
+    "n": 1024,
+    "d": 1,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 1000,
+    "index": 21,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.7655533430000219,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '1024', '--d', '1', '--mu', 'data', '--amplitude', 'low', '--criterion', 'gcv', '--grid-denominat"
+  },
+  {
+    "n": 1024,
+    "d": 4,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 10000,
+    "index": 22,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 6.479488795000009,
+    "result_folder": "slices/00022_n1024_d4_0_high_bic_M10000",
+    "row_status_counts": {
+      "infeasible_naive_runtime": 8,
+      "ok": 24,
+      "budget_exceeded": 12
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 1024,
+    "d": 6,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 23,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_execution_error",
+    "elapsed_s": 0.765463503000035,
+    "reason": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/trendestimation/trendestimation/paper/benchmarks/experiment006/run.py', '--preset', 'slice', '--n', '1024', '--d', '6', '--mu', 'data', '--amplitude', 'high', '--criterion', 'aicc', '--grid-denomin"
+  }
+]
