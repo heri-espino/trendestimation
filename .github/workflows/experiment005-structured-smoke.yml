@@ -97,16 +97,25 @@ jobs:
           python - <<'PY'
           from sksparse.cholmod import cholesky
           import numpy as np
-          from trendestimation import PreparedPLSSolver
+          from trendestimation import PreparedPLSSolver, difference_matrix
           for d in (1,2,3,6):
               y=np.random.default_rng(27+d).normal(size=48)
+              D=difference_matrix(48,d)
               for lam in (0.001,0.1,100.):
                   s=PreparedPLSSolver(48,d,method="sparse_cholesky",factor_cache=True)
                   c=PreparedPLSSolver(48,d,method="cholesky")
                   a=s.fit(y,lambda_=lam,mu=0.15)
                   b=c.fit(y,lambda_=lam,mu=0.15)
-                  np.testing.assert_allclose(a,b,rtol=2e-7,atol=2e-7)
+                  A=np.eye(48)+lam*(D.T@D)
+                  rhs=y+lam*.15*(D.T@np.ones(48-d))
+                  truth=np.linalg.solve(A,rhs)
+                  residual=np.linalg.norm(A@a-rhs)/max(1.,np.linalg.norm(rhs))
+                  np.testing.assert_allclose(a,truth,rtol=2e-8,atol=2e-8)
+                  assert residual < 1e-9
                   assert s.cached_factor_count==1
-          print("CHOLMOD sparse Cholesky actually available and verified")
+                  discrepancy=np.max(abs(a-b))
+                  if discrepancy > 2e-7:
+                      print(f"Recorded old banded discrepancy d={d}, lambda={lam}: {discrepancy:.5g}")
+          print("Actual CHOLMOD sparse Cholesky verified against independent dense equations")
           PY
           python -m pytest tests/test_experiment005_structured_solvers.py -q
