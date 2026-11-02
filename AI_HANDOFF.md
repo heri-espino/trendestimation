@@ -273,3 +273,35 @@ only where feasible. Record every resource skip, fail and actual
 measurement, and archive each workflow run under results/experiment008-*.
 The entire 100000-grid x n131072 naive-inversion experiment is
 physically infeasible and must not be falsely represented as completed.
+
+
+## Experiment008 measured data (completed-hosted batches)
+
+The full factorial design is **252000 planned cells**, but only
+actual raw CSV rows with status=ok are timing observations.
+Completed and archived measurements as of this handoff:
+
+- results/experiment008-hosted-41528426191: 392 valid rows;
+  initial CLI forwarding bug excluded other mu=data attempts.
+- results/experiment008-hosted-41529170696: 632 valid rows,
+  mu=data conditional flag correctly forwarded, no execution errors.
+- results/experiment008-hosted-broad-41529218986: 2214 valid rows
+  across 42 completed n,d slices, 8 timeouts, 2374 unrun slices.
+- results/experiment008-naive-41530425009: 1008 valid rows;
+  168 explicit-inverse GRID observations, all 5 criteria, mu0/data.
+
+4246 actual valid timing records in 4 independent hosted batches
+with different VMs; DO NOT pool hardware timing scales blindly.
+See notes/experiment008_measured_computational_times.md for
+sample measured means and theory caveats, source links and
+exact counts. Run-level dataset includes environment.json,
+paired_speedups.csv, batch manifest and full planned tensor status.
+
+The Windows large-series and Windows bounded batch runs were also
+launched. Only count them after Github pushes their raw data to
+results/experiment008-* branches; do not invent large-n performance.
+The original unbounded process was canceled; a corrected per-slice
+45-second timeout and explicit slice statuses were implemented.
+
+Research PR #98 has complete source + tests; no production solver
+auto-selection default change, no RMSE optimization.
