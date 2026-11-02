@@ -1,0 +1,11 @@
+n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup
+128,6,aicc,data,high,naive_inverse,direct_s,one_s_multiple_series,1,0.004225982000093609,0.004225982000093609,1.0
+128,6,aicc,data,high,naive_inverse,mapped_lambda,one_s_multiple_series,1,0.003975670999921022,0.003975670999921022,1.0
+128,6,aicc,data,high,spectral_svd,direct_s,one_s_multiple_series,1,0.004225982000093609,0.005974601999866991,0.707324437709439
+128,6,aicc,data,high,spectral_svd,mapped_lambda,one_s_multiple_series,1,0.003975670999921022,0.005691600999966795,0.6985154089234674
+128,6,aicc,data,high,banded_cholesky,direct_s,one_s_multiple_series,1,0.004225982000093609,0.007801879999931316,0.541662009686231
+128,6,aicc,data,high,banded_cholesky,mapped_lambda,one_s_multiple_series,1,0.003975670999921022,0.007670662999998967,0.5182956153753016
+128,6,aicc,data,high,sparse_lu_banded_trace,direct_s,one_s_multiple_series,1,0.004225982000093609,0.00852645599997004,0.4956317138220684
+128,6,aicc,data,high,sparse_lu_banded_trace,mapped_lambda,one_s_multiple_series,1,0.003975670999921022,0.0081644319999441,0.4869501025849982
+128,6,aicc,data,high,pcg_fft_banded_trace,direct_s,one_s_multiple_series,1,0.004225982000093609,0.011617059999935009,0.3637737947567845
+128,6,aicc,data,high,pcg_fft_banded_trace,mapped_lambda,one_s_multiple_series,1,0.003975670999921022,0.011396495999974832,0.3488502957338643
