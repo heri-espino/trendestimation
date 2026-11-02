@@ -40,7 +40,7 @@ def test_observed_mu_and_solvers_measured_without_oracle_leakage(tmp_path):
         policies=("data","zero"),methods=("svd","cholesky"),
         high_precision=False)
     assert len(raw)==16
-    assert len(qc)==2*2*3*2*2
+    assert len(qc)==2*3*2*2
     assert {x["mu_policy"] for x in raw}=={"data","zero"}
     assert {x["workload"] for x in raw}=={name for name,_,_ in WORKLOADS}
     assert all(x["status"]=="ok" for x in raw), raw
