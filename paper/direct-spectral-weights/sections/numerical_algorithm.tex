@@ -1,0 +1,140 @@
+\section{Numerical algorithm, validation and cost}\label{sec:algorithm}
+
+\subsection{Root evaluation without an explicit penalty}
+Equation~\eqref{eq:bracket} provides a finite bracket
+for any interior $s$ and a finite computed positive singular
+spectrum. For numerical work, form
+\[
+\alpha_j=2\log\sigma_j-\log\delta_*,
+\quad \log\delta_*=\operatorname{median}_j(2\log\sigma_j),
+\]
+rather than computing $\delta_j$ and their ratios directly.
+Using the logistic function, evaluate
+$G(x)=r^{-1}\sum_j\expit(x+\alpha_j)$.
+When $s>1/2$, it is preferable to solve the
+\emph{complementary equation}
+\begin{equation}\label{eq:tail}
+\frac1r\sum_{j=1}^r\expit(-x-\alpha_j)=1-s
+\end{equation}
+rather than subtracting two nearby numbers after evaluating $G(x)$.
+Brent's bracketing method, bisection or safeguarded Newton iteration
+can find $x_s$; the strict monotonicity and bracket in
+Theorem~\ref{thm:root} eliminate ambiguous roots. These choices
+do not imply a better condition number than log-$\lambda$
+inversion.
+
+\paragraph{Direct-$S$ reconstruction algorithm.}
+Assume $D_d=U\Sigma V^\top$ has been computed and its positive
+singular values pass the chosen numerical-rank check.
+\begin{enumerate}
+\item Accept $s\in[0,1]$, $y\in\R^n$, and either a fixed finite
+$\mu$ or the explicit plug-in $\widehat\mu(y)$ of \eqref{eq:plug}.
+\item If $s=0$, return $\widehat\tau=y$. If $s=1$,
+set $w_j=1$ for every positive singular direction.
+Otherwise compute the log-ratios $\alpha_j$ and
+bracket $x$ using \eqref{eq:bracket}.
+\item Solve $G(x)=s$ (or \eqref{eq:tail}) with
+a bracket-preserving scalar algorithm. Set
+$w_j=\expit(x+\alpha_j)$.
+\item Form $c_\mu=V^\top y-\mu\Sigma^{-1}U^\top\one_r$
+and return $\widehat\tau=y-V(w\odot c_\mu)$.
+Optionally return the \emph{conditional} EDF
+$\nu_{\rm cond}=n-rs$, the attained mean
+$r^{-1}\sum_jw_j$ and a root residual.
+For a plug-in mean, separately report
+$\nu_{\rm plug}$ from \eqref{eq:edf-plug}.
+\end{enumerate}
+The first two endpoints use limiting weights, not matrix
+factorization at an infinite or zero penalty. The mathematical
+formula avoids forming the potentially large degree-$d$
+particular polynomial $p_\mu$ in the interior.
+
+\begin{corollary}[Residual-to-trend error certificate]\label{cor:certificate}
+Suppose an approximate scalar solution $\widetilde x\in\R$
+yields computed \emph{exact-arithmetic} weights
+$\widetilde w_j=\expit(\widetilde x+\alpha_j)$
+with scalar residual
+$\varepsilon=G(\widetilde x)-s$.
+Let $\widetilde\tau=y-V(\widetilde w\odot c_\mu)$.
+Then
+\[
+\norm{\widetilde\tau-\widehat\tau_{s,\mu}}_2
+\le r|\varepsilon|\norm{c_\mu}_2.
+\]
+\end{corollary}
+\begin{proof}
+Since $G$ is strictly increasing and maps $\R$ onto $(0,1)$,
+$\widetilde w=w(\widetilde s)$ with
+$\widetilde s=G(\widetilde x)=s+\varepsilon$.
+Thus $\widetilde\tau=\widehat\tau_{\widetilde s,\mu}$;
+apply \eqref{eq:lipschitz}.
+\end{proof}
+
+\begin{remark}[Scope of the certificate]
+This is an \emph{algebraic root-residual} bound. A floating-point
+implementation also incurs errors in its computed SVD, scalar
+logistic sums and matrix products. The certificate alone
+does not bound those errors, and it cannot establish that the
+new approach is more accurate than computing the same
+weights through a carefully stabilized log-$\lambda$
+algorithm.
+\end{remark}
+
+\subsection{Arithmetic, storage and reuse}
+
+Let $I$ denote the number of scalar residual evaluations.
+For dense reduced SVD of an $r\times n$ matrix with $r\le n$,
+standard algorithms take $O(nr^2)$ setup work and $O(nr)$
+storage. Solving the scalar equation requires $O(Ir)$ work;
+reconstructing one full $n$-vector after the SVD costs
+$O(nr)$ for spectral projections and multiplication.
+Calculating $\widehat\mu(y)=r^{-1}\one_r^\top D_dy$
+requires up to $O(nd)$ arithmetic using a difference
+stencil. No dense $n\times n$ inverse is formed.
+
+If $K$ fixed smoothness targets are used on $R$ series of
+the same length and difference order, the weights can in
+principle be precomputed once and stored with $O(Kr)$
+additional memory. The total major operations are
+\begin{equation}\label{eq:cost}
+O\bigl(nr^2+KIr+RKn r\bigr)
+\end{equation}
+for $RK$ complete reconstructions after shared preparation;
+series-dependent projections may also be shared.
+For only a single fit, structured banded factorization may
+be asymptotically cheaper and should be treated as an
+essential competitor \citep{weinert2007}.
+A cached inverse-penalty implementation could cache
+\emph{the identical weights}; thus \eqref{eq:cost}
+is a description of the proposed execution architecture,
+not a proof of superiority over a well-engineered baseline.
+
+\begin{table*}[t]
+\caption{Mathematical and computational status of three equivalent implementations. The final comparison must time each phase at identical $s,d,\mu$, precision and hardware, rather than infer a speedup from eliminating the name of $\lambda$.}
+\label{tab:comparison}\centering
+\begin{tabular}{@{}p{.23\textwidth}p{.25\textwidth}p{.27\textwidth}p{.14\textwidth}@{}}
+\toprule
+Execution path & Scalar operation & Reconstructing the trend & Current evidence\\
+\midrule
+Explicit $\Lambda_d(s)$ plus spectral PLS
+& Invert $S_d(\lambda)$, retain $\lambda$ & Evaluate $w_j(\lambda)$ and shift-free SVD & Existing validated baseline\\
+Implicit direct weights
+& Solve $G(x)=s$, do not form $\lambda$ & Evaluate $w_j=\expit(x+\alpha_j)$ and shift-free SVD & Implemented; algebraically equivalent\\
+Cached weights across series
+& Solve one scalar problem per distinct $(n,d,s)$ & Reuse $w$ for each new $y,\mu$ & Proposed timed comparison\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{What can and cannot be verified from the current repository}
+The implementation \texttt{src/trendestimation/smoothness\_weights.py}
+already evaluates direct log-odds weights and reconstructs the trend
+without forming $\lambda$. Its tests compare results against the
+existing \texttt{lambda\_for\_smoothness()+fit()} path for
+difference orders $1$ through $6$, fixed nonzero $\mu$,
+the observed-difference plug-in and endpoint cases.
+These tests support finite-precision agreement on their sampled cases,
+not a globally valid numerical error bound.
+No new numerical experiments are performed in this manuscript,
+and no numerical tables in the preceding two CSDA drafts are
+reclassified as a direct-weight runtime comparison.
