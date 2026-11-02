@@ -65,14 +65,25 @@ def configurations(preset):
                 n=n,d=d,criterion=CRITERIA[i%5],
                 mu="data" if i%2 else "0",
                 amplitude="high" if (i//2)%2 else "low",
-                denominator=(100,1000,10000,100000)[i%4]
+                denominator=(100,1000,10000,100000)[(i//2)%4]
             ))
         return selected
     if preset=="broad":
-        # Broad sweep, deterministic order with a mild dense-first priority.
-        return sorted(ordered,key=lambda x:(
-            x["n"]>=16384,x["n"],x["denominator"],
-            x["d"],x["criterion"],x["mu"],x["amplitude"]))
+        # Round-robin matched (n,d) blocks, so a bounded batch samples
+        # every feasible size and all six orders BEFORE another grid
+        # density/criterion; do not spend the full budget on n=64 only.
+        keys=[(n,d) for n in (64,128,256,512,1024)
+              for d in D_LEVELS]
+        buckets={}
+        for key in keys:
+            subset=[x for x in ordered if
+                    x["n"]==key[0] and x["d"]==key[1]]
+            buckets[key]=sorted(subset,key=lambda x:(
+                x["denominator"],x["criterion"],x["amplitude"],x["mu"]))
+        result=[]
+        for i in range(max(len(bucket) for bucket in buckets.values())):
+            result.extend(buckets[k][i] for k in keys if i<len(buckets[k]))
+        return result+[x for x in ordered if x["n"]>=16384]
     raise ValueError("Unknown preset")
 
 
