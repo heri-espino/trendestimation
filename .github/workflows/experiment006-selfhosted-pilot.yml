@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 90
     defaults:
       run:
-        shell: pwsh
+        shell: powershell
     env:
       PYTHONHASHSEED: '0'
       OMP_NUM_THREADS: '1'
