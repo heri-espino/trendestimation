@@ -2,9 +2,10 @@
 
 Fix any reference $\delta_*>0$ and put
 \[
-a_j=\delta_j/\delta_*>0,\qquad
-\alpha_j=\log a_j,\qquad
-\expit(z)=\frac{1}{1+e^{-z}}.
+\begin{aligned}
+a_j&=\delta_j/\delta_*>0,\quad\alpha_j=\log a_j,\\
+\expit(z)&=(1+e^{-z})^{-1}.
+\end{aligned}
 \]
 For $u\in(0,1)$ define the \emph{coupled spectral-weight family}
 \begin{equation}\label{eq:weights-u}
@@ -46,8 +47,10 @@ must coincide. The converse is immediate.
 For every target $0<s<1$, there exists a unique $u_s\in(0,1)$
 such that $G_u(u_s)=s$. Equivalently, with
 \[
-x=\logit(u)=\log\!\left(\frac{u}{1-u}\right),\qquad
-G(x)=\frac1r\sum_{j=1}^r\expit(x+\alpha_j),
+\begin{aligned}
+x&=\logit(u)=\log\frac{u}{1-u},\\
+G(x)&=\frac1r\sum_{j=1}^r\expit(x+\alpha_j).
+\end{aligned}
 \]
 the equation $G(x_s)=s$ has one solution on the real line, satisfying
 \begin{equation}\label{eq:bracket}
@@ -104,12 +107,10 @@ Theorem~\ref{thm:root}, including its endpoint extensions. Define
 $c_\mu=V^\top y-\mu\Sigma^{-1}U^\top\one_r$.
 Then
 \begin{equation}\label{eq:direct-fit}
-\widehat\tau_{s,\mu}
-=y-V\diag(w(s))c_\mu
-=y-V\left[
-w(s)\odot(V^\top y)
--\mu\,(w(s)\oslash\sigma)\odot(U^\top\one_r)
-\right].
+\begin{aligned}
+\widehat\tau_{s,\mu}&=y-V\diag(w(s))c_\mu,\\
+c_\mu&=V^\top y-\mu\Sigma^{-1}U^\top\one_r.
+\end{aligned}
 \end{equation}
 For each interior $s$, this is \emph{exactly} the unique minimizer
 of \eqref{eq:objective} at $\lambda=\Lambda_d(s)$. No explicit
