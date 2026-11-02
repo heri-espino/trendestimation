@@ -1,0 +1,538 @@
+[
+  {
+    "n": 64,
+    "d": 1,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 0,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 2.0622419000137597,
+    "result_folder": "slices\\00000_n64_d1_0_low_cv_M100",
+    "row_status_counts": {
+      "ok": 72,
+      "budget_exceeded": 4
+    },
+    "measured_rows": 72
+  },
+  {
+    "n": 64,
+    "d": 2,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 1,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 1.9823296000249684,
+    "result_folder": "slices\\00001_n64_d2_data_low_gcv_M100",
+    "row_status_counts": {
+      "ok": 72,
+      "budget_exceeded": 4
+    },
+    "measured_rows": 72
+  },
+  {
+    "n": 64,
+    "d": 3,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 2,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 15.033952199853957,
+    "result_folder": "slices\\00002_n64_d3_0_high_bic_M1000",
+    "row_status_counts": {
+      "ok": 64,
+      "budget_exceeded": 4,
+      "numerical_failed": 8
+    },
+    "measured_rows": 64
+  },
+  {
+    "n": 64,
+    "d": 4,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 3,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 19.448306099977344,
+    "result_folder": "slices\\00003_n64_d4_data_high_aicc_M1000",
+    "row_status_counts": {
+      "ok": 72,
+      "budget_exceeded": 4
+    },
+    "measured_rows": 72
+  },
+  {
+    "n": 64,
+    "d": 5,
+    "criterion": "mle",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 4,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.7283140001818538,
+    "result_folder": "slices\\00004_n64_d5_0_low_mle_M10000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 20
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 64,
+    "d": 6,
+    "criterion": "cv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 5,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.7446192998904735,
+    "result_folder": "slices\\00005_n64_d6_data_low_cv_M10000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 20
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 128,
+    "d": 1,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 6,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 45.01077179983258,
+    "reason": "Per-slice 45s execution ceiling"
+  },
+  {
+    "n": 128,
+    "d": 2,
+    "criterion": "bic",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 7,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.7187596999574453,
+    "result_folder": "slices\\00007_n128_d2_data_high_bic_M100000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 20
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 128,
+    "d": 3,
+    "criterion": "aicc",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 8,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 2.8276272998191416,
+    "result_folder": "slices\\00008_n128_d3_0_low_aicc_M100",
+    "row_status_counts": {
+      "ok": 64,
+      "budget_exceeded": 4,
+      "numerical_failed": 8
+    },
+    "measured_rows": 64
+  },
+  {
+    "n": 128,
+    "d": 4,
+    "criterion": "mle",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 9,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 3.712874500080943,
+    "result_folder": "slices\\00009_n128_d4_data_low_mle_M100",
+    "row_status_counts": {
+      "ok": 72,
+      "budget_exceeded": 4
+    },
+    "measured_rows": 72
+  },
+  {
+    "n": 128,
+    "d": 5,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 10,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 38.44721970008686,
+    "result_folder": "slices\\00010_n128_d5_0_high_cv_M1000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 8,
+      "numerical_failed": 24
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 128,
+    "d": 6,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 11,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace",
+      "pcg_fft_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 42.79152540001087,
+    "result_folder": "slices\\00011_n128_d6_data_high_gcv_M1000",
+    "row_status_counts": {
+      "ok": 40,
+      "budget_exceeded": 8,
+      "numerical_failed": 24
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 256,
+    "d": 1,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 12,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 45.023003899957985,
+    "reason": "Per-slice 45s execution ceiling"
+  },
+  {
+    "n": 256,
+    "d": 2,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 13,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "slice_timeout_no_credible_time",
+    "elapsed_s": 45.01335360016674,
+    "reason": "Per-slice 45s execution ceiling"
+  },
+  {
+    "n": 256,
+    "d": 3,
+    "criterion": "mle",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 14,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.7662278998177499,
+    "result_folder": "slices\\00014_n256_d3_0_high_mle_M100000",
+    "row_status_counts": {
+      "budget_exceeded": 20,
+      "ok": 24
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 256,
+    "d": 4,
+    "criterion": "cv",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 15,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 0.7544484999962151,
+    "result_folder": "slices\\00015_n256_d4_data_high_cv_M100000",
+    "row_status_counts": {
+      "budget_exceeded": 20,
+      "ok": 24
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 256,
+    "d": 5,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 16,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 4.6181932000909,
+    "result_folder": "slices\\00016_n256_d5_0_low_gcv_M100",
+    "row_status_counts": {
+      "budget_exceeded": 8,
+      "ok": 32,
+      "numerical_failed": 16
+    },
+    "measured_rows": 32
+  },
+  {
+    "n": 256,
+    "d": 6,
+    "criterion": "bic",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 100,
+    "index": 17,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 5.89144659996964,
+    "result_folder": "slices\\00017_n256_d6_data_low_bic_M100",
+    "row_status_counts": {
+      "budget_exceeded": 8,
+      "criterion_undefined": 8,
+      "ok": 24,
+      "numerical_failed": 16
+    },
+    "measured_rows": 24
+  },
+  {
+    "n": 512,
+    "d": 1,
+    "criterion": "aicc",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 18,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 19.107518899952993,
+    "result_folder": "slices\\00018_n512_d1_0_high_aicc_M1000",
+    "row_status_counts": {
+      "budget_exceeded": 12,
+      "ok": 40
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 512,
+    "d": 3,
+    "criterion": "mle",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 1000,
+    "index": 19,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "completed_with_recorded_cells",
+    "elapsed_s": 42.77114519989118,
+    "result_folder": "slices\\00019_n512_d3_data_high_mle_M1000",
+    "row_status_counts": {
+      "budget_exceeded": 12,
+      "ok": 40
+    },
+    "measured_rows": 40
+  },
+  {
+    "n": 512,
+    "d": 6,
+    "criterion": "cv",
+    "mu": "0",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 20,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "not_executed_batch_limit",
+    "elapsed_s": 338.7230713001918,
+    "reason": "Bounded runner budget; not a timing measurement"
+  },
+  {
+    "n": 1024,
+    "d": 1,
+    "criterion": "gcv",
+    "mu": "data",
+    "amplitude": "low",
+    "denominator": 10000,
+    "index": 21,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "not_executed_batch_limit",
+    "elapsed_s": 338.7230760001112,
+    "reason": "Bounded runner budget; not a timing measurement"
+  },
+  {
+    "n": 1024,
+    "d": 4,
+    "criterion": "bic",
+    "mu": "0",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 22,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "not_executed_batch_limit",
+    "elapsed_s": 338.72307649999857,
+    "reason": "Bounded runner budget; not a timing measurement"
+  },
+  {
+    "n": 1024,
+    "d": 6,
+    "criterion": "aicc",
+    "mu": "data",
+    "amplitude": "high",
+    "denominator": 100000,
+    "index": 23,
+    "methods": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "sparse_lu_banded_trace"
+    ],
+    "status": "not_executed_batch_limit",
+    "elapsed_s": 338.7230769000016,
+    "reason": "Bounded runner budget; not a timing measurement"
+  }
+]

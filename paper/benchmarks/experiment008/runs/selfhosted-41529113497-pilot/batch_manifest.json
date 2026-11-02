@@ -1,0 +1,390 @@
+{
+  "preset": "pilot",
+  "created_utc": "2026-11-02T21:47:22.811743+00:00",
+  "run_id": "41529113497",
+  "runner": "PCAG103A-08",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "host": "Windows-10-10.0.26100-SP0",
+  "max_seconds": 300.0,
+  "max_slices": 24,
+  "per_slice_seconds": 45,
+  "repeats": 2,
+  "R": 2,
+  "max_work": 30000000.0,
+  "score_semantics": "mu=data is conditional plug-in",
+  "all_tasks": 24,
+  "tasks": [
+    {
+      "n": 64,
+      "d": 1,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 0,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 64,
+      "d": 2,
+      "criterion": "gcv",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 1,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 64,
+      "d": 3,
+      "criterion": "bic",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 2,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 64,
+      "d": 4,
+      "criterion": "aicc",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 3,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 64,
+      "d": 5,
+      "criterion": "mle",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 4,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 64,
+      "d": 6,
+      "criterion": "cv",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 5,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 1,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 6,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 2,
+      "criterion": "bic",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 7,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 3,
+      "criterion": "aicc",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 8,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 4,
+      "criterion": "mle",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 9,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 5,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 10,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 128,
+      "d": 6,
+      "criterion": "gcv",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 11,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 1,
+      "criterion": "bic",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 12,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 2,
+      "criterion": "aicc",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 13,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 3,
+      "criterion": "mle",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 14,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 4,
+      "criterion": "cv",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 15,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 5,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 16,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 256,
+      "d": 6,
+      "criterion": "bic",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 100,
+      "index": 17,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 512,
+      "d": 1,
+      "criterion": "aicc",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 18,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 512,
+      "d": 3,
+      "criterion": "mle",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 1000,
+      "index": 19,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 512,
+      "d": 6,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 20,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 1024,
+      "d": 1,
+      "criterion": "gcv",
+      "mu": "data",
+      "amplitude": "low",
+      "denominator": 10000,
+      "index": 21,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 1024,
+      "d": 4,
+      "criterion": "bic",
+      "mu": "0",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 22,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    },
+    {
+      "n": 1024,
+      "d": 6,
+      "criterion": "aicc",
+      "mu": "data",
+      "amplitude": "high",
+      "denominator": 100000,
+      "index": 23,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ]
+    }
+  ]
+}
