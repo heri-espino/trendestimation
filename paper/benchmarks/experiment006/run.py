@@ -419,7 +419,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
             w=csv.DictWriter(f,fieldnames=list(comparisons[0]))
             w.writeheader();w.writerows(comparisons)
         else:
-            f.write("n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup\\n".replace("\\\\n","\\n"))
+            f.write("n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup\n")
     meta=dict(
         n=n,d=d,mu=mu,amplitude=amplitude,criterion=criterion,
         denominator=denominator,methods=list(methods),R=R,
