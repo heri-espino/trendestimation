@@ -239,18 +239,24 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
         for method in methods:
             t0=perf_counter()
             evaluator=None
-            try:
-                evaluator=Evaluator(n,d,method)
-                setup_s=perf_counter()-t0+mapper_setup_s
-            except (ValueError,ArithmeticError,np.linalg.LinAlgError,MemoryError) as exc:
-                setup_s=perf_counter()-t0+mapper_setup_s
-                failure="setup_failed_"+type(exc).__name__
+            # Never allocate a dense n-by-n array before resource gating.
+            preflight=memory_budget_status(
+                n,d,method,denominator,max_dense_bytes,float("inf"),
+                "one_s_one_series",1,1)
+            if preflight!="eligible":
+                setup_s=mapper_setup_s
+                failure=preflight
             else:
-                failure=None
+                try:
+                    evaluator=Evaluator(n,d,method)
+                    setup_s=perf_counter()-t0+mapper_setup_s
+                except (ValueError,ArithmeticError,np.linalg.LinAlgError,
+                        MemoryError) as exc:
+                    setup_s=perf_counter()-t0+mapper_setup_s
+                    failure="setup_failed_"+type(exc).__name__
+                else:
+                    failure=None
             for scenario in SCENARIOS:
-                nr=1 if scenario.endswith("one_series") else R
-                # Grammar exactly: one_s_one_series, grid_one_series,
-                # one_s_multiple_series, grid_multiple_series.
                 nr = (1 if "one_series" in scenario else R)
                 ss=np.array([.5]) if scenario.startswith("one_s") else targets
                 M=len(ss)
@@ -344,7 +350,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                             setup_s+series_setup_s,map_s,tscore,
                             best[0],best[1],state,calls,failed or ""))
                     print(f"{method}: {scenario} {policy} complete",flush=True)
-    output.mkdir(parents=True,exist_ok=False)
+    output.mkdir(parents=True,exist_ok=True)
     path=output/"raw_times.csv"
     with path.open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(rows[0]))
