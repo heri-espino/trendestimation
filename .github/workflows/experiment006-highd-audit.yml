@@ -33,8 +33,8 @@ jobs:
         run: |
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner' }
           if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Conda not installed' }
-          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import mpmath,scipy,numpy; print('Existing Conda environment available')"
-          if ($LASTEXITCODE -ne 0) { throw 'Required mpmath unavailable; no installation attempted' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import decimal,scipy,numpy; print('Existing Conda environment available; decimal precision supported')"
+          if ($LASTEXITCODE -ne 0) { throw 'Existing Conda environment unavailable; no installation attempted' }
       - name: Independent high-order 85-digit numerical QA
         run: |
           $dest = "paper/benchmarks/experiment006/runs/highd-$env:GITHUB_RUN_ID"
