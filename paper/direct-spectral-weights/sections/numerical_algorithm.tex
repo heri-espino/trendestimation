@@ -5,8 +5,10 @@ Equation~\eqref{eq:bracket} provides a finite bracket
 for any interior $s$ and a finite computed positive singular
 spectrum. For numerical work, form
 \[
-\alpha_j=2\log\sigma_j-\log\delta_*,
-\quad \log\delta_*=\operatorname{median}_j(2\log\sigma_j),
+\begin{aligned}
+\log\delta_*&=\operatorname{median}_j(2\log\sigma_j),\\
+\alpha_j&=2\log\sigma_j-\log\delta_*.
+\end{aligned}
 \]
 rather than computing $\delta_j$ and their ratios directly.
 Using the logistic function, evaluate
@@ -127,10 +129,11 @@ Cached weights across series
 \end{table*}
 
 \subsection{What can and cannot be verified from the current repository}
-The implementation \texttt{src/trendestimation/smoothness\_weights.py}
-already evaluates direct log-odds weights and reconstructs the trend
+The implementation in the research module
+\texttt{smoothness\_weights.py} already evaluates direct log-odds weights and reconstructs the trend
 without forming $\lambda$. Its tests compare results against the
-existing \texttt{lambda\_for\_smoothness()+fit()} path for
+existing \texttt{lambda\_for\_smoothness} and
+\texttt{fit} path for
 difference orders $1$ through $6$, fixed nonzero $\mu$,
 the observed-difference plug-in and endpoint cases.
 These tests support finite-precision agreement on their sampled cases,
