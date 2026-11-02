@@ -242,7 +242,8 @@ def _row(n,d,mu,amplitude,criterion,denom,method,policy,scenario,
 def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
               denominator=100,methods=METHODS,repeats=3,R=8,
               max_work=5e7,max_dense_bytes=2*1024**3,
-              output=None,threads=1,seed=20261102):
+              output=None,threads=1,seed=20261102,
+              conditional_data_mu=False):
     if n not in N_LEVELS or d not in D_LEVELS or d>=n:
         raise ValueError("n and d must be requested factorial levels")
     if criterion not in CRITERIA:raise ValueError("Unknown criterion")
