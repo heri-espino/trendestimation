@@ -78,3 +78,18 @@ first-cold-fit time, warm-cache-hit median, total repeated solves and
 setup-plus-total time. Only the second format should support any
 cold-versus-warm statement. These are tiny n=36 hosted smoke timings,
 not a benchmark of the author's Windows machine or of d=6.
+
+## High-order reference validity
+
+The original banded-Cholesky reference uses a degree-d polynomial shift,
+which can lose precision for high orders and large n. Experiment005 now
+computes the reference normal-equation residual before comparing any new
+method. If that residual exceeds the declared threshold, all corresponding
+comparisons are flagged `reference_unreliable` and excluded from
+performance rankings. CHOLMOD's independent small-n verification uses a
+separate dense solve and a backward-residual check, not the banded result
+alone. A sufficiently accurate high-order reference is still required
+before making claims about the large-n solver frontier.
+
+Each subsequent CI smoke uses a unique GitHub Actions run-id directory;
+original smoke, v2 and v3 archives remain intact.
