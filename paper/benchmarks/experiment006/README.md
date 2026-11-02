@@ -103,3 +103,28 @@ there are at least three n values with matched factor levels:
 
 Those empirical slopes reflect the *composite implementation* and are
 not proofs of the asymptotic theoretical exponents.
+
+
+## PCAG103A-08 self-hosted execution without administrator access
+
+The university Windows 11 PC must **never** run `actions/setup-python`,
+`pip install`, `conda create`, or any system-level installation as part of
+the benchmark workflow. It already contains the relevant environment:
+
+    C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation
+
+IMPORTANT: `trend-estimation` (with hyphen) is a second, different
+environment and must not be selected. We use `trendestimation`.
+
+The GitHub Actions workflow `.github/workflows/experiment006-selfhosted-pilot.yml`
+calls `C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe`
+with `run --no-capture-output -n trendestimation python`, so it uses
+the existing Conda environment without modifications or admin rights.
+The checkout source is selected via `PYTHONPATH=$GITHUB_WORKSPACE/src`,
+rather than relying on an installed package version. Tests are run
+before timing. A missing dependency is reported explicitly, NOT installed.
+
+Earlier Actions run #41430529868 failed in `actions/setup-python` and
+never executed mathematical tests. The corrected workflow commit
+`05edb60` removes that step. Do not interpret that failure as a solver
+failure or as measured benchmark evidence.
