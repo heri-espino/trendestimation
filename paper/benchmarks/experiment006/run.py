@@ -363,13 +363,28 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
     for key,values in summary.items():
         eligible=[x for x in values if x["status"]=="ok"]
         state="ok" if len(eligible)==len(values) else "invalid_or_skipped"
+        times=np.array([x["total_cold_s"] for x in eligible],dtype=float)
+        rng=np.random.default_rng(7006)
+        bootstrap=(
+            np.mean(times[rng.integers(0,len(times),(2000,len(times)))],axis=1)
+            if len(times)>=2 and state=="ok" else None)
         derived.append(dict(
             method=key[0],coordinate=key[1],workload=key[2],
             valid_all=state=="ok",valid_repeats=len(eligible),
             expected_repeats=repeats,
+            mean_total_s=(
+                float(np.mean(times)) if state=="ok" else float("nan")),
+            sd_total_s=(
+                float(np.std(times,ddof=1))
+                if state=="ok" and len(times)>=2 else float("nan")),
+            mean_bootstrap_ci95_low_s=(
+                float(np.quantile(bootstrap,.025))
+                if bootstrap is not None else float("nan")),
+            mean_bootstrap_ci95_high_s=(
+                float(np.quantile(bootstrap,.975))
+                if bootstrap is not None else float("nan")),
             median_total_cold_s=(
-                float(np.median([x["total_cold_s"] for x in eligible]))
-                if state=="ok" else float("nan")),
+                float(np.median(times)) if state=="ok" else float("nan")),
             median_total_warm_s=(
                 float(np.median([x["total_warm_s"] for x in eligible]))
                 if state=="ok" else float("nan")),
@@ -377,6 +392,34 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
     with (output/"summary.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(derived[0]))
         w.writeheader();w.writerows(derived)
+    # Paired relative costs against the explicit naive inverse baseline:
+    # same n,d,mu,amplitude,criterion,scenario,coordinate,seed block.
+    baseline={
+        (r["workload"],r["coordinate"],r["repeat"]):r
+        for r in rows if r["method"]=="naive_inverse" and r["status"]=="ok"
+    }
+    comparisons=[]
+    for r in rows:
+        key=(r["workload"],r["coordinate"],r["repeat"])
+        b=baseline.get(key)
+        if r["status"]!="ok" or b is None:
+            continue
+        if r["total_cold_s"]<=0:
+            continue
+        comparisons.append(dict(
+            n=n,d=d,criterion=criterion,mu=str(mu),amplitude=amplitude,
+            method=r["method"],coordinate=r["coordinate"],
+            workload=r["workload"],repeat=r["repeat"],
+            naive_time_s=b["total_cold_s"],
+            candidate_time_s=r["total_cold_s"],
+            paired_speedup=b["total_cold_s"]/r["total_cold_s"],
+        ))
+    with (output/"paired_speedups.csv").open("w",newline="",encoding="utf-8") as f:
+        if comparisons:
+            w=csv.DictWriter(f,fieldnames=list(comparisons[0]))
+            w.writeheader();w.writerows(comparisons)
+        else:
+            f.write("n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup\\n".replace("\\\\n","\\n"))
     meta=dict(
         n=n,d=d,mu=mu,amplitude=amplitude,criterion=criterion,
         denominator=denominator,methods=list(methods),R=R,
