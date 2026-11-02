@@ -128,3 +128,45 @@ Earlier Actions run #41430529868 failed in `actions/setup-python` and
 never executed mathematical tests. The corrected workflow commit
 `05edb60` removes that step. Do not interpret that failure as a solver
 failure or as measured benchmark evidence.
+
+## High-d nonzero-mean numerical audit and conservative guard (2026-11-02)
+
+The independent 85-digit **Decimal** dual banded reference requires only
+Python's standard library, avoiding installations on the university's
+non-administrator Windows runner. It compares the *same frozen float64*
+y, lambda and mu for all backends and also checks agreement with a
+55-digit reference. The audited data have been **committed and pushed** to
+`results/experiment006-highd-41439239921`. The successful action is
+https://github.com/heri-espino/trendestimation/actions/runs/41439239921 .
+
+The diagnostic covers n=128, d={5,6}, mu=0.15, two independent seeds,
+and S={0.75,0.85,0.90,0.91,0.95,0.99,1.0}; 28 cases/backend.
+The threshold for this *forward-error audit only* is 1e-6 relative to
+the independent 85-digit trend. Counts are not runtime-performance wins:
+
+| Fit backend | Accurate/28 | Inaccurate/28 | Solver rejected/28 | Largest observed relative forward error |
+| --- | ---: | ---: | ---: | ---: |
+| Shift-free full SVD | 28 | 0 | 0 | 6.18e-9 |
+| Primal banded Cholesky | 16 | 12 | 0 | 21.24 |
+| Sparse SuperLU | 22 | 6 | 0 | 6.86e-2 |
+| FFT PCG, strict check | 14 | 0 | 14 | 7.64e-12 among accepted fits |
+
+**Conclusion:** a small normal-equation residual does not guarantee an
+accurate fitted trend at extreme high-order/high-smoothness penalties.
+The 24 numerical-failure rows in pilot #41437886131 cannot be fixed by
+simply relaxing a tolerance. In particular, accepting the inaccurate
+primal Cholesky at S=0.99 would be scientifically wrong.
+
+The new explicitly named `guarded_svd_cholesky` *benchmark policy* uses
+shift-free full SVD when d>=5 and banded Cholesky for d<=4. The former
+is empirically accurate for the tested n=128 high-d, nonzero-mu cases.
+Its O(n³) setup and O(n²) memory are **fully charged** and an explicit
+dense feasibility gate prevents using this policy at n=131072.
+This is a conservative validated-small/medium-n fallback,
+**not** a universally efficient high-order solver and **not** a proof of
+accuracy for arbitrary n,d,mu,S. Retain all legacy method failures and
+actual backend names; never ascribe spectral time to banded Cholesky.
+
+The next numerical research priority is a high-precision or
+condition-aware, structure-exploiting high-d path at large n; this
+remains open. Do not claim that the full factorial is complete.
