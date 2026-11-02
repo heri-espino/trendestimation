@@ -14,7 +14,7 @@ Z_{ii}=\frac{1}{L_{ii}^2}
 -\frac{1}{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
 L_{ki}Z_{ki}.
 \end{equation}
-Symmetry supplies $Z_{kj}$ when $k>j$. These are selected-inverse (Takahashi-type) identities, not a proposal to store the full inverse. A banded factorization and selected inversion each require $O(nd^2)$ arithmetic, with $O(nd)$ factor and selected-entry storage for a fixed small difference order. The leverage diagonal is $h_i=Z_{ii}$ and $\nu(\lambda)=\sum_i h_i$.
+Symmetry supplies $Z_{kj}$ when $k>j$. These are selected-inverse (Takahashi-type) identities \citep{erisman1975}, not a proposal to store the full inverse. A banded factorization and selected inversion each require $O(nd^2)$ arithmetic, with $O(nd)$ factor and selected-entry storage for a fixed small difference order. The leverage diagonal is $h_i=Z_{ii}$ and $\nu(\lambda)=\sum_i h_i$.
 
 The finite-penalty right-hand side is constructed directly:
 \begin{equation}\label{eq:direct_rhs}
