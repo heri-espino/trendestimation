@@ -73,3 +73,23 @@ versus d>=5 switch was a small-n guard, not an optimal policy.
 Review experiment007/README.md and tests before changing any
 backend policy. Separate fit-only results from whole-criterion
 CV/GCV/BIC/AICc/MLE costs; no invalid QA cell may be ranked.
+
+
+## Experiment009 n,d solver cost-crossover theory
+
+Research branch research/experiment009-cost-crossover-surface;
+PR #99. Source, frozen exact Windows empirical data, tests and
+mathematical theory: paper/benchmarks/experiment009/. Theory is a
+FAMILY of n,d boundaries indexed by candidate count M, series
+count R and criterion C. Never identify a universal d cutoff.
+Do NOT train a full-criterion cost model with fit-only times:
+complete spectral fitted trends cost O(n^2) PER candidate, while
+scalar global spectral scores can be O(n) per candidate after
+setup; ordinary CV can require O(n^2). Experiment007 Cholesky
+does NOT factor-cache across series; Experiment008 does when
+budget permits. Experiment008 n<=512 cold setup includes a
+COMMON dense spectral S->lambda mapper for both backends.
+All reported predictions require machine-specific calibration,
+numerical validity and dense-memory gating. Holdout results are
+single-class and cannot certify the switch. Do NOT change
+production default or merge without authorization.
