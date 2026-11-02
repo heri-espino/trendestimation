@@ -35,15 +35,15 @@ jobs:
         run: |
           python paper/benchmarks/experiment005/run.py \
             --preset smoke --repeats 3 \
-            --output paper/benchmarks/experiment005/runs/hosted-smoke-v2
+            --output paper/benchmarks/experiment005/runs/hosted-smoke-v3
           python - <<'PY'
           import csv, json
           from pathlib import Path
-          p=Path("paper/benchmarks/experiment005/runs/hosted-smoke-v2")
+          p=Path("paper/benchmarks/experiment005/runs/hosted-smoke-v3")
           rows=list(csv.DictReader((p/"raw_measurements.csv").open()))
           assert rows
           assert all(x["status"] == "ok" for x in rows if
-                     x["method"] in ("cholesky","banded_lu","sparse_lu","sparse_lu_cached"))
+                     x["method"] in ("cholesky","cholesky_cached","banded_lu","sparse_lu","sparse_lu_cached"))
           assert any(x["method"] == "pcg_fft" for x in rows)
           assert (p/"environment.json").is_file()
           print("Recorded actual attempts:",len(rows))
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: experiment005-structured-smoke-raw
-          path: paper/benchmarks/experiment005/runs/hosted-smoke-v2/
+          path: paper/benchmarks/experiment005/runs/hosted-smoke-v3/
           if-no-files-found: warn
       - name: Preserve measured hosted smoke evidence on the feature branch
         if: success()
@@ -66,7 +66,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "$GITHUB_REF_NAME"
           git reset --mixed "origin/$GITHUB_REF_NAME"
-          git add -f paper/benchmarks/experiment005/runs/hosted-smoke-v2/
+          git add -f paper/benchmarks/experiment005/runs/hosted-smoke-v3/
           if git diff --cached --quiet; then
             echo "All scientific results already committed"
           else
