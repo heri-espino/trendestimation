@@ -143,7 +143,9 @@ def analyze(directory:Path):
         "",
         "This report is generated exclusively from the archived actual timing",
         "and numerical validation files. This is a **fit-only** pilot with",
-        "**two seeds**, not a complete statistical-criterion benchmark.",
+        f"**{len(meta['seeds'])} independent seeded blocks** and "
+        f"**{meta.get('timing_repeats',1)} cold timing repetitions per block**; "
+        "not a complete statistical-criterion benchmark.",
         "",
         "Primary mean: mu='data'=mean(np.diff(y,n=d)) computed independently",
         "for each observed series. Fixed mu=0 is a control, not the default.",
@@ -165,7 +167,7 @@ def analyze(directory:Path):
     lines.extend([
         "",
         "These are **not** universal optimal dimension switches: they combine",
-        "only n=64/128/256, two seeds and limited S-grid sizes. The sampled",
+        f"only n=64/128/256, {len(meta['seeds'])} seed blocks and limited S-grid sizes. The sampled",
         "fixed mu=0 and data-derived mean policies must not be conflated.",
         "Speed rankings exclude an entire method×workload×seed block if",
         "even one candidate failed numerical agreement, rather than counting",
