@@ -1,0 +1,80 @@
+{
+  "experiment": "experiment007",
+  "created_utc": "2026-11-02T19:32:14.748427+00:00",
+  "n_levels": [
+    64,
+    128,
+    256
+  ],
+  "d_levels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "scales": [
+    "low",
+    "high"
+  ],
+  "policies": [
+    "data",
+    "zero"
+  ],
+  "methods": [
+    "svd",
+    "cholesky",
+    "sparse_lu",
+    "pcg_fft"
+  ],
+  "smoothness": [
+    0.2,
+    0.5,
+    0.75,
+    0.9,
+    0.95,
+    0.99,
+    1.0
+  ],
+  "seeds": [
+    0,
+    1
+  ],
+  "threads": 1,
+  "timing_repeats": 1,
+  "timing_method_order": "seeded_permutation",
+  "numerical_reference": "85-digit independent decimal for n<=128 d>=5 S>=.9 first series only; elsewhere SVD proxy",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "machine": "Windows-10-10.0.26100-SP0",
+  "runner_name": "PCAG103A-08",
+  "source_sha256": "ff3738a6e4a25fc8ba0a0aafb827a00c183bd551a97e830165af1f33656bc7e7",
+  "total_rows_time": 2304,
+  "total_rows_accuracy": 12096,
+  "status_counts": {
+    "svd": {
+      "agree": 3024,
+      "inaccurate": 0,
+      "failed": 0
+    },
+    "cholesky": {
+      "agree": 2636,
+      "inaccurate": 364,
+      "failed": 24
+    },
+    "sparse_lu": {
+      "agree": 2843,
+      "inaccurate": 181,
+      "failed": 0
+    },
+    "pcg_fft": {
+      "agree": 2711,
+      "inaccurate": 12,
+      "failed": 301
+    }
+  },
+  "elapsed_s": 6.212974399793893,
+  "caveat": "This is FIT ONLY: no full criterion selection. SVD proxy agreement is NOT independent numerical truth. Recorded actual mu='data' per independent series; mu_oracle_true never supplied for fitting. Fit methods are compared on same lambda candidates."
+}
