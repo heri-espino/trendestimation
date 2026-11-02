@@ -1,0 +1,17 @@
+\section{Introduction and contribution boundary}\label{sec:intro}
+
+Quadratic difference-penalty smoothing is a classical model, originating in graduation and time-series filtering \citep{whittaker1923}. Its PLS formulation permits nonzero reference means of differences \citep{guerrero2007}. Guerrero's controlled-smoothness framework already allows users to prescribe a percentage of trend smoothness \citep{guerrero2008}, and the relation to criterion-based smoothing selection has been studied \citep{cortes2017}. Prescribing an effective dimension in place of a raw regularization parameter is also familiar in smoothing-spline software, including \texttt{smooth.spline} \citep{rsmoothspline}. Thus neither user-controlled smoothness nor spectral shrinkage is new.
+
+The question addressed here is more specific: \emph{can the established finite-difference PLS estimator be reconstructed from a bounded smoothness target using coupled spectral weights, without explicitly forming the penalty coefficient in the fitting path?} This question has an affirmative algebraic answer. Whether the resulting implementation is faster or more robust than an equivalently engineered log-penalty implementation is an empirical hypothesis rather than a theorem.
+
+The analysis provides (i) a characterization of the original penalty family by its spectral weights; (ii) a globally bracketed scalar equation in reference spectral log-odds; (iii) exact reconstruction for any integer $1\le d<n$ and fixed, possibly nonzero, difference mean $\mu$; (iv) endpoint and sensitivity results; and (v) an exact effective-degrees-of-freedom correction when the difference mean is estimated as $\widehat\mu(y)=\operatorname{mean}(D_dy)$. Mathematical statements are in exact arithmetic unless numerical evaluation is explicitly discussed.
+
+This is neither a proposed new statistical regularization family nor a closed-form inverse of smoothness. Efficient structured fitting is established prior art \citep{weinert2007}; a modern Whittaker--Henderson treatment addresses related statistical and likelihood questions \citep{biessy2026}. A matched validation and runtime study is required before a computational advantage can be claimed.
+
+\paragraph{Notation and assumptions.}
+$n\ge2$ is the number of observations; $d$ is an integer with $1\le d<n$; and $r=n-d\ge1$. All vectors and matrices are real. Define the unscaled $d$th forward-difference operator $D_d\in\R^{r\times n}$ by
+\begin{equation}\label{eq:defD}
+(D_d\tau)_i=\sum_{k=0}^{d}(-1)^{d-k}\binom dk \tau_{i+k},
+\qquad i=1,\ldots,r.
+\end{equation}
+$\one_r$ is the $r$-vector of ones. Unless specified otherwise, $\mu\in\R$ is a \emph{fixed} reference mean; conditional effective degrees of freedom refers to treating it as fixed even if its numerical value was computed from data. For a matrix $A$, $\Nul(A)$ is its nullspace and $\tr(A)$ its trace. The operators $\odot$ and $\oslash$ mean componentwise multiplication and division. Exact endpoints refer to the limiting fitted trends rather than evaluation of a floating-point matrix at $\lambda=\infty$.

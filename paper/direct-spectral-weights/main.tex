@@ -1,0 +1,55 @@
+% Theoretical working draft. No empirical speedup or novelty claim.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,graphicx,url,xurl}
+\setlength{\emergencystretch}{2em}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\newcommand{\R}{\mathbb R}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\logit}{\operatorname{logit}}
+\newcommand{\expit}{\operatorname{expit}}
+\newcommand{\Nul}{\mathcal N}
+\newcommand{\Ran}{\mathcal R}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Direct smoothness-constrained spectral reconstruction}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Direct Smoothness-Constrained Spectral Reconstruction for Penalized Least-Squares Trends: Exact Equivalence, Endpoint Geometry, and Nonzero Difference Means}
+% Provisional coauthor attribution; approval required before submission.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
+ city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+Finite-difference penalized least-squares (PLS) trends may be described by the penalty $\lambda\in[0,\infty]$ or by a normalized trace smoothness $s\in[0,1]$. We develop and audit a direct spectral-weight representation in which the numerical reconstruction takes $s$ as its input and does not explicitly form $\lambda$. A single strictly monotone scalar equation determines the coupled shrinkage weights. We prove rank and nullspace properties of the difference operator, an exact characterization of the PLS spectral-weight family, existence and uniqueness of the constrained weight solution, equivalence with the conventional penalty-based estimator, endpoint limits, sensitivity bounds, and formulas for a fixed nonzero mean of differences. For the observed-difference plug-in mean, we derive the full data-dependent smoother matrix and its effective-degrees-of-freedom correction, which differs from the customary conditional trace. We give a bracketed log-odds numerical algorithm, complexity accounting and falsifiable benchmark protocols. The scalar root is algebraically equivalent to inversion in log-penalty coordinates: this is neither a new regularization family nor an inversion-free algorithm. No numerical superiority is claimed without a matched accuracy--time study.
+\end{abstract}
+\begin{keywords}
+smoothness index \sep penalized least squares \sep spectral filtering
+\sep finite differences \sep effective degrees of freedom
+\sep numerical reparameterization \sep Whittaker--Henderson smoothing
+\end{keywords}
+\maketitle
+\input{sections/introduction}
+\input{sections/foundations}
+\input{sections/weights}
+\input{sections/plug_in_mean}
+\input{sections/numerical_algorithm}
+\input{sections/discussion}
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
+\end{document}

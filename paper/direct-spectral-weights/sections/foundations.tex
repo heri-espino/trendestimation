@@ -1,0 +1,75 @@
+\section{Difference-penalty geometry}\label{sec:geometry}
+
+\begin{lemma}[Rank, nullspace and affine feasibility]\label{lem:rank}
+For every integer $1\le d<n$, $D_d$ has row rank $r=n-d$. Its nullspace consists precisely of sampled discrete polynomials of degree at most $d-1$ and has dimension $d$. For each fixed $\mu\in\R$, the affine constraint $D_d\tau=\mu\one_r$ is nonempty. In particular,
+\[
+(p_\mu)_i=\mu\binom{i-1}{d},\qquad i=1,\ldots,n,
+\]
+is a feasible vector.
+\end{lemma}
+\begin{proof}
+By \eqref{eq:defD}, the first $r$ columns of $D_d$ form an upper triangular $r\times r$ matrix with diagonal entries $(-1)^d$, which are nonzero. Hence $\rank(D_d)=r$ and rank--nullity gives $\dim\Nul(D_d)=n-r=d$. The $d$ sampled polynomials $1,i,\ldots,i^{d-1}$ are linearly independent for $n\ge d$ (their first $d$ rows form a Vandermonde matrix), and their $d$th differences vanish. Thus they form a basis for $\Nul(D_d)$. Finally, Pascal's identity $\binom{i}{k}-\binom{i-1}{k}=\binom{i-1}{k-1}$ applied $d$ times gives $D_d(\binom{i-1}{d})_{i=1}^n=\one_r$. Multiplying by $\mu$ proves feasibility.
+\end{proof}
+
+For $y\in\R^n$, $\lambda\ge0$ and fixed $\mu$, consider the classical quadratic objective
+\begin{equation}\label{eq:objective}
+J_{\lambda,\mu}(\tau)
+=\norm{y-\tau}_2^2
++\lambda\norm{D_d\tau-\mu\one_r}_2^2.
+\end{equation}
+Let $Q_d=D_d^\top D_d$ and $H_\lambda=(I_n+\lambda Q_d)^{-1}$.
+
+\begin{theorem}[Unique PLS trend and affine smoother]\label{thm:pls}
+For each finite $\lambda\ge0$, \eqref{eq:objective} has the unique minimizer
+\begin{equation}\label{eq:normal}
+\widehat\tau_{\lambda,\mu}
+=(I_n+\lambda Q_d)^{-1}
+ (y+\lambda D_d^\top\mu\one_r).
+\end{equation}
+For any feasible $p_\mu$ from Lemma~\ref{lem:rank},
+\[
+\widehat\tau_{\lambda,\mu}
+=p_\mu+H_\lambda(y-p_\mu).
+\]
+Consequently, for fixed $\mu$, the Jacobian with respect to $y$ is $H_\lambda$.
+\end{theorem}
+\begin{proof}
+The Hessian of $J_{\lambda,\mu}$ equals $2(I_n+\lambda Q_d)$, which is positive definite because, for every nonzero $v$, $v^\top(I_n+\lambda Q_d)v=\norm v_2^2+\lambda\norm{D_dv}_2^2>0$. The vanishing first derivative gives \eqref{eq:normal}. Since $D_dp_\mu=\mu\one_r$, $(I_n+\lambda Q_d)p_\mu=p_\mu+\lambda D_d^\top\mu\one_r$. Subtracting this identity from the normal equation gives $(I_n+\lambda Q_d)(\widehat\tau-p_\mu)=y-p_\mu$, establishing the affine formula. Differentiating in $y$ with $p_\mu$ fixed yields $H_\lambda$.
+\end{proof}
+
+Take the reduced SVD
+\begin{equation}\label{eq:svd}
+\begin{aligned}
+D_d&=U\Sigma V^\top,\\
+U^\top U&=V^\top V=I_r,\\
+\Sigma&=\diag(\sigma_1,\ldots,\sigma_r).
+\end{aligned}
+\end{equation}
+with $\sigma_j>0$ and $\delta_j=\sigma_j^2$. The positive eigenvalues of $Q_d$ are precisely the $\delta_j$; its $d$ remaining eigenvalues vanish. Define $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
+
+\begin{theorem}[Spectral filter and normalized trace smoothness]\label{thm:smoothness}
+Write $w(\lambda)=(w_1(\lambda),\ldots,w_r(\lambda))^\top$. For each finite $\lambda\ge0$,
+\begin{align}
+H_\lambda&=I_n-V\diag(w(\lambda))V^\top,\label{eq:H}\\
+\nu_{\rm cond}(\lambda)&=\tr H_\lambda
+=n-\sum_{j=1}^r w_j(\lambda).\label{eq:edf}
+\end{align}
+The normalized conditional smoothness index
+\begin{equation}\label{eq:S}
+S_d(\lambda)=\frac{n-\nu_{\rm cond}(\lambda)}r
+=\frac1r\sum_{j=1}^r w_j(\lambda)
+\end{equation}
+extends continuously and strictly increasingly from $S_d(0)=0$ to $S_d(\infty)=1$. For $0<s<1$ there is a unique finite $\lambda=\Lambda_d(s)>0$.
+\end{theorem}
+\begin{proof}
+From \eqref{eq:svd}, $Q_d=V\Sigma^2V^\top$. On $\Ran(V)$ the inverse $H_\lambda$ multiplies the $j$th singular direction by $(1+\lambda\delta_j)^{-1}=1-w_j$, and on $\Nul(D_d)=\Ran(V)^\perp$ it acts as the identity. This proves \eqref{eq:H}. Taking traces and using $V^\top V=I_r$ gives \eqref{eq:edf} and \eqref{eq:S}. Each $\delta_j>0$, so
+\[
+S_d'(\lambda)=\frac1r\sum_{j=1}^r
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0
+\]
+for finite $\lambda\ge0$. Each summand of \eqref{eq:S} tends to zero as $\lambda\downarrow0$ and to one as $\lambda\uparrow\infty$. Continuity, strict monotonicity, and the intermediate value theorem give the unique inverse in the interior; the endpoints are understood in the extended nonnegative real line.
+\end{proof}
+
+\begin{remark}[Normalization and interpretation]\label{rem:normalization}
+Guerrero's earlier convention with denominator $n$ has upper endpoint $r/n$ for $d>0$ \citep{guerrero2008}. Dividing the same conditional trace reduction by $r=n-d$ produces $S\in[0,1]$ for every admissible order. Equal $S$ across orders means equal \emph{fraction of penalizable trace degrees of freedom removed}; it does not assert equal curvature, equal fitted values, or the same physical units. When $\mu$ depends on $y$, \eqref{eq:edf} remains a \emph{conditional} trace identity, not the Jacobian trace of the fully data-dependent estimator; see Section~\ref{sec:plugin}.
+\end{remark}
