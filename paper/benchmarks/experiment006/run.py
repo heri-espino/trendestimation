@@ -508,6 +508,7 @@ def main():
     p.add_argument("--max-work",type=float,default=5e7)
     p.add_argument("--max-dense-bytes",type=int,default=2*1024**3)
     p.add_argument("--output",type=Path,default=None)
+    p.add_argument("--conditional-data-mu",action="store_true",help="Opt into conditional plug-in mu=data scores; NOT fully refitted LOOCV")
     a=p.parse_args()
     mu=a.mu if a.mu=="data" else float(a.mu)
     opts=dict(n=a.n,d=a.d,mu=mu,amplitude=a.amplitude,
