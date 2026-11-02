@@ -14,7 +14,7 @@ The normal equation is A_tau=rhs, where A=I+lambda D_d.T D_d and rhs=y+lambda mu
 
 The exact banded selected inverse uses a Takahashi backward recurrence on Cholesky factors to calculate diagonal leverage and trace using O(n d^2) arithmetic and O(n d) storage. It is independently validated against a full dense matrix inverse and existing spectral CV/GCV/AICc/BIC and marginal-MLE scores. The MLE banded score omits only the lambda-independent logdet(D D.T) offset, irrelevant when selecting lambda within fixed n,d.
 
-The three implemented complete-criterion pathways are actual naive dense inversion, full SVD and banded Cholesky with exact selected inverse. Experiment005 introduced sparse LU, CHOLMOD, banded LU and PCG as *fit-only* methods. They are explicitly marked fit_only_not_complete_criterion in this factorial plan, not secretly timed as complete selection methods. Extending their trace, leverage and MLE to robust end-to-end selection is further work.
+The currently implemented complete-criterion pathways include true naive dense inversion, full SVD, banded Cholesky with exact selected inverse, and six **explicit hybrid pipelines**: banded LU+banded trace, sparse LU+banded trace, optional CHOLMOD+banded trace, and FFT/DST/Jacobi PCG+banded trace. Each hybrid actually fits with the named solver and computes exact conditional trace/leverage and criterion diagnostics with an independently timed banded factorization. It is NOT being represented as an intrinsic fast all-in-one sparse or iterative criterion algorithm. The Experiment005 *pure fit-only* methods remain marked fit_only_not_complete_criterion when requested without a diagnostic complement. Improving each hybrid to avoid its duplicate factorization is future research.
 
 ## Complexity
 
@@ -60,7 +60,7 @@ Outputs: raw_times.csv, summary.csv, paired_speedups.csv and environment.json, w
 
 ## Unfinished publication gates
 
-1. Extend complete-criterion diagnostics to optional sparse and iterative backends; never count fit-only solves as complete CV/GCV/AICc/BIC/MLE.
+1. Optimize each sparse/iterative hybrid to compute criterion-specific diagnostics without an unnecessary additional banded factorization; never count fit-only solves as complete CV/GCV/AICc/BIC/MLE.
 2. Optimize selected inverse with compiled execution and validate against a high-precision reference for d=5,6, nonzero mu and near S=1.
 3. Make S-to-lambda grid generation efficient for M up to 100000 without silently sacrificing smoothness precision.
 4. Instrument true cold independent trial setup, warmups, randomized paired method ordering and bootstrap intervals across independent timing blocks; report n/d/criterion-specific failure rates.
@@ -80,9 +80,26 @@ Save the local results in the independent experiment006/windows-local branch:
 The full dataset is represented as a **long-form tensor** with explicitly
 named factor axes, not a giant dense n-dimensional NumPy array. A row with
 infeasible or incomplete status is a scientifically important observation.
-The first implemented timing summary reports mean, median, standard
+The timing summary reports mean, median, standard
 deviation, a seeded 95% bootstrap interval for the mean (when >=2
 independent repeats complete), and paired speedup against explicit
 inversion where the latter is feasible. These are conditional on the
 selected host, threading settings, and run protocol; bootstrap of timing
 repetitions alone does not prove universal speed superiority.
+
+The six hybrid pipelines should be requested with the unambiguous names
+banded_lu_banded_trace, sparse_lu_banded_trace,
+sparse_cholesky_banded_trace, pcg_fft_banded_trace,
+pcg_dst_banded_trace and pcg_jacobi_banded_trace.
+If scikit-sparse is absent, the CHOLMOD hybrid records an explicit setup
+failure; it never falls back to sparse LU. All numerical failures are
+retained and prevent a successful time ranking. The research protocol
+must not conflate fit-only speed with an end-to-end criterion cost.
+
+To aggregate real runs and calculate empirical log-log exponents after
+there are at least three n values with matched factor levels:
+
+    python paper\benchmarks\experiment006\analyze.py --runs paper\benchmarks\experiment006\runs\windows001 --output paper\benchmarks\experiment006\analysis\windows001
+
+Those empirical slopes reflect the *composite implementation* and are
+not proofs of the asymptotic theoretical exponents.
