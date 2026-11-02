@@ -39,16 +39,18 @@ The Hessian of $J_{\lambda,\mu}$ equals $2(I_n+\lambda Q_d)$, which is positive 
 
 Take the reduced SVD
 \begin{equation}\label{eq:svd}
-D_d=U\Sigma V^\top,\quad
-U^\top U=I_r,\quad V^\top V=I_r,\quad
-\Sigma=\diag(\sigma_1,\ldots,\sigma_r),
+\begin{aligned}
+D_d&=U\Sigma V^\top,\\
+U^\top U&=V^\top V=I_r,\\
+\Sigma&=\diag(\sigma_1,\ldots,\sigma_r).
+\end{aligned}
 \end{equation}
 with $\sigma_j>0$ and $\delta_j=\sigma_j^2$. The positive eigenvalues of $Q_d$ are precisely the $\delta_j$; its $d$ remaining eigenvalues vanish. Define $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
 
 \begin{theorem}[Spectral filter and normalized trace smoothness]\label{thm:smoothness}
-For each finite $\lambda\ge0$,
+Write $w(\lambda)=(w_1(\lambda),\ldots,w_r(\lambda))^\top$. For each finite $\lambda\ge0$,
 \begin{align}
-H_\lambda&=I_n-V\diag(w_1(\lambda),\ldots,w_r(\lambda))V^\top,\label{eq:H}\\
+H_\lambda&=I_n-V\diag(w(\lambda))V^\top,\label{eq:H}\\
 \nu_{\rm cond}(\lambda)&=\tr H_\lambda
 =n-\sum_{j=1}^r w_j(\lambda).\label{eq:edf}
 \end{align}
