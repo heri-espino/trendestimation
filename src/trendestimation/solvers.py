@@ -97,6 +97,8 @@ class PreparedPLSSolver:
         self.left_singular_vectors: np.ndarray | None = None
         self.singular_values: np.ndarray | None = None
         self.structured: StructuredSystem | None = None
+        self._band_factors: dict[float, np.ndarray] = {}
+        self._factor_cache = bool(factor_cache)
 
         if method in StructuredSystem.METHODS:
             self.structured = StructuredSystem(
@@ -205,13 +207,17 @@ class PreparedPLSSolver:
                 )[0]
                 return reference + projected
             assert self.penalty_bands is not None
-            ab = lam * self.penalty_bands.copy()
-            ab[0, :] += 1.0
-            if not np.all(np.isfinite(ab)):
-                raise OverflowError("The banded system overflows float64.")
-            factor = cholesky_banded(
-                ab, lower=True, overwrite_ab=True, check_finite=False,
-            )
+            factor = self._band_factors.get(lam)
+            if factor is None:
+                ab = lam * self.penalty_bands.copy()
+                ab[0, :] += 1.0
+                if not np.all(np.isfinite(ab)):
+                    raise OverflowError("The banded system overflows float64.")
+                factor = cholesky_banded(
+                    ab, lower=True, overwrite_ab=True, check_finite=False,
+                )
+                if self._factor_cache:
+                    self._band_factors[lam] = factor
             solution = cho_solve_banded(
                 (factor, True), centered, check_finite=False,
             )
@@ -304,7 +310,8 @@ class PreparedPLSSolver:
     @property
     def cached_factor_count(self) -> int:
         """Number of sparse factors cached across penalties."""
-        return 0 if self.structured is None else self.structured.cached_factor_count
+        return len(self._band_factors) + (
+            0 if self.structured is None else self.structured.cached_factor_count)
 
     @property
     def stored_bytes(self) -> int:
@@ -315,7 +322,9 @@ class PreparedPLSSolver:
                 self.left_singular_vectors, self.singular_values,
             ) if a is not None
         )
-        return dense + (0 if self.structured is None else self.structured.stored_bytes)
+        band_cached = sum(f.nbytes for f in self._band_factors.values())
+        return dense + band_cached + (
+            0 if self.structured is None else self.structured.stored_bytes)
 
 
 def fit_penalized(
