@@ -1,0 +1,61 @@
+{
+  "status": "bounded_pilot_only",
+  "started_utc": "2026-11-02T11:34:46.584186+00:00",
+  "github_run_id": "41437886131",
+  "github_sha": "05edb60c5e9540eecd0a9222dd144a6d1fbd703a",
+  "github_ref": "refs/heads/research/experiment006-full-computational-factorial",
+  "runner_name": "PCAG103A-08",
+  "runner_os": "Windows",
+  "host": "PCAG103A-08",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "tasks": [
+    {
+      "name": "pilot001_n64_d2_mu0_gcv",
+      "n": 64,
+      "d": 2,
+      "mu": 0.0,
+      "amplitude": "low",
+      "criterion": "gcv",
+      "denominator": 100,
+      "methods": [
+        "naive_inverse",
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace"
+      ],
+      "repeats": 2,
+      "R": 2,
+      "threads": 1,
+      "seed": 20261102,
+      "max_work": 300000000.0
+    },
+    {
+      "name": "pilot002_n128_d6_mu015_cv",
+      "n": 128,
+      "d": 6,
+      "mu": 0.15,
+      "amplitude": "high",
+      "criterion": "cv",
+      "denominator": 100,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_lu_banded_trace",
+        "pcg_fft_banded_trace"
+      ],
+      "repeats": 2,
+      "R": 2,
+      "threads": 1,
+      "seed": 20261103,
+      "max_work": 300000000.0
+    }
+  ],
+  "notes": [
+    "Not the full 7 n x 6 d x 5 criteria factorial",
+    "Includes all four workloads and both S/lambda coordinate policies",
+    "All numerical failures and resource skips are preserved",
+    "No statistical RMSE or global winner is asserted",
+    "Timing comparison is restricted to this particular Windows runner"
+  ]
+}
