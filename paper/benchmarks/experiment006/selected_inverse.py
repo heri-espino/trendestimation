@@ -148,7 +148,8 @@ class BandedTrace:
             b[i]=lam*accum
         return b
 
-    def fit_stats(self,y:np.ndarray,lam:float,mu:float,criterion:str):
+    def fit_stats(self,y:np.ndarray,lam:float,mu:float,criterion:str,*,
+                  factor=None,selected=None):
         """Calculate actual criterion, including necessary fit and traces.
 
         Timing of the method-specific fit is separate in the experiment
@@ -170,7 +171,7 @@ class BandedTrace:
         if np.isposinf(lam):
             return self._limit(y,mu,criterion)
         t0=perf_counter()
-        L=self.factor(lam)
+        L=self.factor(lam) if factor is None else factor
         t1=perf_counter()
         rhs=y+(lam*mu)*self.shift
         tau=cho_solve_banded((L,True),rhs,check_finite=False)
@@ -182,8 +183,9 @@ class BandedTrace:
                    max(1.,np.linalg.norm(y),np.linalg.norm(rhs)))
         if not np.all(np.isfinite(tau)) or not np.isfinite(back) or back>1e-7:
             raise ArithmeticError(f"PLS KKT failed: backward_error={back}")
-        z=selected_inverse(L)
-        self.trace_calls+=1
+        z=selected_inverse(L) if selected is None else selected
+        if selected is None:
+            self.trace_calls+=1
         edf=float(np.sum(z[0]))
         if not self.d-1e-5<=edf<=self.n+1e-5:
             raise ArithmeticError("Invalid banded EDF")
