@@ -1,0 +1,57 @@
+\section{Experiment006: factorial evaluation protocol}\label{sec:experiment006}
+The present expansion treats \emph{complete selection time} as its principal response. Statistical estimation error, including trend RMSE, is outside this experiment. Numerical validity remains an eligibility condition: a faster output is not a successful computation if it fails the stated mathematical equations. We distinguish the \emph{prospective} Experiment006 design from archived small-$n$ observations reported in Section~\ref{sec:results}. This section describes a partially implemented research protocol; the large factorial has not been measured.
+
+\subsection{Four crossed workloads}
+Write $M$ for the number of candidate smoothness values, $R$ for independent series sharing $(n,d)$, and $C$ for the number of criteria evaluated. Four workload classes cross the two relevant dimensions:
+\begin{table}[t]\caption{Four full-pipeline workloads. A single $S$ is $0.5$; the complete grid uses the levels in Table~\ref{tab:factor_levels}. A criterion score, not merely a fit, is timed.}\label{tab:four}\centering
+\begin{tabular}{@{}lcc@{}}\toprule
+Workload & $M$ & $R$\\\midrule
+Single value, single series & 1 & 1\\
+Grid, single series & $M>1$ & 1\\
+Single value, multiple series & 1 & $R>1$\\
+Grid, multiple series & $M>1$ & $R>1$\\
+\bottomrule\end{tabular}
+\end{table}
+The first workload exposes cold setup costs; the second exposes amortization across penalties; the third isolates reuse across distinct observed vectors; and the fourth measures a realistic multi-series selection batch. In particular, a grid-level speedup is not extrapolated from timing one isolated factorization.
+
+\subsection{Factors, endpoints and numerical scales}
+\begin{table*}[t]\caption{Target axes of Experiment006. This is a \emph{planned design}, not completed measurements. Each new smoothness grid includes $s=1$ but starts above zero; historical 17-point grids also included $s=0$.}
+\label{tab:factor_levels}\centering
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}p{.25\textwidth}p{.68\textwidth}@{}}\toprule
+Axis & Levels / interpretation\\\midrule
+Series length $n$ & $64,128,256,512,1024,16384,131072$\\
+Difference order $d$ & $1,2,3,4,5,6$\\
+Reference mean & Fixed $\mu=0$ or $\mu=0.15$; observed-difference plug-in $\widehat\mu$ separately, conditional ML only\\
+Observation magnitude & Low ($10^{-3}$ times a fixed seeded shape) and high ($10^6$ times the same shape)\\
+Criterion & Conditional CV, GCV, AICc, residual-based BIC, profiled Gaussian marginal ML\\
+Smoothness grid & $\{j/M:\ j=1,\ldots,M\}$, $M=100,1000,10000,100000$, including $s=1$ exactly\\
+Selection coordinate & On-demand $s\mapsto\lambda$ inversion; once-pretranslated $\lambda_j=\Lambda_{n,d}(s_j)$ and identical candidate scoring\\
+Complete pipeline & Naive inverse, SVD, banded Cholesky/selected inverse, and six named LU/CHOLMOD/PCG plus banded-diagnostic hybrids\\
+Reuse & $R=1$ or $R>1$ independent series; independent paired timing blocks, cold/warm accounting and cache-memory constraints\\
+\bottomrule\end{tabular}
+\end{table*}
+
+Because $S_d(0)=0$ and $S_d(+\infty)=1$, the endpoint $s=1$ is a \emph{constrained} PLS limit, not a very large finite penalty. Any unstable high-order polynomial projection at this endpoint is recorded as a numerical failure. At $n=131072$ a single dense float64 $n\times n$ array requires $128$~GiB before factors or workspaces; dense inversion and full SVD must be explicitly marked resource-ineligible at that scale, not dropped from the design.
+
+Small and large observed amplitudes alone do not define the numerical problem: fixing a nonzero $\mu$ while rescaling $y$ changes the relative strength of the imposed difference-mean constraint. The factorial therefore crosses amplitude and $\mu$ rather than treating their scales as exchangeable. With $d=6$ the nonzero-$\mu$ limiting polynomial can have very large coefficients even when the data values are small.
+
+\subsection{Fair coordinate comparison}
+Define a common candidate set $\mathcal G=\{s_1,\ldots,s_M\}$ and its image $\Lambda_{n,d}(\mathcal G)$. In the on-demand implementation, $s_j$ is inverted whenever requested. In the pretranslated implementation all $\lambda_j$ are computed once and passed directly to the same backend criterion. Therefore,
+\begin{equation}\label{eq:matched}
+F_{\mathrm{direct}}(s_j)
+=F_{\mathrm{translated}}\bigl(\Lambda_{n,d}(s_j)\bigr)
+\end{equation}
+in exact arithmetic for any one criterion $F$ and fixed reference mean. Identical selected values (within numerical tolerance) are a \emph{correctness check}; relative time quantifies reuse of conversion, not a change of statistical estimand. Independently spaced log-$\lambda$ grids sample different models and require a separate sensitivity analysis.
+
+Let $T_0$ be solver preparation, $T_\Lambda$ the once-computed grid mapping, $T_p$ the data projection for one series, and $T_F$ one criterion score. For a spectral GCV-like objective a stylized cost model is
+\begin{equation}\label{eq:amortized}
+T_{\mathrm{shared}}\approx
+T_0+T_\Lambda+R T_p+RCM T_F,
+\end{equation}
+whereas repeated on-demand inversion can introduce up to $RCM$ mapping calls. These are accounting models, not measured speedups. CV changes $T_F$ through leverages; sparse and hybrid algorithms incur separate factorization, cache and diagnostics costs. A fair comparison fixes $(n,d,\mu,R,M)$, criteria and candidates, then records preparation, mapping, per-series projections, candidate scoring, total time and retained memory.
+
+\subsection{Paired measurement and analysis}
+Each run records source revision, CPU, operating system, Python/SciPy/BLAS versions, thread counts, warm-up policy, candidate count, random seed and every attempted computation. Independent seeded timing blocks with counterbalanced method order are the proposed publication protocol. Only complete, numerically valid attempts enter winner comparisons. Planned summaries include means, medians, standard deviations, confidence intervals by independent timing block and paired speedups against explicit dense inversion wherever feasible. For fixed levels of other factors, a regression $\log T=\alpha+\beta\log n$ across at least three series lengths gives a descriptive empirical scaling exponent, not a proof of big-$O$ complexity.
+
+The runnable design manifest, bounded slices and mathematical tests reside in the separate Experiment006 research branch. The largest $M=100000$ by $n=131072$ combinations require resource gating, not extrapolation from completed pilots. Incomplete and ineligible cells are scientifically meaningful observations, not measured timing winners.

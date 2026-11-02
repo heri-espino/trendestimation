@@ -166,3 +166,35 @@ large-n high-d/very-high-S structured algorithm is still open.
 The new evidence supports merging tested research scaffolding
 as a *working experiment*, not asserting a universal computational
 winner or completed full factorial.
+
+## CSDA computational four-workload manuscript branch — 2026-11-02
+
+Branch: paper/csda-four-workload-20261102; complementary to merged Experiment006 implementation PR #95 and its archived self-hosted runs. The user authorized merging the associated research PRs. Existing baseline paper,
+its six AwesomeFigures vector figure families, archived 80,640-row
+Windows timing results, and prior numerical companion are preserved.
+
+The existing paper/csda-computational-costs/main.tex now includes:
+- sections/structured_criteria.tex: exact banded selected inverse,
+  conditional CV/GCV/BIC/AICc/ML computations, nonzero-mu RHS,
+  nine honest end-to-end complete criterion pipelines.
+- sections/experiment006_design.tex: four M×R workload configurations,
+  n to 131072, d=1,...,6, fixed mu zero/nonzero, high/low magnitude,
+  100/1000/10000/100000 S grids including exact S=1,
+  matched direct-S/onetime-pretranslated-lambda policies.
+- sections/experiment006_status.tex: historical measured evidence
+  explicitly separated from the unrun large factorial and
+  hypothesis testing protocol.
+- BibTeX adds Erisman/Tinney (1975), selected inverse prior art.
+
+The main.tex abstract reports only confirmed historical d=2/d=3
+n=48 grid-reuse times; no new full-factorial results are claimed.
+New paper CI: .github/workflows/csda-four-workloads-paper.yml.
+GitHub-hosted LaTeX build copies original CAS class and references
+pre-existing TeX-native AwesomeFigures assets without rerunning figures.
+Outputs: main.pdf, publication hashes, archived GitHub Actions ZIP.
+
+To extend results, retrieve real raw CSV and numerical status from
+the Experiment006 results-only branch after a successful runner run.
+Keep machine-specific timings and conditional performance conclusions
+explicit. Confirm author order, coauthor consent, and citation metadata
+before submission. The full factorial is NOT completed.

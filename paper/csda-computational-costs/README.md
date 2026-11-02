@@ -88,3 +88,45 @@ at a given lambda, nor joint ML estimation of mu when mu='data'.
 - The next joint accuracy-versus-time paper needs actual d6 and
   data-derived mu timing, broader series lengths and a specialized
   structured selected-inverse baseline.
+
+
+## Expanded four-workload CSDA research draft — November 2026
+
+The **paper/csda-four-workload-20261102** branch develops this existing
+two-column Elsevier manuscript into a broader computational-methods paper.
+The original historical figures and raw timing files are kept unchanged;
+the expanded manuscript is **not** a claim that the new 7-length ×
+6-difference-order × four-smoothness-grid factorial has been measured.
+
+New LaTeX material:
+- \`sections/structured_criteria.tex\`: banded selected inverse,
+  exact fixed-mean CV leverages, EDF, direct nonzero-mean RHS,
+  honest sparse and PCG hybrid costs, theoretical complexity.
+- \`sections/experiment006_design.tex\`: the four crossed workloads,
+  7 sample lengths, d=1..6, zero/nonzero fixed mu, low/high magnitude,
+  all 5 criteria, all 4 S grids (including exact S=1), matched
+  direct-S versus once-translated-lambda candidate comparisons.
+- \`sections/experiment006_status.tex\`: evidence matrix clearly
+  separating measured historical d<=5/n<=48 results from
+  pending Experiment006 computational measurements.
+- \`main.tex\`, \`discussion.tex\`, \`references.bib\`: revised
+  title, abstract, interpretation and verified selected-inverse
+  reference (Erisman and Tinney, 1975).
+
+**The historical 80,640 timing records remain the only fully archived
+multi-criterion measured dataset in this paper until new work completes.**
+The initial PCAG103A-08 pilot from separate Experiment006 PR #95 is not
+promoted into a publication result without its raw data and validation.
+Fast fit-only timing is not substituted for complete CV/GCV/AICc/BIC/MLE
+pipeline costs.
+
+The original six AwesomeFigures TeX-native PDF/PGF/SVG figure families
+are reused without re-running experimental simulations or drawing
+invented timing plots. \`csda-four-workloads-paper.yml\` compiles
+the same author-supplied Elsevier CAS double-column template and
+archives the revised paper PDF/source as an independent branch artifact.
+
+The primary unresolved publication steps are: complete matched
+factorial measurements and quality gates, paired CPU timing analysis
+with confidence intervals, high-order/nonzero-mean S=1 numerical
+validation, cached S-grid mapping at large n, and author approval.

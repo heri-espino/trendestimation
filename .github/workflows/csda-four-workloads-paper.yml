@@ -1,0 +1,109 @@
+name: CSDA expanded four-workload paper — Elsevier CAS PDF
+
+on:
+  push:
+    branches: [paper/csda-four-workload-20261102]
+    paths:
+      - .github/workflows/csda-four-workloads-paper.yml
+      - paper/csda-computational-costs/main.tex
+      - paper/csda-computational-costs/sections/**
+      - paper/csda-computational-costs/references.bib
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csda-four-workloads-manuscript
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install full Elsevier CAS-compatible LaTeX engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+      - name: Use the repository's original Elsevier CAS template
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/csda-computational-costs/$f"
+          done
+          sha256sum paper/els-cas-templates/cas-dc.cls \
+            paper/els-cas-templates/cas-common.sty \
+            paper/els-cas-templates/cas-model2-names.bst \
+            > paper/csda-computational-costs/template_source_sha256.txt
+      - name: Validate historical AwesomeFigures assets and no invented Experiment006 results
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in coordinate_map derivative_orders criterion_coordinates workload_scaling reuse_by_d solver_crossover; do
+            for ext in pdf pgf svg; do
+              test -s "paper/csda-computational-costs/figures/$f.$ext"
+            done
+          done
+          test -s paper/csda-computational-costs/sections/generated_d3_timings.tex
+          grep -q '80640' paper/csda-computational-costs/main.tex
+          grep -q 'planned' paper/csda-computational-costs/sections/experiment006_design.tex
+          grep -q 'not a completed' paper/csda-computational-costs/sections/experiment006_status.tex
+      - name: Compile CAS two-column manuscript and BibTeX
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/csda-computational-costs
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -17
+          if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
+            echo 'Undefined citation or reference'; exit 1
+          fi
+          sha256sum main.tex references.bib sections/*.tex figures/*.pdf main.pdf \
+            > four_workload_publication_sha256.txt
+          git rev-parse HEAD > four_workload_source_commit.txt
+      - name: Upload full manuscript and editable AwesomeFigures source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-four-workloads-manuscript
+          path: |
+            paper/csda-computational-costs/main.pdf
+            paper/csda-computational-costs/main.tex
+            paper/csda-computational-costs/sections/
+            paper/csda-computational-costs/references.bib
+            paper/csda-computational-costs/README.md
+            paper/csda-computational-costs/SOURCE_AUDIT.md
+            paper/csda-computational-costs/figures/
+            paper/csda-computational-costs/awesomefigures_latex_manifest.json
+            paper/csda-computational-costs/four_workload_publication_sha256.txt
+          if-no-files-found: warn
+      - name: Preserve compiled PDF and SHA on the paper branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f -- paper/csda-computational-costs/main.pdf \
+            paper/csda-computational-costs/four_workload_publication_sha256.txt \
+            paper/csda-computational-costs/four_workload_source_commit.txt \
+            paper/csda-computational-costs/template_source_sha256.txt
+          if git diff --cached --quiet; then
+            echo 'Verified manuscript PDF already committed'
+          else
+            git commit -m 'paper: archive expanded CSDA manuscript PDF [skip ci]'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

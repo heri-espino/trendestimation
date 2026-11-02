@@ -1,0 +1,69 @@
+\section{Structured end-to-end criterion computation}\label{sec:structured}
+A fast linear-system solution is not automatically a fast smoothing-parameter selector. For each candidate penalty, an implementation must obtain the trend, its residual sum of squares and, depending on the objective, the effective degrees of freedom (EDF), the diagonal leverage values or the marginal likelihood determinant. These auxiliary calculations are included in our definition of a \emph{complete computational pipeline}. We give a structured construction that avoids a dense $n\times n$ inverse.
+
+\subsection{Banded factorization and the selected inverse}
+Let $A_\lambda=I+\lambda Q_d$, $Q_d=D_d^\top D_d$, and $\lambda\in(0,\infty)$. The symmetric positive definite matrix $A_\lambda$ has half-bandwidth $d$. Factor it as $A_\lambda=L_\lambda L_\lambda^\top$ with lower triangular $L_\lambda$, whose nonzero entries satisfy $0\leq k-i\leq d$. Define $Z_\lambda=A_\lambda^{-1}$. Although $Z_\lambda$ is generally dense, only the entries $Z_{ij}$ with $|i-j|\leq d$ are needed in the selected-inverse recurrence. Backward substitution from $i=n$ to $1$ gives
+\begin{equation}\label{eq:seloff}
+Z_{ij}=-\frac{1}{L_{ii}}
+\sum_{k=i+1}^{\min(n,i+d)}
+L_{ki}Z_{kj},\quad i<j\leq \min(n,i+d),
+\end{equation}
+and
+\begin{equation}\label{eq:seldiag}
+Z_{ii}=\frac{1}{L_{ii}^2}
+-\frac{1}{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
+L_{ki}Z_{ki}.
+\end{equation}
+Symmetry supplies $Z_{kj}$ when $k>j$. These are selected-inverse (Takahashi-type) identities \citep{erisman1975}, not a proposal to store the full inverse. A banded factorization and selected inversion each require $O(nd^2)$ arithmetic, with $O(nd)$ factor and selected-entry storage for a fixed small difference order. The leverage diagonal is $h_i=Z_{ii}$ and $\nu(\lambda)=\sum_i h_i$.
+
+The finite-penalty right-hand side is constructed directly:
+\begin{equation}\label{eq:direct_rhs}
+b_{\lambda,\mu}=y+\lambda\mu D_d^\top\mathbf1,
+\qquad A_\lambda\widehat\tau=b_{\lambda,\mu}.
+\end{equation}
+This bypasses the potentially huge polynomial particular solution $p_\mu$, avoiding one source of catastrophic cancellation at large $d$ and nonzero $\mu$. It does not, however, guarantee forward accuracy when $A_\lambda$ becomes badly conditioned. We require finite outputs, residual checks and independent reference comparisons before accepting a timed result.
+
+\subsection{Conditional criteria and computational requirements}
+For a \emph{fixed numeric} $\mu$ define $e=y-\widehat\tau$, $\mathrm{RSS}=e^\top e$ and $h_i=(H_\lambda)_{ii}$, with $H_\lambda=A_\lambda^{-1}$. The classical leave-one-observation-out criterion and generalized cross-validation are
+\begin{equation}\label{eq:cv_gcv}
+\CV(\lambda)=\frac{1}{n}\sum_{i=1}^n
+\left(\frac{e_i}{1-h_i}\right)^2,\qquad
+\GCV(\lambda)=\frac{\mathrm{RSS}/n}
+{(1-\nu(\lambda)/n)^2}.
+\end{equation}
+The original residual-based criteria used in the accompanying benchmark have the form
+\begin{equation}\label{eq:information}
+\begin{aligned}
+\mathrm{BIC}_{\mathrm{RSS}}(\lambda)
+ &=\log(\mathrm{RSS}/n)+\nu(\lambda)\log n/n,\\
+\mathrm{AICc}(\lambda)
+ &=\log(\mathrm{RSS}/n)
+ +\frac{2\nu(\lambda)+1}{n-\nu(\lambda)-2}.
+\end{aligned}
+\end{equation}
+We retain the exact score conventions of the existing software rather than silently substituting a different information criterion. The BIC expression decreases without bound as $\lambda\downarrow0$ under a nondegenerate interpolation limit; the finite grid lower boundary must therefore be disclosed. The profiled Gaussian marginal-likelihood criterion additionally requires a weighted quadratic form and a log determinant on the penalized subspace, described in Section~\ref{sec:complexity}. Its implementation is not interchangeable with merely calculating a residual MSE.
+
+If $\mu$ is estimated from the same observations as $\widehat\mu=\operatorname{mean}(D_dy)$, then $H_\lambda$ is no longer the complete response-to-fit derivative of the plug-in procedure. The standard fixed-$\mu$ leverage formula in \eqref{eq:cv_gcv} is \emph{not} an exact leave-one-out refit of this estimated mean. Our planned fixed-mean comparisons distinguish $\mu=0$ and $\mu=0.15$; plug-in $\mu$ is a separately labeled conditional marginal-likelihood analysis.
+
+\subsection{Sparse and iterative methods with honest diagnostic costs}
+We benchmark nine end-to-end \emph{pipelines}, not nine interchangeable Cholesky routines. Sparse SuperLU, general banded LU, SuiteSparse CHOLMOD, and preconditioned conjugate-gradient (PCG) each provide a fitted trend through a different algorithm. In the current research code their CV/GCV/AICc/BIC/ML scores are completed by an \emph{additional} banded selected-inverse diagnostic step. Thus the hybrid runtime includes both the named fit backend and the added diagnostic factorization. SciPy sparse LU is not CHOLMOD; an unavailable optional CHOLMOD installation is recorded as such.
+
+PCG uses a matrix-free application of $I+\lambda D_d^\top D_d$ and FFT-periodic, DST-Dirichlet or Jacobi preconditioning. The FFT and DST symbols approximate the natural finite-series boundary structure; they are not exact diagonalizations, and no fixed small iteration count is guaranteed. Nonconverged PCG runs cannot enter the successful-time comparison.
+
+\begin{table*}[t]
+\caption{Leading arithmetic complexity for one finite-penalty, fixed-$\mu$ complete criterion evaluation with difference half-bandwidth $d$ and $r=n-d$. For hybrid implementations, additional banded diagnostics are \emph{charged}, even if their fit operation is inexpensive. $q$ is the attained PCG iteration count; these are arithmetic orders, not measured timings.}
+\label{tab:structured_cost}\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{.28\textwidth}p{.18\textwidth}p{.17\textwidth}p{.25\textwidth}@{}}
+\toprule
+Complete pipeline & Preparation / factor & Criterion & Memory\\
+\midrule
+Fresh dense inverse & $O(n^3)$ & $O(n^2)$ after inverse & $O(n^2)$\\
+Full SVD (after one decomposition) & $O(nr^2)$ once & $O(r)$ for GCV/AICc/BIC/ML; $O(nr)$ for CV & $O(nr)$\\
+Banded Cholesky + selected inverse & $O(nd^2)$ & $O(nd)$ for solve and criterion & $O(nd)$\\
+Banded or sparse LU + banded trace & fit-backend dependent $+O(nd^2)$ & $O(nd)$ after diagnostics & fit memory $+O(nd)$\\
+CHOLMOD + banded trace & sparse-factor dependent $+O(nd^2)$ & $O(nd)$ after diagnostics & sparse-factor memory $+O(nd)$\\
+PCG + banded trace & $O(qnd)$, or $O(qn(d+\log n))$ with transforms, $+O(nd^2)$ & $O(nd)$ after diagnostics & $O(nd+n)$, excluding FFT workspaces\\
+\bottomrule
+\end{tabular}
+\end{table*}

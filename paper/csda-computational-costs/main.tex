@@ -17,25 +17,28 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Computation with smoothness-indexed PLS}
+\shorttitle{Four-workload computation with smoothness-indexed PLS}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
-\title[mode=title]{Computational costs of smoothness-indexed penalized least squares: spectral reuse, cached grids and solver trade-offs}
+\title[mode=title]{Fast and reliable smoothness-indexed penalized least squares across difference orders: numerical algorithms, grid reuse and computational scaling}
 % Provisional authorship and order; confirm together before submission.
 \author[1]{Heriberto Espino-Montelongo}
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Finite-difference penalized least squares is most often tuned through a penalty $\lambda$ whose numerical scale varies with series length and difference order. We study the computational cost of using instead normalized trace smoothness $s\in[0,1]$ for any $1\le d<n$ and a fixed, possibly nonzero, mean of the penalized differences. A singular-value representation gives an invertible $s\leftrightarrow\lambda$ map and permits caching of spectra, data projections and grids across criteria and independent series. We distinguish single fitted curves, single criterion scores, repeated full-grid searches and multi-series reuse, and derive arithmetic and memory complexity for dense solves, dense Cholesky, general banded solves, banded Cholesky, dense eigendecomposition and SVD. We analyze an archived 80,640-row paired Windows benchmark with seven numerical backends, five criteria, eight search policies, two fixed means, two sample sizes and two seeds. For five criterion searches at $n=48,d=3$, repeated inversion on the same complete $S\in[0,1]$ candidate grid took 10.050 ms, versus 3.767 ms when the grid was mapped once and shared (a descriptive 2.67-fold reduction). A separate $d=2$ case showed a 2.82-fold reduction. Matching candidates ensures statistical equivalence; independently spaced log-penalty grids are retained only as a secondary, non-equivalent computational control. Separate repeated-fit and 20-seed solver benchmarks show that the fastest method depends on workload and numerical-validity requirements. Timings measure the archived machine and are not universal complexity proofs. This computational companion will ultimately be combined with a separate high-precision study to characterize accuracy--runtime trade-offs.
+Finite-difference penalized least-squares (PLS) trends can be parameterized by a normalized, interpretable smoothness index $s\in[0,1]$ rather than the scale-dependent penalty $\lambda$. Efficient use of this coordinate requires more than a fast linear solver: exact smoothness inversion, conditional effective degrees of freedom, leave-one-out leverage values, criterion evaluation and repeated-grid reuse can dominate complete computational time. We present an algorithmic analysis for difference orders $d=1,\ldots,6$ and fixed zero or nonzero means of penalized differences, including an exact banded selected-inverse formulation for full conditional CV, GCV, AICc, residual BIC and Gaussian marginal-likelihood evaluation. We define four crossed workloads: one or many smoothness candidates evaluated for one or many independent series. Nine full-criterion pipelines---naive dense inversion, spectral SVD, banded Cholesky and six explicitly costed banded/sparse/iterative hybrids---form a staged, resource-gated evaluation design over seven sample sizes through $131072$, four positive smoothness grids through $100000$ candidates, two observation magnitudes and fixed reference means. This large-scale factorial is a \emph{planned experiment, not an empirical result}. The existing two-seed, $80640$-row Windows timing corpus supplies a historical baseline: sharing one exactly matched smoothness-grid translation across five criteria reduced measured elapsed time by factors of $2.67$ at $d=3$ and $2.82$ at $d=2$ for specified $n=48$ workflows. We distinguish these host-specific observations from theoretical complexity and future results, require numerical validity before timing comparisons and preserve $s=1$ as an exact constrained endpoint.
 \end{abstract}
 \begin{keywords}
-Smoothness index \sep penalized least squares \sep algorithmic complexity \sep caching \sep spectral decomposition \sep computational benchmarking \sep cross-validation
+Smoothness index \sep penalized least squares \sep banded selected inverse \sep algorithmic complexity \sep sparse factorization \sep numerical reliability \sep computational benchmarking \sep reuse
 \end{keywords}
 \maketitle
 \input{sections/foundations}
 \input{sections/algorithms}
+\input{sections/structured_criteria}
+\input{sections/experiment006_design}
 \input{sections/benchmarks}
 \input{sections/results}
+\input{sections/experiment006_status}
 \input{sections/discussion}
 \bibliographystyle{cas-model2-names}
 \bibliography{references}
