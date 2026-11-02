@@ -1,0 +1,62 @@
+name: Experiment008 explicit naive inverse 100-S grid baseline
+
+on:
+  push:
+    branches: [research/experiment008-full-factorial-timing]
+    paths: [.github/workflows/experiment008-naive-baseline.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  literal-naive-inverse-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install ephemeral GitHub-hosted dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install threadpoolctl
+      - name: Actual naive-vs-structured and SVD timings
+        run: |
+          base=paper/benchmarks/experiment008/runs/naive-${{ github.run_id }}
+          mkdir -p "$base"
+          for n in 64 128; do
+            for mean in 0 data; do
+              for criterion in cv gcv bic aicc mle; do
+                if [ "$n" = 128 ] && [ "$criterion" != cv ] && [ "$criterion" != gcv ]; then continue; fi
+                folder="$base/n${n}_d2_mu${mean}_${criterion}_M100"
+                python paper/benchmarks/experiment006/run.py --preset slice --n "$n" --d 2 --mu "$mean" --criterion "$criterion" --amplitude low --grid-denominator 100 --methods naive_inverse,spectral_svd,banded_cholesky --repeats 3 --series-count 2 --max-work 10000000000 --conditional-data-mu --threads 1 --output "$folder" || echo "FAILED $folder" | tee -a "$base/failures.txt"
+              done
+            done
+          done
+          python -m pip freeze > "$base/requirements-resolved.txt"
+      - name: Upload actual naive inverse baseline measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment008-naive-${{ github.run_id }}
+          path: paper/benchmarks/experiment008/runs/naive-${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit raw paired times to dedicated branch
+        if: always()
+        run: |
+          dir=paper/benchmarks/experiment008/runs/naive-${{ github.run_id }}
+          if [ ! -f "$dir/requirements-resolved.txt" ]; then exit 0; fi
+          branch=results/experiment008-naive-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -f -- "$dir"
+          git commit -m "experiment008: archive real naive inversion timing grid comparison ${{ github.run_id }}"
+          git push origin "HEAD:refs/heads/$branch"
