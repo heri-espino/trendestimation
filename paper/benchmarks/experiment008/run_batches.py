@@ -12,6 +12,7 @@ import gzip
 import json
 import os
 import platform
+import subprocess
 import sys
 from collections import Counter
 from datetime import datetime, timezone
@@ -21,7 +22,7 @@ from time import perf_counter
 HERE=Path(__file__).resolve().parents[1]/"experiment006"
 sys.path.insert(0,str(HERE))
 from run import (D_LEVELS,GRID_DENOMINATORS,METHODS,N_LEVELS,
-                 SCENARIOS,POLICIES,CRITERIA,memory_budget_status,run_slice)
+                 SCENARIOS,POLICIES,CRITERIA,memory_budget_status)
 
 
 def configurations(preset):
@@ -139,6 +140,7 @@ def methods_for(n):
 
 def execute(output,preset="pilot",*,max_seconds=900,
             max_slices=25,repeats=2,R=2,max_work=4e6,
+            per_slice_seconds=55,
             max_dense_bytes=2*1024**3):
     if output.exists():raise FileExistsError(f"Refusing to overwrite {output}")
     output.mkdir(parents=True)
@@ -156,6 +158,7 @@ def execute(output,preset="pilot",*,max_seconds=900,
                        runner=os.environ.get("RUNNER_NAME"),
                        python=sys.version,host=platform.platform(),
                        max_seconds=max_seconds,max_slices=max_slices,
+                       per_slice_seconds=per_slice_seconds,
                        repeats=repeats,R=R,max_work=max_work,
                        score_semantics="mu=data is conditional plug-in",
                        all_tasks=len(candidates),tasks=candidates),
@@ -178,22 +181,37 @@ def execute(output,preset="pilot",*,max_seconds=900,
             f"{cfg['criterion']}_M{cfg['denominator']}"))
         t0=perf_counter()
         try:
-            rows,_=run_slice(
-                n=cfg["n"],d=cfg["d"],mu=(
-                    cfg["mu"] if cfg["mu"]=="data" else float(cfg["mu"])),
-                amplitude=cfg["amplitude"],criterion=cfg["criterion"],
-                denominator=cfg["denominator"],methods=cfg["methods"],
-                repeats=repeats,R=R,max_work=max_work,
-                max_dense_bytes=max_dense_bytes,
-                output=folder,threads=1,
-                seed=20261102+cfg["index"],
-                conditional_data_mu=True)
+            # Bound EACH slice independently: one high-d numerical S-grid
+            # inversion must not monopolize the whole university runner.
+            cmd=[
+                sys.executable,str(HERE/"run.py"),
+                "--preset","slice","--n",str(cfg["n"]),
+                "--d",str(cfg["d"]),"--mu",cfg["mu"],
+                "--amplitude",cfg["amplitude"],
+                "--criterion",cfg["criterion"],
+                "--grid-denominator",str(cfg["denominator"]),
+                "--methods",",".join(cfg["methods"]),
+                "--repeats",str(repeats),"--series-count",str(R),
+                "--max-work",str(max_work),
+                "--max-dense-bytes",str(max_dense_bytes),
+                "--threads","1","--conditional-data-mu",
+                "--output",str(folder),
+            ]
+            subprocess.run(cmd,check=True,timeout=per_slice_seconds)
+            with (folder/"raw_times.csv").open(
+                    "r",newline="",encoding="utf-8") as stream:
+                rows=list(csv.DictReader(stream))
             outcome=Counter(row["status"] for row in rows)
             all_status.append({**cfg,"status":"completed_with_recorded_cells",
                                "elapsed_s":perf_counter()-t0,
                                "result_folder":str(folder.relative_to(output)),
                                "row_status_counts":dict(outcome),
                                "measured_rows":sum(row["status"]=="ok" for row in rows)})
+            n_completed+=1
+        except subprocess.TimeoutExpired:
+            all_status.append({**cfg,"status":"slice_timeout_no_credible_time",
+                               "elapsed_s":perf_counter()-t0,
+                               "reason":f"Per-slice {per_slice_seconds}s execution ceiling"})
             n_completed+=1
         except Exception as exc:
             all_status.append({**cfg,"status":"slice_execution_error",
@@ -237,10 +255,12 @@ if __name__=="__main__":
     p.add_argument("--preset",choices=("smoke","pilot","broad"),default="pilot")
     p.add_argument("--max-seconds",type=float,default=900.)
     p.add_argument("--max-slices",type=int,default=25)
+    p.add_argument("--per-slice-seconds",type=int,default=55)
     p.add_argument("--repeats",type=int,default=2)
     p.add_argument("--series-count",type=int,default=2)
     p.add_argument("--max-work",type=float,default=4e6)
     args=p.parse_args()
     print(json.dumps(execute(args.output,args.preset,max_seconds=args.max_seconds,
                  max_slices=args.max_slices,repeats=args.repeats,
-                 R=args.series_count,max_work=args.max_work),indent=2))
+                 R=args.series_count,max_work=args.max_work,
+                 per_slice_seconds=args.per_slice_seconds),indent=2))
