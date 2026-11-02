@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from trendestimation import TrendSmoother, score_lambda, difference_matrix
+from trendestimation import TrendSmoother, score_lambda
 
 DIR=Path(__file__).resolve().parents[1]/"paper"/"benchmarks"/"experiment006"
 sys.path.insert(0,str(DIR))
@@ -26,13 +26,13 @@ def test_external_fit_plus_exact_banded_diagnostics(method,d,criterion):
     lam=.1
     backend=Evaluator(n,d,method)
     actual=backend.evaluate(y,mu,lam,criterion,reuse_factor=False)
-    expected=score_lambda(TrendSmoother(n,d),y,lambda_=lam,
+    spectral=TrendSmoother(n,d)
+    expected=score_lambda(spectral,y,lambda_=lam,
                           criterion=criterion,mu=mu)
     if criterion=="mle":
-        D=difference_matrix(n,d)
-        sign,logdet=np.linalg.slogdet(D@D.T)
-        assert sign>0
-        expected+=logdet
+        # Stable positive spectrum, not determinant of ill-conditioned
+        # D D.T when d=6.
+        expected+=2.*float(np.log(spectral._singular_values).sum())
     np.testing.assert_allclose(actual,expected,rtol=1e-5,atol=1e-5)
 
 
