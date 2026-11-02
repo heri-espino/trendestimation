@@ -1,0 +1,210 @@
+\section{Sensitivity and estimated difference means}\label{sec:plugin}
+
+\begin{theorem}[Smoothness sensitivity and conditioning]\label{thm:sensitivity}
+For each interior target $s\in(0,1)$, let
+$b_j(s)=w_j(s)[1-w_j(s)]$ and
+$B(s)=r^{-1}\sum_{j=1}^r b_j(s)>0$.
+Then the spectral weights and the fixed-$\mu$ fitted trend
+are differentiable and satisfy
+\begin{align}
+\frac{\mathrm d w_j}{\mathrm ds}
+&=\frac{b_j(s)}{B(s)},\quad
+0<\frac{\mathrm dw_j}{\mathrm ds}\le r,
+\qquad \sum_{j=1}^r\frac{\mathrm dw_j}{\mathrm ds}=r,
+\label{eq:wdot}\\
+\frac{\partial\widehat\tau_{s,\mu}}{\partial s}
+&=-V\diag\!\left(\frac{b_1(s)}{B(s)},\ldots,
+\frac{b_r(s)}{B(s)}\right)c_\mu.\label{eq:trenddot}
+\end{align}
+For all $s,t\in[0,1]$,
+\begin{equation}\label{eq:lipschitz}
+\norm{\widehat\tau_{s,\mu}-\widehat\tau_{t,\mu}}_2
+\le r|s-t|\norm{c_\mu}_2 .
+\end{equation}
+For fixed $s$ and two numeric means $\mu_1,\mu_2$,
+\begin{equation}\label{eq:mu-lipschitz}
+\norm{\widehat\tau_{s,\mu_1}-\widehat\tau_{s,\mu_2}}_2
+=|\mu_1-\mu_2|
+\left[\sum_{j=1}^r
+\frac{w_j(s)^2(U^\top\one_r)_j^2}{\sigma_j^2}\right]^{1/2}.
+\end{equation}
+Moreover the derivative of the scalar spectral map obeys
+\begin{equation}\label{eq:variance-id}
+G'(x_s)=s(1-s)
+-\frac1r\sum_{j=1}^r[w_j(s)-s]^2
+\le s(1-s),
+\end{equation}
+and hence $\mathrm dx_s/\mathrm ds\ge[s(1-s)]^{-1}$.
+\end{theorem}
+\begin{proof}
+Differentiate $G(x_s)=s$ and use
+$G'(x_s)=B(s)>0$ to obtain
+$\mathrm dx_s/\mathrm ds=1/B(s)$.
+The chain rule then gives
+$\mathrm dw_j/\mathrm ds=b_j(s)/B(s)$.
+Because $rB(s)=\sum_k b_k(s)\ge b_j(s)$,
+the derivative is at most $r$; summing the derivatives gives $r$.
+Differentiate \eqref{eq:direct-fit} with $y,\mu$ fixed for
+\eqref{eq:trenddot}. The mean-value theorem and
+\eqref{eq:wdot}, extended to endpoint limits by continuity,
+yield $|w_j(s)-w_j(t)|\le r|s-t|$.
+Since $V^\top V=I_r$,
+\[
+\norm{V\diag(w(s)-w(t))c_\mu}_2
+\le\max_j|w_j(s)-w_j(t)|\norm{c_\mu}_2,
+\]
+which proves \eqref{eq:lipschitz}.
+The $\mu$-dependence of \eqref{eq:direct-fit} is affine:
+\[
+\widehat\tau_{s,\mu_1}-\widehat\tau_{s,\mu_2}
+=(\mu_1-\mu_2)V\diag(w(s))\Sigma^{-1}U^\top\one_r.
+\]
+Its Euclidean norm equals the right side of
+\eqref{eq:mu-lipschitz} because $V$ is an isometry on $\R^r$.
+Finally, using $s=r^{-1}\sum_jw_j$,
+\[
+G'(x_s)=\frac1r\sum_j(w_j-w_j^2)
+=s-\left(s^2+\frac1r\sum_j(w_j-s)^2\right),
+\]
+which gives \eqref{eq:variance-id}. Inverting the strictly
+positive derivative establishes the lower bound on
+$\mathrm dx_s/\mathrm ds$.
+\end{proof}
+
+\begin{remark}[Conditioning is not eliminated]\label{rem:cond}
+The factor $\mathrm dx_s/\mathrm ds$ becomes large toward both
+endpoints. This is also the conditioning of a log-penalty inverse,
+up to the constant shift in \eqref{eq:implicit}. In contrast,
+\eqref{eq:wdot} bounds the sensitivity of each \emph{weight} to
+the requested smoothness. A well-conditioned weight curve does not
+imply that its scalar log-odds root is well-conditioned, or that
+an inaccurate computed SVD can be repaired by reparameterization.
+\end{remark}
+
+\begin{proposition}[Endpoint penalty scales]\label{prop:asymptotic}
+With $n,d$ and the positive spectrum fixed, define
+$A=r^{-1}\sum_{j=1}^r\delta_j>0$ and
+$B=r^{-1}\sum_{j=1}^r\delta_j^{-1}>0$.
+Then
+\begin{align}
+S_d(\lambda)&=A\lambda+O(\lambda^2)
+ &&(\lambda\downarrow0),\\
+1-S_d(\lambda)&=B/\lambda+O(\lambda^{-2})
+ &&(\lambda\uparrow\infty).
+\end{align}
+Consequently $\Lambda_d(s)=s/A+O(s^2)$ as $s\downarrow0$
+and $\Lambda_d(s)=B/(1-s)+O(1)$ as $s\uparrow1$.
+\end{proposition}
+\begin{proof}
+For each fixed $\delta_j>0$,
+$\lambda\delta_j/(1+\lambda\delta_j)
+=\lambda\delta_j+O(\lambda^2)$ as $\lambda\to0$.
+The finite average gives the first expansion. Similarly
+$1/(1+\lambda\delta_j)
+=(\lambda\delta_j)^{-1}+O(\lambda^{-2})$
+as $\lambda\to\infty$, yielding the second.
+Strict invertibility from Theorem~\ref{thm:smoothness} allows
+termwise inversion of each first-order expansion. Explicitly,
+$s=A\lambda+O(\lambda^2)$ implies
+$\lambda=s/A+O(s^2)$; and with $t=1-s$,
+$t=B/\lambda+O(\lambda^{-2})$ implies
+$1/\lambda=t/B+O(t^2)$ and hence
+$\lambda=B/t+O(1)$.
+\end{proof}
+
+\subsection{Observed-difference plug-in mean}
+The previous results treat $\mu$ as fixed. The option
+\begin{equation}\label{eq:plug}
+\widehat\mu(y)=\frac1r\one_r^\top D_dy
+=:g^\top y,\qquad g=D_d^\top\one_r/r,
+\end{equation}
+instead defines a different \emph{data-dependent linear mapping}
+$y\mapsto\widehat\tau_{s,\widehat\mu(y)}$ for every fixed target $s$.
+Its full Jacobian need not equal $H_s$.
+
+\begin{theorem}[Exact plug-in smoother and EDF correction]\label{thm:plugin}
+Let $s\in[0,1]$ be fixed and put
+$a=U^\top\one_r$,
+$b_s=V\diag(w(s))\Sigma^{-1}a$.
+The estimator obtained by substituting \eqref{eq:plug} into
+\eqref{eq:direct-fit} is the linear map
+\begin{equation}\label{eq:plug-hat}
+\widehat\tau_{s,\widehat\mu(y)}
+=T_sy,\qquad
+T_s=H_s+b_sg^\top,
+\end{equation}
+where $H_s=I_n-V\diag(w(s))V^\top$.
+Its \emph{unconditional} trace (holding $s$ fixed, but
+not holding the estimated mean fixed) is
+\begin{equation}\label{eq:edf-plug}
+\begin{aligned}
+\nu_{\rm plug}(s)&=\tr T_s
+=n-rs+\Delta(s),\\
+\Delta(s)&=\frac1r\sum_{j=1}^r w_j(s)a_j^2,
+\qquad 0\le\Delta(s)\le1.
+\end{aligned}
+\end{equation}
+In particular,
+\[
+\nu_{\rm plug}(0)=n,\qquad
+\nu_{\rm plug}(1)=d+1,
+\]
+whereas the conditional fixed-$\mu$ trace equals $n-rs$,
+with limiting value $d$ at $s=1$.
+\end{theorem}
+\begin{proof}
+Equation \eqref{eq:direct-fit} can be written
+$\widehat\tau_{s,\mu}=H_sy+\mu b_s$.
+Replacing $\mu$ by $g^\top y$ gives \eqref{eq:plug-hat}.
+Using $\tr(b_sg^\top)=g^\top b_s$ and
+$D_d=U\Sigma V^\top$,
+\[
+\begin{aligned}
+g^\top b_s
+&=\frac1r\one_r^\top D_dV\diag(w)\Sigma^{-1}a\\
+&=\frac1r\one_r^\top U\Sigma\diag(w)\Sigma^{-1}U^\top\one_r\\
+&=\frac1r\,a^\top\diag(w)a
+=\frac1r\sum_jw_ja_j^2.
+\end{aligned}
+\]
+Together with $\tr H_s=n-rs$ this proves
+\eqref{eq:edf-plug}. Since $U$ is orthogonal,
+$\sum_j a_j^2=\norm{\one_r}_2^2=r$.
+Every $w_j\in[0,1]$, so $\Delta\in[0,1]$.
+At $s=0$ all weights are zero and
+$\Delta(0)=0$; at $s=1$ every weight is one,
+giving $\Delta(1)=1$. The endpoint
+values follow.
+\end{proof}
+
+\begin{corollary}[A caution for interpreting normalized smoothness]\label{cor:edf}
+If $\mu$ is estimated from observed differences, the index $s$
+in \eqref{eq:S} still specifies the \emph{conditional} trace
+reduction $r^{-1}\sum_jw_j(s)$. The reduction calculated from
+the full plug-in operator is instead
+\[
+\frac{n-\tr(T_s)}r=s-\frac{\Delta(s)}r.
+\]
+These two quantities differ for interior $s$, and their endpoint
+values at $s=1$ are $1$ and $1-1/r$, respectively.
+\end{corollary}
+\begin{proof}
+Substitute \eqref{eq:edf-plug}. For $0<s<1$, the
+$w_j(s)$ are strictly positive, while $a\ne0$ because
+$U$ is orthogonal and $\one_r\ne0$, so $\Delta(s)>0$.
+The endpoint values follow from Theorem~\ref{thm:plugin}.
+\end{proof}
+
+\begin{remark}[Degrees of freedom versus statistical claims]
+The trace $\tr(T_s)$ is the exact divergence of the
+linear fitted-value map for a fixed $s$.
+Interpreting this divergence as a covariance-based
+effective number of parameters requires a statistical model
+(e.g., homoskedastic independent Gaussian errors).
+If $s$ itself is selected using $y$, further
+data-dependence arises, and neither trace formula
+automatically describes the full adaptive procedure.
+Similarly, deleting one observation and holding a
+plug-in $\widehat\mu$ fixed is not an exact leave-one-out
+refit of the complete plug-in estimator.
+\end{remark}
