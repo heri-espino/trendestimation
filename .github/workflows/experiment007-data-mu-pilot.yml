@@ -5,6 +5,9 @@ on:
     branches: [research/experiment007-data-mu-backend-frontier]
     paths:
       - .github/workflows/experiment007-data-mu-pilot.yml
+      - paper/benchmarks/experiment007/**
+      - paper/benchmarks/experiment006/audit_high_d.py
+      - tests/test_experiment007_data_mu.py
   workflow_dispatch:
 
 permissions:
