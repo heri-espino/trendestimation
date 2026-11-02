@@ -68,3 +68,25 @@ def test_complete_aicc_model_has_separate_holdout():
     out,quality=cross.compare(rows,models,"aicc",holdout)
     assert len(out)==len(rows)
     assert all(x["set"]=="holdout" for x in out if x["n"]==512)
+
+
+def test_closed_form_crossover_is_theoretically_consistent():
+    # At n=128,d=2,R=1: T_svd=1 and T_chol=M/7 exactly.
+    models={"svd":np.array([1.,0.,0.,0.]),
+            "cholesky":np.array([0.,0.,1.,0.])}
+    mstar=cross.break_even_candidates(models,"fit",128,2,1)
+    assert mstar is not None
+    np.testing.assert_allclose(mstar,7.,rtol=1e-8)
+    assert cross.predict(models,"fit","svd",128,2,10,1)<cross.predict(
+        models,"fit","cholesky",128,2,10,1)
+    assert cross.predict(models,"fit","svd",128,2,2,1)>cross.predict(
+        models,"fit","cholesky",128,2,2,1)
+
+
+def test_heldout_class_distribution_is_recorded_not_overclaimed():
+    fit=cross.collect_fit()
+    models,_,holdout=cross.fit_models(fit,"fit")
+    _,quality=cross.compare(fit,models,"fit",holdout)
+    assert set(quality["heldout_true_winners"])=={"svd","cholesky"}
+    assert isinstance(quality["heldout_has_both_classes"],bool)
+    assert quality["training_paired_comparable"]>=quality["training_correct"]
