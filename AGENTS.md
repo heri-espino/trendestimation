@@ -53,3 +53,11 @@ criterion pipelines must not be conflated with Experiment005 fit-only
 solvers; missing methods remain explicitly not implemented. High-order
 nonzero-mu regimes and S=1 require independent numerical auditing.
 Never merge without explicit user authorization.
+
+## Experiment006 hybrid scientific contract (latest)
+
+Six hybrid sparse/iterative plus banded selected-inverse diagnostic
+pipelines have been added to the Experiment006 runner. Compare their
+full measured cost including every factorization, not just their trend
+fit time. Check tests/test_experiment006_hybrid_criteria.py before
+interpreting speed rankings. No unrecorded timing or numerical results.
