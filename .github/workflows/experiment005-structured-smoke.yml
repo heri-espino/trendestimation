@@ -1,0 +1,121 @@
+name: Experiment005 structured-solvers smoke
+
+on:
+  push:
+    branches: [feature/experiment005-structured-solvers]
+    paths:
+      - src/trendestimation/_structured_solvers.py
+      - src/trendestimation/solvers.py
+      - tests/test_experiment005_structured_solvers.py
+      - paper/benchmarks/experiment005/run.py
+      - .github/workflows/experiment005-structured-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment005-smoke
+  cancel-in-progress: true
+
+jobs:
+  scientific-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package and scientific test dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Validate direct/iterative numerical parity and convergence
+        run: python -m pytest tests/test_experiment005_structured_solvers.py -q
+      - name: Run actual paired smoke on hosted runner
+        run: |
+          python paper/benchmarks/experiment005/run.py \
+            --preset smoke --repeats 3 \
+            --output paper/benchmarks/experiment005/runs/hosted-${{ github.run_id }}
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          p=Path("paper/benchmarks/experiment005/runs/hosted-${{ github.run_id }}")
+          rows=list(csv.DictReader((p/"raw_measurements.csv").open()))
+          assert rows
+          assert all(x["status"] == "ok" for x in rows if
+                     x["method"] in ("cholesky","cholesky_cached","banded_lu","sparse_lu","sparse_lu_cached"))
+          assert any(x["method"] == "pcg_fft" for x in rows)
+          assert (p/"environment.json").is_file()
+          print("Recorded actual attempts:",len(rows))
+          from collections import Counter
+          print(Counter(x["status"].split(":")[0] for x in rows))
+          PY
+      - name: Upload complete raw measurement and environment archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment005-structured-smoke-raw
+          path: paper/benchmarks/experiment005/runs/hosted-${{ github.run_id }}/
+          if-no-files-found: warn
+      - name: Preserve measured hosted smoke evidence on the feature branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f paper/benchmarks/experiment005/runs/hosted-${{ github.run_id }}/
+          if git diff --cached --quiet; then
+            echo "All scientific results already committed"
+          else
+            git commit -m "experiment005: archive hosted parity-and-timing smoke [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+
+  cholmod-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install SuiteSparse CHOLMOD build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libsuitesparse-dev
+      - name: Install package and genuine scikit-sparse wrapper
+        shell: bash
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pip install scikit-sparse
+      - name: Validate actual sparse Cholesky parity
+        run: |
+          python - <<'PY'
+          from sksparse.cholmod import cholesky
+          import numpy as np
+          from trendestimation import PreparedPLSSolver, difference_matrix
+          for d in (1,2,3,6):
+              y=np.random.default_rng(27+d).normal(size=48)
+              D=difference_matrix(48,d)
+              for lam in (0.001,0.1,100.):
+                  s=PreparedPLSSolver(48,d,method="sparse_cholesky",factor_cache=True)
+                  c=PreparedPLSSolver(48,d,method="cholesky")
+                  a=s.fit(y,lambda_=lam,mu=0.15)
+                  b=c.fit(y,lambda_=lam,mu=0.15)
+                  A=np.eye(48)+lam*(D.T@D)
+                  rhs=y+lam*.15*(D.T@np.ones(48-d))
+                  truth=np.linalg.solve(A,rhs)
+                  residual=np.linalg.norm(A@a-rhs)/max(1.,np.linalg.norm(rhs))
+                  np.testing.assert_allclose(a,truth,rtol=2e-8,atol=2e-8)
+                  assert residual < 1e-9
+                  assert s.cached_factor_count==1
+                  discrepancy=np.max(abs(a-b))
+                  if discrepancy > 2e-7:
+                      print(f"Recorded old banded discrepancy d={d}, lambda={lam}: {discrepancy:.5g}")
+          print("Actual CHOLMOD sparse Cholesky verified against independent dense equations")
+          PY
+          python -m pytest tests/test_experiment005_structured_solvers.py -q

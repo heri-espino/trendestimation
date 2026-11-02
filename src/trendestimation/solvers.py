@@ -31,8 +31,9 @@ from scipy.linalg import (
 from scipy.special import binom
 
 from .core import difference_matrix
+from ._structured_solvers import StructuredSystem
 
-FitBackend = Literal["svd", "eigh", "cholesky"]
+FitBackend = Literal["svd", "eigh", "cholesky", "banded_lu", "sparse_lu", "sparse_cholesky", "pcg"]
 
 
 def _penalty_lower_bands(n: int, d: int) -> np.ndarray:
@@ -50,7 +51,7 @@ def _penalty_lower_bands(n: int, d: int) -> np.ndarray:
 
 
 class PreparedPLSSolver:
-    """Fit the *same* PLS trends with one of three linear-algebra backends.
+    """Fit the *same* PLS trends with dense, banded, sparse, or iterative backends.
 
     Parameters
     ----------
@@ -58,7 +59,7 @@ class PreparedPLSSolver:
         Series length, at least one.
     order : int, default=2
         Forward difference order with 0 <= order < n.
-    method : {"svd", "eigh", "cholesky"}, default="svd"
+    method : {"svd", "eigh", "cholesky", "banded_lu", "sparse_lu", "sparse_cholesky", "pcg"}, default="svd"
         Solver used for the fitted trend. The default is full spectral SVD
         with shift-free trend reconstruction. Measured runtimes depend on
         n, d, the number of fits, and hardware; explicit svd and eigh
@@ -74,6 +75,8 @@ class PreparedPLSSolver:
 
     def __init__(
         self, n: int, order: int = 2, *, method: FitBackend = "svd",
+        preconditioner: str = "fft", cg_rtol: float = 1e-9,
+        cg_maxiter: int | None = None, factor_cache: bool = False,
     ) -> None:
         if (isinstance(n, (bool, np.bool_)) or
                 not isinstance(n, (int, np.integer)) or n < 1):
@@ -81,8 +84,9 @@ class PreparedPLSSolver:
         if (isinstance(order, (bool, np.bool_)) or
                 not isinstance(order, (int, np.integer)) or not 0 <= order < n):
             raise ValueError("order must be an integer in [0, n).")
-        if method not in ("svd", "eigh", "cholesky"):
-            raise ValueError("method must be svd, eigh, or cholesky.")
+        if method not in ("svd", "eigh", "cholesky", "banded_lu",
+                          "sparse_lu", "sparse_cholesky", "pcg"):
+            raise ValueError("Unknown fit-only backend.")
 
         self.n = int(n)
         self.order = int(order)
@@ -92,8 +96,17 @@ class PreparedPLSSolver:
         self.penalty_bands: np.ndarray | None = None
         self.left_singular_vectors: np.ndarray | None = None
         self.singular_values: np.ndarray | None = None
+        self.structured: StructuredSystem | None = None
+        self._band_factors: dict[float, np.ndarray] = {}
+        self._factor_cache = bool(factor_cache)
 
-        if method == "cholesky":
+        if method in StructuredSystem.METHODS:
+            self.structured = StructuredSystem(
+                self.n, self.order, method,
+                preconditioner=preconditioner, cg_rtol=cg_rtol,
+                cg_maxiter=cg_maxiter, factor_cache=factor_cache,
+            )
+        elif method == "cholesky":
             self.penalty_bands = _penalty_lower_bands(self.n, self.order)
         else:
             D = difference_matrix(self.n, self.order)
@@ -194,13 +207,17 @@ class PreparedPLSSolver:
                 )[0]
                 return reference + projected
             assert self.penalty_bands is not None
-            ab = lam * self.penalty_bands.copy()
-            ab[0, :] += 1.0
-            if not np.all(np.isfinite(ab)):
-                raise OverflowError("The banded system overflows float64.")
-            factor = cholesky_banded(
-                ab, lower=True, overwrite_ab=True, check_finite=False,
-            )
+            factor = self._band_factors.get(lam)
+            if factor is None:
+                ab = lam * self.penalty_bands.copy()
+                ab[0, :] += 1.0
+                if not np.all(np.isfinite(ab)):
+                    raise OverflowError("The banded system overflows float64.")
+                factor = cholesky_banded(
+                    ab, lower=True, overwrite_ab=True, check_finite=False,
+                )
+                if self._factor_cache:
+                    self._band_factors[lam] = factor
             solution = cho_solve_banded(
                 (factor, True), centered, check_finite=False,
             )
@@ -222,6 +239,8 @@ class PreparedPLSSolver:
         mu: float | Literal["data"] = 0.0,
     ) -> np.ndarray:
         """Compute one full fitted trend, without spectral diagnostics."""
+        if self.structured is not None:
+            return self._fit_structured(y, float(lambda_), mu)
         observed, reference = self._prepare(y, mu)
         return self._fit_prepared(
             observed, reference, float(lambda_), None,
@@ -241,6 +260,10 @@ class PreparedPLSSolver:
             raise ValueError("lambdas must be a one-dimensional non-NaN array.")
         if np.any(penalties < 0):
             raise ValueError("lambdas must be nonnegative.")
+        if self.structured is not None:
+            return np.asarray([
+                self._fit_structured(y, float(lam), mu) for lam in penalties
+            ]).reshape(penalties.size, self.n)
         observed, reference = self._prepare(y, mu)
         coords = None
         if self.eigenvectors is not None and self.method != "svd":
@@ -250,21 +273,66 @@ class PreparedPLSSolver:
             for lam in penalties
         ]).reshape(penalties.size, self.n)
 
+    def _fit_structured(self, y, lam, mu):
+        observed = np.asarray(y, dtype=float)
+        if observed.ndim != 1 or observed.size != self.n or not np.all(np.isfinite(observed)):
+            raise ValueError("y must be a finite one-dimensional array of length n.")
+        if np.isnan(lam) or lam < 0:
+            raise ValueError("lambda_ must lie in [0, infinity].")
+        mean = (float(np.mean(np.diff(observed, n=self.order)))
+                if mu == "data" else float(mu))
+        if not np.isfinite(mean):
+            raise ValueError("mu must be finite or 'data'.")
+        if lam == 0:
+            return observed.copy()
+        if np.isinf(lam):
+            if self.order == 0:
+                return np.full(self.n, mean)
+            reference = mean * binom(np.arange(self.n, dtype=float), self.order)
+            if not np.all(np.isfinite(reference)):
+                raise OverflowError("Polynomial constrained limit overflows.")
+            z = np.linspace(-1., 1., self.n)
+            V = np.polynomial.legendre.legvander(z, self.order-1)
+            return reference + V @ np.linalg.lstsq(V, observed-reference, rcond=None)[0]
+        assert self.structured is not None
+        return self.structured.solve(observed, lam, mean)
+
+    @property
+    def cg_iterations(self) -> int | None:
+        """Iterations in the last PCG call; None for direct methods."""
+        return None if self.structured is None else self.structured.last_iterations
+
+    @property
+    def cg_relative_residual(self) -> float | None:
+        """Relative normal-equation residual after the last PCG call."""
+        return None if self.structured is None else self.structured.last_relative_residual
+
+    @property
+    def cached_factor_count(self) -> int:
+        """Number of sparse factors cached across penalties."""
+        return len(self._band_factors) + (
+            0 if self.structured is None else self.structured.cached_factor_count)
+
     @property
     def stored_bytes(self) -> int:
         """Direct bytes of long-lived ndarray state (not process RSS)."""
-        return sum(
+        dense = sum(
             a.nbytes for a in (
                 self.eigenvectors, self.eigenvalues, self.penalty_bands,
                 self.left_singular_vectors, self.singular_values,
             ) if a is not None
         )
+        band_cached = sum(f.nbytes for f in self._band_factors.values())
+        return dense + band_cached + (
+            0 if self.structured is None else self.structured.stored_bytes)
 
 
 def fit_penalized(
     y, *, lambda_: float, order: int = 2,
     mu: float | Literal["data"] = 0.0,
     method: FitBackend = "svd",
+    preconditioner: str = "fft", cg_rtol: float = 1e-9,
+    cg_maxiter: int | None = None, factor_cache: bool = False,
 ) -> np.ndarray:
     """Fit one trend with a chosen backend, returning its 1-D values.
 
@@ -282,4 +350,6 @@ def fit_penalized(
         raise ValueError("y must be one-dimensional.")
     return PreparedPLSSolver(
         len(values), order=order, method=method,
+        preconditioner=preconditioner, cg_rtol=cg_rtol,
+        cg_maxiter=cg_maxiter, factor_cache=factor_cache,
     ).fit(values, lambda_=lambda_, mu=mu)
