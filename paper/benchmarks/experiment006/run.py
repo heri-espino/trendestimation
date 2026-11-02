@@ -46,7 +46,8 @@ HYBRID_METHODS=(
     "banded_lu_banded_trace","sparse_lu_banded_trace",
     "sparse_cholesky_banded_trace","pcg_fft_banded_trace",
     "pcg_dst_banded_trace","pcg_jacobi_banded_trace")
-METHODS=("naive_inverse","spectral_svd","banded_cholesky")+HYBRID_METHODS
+METHODS=("naive_inverse","spectral_svd","banded_cholesky",
+         "guarded_svd_cholesky")+HYBRID_METHODS
 CRITERIA=("cv","gcv","bic","aicc","mle")
 POLICIES=("direct_s","mapped_lambda")
 SCENARIOS=("one_s_one_series","grid_one_series",
@@ -130,7 +131,8 @@ def memory_budget_status(n,d,method,denom,max_dense_bytes,max_work,scenario,R,re
         if n*n*8*7>max_dense_bytes:
             return "infeasible_dense_memory"
         if n>512: return "infeasible_naive_runtime"
-    if method=="spectral_svd":
+    if method in ("spectral_svd","guarded_svd_cholesky") and (
+            method=="spectral_svd" or d>=5):
         if n*n*8*5>max_dense_bytes:
             return "infeasible_dense_memory"
         if n>2048: return "infeasible_svd_runtime"
@@ -139,7 +141,8 @@ def memory_budget_status(n,d,method,denom,max_dense_bytes,max_work,scenario,R,re
     work=float(n)*max(1,d*d)*M*R*repeats
     if method=="naive_inverse":
         work=float(n**3)*M*R*repeats
-    if method=="spectral_svd":
+    if method=="spectral_svd" or (
+            method=="guarded_svd_cholesky" and d>=5):
         work=float(n*n)*M*R*repeats
     if work>max_work: return "budget_exceeded"
     return "eligible"
@@ -148,9 +151,17 @@ def memory_budget_status(n,d,method,denom,max_dense_bytes,max_work,scenario,R,re
 class Evaluator:
     def __init__(self,n,d,method):
         self.n,self.d,self.method=n,d,method
-        self.spectral=(TrendSmoother(n,d) if method=="spectral_svd" else None)
+        # Conservative, explicit policy: use independently accuracy-verified
+        # shift-free spectral formulation for d>=5. For d<=4 use banded.
+        # Dense memory/runtime gates prevent claiming large-n applicability.
+        self.actual_backend=(
+            ("spectral_svd" if d>=5 else "banded_cholesky")
+            if method=="guarded_svd_cholesky" else method)
+        self.spectral=(TrendSmoother(n,d)
+                       if self.actual_backend=="spectral_svd" else None)
         self.banded=(BandedTrace(n,d) if (
-            method=="banded_cholesky" or method in HYBRID_METHODS
+            self.actual_backend=="banded_cholesky" or
+            method in HYBRID_METHODS
         ) else None)
         self.hybrid=None
         if method in HYBRID_METHODS:
@@ -331,13 +342,12 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                             if evaluator.hybrid.structured is not None:
                                 evaluator.hybrid.structured._factors.clear()
                             evaluator.hybrid._band_factors.clear()
-                        reuse=nr>1 and method!="spectral_svd"
+                        reuse=nr>1 and evaluator.spectral is None
                         # Cache only if a full collection of retained factors
                         # fits in the explicitly reported memory budget.
                         if reuse and method=="naive_inverse":
                             reuse=M*n*n*8<max_dense_bytes//2
-                        if reuse and (method=="banded_cholesky" or
-                                      method in HYBRID_METHODS):
+                        if reuse and (evaluator.banded is not None):
                             # A conservative 4x multiplier includes
                             # selected inverse plus opaque LU/CHOLMOD factors.
                             reuse=M*n*(d+1)*8*4<max_dense_bytes//2
