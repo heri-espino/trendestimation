@@ -507,3 +507,35 @@ independently validated before calling a fast solver
 admissible, especially at d5. The n512 second block
 offset60 is independently archived and must be read
 before any claims. See RESULTS_INDEX.md.
+
+
+## Evidence-bounded computational manuscript snapshot (3 November 2026)
+
+Independent paper branch: paper/observed-computational-study,
+based on the exact head of the still-open draft Experiment010 PR #100,
+not merged into main. Existing paper location:
+paper/csda-computational-costs/main.tex. Its newly completed
+result section is sections/experiment010_observed.tex, and
+full source/run ledger is OBSERVED_RESULTS_SNAPSHOT.md.
+
+The manuscript uses **only actual archived corrected data**:
+450 executed method-case attempts, 5570 status=ok timing rows,
+5480 selected-score parity-only matches, 18 disagreeing records,
+72 lacking spectral reference, and 1102 failed/partial observations.
+All ten full-criterion policies appear; no synthetic times for
+CHOLMOD unavailable, dense infeasible or incomplete methods.
+Matched n256,d1,GCV,mu=0 one S: Cholesky 8.13ms, SVD 13.80ms;
+matched 100 S: Cholesky 61.31ms, SVD 26.68ms. Three mu
+policies zero/data/fixed 0.15 support this descriptive reversal.
+Pre-correction MLE normalization discrepancy and its exact log
+determinant correction are reported with both immutable source
+versions. Separate high-precision Experiment006 reference is
+never equated with criterion-score parity.
+
+No validated ten-method dispatcher, cross-machine universal
+winner, full factorial or untested n>=1024 timing is claimed.
+Prior historical manuscript and figure records are preserved.
+Build final PDF from author-supplied Elsevier CAS template
+without re-running numerical experiments. Do not merge paper
+branch or PR #100 without explicit authorization. Check
+the CI/PDF outcome and inspect figures/text after compilation.
