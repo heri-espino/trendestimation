@@ -62,16 +62,39 @@ winner is inferred. Two repeats cannot robustly estimate timing
 uncertainty. Moreover, the current Experiment006 implementation
 charges separately instantiated S-grid mapper setup per method.
 
-### Pilot
+### Completed pilot — IMPORTANT numerical / scoring caveat
 
-Pilot is the second job of the same workflow run, with up to 60
-bounded method-case attempts, chosen to cover difference orders
-1..6, all three mean policies and all five criteria early in its
-case schedule. Inspect the **live Actions run** and its resulting
-immutable results branch
-'results/experiment010-41586066141-a1-pilot' before making any
-completion/accuracy statement. This index does not fabricate pilot
-results while the job is running.
+[Immutable pilot results](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41586066141-a1-pilot/paper/benchmarks/experiment010/runs/windows-41586066141-a1-pilot)
+
+- GitHub Actions pilot job: **success**.
+- **60** method-case attempts finished and were archived;
+  **720 raw status=ok timing records**.
+- The 60 attempts cover six n=64 cases, one for each
+  d=1,...,6, distributed over all three mean policies and
+  five criteria. No n=128 case was attempted yet.
+- The 900 score-audit rows include **616 pass**, **104 score
+  disagreements**, **180 failed/partial**; passing score
+  parity is NOT a high-precision numerical certificate.
+- Of the 104 disagreements, **100** involve d=5 and
+  mu="data" with the MLE criterion, and **4** involve
+  d=6, mu=0.15 and ordinary CV (naive inverse).
+- The d=5 MLE scores revealed an **inconsistent additive
+  normalization** in the original banded/hybrid/naive
+  benchmark scores relative to spectral MLE and the
+  exact S=1 limit. That was corrected on PR #100,
+  preserving the original results unchanged. See
+  [the mathematical audit](../../../../notes/experiment010_mle_normalization_audit.md).
+  The first pilot's cross-method absolute MLE scores are
+  **not eligible for an empirical solver ranking**.
+  High-order numerical error may remain after correction.
+- Pilot continuation cursor is **next_attempt_offset=60**
+  of 1800 planned pilot method-case attempts. Subsequent
+  invocations must use a new output path and source SHA.
+
+The initial pilot can be used as historical evidence of the
+bug and its measured runtimes, but not as a corrected MLE
+comparison. A NEW source-version run and independent
+numerical validation are required.
 
 ## Completion contract for future agents
 
