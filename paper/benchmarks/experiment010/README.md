@@ -1,6 +1,6 @@
 # Experiment010 — The feasible computational frontier for smoothness-indexed PLS
 
-**Status:** research protocol only; no Experiment010 timings, calibrations, production auto-selector, or paper-level experimental conclusions are claimed. Builds on merged PR #98 (Experiment008) and PR #99 (Experiment009). All prior source and raw observations remain preserved. Follow `AGENTS.md` and `AI_HANDOFF.md`.
+**Status:** bounded measurement implementation and source-controlled research protocol; Experiment010 timings, frontier calibrations, any production auto-selector, and paper-level new experimental conclusions are NOT claimed until verified on the archived output. Builds on merged PR #98 (Experiment008) and PR #99 (Experiment009). All prior source and raw observations remain preserved. Follow `AGENTS.md` and `AI_HANDOFF.md`.
 
 ## Research question
 
@@ -148,3 +148,29 @@ There is a statistical distinction between pre-execution availability (packages/
 **Thesis:** structural linear algebra and caching produce a computable, criterion-specific *theoretical* runtime ranking. **Counter-thesis:** numerical conditioning, unknown solver constants/iterations, memory, optional packages and benchmark noise can reverse that ranking. **Synthesis:** an empirical-calibrated **admissible computational frontier**, with verified fallback and reported regret, is a useful research object and potential library policy; it is not yet established by Experiments008/009 alone.
 
 **Current conclusion:** Not yet implemented or proven. The objective of Experiment010 is to test it.
+
+
+## Measurement implementation (additional reproducibility rules)
+
+The executable entrypoint is 'paper/benchmarks/experiment010/run_batches.py'; its contracts are tested by 'tests/test_experiment010_runner.py'. The manifest enumerates all 7 × 6 × 3 × 2 × 5 × 4 × 10 = **50,400** method–case combinations (and all four workloads and both S-coordinate policies); the manifest is not evidence those combinations ran.
+
+Each backend is executed in its own subprocess using the pre-existing Experiment006 full-criterion evaluator. Successful raw times and criterion values are kept in 'slices/<case>/<method>/raw_times.csv', together with 'environment.json'; the wrapper checkpoints 'method_attempts.csv', 'outcomes.json', and 'batch_summary.json'. A timeout, ineligible or missing dependency has an explicit recorded status but **no fabricated elapsed criterion time**. 'score_parity_not_certification.csv' checks selected criterion scores against matched spectral candidates, but does NOT establish independent high-precision forward accuracy. No dispatcher, validated universal method ranking or paper conclusion is implemented here.
+
+**Important measurement scope:** the existing Experiment006 mapper is instantiated once per method subprocess, so these are stand-alone *cold* end-to-end method timings. A dispatcher that translates S to lambda **once across all competing methods/criteria** has different shared-setup costs. Distinguish the two regimes in the eventual calibrated theoretical frontier; do not present this runner as a measurement of globally shared mapping across methods.
+
+### Windows 11 Conda entrypoints
+
+From the repository root in PowerShell (the university runner has Conda environment 'trendestimation', no installation needed):
+
+    $env:PYTHONPATH = (Join-Path (Get-Location) "src")
+    $conda = "C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe"
+    & $conda run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment010_runner.py tests/test_experiment006_bench.py tests/test_experiment006_hybrid_criteria.py
+
+    $id = Get-Date -Format 'yyyyMMdd-HHmmss'
+    & $conda run --no-capture-output -n trendestimation python paper/benchmarks/experiment010/run_batches.py --preset smoke --repeats 2 --series-count 2 --max-work 80000000 --max-seconds 600 --per-method-seconds 55 --max-method-attempts 30 --output "paper/benchmarks/experiment010/runs/local-$id-smoke"
+    & $conda run --no-capture-output -n trendestimation python paper/benchmarks/experiment010/run_batches.py --preset pilot --repeats 2 --series-count 2 --max-work 80000000 --max-seconds 900 --per-method-seconds 55 --max-method-attempts 60 --output "paper/benchmarks/experiment010/runs/local-$id-pilot"
+
+    # A single reproducible shard, NOT a complete 50,400-cell measurement.
+    & $conda run --no-capture-output -n trendestimation python paper/benchmarks/experiment010/run_batches.py --preset comprehensive --shard-index 0 --shard-count 64 --repeats 2 --series-count 2 --max-work 80000000 --max-seconds 900 --per-method-seconds 55 --max-method-attempts 60 --output "paper/benchmarks/experiment010/runs/local-$id-shard00"
+
+**Unfinished design work:** There is no resume/continuation flag yet. Re-running the same shard repeats its first bounded attempts; it does not finish all unmeasured methods. Before interpreting a full shard as completed, implement an immutable checkpoint-resume strategy and run the remaining eligible attempts. Existing self-hosted GitHub Actions workflow archives every actual output on a unique results branch. Preserve all local results in GitHub too; no important output should remain only on the Windows VM.
