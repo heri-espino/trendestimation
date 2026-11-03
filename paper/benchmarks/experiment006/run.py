@@ -505,6 +505,7 @@ def main():
     p.add_argument("--repeats",type=int,default=2)
     p.add_argument("--series-count",type=int,default=3)
     p.add_argument("--threads",type=int,default=1)
+    p.add_argument("--seed",type=int,default=20261102)
     p.add_argument("--max-work",type=float,default=5e7)
     p.add_argument("--max-dense-bytes",type=int,default=2*1024**3)
     p.add_argument("--output",type=Path,default=None)
@@ -516,7 +517,7 @@ def main():
               methods=tuple(x.strip() for x in a.methods.split(",")),
               repeats=a.repeats,R=a.series_count,threads=a.threads,
               max_work=a.max_work,max_dense_bytes=a.max_dense_bytes,
-              output=a.output,conditional_data_mu=a.conditional_data_mu)
+              output=a.output,seed=a.seed,conditional_data_mu=a.conditional_data_mu)
     if a.preset=="smoke":
         opts.update(n=64,d=2,mu=.15,amplitude="low",criterion="gcv",
                     denominator=100,methods=("banded_cholesky","spectral_svd"),
