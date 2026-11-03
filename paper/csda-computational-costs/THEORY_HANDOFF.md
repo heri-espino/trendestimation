@@ -1,3 +1,49 @@
+## Important revision: practical decision guidance and applications
+
+The current Paper B now includes:
+`sections/decision_examples.tex` explicitly answering the
+SVD-versus-banded-Cholesky question, two theoretical work figures,
+one actual matched BIC workload example, and one NGSIM illustration
+with $d=3$ and a training-only plug-in third-difference mean.
+It is still a theory-led computational paper; measured milliseconds
+are a deliberately narrow example rather than a claimed
+general runtime frontier. CV requires $O(nr)$ spectral
+leverage/residual work, whereas a selected inverse makes
+banded exact-CV diagnostics $O(nd^2)$ per candidate.
+It is incorrect to claim that SVD wins every complete
+grid, especially for large n and CV.
+
+**New reproducible artifacts** in this directory:
+- `data/experiment010_matched_three_methods.csv`: 48 actual rows,
+  selected-score parity, source SHA, 1 worker, 1 BLAS thread, two repeats,
+  n64/d1/BIC/100000 S candidates, saved from the original
+  result branch without rerunning;
+- `render_theory_figures.py`: pinned AwesomeFigures/CAS exports for
+  `theory_regime_map` and `theory_cost_curves` (unit-cost
+  mathematical illustrations, not calibrated times),
+  `matched_bic_timings` (frozen real milliseconds/seconds), and
+  `ngsim_jerk_application` (real FHWA US-101 measurements);
+- `theory_awesomefigures_manifest.json` and
+  `theory_figure_sources.json`: renderer and dataset provenance;
+- vector PDF, PGF and SVG figures, compiled CAS `main.pdf`,
+  and reproducibility SHA-256 manifest generated and archived by
+  `.github/workflows/csda-computational-theory.yml`.
+
+**NGSIM source**: `paper/ngsim-jerk-case-study/data/` and
+`results/selection_rows.json`, original FHWA DOI 10.21949/1504477,
+10 Hz longitudinal vehicle positions. Illustrated track 1, origin
+185, n_train=80, 20 held-out frames, d=3, GCV S=0.40,
+lambda=0.0808367263; mu is `mean(diff(train,n=3))`.
+The continuation explicitly follows that study's local degree-2
+polynomial plus cubic particular solution. It is a forecasting
+heuristic, not a native TrendSmoother forecast or independently
+measured jerk. Keep the full empirical forecasting claims in the
+third manuscript.
+
+Do not change existing benchmark timings, rerun the
+100000-candidate batch, misreport the theoretical unit-cost plots
+as milliseconds, or merge PR #109 without explicit authorization.
+
 # CSDA Paper B — theoretical computational complexity handoff
 
 ## Manuscript objective and scope
