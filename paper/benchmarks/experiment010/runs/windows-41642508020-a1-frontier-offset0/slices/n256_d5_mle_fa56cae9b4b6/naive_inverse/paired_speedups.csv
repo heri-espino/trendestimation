@@ -1,0 +1,3 @@
+n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup
+256,5,mle,data,high,naive_inverse,direct_s,one_s_multiple_series,0,0.009555000113323331,0.009555000113323331,1.0
+256,5,mle,data,high,naive_inverse,mapped_lambda,one_s_multiple_series,0,0.009328499902039766,0.009328499902039766,1.0

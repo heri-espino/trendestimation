@@ -1,0 +1,13 @@
+n,d,mu,amplitude,criterion,grid_denominator,method,coordinate,workload,repeat,R,M,selected_s,selected_score,method_setup_s,s_to_lambda_s,candidate_evaluation_s,total_cold_s,total_warm_s,evaluations,status,comment
+256,5,data,high,mle,100,naive_inverse,direct_s,one_s_one_series,0,1,1,nan,nan,0.007180000189691782,0.0001605998259037733,0.0016232000198215246,0.00896380003541708,0.001783799845725298,1,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,direct_s,one_s_one_series,1,1,1,nan,nan,0.0071760001592338085,0.00013729999773204327,0.0016248999163508415,0.008938200073316693,0.0017621999140828848,1,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,one_s_one_series,0,1,1,nan,nan,0.007175200153142214,0.00018339999951422215,0.0014914998319000006,0.008850099984556437,0.0016748998314142227,1,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,one_s_one_series,1,1,1,nan,nan,0.007175300037488341,0.00012869993224740028,0.0015374000649899244,0.008841400034725666,0.0016660999972373247,1,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,direct_s,grid_one_series,-1,1,100,nan,nan,0.007162400055676699,0.0,0.0,0.007162400055676699,0.0,0,budget_exceeded,Not run: explicit resource or setup gate
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,grid_one_series,-1,1,100,nan,nan,0.007162400055676699,0.0,0.0,0.007162400055676699,0.0,0,budget_exceeded,Not run: explicit resource or setup gate
+256,5,data,high,mle,100,naive_inverse,direct_s,one_s_multiple_series,0,2,1,0.5,6657.258003196336,0.00718119996599853,0.0002489001490175724,0.002124899998307228,0.009555000113323331,0.0023738001473248005,2,ok,
+256,5,data,high,mle,100,naive_inverse,direct_s,one_s_multiple_series,1,2,1,nan,nan,0.00718180020339787,0.00025180005468428135,0.0017256001010537148,0.009159200359135866,0.001977400155737996,2,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,one_s_multiple_series,0,2,1,0.5,6657.258003196336,0.007180999964475632,0.00012520002201199532,0.0020222999155521393,0.009328499902039766,0.0021474999375641346,2,ok,
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,one_s_multiple_series,1,2,1,nan,nan,0.007179100066423416,0.0001235001254826784,0.00170519994571805,0.009007800137624145,0.0018287000712007284,2,criterion_undefined,
+256,5,data,high,mle,100,naive_inverse,direct_s,grid_multiple_series,-1,2,100,nan,nan,0.007162400055676699,0.0,0.0,0.007162400055676699,0.0,0,budget_exceeded,Not run: explicit resource or setup gate
+256,5,data,high,mle,100,naive_inverse,mapped_lambda,grid_multiple_series,-1,2,100,nan,nan,0.007162400055676699,0.0,0.0,0.007162400055676699,0.0,0,budget_exceeded,Not run: explicit resource or setup gate
