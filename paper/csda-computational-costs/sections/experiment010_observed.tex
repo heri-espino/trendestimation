@@ -180,12 +180,13 @@ immutable GitHub branches. Correcting a statistical
 criterion is a scientific finding, not a claimed speedup.
 
 \subsection{Conditional computational minimum: a testable hypothesis}
-For a future workload $w$, define the set of eligible
+For a future workload $w$, let $A_b,M_b,N_b$ be binary indicators
+of complete-criterion availability, sufficient memory/resources and
+independent numerical certification, respectively. Define the eligible
 complete pipelines
 \begin{equation}
 \mathcal F(w)=
-\{b:\text{$b$ installed, memory-feasible, criterion-complete,
-and independently accuracy-certified}\}.
+\{b:A_b(w)M_b(w)N_b(w)=1\}.
 \end{equation}
 An operational hypothesis is to estimate the machine-specific
 full execution time $\widehat T_b(w)$---including setup,
@@ -213,8 +214,8 @@ The corrected-source Actions runs are
 The pre-correction failure-discovery run is
 \texttt{41586066141}. Each individual result branch
 and precise case path is indexed by
-\texttt{paper/csda-computational-costs/OBSERVED\_RESULTS\_SNAPSHOT.md}
-and \texttt{paper/benchmarks/experiment010/RESULTS\_INDEX.md}.
+\url{paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md}
+and \url{paper/benchmarks/experiment010/RESULTS_INDEX.md}.
 The full original CSVs, including failures and no-reference
 statuses, are the data source rather than any plotted
 or theoretical extrapolation. No execution at
