@@ -289,7 +289,7 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
         "per_method_seconds": (None if no_time_limit else per_method_seconds),
         "max_method_attempts": max_method_attempts,
         "repeats": repeats, "series_count": series_count,
-        "max_work": max_work, "max_dense_bytes": max_dense_bytes,
+        "max_dense_bytes": max_dense_bytes,
         "seed": seed, "planned_attempts_in_shard": len(all_work),
         "start_attempt": start_attempt,
         "attempts_in_this_window": len(work),
@@ -372,8 +372,8 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
                     # would accumulate unbounded logs in host RAM.
                     log_path = dest.parent / f"{method}.log"
                     with log_path.open("w", encoding="utf-8") as log:
-                        log.write(f"started_utc={datetime.now(timezone.utc).isoformat()}\\n")
-                        log.write(f"no_time_limit={no_time_limit}\\n")
+                        log.write(f"started_utc={datetime.now(timezone.utc).isoformat()}\n")
+                        log.write(f"no_time_limit={no_time_limit}\n")
                         log.flush()
                         proc = subprocess.run(
                             cmd, text=True, stdout=log, stderr=subprocess.STDOUT,
