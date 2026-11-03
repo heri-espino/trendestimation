@@ -147,3 +147,28 @@ has four bounded nonoverlapping continuation blocks starting at offsets
 60, 120, 180, 240, each covering 60 additional method-case attempts
 against the same corrected experimental scoring code. Consult the
 actual run/branches before claiming how many succeeded.
+
+
+## Corrected pilot continuation: archived offset 60
+
+[Actions #41587723422](https://github.com/heri-espino/trendestimation/actions/runs/41587723422)
+started a nonoverlapping continuation on the same PCAG103A-08 machine,
+using the post-normalization source and the same pilot schedule.
+
+[Offset-60 immutable results](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587723422-a1-pilot-offset60/paper/benchmarks/experiment010/runs/windows-41587723422-a1-pilot-offset60)
+
+- 60/60 method-case subprocesses completed with raw CSVs.
+- **680 actual status=ok timing rows** and 680 spectral
+  selected-score-parity-only passes. 208 other rows are
+  failed/partial; **zero** recorded score disagreements for
+  the successfully completed comparisons on this offset.
+- Continuation cursor: next_attempt_offset **120** of
+  1,800 planned pilot method-case attempts. Later offsets
+  120/180/240 are separate jobs and must each be verified
+  from their immutable archives before counting successes.
+- Do not count these 680 as **numerically independently
+  certified**; selected-score parity does not imply accurate
+  trend reconstruction in finite precision.
+
+All timings remain archived as raw per-method records, not
+inferred from method subprocess wall times.
