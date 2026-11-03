@@ -4,10 +4,8 @@ on:
   push:
     branches: [research/experiment010-multibackend-frontier-design]
     paths:
-      - .github/workflows/experiment010-all-backend.yml
-      - paper/benchmarks/experiment010/**
-      - paper/benchmarks/experiment006/run.py
-      - tests/test_experiment010_runner.py
+      # Change this request file explicitly to launch another bounded run.
+      - paper/benchmarks/experiment010/REQUEST_RUN.md
   workflow_dispatch:
 
 permissions:

@@ -385,3 +385,29 @@ or manuscript timing claims were performed in this protocol branch.
 Follow repository-first experiment-numbering and archive every result
 with source/environment provenance. University PCAG103A-08 uses the
 existing non-admin Conda environment trendestimation; no reinstall.
+
+
+### Experiment010 runnable all-method work and first Windows execution (2026-11-03)
+
+PR #100 now contains paper/benchmarks/experiment010/run_batches.py,
+tests/test_experiment010_runner.py, the full-factorial manifest and
+bounded checkpointed experimental batches. Existing Experiment006 exposes
+an optional --seed CLI for deterministic paired repetitions.
+The university Windows workflow was launched on the user's own
+PCAG103A-08 and passed local numerical prerequisites:
+https://github.com/heri-espino/trendestimation/actions/runs/41586066141
+Its smoke/pilot jobs archive raw timing CSVs, machine environment, exact
+failure statuses, and score-parity outputs on immutable per-run branches.
+DO NOT claim a finished 50,400-case execution until actual outputs prove
+it; run the remaining shards with --start-attempt cursors. A score-parity
+check is NOT a high-precision numerical forward-error certificate.
+
+The general PR CI initially failed only for a lint-unused import in
+tests/test_experiment010_runner.py; fixed in the next commit. The
+Windows workflow push trigger is deliberately gated to an explicit
+REQUEST_RUN.md path to prevent any subsequent code/doc fix from
+restarting costly university-VM measurements. The existing active
+run is unaffected. To rerun the workload later, explicitly update
+that request file or use a supported workflow_dispatch after merging.
+No new numerical dispatcher or all-backend timing conclusion is yet
+verified, and this draft PR must not be merged without approval.
