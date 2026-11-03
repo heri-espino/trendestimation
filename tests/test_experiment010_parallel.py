@@ -67,6 +67,7 @@ def test_parallel_two_workers_run_concurrently_and_checkpoint(tmp_path, monkeypa
     assert summary["completed_method_slices"] == 2
     assert summary["successful_raw_timing_rows"] == 2
     assert summary["next_attempt_offset"] == 2
+    assert summary["ledger_checkpoint_file"] == "method_attempts.csv"
     with (output / "method_attempts.csv").open(
             newline="", encoding="utf-8") as f:
         records = list(csv.DictReader(f))
@@ -113,3 +114,56 @@ def test_child_invocation_has_no_runtime_timeout_and_keeps_error_status(
     assert kwargs["stderr"] is PAR.subprocess.STDOUT
     log = tmp_path / "slices" / item[0] / (item[2] + ".log")
     assert log.exists()
+
+
+def test_windows_locked_ledger_preserves_complete_versioned_checkpoint(
+        tmp_path, monkeypatch):
+    """Do not discard completed work if Windows temporarily denies replace."""
+    from unittest.mock import patch
+
+    target = tmp_path / "method_attempts.csv"
+    original_replace = Path.replace
+    records = [dict.fromkeys(PAR.B.COLUMNS, "x")]
+    target.write_text("older checkpoint", encoding="utf-8")
+
+    def always_locked(self, dest):
+        if Path(dest) == target:
+            raise PermissionError(13, "Simulated WinError 5", str(target))
+        return original_replace(self, dest)
+
+    with patch.object(Path, "replace", always_locked):
+        with patch("time.sleep", return_value=None):
+            preserved = PAR.B.archive_ledger(target, records)
+    assert target.read_text(encoding="utf-8") == "older checkpoint"
+    assert preserved != target
+    assert preserved.exists()
+    with preserved.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 1
+    assert rows[0]["method"] == "x"
+
+
+def test_windows_transient_lock_retries_until_atomic_replace_succeeds(
+        tmp_path):
+    from unittest.mock import patch
+
+    target = tmp_path / "method_attempts.csv"
+    replace = Path.replace
+    attempts = {"n": 0}
+
+    def briefly_locked(self, dest):
+        if Path(dest) == target and attempts["n"] < 2:
+            attempts["n"] += 1
+            raise PermissionError(13, "Temporary Windows file lock", str(target))
+        return replace(self, dest)
+
+    with patch.object(Path, "replace", briefly_locked):
+        with patch("time.sleep", return_value=None):
+            resulting_path = PAR.B.archive_ledger(
+                target, [dict.fromkeys(PAR.B.COLUMNS, "test")])
+    assert attempts["n"] == 2
+    assert resulting_path == target
+    with target.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 1
+    assert rows[0]["method"] == "test"
