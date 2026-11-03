@@ -1,0 +1,116 @@
+name: CSDA computational theory — deterministic verification and Elsevier CAS PDF
+
+on:
+  push:
+    branches:
+      - paper/csda-computational-theory
+    paths:
+      - ".github/workflows/csda-computational-theory.yml"
+      - "paper/csda-computational-costs/main.tex"
+      - "paper/csda-computational-costs/sections/**"
+      - "paper/csda-computational-costs/verify_theory.py"
+      - "paper/csda-computational-costs/references.bib"
+      - "paper/csda-computational-costs/figures/coordinate_map.pdf"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csda-computational-theory-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check theory algebra without benchmarking
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install numpy scipy
+          python paper/csda-computational-costs/verify_theory.py
+          ! grep -q 'input{sections/benchmarks}' paper/csda-computational-costs/main.tex
+          ! grep -q 'input{sections/results}' paper/csda-computational-costs/main.tex
+          ! grep -q 'input{sections/experiment006_status}' paper/csda-computational-costs/main.tex
+          test -s paper/csda-computational-costs/figures/coordinate_map.pdf
+      - name: Install Elsevier CAS compatible TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+      - name: Copy exact repository Elsevier CAS template
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/csda-computational-costs/$f"
+          done
+      - name: Build theoretical article and audit cross references
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/csda-computational-costs
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -18
+          if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
+            echo 'Undefined bibliography or cross-reference in final LaTeX log'
+            exit 1
+          fi
+          sha256sum main.tex references.bib sections/foundations.tex \
+            sections/algorithms.tex sections/structured_criteria.tex \
+            sections/amortized_frontier.tex sections/theory_discussion.tex \
+            verify_theory.py figures/coordinate_map.pdf main.pdf \
+            > theory_publication_sha256.txt
+          git rev-parse HEAD > theory_source_commit.txt
+      - name: Preserve PDF and provenance on dedicated paper branch
+        if: success() && github.ref == 'refs/heads/paper/csda-computational-theory'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f paper/csda-computational-costs/main.pdf \
+            paper/csda-computational-costs/theory_publication_sha256.txt \
+            paper/csda-computational-costs/theory_source_commit.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'paper: archive verified theoretical CSDA PDF [skip ci]'
+            git fetch origin "$GITHUB_REF_NAME"
+            if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+              echo 'Branch changed during build; refuse to overwrite newer work'
+              exit 1
+            fi
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+      - name: Upload compiled theoretical paper and full editable source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-computational-theory-${{ github.run_id }}
+          path: |
+            paper/csda-computational-costs/main.pdf
+            paper/csda-computational-costs/main.tex
+            paper/csda-computational-costs/sections/foundations.tex
+            paper/csda-computational-costs/sections/algorithms.tex
+            paper/csda-computational-costs/sections/structured_criteria.tex
+            paper/csda-computational-costs/sections/amortized_frontier.tex
+            paper/csda-computational-costs/sections/theory_discussion.tex
+            paper/csda-computational-costs/verify_theory.py
+            paper/csda-computational-costs/references.bib
+            paper/csda-computational-costs/figures/coordinate_map.pdf
+            paper/csda-computational-costs/theory_publication_sha256.txt
+            paper/csda-computational-costs/theory_source_commit.txt
+          if-no-files-found: warn
+          retention-days: 30
