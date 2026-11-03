@@ -12,6 +12,18 @@ Independent work branch: research/experiment010-comprehensive-grid,
 based on the existing draft PR #100. Do not merge either branch without
 authorization. No change to production trendestimation default.
 
+## Interpretation of "all methods"
+
+The full grid currently crosses **the ten existing implemented complete
+criterion pipelines**, not every possible numerical method for the dual
+PLS linear system. In particular, independent dual LDL, QR, dedicated
+dual banded Cholesky, and newly developed fast Toeplitz techniques
+are not silently counted as implemented or benchmarked. Such methods
+must first provide complete, tested CV/GCV/AICc/BIC/MLE outputs,
+not merely a fast fit, before being added as separate experimental
+pipelines. This distinction avoids claiming an exhaustive algorithm
+survey when only the implemented ten are being compared.
+
 ## Entire factorial
 
 - n: 64, 128, 256, 512, 1024, 16384, 131072 (7 levels)
