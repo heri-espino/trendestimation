@@ -305,3 +305,49 @@ The original unbounded process was canceled; a corrected per-slice
 
 Research PR #98 has complete source + tests; no production solver
 auto-selection default change, no RMSE optimization.
+
+
+## Experiment009 SVD vs banded Cholesky theory and empirical surfaces
+
+Open PR #99 on research/experiment009-cost-crossover-surface.
+Read paper/benchmarks/experiment009/README.md and source
+crossover.py before modifying. Frozen Windows data:
+data/experiment007_fit_pair.csv (12-seed fits; n64/128/256,
+d1-6, mu=data/0, M1/7 and R1/3) and
+data/experiment008_aicc_data_n{64,128,256,512}.csv
+(complete AICc selection, mu=data, high amplitude, mapped
+lambda, M1/100 and R1/2). Both are from immutable results
+branches, provenance paths preserved per record.
+
+First completed run:
+https://github.com/heri-espino/trendestimation/actions/runs/41537222327.
+Updated analytic M* and class-balance run:
+https://github.com/heri-espino/trendestimation/actions/runs/41537747991.
+Committed figures/CSV/calibration JSON on
+results/experiment009-crossover-41537747991.
+Fit-only NNLS trained n64/128, holds out n256:
+61/61 of comparable predictions correct, but all 61 true
+winners are Cholesky. AICc trained n64/128/256,
+holds out n512: 8/8 correct, BUT all 8 winners
+Cholesky (M1 only), and SVD M100 grid n512 was
+not eligible. Thus NO successful empirical boundary
+validation; training classification 137/142 fit,
+46/60 AICc. Do NOT quote 100% holdout as evidence
+of universal crossover. The model extrapolates M/n and
+is constrained by poor numerical high-d Cholesky cases.
+README and notes/experiment009_crossover_findings.md
+give actual comparison tables and next experiments.
+
+The derived theoretical conditional break-even grid size is
+M*=(a n^3+b R n^2)/(u n d^2+v R n d-c_C R n^q),
+when denominator positive and factors shared. q=1
+for global scalar scores and q=2 for CV/leverage or
+full fitted trend. Fit-only Cholesky WITHOUT reuse has
+MR n d^2 factor cost; use the distinct equation.
+Empirical calibration found some coefficients zero due
+to underidentification—do not misread this as eliminating
+the corresponding asymptotic theoretical work.
+
+Proposed output: provide theoretical and empirical
+multi-parameter surfaces with separate numerical
+reliability/memory masks; no production switch yet.
