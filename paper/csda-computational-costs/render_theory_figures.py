@@ -87,7 +87,7 @@ def theoretical_landscape():
         ws, wb = normalized_work(N, M, criterion=criterion)
         ratio = np.log10(wb / ws)
         ax.contourf(M, N, ratio, levels=[-20, 0, 20],
-                    colors=["#e4edf4", "#f4e8db"], alpha=.9)
+                    colors=["#f4e8db", "#e4edf4"], alpha=.9)
         if float(np.min(ratio)) < 0 < float(np.max(ratio)):
             ax.contour(M, N, ratio, levels=[0], colors=[NAVY],
                        linewidths=1.3, linestyles="--")
