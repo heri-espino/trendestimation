@@ -6,6 +6,7 @@ param(
     [ValidateRange(0,1000000)][int]$StartAttempt = 0,
     [ValidateRange(1,1000)][int]$MethodAttempts = 10,
     [ValidateRange(1,32)][int]$Workers = 8,
+    [string]$Methods = "focused",
     [ValidateRange(1,100)][int]$Repeats = 2,
     [ValidateRange(2,100)][int]$SeriesCount = 2,
     [ValidateRange(1,68719476736)][long]$MaxDenseBytes = 2147483648,
@@ -43,6 +44,7 @@ try {
 
     Write-Host "Source: $sourceSha ; shard $ShardIndex/$ShardCount ; start $StartAttempt"
     Write-Host "Independent worker processes: $Workers; one BLAS thread each."
+    Write-Host "Selected numerical methods: $Methods"
     Write-Host 'No per-method, estimated-work, or whole-batch time cutoff; parallel worker pool enabled.'
     $runError = $null
     try {
@@ -61,6 +63,7 @@ try {
           '--shard-count',"$ShardCount",'--start-attempt',"$StartAttempt",
           '--max-method-attempts',"$MethodAttempts",
           '--workers',"$Workers",
+          '--methods',$Methods,
           '--repeats',"$Repeats",'--series-count',"$SeriesCount",
           '--max-dense-bytes',"$MaxDenseBytes",
           '--total-parallel-dense-bytes',"$TotalParallelDenseBytes",
