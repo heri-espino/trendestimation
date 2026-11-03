@@ -97,7 +97,7 @@ def test_child_invocation_has_no_runtime_timeout_and_keeps_error_status(
         dest = Path(cmd[cmd.index("--output") + 1])
         dest.mkdir(parents=True, exist_ok=True)
         (dest / "raw_times.csv").write_text(
-            "status\\n" + "numerical_failed\\n", encoding="utf-8")
+            "status" + chr(10) + "numerical_failed" + chr(10), encoding="utf-8")
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr(PAR.subprocess, "run", fake_run)
