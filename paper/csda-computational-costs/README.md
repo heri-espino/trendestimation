@@ -1,7 +1,7 @@
 # Current Paper B — theoretical computational analysis (November 2026)
 
-**Entry point:** `main.tex`, title *A workload-aware complexity framework
-for smoothness-indexed penalized least squares*. This is a **theoretical
+**Entry point:** `main.tex`, title *Amortized complexity of smoothness-indexed
+penalized least squares*. This is a **theoretical
 CSDA working manuscript**. Read [THEORY_HANDOFF.md](THEORY_HANDOFF.md)
 for the full proof/validation contract.
 
