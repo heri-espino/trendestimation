@@ -70,6 +70,21 @@ def configurations(preset):
         seen = {json.dumps(c, sort_keys=True) for c in priority}
         return priority + [
             c for c in full if json.dumps(c, sort_keys=True) not in seen]
+    if preset == "frontier":
+        # First class-balanced n>128 challenge: compare ALL three mu
+        # policies within each n,d,criterion workload. Each of four
+        # blocks has exactly ten methods times three mean policies.
+        # Exact same S grid across the 10 complete pipelines.
+        blocks = (
+            (256, 1, "gcv"),
+            (256, 5, "mle"),
+            (512, 2, "aicc"),
+            (512, 6, "cv"),
+        )
+        return [
+            case(n, d, mu, "high", criterion, 100)
+            for n, d, criterion in blocks for mu in MEANS
+        ]
     if preset == "comprehensive":
         return [case(*p) for p in product(
             N_LEVELS, D_LEVELS, MEANS, AMPLITUDES,
@@ -378,7 +393,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--preset",
-                        choices=("smoke", "pilot", "comprehensive"),
+                        choices=("smoke", "pilot", "frontier", "comprehensive"),
                         default="smoke")
     parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--shard-count", type=int, default=1)
