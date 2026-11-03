@@ -1,3 +1,20 @@
+# Current evidence status (November 2026)
+
+The theoretical Paper B at `paper/csda-computational-costs/main.tex`
+has **no runtime-based theorem claims**. Its proofs and deterministic
+algebraic checks are in `sections/amortized_frontier.tex` and
+`verify_theory.py`. This audit's historical timing sources remain
+preserved for the separate implementation/runtime paper.
+
+The user's newer single-worker `experiment010` three-method run
+is on the immutable result branch
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`.
+It contains 48 valid timing rows but is not an empirical claim
+of this theoretical article. Exact provenance and summary values are
+in `THEORY_HANDOFF.md`.
+
+---
+
 # Computational-cost companion — archived evidence audit
 
 This manuscript is a **separate companion** to
