@@ -209,3 +209,17 @@ The current manuscript is restricted to numerical correctness
 and real complete-criterion computing times of all ten pipelines.
 The cost-model/oracle/fallback research proposals above are
 historical context, **not approved manuscript deliverables**.
+
+
+## Uncapped local Windows reruns (2026-11-03)
+
+The user opted to rerun without algorithm-level wall-clock cutoffs,
+recording true completed times and numerical failures rather than
+25-second censored attempts. Use the documented PowerShell launcher
+and checkpointed result-branch protocol in
+[UNCAPPED_LOCAL.md](UNCAPPED_LOCAL.md). The optional
+`--no-time-limit` switch removes estimated runtime gates but
+keeps dense-memory safety and all numerical correctness tests.
+Never infer that a manually launched process has finished or
+that skipped operations were measured. Do not run an unbounded
+sweep inside the GitHub Actions 25-minute job workflow.

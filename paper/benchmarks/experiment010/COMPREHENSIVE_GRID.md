@@ -139,3 +139,18 @@ design is complete, but a full experimental execution is NOT complete
 until every method-case attempt is addressed and all feasible cells
 have either successful measurements or explicit failures under the
 stated fixed budget.
+
+
+## Uncapped comparison branch and actual VM PowerShell runs
+
+Follow [UNCAPPED_LOCAL.md](UNCAPPED_LOCAL.md) on the independent
+research/experiment010-uncapped-checkpointed branch (draft PR #103).
+The uncapped experiment is an **explicit opt-in replacement** for
+arbitrary 25-second method timeouts and 600-second run budgets;
+physical-memory eligibility and numerical failure recording remain.
+The first historical full-grid four-shard result archives remain
+unchanged as *capped preliminary evidence*. No uncapped numerical
+results should be claimed before the user executes and uploads them
+from PCAG103A-08. The PowerShell launcher creates a unique results
+branch and pushes actual rows and error logs after each method-case
+checkpoint batch. There is no background scheduled completion.

@@ -530,3 +530,23 @@ See paper/benchmarks/experiment010/COMPREHENSIVE_GRID.md.
 Paper scope limited to independent numerical correctness,
 actual all-ten-method end-to-end timing and failure rates.
 No added cost-oracle/fallback policy research per user direction.
+
+
+### Experiment010 uncapped local rerun / source handoff
+
+User rejected the 25-second artificially censored timings and
+requested uncapped execution manually on university Windows VM.
+See paper/benchmarks/experiment010/UNCAPPED_LOCAL.md, source
+research/experiment010-uncapped-checkpointed and draft PR #103.
+Optional `--no-time-limit` in Experiment010 removes outer method
+and batch wall-clock thresholds and sets estimated max_work=inf.
+Experiment006 `--allow-unbounded-runtime` permits physically
+feasible methods to run without guessed n-only runtime exclusions.
+The original experiment result branches and PR #101 are preserved.
+Physical dense RAM guard remains. Experiment006 saves atomic
+raw_times.csv after each completed row, outer controller streams
+method stdout/stderr to logs, PowerShell launcher archives each
+batch on a unique `results/experiment010-uncapped-*` Git branch
+and prints cursor. No uncapped measurement has been verified or
+claimed merely because the source was published; the user will
+run it on PCAG103A-08 and can supply the GitHub result branch.

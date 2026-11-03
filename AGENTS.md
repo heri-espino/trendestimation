@@ -173,3 +173,22 @@ mean that the full feasible experiment has run.
 The user declined further cost-prediction and fallback-regret
 research for the current manuscript. Scope = accuracy and
 measured time of ten existing complete-criterion pipelines.
+
+
+## Experiment010 uncapped manual VM protocol (2026-11-03)
+
+The user requested reruns WITHOUT artificial per-method runtime
+timeouts or estimated-work exclusions. Source branch:
+research/experiment010-uncapped-checkpointed (draft PR #103
+stacked on PR #101). Read
+paper/benchmarks/experiment010/UNCAPPED_LOCAL.md for the exact
+PowerShell worktree/conda commands and immutable result-archive
+script. The `--no-time-limit` option disables both per-method
+and whole-batch time thresholds and uses unlimited estimated-work
+budget. It does NOT bypass 2 GiB default dense-memory safety,
+any numerical criteria, or actual OS/VM interruption. A small
+`--max-method-attempts` is a checkpoint size, NOT a timeout.
+Preserve real per-row times, numerical failures, and stderr logs,
+including incomplete interrupted attempts. Never claim that
+local runs have executed unless the corresponding results branches
+exist and have been inspected.
