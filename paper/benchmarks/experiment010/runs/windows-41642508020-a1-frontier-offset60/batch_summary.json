@@ -1,0 +1,26 @@
+{
+  "attempt_counts": {
+    "completed_with_csv": 60
+  },
+  "planned_attempts_in_shard": 120,
+  "start_attempt": 60,
+  "next_attempt_offset": 120,
+  "actual_attempted": 60,
+  "completed_method_slices": 60,
+  "successful_raw_timing_rows": 564,
+  "planned_manifest_statuses": {
+    "eligible": 264240,
+    "budget_exceeded": 106320,
+    "infeasible_naive_runtime": 5760,
+    "infeasible_dense_memory": 26880
+  },
+  "elapsed_s": 206.45174799999222,
+  "note": "Every timing is in slices/*/*/raw_times.csv with status=ok; method_attempts.csv elapsed_s is subprocess wall-clock, not a complete criterion observation; method timeouts have no valid benchmark time; parity comparison is not a high-precision accuracy certification.",
+  "parity_row_status_counts": {
+    "failed_or_partial": 282,
+    "score_parity_only_not_precision_certified": 492,
+    "unverified_no_spectral_reference": 72
+  },
+  "parity_agreements_not_precision_proofs": 492,
+  "parity_rows": 846
+}
