@@ -113,3 +113,37 @@ numerical validation are required.
    second-choice fallback failures; do not select from Big-O alone.
 5. Update the paper only once model comparisons and held-out
    uncertainty are supported by archived source-derived evidence.
+
+
+## Corrected MLE normalization rerun — completed #41587467639
+
+[GitHub Actions run](https://github.com/heri-espino/trendestimation/actions/runs/41587467639)
+on the SAME university Windows VM and Conda environment; run source SHA
+532f0aab8abe3af8a4b47acce9a72e08c7895ea7 (the post-normalization
+code). BOTH smoke and pilot jobs completed successfully and their
+numerical prerequisite tests passed.
+
+- [Corrected smoke raw data](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587467639-a1-smoke/paper/benchmarks/experiment010/runs/windows-41587467639-a1-smoke):
+  30 complete method-case CSVs, 420 status=ok timing records,
+  420 score-parity-only passes, 30 failed/partial.
+- [Corrected pilot raw data](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587467639-a1-pilot/paper/benchmarks/experiment010/runs/windows-41587467639-a1-pilot):
+  60 complete method-case CSVs, 720 status=ok timings,
+  **704 score-parity-only passes, 16 disagreements, 180 failed/partial**.
+- Compared with the pre-correction pilot (616 parity, 104 disagreements),
+  correction changes 88 rows from disagreement to score-parity pass.
+  This is not additional independent data: the same deterministic
+  seed blocks and workload design are used under different source SHAs.
+- The 16 remaining score disagreements are ALL from the naive
+  dense inverse: 12 for n64,d5,mu=data,MLE, and 4 for
+  n64,d6,mu=0.15,CV. High-order forward numerical accuracy
+  remains a mandatory separate independent gate; do not declare
+  a ten-method numerical winner yet.
+- These two run IDs MUST NOT have their MLE scores directly pooled:
+  first is mathematically inconsistently normalized, second is corrected.
+  Both complete raw timing archives are preserved.
+
+**Pilot extension started:** [GitHub Actions #41587723422](https://github.com/heri-espino/trendestimation/actions/runs/41587723422)
+has four bounded nonoverlapping continuation blocks starting at offsets
+60, 120, 180, 240, each covering 60 additional method-case attempts
+against the same corrected experimental scoring code. Consult the
+actual run/branches before claiming how many succeeded.

@@ -439,3 +439,20 @@ retroactively repaired. A fresh corrected run is required and must
 be archived independently. See
 notes/experiment010_mle_normalization_audit.md and
 paper/benchmarks/experiment010/RESULTS_INDEX.md.
+
+
+### Experiment010 corrected rerun and extended pilot (2026-11-03)
+
+The MLE normalization fix was validated in GitHub Actions
+#41587467639 (smoke and pilot both successful; all 4 CI checks pass).
+Corrected raw archives are on
+results/experiment010-41587467639-a1-smoke and
+results/experiment010-41587467639-a1-pilot.
+Corrected pilot: 60 method-case executions, 720 actual valid timing
+rows, 704 spectral selected-score parity-only matches, 16 mismatches
+(ALL naive inverse: 12 n64d5 mu=data MLE, 4 n64d6 mu=0.15 CV),
+180 invalid/partial rows. Old pilot #41586066141 had 104 mismatches;
+do not pool old unnormalized and new corrected MLE score values.
+In progress: continuation run #41587723422 with bounded
+offset windows 60,120,180,240 and immutable result branches.
+Refer to paper/benchmarks/experiment010/RESULTS_INDEX.md.

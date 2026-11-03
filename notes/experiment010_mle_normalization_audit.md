@@ -104,3 +104,21 @@ high d, extreme S and amplitude effects require independent
 high-precision trend-forward validation before declaring an
 algorithm numerically eligible. Confirm the exact S=1 boundary,
 and evaluate the small remaining CV disagreements separately.
+
+
+## Empirical post-correction verification
+
+Post-fix commit 532f0aab8abe3af8a4b47acce9a72e08c7895ea7 passed
+GitHub-hosted Python 3.10 and 3.12 tests, documentation, validation,
+and both Windows 11 experiment jobs
+https://github.com/heri-espino/trendestimation/actions/runs/41587467639.
+The corrected pilot again saved 720 actual status=ok timing rows.
+Score disagreements fell from 104 to **16** under the SAME
+seed/workload design. All 16 remaining disagreements are from
+naive inversion (12 d5 MLE; 4 d6 CV), not banded/hybrid MLE.
+The corrected numerical parity result supports the analytical
+normalization diagnosis but does not certify forward accuracy
+of every high-order fitted trend. Do not interpret the original
+d5 MLE discrepancies as evidence that the banded methods
+were numerically incorrect: the old scores used distinct
+criterion additive constants. Preserve both source versions.
