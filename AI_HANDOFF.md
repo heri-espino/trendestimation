@@ -571,3 +571,24 @@ serial shard0 offset10 attempt IDs. No parallel run should be
 claimed completed without its actual GitHub results branch.
 Parallel timing is throughput under load, not comparable to
 isolation-based timing without a controlled comparison.
+
+
+### Windows WinError 5: preserved uncapped offset10 results / fix
+
+The user's VM sequential uncapped batch of 10 method-case attempts
+on shard0 starting at offset10 finished all ten subprocesses, but
+`archive_ledger()` failed on the final `Path.replace` with
+Windows `PermissionError: [WinError 5]`. The launcher archived
+all the raw results, `method_attempts.csv`,
+`method_attempts.tmp`, environment, logs, and outcomes.json:
+results/experiment010-uncapped-PCAG103A-08-20261103T155726693Z-shard0-offset10.
+Both ledgers contain 10 completed_with_csv subprocess statuses;
+9 have 16 valid timing rows each; sparse Cholesky has 0.
+No batch_summary.json exists because of the final checkpoint
+exception; next shard0 cursor is nevertheless **20**, not 10.
+The correction in PR #104 adds Windows atomic-replace retries,
+preserves an explicit versioned fallback CSV, and tests both
+transient and persistent locks. Parallel summary points to the
+actual checkpoint file. Do not confuse operating-system access
+errors with numerical failure, do not re-execute archived attempts,
+and do not infer high-precision accuracy from status=ok.

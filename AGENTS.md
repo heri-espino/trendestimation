@@ -214,3 +214,20 @@ elapsed times involve CPU/resource contention and must not be
 pooled as isolated serial latencies. Do not overwrite running
 serial shard0 offset10 outputs or run duplicate case IDs.
 Do not merge this stacked draft PR without authorization.
+
+
+## Experiment010: Windows locked-CSV checkpoint and parallel safety
+
+The manually completed shard0 offset10 batch archived all 10
+method subprocess outputs despite final `PermissionError
+[WinError 5]` replacing `method_attempts.tmp` to CSV. Archive:
+results/experiment010-uncapped-PCAG103A-08-20261103T155726693Z-shard0-offset10.
+It lacks batch_summary.json; both archived ledgers show all ten
+completed subprocesses, with 0 valid rows for optional CHOLMOD.
+The next correct shard0 cursor is **20**; never rerun offset10.
+Source branch research/experiment010-parallel-local now retries
+transient Windows locked-ledger replacement with backoff, preserves
+unique recovery CSV if replacement remains denied, and adds
+regression tests simulating this error. The parallel batch summary
+identifies the effective ledger path. Read PARALLEL_LOCAL.md before
+running. Keep source and archives distinct; do not merge.

@@ -113,3 +113,47 @@ The manuscript scope remains a numerical accuracy/error audit and
 a small measured computing-time comparison. This change does NOT
 introduce prediction models, regret/fallback studies or additional
 unimplemented dual solvers.
+
+
+## Windows WinError 5 incident and safe continuation — 2026-11-03
+
+The source revision `8a02f4a52d81994daef83c4d8d1ef168aa9c832e`
+completed all **ten** n=64, d=1, AICc, mu=data, low-amplitude,
+M=100000 method subprocesses for shard 0 at start offset 10.
+On the final CSV checkpoint, Windows raised `PermissionError:
+[WinError 5]` when replacing `method_attempts.csv` with
+`method_attempts.tmp`. The PowerShell launcher nevertheless
+committed and pushed all ten per-method raw files and logs to:
+
+https://github.com/heri-espino/trendestimation/tree/results/experiment010-uncapped-PCAG103A-08-20261103T155726693Z-shard0-offset10
+
+Both the ordinary ledger and temporary ledger show all ten
+`completed_with_csv` subprocess statuses, but sparse Cholesky
+has **zero** valid status=ok rows, consistent with the optional
+CHOLMOD dependency being unavailable. A subprocess status alone
+is never a numerical success certificate. The batch lacks a
+`batch_summary.json` because the final ledger replacement
+raised before aggregation. The *correct continuation cursor is
+20*, NOT 10; never rerun these ten method-case attempts.
+
+The corrected source in this branch retries Windows atomic
+ledger replacement on transient access-denied/share-violation
+errors and, if the lock persists, retains an independently named
+`method_attempts.recovery-*.csv` checkpoint. The parallel
+summary records `ledger_checkpoint_file` so agents know which
+ledger is authoritative if the default CSV was temporarily locked.
+An archive containing a `method_attempts.tmp` remains valuable
+historical evidence; do not delete or rewrite it on its original
+immutable result branch.
+
+**Next command** from the NEW parallel worktree after fetching
+this branch, when the old process has ended:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\\paper\\benchmarks\\experiment010\\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 20 -MethodAttempts 10 -Workers 8
+```
+
+The runner checks the Windows ledger-recovery tests before starting
+worker processes. Avoid opening live CSVs in Excel during execution
+or syncing the active output directory through OneDrive, because
+external readers can contribute to Windows access-denied errors.
