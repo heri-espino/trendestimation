@@ -122,3 +122,21 @@ All reported predictions require machine-specific calibration,
 numerical validity and dense-memory gating. Holdout results are
 single-class and cannot certify the switch. Do NOT change
 production default or merge without authorization.
+
+
+## Final Computational Statistics engineering evidence (2026-11-03)
+
+The Springer manuscript entrypoint is paper/main.tex, NOT the SNCS
+or Elsevier CAS companion. It includes the 48 measured n64/d1/BIC
+rows from two independent GitHub result-branch commits, with source
+data and QA at paper/benchmarks/experiment010/publication_evidence/.
+SVD/naive ran in an 8-worker pool; the CHOLMOD hybrid backfill used
+one process. Do not interpret their elapsed seconds as a controlled
+relative-performance ranking. CHOLMOD hybrid includes separate banded
+selected-inverse diagnostics, not just a sparse factorization.
+For controlled runtimes, rerun all three on the same machine in one
+batch with Workers=1. Setting Workers=8 on just one method-case
+launches only one subprocess. Never silently rewrite archived
+source data, inflate selected-score parity into high-precision
+accuracy certification, or mix with the historical full-factorial
+Windows datasets.

@@ -1,0 +1,86 @@
+\subsection{A targeted three-backend engineering check}
+\label{sec:three-backend-check}
+The normal-equations matrix
+$A_\lambda=I_n+\lambda D_d^\top D_d$ is symmetric positive
+definite at finite $\lambda\geq0$ and has half-bandwidth $d$.
+Consequently, direct banded Cholesky requires
+$O(nd^2)$ arithmetic and $O(nd)$ storage for one factorization.
+A sparse Cholesky package can exploit the same one-dimensional
+sparsity, but its generic symbolic machinery need not outperform
+a dedicated banded implementation. In contrast, full spectral
+decomposition pays $O(n^3)$ preprocessing and $O(n^2)$ storage,
+while reusable projected scalar criteria such as GCV, AICc
+and residual BIC can be evaluated in $O(n)$ per interior
+penalty candidate. Full fitted trends and ordinary
+leave-one-out leverage calculations have additional costs.
+These distinctions concern \emph{complete criterion pipelines},
+not merely a single linear solve.
+
+To check functional reproducibility, we reconciled two archived
+Windows 11 numerical batches for the same
+$(n,d)=(64,1)$, conditional plug-in reference mean
+$\mu=\overline{D_1y}$, high-amplitude synthetic series,
+residual BIC criterion, and an $M=100\,000$ target-smoothness
+grid. The three complete pipelines were dense naive inversion,
+reusable spectral SVD and genuine sparse CHOLMOD Cholesky followed
+by separately charged banded selected-inverse diagnostics.
+The normal-equations solver, smoother, and statistical
+criterion were not changed. Each implementation produced
+16 valid rows across two repeats, two coordinates, and four
+one/multiple-candidate by one/multiple-series workloads.
+In total, all 48 recorded observations had successful
+numerical status. Both repeated outcomes selected $S=10^{-5}$
+for the grid workloads, consistent with the known
+near-interpolation behavior of the adopted residual BIC
+expression. This boundary choice should not be interpreted
+as evidence of a statistically well-identified interior optimum.
+
+\begin{table}[tbp]
+\centering
+\caption{Observed median cold total time, in seconds, for the
+$n=64$, $d=1$, $M=100\,000$ conditional plug-in BIC check,
+using a pretranslated smoothness grid where relevant.
+Each cell is the median of two archived repeats.
+The SVD and naive-inverse runs used a pool of eight concurrent
+method--case processes; the later CHOLMOD backfill used one
+worker. The times are therefore \emph{descriptive},
+not controlled comparative speedups.}
+\label{tab:experiment010-three-backend}
+\begin{tabular}{lrrr}
+\toprule
+Workload & Spectral SVD & Naive inverse & CHOLMOD hybrid\\
+\midrule
+One candidate, one series & 0.00195 & 0.00113 & 0.00270\\
+$10^5$ candidates, one series & 10.226 & 15.167 & 31.533\\
+One candidate, two series & 0.00189 & 0.00102 & 0.00274\\
+$10^5$ candidates, two series & 11.686 & 20.640 & 37.144\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The maximum relative difference in selected BIC score from the
+SVD reference across the same 16 workload--coordinate--repeat
+keys was $2.321\times10^{-12}$ for naive inversion and
+$4.463\times10^{-13}$ for the sparse-Cholesky hybrid, with
+identical selected smoothness at the recorded resolution.
+These \emph{float64 selected-score parity} checks are not
+independent high-precision solution-error certificates.
+CHOLMOD's first archived attempt had failed at dependency
+initialization; the separately archived successful backfill
+uses the installed scikit-sparse implementation. The short
+hardware timings are not pooled with the distinct historical
+80\,640-record factorial experiment.
+
+The complete 48-row CSV, original source revisions,
+worker counts, seed, workload definitions and an executable
+validation script are preserved under
+\texttt{paper/benchmarks/experiment010/publication\_evidence/}.
+For a controlled wall-time comparison, the three methods
+must be rerun under identical CPU contention, numerical
+tolerances and caching conditions. Merely setting
+\texttt{Workers=8} on a single method--case task does not
+parallelize its factorization: the worker pool schedules
+independent tasks, not partitions of one Cholesky solve.
+We do not extrapolate this $n=64$ case to a universal
+solver cutoff, or require a much larger brute-force grid
+to establish the theory of the estimator.
