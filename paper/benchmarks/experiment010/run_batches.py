@@ -110,7 +110,8 @@ def attempts(preset, shard_index=0, shard_count=1):
 
 def manifest(path, *, max_work, repeats, series_count,
              max_dense_bytes, shard_index, shard_count, preset,
-             scope="full", allow_unbounded_runtime=False):
+             scope="full", allow_unbounded_runtime=False,
+             selected_methods=None):
     """Record EVERY planned method-case pair and its conservative mask."""
     if path.exists():
         raise FileExistsError(path)
@@ -134,10 +135,13 @@ def manifest(path, *, max_work, repeats, series_count,
                 for workload in SCENARIOS:
                     M = 1 if workload.startswith("one_s") else c["denominator"]
                     R = 1 if "one_series" in workload else series_count
-                    status = memory_budget_status(
-                        c["n"], c["d"], method, c["denominator"],
-                        max_dense_bytes, max_work, workload, R, repeats,
-                        allow_unbounded_runtime=allow_unbounded_runtime)
+                    status = (
+                        "method_not_selected" if selected_methods is not None
+                        and method not in selected_methods else
+                        memory_budget_status(
+                            c["n"], c["d"], method, c["denominator"],
+                            max_dense_bytes, max_work, workload, R, repeats,
+                            allow_unbounded_runtime=allow_unbounded_runtime))
                     counts[status] += 2
                     for coordinate in POLICIES:
                         writer.writerow(dict(
