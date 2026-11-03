@@ -122,3 +122,14 @@ All reported predictions require machine-specific calibration,
 numerical validity and dense-memory gating. Holdout results are
 single-class and cannot certify the switch. Do NOT change
 production default or merge without authorization.
+
+
+## Mainline CHOLMOD 0.5 compatibility (2026-11-03)
+
+Read notes/scikit_sparse_v05_windows.md when touching sparse Cholesky.
+The user verified real CHOLMOD fit parity on Windows (maximum difference
+1.2948756650255078e-13 at n64/d2/lambda2/mu0.15) and passed 110
+targeted tests. Modern scikit-sparse requires cho_factor(csc_array(A))
+followed by .solve(rhs); keep old Factor.solve_A() compatibility.
+Never substitute SuperLU silently; keep large-run score/timing claims
+separate from single-fit validation.
