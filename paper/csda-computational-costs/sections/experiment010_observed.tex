@@ -135,3 +135,91 @@ did not finish with completely acceptable criterion records,
 whereas SVD and the guarded policy did. At $n=512$, 72 timing
 records lacked a valid matched spectral reference.
 They must remain unverified rather than declared correct.
+
+\subsection{High-order reliability and a discovered MLE normalization error}
+The independent Experiment006 85-decimal-digit fitted-trend audit
+(Table~\ref{tab:experiment006-highd}) used $n=128$, $d=5,6$,
+fixed $\mu=0.15$, and 28 reference problems per backend.
+Under its $10^{-6}$ relative forward-error threshold, full
+shift-free SVD passed 28/28, banded Cholesky 16/28, sparse LU
+22/28 and FFT--PCG 14/28 accepted its convergence gate.
+This is separate \emph{fit accuracy} evidence, not a high-precision
+certificate for each Experiment010 criterion timing.
+
+The original \emph{pre-correction} Experiment010 pilot reported
+104 disagreements in selected criterion scores; 100 occurred
+for $n=64,d=5$, data-derived $\mu$, and the profiled
+Gaussian marginal-likelihood criterion. The original finite-penalty
+banded, hybrid and naive benchmark implementations omitted
+$\log\det(D_dD_d^\top)$ from that criterion, whereas the spectral
+score and exact $S=1$ endpoint retained it. For $r=n-d$ and
+positive eigenvalues $\delta_j$ of $D_d^\top D_d$,
+\begin{equation}\label{eq:experiment010_mle}
+\begin{aligned}
+&\log\det(I+\lambda D_d^\top D_d)-r\log\lambda\\
+&\quad=\sum_{j=1}^r\log\left(1+\frac1{\lambda\delta_j}\right)
++\log\det(D_dD_d^\top).
+\end{aligned}
+\end{equation}
+Although the last term is constant among \emph{finite}
+penalty candidates, omitting it destroys objective-value
+comparability with the correctly normalized exact
+$S=1$ candidate. The implemented correction evaluates
+this term without a dense determinant using the identity
+\begin{equation}\label{eq:experiment010_gram}
+\det(D_dD_d^\top)=
+\prod_{j=0}^{d-1}
+\frac{\binom{n+j}{2j+1}}{\binom{2j}{j}}.
+\end{equation}
+After revising the MLE benchmarks and regression tests,
+the repeated pilot had only 16 score disagreements, all
+from the high-order naive inverse. The remaining discrepancies
+and forward-error risks are not dismissed by score parity.
+Old and corrected raw results are preserved on distinct
+immutable GitHub branches. Correcting a statistical
+criterion is a scientific finding, not a claimed speedup.
+
+\subsection{Conditional computational minimum: a testable hypothesis}
+For a future workload $w$, define the set of eligible
+complete pipelines
+\begin{equation}
+\mathcal F(w)=
+\{b:\text{$b$ installed, memory-feasible, criterion-complete,
+and independently accuracy-certified}\}.
+\end{equation}
+An operational hypothesis is to estimate the machine-specific
+full execution time $\widehat T_b(w)$---including setup,
+$S\mapsto\lambda$ mapping, factorization, criterion
+diagnostics and reuse---then choose
+\begin{equation}\label{eq:experiment010_selector}
+\widehat b(w)\in\arg\min_{b\in\mathcal F(w)}\widehat T_b(w).
+\end{equation}
+On failure, a future dispatcher would try the next
+valid, feasible candidate and record extra time.
+The existing results do \emph{not} establish a calibrated
+ten-method model, independent class-balanced held-out
+prediction of crossovers, or measured fallback regret.
+Leading-order arithmetic alone cannot predict actual
+execution time without constants, conditioning,
+iterative-solver convergence and memory constraints.
+Thus~\eqref{eq:experiment010_selector} is a \emph{research
+proposal}, not a deployed, empirically proven selector.
+
+\subsection{Reproducibility and precise limits}
+The corrected-source Actions runs are
+\texttt{41587467639} (smoke and initial pilot),
+\texttt{41587723422} (pilot continuations) and
+\texttt{41642508020} (targeted $n=256,512$ frontier).
+The pre-correction failure-discovery run is
+\texttt{41586066141}. Each individual result branch
+and precise case path is indexed by
+\texttt{paper/csda-computational-costs/OBSERVED\_RESULTS\_SNAPSHOT.md}
+and \texttt{paper/benchmarks/experiment010/RESULTS\_INDEX.md}.
+The full original CSVs, including failures and no-reference
+statuses, are the data source rather than any plotted
+or theoretical extrapolation. No execution at
+$n=16384$ or $131072$ and no completion of a
+10,000--100,000-point search is inferred from the
+smaller archived batches. Numerical certification,
+large-series feasibility and the general conditional
+winner rule remain separate research questions.
