@@ -1,0 +1,162 @@
+[
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "naive_inverse",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\naive_inverse",
+    "elapsed_s": 139.45168969989754,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "spectral_svd",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\spectral_svd",
+    "elapsed_s": 88.30911740008742,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "banded_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\banded_cholesky",
+    "elapsed_s": 220.56449549994431,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "guarded_svd_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\guarded_svd_cholesky",
+    "elapsed_s": 220.67217740020715,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "banded_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\banded_lu_banded_trace",
+    "elapsed_s": 244.08248310000636,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "sparse_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\sparse_lu_banded_trace",
+    "elapsed_s": 330.77946619992144,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\sparse_cholesky_banded_trace",
+    "elapsed_s": 0.7149263999890536,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "pcg_fft_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\pcg_fft_banded_trace",
+    "elapsed_s": 357.8854826998431,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "pcg_dst_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\pcg_dst_banded_trace",
+    "elapsed_s": 371.7401581997983,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_aicc_e255a6421f3f",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "low",
+      "criterion": "aicc",
+      "denominator": 100000
+    },
+    "method": "pcg_jacobi_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_aicc_e255a6421f3f\\pcg_jacobi_banded_trace",
+    "elapsed_s": 941.790192199871,
+    "reason": ""
+  }
+]
