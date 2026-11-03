@@ -456,3 +456,33 @@ do not pool old unnormalized and new corrected MLE score values.
 In progress: continuation run #41587723422 with bounded
 offset windows 60,120,180,240 and immutable result branches.
 Refer to paper/benchmarks/experiment010/RESULTS_INDEX.md.
+
+
+### Experiment010 pilot through cursor300 and targeted n256/n512
+
+All four windows of Actions #41587723422 passed on the
+university Windows VM; offsets 60,120,180,240 each
+finished 60 method-case attempts with valid rows
+680,840,840,840 (total 3,200). All 3,200
+selected-score parity-only audits passed; remaining
+recorded statuses were invalid/partial. Together with
+corrected first pilot, 300 of 1,800 pilot method-case
+attempts have been run and 3,920 successful timing
+records preserved. Corrected smoke adds 420 records.
+Result branches are
+results/experiment010-41587723422-a1-pilot-offset60,
+...offset120, ...offset180, ...offset240.
+All full runs are immutable and traceable via source SHA.
+
+The next targeted balanced n256/n512 run is
+Actions #41642508020 with two nonoverlapping
+frontier offsets0/60, 120 scheduled method-case
+attempts. Examine results/experiment010-*frontier*
+before making numerical conclusions. All 3 mu
+policies crossed for (n,d,criterion) blocks
+(256,1,GCV),(256,5,MLE),(512,2,AICc),(512,6,CV).
+This is not a 50,400-combination exhaustive sweep.
+Independent high-precision forward certification,
+calibrated cost-model regression, and held-out oracle
+regret are still future work; never silently
+conflate criterion parity with numerical validity.

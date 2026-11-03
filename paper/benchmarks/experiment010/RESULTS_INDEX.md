@@ -172,3 +172,45 @@ using the post-normalization source and the same pilot schedule.
 
 All timings remain archived as raw per-method records, not
 inferred from method subprocess wall times.
+
+
+## Completed corrected pilot through cursor 300 (verified)
+
+All four continuation jobs of
+[Actions #41587723422](https://github.com/heri-espino/trendestimation/actions/runs/41587723422)
+**completed successfully**, each with an independently archived
+immutable results branch. Together, the four windows contributed
+**3,200** status=ok full-criterion timing observations:
+
+| Offset | Method-case attempts | Timing records status=ok | Parity only | Failed/partial rows | Next cursor |
+|---|---:|---:|---:|---:|---:|
+| [60](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587723422-a1-pilot-offset60) | 60 | 680 | 680 | 208 | 120 |
+| [120](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587723422-a1-pilot-offset120) | 60 | 840 | 840 | 60 | 180 |
+| [180](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587723422-a1-pilot-offset180) | 60 | 840 | 840 | 60 | 240 |
+| [240](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41587723422-a1-pilot-offset240) | 60 | 840 | 840 | 60 | 300 |
+
+Combined with the corrected first 60-attempt pilot,
+there are **300 out of 1,800** executed pilot method-case
+attempts and **3,920** status=ok timing observations.
+The corrected smoke contributes a further distinct
+420 timing observations, for a total of **4,340**
+from the corrected source family. These are not
+4,340 independent statistical test problems.
+The 1,500 unexecuted pilot attempts and unexecuted
+complete factorial remain explicit, and none are
+asserted to have physically measured times.
+Score-parity successes alone do not establish
+independent high-precision numerical correctness.
+
+## Targeted n256/n512 frontier — initiated, not yet verified
+
+[GitHub Actions #41642508020](https://github.com/heri-espino/trendestimation/actions/runs/41642508020)
+was launched on PCAG103A-08 to measure ALL ten
+complete-criterion method policies at n256 and n512,
+with paired three-mean blocks, difference orders
+1/2/5/6, four criterion selections GCV/MLE/AICc/CV,
+and exact shared S candidates across both policies.
+Its two nonoverlapping method-case offsets are
+0 and 60. Consult the actual job conclusions and
+unique results branches before claiming any
+n256/n512 timings or numerical accuracy.

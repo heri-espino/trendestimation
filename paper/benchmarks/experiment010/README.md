@@ -177,3 +177,23 @@ From the repository root in PowerShell (the university runner has Conda environm
 
 
 To continue the previous shard, read 'next_attempt_offset' in its 'batch_summary.json' and add '--start-attempt <that-integer>' to the same command, with a **new** output directory. Never claim the entire factorial was measured while some manifest rows remain skipped/unavailable/failed.
+
+
+## Higher-n matched frontier batch (November 2026)
+
+The runnable `frontier` preset now contains 12 scientifically
+paired cases: the four blocks (n,d,criterion) = (256,1,GCV),
+(256,5,MLE), (512,2,AICc), (512,6,CV). EVERY block crosses
+three mean policies mu=0, mu="data", and fixed mu=0.15. The
+12 configurations × ten complete-policy entries produce 120
+method-case attempts, each with all four workload types and
+both matched-S coordinate strategies. This is a **targeted
+cross-size pilot**, not the entire theoretical frontier.
+
+Workflow `.github/workflows/experiment010-frontier.yml` runs
+two nonoverlapping offsets (0 and 60) on PCAG103A-08 with
+independent time/memory gates; each output is committed to
+a unique immutable results branch and uploaded as an Actions
+artifact. See the actual Actions run before claiming it
+finished; no result is implied merely by being queued.
+The runner does not adopt a fastest-method dispatcher.
