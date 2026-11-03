@@ -1,3 +1,39 @@
+## Revised research article with four verified figures
+
+Paper B remains **theory-first**, with two carefully bounded illustrations.
+The main draft now includes `sections/decision_examples.tex`:
+a plain-language solver-regime comparison with exact CV versus scalar
+criterion distinctions; compact exact-solver and hybrid tables; and
+two theoretical work-count figures (NOT calibrated runtimes).
+It also includes one reproducible, matched, one-worker BIC example and
+one real FHWA NGSIM vehicle trajectory illustrating $d=3$,
+training-only `mu='data'`, a fitted trend and a **separate**
+local-polynomial forecast. The latter is not a native PLS forecast,
+does not measure ground-truth jerk, and does not substitute for the
+independent NGSIM application study.
+
+Run `python paper/csda-computational-costs/render_theory_figures.py`
+with the pinned AwesomeFigures dependency and original CAS class.
+It produces `theory_regime_map`, `theory_cost_curves`,
+`matched_bic_timings` and `ngsim_jerk_application` in PDF/PGF/SVG
+plus `theory_awesomefigures_manifest.json` and
+`theory_figure_sources.json`. The GitHub Actions workflow runs
+this exact script, validates 48 archived rows and all source
+provenance, and commits the compiled manuscript and vector figures.
+
+All 48 records were copied, without timing recomputation, from
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`
+to `data/experiment010_matched_three_methods.csv`.
+The values represent **one worker, one BLAS thread**, two repeats
+per workload and method, and only n=64/d=1/BIC/mu=data.
+These outcomes do not identify a universal SVD/Cholesky crossover.
+
+The independent NGSIM source in
+`paper/ngsim-jerk-case-study/` selects, by training-only GCV,
+`S=0.40` for the illustrated track and origin; use the already
+archived real track, never fabricated observations or future leakage.
+This Paper B illustration is not a substitute for the third paper.
+
 # Current Paper B — theoretical computational analysis (November 2026)
 
 **Entry point:** `main.tex`, title *Amortized complexity of smoothness-indexed
