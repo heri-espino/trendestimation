@@ -1,5 +1,28 @@
 # AGENTS.md — trendestimation research repository
 
+## Paper B reproducibility revision (November 2026)
+
+Open PR #109 targets the theory-first CAS article
+`paper/csda-computational-costs/main.tex`. Read its new
+`sections/decision_examples.tex`, `THEORY_HANDOFF.md`,
+`SOURCE_AUDIT.md`, frozen `data/` CSV, and
+`render_theory_figures.py` before changing figures or
+theory claims. The four new plot sets include two theoretical
+unit-coefficient **work counts** (never claim machine time),
+one controlled isolated 48-row n64/d1/BIC timing illustration,
+and one real NGSIM jerk-proxy vehicle-position training/heldout
+illustration (d3 training-only mean, GCV S=.4; separately appended
+local polynomial forecast). The large theoretical picture is
+**criterion-dependent**: dense spectral SVD can amortize scalar
+scores on many S candidates, but exact CV can favor banded
+Cholesky with selected inversion for large n and small d.
+Do not conclude a universal optimal method, mix runtimes from
+different contention, rerun archived full grids unnecessarily,
+or publish an implied PLS-native forecast. Preserve
+the third NGSIM paper's original FHWA attribution/CC BY-SA
+3.0 source. Do not merge concurrent branches without consent.
+
+
 Read README.md, this file, paper/benchmarks/README.md,
 paper/benchmarks/experiment005/README.md, source modules, and tests
 before editing. Existing numerical decisions and archived results are
