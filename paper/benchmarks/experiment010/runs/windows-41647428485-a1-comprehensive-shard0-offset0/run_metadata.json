@@ -1,0 +1,59 @@
+{
+  "created_utc": "2026-11-03T13:47:46.344038+00:00",
+  "preset": "comprehensive",
+  "source_sha": "7e130f6f3c6a7c5a2d52389b9b0c243bf3923657",
+  "plan_only": false,
+  "manifest_scope": "shard",
+  "host": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "runner_name": "PCAG103A-08",
+  "run_id": "41647428485",
+  "shard_index": 0,
+  "shard_count": 16,
+  "methods": [
+    "naive_inverse",
+    "spectral_svd",
+    "banded_cholesky",
+    "guarded_svd_cholesky",
+    "banded_lu_banded_trace",
+    "sparse_lu_banded_trace",
+    "sparse_cholesky_banded_trace",
+    "pcg_fft_banded_trace",
+    "pcg_dst_banded_trace",
+    "pcg_jacobi_banded_trace"
+  ],
+  "mean_policies": [
+    "0",
+    "data",
+    "0.15"
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "bic",
+    "aicc",
+    "mle"
+  ],
+  "coordinates": [
+    "direct_s",
+    "mapped_lambda"
+  ],
+  "workloads": [
+    "one_s_one_series",
+    "grid_one_series",
+    "one_s_multiple_series",
+    "grid_multiple_series"
+  ],
+  "max_seconds": 600.0,
+  "per_method_seconds": 25.0,
+  "max_method_attempts": 40,
+  "repeats": 2,
+  "series_count": 2,
+  "max_work": 80000000.0,
+  "max_dense_bytes": 2147483648,
+  "seed": 20261102,
+  "planned_attempts_in_shard": 3280,
+  "start_attempt": 0,
+  "attempts_in_this_window": 3280,
+  "warning": "A recorded status=ok is not independent numerical certification; high-precision audit required. No synthetic timing of skipped methods."
+}
