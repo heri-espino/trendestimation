@@ -26,10 +26,12 @@ This bypasses the potentially huge polynomial particular solution $p_\mu$, avoid
 \subsection{Conditional criteria and computational requirements}
 For a \emph{fixed numeric} $\mu$ define $e=y-\widehat\tau$, $\mathrm{RSS}=e^\top e$ and $h_i=(H_\lambda)_{ii}$, with $H_\lambda=A_\lambda^{-1}$. The classical leave-one-observation-out criterion and generalized cross-validation are
 \begin{equation}\label{eq:cv_gcv}
-\CV(\lambda)=\frac{1}{n}\sum_{i=1}^n
-\left(\frac{e_i}{1-h_i}\right)^2,\qquad
-\GCV(\lambda)=\frac{\mathrm{RSS}/n}
+\begin{aligned}
+\CV(\lambda)&=\frac{1}{n}\sum_{i=1}^n
+\left(\frac{e_i}{1-h_i}\right)^2,\\
+\GCV(\lambda)&=\frac{\mathrm{RSS}/n}
 {(1-\nu(\lambda)/n)^2}.
+\end{aligned}
 \end{equation}
 The residual-based information-criterion convention considered here has the form
 \begin{equation}\label{eq:information}
