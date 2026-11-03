@@ -258,3 +258,20 @@ zero-second success. The original ten-method shard cursor is
 unchanged for conflict-free resumption. Dense naive/SVD also remain
 RAM-infeasible at very large n. DO NOT merge other agent branches
 or claim a genuine three-method comparison where one is missing.
+
+
+## Experiment010 scikit-sparse 0.5 compatibility (2026-11-03)
+
+The Windows Conda optional `scikit-sparse` install now imports,
+but a user-supplied legacy `cholesky(A)(b)` smoke command fails
+with `TypeError: 'tuple' object is not callable` due to
+scikit-sparse 0.5's revised API. Correct public call:
+`cho_factor(csc_array(A)).solve(b)`. Branch
+research/experiment010-cholmod-v05-compat (stacked on #105)
+explicitly uses SciPy CSC arrays for modern CHOLMOD while
+preserving old 0.4 `Factor.solve_A`; a functional tiny PLS parity
+preflight prevents unverified long benchmark attempts. Read
+paper/benchmarks/experiment010/FOCUSED_THREE.md.
+Do not claim the actual Windows installed build passed the solver
+tests until its real VM output is archived. Never rerun previously
+archived naive/SVD results just because optional CHOLMOD was installed.

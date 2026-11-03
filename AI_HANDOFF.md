@@ -616,3 +616,19 @@ numerical comparison. Dense memory gates remain. Shard0 cursor
 now **30** for future work. Read
 paper/benchmarks/experiment010/FOCUSED_THREE.md and do not
 merge active research PRs without approval.
+
+
+### Experiment010 optional scikit-sparse 0.5 API migration
+
+The user's Conda Windows VM now imports `sksparse.cholmod`,
+but the old verification call `cholesky(A)(b)` failed with a
+`tuple object is not callable` exception: scikit-sparse 0.5
+changed to `cho_factor(A).solve(b)` and CSC sparse arrays.
+Branch `research/experiment010-cholmod-v05-compat` introduces
+explicit `csc_array` conversion in the new CHOLMOD adapter,
+keeps 0.4 `cholesky(...).solve_A` compatibility and mock-based
+regression tests. Experiment010 optional preflight now exercises
+an actual small CHOLMOD PLS fit and compares to banded Cholesky
+rather than treating an import as proof. Read FOCUSED_THREE.md
+for commands. The user's real VM must pass the tests before a
+new sparse-only backfill; prior results branches remain immutable.
