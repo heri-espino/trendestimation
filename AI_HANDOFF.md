@@ -383,3 +383,29 @@ Windows CHOLMOD fit agreed with banded Cholesky to maximum error
 source fix remains independent from the nested Experiment010 runner
 PR stack and from the Springer paper manuscript PR. Full handoff is in
 notes/scikit_sparse_v05_windows.md.
+
+
+### Paper B scope decision and new archived three-method run (2026-11-03)
+
+The user chose to focus on a theoretical Paper B at
+paper/csda-computational-costs/, with a distinct future Springer
+implementation/real-runtime article. Branch
+paper/csda-computational-theory introduces the formal full-criterion
+T_A(n,d,M,R,C;epsilon,theta) model, exact banded Gaussian
+likelihood identity, spectral and selected-inverse cost proofs,
+d=1 cosine spectrum, conditional crossover proposition, and
+a small deterministic regression checker. The new CSDA main.tex
+omits the existing empirical timing/result/experimental-plan
+sections (preserved unchanged in Git), and the new CSDA theory
+GitHub workflow compiles exact Elsevier CAS without benchmarks.
+Consult paper/csda-computational-costs/THEORY_HANDOFF.md.
+
+A new matched serial Experiment010 three-method run was completed
+and pushed to results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20,
+source f16f2bab6cfa37c6423c7f2d4554208efa9f683a. It has
+three completed methods (SVD, naive, sparse-Cholesky+banded
+diagnostics), one worker, one BLAS thread, n64/d1/BIC
+mu=mean(Dy), 100000 candidate grid, 2 repeats, 48 valid
+timing rows and matched score-parity records. Keep this
+experimental archive unchanged, label as a single-case
+runtime check only, and reuse it for the Springer methods paper.
