@@ -32,10 +32,26 @@ FOCUSED_METHODS = (
 
 
 def optional_cholmod_error():
-    """Report the missing optional dependency without timing an import error."""
+    """Prove the installed CHOLMOD actually solves a tiny PLS system.
+
+    Import-only preflight misses breaking changes to scikit-sparse 0.5.
+    Numerical parity is just a smoke test; it is NOT a high-precision audit.
+    """
     try:
         importlib.import_module("sksparse.cholmod")
-    except (ImportError, OSError) as exc:
+        import numpy as np
+        from trendestimation import PreparedPLSSolver
+
+        y = np.array([.4, .8, -.3, 1.5, 2.0, .7, -1.1, .2])
+        actual = PreparedPLSSolver(
+            8, 1, method="sparse_cholesky").fit(
+                y, lambda_=2.0, mu=0.15)
+        reference = PreparedPLSSolver(
+            8, 1, method="cholesky").fit(
+                y, lambda_=2.0, mu=0.15)
+        if not np.allclose(actual, reference, atol=1e-10, rtol=1e-10):
+            return "NumericalMismatch: CHOLMOD PLS smoke-test parity failed"
+    except Exception as exc:
         return type(exc).__name__ + ": " + str(exc)[:220]
     return None
 
