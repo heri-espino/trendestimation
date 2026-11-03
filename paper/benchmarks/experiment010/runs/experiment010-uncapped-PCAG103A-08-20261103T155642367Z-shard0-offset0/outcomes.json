@@ -1,0 +1,162 @@
+[
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "naive_inverse",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\naive_inverse",
+    "elapsed_s": 0.838323200121522,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "spectral_svd",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\spectral_svd",
+    "elapsed_s": 0.7764725999440998,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "banded_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\banded_cholesky",
+    "elapsed_s": 0.9208986000157893,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "guarded_svd_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\guarded_svd_cholesky",
+    "elapsed_s": 0.894237499916926,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "banded_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\banded_lu_banded_trace",
+    "elapsed_s": 0.935685700038448,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "sparse_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\sparse_lu_banded_trace",
+    "elapsed_s": 0.9999619999434799,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\sparse_cholesky_banded_trace",
+    "elapsed_s": 0.6786806997843087,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "pcg_fft_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\pcg_fft_banded_trace",
+    "elapsed_s": 1.0246910001151264,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "pcg_dst_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\pcg_dst_banded_trace",
+    "elapsed_s": 1.0589678999967873,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_bic_1e563210f8be",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100
+    },
+    "method": "pcg_jacobi_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_1e563210f8be\\pcg_jacobi_banded_trace",
+    "elapsed_s": 1.61794100003317,
+    "reason": ""
+  }
+]
