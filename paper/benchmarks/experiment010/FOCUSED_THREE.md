@@ -184,3 +184,66 @@ the user installed the optional package; its completion and actual
 next cursor MUST be verified in the GitHub results archive before
 scheduling overlapping attempts. Do not infer that it finished based
 on `[33/40]` alone.
+
+## Windows VM CHOLMOD verification observed — 2026-11-03
+
+The user provided the following successful terminal results from the
+university Windows PC, in a detached worktree at source
+`ab3a427e9df4d5bddfb2a593d53993c96843bfe2`,
+Conda environment `trendestimation` with `PYTHONPATH=src`:
+
+```powershell
+conda run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment005_structured_solvers.py tests/test_experiment010_parallel.py
+# 110 passed in 3.15s
+```
+
+```powershell
+conda run --no-capture-output -n trendestimation python -c "import numpy as np; from trendestimation import PreparedPLSSolver; y=np.random.default_rng(42).normal(size=64); a=PreparedPLSSolver(64,2,method='sparse_cholesky').fit(y,lambda_=2.0,mu=0.15); b=PreparedPLSSolver(64,2,method='cholesky').fit(y,lambda_=2.0,mu=0.15); print('Maximum absolute error:',np.max(np.abs(a-b))); print('PASS:',np.allclose(a,b,atol=1e-10,rtol=1e-10))"
+# Maximum absolute error: 1.2948756650255078e-13
+# PASS: True
+```
+
+Interpretation: the **installed Windows CHOLMOD fit backend now
+operates** and reproduces the banded-Cholesky fit for one
+`n=64,d=2,lambda=2,mu=0.15` sample. This is a user-shared
+terminal validation record, *not* an archived raw benchmark, a
+multi-parameter high-precision certification or proof that the
+complete BIC/CV/AICc/MLE evaluation pipeline works.
+
+All seven CI checks on source commit
+`ab3a427e9df4d5bddfb2a593d53993c96843bfe2` passed,
+including Python 3.10/3.12 tests, independent verification and
+documentation.
+
+### Narrow next experiment: only missing CHOLMOD measurement
+
+To fill the exact **sparse-Cholesky-only** setup failure in the
+previous n64/d1/observed-mean/high-amplitude/BIC/M100000
+shard0 offset20 archive, run the CHOLMOD slot at **offset 26**.
+The earlier archive's ten methods are indexed 20..29; sparse
+Cholesky is seventh, at zero-based index 26. Do **not** repeat
+the other nine method cases, already archived.
+
+From the dedicated clean `trendestimation-cholmod` worktree:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment010\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 26 -MethodAttempts 1 -Workers 1 -Methods sparse_cholesky_banded_trace
+```
+
+The resulting `batch_summary.json` will report next cursor 27
+for *this one-slot backfill*, which is **not** the continuation
+cursor of the wider experiment. The historical comprehensive
+shard0 offset20 batch remains fully archived. Do not advance or
+reset the main shard cursor based on the backfill.
+
+The original focused offset30 batch was seen starting in the
+user's terminal, but its result branch was not present in the
+GitHub branch listing checked later. Its fate is **unverified**:
+before scheduling offset30 again, inspect its local
+`paper/benchmarks/experiment010/runs` output and archive any
+partial/final numerical data. Never assume an incomplete batch
+is safely repeatable or fully archived.
+
+When CHOLMOD-only smoke succeeds, broaden on deliberately selected
+workloads and record explicit source SHA, environment versions,
+per-workload valid rows, status codes and measured seconds.
