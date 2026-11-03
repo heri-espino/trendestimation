@@ -155,3 +155,42 @@ def test_full_sweep_skips_all_ineligible_without_inventing_times(tmp_path):
     assert not (output / "slices").exists()
     assert json.loads((output / "run_metadata.json").read_text())[
         "manifest_scope"] == "shard"
+
+def test_uncapped_mode_removes_runtime_gates_but_preserves_ram_safety():
+    # Predicted work and n-only cutoffs are NOT numerical failures.
+    dflt = RUN.memory_budget_status(
+        64, 1, "naive_inverse", 1000, 2 * 1024**3,
+        1, "grid_one_series", 1, 2)
+    uncapped = RUN.memory_budget_status(
+        64, 1, "naive_inverse", 1000, 2 * 1024**3,
+        float("inf"), "grid_one_series", 1, 2,
+        allow_unbounded_runtime=True)
+    assert dflt == "budget_exceeded"
+    assert uncapped == "eligible"
+    assert RUN.memory_budget_status(
+        131072, 6, "naive_inverse", 100,
+        2 * 1024**3, float("inf"),
+        "one_s_one_series", 1, 2,
+        allow_unbounded_runtime=True) == "infeasible_dense_memory"
+
+
+def test_uncapped_mode_keeps_actual_numerical_attempt_guard(tmp_path):
+    dest = tmp_path / "uncapped-guard"
+    summary = RUN.execute(
+        dest, preset="comprehensive",
+        shard_index=0, shard_count=64,
+        no_time_limit=True,
+        max_seconds=1, per_method_seconds=1,
+        max_method_attempts=1, repeats=2, series_count=2,
+        max_work=1, max_dense_bytes=1,
+        manifest_scope="shard")
+    assert summary["actual_attempted"] == 1
+    assert summary["attempt_counts"].get(
+        "resource_ineligible_all_workloads") == 1
+    assert summary["successful_raw_timing_rows"] == 0
+    with (dest / "run_metadata.json").open(
+            encoding="utf-8") as stream:
+        meta = json.load(stream)
+    assert meta["no_time_limit"] is True
+    assert meta["subprocess_timeout_seconds"] is None
+    assert meta["max_work"] == "unbounded"
