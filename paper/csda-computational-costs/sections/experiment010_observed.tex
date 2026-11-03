@@ -1,0 +1,30 @@
+\section{Completed multi-backend experiments}\label{sec:experiment010}
+This section reports only the experiments completed and archived by 3 November
+2026. The planned larger factorial is not presented as measured, and the
+historical small-series results in Sections~\ref{sec:design}--\ref{sec:results}
+are not pooled with the newer Windows timing observations.
+
+\subsection{Full-criterion workloads}
+The experiment varies series length $n$, finite-difference order $d$,
+candidate smoothness count $M$, number of independent series $R$,
+criterion $C$ (CV, GCV, BIC, AICc or Gaussian marginal likelihood),
+reference mean $\mu$, observation amplitude, native-$S$ versus
+pretranslated-$\lambda$ evaluation, and the complete numerical backend.
+Three mean policies are compared:
+\[
+\mu=0,\qquad
+\widehat\mu_{\mathrm{data}}=\frac{\mathbf1^\top D_dy}{n-d},\qquad
+\mu=c=0.15.
+\]
+The sample-derived mean is computed separately for each observed series.
+It produces conditional plug-in scores, not exact leave-one-out
+re-estimation of the mean or joint marginal maximum likelihood.
+For the same $(n,d)$, all three policies share the same exact map
+$\Lambda_{n,d}(S)$, independent of the observations and mean policy.
+
+All complete-criterion pipelines charge their setup, smoothness mapping,
+fit, effective degrees of freedom, leverage and marginal-likelihood
+diagnostics as applicable. The guarded SVD/Cholesky policy is composite;
+sparse and PCG hybrid pipelines include their extra banded diagnostics.
+An incomplete, unavailable or numerically invalid method is never
+assigned a fictitious valid execution time.
