@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib
 import json
 import math
 import os
@@ -23,6 +24,21 @@ from pathlib import Path
 from time import perf_counter
 
 import run_batches as B
+
+# Requested focused comparison. Preserve all ten methods for legacy runs.
+FOCUSED_METHODS = (
+    "naive_inverse", "spectral_svd", "sparse_cholesky_banded_trace"
+)
+
+
+def optional_cholmod_error():
+    """Report the missing optional dependency without timing an import error."""
+    try:
+        importlib.import_module("sksparse.cholmod")
+    except (ImportError, OSError) as exc:
+        return type(exc).__name__ + ": " + str(exc)[:220]
+    return None
+
 
 
 def run_one(item, output, *, repeats, series_count, max_dense_bytes, seed):
@@ -92,7 +108,16 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
                      start_attempt=0, max_method_attempts=10,
                      workers=8, max_dense_bytes=2 * 1024**3,
                      total_parallel_dense_bytes=16 * 1024**3,
-                     repeats=2, series_count=2, seed=20261102):
+                     repeats=2, series_count=2, seed=20261102,
+                     selected_methods=None):
+    selected_methods = (
+        tuple(B.METHODS_ALL) if selected_methods is None
+        else tuple(selected_methods))
+    if (not selected_methods or len(set(selected_methods)) !=
+            len(selected_methods) or
+            any(method not in B.METHODS_ALL for method in selected_methods)):
+        raise ValueError("selected_methods must be distinct implemented pipelines")
+    selected_set = frozenset(selected_methods)
     if output.exists():
         raise FileExistsError("Refusing to overwrite existing output: " +
                               str(output))
@@ -128,6 +153,10 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
         shard_index=shard_index, shard_count=shard_count,
         start_attempt=start_attempt,
         max_method_attempts=max_method_attempts,
+        selected_methods=selected_methods,
+        cursor_semantics=("start_attempt and next_attempt_offset index the "
+                          "original 10-method shard; unselected slots "
+                          "advance the cursor but launch no process."),
         planned_attempts_in_shard=len(all_work),
         numerical_accuracy_note="Selected-score parity is not independent "
                                 "high-precision forward-error certification.",
@@ -143,11 +172,30 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
         max_dense_bytes=max_dense_bytes,
         shard_index=shard_index, shard_count=shard_count,
         preset="comprehensive", scope="shard",
-        allow_unbounded_runtime=True)
+        allow_unbounded_runtime=True,
+        selected_methods=selected_set)
     results = {}
     futures = {}
+    cholmod_failure = (
+        optional_cholmod_error()
+        if "sparse_cholesky_banded_trace" in selected_set else None)
+    if cholmod_failure:
+        print("WARNING: sparse Cholesky optional dependency unavailable: "
+              + cholmod_failure, flush=True)
     for offset, item in enumerate(work):
         identifier, cfg, method = item
+        if method not in selected_set:
+            results[offset] = dict(
+                case_id=identifier, configuration=cfg, method=method,
+                status="method_not_selected", folder="", elapsed_s=0.0,
+                reason="Excluded by focused-method design", measured_rows=0)
+            continue
+        if method == "sparse_cholesky_banded_trace" and cholmod_failure:
+            results[offset] = dict(
+                case_id=identifier, configuration=cfg, method=method,
+                status="dependency_unavailable", folder="", elapsed_s=0.0,
+                reason=cholmod_failure, measured_rows=0)
+            continue
         reasons = [
             B.memory_budget_status(
                 cfg["n"], cfg["d"], method, cfg["denominator"],
@@ -215,7 +263,11 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
         planned_attempts_in_shard=len(all_work),
         start_attempt=start_attempt,
         next_attempt_offset=start_attempt + len(work),
-        actual_attempted=len(work),
+        actual_attempted=len(runnable),
+        selected_method_cases=sum(
+            method in selected_set for _, _, method in work),
+        not_selected_by_design=statuses["method_not_selected"],
+        dependency_unavailable=statuses["dependency_unavailable"],
         completed_method_slices=statuses["completed_with_csv"],
         successful_raw_timing_rows=sum(o["measured_rows"] for o in outcomes),
         planned_manifest_statuses=masks,
@@ -240,6 +292,10 @@ def main():
     p.add_argument("--start-attempt", type=int, default=0)
     p.add_argument("--max-method-attempts", type=int, default=10)
     p.add_argument("--workers", type=int, default=8)
+    p.add_argument("--methods", default="all",
+                   help="Comma-separated implemented methods, "
+                        "or 'focused' for the three-method shortlist, "
+                        "or 'all'")
     p.add_argument("--max-dense-bytes", type=int, default=2 * 1024**3)
     p.add_argument("--total-parallel-dense-bytes", type=int,
                    default=16 * 1024**3)
@@ -247,6 +303,9 @@ def main():
     p.add_argument("--series-count", type=int, default=2)
     p.add_argument("--seed", type=int, default=20261102)
     a = p.parse_args()
+    selected = (None if a.methods == "all" else
+                FOCUSED_METHODS if a.methods == "focused" else
+                tuple(v.strip() for v in a.methods.split(",")))
     summary = execute_parallel(
         a.output, shard_index=a.shard_index,
         shard_count=a.shard_count,
@@ -255,7 +314,8 @@ def main():
         workers=a.workers,
         max_dense_bytes=a.max_dense_bytes,
         total_parallel_dense_bytes=a.total_parallel_dense_bytes,
-        repeats=a.repeats, series_count=a.series_count, seed=a.seed)
+        repeats=a.repeats, series_count=a.series_count, seed=a.seed,
+        selected_methods=selected)
     print(json.dumps(summary, indent=2))
 
 
