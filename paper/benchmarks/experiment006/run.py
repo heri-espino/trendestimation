@@ -40,7 +40,7 @@ from threadpoolctl import threadpool_info, threadpool_limits
 from trendestimation import TrendSmoother, PreparedPLSSolver
 from trendestimation.core import difference_matrix
 from trendestimation.criteria import _score_from_coordinates
-from selected_inverse import BandedTrace, selected_inverse
+from selected_inverse import BandedTrace, selected_inverse, difference_gram_logdet
 
 HYBRID_METHODS=(
     "banded_lu_banded_trace","sparse_lu_banded_trace",
@@ -115,7 +115,7 @@ def naive_score(n,d,y,lam,mu,criterion,Q=None,H=None):
         if weighted<=0: return float("inf")
         sign,logdet=np.linalg.slogdet(A)
         if sign<=0: raise ArithmeticError("Dense A determinant invalid")
-        return float(m*np.log(weighted/m)+logdet-m*np.log(lam))
+        return float(m*np.log(weighted/m)+logdet-m*np.log(lam)-difference_gram_logdet(n,d))
     eps=np.finfo(float).eps*max(1.,float(centered@centered))
     if rss<=eps: return float("inf")
     base=float(np.log(rss/n))
