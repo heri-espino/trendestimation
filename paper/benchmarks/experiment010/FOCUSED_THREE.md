@@ -141,3 +141,46 @@ Compare only fully valid workloads with identical
 `n,d,mu,criterion,M,R` and numerical tolerances.
 Parallel wall times reflect resource contention,
 not isolated one-worker solver latencies.
+
+## scikit-sparse 0.5 installation and API handoff — 2026-11-03
+
+The user successfully installed the optional scikit-sparse dependency in
+the existing Windows Conda `trendestimation` environment and then saw
+`TypeError: 'tuple' object is not callable` when running the *old*
+`cholesky(A)(b)` verification command. This is **not** an installation
+failure. As documented for scikit-sparse 0.5, `cholesky()` now returns
+a factor array or a tuple of (factor, permutation), and the solver
+interface is `cho_factor(A).solve(b)`. Version 0.5 expects SciPy
+`csc_array` rather than legacy `csc_matrix`.
+
+This source branch preserves the scikit-sparse 0.4 `Factor.solve_A`
+path while explicitly converting the CHOLMOD 0.5 input to
+`scipy.sparse.csc_array`. The focused parallel runner now executes
+a tiny end-to-end PLS fit with CHOLMOD and compares against the
+existing banded Cholesky solver **before** launching large batches.
+The installed optional dependency is not assumed functional from
+successful imports alone.
+
+Verify using the existing VM PowerShell terminal when no benchmark is
+using the Conda environment:
+
+```powershell
+conda run --no-capture-output -n trendestimation python -c "import numpy as np; from scipy.sparse import csc_array; from sksparse.cholmod import cho_factor; A=csc_array([[4.,1.],[1.,3.]]); b=np.array([1.,2.]); f=cho_factor(A); x=f.solve(b); print(x); print('residual',np.linalg.norm(A@x-b))"
+
+conda run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment005_structured_solvers.py tests/test_experiment010_parallel.py
+```
+
+The first expected vector is `[0.09090909 0.63636364]`, with a
+residual near numerical precision. The second command must pass against
+the installed real CHOLMOD, not only mock CI.
+
+**Do not rerun previously archived naive/SVD methods** just to verify
+this dependency. Preserve the previous incomplete/CHOLMOD-unavailable
+records. Use the new independent source branch for any real
+CHOLMOD-only backfill and archive its provenance and numerical results.
+
+The existing manual VM run at `shard0 offset30` had started when
+the user installed the optional package; its completion and actual
+next cursor MUST be verified in the GitHub results archive before
+scheduling overlapping attempts. Do not infer that it finished based
+on `[33/40]` alone.
