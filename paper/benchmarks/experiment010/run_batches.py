@@ -163,13 +163,50 @@ def source_sha():
 
 
 def archive_ledger(path, records):
-    # Atomic replacement protects checkpoint integrity if interrupted.
-    tmp = path.with_suffix(".tmp")
+    """Atomically checkpoint the ledger, tolerating transient WinError 5.
+
+    Windows antivirus/indexing or an external reader may temporarily hold the
+    destination open. Never delete the existing ledger to force replacement.
+    If retries fail, retain a versioned, complete CSV and report its path.
+    """
+    import time
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(
+        f".{path.stem}.{os.getpid()}.{time.time_ns()}.tmp")
     with tmp.open("w", newline="", encoding="utf-8") as out:
         writer = csv.DictWriter(out, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(records)
-    tmp.replace(path)
+        out.flush()
+        os.fsync(out.fileno())
+
+    last_error = None
+    for i in range(8):
+        try:
+            tmp.replace(path)
+            return path
+        except PermissionError as exc:
+            last_error = exc
+            time.sleep(min(0.1 * 2 ** i, 1.0))
+        except OSError as exc:
+            if getattr(exc, "winerror", None) not in (5, 32):
+                raise
+            last_error = exc
+            time.sleep(min(0.1 * 2 ** i, 1.0))
+
+    # A concurrently open ledger must not discard a completed numerical job.
+    # The complete record remains in this independent versioned CSV.
+    recovery = path.with_name(
+        f"{path.stem}.recovery-{len(records)}-{time.time_ns()}.csv")
+    try:
+        tmp.rename(recovery)
+    except OSError:
+        recovery = tmp  # Still a complete, closed, durable file.
+    print("WARNING: Windows locked the ledger destination; "
+          f"checkpoint preserved at {recovery}. "
+          f"Original error: {last_error}", flush=True)
+    return recovery
 
 
 def aggregate(output, outcomes):
