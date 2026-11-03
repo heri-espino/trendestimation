@@ -83,7 +83,7 @@ charges separately instantiated S-grid mapper setup per method.
   benchmark scores relative to spectral MLE and the
   exact S=1 limit. That was corrected on PR #100,
   preserving the original results unchanged. See
-  [the mathematical audit](../../../../notes/experiment010_mle_normalization_audit.md).
+  [the mathematical audit](../../../notes/experiment010_mle_normalization_audit.md).
   The first pilot's cross-method absolute MLE scores are
   **not eligible for an empirical solver ranking**.
   High-order numerical error may remain after correction.

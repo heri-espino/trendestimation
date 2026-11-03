@@ -411,3 +411,31 @@ run is unaffected. To rerun the workload later, explicitly update
 that request file or use a supported workflow_dispatch after merging.
 No new numerical dispatcher or all-backend timing conclusion is yet
 verified, and this draft PR must not be merged without approval.
+
+
+### Experiment010 first measured outcomes, bug diagnosis and remediation
+
+Actions #41586066141 completed both jobs successfully on PCAG103A-08.
+Source SHA fc76c8c9d5366870e665b0897137da71e00f0dd7.
+Smoke result branch results/experiment010-41586066141-a1-smoke:
+30 completed method-cases, 420 valid timing rows, 420 spectral selected-score
+parity successes (no independent high-precision forward certificate).
+Pilot branch results/experiment010-41586066141-a1-pilot:
+60 of 1800 planned method-case attempts (next_attempt_offset=60),
+720 valid raw timing rows, 616 score parity, 104 disagreements, 180 partial.
+All ten method *policies* attempted; CHOLMOD optional backend not installed.
+The run is NOT the complete 50,400-case factorial.
+
+Diagnosis: 100 discrepancies at n64,d5,mu=data,MLE largely reflect a
+normalization omission in the finite-lambda banded/hybrid/naive MLE
+benchmarks; exactly logdet(D D.T)=66.32448169 for n64,d5 was omitted,
+while spectral MLE and S=1 use the normalized score. We fixed the
+experimental scoring functions using an analytic log-gamma determinant
+formula in paper/benchmarks/experiment006/selected_inverse.py and the
+naive benchmark, with new tests/test_experiment010_mle_normalization.py.
+4 discrepancies at n64,d6,mu=0.15,CV remain for independent numerical
+analysis. Raw original results are permanently preserved and NOT
+retroactively repaired. A fresh corrected run is required and must
+be archived independently. See
+notes/experiment010_mle_normalization_audit.md and
+paper/benchmarks/experiment010/RESULTS_INDEX.md.

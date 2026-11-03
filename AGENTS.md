@@ -139,3 +139,17 @@ an independently validated next-best method. Validate machine-specific
 theoretical cost rankings on held-out empirically measured boundary cases.
 This is a design protocol, NOT an implemented dispatcher or completed
 Experiment010 benchmark. Do not change the library's default policy.
+
+
+### Experiment010 mathematical scoring audit after first Windows run
+
+First university VM run #41586066141 succeeded (smoke and pilot), yielding
+420 + 720 measured status=ok timing rows. The pilot's 104 selected-score
+disagreements included 100 for n64,d5,mu='data',MLE and 4 for n64,d6,
+mu=0.15,CV. Read notes/experiment010_mle_normalization_audit.md BEFORE
+ranking MLE methods. The old banded/hybrid/naive experimental MLE finite
+lambda scores omitted logdet(D_d D_d.T), unlike spectral MLE and the exact
+S=1 endpoint. Corrected on PR #100 using an O(d) analytic log-gamma
+formula; keep original immutable result branches as PRE-correction evidence.
+Use fresh measurements/tests and high-precision accuracy certificates
+before claiming reliable winners or updating the CSDA manuscript.
