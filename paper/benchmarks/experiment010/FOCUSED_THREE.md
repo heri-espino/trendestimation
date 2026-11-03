@@ -141,3 +141,109 @@ Compare only fully valid workloads with identical
 `n,d,mu,criterion,M,R` and numerical tolerances.
 Parallel wall times reflect resource contention,
 not isolated one-worker solver latencies.
+
+## scikit-sparse 0.5 installation and API handoff — 2026-11-03
+
+The user successfully installed the optional scikit-sparse dependency in
+the existing Windows Conda `trendestimation` environment and then saw
+`TypeError: 'tuple' object is not callable` when running the *old*
+`cholesky(A)(b)` verification command. This is **not** an installation
+failure. As documented for scikit-sparse 0.5, `cholesky()` now returns
+a factor array or a tuple of (factor, permutation), and the solver
+interface is `cho_factor(A).solve(b)`. Version 0.5 expects SciPy
+`csc_array` rather than legacy `csc_matrix`.
+
+This source branch preserves the scikit-sparse 0.4 `Factor.solve_A`
+path while explicitly converting the CHOLMOD 0.5 input to
+`scipy.sparse.csc_array`. The focused parallel runner now executes
+a tiny end-to-end PLS fit with CHOLMOD and compares against the
+existing banded Cholesky solver **before** launching large batches.
+The installed optional dependency is not assumed functional from
+successful imports alone.
+
+Verify using the existing VM PowerShell terminal when no benchmark is
+using the Conda environment:
+
+```powershell
+conda run --no-capture-output -n trendestimation python -c "import numpy as np; from scipy.sparse import csc_array; from sksparse.cholmod import cho_factor; A=csc_array([[4.,1.],[1.,3.]]); b=np.array([1.,2.]); f=cho_factor(A); x=f.solve(b); print(x); print('residual',np.linalg.norm(A@x-b))"
+
+conda run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment005_structured_solvers.py tests/test_experiment010_parallel.py
+```
+
+The first expected vector is `[0.09090909 0.63636364]`, with a
+residual near numerical precision. The second command must pass against
+the installed real CHOLMOD, not only mock CI.
+
+**Do not rerun previously archived naive/SVD methods** just to verify
+this dependency. Preserve the previous incomplete/CHOLMOD-unavailable
+records. Use the new independent source branch for any real
+CHOLMOD-only backfill and archive its provenance and numerical results.
+
+The existing manual VM run at `shard0 offset30` had started when
+the user installed the optional package; its completion and actual
+next cursor MUST be verified in the GitHub results archive before
+scheduling overlapping attempts. Do not infer that it finished based
+on `[33/40]` alone.
+
+## Windows VM CHOLMOD verification observed — 2026-11-03
+
+The user provided the following successful terminal results from the
+university Windows PC, in a detached worktree at source
+`ab3a427e9df4d5bddfb2a593d53993c96843bfe2`,
+Conda environment `trendestimation` with `PYTHONPATH=src`:
+
+```powershell
+conda run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment005_structured_solvers.py tests/test_experiment010_parallel.py
+# 110 passed in 3.15s
+```
+
+```powershell
+conda run --no-capture-output -n trendestimation python -c "import numpy as np; from trendestimation import PreparedPLSSolver; y=np.random.default_rng(42).normal(size=64); a=PreparedPLSSolver(64,2,method='sparse_cholesky').fit(y,lambda_=2.0,mu=0.15); b=PreparedPLSSolver(64,2,method='cholesky').fit(y,lambda_=2.0,mu=0.15); print('Maximum absolute error:',np.max(np.abs(a-b))); print('PASS:',np.allclose(a,b,atol=1e-10,rtol=1e-10))"
+# Maximum absolute error: 1.2948756650255078e-13
+# PASS: True
+```
+
+Interpretation: the **installed Windows CHOLMOD fit backend now
+operates** and reproduces the banded-Cholesky fit for one
+`n=64,d=2,lambda=2,mu=0.15` sample. This is a user-shared
+terminal validation record, *not* an archived raw benchmark, a
+multi-parameter high-precision certification or proof that the
+complete BIC/CV/AICc/MLE evaluation pipeline works.
+
+All seven CI checks on source commit
+`ab3a427e9df4d5bddfb2a593d53993c96843bfe2` passed,
+including Python 3.10/3.12 tests, independent verification and
+documentation.
+
+### Narrow next experiment: only missing CHOLMOD measurement
+
+To fill the exact **sparse-Cholesky-only** setup failure in the
+previous n64/d1/observed-mean/high-amplitude/BIC/M100000
+shard0 offset20 archive, run the CHOLMOD slot at **offset 26**.
+The earlier archive's ten methods are indexed 20..29; sparse
+Cholesky is seventh, at zero-based index 26. Do **not** repeat
+the other nine method cases, already archived.
+
+From the dedicated clean `trendestimation-cholmod` worktree:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment010\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 26 -MethodAttempts 1 -Workers 1 -Methods sparse_cholesky_banded_trace
+```
+
+The resulting `batch_summary.json` will report next cursor 27
+for *this one-slot backfill*, which is **not** the continuation
+cursor of the wider experiment. The historical comprehensive
+shard0 offset20 batch remains fully archived. Do not advance or
+reset the main shard cursor based on the backfill.
+
+The original focused offset30 batch was seen starting in the
+user's terminal, but its result branch was not present in the
+GitHub branch listing checked later. Its fate is **unverified**:
+before scheduling offset30 again, inspect its local
+`paper/benchmarks/experiment010/runs` output and archive any
+partial/final numerical data. Never assume an incomplete batch
+is safely repeatable or fully archived.
+
+When CHOLMOD-only smoke succeeds, broaden on deliberately selected
+workloads and record explicit source SHA, environment versions,
+per-workload valid rows, status codes and measured seconds.
