@@ -353,6 +353,26 @@ multi-parameter surfaces with separate numerical
 reliability/memory masks; no production switch yet.
 
 
+### Springer paper final empirical table and compilation (2026-11-03)
+
+The user asked for final main paper/main.tex, real empirical tables,
+paper PR merge and GitHub Actions PDF compilation. The dedicated
+paper/computational-statistics-final-evidence branch adds
+paper/sections/experiment010_three_backend.tex and 48 genuine timing
+rows copied from immutable results branches:
+results/experiment010-uncapped-PCAG103A-08-20261103T165925192Z-shard0-offset20
+(SVD and naive) and
+results/experiment010-uncapped-PCAG103A-08-20261103T193236486Z-shard0-offset26
+(sparse CHOLMOD). All three have 16 valid rows. Compared with SVD,
+maximum relative selected-BIC score differences were 2.321e-12
+for naive and 4.463e-13 for CHOLMOD. Numerical times are
+DESCRIPTIVE because source parallel worker counts differ (8 vs 1).
+The check_table.py script validates source metadata and all recorded
+medians. The computational-statistics-paper.yml workflow rebuilds the
+Springer PDF and uploads artifacts; on the dedicated paper branch it
+also commits the PDF and submission ZIP. Do not automatically merge
+the separate nested Experiment010 research stack with this paper PR.
+
 ### CHOLMOD 0.5 code fix for main (2026-11-03)
 
 Standalone fix/scikit-sparse-v05-main cherry-picks only the library

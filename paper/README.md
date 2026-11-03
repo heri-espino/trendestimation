@@ -489,3 +489,23 @@ with separate metadata, never mislabeled as hosted results.
 ~~~powershell
 python paper/benchmarks/full_s_search_modes.py --preset full --repeats 7
 ~~~
+
+
+## Final three-backend Experiment010 engineering table (2026-11-03)
+
+Main Springer paper/main.tex includes sections/experiment010_three_backend.tex,
+with one-configuration real Windows computation-time measurements for
+naive inversion, reusable SVD, and sparse CHOLMOD with banded
+selected-inverse diagnostics. The **48 original observations** are frozen
+under benchmarks/experiment010/publication_evidence/, with source SHA,
+worker count, seed and executable QA. Eight-worker SVD/naive and
+one-worker CHOLMOD times are descriptive, **not a controlled ranking**.
+Read that evidence folder's README for a matched serial rerun.
+The archived source branches remain immutable; no expensive numerical
+benchmarks are rerun to compile the paper.
+
+The computational-statistics-paper.yml GitHub workflow validates the
+frozen table, generates figures, compiles paper/main.pdf, produces the
+submission ZIP and archives the outputs on the source branch.
+Author declarations and corresponding author contact still require
+real coauthor confirmation.
