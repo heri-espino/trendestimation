@@ -20,9 +20,11 @@ The criterion label $C$ is allowed to be a singleton
 (e.g., CV or GCV) or a set of criteria, so
 $c=|\mathcal C|$ need not equal one. Define
 \begin{equation}\label{eq:theory_cost_function}
-T_{\mathcal A}(n,d,M,R,\mathcal C;\varepsilon,\theta)
-=T_{\rm setup}+T_{\rm map}+T_{\rm factors}
-+T_{\rm series}+T_{\rm scores}+T_{\rm overhead}.
+\begin{aligned}
+T_{\mathcal A}
+={}&T_{\rm setup}+T_{\rm map}+T_{\rm factors}\\
+&+T_{\rm series}+T_{\rm scores}+T_{\rm overhead}.
+\end{aligned}
 \end{equation}
 Here $\mathcal A$ denotes the complete numerical pipeline,
 $\varepsilon$ its requested accuracy tolerances, and $\theta$
@@ -73,9 +75,8 @@ At fixed finite $\lambda>0$ and fixed numeric $\mu$,
 an SPD banded Cholesky factorization of
 $A_\lambda=I+\lambda D_d^\top D_d$, together with
 the selected inverse on its sparsity band, suffices
-to evaluate the fitted curve, conditional
-CV/GCV/AICc/residual BIC, and a profiled Gaussian
-reduced-coordinate marginal-likelihood score,
+to evaluate the fitted curve, conditional CV/GCV/AICc/residual BIC, and
+profiled Gaussian marginal likelihood,
 without forming a dense $n\times n$ inverse.
 
 \noindent\emph{Proof.}
@@ -98,11 +99,13 @@ choose $p_\mu$ with $D_dp_\mu=\mu\mathbf1$, and put
 $z=y-p_\mu$. Let $w_j=\lambda\delta_j/(1+\lambda\delta_j)$.
 Then
 \begin{equation}\label{eq:theory_profile_quad}
-\sum_{j=1}^r w_j(v_j^\top z)^2
-=z^\top(I-H_\lambda)z
-=\|y-\widehat\tau_\lambda\|^2
-+\lambda\|D_d\widehat\tau_\lambda-\mu\mathbf1\|^2
-=:J_\lambda.
+\begin{aligned}
+J_\lambda
+&:=\sum_{j=1}^r w_j(v_j^\top z)^2\\
+&=z^\top(I-H_\lambda)z\\
+&=\|y-\widehat\tau_\lambda\|^2\\
+&\quad+\lambda\|D_d\widehat\tau_\lambda-\mu\mathbf1\|^2.
+\end{aligned}
 \end{equation}
 The final equality follows by substituting the
 normal-equation minimizer in the strictly convex
@@ -133,10 +136,11 @@ $D_dD_d^\top$. Profiling the observational variance
 gives $\widehat\sigma^2_\varepsilon=J_\lambda/r$
 and a negative twice-log-likelihood, up to constants,
 \begin{equation}\label{eq:theory_mle}
+\begin{aligned}
 \mathcal L(\lambda)
-=r\log(J_\lambda/r)
-+\log\det A_\lambda-r\log\lambda
--\log\det(D_dD_d^\top).
+={}&r\log(J_\lambda/r)+\log\det A_\lambda\\
+&-r\log\lambda-\log\det(D_dD_d^\top).
+\end{aligned}
 \end{equation}
 Consequently all the stated quantities can be
 evaluated from banded information alone.
@@ -318,9 +322,11 @@ follows from the affine model.
 \noindent\emph{Proof.}
 Subtract the two affine time functions:
 \[
+\begin{aligned}
 T_{\rm SVD}(M)-T_{\rm band}(M)
-=(a_{\rm SVD}-a_{\rm band})
--M(b_{\rm band}-b_{\rm SVD}).
+&=(a_{\rm SVD}-a_{\rm band})\\
+&\quad-M(b_{\rm band}-b_{\rm SVD}).
+\end{aligned}
 \]
 Its unique zero is $M_\star>0$ under
 the stated inequalities, and its
