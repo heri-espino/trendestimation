@@ -110,7 +110,7 @@ def attempts(preset, shard_index=0, shard_count=1):
 
 def manifest(path, *, max_work, repeats, series_count,
              max_dense_bytes, shard_index, shard_count, preset,
-             scope="full"):
+             scope="full", allow_unbounded_runtime=False):
     """Record EVERY planned method-case pair and its conservative mask."""
     if path.exists():
         raise FileExistsError(path)
@@ -136,7 +136,8 @@ def manifest(path, *, max_work, repeats, series_count,
                     R = 1 if "one_series" in workload else series_count
                     status = memory_budget_status(
                         c["n"], c["d"], method, c["denominator"],
-                        max_dense_bytes, max_work, workload, R, repeats)
+                        max_dense_bytes, max_work, workload, R, repeats,
+                        allow_unbounded_runtime=allow_unbounded_runtime)
                     counts[status] += 2
                     for coordinate in POLICIES:
                         writer.writerow(dict(
@@ -245,17 +246,24 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
             max_method_attempts=40, repeats=1, series_count=2,
             max_work=3e7, max_dense_bytes=2*1024**3,
             seed=20261102, start_attempt=0,
-            plan_only=False, manifest_scope="full"):
+            plan_only=False, manifest_scope="full",
+            no_time_limit=False):
     if manifest_scope not in ("full", "shard"):
         raise ValueError("manifest_scope must be full or shard")
     if plan_only and (preset != "comprehensive" or manifest_scope != "full"):
         raise ValueError("Plan-only mode requires the complete comprehensive manifest")
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite results: {output}")
-    if repeats < 1 or series_count < 2 or per_method_seconds < 1:
-        raise ValueError("Invalid repetition, series or timeout")
-    if max_seconds < 1 or max_method_attempts < 1:
+    if repeats < 1 or series_count < 2:
+        raise ValueError("Invalid repetition/series")
+    if not no_time_limit and per_method_seconds < 1:
+        raise ValueError("Invalid per-method timeout")
+    if not no_time_limit and max_seconds < 1:
+        raise ValueError("Invalid whole-run timeout")
+    if max_method_attempts < 1:
         raise ValueError("Invalid execution budget")
+    if no_time_limit:
+        max_work = math.inf  # No estimated-work threshold, not a RAM bypass.
     output.mkdir(parents=True)
     started = perf_counter()
     sha = source_sha()
@@ -267,6 +275,9 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "preset": preset, "source_sha": sha,
         "plan_only": plan_only, "manifest_scope": manifest_scope,
+        "no_time_limit": no_time_limit,
+        "subprocess_timeout_seconds": (None if no_time_limit else per_method_seconds),
+        "max_work": ("unbounded" if no_time_limit else max_work),
         "host": platform.platform(), "python": sys.version,
         "runner_name": os.environ.get("RUNNER_NAME"),
         "run_id": os.environ.get("GITHUB_RUN_ID"),
@@ -274,8 +285,8 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
         "methods": METHODS_ALL, "mean_policies": MEANS,
         "criteria": CRITERIA, "coordinates": POLICIES,
         "workloads": SCENARIOS,
-        "max_seconds": max_seconds,
-        "per_method_seconds": per_method_seconds,
+        "max_seconds": (None if no_time_limit else max_seconds),
+        "per_method_seconds": (None if no_time_limit else per_method_seconds),
         "max_method_attempts": max_method_attempts,
         "repeats": repeats, "series_count": series_count,
         "max_work": max_work, "max_dense_bytes": max_dense_bytes,
@@ -293,7 +304,8 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
                       series_count=series_count,
                       max_dense_bytes=max_dense_bytes,
                       shard_index=shard_index, shard_count=shard_count,
-                      preset=preset, scope=manifest_scope)
+                      preset=preset, scope=manifest_scope,
+                      allow_unbounded_runtime=no_time_limit)
     if plan_only:
         summary = dict(status="design_only_no_benchmarks",
                        planned_cases=len(configurations("comprehensive")),
@@ -308,8 +320,8 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
     outcomes = []
     for i, (identifier, c, method) in enumerate(work):
         elapsed = perf_counter() - started
-        remaining = max_seconds - elapsed
-        if (i >= max_method_attempts or remaining <= 1):
+        remaining = (math.inf if no_time_limit else max_seconds - elapsed)
+        if (i >= max_method_attempts or (not no_time_limit and remaining <= 1)):
             status = "not_executed_budget"
             reason = "Whole-run time or attempt budget exhausted"
             elapsed_method = 0.0
@@ -322,7 +334,7 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
                     c["n"], c["d"], method, c["denominator"],
                     max_dense_bytes, max_work, scenario,
                     1 if "one_series" in scenario else series_count,
-                    repeats)
+                    repeats, allow_unbounded_runtime=no_time_limit)
                 for scenario in SCENARIOS
             ]
             if preset == "comprehensive" and "eligible" not in masks:
@@ -350,18 +362,25 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
                     "--max-work", str(max_work),
                     "--max-dense-bytes", str(max_dense_bytes),
                     "--seed", str(seed), "--conditional-data-mu",
+                    *(["--allow-unbounded-runtime"] if no_time_limit else []),
                     "--output", str(dest),
                 ]
                 t0 = perf_counter()
                 try:
-                    proc = subprocess.run(
-                        cmd, text=True, capture_output=True,
-                        timeout=min(float(per_method_seconds), max(1., remaining)),
-                        check=False, cwd=ROOT)
+                    # Stream subprocess output immediately to disk. Uncapped
+                    # procedures could run for hours: capture_output=True
+                    # would accumulate unbounded logs in host RAM.
+                    log_path = dest.parent / f"{method}.log"
+                    with log_path.open("w", encoding="utf-8") as log:
+                        log.write(f"started_utc={datetime.now(timezone.utc).isoformat()}\\n")
+                        log.write(f"no_time_limit={no_time_limit}\\n")
+                        log.flush()
+                        proc = subprocess.run(
+                            cmd, text=True, stdout=log, stderr=subprocess.STDOUT,
+                            timeout=(None if no_time_limit else
+                                     min(float(per_method_seconds), max(1., remaining))),
+                            check=False, cwd=ROOT)
                     elapsed_method = perf_counter() - t0
-                    (dest.parent / f"{method}.log").write_text(
-                        (proc.stdout or "") + "\n[stderr]\n" + (proc.stderr or ""),
-                        encoding="utf-8")
                     if proc.returncode:
                         status, reason, measured = (
                             "execution_failed", f"exit_code={proc.returncode}", 0)
@@ -447,6 +466,8 @@ def main():
     parser.add_argument("--seed", type=int, default=20261102)
     parser.add_argument("--start-attempt", type=int, default=0)
     parser.add_argument("--plan-only", action="store_true")
+    parser.add_argument("--no-time-limit", action="store_true",
+                        help="Disable method and batch runtime cutoffs, including estimated runtime gates; preserve memory guard")
     parser.add_argument("--manifest-scope", choices=("full", "shard"),
                         default="full")
     a = parser.parse_args()
@@ -461,7 +482,8 @@ def main():
                      max_dense_bytes=a.max_dense_bytes, seed=a.seed,
                      start_attempt=a.start_attempt,
                      plan_only=a.plan_only,
-                     manifest_scope=a.manifest_scope)
+                     manifest_scope=a.manifest_scope,
+                     no_time_limit=a.no_time_limit)
     print(json.dumps(result, indent=2))
 
 
