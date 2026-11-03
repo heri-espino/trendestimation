@@ -67,14 +67,34 @@ successful timing. Unfinished attempts are not_executed_budget.
 same shard_count and shard_index, and a unique output. Do not reuse
 a prior branch name or overwrite results.
 
-### Manually continue on GitHub
+### Continue on the unmerged research branch
 
-Select the workflow named Experiment010 comprehensive grid (Windows).
-Use Run workflow, branch research/experiment010-comprehensive-grid,
-mode=batch, shard_count=16, shard_index (0 through 15),
-and start_attempt equal to that shard's archived next_attempt_offset.
-Each dispatch runs 40 more method-case attempts or until its
-stated resource budget expires.
+**Reliable launch mechanism:** create or edit the file
+paper/benchmarks/experiment010/REQUEST_BATCH.json with this content,
+then commit and push it to research/experiment010-comprehensive-grid:
+
+```json
+{
+  "enabled": true,
+  "shard_index": 4,
+  "shard_count": 16,
+  "start_attempt": 0,
+  "max_method_attempts": 40
+}
+```
+
+Its push triggers the one-job workflow
+.github/workflows/experiment010-comprehensive-request.yml.
+On subsequent requests, change the shard or the exact
+start_attempt using the last batch_summary.json. Every
+changed request generates a unique run-ID archive.
+A pull request or default-branch merge is NOT required to use
+the request-file push trigger.
+
+The convenience workflow_dispatch inputs in the original
+comprehensive workflow may be inaccessible until the
+workflow file is present on the repository default
+branch. Do not rely on that UI for an unmerged PR.
 
 ### Run locally in PowerShell
 
