@@ -245,6 +245,68 @@ criterion formulae are not automatically the correct data-refitted
 criteria for mu='data'.
 
 
+## Experiment008: full-criterion computational timing tensor
+
+Research PR #98, branch research/experiment008-full-factorial-timing.
+The user explicitly wants all requested times (no RMSE), repeating
+on PCAG103A-08 and preserving raw observations in GitHub. All
+Cartesian cells are enumerated with resource eligibility in
+paper/benchmarks/experiment008/run_batches.py, saved as a compressed
+long-form full_factorial_plan.csv.gz. Actual measured times are written
+only to per-slice raw_times.csv and their summary and paired naive
+speedups; don't mistake planned/skipped rows for observed timings.
+
+Actions run #41526378012 launched pilot and broad bounded batches;
+large-n action #41527345441 covers n=16384/131072, d=1/6
+with resource gates. The existing university runner uses
+C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation,
+nonadmin, PowerShell 5.1 and no dependency installations.
+
+All four workloads, exact S=1, full CV/GCV/BIC/AICc/MLE and
+direct-S versus mapped-lambda coordinate policies are retained.
+Actual mu='data' is each observed series' mean d-th difference.
+For the fixed-mu criteria, opt-in conditional data-derived mean
+is a CONDITIONAL PLUG-IN score, NOT a fully refitted-mean CV.
+A fixed nonzero mu=.15 is retained solely as a controlled
+reference case. The naive explicit-inverse method is baseline
+only where feasible. Record every resource skip, fail and actual
+measurement, and archive each workflow run under results/experiment008-*.
+The entire 100000-grid x n131072 naive-inversion experiment is
+physically infeasible and must not be falsely represented as completed.
+
+
+## Experiment008 measured data (completed-hosted batches)
+
+The full factorial design is **252000 planned cells**, but only
+actual raw CSV rows with status=ok are timing observations.
+Completed and archived measurements as of this handoff:
+
+- results/experiment008-hosted-41528426191: 392 valid rows;
+  initial CLI forwarding bug excluded other mu=data attempts.
+- results/experiment008-hosted-41529170696: 632 valid rows,
+  mu=data conditional flag correctly forwarded, no execution errors.
+- results/experiment008-hosted-broad-41529218986: 2214 valid rows
+  across 42 completed n,d slices, 8 timeouts, 2374 unrun slices.
+- results/experiment008-naive-41530425009: 1008 valid rows;
+  168 explicit-inverse GRID observations, all 5 criteria, mu0/data.
+
+4246 actual valid timing records in 4 independent hosted batches
+with different VMs; DO NOT pool hardware timing scales blindly.
+See notes/experiment008_measured_computational_times.md for
+sample measured means and theory caveats, source links and
+exact counts. Run-level dataset includes environment.json,
+paired_speedups.csv, batch manifest and full planned tensor status.
+
+The Windows large-series and Windows bounded batch runs were also
+launched. Only count them after Github pushes their raw data to
+results/experiment008-* branches; do not invent large-n performance.
+The original unbounded process was canceled; a corrected per-slice
+45-second timeout and explicit slice statuses were implemented.
+
+Research PR #98 has complete source + tests; no production solver
+auto-selection default change, no RMSE optimization.
+
+
 ## Experiment009 SVD vs banded Cholesky theory and empirical surfaces
 
 Open PR #99 on research/experiment009-cost-crossover-surface.

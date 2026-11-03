@@ -1,0 +1,80 @@
+name: Experiment008 large-n structured full-criterion timing
+
+on:
+  push:
+    branches: [research/experiment008-full-factorial-timing]
+    paths: [.github/workflows/experiment008-large-series.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment008-large-n-pcag103a08
+  cancel-in-progress: false
+
+jobs:
+  large-series:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONPATH: ${{ github.workspace }}\src
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate exact non-admin Conda runner
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import numpy, scipy; print('Existing Conda environment ready')"
+          if ($LASTEXITCODE -ne 0) { throw 'Missing existing dependencies; no installs' }
+      - name: Run large-n banded full-criterion slices, preserving skips
+        id: benchmark
+        run: |
+          $dest = "paper/benchmarks/experiment008/runs/large-$env:GITHUB_RUN_ID"
+          New-Item -ItemType Directory -Force $dest | Out-Null
+          $tasks = @(
+            @{n=16384; d=1; mu='data'; criterion='mle'},
+            @{n=131072; d=1; mu='data'; criterion='mle'},
+            @{n=16384; d=6; mu='0'; criterion='gcv'},
+            @{n=131072; d=6; mu='0'; criterion='gcv'}
+          )
+          foreach ($task in $tasks) {
+            $name = "n$($task.n)_d$($task.d)_$($task.criterion)_mu$($task.mu)"
+            $folder = Join-Path $dest $name
+            Write-Host "Starting real large-n timing slice $name"
+            & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment006/run.py --preset slice --n $task.n --d $task.d --mu $task.mu --criterion $task.criterion --amplitude low --grid-denominator 100 --methods banded_cholesky,sparse_lu_banded_trace --repeats 2 --series-count 2 --max-work 10000000 --threads 1 --output $folder
+            if ($LASTEXITCODE -ne 0) {
+              "FAILED: $name exit $LASTEXITCODE" | Out-File -Append -Encoding utf8 "$dest/failures.txt"
+            } else {
+              Write-Host "Saved raw timing $folder"
+            }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dest/requirements-resolved.txt" -Encoding utf8
+      - name: Upload large-n actual results and resource statuses
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment008-large-n-${{ github.run_id }}
+          path: paper/benchmarks/experiment008/runs/large-${{ github.run_id }}/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit all measured large-n data to standalone result branch
+        if: always()
+        run: |
+          $dir = "paper/benchmarks/experiment008/runs/large-$env:GITHUB_RUN_ID"
+          if (!(Test-Path "$dir/requirements-resolved.txt")) { exit 0 }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          $branch = "results/experiment008-large-n-$env:GITHUB_RUN_ID"
+          git switch -c $branch
+          git add -f -- $dir
+          git commit -m "experiment008: archive large-n banded full-criterion timing $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not push results' }

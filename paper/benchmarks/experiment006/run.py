@@ -242,14 +242,15 @@ def _row(n,d,mu,amplitude,criterion,denom,method,policy,scenario,
 def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
               denominator=100,methods=METHODS,repeats=3,R=8,
               max_work=5e7,max_dense_bytes=2*1024**3,
-              output=None,threads=1,seed=20261102):
+              output=None,threads=1,seed=20261102,
+              conditional_data_mu=False):
     if n not in N_LEVELS or d not in D_LEVELS or d>=n:
         raise ValueError("n and d must be requested factorial levels")
     if criterion not in CRITERIA:raise ValueError("Unknown criterion")
     if isinstance(mu,str) and mu!="data":
         raise ValueError("mu must be numeric or 'data'")
-    if mu=="data" and criterion!="mle":
-        raise ValueError("mu='data' supported only for conditional MLE")
+    if mu=="data" and criterion!="mle" and not conditional_data_mu:
+        raise ValueError("mu='data' with fixed-mean criteria requires conditional_data_mu=True; scores are CONDITIONAL plug-in, not refitted CV")
     if denominator not in GRID_DENOMINATORS:
         raise ValueError("Invalid grid")
     if repeats<1 or R<2 or threads<1:raise ValueError("Bad repeat/R/threads")
@@ -465,6 +466,11 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
             f.write("n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup\n")
     meta=dict(
         n=n,d=d,mu=mu,amplitude=amplitude,criterion=criterion,
+        mean_policy_note=(
+            "conditional_plugin_not_refitted" if mu=="data" and criterion!="mle"
+            else "conditional_plugin_mle" if mu=="data"
+            else "fixed_numeric_reference_mean"
+        ),
         denominator=denominator,methods=list(methods),R=R,
         repeats=repeats,policies=list(POLICIES),scenarios=list(SCENARIOS),
         exact_S_one=True,grid_starts_at_positive_s=True,
@@ -502,6 +508,7 @@ def main():
     p.add_argument("--max-work",type=float,default=5e7)
     p.add_argument("--max-dense-bytes",type=int,default=2*1024**3)
     p.add_argument("--output",type=Path,default=None)
+    p.add_argument("--conditional-data-mu",action="store_true",help="Opt into conditional plug-in mu=data scores; NOT fully refitted LOOCV")
     a=p.parse_args()
     mu=a.mu if a.mu=="data" else float(a.mu)
     opts=dict(n=a.n,d=a.d,mu=mu,amplitude=a.amplitude,
@@ -509,7 +516,7 @@ def main():
               methods=tuple(x.strip() for x in a.methods.split(",")),
               repeats=a.repeats,R=a.series_count,threads=a.threads,
               max_work=a.max_work,max_dense_bytes=a.max_dense_bytes,
-              output=a.output)
+              output=a.output,conditional_data_mu=a.conditional_data_mu)
     if a.preset=="smoke":
         opts.update(n=64,d=2,mu=.15,amplitude="low",criterion="gcv",
                     denominator=100,methods=("banded_cholesky","spectral_svd"),
