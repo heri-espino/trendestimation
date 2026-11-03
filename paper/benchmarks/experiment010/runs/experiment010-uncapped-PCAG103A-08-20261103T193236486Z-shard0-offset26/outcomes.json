@@ -1,0 +1,19 @@
+[
+  {
+    "case_id": "n64_d1_bic_d8ae4e0692ae",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "bic",
+      "denominator": 100000
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_bic_d8ae4e0692ae\\sparse_cholesky_banded_trace",
+    "elapsed_s": 301.3957100000698,
+    "reason": "",
+    "measured_rows": 16
+  }
+]

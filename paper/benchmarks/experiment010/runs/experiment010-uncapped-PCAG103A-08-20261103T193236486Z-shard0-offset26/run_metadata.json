@@ -1,0 +1,29 @@
+{
+  "created_utc": "2026-11-03T19:32:46.605159+00:00",
+  "source_sha": "f16f2bab6cfa37c6423c7f2d4554208efa9f683a",
+  "host": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "runner_name": null,
+  "mode": "parallel_uncapped",
+  "workers": 1,
+  "blas_threads_per_worker": 1,
+  "max_seconds": null,
+  "per_method_seconds": null,
+  "max_work": "unbounded",
+  "max_dense_bytes": 2147483648,
+  "total_parallel_dense_bytes": 17179869184,
+  "repeats": 2,
+  "series_count": 2,
+  "seed": 20261102,
+  "shard_index": 0,
+  "shard_count": 16,
+  "start_attempt": 26,
+  "max_method_attempts": 1,
+  "selected_methods": [
+    "sparse_cholesky_banded_trace"
+  ],
+  "cursor_semantics": "start_attempt and next_attempt_offset index the original 10-method shard; unselected slots advance the cursor but launch no process.",
+  "planned_attempts_in_shard": 3280,
+  "numerical_accuracy_note": "Selected-score parity is not independent high-precision forward-error certification.",
+  "timing_note": "Parallel-process throughput timings run under CPU contention and must not be pooled as standalone serial benchmark latencies."
+}
