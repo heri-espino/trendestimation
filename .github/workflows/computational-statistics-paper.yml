@@ -1,10 +1,19 @@
-name: Computational Statistics manuscript PDF (manual)
+name: Computational Statistics manuscript PDF (reproducible build)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - paper/computational-statistics-final-evidence
+    paths:
+      - '.github/workflows/computational-statistics-paper.yml'
+      - 'paper/main.tex'
+      - 'paper/sections/**'
+      - 'paper/benchmarks/experiment010/publication_evidence/**'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   compile:
@@ -26,6 +35,9 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pip install -r paper/requirements.txt
+      - name: Validate frozen Experiment010 BIC timing table without rerunning experiments
+        run: |
+          python paper/benchmarks/experiment010/publication_evidence/check_table.py
       - name: Generate Springer manuscript figures and simulation tables
         run: python paper/build.py --figures
       - name: Compile official Springer Nature LaTeX
@@ -36,6 +48,27 @@ jobs:
           latexmk_use_xelatex: false
       - name: Make flat Computational Statistics submission archive
         run: python paper/build.py --package
+      # Commit the generated PDF and flat submission bundle on the dedicated
+      # paper branch only; do not rewrite other agents' main branch.
+      - name: Preserve compiled manuscript PDF and submission ZIP in Git
+        if: github.ref == 'refs/heads/paper/computational-statistics-final-evidence'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f paper/main.pdf paper/computational-statistics-submission.zip
+          if git diff --cached --quiet; then
+            echo 'Manuscript PDF and ZIP already match their source.'
+          else
+            git commit -m 'paper: archive verified compiled manuscript and submission ZIP [skip ci]'
+            git fetch origin "$GITHUB_REF_NAME"
+            if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+              echo 'Branch advanced concurrently; refusing to overwrite or rebase another agent.'
+              exit 1
+            fi
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
       - name: Upload Springer draft and source archive
         uses: actions/upload-artifact@v4
         with:
