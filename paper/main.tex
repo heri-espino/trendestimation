@@ -25,7 +25,7 @@
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, general banded, dense Cholesky, and banded Cholesky solvers under matched workloads. A companion study compares six implementations for actual GCV grid searches under varying difference orders, fixed nonzero reference means and reusable preprocessing. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
+\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, general banded, dense Cholesky, and banded Cholesky solvers under matched workloads. A companion study compares six implementations for actual GCV grid searches under varying difference orders, fixed nonzero reference means and reusable preprocessing. A targeted, source-archived Windows engineering check adds 48 valid timings for dense inversion, spectral SVD and a sparse-Cholesky hybrid at one fixed workload configuration, with explicit qualification of differing processor contention. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
 
 \keywords{normalized smoothness index, penalized least squares, smoothing parameter selection, spectral computation, numerical benchmarking}
 
@@ -252,6 +252,7 @@ An independent check compares the SVD implementation with the direct normal equa
 \input{sections/selection_visuals}
 \input{sections/full_s_factorial}
 \input{sections/windows_full_s_results}
+\input{sections/experiment010_three_backend}
 
 \input{sections/high_order_numerics}
 
@@ -291,7 +292,14 @@ workloads, while banded Cholesky is an efficient choice for many full-
 trend reconstructions. Reusing Cholesky factors is beneficial only when
 the same penalty candidates recur across multiple series.
 Observed timing differences apply to the stated workloads and
-hardware. Higher differencing orders can amplify numerical
+hardware. The additional three-backend verification at $n=64$
+exhibits close selected-BIC agreement, but the CHOLMOD backfill
+was performed with a different number of concurrent workers;
+its measured seconds are therefore descriptive rather than an
+unconfounded head-to-head speed ranking. A banded Cholesky
+factorization exploits the $d$-banded positive-definite system
+at $O(nd^2)$ cost; the observed CHOLMOD hybrid also pays
+for exact selected-inverse diagnostics. Higher differencing orders can amplify numerical
 conditioning problems; a common $s$ across orders standardizes
 a conditional trace index, \emph{not} trend geometry.
 
@@ -314,7 +322,7 @@ remain outside the scope of the present study.
 
 \noindent\textbf{Ethics approval and consent.} Not applicable to the presented numerical algorithms and historical aggregate time-series examples; authors to verify.
 
-\noindent\textbf{Data availability.} The simulated data can be reproduced from the supplied scripts and seeds. The observed monthly carbon-dioxide series is derived from \texttt{statsmodels.datasets.co2}; data access and provenance are described in the manuscript.
+\noindent\textbf{Data availability.} The simulated data can be reproduced from the supplied scripts and seeds. The observational monthly carbon-dioxide source is a frozen NOAA Mauna Loa snapshot through September 2026, with a documented derived-data provenance in the repository. The numerical benchmark rows, their original GitHub results branches, frozen CSV, and validation script are preserved under \texttt{paper/benchmarks/experiment010/publication\_evidence/}.
 
 \noindent\textbf{Code availability.} The implementation and paper-specific simulation and benchmark scripts are maintained at \url{https://github.com/heri-espino/trendestimation}. A permanently archived release identifier should be added before submission.
 
