@@ -486,3 +486,24 @@ Independent high-precision forward certification,
 calibrated cost-model regression, and held-out oracle
 regret are still future work; never silently
 conflate criterion parity with numerical validity.
+
+
+### Actual n256 higher-n empirical evidence
+
+Actions #41642508020 first offset0 finished successfully,
+archive results/experiment010-41642508020-a1-frontier-offset0.
+60 complete method-case attempts, 666 valid raw timing
+rows, 664 criterion parity-only matches, 2 disagreements
+(naive inverse n256d5 mu=data MLE), 222 failed/partial.
+Three-reference-mean paired n256d1 GCV comparisons:
+one S cold banded Cholesky approximately 8ms vs
+SVD 13ms, but M100 grid Cholesky approximately
+60ms vs SVD approximately 25ms; consistent
+workload-specific crossover for all mu=0/data/0.15.
+Two repeats only. n256d5 MLE: Cholesky single-S
+recorded status ok but 100-S did not have valid full
+repeats; SVD/guard did. Numerical accuracy must be
+independently validated before calling a fast solver
+admissible, especially at d5. The n512 second block
+offset60 is independently archived and must be read
+before any claims. See RESULTS_INDEX.md.

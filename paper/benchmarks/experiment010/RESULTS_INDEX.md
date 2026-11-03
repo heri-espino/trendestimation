@@ -214,3 +214,43 @@ Its two nonoverlapping method-case offsets are
 0 and 60. Consult the actual job conclusions and
 unique results branches before claiming any
 n256/n512 timings or numerical accuracy.
+
+
+## Observed n=256 frontier — verified first half of #41642508020
+
+First stage: [Windows Actions run #41642508020](https://github.com/heri-espino/trendestimation/actions/runs/41642508020);
+[immutable offset-0 results](https://github.com/heri-espino/trendestimation/tree/results/experiment010-41642508020-a1-frontier-offset0).
+This first n=256 block completed **60 out of 120** scheduled method-case
+attempts and retained **666** status=ok timing rows; it records
+**664 score-parity-only matches**, **2 disagreements** and
+222 failed/partial audit rows. The two remaining criterion disagreements
+involve the naive inverse at n=256,d=5,mu=data,MLE and R=2/S=one,
+relative error approximately 2.48e-6. The later n=512
+block is a **separate pending/independently verifiable** result
+from offset 60; do not invent its measurements here.
+
+Illustrative measured cold total median times in milliseconds,
+**two repeats**, policy=pretranslated lambda, one observed series,
+high input scale. The S grid is *identical* for every backend.
+
+| n,d,criterion,mu | Banded Cholesky one S | Spectral SVD one S | Banded Cholesky 100 S | Spectral SVD 100 S |
+|---|---:|---:|---:|---:|
+| 256,1,GCV,0 | 8.13 | 13.80 | 61.31 | 26.68 |
+| 256,1,GCV,"data" | 8.4 | 13.5 | 60.2 | 25.6 |
+| 256,1,GCV,0.15 | 8.1 | 12.9 | 59.5 | 24.9 |
+| 256,5,MLE,0 | 10.5 | 13.4 | invalid / no full valid repeat | 26.5 |
+| 256,5,MLE,"data" | 10.2 | 13.0 | invalid / no full valid repeat | 25.2 |
+| 256,5,MLE,0.15 | 10.5 | 13.2 | invalid / no full valid repeat | 25.4 |
+
+This is a directly observed **workload crossover within
+three matched mean policies** at n256,d1: Cholesky faster
+for a single S, SVD faster for 100 S, on this implementation
+and specific Windows host. For n256,d5, several structured
+100-S pipelines lack fully valid status=ok repeats; do
+NOT report them as slower or as numerically certified
+based solely on benchmark criterion output. Optional
+CHOLMOD unavailable, and guarded SVD/Cholesky is a
+composite policy not an independent primitive. These
+figures do not establish a calibrated predictive frontier
+or a high-precision accuracy guarantee. Repetitions=2
+cannot yield robust timing uncertainty intervals.
