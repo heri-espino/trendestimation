@@ -146,3 +146,68 @@ def test_banded_cholesky_factor_cache_same_lambda_different_mean():
     fitter.fit(y,lambda_=9.,mu=0.0)
     assert fitter.cached_factor_count==2
     assert fitter.stored_bytes>8*(2+1)*n
+
+
+def test_scikit_sparse_05_adapter_uses_csc_array_and_solve(monkeypatch):
+    """Mock 0.5 public API so CI can test compatibility without CHOLMOD."""
+    import sys
+    from types import ModuleType
+    from scipy.sparse import csc_array, issparse
+
+    root = ModuleType("sksparse")
+    child = ModuleType("sksparse.cholmod")
+    matrices = []
+
+    def cho_factor(A):
+        assert isinstance(A, csc_array), (
+            "scikit-sparse 0.5 requires a CSC sparse array")
+        matrices.append(A.copy())
+        class Factor:
+            def solve(self, b):
+                return np.linalg.solve(A.toarray(), b)
+        return Factor()
+
+    child.cho_factor = cho_factor
+    root.cholmod = child
+    monkeypatch.setitem(sys.modules, "sksparse", root)
+    monkeypatch.setitem(sys.modules, "sksparse.cholmod", child)
+    n, d = 28, 2
+    y = np.random.default_rng(911).normal(size=n)
+    solver = PreparedPLSSolver(n, d, method="sparse_cholesky",
+                               factor_cache=True)
+    fitted = solver.fit(y, lambda_=2.0, mu=0.15)
+    expected = PreparedPLSSolver(n, d, method="cholesky").fit(
+        y, lambda_=2.0, mu=0.15)
+    assert_allclose(fitted, expected, rtol=2e-9, atol=2e-9)
+    assert len(matrices) == 1
+    assert issparse(matrices[0])
+
+
+def test_scikit_sparse_04_adapter_retains_legacy_solve_A(monkeypatch):
+    """The explicit modern conversion must not break older 0.4 installs."""
+    import sys
+    from types import ModuleType
+    from scipy.sparse import csc_matrix
+
+    root = ModuleType("sksparse")
+    child = ModuleType("sksparse.cholmod")
+    matrices = []
+    def cholesky(A):
+        assert isinstance(A, csc_matrix)
+        matrices.append(A.copy())
+        class Factor:
+            def solve_A(self, b):
+                return np.linalg.solve(A.toarray(), b)
+        return Factor()
+    child.cholesky = cholesky
+    root.cholmod = child
+    monkeypatch.setitem(sys.modules, "sksparse", root)
+    monkeypatch.setitem(sys.modules, "sksparse.cholmod", child)
+    n, d = 20, 1
+    y = np.random.default_rng(912).normal(size=n)
+    fit = PreparedPLSSolver(n, d, method="sparse_cholesky").fit(
+        y, lambda_=1.4, mu=0.)
+    reference = PreparedPLSSolver(n, d, method="cholesky").fit(
+        y, lambda_=1.4, mu=0.)
+    assert_allclose(fit, reference, rtol=1e-9, atol=1e-9)
+    assert len(matrices) == 1
