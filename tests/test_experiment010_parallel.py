@@ -167,3 +167,62 @@ def test_windows_transient_lock_retries_until_atomic_replace_succeeds(
         rows = list(csv.DictReader(handle))
     assert len(rows) == 1
     assert rows[0]["method"] == "test"
+
+
+
+def test_focused_three_skip_other_methods_and_detect_missing_cholmod(
+        tmp_path, monkeypatch):
+    """Keep the original 10-slot cursor while running only selected pipelines."""
+    launched = []
+
+    def fake_run_one(item, output, *, repeats, series_count,
+                     max_dense_bytes, seed):
+        identifier, cfg, method = item
+        launched.append(method)
+        return dict(
+            case_id=identifier, configuration=cfg, method=method,
+            status="process_error", folder="", elapsed_s=0.01,
+            reason="synthetic controlled failure", measured_rows=0)
+
+    monkeypatch.setattr(PAR, "run_one", fake_run_one)
+    monkeypatch.setattr(PAR, "optional_cholmod_error",
+                        lambda: "ImportError: no sksparse in test")
+    monkeypatch.setattr(PAR.B, "source_sha", lambda: "focused-test-sha")
+    output = tmp_path / "focused"
+    summary = PAR.execute_parallel(
+        output, shard_index=0, shard_count=64, start_attempt=0,
+        max_method_attempts=10, workers=2,
+        max_dense_bytes=2 * 1024**3,
+        total_parallel_dense_bytes=4 * 1024**3,
+        repeats=2, series_count=2,
+        selected_methods=PAR.FOCUSED_METHODS)
+    assert set(launched) == {"naive_inverse", "spectral_svd"}
+    assert summary["next_attempt_offset"] == 10
+    assert summary["selected_method_cases"] == 3
+    assert summary["actual_attempted"] == 2
+    assert summary["dependency_unavailable"] == 1
+    assert summary["not_selected_by_design"] == 7
+    assert summary["attempt_counts"]["process_error"] == 2
+    with (output / "method_attempts.csv").open(
+            newline="", encoding="utf-8") as stream:
+        records = list(csv.DictReader(stream))
+    assert len(records) == 10
+    assert sum(r["status"] == "method_not_selected"
+               for r in records) == 7
+    assert sum(r["status"] == "dependency_unavailable"
+               for r in records) == 1
+    meta = json.loads((output / "run_metadata.json").read_text())
+    assert tuple(meta["selected_methods"]) == PAR.FOCUSED_METHODS
+    assert "method_not_selected" in summary["planned_manifest_statuses"]
+
+
+def test_invalid_or_duplicate_focused_methods_rejected_before_output(
+        tmp_path):
+    for selected in ([], ["unknown_solver"],
+                     ["spectral_svd", "spectral_svd"]):
+        target = tmp_path / ("bad" + str(len(selected)) +
+                             str(selected[:1]).replace("/", "_"))
+        with pytest.raises(ValueError, match="selected_methods"):
+            PAR.execute_parallel(
+                target, selected_methods=selected)
+        assert not target.exists()
