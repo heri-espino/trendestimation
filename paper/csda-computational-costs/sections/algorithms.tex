@@ -31,11 +31,11 @@ For dense direct methods, EDF and LOOCV may be computed using a factorization an
 \subsection{How pretranslation and grid reuse change total work}
 With the singular values cached, one inverse $s\mapsto\lambda$ is a monotone scalar root problem in $\log\lambda$ whose function calls each take $O(r)$, so $K$ targets with $I$ iterations cost $O(KIr)$ beyond the SVD. Let the set $G_{n,d}=\{\Lambda_{n,d}(s_j):1\le j\le K\}$ be cached. It depends neither on the current series nor on the fixed mean of differences. The same grid can be reused across $C$ criteria and $R$ new series.
 
-For GCV/AICc/BIC/ML-style spectral selections, an illustrative amortized cost is
+For GCV/AICc/BIC/ML-style spectral selections, a preliminary arithmetic bound is
 \begin{equation}\label{eq:cost}
 T_{\mathrm{SVD}}=O(nr^2+KIr+Rnr+RCKr).
 \end{equation}
-The $Rnr$ term projects each new series once; CV replaces the pertinent $O(r)$ candidate term by $O(nr)$. A cold approach that re-inverts $s$ at every criterion or re-decomposes for each series incurs additional repeated work. Likewise, a banded Cholesky implementation that caches the same $K$ factors across $R$ series may incur $O(Knd^2+RKnd)$ fitting arithmetic, \emph{before} trace/leverage computation. This is why different setup/reuse policies can reverse a timing winner.
+The $Rnr$ term projects each new series once; CV replaces the pertinent $O(r)$ candidate term by $O(nr)$. A proof with explicit memory and criterion-set assumptions appears in Section~\ref{sec:amortized}. A cold approach that re-inverts $s$ at every criterion or re-decomposes for each series incurs additional repeated work. Likewise, a banded Cholesky implementation that caches the same $K$ factors across $R$ series may incur $O(Knd^2+RKnd)$ fitting arithmetic, \emph{before} trace/leverage computation. This is why different setup/reuse policies can reverse a timing winner.
 
 The reference-mean policy changes coefficients of the right-hand side, not the spectrum. Fixed $\mu=0$ and fixed $\mu=0.15$ share precisely the same $G_{n,d}$. Estimating $\widehat\mu$ from $D_dy$ adds an $O(nd)$ pass per series; the archived comprehensive Windows run did \emph{not} separately time this data-dependent mean-estimation step.
 
