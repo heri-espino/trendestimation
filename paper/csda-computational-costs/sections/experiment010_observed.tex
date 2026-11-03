@@ -28,3 +28,43 @@ diagnostics as applicable. The guarded SVD/Cholesky policy is composite;
 sparse and PCG hybrid pipelines include their extra banded diagnostics.
 An incomplete, unavailable or numerically invalid method is never
 assigned a fictitious valid execution time.
+
+\subsection{Completed attempts and archival accounting}
+All new measurements used the existing non-administrator
+\texttt{trendestimation} Conda environment on university Windows 11
+runner \texttt{PCAG103A-08}. The committed source SHA, original
+\texttt{raw\_times.csv}, per-method criterion scores and failure
+statuses, seed, environment and batch summary are preserved in
+immutable GitHub result branches. A status-\texttt{ok} timing row
+is a method--workload--coordinate--repetition observation,
+\emph{not} an independent experimental problem.
+
+\begin{table*}[t]\centering
+\caption{Verified corrected-source Experiment010 evidence. Match
+means selected-score agreement against a valid spectral reference,
+not independent high-precision verification. Failed/partial records
+have no valid complete-criterion time. No-reference rows cannot
+be independently compared with spectral scores.}
+\label{tab:experiment010_coverage}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Batch & Attempts & OK times & Match & Differ & No ref. & Failed/partial\\
+\midrule
+Corrected smoke & 30 & 420 & 420 & 0 & 0 & 30\\
+Initial corrected pilot & 60 & 720 & 704 & 16 & 0 & 180\\
+Pilot continuation offset 60 & 60 & 680 & 680 & 0 & 0 & 208\\
+Pilot continuation offsets 120--240 & 180 & 2520 & 2520 & 0 & 0 & 180\\
+$n=256$ targeted frontier & 60 & 666 & 664 & 2 & 0 & 222\\
+$n=512$ targeted frontier & 60 & 564 & 492 & 0 & 72 & 282\\
+\midrule
+\textbf{Total} & \textbf{450} & \textbf{5570} & \textbf{5480} &
+\textbf{18} & \textbf{72} & \textbf{1102}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+The pilot advanced only 300 out of 1800 scheduled method--case
+attempts. The 50,400-method--case and 403,200 workload/policy-row
+factorial \emph{manifests} remain plans, not completed time observations.
+The original 80,640-row historical Windows study, Experiment007 fit-only
+runs and other Experiment008/009 measurements remain separate datasets.
