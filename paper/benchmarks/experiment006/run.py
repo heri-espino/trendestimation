@@ -124,18 +124,21 @@ def naive_score(n,d,y,lam,mu,criterion,Q=None,H=None):
     return (base+(2*edf+1)/den if den>0 else float("inf"))
 
 
-def memory_budget_status(n,d,method,denom,max_dense_bytes,max_work,scenario,R,repeats):
+def memory_budget_status(n,d,method,denom,max_dense_bytes,max_work,scenario,R,repeats,*,
+                         allow_unbounded_runtime=False):
     """A skip is an explicit reproducible result, never an unnoticed omission."""
     M=1 if scenario.startswith("one_s") else denom
     if method=="naive_inverse":
         if n*n*8*7>max_dense_bytes:
             return "infeasible_dense_memory"
-        if n>512: return "infeasible_naive_runtime"
+        if n>512 and not allow_unbounded_runtime:
+            return "infeasible_naive_runtime"
     if method in ("spectral_svd","guarded_svd_cholesky") and (
             method=="spectral_svd" or d>=5):
         if n*n*8*5>max_dense_bytes:
             return "infeasible_dense_memory"
-        if n>2048: return "infeasible_svd_runtime"
+        if n>2048 and not allow_unbounded_runtime:
+            return "infeasible_svd_runtime"
     # Conservative accounting in Python loop units; override explicitly
     # on a machine capable of completing this particular slice.
     work=float(n)*max(1,d*d)*M*R*repeats
@@ -243,7 +246,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
               denominator=100,methods=METHODS,repeats=3,R=8,
               max_work=5e7,max_dense_bytes=2*1024**3,
               output=None,threads=1,seed=20261102,
-              conditional_data_mu=False):
+              conditional_data_mu=False,allow_unbounded_runtime=False):
     if n not in N_LEVELS or d not in D_LEVELS or d>=n:
         raise ValueError("n and d must be requested factorial levels")
     if criterion not in CRITERIA:raise ValueError("Unknown criterion")
@@ -261,6 +264,19 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
         raise FileExistsError(f"Refusing to overwrite archived run: {output}")
     targets=grid_of_s(denominator)
     rows=[]
+    # Save each completed row before starting the next long calculation.
+    # An interrupted process leaves an explicit, incomplete CSV on disk.
+    output.mkdir(parents=True, exist_ok=True)
+    def emit_row(row):
+        rows.append(row)
+        checkpoint=output/"raw_times.csv"
+        temporary=output/"raw_times.tmp"
+        with temporary.open("w",newline="",encoding="utf-8") as handle:
+            writer=csv.DictWriter(handle,fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+        temporary.replace(checkpoint)
+
     with threadpool_limits(limits=threads):
         # The coordinate mapper belongs to the same (n,d) problem and
         # may be reused across ALL mu, series, criterion and methods.
@@ -280,7 +296,8 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
             # Never allocate a dense n-by-n array before resource gating.
             preflight=memory_budget_status(
                 n,d,method,denominator,max_dense_bytes,float("inf"),
-                "one_s_one_series",1,1)
+                "one_s_one_series",1,1,
+                allow_unbounded_runtime=allow_unbounded_runtime)
             if preflight!="eligible":
                 setup_s=mapper_setup_s
                 failure=preflight
@@ -301,9 +318,10 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                 for policy in POLICIES:
                     budget=memory_budget_status(
                         n,d,method,denominator,max_dense_bytes,max_work,
-                        scenario,nr,repeats)
+                        scenario,nr,repeats,
+                        allow_unbounded_runtime=allow_unbounded_runtime)
                     if failure or budget!="eligible":
-                        rows.append(_row(
+                        emit_row(_row(
                             n,d,mu,amplitude,criterion,denominator,method,
                             policy,scenario,-1,nr,M,setup_s,0.,0.,
                             float("nan"),float("nan"),
@@ -327,7 +345,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                                 mapped=[invert(s) for s in ss]
                             except (ValueError, ArithmeticError,
                                     OverflowError,np.linalg.LinAlgError) as exc:
-                                rows.append(_row(
+                                emit_row(_row(
                                     n,d,mu,amplitude,criterion,denominator,
                                     method,policy,scenario,repeat,nr,M,
                                     setup_s+series_setup_s,
@@ -388,7 +406,7 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
                             state="ok"
                         best=min(finite,key=lambda x:x[0]) if finite else (
                             float("nan"),float("nan"))
-                        rows.append(_row(
+                        emit_row(_row(
                             n,d,mu,amplitude,criterion,denominator,method,
                             policy,scenario,repeat,nr,M,
                             setup_s+series_setup_s,map_s,tscore,
@@ -476,7 +494,9 @@ def run_slice(n=64,d=2,mu=0.,amplitude="low",criterion="gcv",
         exact_S_one=True,grid_starts_at_positive_s=True,
         mapping_backend=mapping_backend,
         mapper_setup_s=mapper_setup_s,
-        max_work=max_work,max_dense_bytes=max_dense_bytes,
+        max_work=("unbounded" if math.isinf(max_work) else max_work),
+        max_dense_bytes=max_dense_bytes,
+        allow_unbounded_runtime=allow_unbounded_runtime,
         seed=seed,host=platform.platform(),python=sys.version,
         numpy=np.__version__,scipy=scipy.__version__,
         threadpools=threadpool_info(),blas_threads=threads,
@@ -507,6 +527,7 @@ def main():
     p.add_argument("--threads",type=int,default=1)
     p.add_argument("--seed",type=int,default=20261102)
     p.add_argument("--max-work",type=float,default=5e7)
+    p.add_argument("--allow-unbounded-runtime",action="store_true")
     p.add_argument("--max-dense-bytes",type=int,default=2*1024**3)
     p.add_argument("--output",type=Path,default=None)
     p.add_argument("--conditional-data-mu",action="store_true",help="Opt into conditional plug-in mu=data scores; NOT fully refitted LOOCV")
@@ -517,7 +538,8 @@ def main():
               methods=tuple(x.strip() for x in a.methods.split(",")),
               repeats=a.repeats,R=a.series_count,threads=a.threads,
               max_work=a.max_work,max_dense_bytes=a.max_dense_bytes,
-              output=a.output,seed=a.seed,conditional_data_mu=a.conditional_data_mu)
+              output=a.output,seed=a.seed,conditional_data_mu=a.conditional_data_mu,
+              allow_unbounded_runtime=a.allow_unbounded_runtime)
     if a.preset=="smoke":
         opts.update(n=64,d=2,mu=.15,amplitude="low",criterion="gcv",
                     denominator=100,methods=("banded_cholesky","spectral_svd"),
