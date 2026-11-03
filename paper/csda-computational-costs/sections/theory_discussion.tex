@@ -154,35 +154,40 @@ and expressed the implementation decision
 as an admissible, workload-specific
 cost frontier.
 
-These deductions do not determine
-which method will be fastest in
-milliseconds on any particular machine.
-That empirical question, including
-matched controlled runtimes and
-high-precision numerical failures,
-belongs in a separate reproducible
-software benchmark. The present
-manuscript is a \emph{theoretical
-computational analysis}; the historical
-Windows timing study, the recent
-three-backend CHOLMOD archive and their
-AwesomeFigures visualizations remain
-available in the same repository as
-independent evidence, but are not
-treated as findings of this paper.
+These deductions do not determine a universal fastest method
+in milliseconds. Section~\ref{sec:matched-example} reports
+one matched, single-worker BIC implementation example;
+the observed spectral advantage for a $10^5$-candidate grid
+is descriptive at $n=64$ and $d=1$, not a claim about CV
+or arbitrary sample sizes. The NGSIM application
+in Section~\ref{sec:jerk-illustration} likewise demonstrates
+the meaning of the estimated third difference and a
+separately appended forecasting heuristic, not an
+intrinsic PLS predictive distribution or measured true jerk.
+A fully powered multi-criterion runtime frontier and
+independent physical forecasting evaluation remain
+appropriate subjects for separate papers.
 
 \section*{Data and code availability}
 The full mathematical derivations and
 reproducibility notes are maintained at
 \url{https://github.com/heri-espino/trendestimation}.
 An archived source revision must be
-cited at submission. The manuscript's
-analytical identities require no
-new empirical data. Historical
-timing files and their environment
-metadata remain preserved elsewhere
-in the repository and are not
-reclassified as new measurements.
+cited at submission. The mathematical identities require no
+experimental calibration. The small matched
+benchmark illustration uses 48 frozen
+Windows observations and their original source revision,
+copied verbatim under
+\texttt{paper/csda-computational-costs/data/}.
+The jerk example reuses real FHWA US-101 longitudinal
+measurements and the predeclared training-only selection
+from \texttt{paper/ngsim-jerk-case-study/};
+the recorded positions and CC BY-SA 3.0 attribution
+are retained in that source manuscript.
+The four new AwesomeFigures sources, editable
+PGF/PDF/SVG outputs, figure-generation script,
+checksums, and full archived benchmark provenance
+are preserved in this repository.
 
 \section*{Declarations}
 Author order, correspondence,
