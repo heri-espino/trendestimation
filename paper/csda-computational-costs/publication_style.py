@@ -29,7 +29,7 @@ _LAYOUT = None
 _PAPER = None
 _COLUMN_INCHES = None
 _MANIFEST = []
-WIDE = frozenset({"criterion_coordinates", "workload_scaling", "reuse_by_d", "solver_crossover", "derivative_orders"})
+WIDE = frozenset({"criterion_coordinates", "workload_scaling", "reuse_by_d", "solver_crossover", "derivative_orders", "theory_regime_map", "theory_cost_curves", "matched_bic_timings", "ngsim_jerk_application"})
 
 
 def configure_publication(paper: Path):
@@ -141,12 +141,16 @@ def publication_export(fig, name: str, figures_dir: Path):
     print("TeX/PGF AwesomeFigures export complete:", name, flush=True)
 
 
-def finish_manifest(paper: Path, figures_dir: Path):
+def finish_manifest(paper: Path, figures_dir: Path, *,
+                    names=None,
+                    manifest_name="awesomefigures_latex_manifest.json",
+                    source_data="original Windows timing and paired 20-seed solver CSV archives"):
     target = Path(figures_dir)
-    names = (
-        "coordinate_map", "derivative_orders", "criterion_coordinates",
-        "workload_scaling", "reuse_by_d", "solver_crossover",
-    )
+    if names is None:
+        names = (
+            "coordinate_map", "derivative_orders", "criterion_coordinates",
+            "workload_scaling", "reuse_by_d", "solver_crossover",
+        )
     if {row["figure"] for row in _MANIFEST} != set(names):
         raise RuntimeError("An expected figure has not been exported.")
     for row in _MANIFEST:
@@ -159,11 +163,11 @@ def finish_manifest(paper: Path, figures_dir: Path):
             row["outputs_sha256"][ext] = hashlib.sha256(
                 file.read_bytes()
             ).hexdigest()
-    (Path(paper) / "awesomefigures_latex_manifest.json").write_text(
+    (Path(paper) / manifest_name).write_text(
         json.dumps({
             "manuscript": "Elsevier CAS v2.4 / cas-dc",
             "awesomefigures_version": getattr(af, "__version__", "unknown"),
-            "source_data": "original Windows timing and paired 20-seed solver CSV archives",
+            "source_data": source_data,
             "figures": _MANIFEST,
         }, indent=2) + "\n", encoding="utf8",
     )
