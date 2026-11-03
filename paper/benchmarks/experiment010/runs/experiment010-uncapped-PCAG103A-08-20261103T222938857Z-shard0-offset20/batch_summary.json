@@ -1,0 +1,29 @@
+{
+  "attempt_counts": {
+    "completed_with_csv": 3,
+    "method_not_selected": 7
+  },
+  "planned_attempts_in_shard": 3280,
+  "start_attempt": 20,
+  "next_attempt_offset": 30,
+  "actual_attempted": 3,
+  "selected_method_cases": 3,
+  "not_selected_by_design": 7,
+  "dependency_unavailable": 0,
+  "completed_method_slices": 3,
+  "successful_raw_timing_rows": 48,
+  "planned_manifest_statuses": {
+    "eligible": 6432,
+    "method_not_selected": 18368,
+    "infeasible_dense_memory": 1440
+  },
+  "elapsed_s": 525.5456934000831,
+  "parallel_workers": 1,
+  "ledger_checkpoint_file": "method_attempts.csv",
+  "note": "No solver wall-clock timeouts, full per-worker logs, durable row-level numerical checkpoint; parallel contention changes timing interpretation; parity is not proof.",
+  "parity_row_status_counts": {
+    "score_parity_only_not_precision_certified": 48
+  },
+  "parity_agreements_not_precision_proofs": 48,
+  "parity_rows": 48
+}
