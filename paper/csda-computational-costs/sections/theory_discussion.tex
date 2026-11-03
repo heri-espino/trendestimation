@@ -1,0 +1,192 @@
+\section{Implementation-independent computational policy}
+\label{sec:policy}
+The preceding bounds suggest a reproducible decision procedure,
+but not a universal numerical winner. In practice the expensive
+operations must be attributed to the correct level of reuse:
+a factorization is specific to $(n,d,\lambda)$, whereas
+a smoothing-grid inverse is specific only to $(n,d,s)$.
+A fitted curve is specific to the observations and to the
+reference-difference mean. A scalar selection criterion
+depends on the already-computed residual and diagnostic
+summaries, whereas its numerical definition is unchanged
+by a reparameterization of the candidate grid.
+
+\subsection{Cost-aware organization of a complete search}
+For each fixed $(n,d)$ the following abstract procedure
+avoids unnecessary repetitions. It is pseudocode for
+organizing computations, not a claim of a newly implemented
+universal dispatcher.
+\begin{enumerate}
+\item Fix the requested criterion set $\mathcal C$,
+the target-smoothness grid $\mathcal S$, numerical tolerances,
+and fixed or explicitly conditional plug-in means.
+Determine whether any requested criterion requires
+per-observation leverages (ordinary CV) or a
+Gaussian marginal determinant.
+\item Choose a mathematically admissible smoothness
+mapping method. Invert each interior $s_j$ \emph{once};
+handle $s=0$ and $s=1$ by their respective analytical
+limits. Record a bracketed inversion residual or a
+rigorous stopping condition, not merely an iteration count.
+\item Choose the candidate-score family subject to the
+memory budget and required outputs. For the spectral
+family, prepare the basis once and the projected
+observations once per series. For the banded family,
+factor each $A_{\lambda_j}$ once and obtain its
+selected inverse or other needed diagnostics once.
+\item For each $j=1,\ldots,M$, reuse the same penalty
+and factorization across every observed series and
+every criterion that permits such sharing. Calculate
+all required score terms, flag undefined scores and
+numerical failures, and update the best valid
+candidate for each series--criterion pair.
+\item Record the decomposition, grid mapping,
+criterion evaluation, memory and accuracy costs
+\emph{separately}; report the complete elapsed time
+only for workloads with all required results.
+\end{enumerate}
+
+If no score requires the full fitted curve, computing
+it for every candidate is unnecessary for the spectral
+family. Conversely, ordinary conditional CV requires
+leverage diagonals and residuals, so a fit-only solver
+time is not a full CV-selection time. Marginal
+Gaussian likelihood also requires its own variance
+and determinant assumptions; the
+least-squares objective should not be substituted
+for the likelihood merely because both involve
+$D_d^\top D_d$.
+
+\subsection{Rival algorithmic explanations}
+One explanation for good observed performance is
+\emph{arithmetic sparsity}: the $d$-banded positive
+definite system admits a direct solve and its
+selected-inverse diagnostic in nearly linear
+arithmetic for fixed $d$. This is the strong
+case for banded Cholesky when $n$ is large.
+
+A rival explanation is \emph{amortization}:
+dense spectral preprocessing is expensive,
+but the same singular basis can serve many
+smoothed-series and scalar-criterion evaluations.
+The second explanation is especially relevant
+for large $M$ and scalar GCV/AICc/BIC/ML scoring.
+Neither explanation dominates without the
+actual workload and implementation constants,
+and both can be affected by numerical conditioning.
+The synthesis is the conditional admissible
+frontier of Eq.~\eqref{eq:theory_frontier}, rather
+than a globally preferred factorization.
+
+The importance of exploiting Whittaker--Henderson
+structure was demonstrated long before this paper:
+\citet{weinert2007} developed efficient fitted
+trends and GCV computations, and \citet{biessy2026}
+examined banded methods and reduced-rank
+parameterizations in a modern statistical framework.
+The sparse selected-inverse principle is likewise
+classical \citep{erisman1975}. Our contribution
+is an explicit \emph{combined workload model}
+that keeps normalized-smoothness inversion,
+criterion diagnostics, reuse, endpoints,
+numerical admissibility and memory on the
+same accounting basis. It is not a claim
+to have invented Cholesky, selected inversion,
+the Gaussian variance model or the original
+smoothness index.
+
+\subsection{Limits of the theoretical results}
+Big-$O$ bounds omit constants, BLAS scheduling,
+cache locality, dense-SVD numerical tolerances,
+Python dispatch, allocation, garbage collection
+and CPU contention. The threshold in
+Eq.~\eqref{eq:theory_threshold} can be fitted
+only from controlled measurements; using a
+few timings collected under different
+concurrency conditions would be misleading.
+Furthermore, the numerical advantage of
+shift-free spectral reconstruction at
+large $d$ or extreme $\lambda$ is a separate
+accuracy concern, not an asymptotic runtime
+guarantee.
+
+The statements concern a finite, equally spaced
+univariate series and a conventional forward
+difference penalty. Irregularly spaced
+observations, missing-data weights, nonquadratic
+losses, spatial lattices and higher-dimensional
+penalties can change the sparsity pattern
+and invalidate a naive reuse of $O(nd^2)$.
+Although the fitted trend is commonly described
+as a time-series trend, no in-sample conditional
+CV expression presented here establishes
+out-of-sample forecasting accuracy.
+
+The endpoints also require care:
+$S(0)=0$ returns the observations, but
+$\mathrm{CV}$ and information criteria can be
+undefined or divergent at exact interpolation;
+$S=1$ means the constrained polynomial limit,
+not the inversion of $A_\lambda$ at an
+artificially enormous finite penalty.
+A user-provided $\mu$ is fixed when the
+derivatives and conditional EDF are computed.
+If $\mu$ is estimated from $y$, this
+data dependence cannot simply be suppressed
+when deriving the exact leave-one-out score.
+
+\section{Conclusions}\label{sec:theory_conclusions}
+Smoothness-indexed finite-difference PLS
+admits two complementary computational
+representations. Its reusable spectrum
+supplies a monotone and data-independent
+map between normalized smoothness and
+the penalty; its banded normal equations
+supply a memory-efficient way to obtain
+fitted curves and exact conditional
+criterion diagnostics. We derived a
+complete banded expression for the
+reduced-coordinate Gaussian determinant
+and profiled quadratic form, established
+amortized work and storage bounds for
+repeated candidates, criteria and series,
+and expressed the implementation decision
+as an admissible, workload-specific
+cost frontier.
+
+These deductions do not determine
+which method will be fastest in
+milliseconds on any particular machine.
+That empirical question, including
+matched controlled runtimes and
+high-precision numerical failures,
+belongs in a separate reproducible
+software benchmark. The present
+manuscript is a \emph{theoretical
+computational analysis}; the historical
+Windows timing study, the recent
+three-backend CHOLMOD archive and their
+AwesomeFigures visualizations remain
+available in the same repository as
+independent evidence, but are not
+treated as findings of this paper.
+
+\section*{Data and code availability}
+The full mathematical derivations and
+reproducibility notes are maintained at
+\url{https://github.com/heri-espino/trendestimation/tree/main/paper/csda-computational-costs}.
+An archived source revision must be
+cited at submission. The manuscript's
+analytical identities require no
+new empirical data. Historical
+timing files and their environment
+metadata remain preserved elsewhere
+in the repository and are not
+reclassified as new measurements.
+
+\section*{Declarations}
+Author order, correspondence,
+funding, potential conflicts and
+contributor statements remain subject
+to confirmation by both authors
+before journal submission.
