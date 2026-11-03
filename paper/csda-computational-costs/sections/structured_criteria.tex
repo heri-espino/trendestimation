@@ -31,7 +31,7 @@ For a \emph{fixed numeric} $\mu$ define $e=y-\widehat\tau$, $\mathrm{RSS}=e^\top
 \GCV(\lambda)=\frac{\mathrm{RSS}/n}
 {(1-\nu(\lambda)/n)^2}.
 \end{equation}
-The original residual-based criteria used in the accompanying benchmark have the form
+The residual-based information-criterion convention considered here has the form
 \begin{equation}\label{eq:information}
 \begin{aligned}
 \mathrm{BIC}_{\mathrm{RSS}}(\lambda)
@@ -43,10 +43,10 @@ The original residual-based criteria used in the accompanying benchmark have the
 \end{equation}
 We retain the exact score conventions of the existing software rather than silently substituting a different information criterion. The BIC expression decreases without bound as $\lambda\downarrow0$ under a nondegenerate interpolation limit; the finite grid lower boundary must therefore be disclosed. The profiled Gaussian marginal-likelihood criterion additionally requires a weighted quadratic form and a log determinant on the penalized subspace, described in Section~\ref{sec:complexity}. Its implementation is not interchangeable with merely calculating a residual MSE.
 
-If $\mu$ is estimated from the same observations as $\widehat\mu=\operatorname{mean}(D_dy)$, then $H_\lambda$ is no longer the complete response-to-fit derivative of the plug-in procedure. The standard fixed-$\mu$ leverage formula in \eqref{eq:cv_gcv} is \emph{not} an exact leave-one-out refit of this estimated mean. Our planned fixed-mean comparisons distinguish $\mu=0$ and $\mu=0.15$; plug-in $\mu$ is a separately labeled conditional marginal-likelihood analysis.
+If $\mu$ is estimated from the same observations as $\widehat\mu=\operatorname{mean}(D_dy)$, then $H_\lambda$ is no longer the complete response-to-fit derivative of the plug-in procedure. The standard fixed-$\mu$ leverage formula in \eqref{eq:cv_gcv} is \emph{not} an exact leave-one-out refit of this estimated mean. The fixed-mean theorems apply for any specified numeric $\mu$, including zero and nonzero values; the plug-in case must be labeled as conditional.
 
 \subsection{Sparse and iterative methods with honest diagnostic costs}
-We benchmark nine end-to-end \emph{pipelines}, not nine interchangeable Cholesky routines. Sparse SuperLU, general banded LU, SuiteSparse CHOLMOD, and preconditioned conjugate-gradient (PCG) each provide a fitted trend through a different algorithm. In the current research code their CV/GCV/AICc/BIC/ML scores are completed by an \emph{additional} banded selected-inverse diagnostic step. Thus the hybrid runtime includes both the named fit backend and the added diagnostic factorization. SciPy sparse LU is not CHOLMOD; an unavailable optional CHOLMOD installation is recorded as such.
+The implementation archive includes multiple end-to-end \emph{pipelines}, not interchangeable Cholesky routines. Sparse SuperLU, general banded LU, SuiteSparse CHOLMOD, and preconditioned conjugate-gradient (PCG) each provide a fitted trend through a different algorithm. In the existing research code their CV/GCV/AICc/BIC/ML scores are completed by an \emph{additional} banded selected-inverse diagnostic step. Thus any realistic hybrid cost includes both the named fit backend and the added diagnostic factorization. SciPy sparse LU is not CHOLMOD; an unavailable optional CHOLMOD installation is recorded as such.
 
 PCG uses a matrix-free application of $I+\lambda D_d^\top D_d$ and FFT-periodic, DST-Dirichlet or Jacobi preconditioning. The FFT and DST symbols approximate the natural finite-series boundary structure; they are not exact diagonalizations, and no fixed small iteration count is guaranteed. Nonconverged PCG runs cannot enter the successful-time comparison.
 
