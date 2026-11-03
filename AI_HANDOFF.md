@@ -592,3 +592,27 @@ transient and persistent locks. Parallel summary points to the
 actual checkpoint file. Do not confuse operating-system access
 errors with numerical failure, do not re-execute archived attempts,
 and do not infer high-precision accuracy from status=ok.
+
+
+### Experiment010 focused large three-method decision (2026-11-03)
+
+Following the successful parallel uncapped batch on
+results/experiment010-uncapped-PCAG103A-08-20261103T165925192Z-shard0-offset20
+(n64,d1,mu=data, high amplitude,BIC,M100000; 8 workers,
+1109.304s; 144 valid selected-score parity rows, 8
+`setup_failed_ImportError` CHOLMOD rows), the user explicitly
+chose to keep *only* naive_inverse, spectral_svd and
+sparse_cholesky_banded_trace for the larger grid.
+New independent research/experiment010-focused-three branch
+implements explicit selected methods while preserving all original
+10 method slots in the shard cursor, and marks the seven omitted
+methods as `method_not_selected` in the ledger/manifest.
+Sksparse/CHOLMOD is missing on the user's Windows Conda VM;
+new code tests the optional import once and records
+`dependency_unavailable` rather than repeatedly launching
+failed processes. This leaves two operational selected solvers
+unless the dependency is installed; do not claim a valid three-way
+numerical comparison. Dense memory gates remain. Shard0 cursor
+now **30** for future work. Read
+paper/benchmarks/experiment010/FOCUSED_THREE.md and do not
+merge active research PRs without approval.

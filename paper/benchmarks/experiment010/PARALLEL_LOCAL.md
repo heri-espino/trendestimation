@@ -157,3 +157,19 @@ The runner checks the Windows ledger-recovery tests before starting
 worker processes. Avoid opening live CSVs in Excel during execution
 or syncing the active output directory through OneDrive, because
 external readers can contribute to Windows access-denied errors.
+
+
+## Focused three-method large experiment
+
+The *current* recommended large-run launcher defaults to
+`-Methods focused` (naive inverse, spectral SVD and sparse
+Cholesky). Read [FOCUSED_THREE.md](FOCUSED_THREE.md) for exact
+PowerShell commands, source branch and selected-method caveats.
+The seven other methods remain in the original ten-slot planning
+manifest but are marked `method_not_selected`, not failed.
+The optional sparse Cholesky backend is absent on the VM
+(`setup_failed_ImportError` in archived run offset20), so it is
+preflight-marked `dependency_unavailable` without repeated worker
+launches. No other solver is secretly substituted. The next
+nonoverlapping shard0 cursor after the archived offset20 batch is
+30. Use `-Methods all` only to intentionally rerun all ten.

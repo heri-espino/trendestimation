@@ -235,3 +235,15 @@ CPU contention and memory reservations, read
 random seeds, candidate grids, and error statuses remain unchanged.
 Parallel timings measure throughput under contention and must not
 be pooled as equivalent to single-worker serial cold timings.
+
+
+### Requested focused large comparison — November 3, 2026
+
+The user narrowed the new large factorial campaign to exactly three
+named complete-criterion pipelines: `naive_inverse`,
+`spectral_svd`, and `sparse_cholesky_banded_trace`.
+Read [FOCUSED_THREE.md](FOCUSED_THREE.md) for the archived BIC run,
+its 144 score-parity rows and eight CHOLMOD import failures,
+follow-up PowerShell command, explicit excluded-method statuses,
+resumption offsets and memory/accuracy limitations. The existing ten
+methods and their earlier measurements remain preserved in Git.

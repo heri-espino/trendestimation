@@ -231,3 +231,30 @@ unique recovery CSV if replacement remains denied, and adds
 regression tests simulating this error. The parallel batch summary
 identifies the effective ledger path. Read PARALLEL_LOCAL.md before
 running. Keep source and archives distinct; do not merge.
+
+
+## Experiment010 focused three-method large campaign (2026-11-03)
+
+The user explicitly requests `naive_inverse`, `spectral_svd`,
+`sparse_cholesky_banded_trace` ONLY for the upcoming large numerical
+experiment. Read `paper/benchmarks/experiment010/FOCUSED_THREE.md`.
+The 8-worker uncapped parallel n64/d1/BIC/high-amplitude/
+mu=data/M100000 result batch at shard0 offset20 finished and is
+archived at
+results/experiment010-uncapped-PCAG103A-08-20261103T165925192Z-shard0-offset20.
+It measured 144 valid score-parity-only rows; eight setup failure
+rows belong to optional CHOLMOD (sparse Cholesky has no valid
+numeric timing). Workload wall time was 1109.3s, with strong
+parallel resource contention. No independent 85-digit accuracy
+certificate is established. Next original ten-method shard0
+cursor is **30**; do not repeat offsets 20–29.
+
+The new independent research/experiment010-focused-three branch
+keeps all ten methods and historical results intact but selects
+only the requested three at launch. Nonselected full-design
+positions get explicit `method_not_selected` ledger/manifest status.
+Missing CHOLMOD is preflight `dependency_unavailable`, not a
+zero-second success. The original ten-method shard cursor is
+unchanged for conflict-free resumption. Dense naive/SVD also remain
+RAM-infeasible at very large n. DO NOT merge other agent branches
+or claim a genuine three-method comparison where one is missing.
