@@ -372,3 +372,14 @@ medians. The computational-statistics-paper.yml workflow rebuilds the
 Springer PDF and uploads artifacts; on the dedicated paper branch it
 also commits the PDF and submission ZIP. Do not automatically merge
 the separate nested Experiment010 research stack with this paper PR.
+
+### CHOLMOD 0.5 code fix for main (2026-11-03)
+
+Standalone fix/scikit-sparse-v05-main cherry-picks only the library
+CSC-array CHOLMOD 0.5 adapter and the two mocked compatibility tests
+from the already verified Experiment010 research PR #106. User's real
+Windows CHOLMOD fit agreed with banded Cholesky to maximum error
+1.2948756650255078e-13, and 110 targeted tests passed. The mainline
+source fix remains independent from the nested Experiment010 runner
+PR stack and from the Springer paper manuscript PR. Full handoff is in
+notes/scikit_sparse_v05_windows.md.

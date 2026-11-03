@@ -140,3 +140,13 @@ launches only one subprocess. Never silently rewrite archived
 source data, inflate selected-score parity into high-precision
 accuracy certification, or mix with the historical full-factorial
 Windows datasets.
+
+## Mainline CHOLMOD 0.5 compatibility (2026-11-03)
+
+Read notes/scikit_sparse_v05_windows.md when touching sparse Cholesky.
+The user verified real CHOLMOD fit parity on Windows (maximum difference
+1.2948756650255078e-13 at n64/d2/lambda2/mu0.15) and passed 110
+targeted tests. Modern scikit-sparse requires cho_factor(csc_array(A))
+followed by .solve(rhs); keep old Factor.solve_A() compatibility.
+Never substitute SuperLU silently; keep large-run score/timing claims
+separate from single-fit validation.

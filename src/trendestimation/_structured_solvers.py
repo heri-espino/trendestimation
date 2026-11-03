@@ -9,7 +9,7 @@ from math import comb
 import numpy as np
 from scipy.fft import dst, idst
 from scipy.linalg import solve_banded
-from scipy.sparse import diags, eye as sparse_eye
+from scipy.sparse import csc_array, diags, eye as sparse_eye
 from scipy.sparse.linalg import LinearOperator, cg, splu
 
 
@@ -58,11 +58,13 @@ class StructuredSystem:
         if method in ("sparse_lu","sparse_cholesky","banded_lu"):
             self.Q = (self.D.T @ self.D).tocsc()
             if method == "sparse_cholesky":
+                self._cholmod_new_api = False
                 try:
                     # New scikit-sparse 0.5: cho_factor returns a factor
                     # object with .solve(). The cholesky() function now
                     # returns a matrix or (matrix, permutation) tuple.
                     from sksparse.cholmod import cho_factor as cholmod_factor
+                    self._cholmod_new_api = True
                 except ImportError:
                     try:
                         # scikit-sparse 0.4: cholesky returned a Factor
@@ -110,8 +112,15 @@ class StructuredSystem:
                 A = sparse_eye(self.n,format="csc") + lam*self.Q
                 if not np.all(np.isfinite(A.data)):
                     raise OverflowError("Sparse matrix overflow")
-                factor = (splu(A,permc_spec="NATURAL")
-                          if self.method == "sparse_lu" else self.cholmod(A))
+                if self.method == "sparse_lu":
+                    factor = splu(A, permc_spec="NATURAL")
+                else:
+                    # scikit-sparse 0.5 uses scipy.sparse arrays rather
+                    # than the deprecated sparse-matrix interface.
+                    # Preserve CSC matrices for legacy 0.4 CHOLMOD.
+                    cholmod_A = (csc_array(A) if self._cholmod_new_api
+                                 else A)
+                    factor = self.cholmod(cholmod_A)
                 if self.factor_cache:
                     self._factors[lam] = factor
             x = (factor.solve_A(rhs) if hasattr(factor, "solve_A")
