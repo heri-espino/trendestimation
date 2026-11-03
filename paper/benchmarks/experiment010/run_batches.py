@@ -215,7 +215,7 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
             max_seconds=900, per_method_seconds=50,
             max_method_attempts=40, repeats=1, series_count=2,
             max_work=3e7, max_dense_bytes=2*1024**3,
-            seed=20261102):
+            seed=20261102, start_attempt=0):
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite results: {output}")
     if repeats < 1 or series_count < 2 or per_method_seconds < 1:
@@ -225,7 +225,10 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
     output.mkdir(parents=True)
     started = perf_counter()
     sha = source_sha()
-    work = attempts(preset, shard_index, shard_count)
+    all_work = attempts(preset, shard_index, shard_count)
+    if not (0 <= start_attempt <= len(all_work)):
+        raise ValueError('start_attempt outside selected shard')
+    work = all_work[start_attempt:]
     metadata = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "preset": preset, "source_sha": sha,
@@ -241,7 +244,9 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
         "max_method_attempts": max_method_attempts,
         "repeats": repeats, "series_count": series_count,
         "max_work": max_work, "max_dense_bytes": max_dense_bytes,
-        "seed": seed, "planned_attempts_in_shard": len(work),
+        "seed": seed, "planned_attempts_in_shard": len(all_work),
+        "start_attempt": start_attempt,
+        "attempts_in_this_window": len(work),
         "warning": ("A recorded status=ok is not independent numerical "
                     "certification; high-precision audit required. "
                     "No synthetic timing of skipped methods.")
@@ -337,7 +342,10 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
     parity = aggregate(output, outcomes)
     summary = {
         "attempt_counts": dict(statuses),
-        "planned_attempts_in_shard": len(work),
+        "planned_attempts_in_shard": len(all_work),
+        "start_attempt": start_attempt,
+        "next_attempt_offset": start_attempt + sum(
+            r["status"] != "not_executed_budget" for r in ledger),
         "actual_attempted": sum(
             r["status"] != "not_executed_budget" for r in ledger),
         "completed_method_slices": statuses["completed_with_csv"],
@@ -373,6 +381,7 @@ def main():
     parser.add_argument("--max-dense-bytes", type=int,
                         default=2 * 1024**3)
     parser.add_argument("--seed", type=int, default=20261102)
+    parser.add_argument("--start-attempt", type=int, default=0)
     a = parser.parse_args()
     result = execute(a.output, preset=a.preset,
                      shard_index=a.shard_index,
@@ -382,7 +391,8 @@ def main():
                      max_method_attempts=a.max_method_attempts,
                      repeats=a.repeats, series_count=a.series_count,
                      max_work=a.max_work,
-                     max_dense_bytes=a.max_dense_bytes, seed=a.seed)
+                     max_dense_bytes=a.max_dense_bytes, seed=a.seed,
+                     start_attempt=a.start_attempt)
     print(json.dumps(result, indent=2))
 
 
