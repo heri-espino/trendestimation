@@ -109,7 +109,8 @@ def attempts(preset, shard_index=0, shard_count=1):
 
 
 def manifest(path, *, max_work, repeats, series_count,
-             max_dense_bytes, shard_index, shard_count, preset):
+             max_dense_bytes, shard_index, shard_count, preset,
+             scope="full"):
     """Record EVERY planned method-case pair and its conservative mask."""
     if path.exists():
         raise FileExistsError(path)
@@ -120,12 +121,15 @@ def manifest(path, *, max_work, repeats, series_count,
             *COLUMNS, "workload", "coordinate", "M", "R",
             "score_semantics", "plan_status"))
         writer.writeheader()
-        # The comprehensive manifest is intentionally not sharded so every
-        # archive remains independently interpretable.
+        # One complete design-only archive has the full manifest. Distributed
+        # execution archives keep the exact selected shard, without repeating
+        # hundreds of thousands of unrelated rows per execution batch.
         for c in configurations("comprehensive"):
             identifier = case_id(c)
             in_shard = (int(hashlib.sha256(identifier.encode()).hexdigest()[:8], 16)
                         % shard_count == shard_index)
+            if scope == "shard" and not in_shard:
+                continue
             for method in METHODS_ALL:
                 for workload in SCENARIOS:
                     M = 1 if workload.startswith("one_s") else c["denominator"]
@@ -240,7 +244,12 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
             max_seconds=900, per_method_seconds=50,
             max_method_attempts=40, repeats=1, series_count=2,
             max_work=3e7, max_dense_bytes=2*1024**3,
-            seed=20261102, start_attempt=0):
+            seed=20261102, start_attempt=0,
+            plan_only=False, manifest_scope="full"):
+    if manifest_scope not in ("full", "shard"):
+        raise ValueError("manifest_scope must be full or shard")
+    if plan_only and (preset != "comprehensive" or manifest_scope != "full"):
+        raise ValueError("Plan-only mode requires the complete comprehensive manifest")
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite results: {output}")
     if repeats < 1 or series_count < 2 or per_method_seconds < 1:
@@ -257,6 +266,7 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
     metadata = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "preset": preset, "source_sha": sha,
+        "plan_only": plan_only, "manifest_scope": manifest_scope,
         "host": platform.platform(), "python": sys.version,
         "runner_name": os.environ.get("RUNNER_NAME"),
         "run_id": os.environ.get("GITHUB_RUN_ID"),
@@ -283,7 +293,17 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
                       series_count=series_count,
                       max_dense_bytes=max_dense_bytes,
                       shard_index=shard_index, shard_count=shard_count,
-                      preset=preset)
+                      preset=preset, scope=manifest_scope)
+    if plan_only:
+        summary = dict(status="design_only_no_benchmarks",
+                       planned_cases=len(configurations("comprehensive")),
+                       planned_method_cases=len(all_work),
+                       planned_manifest_statuses=counts,
+                       successful_raw_timing_rows=0,
+                       actual_attempted=0, elapsed_s=perf_counter()-started)
+        (output / "batch_summary.json").write_text(
+            json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+        return summary
     ledger = []
     outcomes = []
     for i, (identifier, c, method) in enumerate(work):
@@ -295,57 +315,76 @@ def execute(output, *, preset="smoke", shard_index=0, shard_count=1,
             elapsed_method = 0.0
             measured = 0
         else:
-            folder = Path("slices") / identifier / method
-            dest = output / folder
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            cmd = [
-                sys.executable, str(EXP006 / "run.py"),
-                "--preset", "slice", "--n", str(c["n"]),
-                "--d", str(c["d"]), "--mu", c["mu"],
-                "--amplitude", c["amplitude"],
-                "--criterion", c["criterion"],
-                "--grid-denominator", str(c["denominator"]),
-                "--methods", method, "--threads", "1",
-                "--repeats", str(repeats),
-                "--series-count", str(series_count),
-                "--max-work", str(max_work),
-                "--max-dense-bytes", str(max_dense_bytes),
-                "--seed", str(seed), "--conditional-data-mu",
-                "--output", str(dest),
+            # A fully preflight-ineligible method-case must not start an
+            # expensive subprocess or invent a measured runtime.
+            masks = [
+                memory_budget_status(
+                    c["n"], c["d"], method, c["denominator"],
+                    max_dense_bytes, max_work, scenario,
+                    1 if "one_series" in scenario else series_count,
+                    repeats)
+                for scenario in SCENARIOS
             ]
-            t0 = perf_counter()
-            try:
-                proc = subprocess.run(
-                    cmd, text=True, capture_output=True,
-                    timeout=min(float(per_method_seconds), max(1., remaining)),
-                    check=False, cwd=ROOT)
-                elapsed_method = perf_counter() - t0
-                (dest.parent / f"{method}.log").write_text(
-                    (proc.stdout or "") + "\n[stderr]\n" + (proc.stderr or ""),
-                    encoding="utf-8")
-                if proc.returncode:
+            if preset == "comprehensive" and "eligible" not in masks:
+                status = "resource_ineligible_all_workloads"
+                reason = ";".join(sorted(set(masks)))
+                elapsed_method = 0.0
+                measured = 0
+                print(f"[{start_attempt+i+1}/{len(all_work)}] "
+                      f"{identifier} {method}: {status} ({reason})",
+                      flush=True)
+            else:
+                folder = Path("slices") / identifier / method
+                dest = output / folder
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                cmd = [
+                    sys.executable, str(EXP006 / "run.py"),
+                    "--preset", "slice", "--n", str(c["n"]),
+                    "--d", str(c["d"]), "--mu", c["mu"],
+                    "--amplitude", c["amplitude"],
+                    "--criterion", c["criterion"],
+                    "--grid-denominator", str(c["denominator"]),
+                    "--methods", method, "--threads", "1",
+                    "--repeats", str(repeats),
+                    "--series-count", str(series_count),
+                    "--max-work", str(max_work),
+                    "--max-dense-bytes", str(max_dense_bytes),
+                    "--seed", str(seed), "--conditional-data-mu",
+                    "--output", str(dest),
+                ]
+                t0 = perf_counter()
+                try:
+                    proc = subprocess.run(
+                        cmd, text=True, capture_output=True,
+                        timeout=min(float(per_method_seconds), max(1., remaining)),
+                        check=False, cwd=ROOT)
+                    elapsed_method = perf_counter() - t0
+                    (dest.parent / f"{method}.log").write_text(
+                        (proc.stdout or "") + "\n[stderr]\n" + (proc.stderr or ""),
+                        encoding="utf-8")
+                    if proc.returncode:
+                        status, reason, measured = (
+                            "execution_failed", f"exit_code={proc.returncode}", 0)
+                    elif not (dest / "raw_times.csv").is_file():
+                        status, reason, measured = (
+                            "missing_raw_csv", "Process returned without CSV", 0)
+                    else:
+                        with (dest / "raw_times.csv").open(
+                                newline="", encoding="utf-8") as stream:
+                            records = list(csv.DictReader(stream))
+                        status, reason, measured = (
+                            "completed_with_csv", "", sum(
+                                r["status"] == "ok" for r in records))
+                except subprocess.TimeoutExpired as exc:
+                    elapsed_method = perf_counter() - t0
                     status, reason, measured = (
-                        "execution_failed", f"exit_code={proc.returncode}", 0)
-                elif not (dest / "raw_times.csv").is_file():
+                        "method_timeout_no_credible_time",
+                        f"timeout_seconds={exc.timeout}", 0)
+                except (OSError, ValueError) as exc:
+                    elapsed_method = perf_counter() - t0
                     status, reason, measured = (
-                        "missing_raw_csv", "Process returned without CSV", 0)
-                else:
-                    with (dest / "raw_times.csv").open(
-                            newline="", encoding="utf-8") as stream:
-                        records = list(csv.DictReader(stream))
-                    status, reason, measured = (
-                        "completed_with_csv", "", sum(
-                            r["status"] == "ok" for r in records))
-            except subprocess.TimeoutExpired as exc:
-                elapsed_method = perf_counter() - t0
-                status, reason, measured = (
-                    "method_timeout_no_credible_time",
-                    f"timeout_seconds={exc.timeout}", 0)
-            except (OSError, ValueError) as exc:
-                elapsed_method = perf_counter() - t0
-                status, reason, measured = (
-                    "process_error",
-                    f"{type(exc).__name__}: {str(exc)[:200]}", 0)
+                        "process_error",
+                        f"{type(exc).__name__}: {str(exc)[:200]}", 0)
             outcomes.append({
                 "case_id": identifier, "configuration": c,
                 "method": method, "status": status,
@@ -407,6 +446,9 @@ def main():
                         default=2 * 1024**3)
     parser.add_argument("--seed", type=int, default=20261102)
     parser.add_argument("--start-attempt", type=int, default=0)
+    parser.add_argument("--plan-only", action="store_true")
+    parser.add_argument("--manifest-scope", choices=("full", "shard"),
+                        default="full")
     a = parser.parse_args()
     result = execute(a.output, preset=a.preset,
                      shard_index=a.shard_index,
@@ -417,7 +459,9 @@ def main():
                      repeats=a.repeats, series_count=a.series_count,
                      max_work=a.max_work,
                      max_dense_bytes=a.max_dense_bytes, seed=a.seed,
-                     start_attempt=a.start_attempt)
+                     start_attempt=a.start_attempt,
+                     plan_only=a.plan_only,
+                     manifest_scope=a.manifest_scope)
     print(json.dumps(result, indent=2))
 
 
