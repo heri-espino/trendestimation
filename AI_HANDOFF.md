@@ -351,3 +351,37 @@ the corresponding asymptotic theoretical work.
 Proposed output: provide theoretical and empirical
 multi-parameter surfaces with separate numerical
 reliability/memory masks; no production switch yet.
+
+
+## Experiment010 proposed cross-backend research after merged #98/#99
+
+As explicitly requested by the user, PR #98 and PR #99 have been merged
+into main. New design-only research branch:
+research/experiment010-multibackend-frontier-design.
+Primary protocol: paper/benchmarks/experiment010/README.md.
+
+Scientific objective: predict and empirically validate the fastest
+*complete* PLS criterion pipeline for each n,d,M,R,criterion,mu-policy,
+S-grid,cache/hardware regime, while excluding numerically inaccurate,
+unavailable and memory-infeasible candidates. Cross mu=0 versus
+mu='data'=mean(D_d y) per series versus fixed mu=c (starting with
+c=0.15), keeping conditional plug-in CV/GCV/AICc/BIC/MLE semantics
+honest. Include all existing ten Experiment006/008 method names rather
+than only SVD/Cholesky; guarded is a derived policy, hybrids charge their
+banded diagnostics, CHOLMOD is never silently substituted. Compare
+native S selection with a *single pretranslated lambda grid of exactly
+those S candidates*, shared across criteria/series where appropriate.
+S=1 is an exact infinite-penalty constrained fit. Include translation
+cost and cache memory; no blanket claim that pretranslation always wins.
+
+The new empirical claim to test is a calibrated *theoretical* minimum
+among independently numerically certified and computationally feasible
+methods, plus fallback to the next candidate on unexpected resource or
+accuracy failure. Cost models, one-class boundary holdout limitations,
+paired measured regret versus an observed oracle, and invalid/missing
+statuses must be documented. No new numerical runs, production selector,
+or manuscript timing claims were performed in this protocol branch.
+
+Follow repository-first experiment-numbering and archive every result
+with source/environment provenance. University PCAG103A-08 uses the
+existing non-admin Conda environment trendestimation; no reinstall.
