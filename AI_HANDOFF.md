@@ -539,3 +539,19 @@ Build final PDF from author-supplied Elsevier CAS template
 without re-running numerical experiments. Do not merge paper
 branch or PR #100 without explicit authorization. Check
 the CI/PDF outcome and inspect figures/text after compilation.
+
+
+### Finished computational-paper index and PDF
+
+Paper branch paper/observed-computational-study, review PR #102.
+Published branch PDF: paper/csda-computational-costs/main.pdf
+(Elsevier CAS, 15 pages; compiled by Actions run #41649687050,
+whose original TeX source SHA and final PDF hash are committed).
+LaTeX results: sections/experiment010_observed.tex.
+Observed full-case and raw timing provenance:
+OBSERVED_RESULTS_SNAPSHOT.md. Reproducible project chronology:
+PROJECT_HISTORY.md (Experiments005–010 and earlier historical corpus).
+Do not confuse the completed **bounded empirical paper** with
+the uncompleted factorial or a numerically certified dispatch policy.
+Both PR #100 and dependent paper PR #102 remain unmerged,
+pending coauthor review and explicit authorization.
