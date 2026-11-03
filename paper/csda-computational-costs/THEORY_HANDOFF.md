@@ -4,8 +4,8 @@
 
 **Primary manuscript:** `paper/csda-computational-costs/main.tex`.
 
-**Working title:** *A workload-aware complexity framework for
-smoothness-indexed penalized least squares*.
+**Working title:** *Amortized complexity of smoothness-indexed
+penalized least squares*.
 
 This is now a **theoretical computational paper**, not a manuscript
 claiming that historical Windows timing plots establish general runtime
