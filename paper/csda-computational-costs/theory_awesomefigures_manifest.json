@@ -1,0 +1,131 @@
+{
+  "manuscript": "Elsevier CAS v2.4 / cas-dc",
+  "awesomefigures_version": "0.1.0",
+  "source_data": "closed-form unit-cost work model (not timings); single-worker archived Experiment010 raw outcomes; real FHWA NGSIM US-101 observations / frozen GCV selection",
+  "figures": [
+    {
+      "figure": "theory_regime_map",
+      "layout": "text",
+      "document": "main.tex",
+      "document_class": "cas-dc (user supplied CAS 2.4)",
+      "engine": "pdflatex",
+      "pdf_backend": "PGF (genuine TeX text and mathematics)",
+      "pgf_source": true,
+      "awesomefigures_api": [
+        "set_style",
+        "inspect_latex",
+        "latex_style",
+        "PublicationStyle.fit",
+        "PublicationStyle.audit",
+        "PublicationStyle.savefig"
+      ],
+      "body_column_width_pt": 238.25444,
+      "body_text_width_pt": 494.50888,
+      "columnsep_pt": 18.0,
+      "output_width_pt": 494.50888,
+      "expected_width_pt": 494.50888,
+      "smallest_text_pt": 8.333333333333334,
+      "font_family": "cmr",
+      "font_name": "ecrm1000",
+      "audit_warnings": [],
+      "outputs_sha256": {
+        "pdf": "a6d4af6f8af6c40b12ac96738240debe6ee6ed6b6d0977a437d8471209c37616",
+        "pgf": "d9331151dc779877f9075c2089a323563a2c04d13a54d9abc216dbcd5a2b2eb7",
+        "svg": "f89aee6e475285c1d08a80fb915d8defd6160f4cd57718a12fd87fda13839116"
+      }
+    },
+    {
+      "figure": "theory_cost_curves",
+      "layout": "text",
+      "document": "main.tex",
+      "document_class": "cas-dc (user supplied CAS 2.4)",
+      "engine": "pdflatex",
+      "pdf_backend": "PGF (genuine TeX text and mathematics)",
+      "pgf_source": true,
+      "awesomefigures_api": [
+        "set_style",
+        "inspect_latex",
+        "latex_style",
+        "PublicationStyle.fit",
+        "PublicationStyle.audit",
+        "PublicationStyle.savefig"
+      ],
+      "body_column_width_pt": 238.25444,
+      "body_text_width_pt": 494.50888,
+      "columnsep_pt": 18.0,
+      "output_width_pt": 494.50888,
+      "expected_width_pt": 494.50888,
+      "smallest_text_pt": 8.333333333333334,
+      "font_family": "cmr",
+      "font_name": "ecrm1000",
+      "audit_warnings": [],
+      "outputs_sha256": {
+        "pdf": "f562b37796f1ea5a9192c903175e24f23af8e2d126f89c0f30269ac08eb859be",
+        "pgf": "cd4d97fcedb4d4feb5bf4ae3a961786f122ba7ea434617341ba3a1ac83757c7e",
+        "svg": "009128bc3d5595e9f803c60de6969920c85759ac735255c117bbf912e98177d8"
+      }
+    },
+    {
+      "figure": "matched_bic_timings",
+      "layout": "text",
+      "document": "main.tex",
+      "document_class": "cas-dc (user supplied CAS 2.4)",
+      "engine": "pdflatex",
+      "pdf_backend": "PGF (genuine TeX text and mathematics)",
+      "pgf_source": true,
+      "awesomefigures_api": [
+        "set_style",
+        "inspect_latex",
+        "latex_style",
+        "PublicationStyle.fit",
+        "PublicationStyle.audit",
+        "PublicationStyle.savefig"
+      ],
+      "body_column_width_pt": 238.25444,
+      "body_text_width_pt": 494.50888,
+      "columnsep_pt": 18.0,
+      "output_width_pt": 494.50888,
+      "expected_width_pt": 494.50888,
+      "smallest_text_pt": 7.333333333333333,
+      "font_family": "cmr",
+      "font_name": "ecrm1000",
+      "audit_warnings": [],
+      "outputs_sha256": {
+        "pdf": "196517fda0d980dc0ea0c08596870c798baf8475e33ddd1e90ad05b6c3cc061b",
+        "pgf": "b365f1e7455c7857f3ea7dcbefa29f1974cfb5420008331a27fb7af92b27d610",
+        "svg": "515adf63fdce9b4aed7d9791b2af147d16d8763da25b182084fb9697257aff1c"
+      }
+    },
+    {
+      "figure": "ngsim_jerk_application",
+      "layout": "text",
+      "document": "main.tex",
+      "document_class": "cas-dc (user supplied CAS 2.4)",
+      "engine": "pdflatex",
+      "pdf_backend": "PGF (genuine TeX text and mathematics)",
+      "pgf_source": true,
+      "awesomefigures_api": [
+        "set_style",
+        "inspect_latex",
+        "latex_style",
+        "PublicationStyle.fit",
+        "PublicationStyle.audit",
+        "PublicationStyle.savefig"
+      ],
+      "body_column_width_pt": 238.25444,
+      "body_text_width_pt": 494.50888,
+      "columnsep_pt": 18.0,
+      "output_width_pt": 494.50888,
+      "expected_width_pt": 494.50888,
+      "smallest_text_pt": 7.777777777777778,
+      "font_family": "cmr",
+      "font_name": "ecrm1000",
+      "audit_warnings": [],
+      "outputs_sha256": {
+        "pdf": "a5f36608a041f1ef85e6221b26c62b9413d2054aa1bd285e6b864eeb78d977a3",
+        "pgf": "56f120ffbbb9da0eb60dc063e2381aa6fdb0a9a26128aeccf674df5f597be90c",
+        "svg": "f0ab1f348f169a99c74090bfe8c614f2d31435e3e49ef253eb3c2c09ff8f216b"
+      }
+    }
+  ]
+}
