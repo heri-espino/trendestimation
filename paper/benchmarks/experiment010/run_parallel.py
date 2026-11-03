@@ -165,7 +165,9 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
                 measured_rows=0)
     # Initial checkpoint includes pending and excluded attempts. If the
     # controller is interrupted, successful worker CSVs survive on disk.
+    ledger_location = None
     def write_ledger():
+        nonlocal ledger_location
         records = []
         for position, (identifier, cfg, method) in enumerate(work):
             result = results.get(position)
@@ -179,7 +181,8 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
                                else ""),
                 run_id=os.environ.get("GITHUB_RUN_ID", ""),
                 source_sha=sha))
-        B.archive_ledger(output / "method_attempts.csv", records)
+        ledger_location = B.archive_ledger(
+            output / "method_attempts.csv", records)
         return records
     write_ledger()
     runnable = [(position, item) for position, item in enumerate(work)
@@ -218,6 +221,8 @@ def execute_parallel(output, *, shard_index=0, shard_count=16,
         planned_manifest_statuses=masks,
         elapsed_s=perf_counter() - started,
         parallel_workers=workers,
+        ledger_checkpoint_file=(str(ledger_location.relative_to(output))
+                                if ledger_location is not None else None),
         note=("No solver wall-clock timeouts, full per-worker logs, "
               "durable row-level numerical checkpoint; parallel contention "
               "changes timing interpretation; parity is not proof."),
