@@ -150,3 +150,27 @@ targeted tests. Modern scikit-sparse requires cho_factor(csc_array(A))
 followed by .solve(rhs); keep old Factor.solve_A() compatibility.
 Never substitute SuperLU silently; keep large-run score/timing claims
 separate from single-fit validation.
+
+
+## Paper B theoretical CSDA manuscript (November 2026)
+
+The active dedicated branch is paper/csda-computational-theory.
+Read paper/csda-computational-costs/THEORY_HANDOFF.md before editing.
+Paper B is mathematical computational complexity, NOT an end-to-end
+Windows timing-paper claim. Current main.tex includes foundations,
+algorithms, structured_criteria, amortized_frontier and
+theory_discussion only. All prior empirical sections, historical CSVs,
+AwesomeFigures and result branches are retained but excluded from the
+theory article. The analytical identity
+logdet(C_lambda)=logdet(A_lambda)-(n-d)log(lambda)-logdet(D_d D_d.T)
+and its quadratic objective equality are verified on deterministic
+small cases by paper/csda-computational-costs/verify_theory.py.
+A new .github/workflows/csda-computational-theory.yml compiles the
+exact Elsevier CAS class, without rerunning computational benchmarks.
+Do not introduce a runtime ranking from mixed-concurrency evidence.
+The new matched one-worker Experiment010 n64/d1/BIC run is archived
+in the user's results/...20261103T222938857Z-shard0-offset20 branch;
+use it for the SEPARATE Springer implementation paper. Keep theory
+claims qualified against Weinert 2007, Biessy 2026 and
+Erisman--Tinney 1975; do not claim algorithmic novelty for their work.
+Do not merge a Paper B PR without explicit authorization.
