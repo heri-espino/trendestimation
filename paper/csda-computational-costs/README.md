@@ -113,8 +113,7 @@ New LaTeX material:
   title, abstract, interpretation and verified selected-inverse
   reference (Erisman and Tinney, 1975).
 
-**The historical 80,640 timing records remain the only fully archived
-multi-criterion measured dataset in this paper until new work completes.**
+**Historical status, superseded by the newer completed bounded Experiment010 results reported below:** the 80,640 original historical rows remain independently archived.
 The initial PCAG103A-08 pilot from separate Experiment006 PR #95 is not
 promoted into a publication result without its raw data and validation.
 Fast fit-only timing is not substituted for complete CV/GCV/AICc/BIC/MLE
@@ -130,3 +129,36 @@ The primary unresolved publication steps are: complete matched
 factorial measurements and quality gates, paired CPU timing analysis
 with confidence intervals, high-order/nonzero-mean S=1 numerical
 validation, cached S-grid mapping at large n, and author approval.
+
+
+## Completed bounded empirical manuscript — November 2026
+
+The paper now incorporates the real Experiment010 ten-policy numerical
+comparison, rather than describing it only as a planned factorial.
+The LaTeX section is sections/experiment010_observed.tex, with
+a revised title, abstract, discussion and historical-status bridge.
+The current immutable evidence ledger is OBSERVED_RESULTS_SNAPSHOT.md.
+
+**Observed corrected-source study:** 450 method–case attempts, 5,570
+successful raw timing records, 5,480 selected-criterion score
+agreements, 18 disagreements, 72 without a valid spectral reference,
+and 1,102 failed/partial records. These are related timing observations,
+not independent problems or universally precision-certified solutions.
+Original and corrected MLE results remain separate.
+
+The manuscript includes all ten existing complete-criterion policies
+(guarded is composite; optional CHOLMOD was unavailable), uses matched
+S candidates under three reference-mean policies (zero, empirical
+mean of observed differences, fixed 0.15), and presents the measured
+n=256 one-S vs 100-S GCV winner reversal. The independent 85-digit
+Experiment006 fit audit remains distinct from full-criterion timing.
+No automatic solver dispatcher, empirically calibrated cost surface
+or full 50,400-case factorial completion is claimed.
+
+**Status:** completed, reproducible research snapshot; not
+journal-submission ready. Both authors must approve author order,
+declarations and interpretation. The existing historical figures
+and raw sources are retained and no numerical benchmarks are rerun
+for this paper build. PDF generation uses the same author-supplied
+Elsevier CAS template on GitHub-hosted Linux; no university Windows
+installation or administrator access is needed.

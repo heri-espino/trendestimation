@@ -17,19 +17,46 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Four-workload computation with smoothness-indexed PLS}
+\shorttitle{Observed costs of smoothness-indexed PLS}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
-\title[mode=title]{Fast and reliable smoothness-indexed penalized least squares across difference orders: numerical algorithms, grid reuse and computational scaling}
+\title[mode=title]{Smoothness-indexed penalized least squares: a computational benchmark}
 % Provisional authorship and order; confirm together before submission.
 \author[1]{Heriberto Espino-Montelongo}
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Finite-difference penalized least-squares (PLS) trends can be parameterized by a normalized, interpretable smoothness index $s\in[0,1]$ rather than the scale-dependent penalty $\lambda$. Efficient use of this coordinate requires more than a fast linear solver: exact smoothness inversion, conditional effective degrees of freedom, leave-one-out leverage values, criterion evaluation and repeated-grid reuse can dominate complete computational time. We present an algorithmic analysis for difference orders $d=1,\ldots,6$ and fixed zero or nonzero means of penalized differences, including an exact banded selected-inverse formulation for full conditional CV, GCV, AICc, residual BIC and Gaussian marginal-likelihood evaluation. We define four crossed workloads: one or many smoothness candidates evaluated for one or many independent series. Nine full-criterion pipelines---naive dense inversion, spectral SVD, banded Cholesky and six explicitly costed banded/sparse/iterative hybrids---form a staged, resource-gated evaluation design over seven sample sizes through $131072$, four positive smoothness grids through $100000$ candidates, two observation magnitudes and fixed reference means. This large-scale factorial is a \emph{planned experiment, not an empirical result}. The existing two-seed, $80640$-row Windows timing corpus supplies a historical baseline: sharing one exactly matched smoothness-grid translation across five criteria reduced measured elapsed time by factors of $2.67$ at $d=3$ and $2.82$ at $d=2$ for specified $n=48$ workflows. We distinguish these host-specific observations from theoretical complexity and future results, require numerical validity before timing comparisons and preserve $s=1$ as an exact constrained endpoint.
+Finite-difference penalized least-squares (PLS) trends may be indexed by
+normalized smoothness $S\in[0,1]$ rather than a scale-dependent penalty
+$\lambda$. Selecting an efficient implementation requires more than
+one linear solve: the complete CV, GCV, AICc, BIC and marginal-likelihood
+workloads include grid inversion, factorization, exact trace or leverage
+diagnostics and setup reuse. We compare ten existing complete-criterion
+pipeline policies, including explicit dense inversion, full spectral SVD,
+banded Cholesky and banded, sparse or iterative hybrids. The completed,
+corrected-source Windows runs archive 5570 successful raw timing
+observations across 450 method--case attempts; 1102 additional
+workload records failed or were partial, 18 disagreed with a reference
+criterion score, and 72 lacked a valid spectral comparator.
+For the matched $n=256,d=1$, GCV workload at fixed $\mu=0$,
+banded Cholesky took 8.13\,ms versus 13.80\,ms for SVD with one
+smoothness candidate, whereas spectral SVD took 26.68\,ms versus
+61.31\,ms for Cholesky with 100 candidates (two timing repetitions
+on a single Windows runner). The same descriptive winner reversal
+appeared under the empirical-difference plug-in mean and fixed
+$\mu=0.15$. An MLE-normalization discrepancy discovered in the
+initial pilot was corrected analytically, reducing recorded
+score disagreements from 104 to 16. We distinguish fitted-trend
+accuracy from criterion-score parity, preserve unavailable and
+unmeasured cases without fictitious times, and give a conditional
+fastest-feasible-method rule as an \emph{unvalidated research
+hypothesis}, not a deployed dispatcher or an exhaustive factorial
+conclusion. All source revisions and raw outputs remain archived.
 \end{abstract}
 \begin{keywords}
-Smoothness index \sep penalized least squares \sep banded selected inverse \sep algorithmic complexity \sep sparse factorization \sep numerical reliability \sep computational benchmarking \sep reuse
+Penalized least squares \sep normalized smoothness \sep computational
+benchmarking \sep selected inverse \sep numerical stability \sep solver
+selection \sep reproducible science
 \end{keywords}
 \maketitle
 \input{sections/foundations}
@@ -39,6 +66,7 @@ Smoothness index \sep penalized least squares \sep banded selected inverse \sep 
 \input{sections/benchmarks}
 \input{sections/results}
 \input{sections/experiment006_status}
+\input{sections/experiment010_observed}
 \input{sections/discussion}
 \bibliographystyle{cas-model2-names}
 \bibliography{references}

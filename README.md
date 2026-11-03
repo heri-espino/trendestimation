@@ -373,3 +373,17 @@ GCV selection in the recorded reference cases. Results and
 [executed charts](docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb)
 are specific to a declared hosted-Linux environment; no universal
 ranking or faster uniform-S search is claimed.
+
+
+## Archived computational paper: completed bounded study
+
+The separate Elsevier computational-costs research paper is preserved at
+[paper/csda-computational-costs/main.pdf](paper/csda-computational-costs/main.pdf)
+with [LaTeX sources](paper/csda-computational-costs/main.tex),
+[immutable observed-result ledger](paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md),
+and [research chronology](paper/csda-computational-costs/PROJECT_HISTORY.md).
+It reports an evidence-limited ten-policy experiment (450 method–case
+attempts and 5,570 successful corrected-source raw timings),
+not the unexecuted full factorial or a deployed fastest-method selector.
+The research source and original figures remain versioned; author
+approval is required before journal submission.
