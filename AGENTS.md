@@ -153,3 +153,23 @@ S=1 endpoint. Corrected on PR #100 using an O(d) analytic log-gamma
 formula; keep original immutable result branches as PRE-correction evidence.
 Use fresh measurements/tests and high-precision accuracy certificates
 before claiming reliable winners or updating the CSDA manuscript.
+
+
+## Experiment010 full-grid execution (2026-11-03)
+
+Current independent branch research/experiment010-comprehensive-grid
+is based on draft PR #100; it does NOT change PR #100 and must NOT be
+merged without authorization. Read paper/benchmarks/experiment010/
+COMPREHENSIVE_GRID.md. The 403200-cell feasibility DESIGN is archived
+at results/experiment010-41647428485-a1-comprehensive-plan.
+The first bounded actual measurement action #41647428485 runs
+shards 0..3 of 16, each with at most 40 method-case attempts;
+completion and results must be verified separately.
+Preserve correct source SHA, complete raw timing and failure
+logs, machine fingerprint and independent numerical certificates.
+Resource-ineligible-all-workloads is an explicit status, never
+a measured zero-second winner. A complete manifest does not
+mean that the full feasible experiment has run.
+The user declined further cost-prediction and fallback-regret
+research for the current manuscript. Scope = accuracy and
+measured time of ten existing complete-criterion pipelines.

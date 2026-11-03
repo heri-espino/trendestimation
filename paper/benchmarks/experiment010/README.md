@@ -197,3 +197,15 @@ a unique immutable results branch and uploaded as an Actions
 artifact. See the actual Actions run before claiming it
 finished; no result is implied merely by being queued.
 The runner does not adopt a fastest-method dispatcher.
+
+
+## Current complete-grid scope and archive (2026-11-03)
+
+See [COMPREHENSIVE_GRID.md](COMPREHENSIVE_GRID.md) for the full
+403200-cell planning manifest, Windows benchmark schedule,
+resource masks, exact archive links, continuation procedure
+and the distinction between plans and actual observations.
+The current manuscript is restricted to numerical correctness
+and real complete-criterion computing times of all ten pipelines.
+The cost-model/oracle/fallback research proposals above are
+historical context, **not approved manuscript deliverables**.

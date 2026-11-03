@@ -507,3 +507,26 @@ independently validated before calling a fast solver
 admissible, especially at d5. The n512 second block
 offset60 is independently archived and must be read
 before any claims. See RESULTS_INDEX.md.
+
+
+### Experiment010 full grid continuation (2026-11-03)
+
+The independent research/experiment010-comprehensive-grid branch
+implements full plan-only output and safe sharded actual runs.
+The immutable complete plan at
+results/experiment010-41647428485-a1-comprehensive-plan
+contains 5040 cases, 50400 method-case attempts and
+403200 method/workload/coordinate planning records:
+264240 conservatively eligible, 106320 work-budget-exceeded,
+26880 dense-memory-infeasible, 5760 naive-runtime-infeasible.
+These are not measured timings. The first actual measurement
+workflow is https://github.com/heri-espino/trendestimation/actions/runs/41647428485;
+check each shard's results branch before claiming success.
+Two repeated timings, R=2 for multiple-series mode, fixed
+80M work-unit cap, 2 GiB dense-memory cap and 25-second
+per-method timeout. Continuation offset comes ONLY from
+a prior batch_summary.json for the same shard index/count.
+See paper/benchmarks/experiment010/COMPREHENSIVE_GRID.md.
+Paper scope limited to independent numerical correctness,
+actual all-ten-method end-to-end timing and failure rates.
+No added cost-oracle/fallback policy research per user direction.
