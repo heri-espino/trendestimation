@@ -550,3 +550,24 @@ batch on a unique `results/experiment010-uncapped-*` Git branch
 and prints cursor. No uncapped measurement has been verified or
 claimed merely because the source was published; the user will
 run it on PCAG103A-08 and can supply the GitHub result branch.
+
+
+### Experiment010 parallel local VM revision — 2026-11-03
+
+The user showed actual sequential n64 d1 AICc high M=100000
+subprocess durations: naive_inverse 139.45s, spectral_svd 88.31s,
+banded_cholesky 220.56s, guarded_svd_cholesky 220.67s,
+banded_lu_banded_trace 244.08s. These are self-reported VM
+subprocess durations, **not** numerical accuracy certification.
+The user requested acceleration with 32 logical processors.
+Branch research/experiment010-parallel-local, draft PR #104
+stacked on #103, implements 8-worker process-level parallelism
+(one BLAS thread per process) with adjustable count up to 32,
+explicit aggregate dense-memory reservation, disjoint raw result
+paths, streaming errors and checkpointed central ledger. Read
+paper/benchmarks/experiment010/PARALLEL_LOCAL.md for exact
+safe PowerShell commands; do not overlap the still-running
+serial shard0 offset10 attempt IDs. No parallel run should be
+claimed completed without its actual GitHub results branch.
+Parallel timing is throughput under load, not comparable to
+isolation-based timing without a controlled comparison.

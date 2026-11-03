@@ -223,3 +223,15 @@ keeps dense-memory safety and all numerical correctness tests.
 Never infer that a manually launched process has finished or
 that skipped operations were measured. Do not run an unbounded
 sweep inside the GitHub Actions 25-minute job workflow.
+
+
+### Parallel local execution (Windows, 32 logical CPUs)
+
+The VM now supports **parallel subprocess workers** through
+`run_parallel.py` and `run_uncapped_local.ps1 -Workers 8`.
+For safeguards, unique result branches, sample PowerShell commands,
+CPU contention and memory reservations, read
+[PARALLEL_LOCAL.md](PARALLEL_LOCAL.md). The scientific method list,
+random seeds, candidate grids, and error statuses remain unchanged.
+Parallel timings measure throughput under contention and must not
+be pooled as equivalent to single-worker serial cold timings.

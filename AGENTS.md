@@ -192,3 +192,25 @@ Preserve real per-row times, numerical failures, and stderr logs,
 including incomplete interrupted attempts. Never claim that
 local runs have executed unless the corresponding results branches
 exist and have been inspected.
+
+
+## Experiment010 VM parallel local work (2026-11-03)
+
+The user's 32-logical-processor Windows VM was bottlenecked by
+sequential method subprocesses. The independent branch
+research/experiment010-parallel-local (draft PR #104 stacked on
+#103) adds `paper/benchmarks/experiment010/run_parallel.py` and
+`-Workers 8` in `run_uncapped_local.ps1`. Follow
+`paper/benchmarks/experiment010/PARALLEL_LOCAL.md` precisely.
+Each method runs in its own process at one BLAS thread. The main
+process is the sole atomic method-ledger writer and records all
+numerical failures, timeout absence, resource exclusions, and
+separate logs; final raw outputs are committed and pushed to a
+unique branch. Eight workers is a conservative start; 32 logical
+processors does not imply 32 safe concurrent processes. The default
+RAM reservation is 2 GiB x 8 workers = 16 GiB; this is a scheduling
+budget, not actual operating-system memory enforcement. Parallel
+elapsed times involve CPU/resource contention and must not be
+pooled as isolated serial latencies. Do not overwrite running
+serial shard0 offset10 outputs or run duplicate case IDs.
+Do not merge this stacked draft PR without authorization.

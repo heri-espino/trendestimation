@@ -110,3 +110,16 @@ files remain in the working directory under
 `method_attempts.csv` and any partial `raw_times.csv`, then
 manually commit and push those partial outputs to a new results branch
 before resuming. Never overwrite that directory.
+
+
+## Parallel version: begin here for the 32-logical-processor VM
+
+[PARALLEL_LOCAL.md](PARALLEL_LOCAL.md) is the updated parallel
+launcher protocol. Use an independent worktree on the
+research/experiment010-parallel-local branch and
+`run_uncapped_local.ps1 -Workers 8`. It starts eight separate
+one-BLAS-thread Python subprocesses, retains the uncapped criteria,
+all previous numerical/error logging, and result-branch archival.
+The current shard0 offset10 serial batch must be completely
+archived before attempting offset20. The exact cursor is determined
+by its committed batch_summary.json, not by a guessed offset.
