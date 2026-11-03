@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import csv
+import gzip
+import json
 import importlib.util
 from pathlib import Path
 
@@ -110,3 +112,46 @@ def test_parity_marks_unverified_and_does_not_assert_precision(tmp_path):
         "score_parity_only_not_precision_certified",
         "score_disagreement",
     }
+
+
+def test_comprehensive_exhaustive_size_and_shard_distribution():
+    assert len(RUN.configurations("comprehensive")) == 5040
+    assert len(RUN.attempts("comprehensive")) == 50400
+    whole = len(RUN.attempts("comprehensive"))
+    assert sum(len(RUN.attempts("comprehensive", i, 16))
+               for i in range(16)) == whole
+
+
+def test_comprehensive_shard_manifest_contains_no_other_shards(tmp_path):
+    path = tmp_path / "shard.csv.gz"
+    counts = RUN.manifest(
+        path, max_work=8e7, repeats=2, series_count=2,
+        max_dense_bytes=2 * 1024**3, shard_index=0,
+        shard_count=32, preset="comprehensive", scope="shard")
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
+    assert len(rows) == 8 * len(RUN.attempts("comprehensive", 0, 32))
+    assert "outside_shard" not in counts
+    assert all(r["plan_status"] != "outside_shard" for r in rows)
+
+
+def test_full_sweep_skips_all_ineligible_without_inventing_times(tmp_path):
+    output = tmp_path / "comprehensive-shard"
+    summary = RUN.execute(
+        output, preset="comprehensive",
+        shard_index=0, shard_count=64,
+        max_seconds=30, per_method_seconds=1,
+        max_method_attempts=2, repeats=1, series_count=2,
+        max_work=1, max_dense_bytes=2 * 1024**3,
+        manifest_scope="shard")
+    assert summary["actual_attempted"] == 2
+    assert summary["successful_raw_timing_rows"] == 0
+    assert summary["attempt_counts"]["resource_ineligible_all_workloads"] == 2
+    with (output / "method_attempts.csv").open(
+            newline="", encoding="utf-8") as stream:
+        records = list(csv.DictReader(stream))
+    assert len(records) == len(RUN.attempts("comprehensive", 0, 64))
+    assert all(r["elapsed_s"] == "0.0" for r in records)
+    assert not (output / "slices").exists()
+    assert json.loads((output / "run_metadata.json").read_text())[
+        "manifest_scope"] == "shard"
