@@ -1,0 +1,11 @@
+case_id,n,d,mu,amplitude,criterion,denominator,method,status,reason,elapsed_s,measured_rows,run_id,source_sha
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,naive_inverse,completed_with_csv,,171.7505357998889,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,spectral_svd,completed_with_csv,,111.8503416001331,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,banded_cholesky,completed_with_csv,,268.5557385000866,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,guarded_svd_cholesky,completed_with_csv,,271.94690590002574,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,banded_lu_banded_trace,completed_with_csv,,291.1525549001526,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,sparse_lu_banded_trace,completed_with_csv,,388.3574629998766,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,sparse_cholesky_banded_trace,completed_with_csv,,0.8197129999753088,0,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,pcg_fft_banded_trace,completed_with_csv,,421.45878610014915,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,pcg_dst_banded_trace,completed_with_csv,,437.83169159991667,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
+n64_d1_bic_d8ae4e0692ae,64,1,data,high,bic,100000,pcg_jacobi_banded_trace,completed_with_csv,,997.2333367001265,16,,bf4195c12e3c4b07e039df85971b303ab1d83d37
