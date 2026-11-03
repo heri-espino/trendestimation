@@ -1,0 +1,482 @@
+[
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "naive_inverse",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\naive_inverse",
+    "elapsed_s": 0.7280894999857992,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "spectral_svd",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\spectral_svd",
+    "elapsed_s": 0.7825067001394928,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\banded_cholesky",
+    "elapsed_s": 0.8952306001447141,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "guarded_svd_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\guarded_svd_cholesky",
+    "elapsed_s": 0.8893168999347836,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\banded_lu_banded_trace",
+    "elapsed_s": 0.9237761998083442,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\sparse_lu_banded_trace",
+    "elapsed_s": 0.9930138001218438,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\sparse_cholesky_banded_trace",
+    "elapsed_s": 0.6633568999823183,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_fft_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\pcg_fft_banded_trace",
+    "elapsed_s": 1.0352864998858422,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_dst_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\pcg_dst_banded_trace",
+    "elapsed_s": 1.051221099914983,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b205e906b227",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_jacobi_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b205e906b227\\pcg_jacobi_banded_trace",
+    "elapsed_s": 1.6118201001081616,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "naive_inverse",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\naive_inverse",
+    "elapsed_s": 0.7215362000279129,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "spectral_svd",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\spectral_svd",
+    "elapsed_s": 0.7646290000993758,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\banded_cholesky",
+    "elapsed_s": 0.8915026998147368,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "guarded_svd_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\guarded_svd_cholesky",
+    "elapsed_s": 0.9039777000434697,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\banded_lu_banded_trace",
+    "elapsed_s": 0.9066136998590082,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\sparse_lu_banded_trace",
+    "elapsed_s": 0.9841076999437064,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\sparse_cholesky_banded_trace",
+    "elapsed_s": 0.6725623998790979,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_fft_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\pcg_fft_banded_trace",
+    "elapsed_s": 1.0425911000929773,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_dst_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\pcg_dst_banded_trace",
+    "elapsed_s": 1.0555625001434237,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_b17c2de755f3",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "data",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_jacobi_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_b17c2de755f3\\pcg_jacobi_banded_trace",
+    "elapsed_s": 1.6114295001607388,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "naive_inverse",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\naive_inverse",
+    "elapsed_s": 0.7335498000029474,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "spectral_svd",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\spectral_svd",
+    "elapsed_s": 0.7671932000666857,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\banded_cholesky",
+    "elapsed_s": 0.8821767000481486,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "guarded_svd_cholesky",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\guarded_svd_cholesky",
+    "elapsed_s": 0.8914866999257356,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "banded_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\banded_lu_banded_trace",
+    "elapsed_s": 0.9114747999701649,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_lu_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\sparse_lu_banded_trace",
+    "elapsed_s": 0.9847152000293136,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "sparse_cholesky_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\sparse_cholesky_banded_trace",
+    "elapsed_s": 0.6888864999637008,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_fft_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\pcg_fft_banded_trace",
+    "elapsed_s": 1.0319333001971245,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_dst_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\pcg_dst_banded_trace",
+    "elapsed_s": 1.0655757999047637,
+    "reason": ""
+  },
+  {
+    "case_id": "n64_d1_gcv_fe86cf41de60",
+    "configuration": {
+      "n": 64,
+      "d": 1,
+      "mu": "0.15",
+      "amplitude": "high",
+      "criterion": "gcv",
+      "denominator": 100
+    },
+    "method": "pcg_jacobi_banded_trace",
+    "status": "completed_with_csv",
+    "folder": "slices\\n64_d1_gcv_fe86cf41de60\\pcg_jacobi_banded_trace",
+    "elapsed_s": 1.592315400019288,
+    "reason": ""
+  }
+]

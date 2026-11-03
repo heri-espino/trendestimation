@@ -1,0 +1,13 @@
+n,d,criterion,mu,amplitude,method,coordinate,workload,repeat,naive_time_s,candidate_time_s,paired_speedup
+64,1,gcv,0.15,high,naive_inverse,direct_s,one_s_one_series,0,0.0010862997733056545,0.0010862997733056545,1.0
+64,1,gcv,0.15,high,naive_inverse,direct_s,one_s_one_series,1,0.0010246997699141502,0.0010246997699141502,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,one_s_one_series,0,0.000973499845713377,0.000973499845713377,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,one_s_one_series,1,0.0009571998380124569,0.0009571998380124569,1.0
+64,1,gcv,0.15,high,naive_inverse,direct_s,grid_one_series,0,0.014270401559770107,0.014270401559770107,1.0
+64,1,gcv,0.15,high,naive_inverse,direct_s,grid_one_series,1,0.013633901486173272,0.013633901486173272,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,grid_one_series,0,0.013131599873304367,0.013131599873304367,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,grid_one_series,1,0.014404300600290298,0.014404300600290298,1.0
+64,1,gcv,0.15,high,naive_inverse,direct_s,one_s_multiple_series,0,0.0010755001567304134,0.0010755001567304134,1.0
+64,1,gcv,0.15,high,naive_inverse,direct_s,one_s_multiple_series,1,0.0010432994458824396,0.0010432994458824396,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,one_s_multiple_series,0,0.0009641998913139105,0.0009641998913139105,1.0
+64,1,gcv,0.15,high,naive_inverse,mapped_lambda,one_s_multiple_series,1,0.0009576999582350254,0.0009576999582350254,1.0
