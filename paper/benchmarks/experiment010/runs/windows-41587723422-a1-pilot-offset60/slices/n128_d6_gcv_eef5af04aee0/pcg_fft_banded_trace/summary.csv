@@ -1,0 +1,9 @@
+method,coordinate,workload,valid_all,valid_repeats,expected_repeats,mean_total_s,sd_total_s,mean_bootstrap_ci95_low_s,mean_bootstrap_ci95_high_s,median_total_cold_s,median_total_warm_s
+pcg_fft_banded_trace,direct_s,one_s_one_series,True,2,2,0.0050582996336743236,0.00011794548601583201,0.004974899580702186,0.0051416996866464615,0.0050582996336743236,0.001990949735045433
+pcg_fft_banded_trace,mapped_lambda,one_s_one_series,True,2,2,0.004913600045256317,2.4748596518371575e-05,0.004896100144833326,0.004931099945679307,0.004913600045256317,0.0018463500309735537
+pcg_fft_banded_trace,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+pcg_fft_banded_trace,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+pcg_fft_banded_trace,direct_s,one_s_multiple_series,True,2,2,0.0053321002051234245,3.832531473107031e-05,0.005305000115185976,0.005359200295060873,0.0053321002051234245,0.0022650002501904964
+pcg_fft_banded_trace,mapped_lambda,one_s_multiple_series,True,2,2,0.00519204989541322,2.6159034218343565e-06,0.005190200172364712,0.005193899618461728,0.00519204989541322,0.002125049941241741
+pcg_fft_banded_trace,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+pcg_fft_banded_trace,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
