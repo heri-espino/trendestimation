@@ -52,20 +52,74 @@ The implementation archive includes multiple end-to-end \emph{pipelines}, not in
 
 PCG uses a matrix-free application of $I+\lambda D_d^\top D_d$ and FFT-periodic, DST-Dirichlet or Jacobi preconditioning. The FFT and DST symbols approximate the natural finite-series boundary structure; they are not exact diagonalizations, and no fixed small iteration count is guaranteed. Nonconverged PCG runs cannot enter the successful-time comparison.
 
-\begin{table*}[t]
-\caption{Leading arithmetic complexity for one finite-penalty, fixed-$\mu$ complete criterion evaluation with difference half-bandwidth $d$ and $r=n-d$. For hybrid implementations, additional banded diagnostics are \emph{charged}, even if their fit operation is inexpensive. $q$ is the attained PCG iteration count; these are arithmetic orders, not measured timings.}
-\label{tab:structured_cost}\centering
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}p{.28\textwidth}p{.18\textwidth}p{.17\textwidth}p{.25\textwidth}@{}}
+\begin{table*}[tbp]
+\centering
+\caption{Three exact, complete pipelines at a given finite penalty.
+The candidate penalty is already known; any cost of mapping
+$S\mapsto\lambda$ is accounted for separately.
+Here $r=n-d$ and the reported orders count arithmetic, not seconds.
+The banded entry includes the \emph{entire} Cholesky and selected-inverse
+diagnostic, not just a fitted curve.}
+\label{tab:structured_cost}
+\small
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\textwidth}{@{}p{.22\textwidth}p{.20\textwidth}Xp{.10\textwidth}@{}}
 \toprule
-Complete pipeline & Preparation / factor & Criterion & Memory\\
+Pipeline & Reusable setup & Work for one candidate & Storage\\
 \midrule
-Fresh dense inverse & $O(n^3)$ & $O(n^2)$ after inverse & $O(n^2)$\\
-Full SVD (after one decomposition) & $O(nr^2)$ once & $O(r)$ for GCV/AICc/BIC/ML; $O(nr)$ for CV & $O(nr)$\\
-Banded Cholesky + selected inverse & $O(nd^2)$ & $O(nd)$ for solve and criterion & $O(nd)$\\
-Banded or sparse LU + banded trace & fit-backend dependent $+O(nd^2)$ & $O(nd)$ after diagnostics & fit memory $+O(nd)$\\
-CHOLMOD + banded trace & sparse-factor dependent $+O(nd^2)$ & $O(nd)$ after diagnostics & sparse-factor memory $+O(nd)$\\
-PCG + banded trace & $O(qnd)$, or $O(qn(d+\log n))$ with transforms, $+O(nd^2)$ & $O(nd)$ after diagnostics & $O(nd+n)$, excluding FFT workspaces\\
+Dense inverse
+& None
+& $O(n^3)$ inverse; $O(n^2)$ diagnostics
+& $O(n^2)$\\
+\addlinespace[2pt]
+Full SVD
+& $O(nr^2)$ once
+& $O(r)$ for a projected scalar score;
+$O(nr)$ when CV requires fitted residuals and leverage
+& $O(nr)$\\
+\addlinespace[2pt]
+Banded Cholesky with selected inverse
+& $O(nd^2)$ structural preparation
+& $O(nd^2)$ factor and diagnostics;
+$O(nd)$ for each fitted series
+& $O(nd)$\\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table*}
+
+\begin{table*}[tbp]
+\centering
+\caption{Additional implementation-specific hybrid pipelines.
+These rows are \emph{not} alternative asymptotic bounds
+for a pure factorization: each backend fit is supplemented by
+a separately charged $O(nd^2)$ banded diagnostic. The iteration
+count $q$ of PCG is not assumed bounded independently of conditioning.}
+\label{tab:structured_hybrids}
+\small
+\renewcommand{\arraystretch}{1.16}
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\textwidth}{@{}p{.24\textwidth}p{.32\textwidth}X@{}}
+\toprule
+Hybrid pipeline & Fit phase & Complete-score overhead\\
+\midrule
+Banded/sparse LU + trace
+& LU-dependent factorization and solve
+& Added $O(nd^2)$ banded selected inverse\\
+CHOLMOD + trace
+& Sparse Cholesky factorization and solve
+& Added $O(nd^2)$ banded selected inverse\\
+PCG + trace
+& $O(qnd)$ matrix-free iterations; transform
+preconditioners can add $O(qn\log n)$
+& Added $O(nd^2)$ banded selected inverse\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+For a single candidate, factorization cost and complete selection
+cost need not have the same ranking. Table~\ref{tab:structured_cost}
+is used to derive the workload comparison in
+Section~\ref{sec:decision-regimes}; Table~\ref{tab:structured_hybrids}
+documents the implementation families without conflating their
+additional diagnostics with the named fitting backend.
