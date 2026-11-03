@@ -106,9 +106,8 @@ def theoretical_landscape():
                  transform=axes[1].transAxes, color="#89552f", fontsize=8)
     fig.suptitle("Illustrative algorithmic work frontier ($d=3$, $R=1$)",
                  fontsize=12, y=.99)
-    fig.text(.5, -.015, "Unit coefficients; premapped grid; no timing data or calibrated crossover",
-             ha="center", va="center", fontsize=8, color=NAVY)
-    fig.tight_layout(rect=(0,.04,1,.92))
+    # Unit coefficients are disclosed in the LaTeX caption; avoid overflow.
+    fig.tight_layout(rect=(0,.035,1,.92))
     export(fig, "theory_regime_map")
 
 
@@ -214,10 +213,13 @@ def matched_runtime_figure():
         ax.set_ylim(0,max(np.median(grouped[("mapped_lambda", k, meth)])*
                            scale for k in kinds for meth,_,_ in METHODS)*1.23)
         ax.grid(axis="y",alpha=.14)
-    axes[0].legend(frameon=False,fontsize=7,loc="upper left")
+    # Place shared legend above, outside the bars and value annotations.
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=7.5,
+               ncol=3, loc="upper center", bbox_to_anchor=(.52,.92))
     fig.suptitle("Real matched one-worker BIC pipeline measurements ($n=64$, $d=1$)",
-                 fontsize=11.5,y=.99)
-    fig.tight_layout(rect=(0,.02,1,.90))
+                 fontsize=11.5,y=.995)
+    fig.tight_layout(rect=(0,.02,1,.80))
     export(fig,"matched_bic_timings")
 
 
