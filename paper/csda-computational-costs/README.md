@@ -1,3 +1,67 @@
+# Current Paper B — theoretical computational analysis (November 2026)
+
+**Entry point:** `main.tex`, title *A workload-aware complexity framework
+for smoothness-indexed penalized least squares*. This is a **theoretical
+CSDA working manuscript**. Read [THEORY_HANDOFF.md](THEORY_HANDOFF.md)
+for the full proof/validation contract.
+
+The principal contribution is the workload-dependent mathematical model
+
+\[
+T_{\mathcal A}(n,d,M,R,\mathcal C;\varepsilon,\theta),
+\]
+
+and its proof-based decomposition into mapping preparation, factorization,
+conditional criterion diagnostics and reuse across smoothing candidates
+and independent observed series. The paper proves a banded
+Gaussian likelihood log-determinant identity, gives full-SVD versus
+banded-selected-inverse arithmetic and memory bounds, an exact
+first-difference cosine-eigenvalue formula, and the sign conditions for
+a conditional calibrated crossover. These are not machine timings.
+
+**The original empirical manuscript sections and all six AwesomeFigures
+figure families remain in the repository unchanged**, but the
+theoretical `main.tex` no longer inputs the historical
+`sections/benchmarks.tex`, `sections/results.tex`,
+`sections/experiment006_design.tex` or
+`sections/experiment006_status.tex`.
+The newly completed three-backend, one-worker Windows comparison is
+preserved on the user's timestamped GitHub results branch and documented
+in THEORY_HANDOFF.md as evidence for a **different implementation/runtime
+Springer manuscript**. No new benchmark is needed to compile Paper B.
+
+## Reproduce theory checks and the PDF
+
+From the repository root:
+
+```powershell
+conda activate trendestimation
+python paper/csda-computational-costs/verify_theory.py
+Copy-Item paper\els-cas-templates\cas-dc.cls,paper\els-cas-templates\cas-common.sty,paper\els-cas-templates\cas-model2-names.bst -Destination paper\csda-computational-costs
+Push-Location paper\csda-computational-costs
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+Pop-Location
+Start-Process ".\paper\csda-computational-costs\main.pdf"
+```
+
+The dedicated [CSDA theory build](../../.github/workflows/csda-computational-theory.yml)
+verifies mathematical identities and compiles the Elsevier CAS PDF
+without rerunning statistical simulations, benchmark workflows or
+the historical timing renderers. Its committed PDF and SHA256 input
+manifest remain on the paper branch.
+
+The author metadata and disclosures remain provisional. A mathematical
+theory paper still requires novelty assessment against Weinert (2007),
+Erisman--Tinney (1975), and Biessy (2026) before journal submission.
+
+---
+
+## Preserved historical computational-timing manuscript documentation
+
+The remainder of this file documents the **prior empirical draft**,
+whose sources and figures are retained for reproducibility but are
+no longer input by the current theoretical `main.tex`.
+
 # Computational costs of smoothness-indexed PLS
 
 **Independent, pre-submission computational companion** to the separate
