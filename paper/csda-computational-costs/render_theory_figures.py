@@ -98,9 +98,9 @@ def theoretical_landscape():
         ax.set(xlabel="Number of evaluated smoothness values $M$")
         ax.grid(alpha=.10)
     axes[0].set_ylabel("Series length $n$")
-    axes[0].text(.05, .12, "SVD work lower",
+    axes[0].text(.59, .12, "SVD work lower",
                  transform=axes[0].transAxes, color=NAVY, fontsize=8)
-    axes[0].text(.62, .82, "Banded work lower",
+    axes[0].text(.05, .81, "Banded work lower",
                  transform=axes[0].transAxes, color="#89552f", fontsize=8)
     axes[1].text(.47, .15, "Banded work lower",
                  transform=axes[1].transAxes, color="#89552f", fontsize=8)
