@@ -1,5 +1,39 @@
 # AI_HANDOFF — latest
 
+## Current Paper B revision — theory, exact CV and real implementation examples (2026-11-03)
+
+PR #109 on branch `paper/csda-computational-theory` now includes
+a compact exact-backend Table 2 and separate hybrid Table 3,
+explicit SVD-versus-Cholesky regime guidance for scalar
+GCV/AICc/BIC/ML versus exact CV, and four pinned
+AwesomeFigures CAS-ready plots. Source script is
+`paper/csda-computational-costs/render_theory_figures.py`.
+Analytic work landscapes are illustrative arithmetic
+units with assumed unit coefficients, **not measured
+speed ranks**. Actual frozen one-worker/one-BLAS-thread
+BIC timings come from 48 Experiment010 raw rows
+copied verbatim to the paper's `data/` directory;
+original archive timestamp 20261103T222938857Z
+from source SHA f16f2bab6cfa37c6423c7f2d4554208efa9f683a.
+No repeated large experiment.
+
+The jerk illustration is from existing separate third
+manuscript `paper/ngsim-jerk-case-study`, using real
+FHWA NGSIM US-101 vehicle positions (CC BY-SA 3.0),
+track 1 origin 185, 80 training positions, 20
+chronological held-out positions, d=3, GCV S=.4 and
+`mu='data'` measured only on training. The forecast is
+an explicitly separate local polynomial continuation,
+not intrinsic PLS or true jerk measurement.
+
+The CSDA theory workflow installs pinned AwesomeFigures,
+renders PDF/PGF/SVG from the exact CAS LaTeX template,
+checks frozen numerical provenance, compiles the PDF and
+archives all output and hashes on the PR branch. Before
+editing read `paper/csda-computational-costs/THEORY_HANDOFF.md`.
+Never merge PR #109 without authorization.
+
+
 ## Experiment005: sparse/iterative PLS, current branch
 
 Branch: feature/experiment005-structured-solvers; PR #94.
