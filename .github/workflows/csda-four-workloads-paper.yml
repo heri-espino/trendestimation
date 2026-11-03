@@ -1,20 +1,21 @@
-name: CSDA expanded four-workload paper — Elsevier CAS PDF
+name: CSDA completed observed computational paper — Elsevier CAS PDF
 
 on:
   push:
-    branches: [paper/csda-four-workload-20261102]
+    branches: [paper/observed-computational-study]
     paths:
       - .github/workflows/csda-four-workloads-paper.yml
       - paper/csda-computational-costs/main.tex
       - paper/csda-computational-costs/sections/**
       - paper/csda-computational-costs/references.bib
+      - paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: csda-four-workloads-manuscript
+  group: csda-observed-computational-manuscript
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +46,7 @@ jobs:
             paper/els-cas-templates/cas-common.sty \
             paper/els-cas-templates/cas-model2-names.bst \
             > paper/csda-computational-costs/template_source_sha256.txt
-      - name: Validate historical AwesomeFigures assets and no invented Experiment006 results
+      - name: Validate existing AwesomeFigures assets and source-measured new section
         shell: bash
         run: |
           set -euo pipefail
@@ -55,9 +56,11 @@ jobs:
             done
           done
           test -s paper/csda-computational-costs/sections/generated_d3_timings.tex
-          grep -q '80640' paper/csda-computational-costs/main.tex
+          grep -q 'experiment010_observed' paper/csda-computational-costs/main.tex
+          grep -q '5570' paper/csda-computational-costs/main.tex
+          test -s paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md
           grep -q 'planned' paper/csda-computational-costs/sections/experiment006_design.tex
-          grep -q 'not a completed' paper/csda-computational-costs/sections/experiment006_status.tex
+          grep -q '450' paper/csda-computational-costs/sections/experiment010_observed.tex
       - name: Compile CAS two-column manuscript and BibTeX
         shell: bash
         run: |
@@ -69,14 +72,14 @@ jobs:
           if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
             echo 'Undefined citation or reference'; exit 1
           fi
-          sha256sum main.tex references.bib sections/*.tex figures/*.pdf main.pdf \
+          sha256sum main.tex references.bib sections/*.tex figures/*.pdf OBSERVED_RESULTS_SNAPSHOT.md main.pdf \
             > four_workload_publication_sha256.txt
           git rev-parse HEAD > four_workload_source_commit.txt
       - name: Upload full manuscript and editable AwesomeFigures source
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: csda-four-workloads-manuscript
+          name: csda-observed-results-manuscript
           path: |
             paper/csda-computational-costs/main.pdf
             paper/csda-computational-costs/main.tex
@@ -84,6 +87,7 @@ jobs:
             paper/csda-computational-costs/references.bib
             paper/csda-computational-costs/README.md
             paper/csda-computational-costs/SOURCE_AUDIT.md
+            paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md
             paper/csda-computational-costs/figures/
             paper/csda-computational-costs/awesomefigures_latex_manifest.json
             paper/csda-computational-costs/four_workload_publication_sha256.txt
