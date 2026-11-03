@@ -1058,12 +1058,6 @@
 \pgfsetfillcolor{textcolor}%
 \pgftext[x=3.421260in,y=2.592555in,,top]{\color{textcolor}{\fontfamily{\familydefault}\fontsize{13.333333}{16.000000}\selectfont\catcode`\^=\active\def^{\ifmmode\sp\else\^{}\fi}\catcode`\%=\active\def%{\%}Illustrative algorithmic work frontier ($d=3$, $R=1$)}}%
 \end{pgfscope}%
-\begin{pgfscope}%
-\definecolor{textcolor}{rgb}{0.156863,0.286275,0.368627}%
-\pgfsetstrokecolor{textcolor}%
-\pgfsetfillcolor{textcolor}%
-\pgftext[x=3.421260in,y=-0.039281in,,]{\color{textcolor}{\fontfamily{\familydefault}\fontsize{8.888889}{10.666667}\selectfont\catcode`\^=\active\def^{\ifmmode\sp\else\^{}\fi}\catcode`\%=\active\def%{\%}Unit coefficients; premapped grid; no timing data or calibrated crossover}}%
-\end{pgfscope}%
 \end{pgfpicture}%
 \makeatother%
 \endgroup%
