@@ -7,6 +7,9 @@ on:
     paths:
       - ".github/workflows/csda-computational-theory.yml"
       - "paper/csda-computational-costs/main.tex"
+      - "paper/csda-computational-costs/README.md"
+      - "paper/csda-computational-costs/THEORY_HANDOFF.md"
+      - "paper/csda-computational-costs/SOURCE_AUDIT.md"
       - "paper/csda-computational-costs/sections/**"
       - "paper/csda-computational-costs/verify_theory.py"
       - "paper/csda-computational-costs/render_theory_figures.py"
@@ -113,7 +116,8 @@ jobs:
             echo 'Undefined bibliography or cross-reference in final LaTeX log'
             exit 1
           fi
-          sha256sum main.tex references.bib sections/foundations.tex \
+          sha256sum main.tex references.bib README.md THEORY_HANDOFF.md \
+            SOURCE_AUDIT.md sections/foundations.tex \
             sections/algorithms.tex sections/structured_criteria.tex \
             sections/amortized_frontier.tex sections/decision_examples.tex \
             sections/theory_discussion.tex verify_theory.py render_theory_figures.py \
@@ -121,7 +125,10 @@ jobs:
             figures/coordinate_map.pdf figures/theory_regime_map.pdf \
             figures/theory_cost_curves.pdf figures/matched_bic_timings.pdf \
             figures/ngsim_jerk_application.pdf theory_awesomefigures_manifest.json \
-            theory_figure_sources.json main.pdf \
+            theory_figure_sources.json \
+            ../ngsim-jerk-case-study/data/ngsim_us101_selected_raw_positions.csv \
+            ../ngsim-jerk-case-study/data/provenance.json \
+            ../ngsim-jerk-case-study/results/selection_rows.json main.pdf \
             > theory_publication_sha256.txt
           git rev-parse HEAD > theory_source_commit.txt
       - name: Preserve PDF and provenance on dedicated paper branch
