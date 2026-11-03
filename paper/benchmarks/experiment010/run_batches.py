@@ -55,11 +55,21 @@ def configurations(preset):
     if preset == "smoke":
         return [case(64, 1, mu, "high", "gcv", 100) for mu in MEANS]
     if preset == "pilot":
-        # Each mu occurs for every n,d,C, not an aliased cycling subset.
-        return [case(n, d, mu, "high", criterion, 100)
+        # Front-load coverage across every d, all 3 means and all 5
+        # criteria; the complete pilot still crosses every n,d,C,mu.
+        priority = [
+            case(n, d, MEANS[i % 3], "high",
+                 CRITERIA[(i + (n == 128)) % len(CRITERIA)], 100)
+            for n in (64, 128)
+            for i, d in enumerate(D_LEVELS)
+        ]
+        full = [case(n, d, mu, "high", criterion, 100)
                 for n, d, criterion in product(
                     (64, 128), D_LEVELS, CRITERIA)
                 for mu in MEANS]
+        seen = {json.dumps(c, sort_keys=True) for c in priority}
+        return priority + [
+            c for c in full if json.dumps(c, sort_keys=True) not in seen]
     if preset == "comprehensive":
         return [case(*p) for p in product(
             N_LEVELS, D_LEVELS, MEANS, AMPLITUDES,
