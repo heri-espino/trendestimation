@@ -122,3 +122,20 @@ All reported predictions require machine-specific calibration,
 numerical validity and dense-memory gating. Holdout results are
 single-class and cannot certify the switch. Do NOT change
 production default or merge without authorization.
+
+
+## Experiment010 — multi-backend feasible runtime frontier (draft research plan)
+
+Read paper/benchmarks/experiment010/README.md before new computational
+benchmark work. Compare all ten complete-criterion Experiment006/008
+pipelines, separately identifying composite guarded policy versus actual
+solver, across mu=0, observed-difference mu='data', and fixed nonzero
+mu=c. Use *identical S candidate grids*, including analytic S=1, for
+both direct-S and once-pretranslated lambda policies. Include every
+mapping, factorization, diagnostic and cache cost. Fit-only timing is
+not an honest complete criterion comparison. Rank only memory-feasible,
+installed, numerically certified pipelines; record failures and retry
+an independently validated next-best method. Validate machine-specific
+theoretical cost rankings on held-out empirically measured boundary cases.
+This is a design protocol, NOT an implemented dispatcher or completed
+Experiment010 benchmark. Do not change the library's default policy.
