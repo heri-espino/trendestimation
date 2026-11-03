@@ -48,6 +48,7 @@ try {
     try {
         $testArgs = @('run','--no-capture-output','-n','trendestimation',
           'python','-m','pytest','-q','tests/test_experiment010_runner.py',
+          'tests/test_experiment010_parallel.py',
           'tests/test_experiment010_mle_normalization.py',
           'tests/test_experiment006_selected_inverse.py',
           'tests/test_experiment006_hybrid_criteria.py')
