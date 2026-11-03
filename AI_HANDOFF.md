@@ -632,3 +632,24 @@ an actual small CHOLMOD PLS fit and compares to banded Cholesky
 rather than treating an import as proof. Read FOCUSED_THREE.md
 for commands. The user's real VM must pass the tests before a
 new sparse-only backfill; prior results branches remain immutable.
+
+
+### CHOLMOD verified on Windows VM — November 3, 2026
+
+On the Windows Conda `trendestimation` environment, the user ran
+`tests/test_experiment005_structured_solvers.py` and
+`tests/test_experiment010_parallel.py`: **110 passed in 3.15s**.
+They also compared the *real installed* `PreparedPLSSolver`
+sparse-Cholesky fit versus banded Cholesky with
+`n=64,d=2,lambda=2,mu=0.15,seed=42`: maximum absolute
+difference **1.2948756650255078e-13**, `PASS: True`.
+This verifies the sparse fitting backend for one case, not the
+full criterion pipeline or accuracy over all n,d,lambda.
+Seven GitHub CI checks on compatibility commit `ab3a427` also
+passed. See `paper/benchmarks/experiment010/FOCUSED_THREE.md`
+for reproducible commands and one-slot sparse-only backfill
+(offset 26, shard0, count16, one method attempt). Do not overwrite
+original n64 BIC result branch or redo nine successful methods.
+The fate of the prior focused offset30 batch is unverified;
+inspect and preserve VM-local outputs before assuming its
+resume cursor.
