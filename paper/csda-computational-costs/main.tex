@@ -5,7 +5,7 @@
 \documentclass[a4paper,fleqn]{cas-dc}
 \usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage{graphicx,booktabs,url}
+\usepackage{graphicx,booktabs,tabularx,url}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
 \newcommand{\R}{\mathbb R}
@@ -28,7 +28,7 @@
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-A normalized trace-based smoothness index provides an interpretable coordinate for finite-difference penalized least-squares trend estimation, but its numerical cost depends on how smoothing parameters, fitted series and statistical selection criteria are reused. We formalize complete criterion-evaluation work as a function of sample length, difference order, number of candidate smoothness values, number of series and requested criterion set. For fixed reference-difference means, we establish the data-independent smoothness-to-penalty mapping and show that banded Cholesky with selected inversion is sufficient to evaluate conditional cross-validation, generalized cross-validation, information criteria and a profiled Gaussian marginal likelihood without a dense inverse. A log-determinant identity supplies a banded expression for the reduced-coordinate likelihood. We derive arithmetic and storage bounds for reusable spectral and streamed banded pipelines, identify an explicit order-one eigenvalue simplification and characterize when a calibrated candidate-count crossover may exist. The results distinguish theoretical operation counts from execution time, account for numerical admissibility and explain why no solver is universally optimal. The analysis synthesizes established smoother, factorization and selected-inversion theory rather than proposing a new smoothing penalty. Empirical runtime rankings and implementation-specific constants are deliberately deferred to a separate computational software study.
+A normalized trace-based smoothness index provides an interpretable coordinate for finite-difference penalized least-squares trend estimation, but its numerical cost depends on how smoothing parameters, fitted series and statistical selection criteria are reused. We formalize complete criterion-evaluation work as a function of sample length, difference order, number of candidate smoothness values, number of series and requested criterion set. For fixed reference-difference means, we establish the data-independent smoothness-to-penalty mapping and show that banded Cholesky with selected inversion is sufficient to evaluate conditional cross-validation, generalized cross-validation, information criteria and a profiled Gaussian marginal likelihood without a dense inverse. A log-determinant identity supplies a banded expression for the reduced-coordinate likelihood. We derive arithmetic and storage bounds for reusable spectral and streamed banded pipelines, identify an explicit order-one eigenvalue simplification and characterize when a calibrated candidate-count crossover may exist. The results distinguish theoretical operation counts from execution time, account for numerical admissibility and explain why no solver is universally optimal. The analysis synthesizes established smoother, factorization and selected-inversion theory rather than proposing a new smoothing penalty. Two supporting illustrations distinguish measured one-worker BIC pipeline timings from the theoretical bounds and relate a third-difference smoother to a real vehicle-position segment. Broader runtime and forecasting evaluations remain separate research studies.
 \end{abstract}
 \begin{keywords}
 Penalized least squares \sep normalized smoothness \sep amortized complexity
@@ -40,6 +40,7 @@ Penalized least squares \sep normalized smoothness \sep amortized complexity
 \input{sections/algorithms}
 \input{sections/structured_criteria}
 \input{sections/amortized_frontier}
+\input{sections/decision_examples}
 \input{sections/theory_discussion}
 
 \bibliographystyle{cas-model2-names}
