@@ -12,6 +12,10 @@ on:
       - 'paper/sections/**'
       - 'paper/benchmarks/experiment010/publication_evidence/**'
 
+concurrency:
+  group: computational-statistics-paper-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
