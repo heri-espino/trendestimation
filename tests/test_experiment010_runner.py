@@ -35,6 +35,26 @@ def test_manifest_factors_cross_reference_means_not_confounded():
                for x in RUN.attempts("smoke"))
 
 
+def test_frontier_crosses_three_means_and_four_higher_n_blocks():
+    cases = RUN.configurations("frontier")
+    assert len(cases) == 12
+    assert len(RUN.attempts("frontier")) == 120
+    blocks = {
+        (c["n"], c["d"], c["criterion"]) for c in cases
+    }
+    assert blocks == {
+        (256, 1, "gcv"),
+        (256, 5, "mle"),
+        (512, 2, "aicc"),
+        (512, 6, "cv"),
+    }
+    for key in blocks:
+        assert {
+            c["mu"] for c in cases
+            if (c["n"], c["d"], c["criterion"]) == key
+        } == set(RUN.MEANS)
+
+
 def test_shards_are_disjoint_and_exhaustive():
     whole = {(key, method) for key, _, method in RUN.attempts("pilot")}
     a = {(key, method) for key, _, method in RUN.attempts("pilot", 0, 3)}
