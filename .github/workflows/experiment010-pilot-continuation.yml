@@ -1,0 +1,80 @@
+name: Experiment010 bounded pilot continuation on university Windows VM
+
+on:
+  push:
+    branches: [research/experiment010-multibackend-frontier-design]
+    paths:
+      - .github/workflows/experiment010-pilot-continuation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment010-pilot-continuation
+  cancel-in-progress: false
+
+jobs:
+  numerical-pilot-extension:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        start: [60, 120, 180, 240]
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONPATH: ${{ github.workspace }}\src
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify existing runner and numerical contracts
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner' }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Existing Conda missing' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_experiment010_mle_normalization.py tests/test_experiment010_runner.py tests/test_experiment006_hybrid_criteria.py tests/test_experiment006_selected_inverse.py
+          if ($LASTEXITCODE -ne 0) { throw 'Numeric/criterion tests failed; no benchmark' }
+      - name: Continue pilot without remeasuring earlier attempts
+        run: |
+          $id = "$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $offset = '${{ matrix.start }}'
+          $dest = "paper/benchmarks/experiment010/runs/windows-$id-pilot-offset$offset"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment010/run_batches.py --preset pilot --start-attempt $offset --repeats 2 --series-count 2 --max-work 80000000 --max-seconds 600 --per-method-seconds 55 --max-method-attempts 60 --output $dest
+          if ($LASTEXITCODE -ne 0) { throw 'Pilot continuation failed; partial output still archived' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath "$dest/requirements-resolved.txt" -Encoding utf8
+          Get-Content "$dest/batch_summary.json"
+      - name: Preserve all raw measurements and failures as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment010-pilot-offset${{ matrix.start }}-${{ github.run_id }}-a${{ github.run_attempt }}
+          path: paper/benchmarks/experiment010/runs/windows-${{ github.run_id }}-a${{ github.run_attempt }}-pilot-offset${{ matrix.start }}/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve results permanently in a unique branch
+        if: always()
+        run: |
+          $id = "$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $offset = '${{ matrix.start }}'
+          $dir = "paper/benchmarks/experiment010/runs/windows-$id-pilot-offset$offset"
+          if (!(Test-Path -LiteralPath "$dir/run_metadata.json")) { exit 0 }
+          $archive = "results/experiment010-$id-pilot-offset$offset"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable results branch' }
+          git add -f -- $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage results' }
+          git commit -m "experiment010: archive corrected pilot continuation from $offset ($id)"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit archived results' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push archived results' }
+          Write-Host "Preserved immutable results: $archive"

@@ -7,17 +7,52 @@
   "font_family": "cmr",
   "font_name": "cmr10",
   "inclusion_fraction": 1.0,
-  "export_width_pt": 372.0,
-  "minimum_text_pt": 7.5281175000000005,
+  "export_width_pt": 372.00079124999996,
+  "minimum_text_pt": 7.499999999999999,
   "audit_warnings": [
     "A text label extends beyond the figure canvas."
   ],
   "font_backend": "pdfLaTeX PGF-generated vector PDF",
+  "typography_provenance": "exact-tex-preamble",
+  "pdf_fonts": [
+    {
+      "name": "/DQEJHB+CMMI12",
+      "embedded": true
+    },
+    {
+      "name": "/EOKQTH+CMR8",
+      "embedded": true
+    },
+    {
+      "name": "/HMPEFZ+CMSY5",
+      "embedded": true
+    },
+    {
+      "name": "/RKQINR+CMR9",
+      "embedded": true
+    },
+    {
+      "name": "/TRZUMY+CMBX12",
+      "embedded": true
+    },
+    {
+      "name": "/XBCZII+CMR12",
+      "embedded": true
+    },
+    {
+      "name": "/XFRVQP+CMR5",
+      "embedded": true
+    },
+    {
+      "name": "/YAUCEJ+CMR7",
+      "embedded": true
+    }
+  ],
+  "pdf_sha256": "4da6147d73d5c11d4b838075a8fe4fad80bbf189e96cb0f9dafb5b65cb00525e",
   "awesomefigures_apis": [
-    "inspect_latex",
-    "latex_style",
-    "PublicationStyle.fit",
-    "PublicationStyle.audit",
-    "PublicationStyle.savefig"
+    "paper",
+    "Publication.savefig",
+    "Publication.records",
+    "audit_figure"
   ]
 }

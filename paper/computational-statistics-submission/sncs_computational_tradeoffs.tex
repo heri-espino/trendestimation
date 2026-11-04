@@ -1,0 +1,207 @@
+\subsection{Computational complexity by workload}
+\label{sec:sncs-complexity}
+Our comparison separates the cost of (i) preprocessing,
+(ii) one complete trend, (iii) one criterion score,
+(iv) a search over $M$ candidate penalties, and
+(v) repeatedly evaluating the same candidates for $P$
+criteria or $R$ independent series. These workloads
+are \emph{not interchangeable}. Let $n$ denote the
+number of observations and $d$ the fixed difference
+order. The normal-equation matrix
+$A_\lambda=I+\lambda D_d^\top D_d$
+has half-bandwidth $d$. Efficient structured
+Whittaker--Henderson solutions substantially predate
+our implementation \cite{weinert2007wh}.
+
+\begin{table}[tbp]
+\centering\scriptsize\setlength{\tabcolsep}{3pt}
+\caption{Leading operation and memory orders for
+different numerical solvers. A new penalty entails
+a new factorization for the direct methods, whereas
+spectral bases can be reused. CV leverage and
+trace calculations may add substantial work.
+The expressions assume $d\ll n$; these are
+complexities, not measured runtime rankings.}
+\label{tab:sncs-solver-complexity}
+\begin{tabular}{p{.29\linewidth}p{.23\linewidth}p{.24\linewidth}p{.12\linewidth}}
+\toprule
+Method & Setup & Full trend per $\lambda$ & Memory\\
+\midrule
+Dense solve or dense Cholesky
+& $O(nd^2)$ for $Q_d$
+& $O(n^3)$ factorization
+& $O(n^2)$\\
+General banded solve
+& Store $2d+1$ diagonals
+& $O(nd^2)$
+& $O(nd)$\\
+Banded Cholesky
+& Store $d+1$ diagonals
+& $O(nd^2)$ factor; $O(nd)$ solve
+& $O(nd)$\\
+SVD of $D_d$
+& $O(n^3)$
+& $O(n^2)$
+& $O(n^2)$\\
+Symmetric \texttt{eigh} of $Q_d$
+& $O(n^3)$
+& $O(n^2)$
+& $O(n^2)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+After dense spectral preprocessing, an EDF/trace
+evaluation and a scalar normalized $S(\lambda)$
+evaluation require $O(n)$ operations. Once the
+observations have been projected, spectral
+GCV, AICc, BIC and the implemented conditional
+Gaussian likelihood also admit $O(n)$ score
+paths per penalty. Full trend reconstruction
+and the usual spectral diagonal-leverage
+computation for ordinary CV require
+$O(n^2)$ per candidate. These costs explain
+why a fast one-curve banded solver need not
+be the fastest method for a complete search.
+
+For $M$ distinct \emph{full fitted curves},
+two leading cost models are
+\[
+ T_{\rm spectral}=O(n^3+Mn^2),\qquad
+ T_{\rm banded\ Cholesky}=O(Mnd^2).
+\]
+The spectral cost includes its one-time basis.
+Banded Cholesky exploits fixed bandwidth
+but must refactor for each different $\lambda$.
+The constants, BLAS implementation, order
+and requested diagnostic quantities determine
+the actual crossover.
+
+\subsection{The cost of an $S$-only coordinate}
+\label{sec:sncs-mapping-cost}
+The normalized mapping $S_d(\lambda)$ depends
+only on $n,d$ and the positive penalty spectrum;
+it does not depend on $y$ or on the fixed
+reference difference mean $\mu$.
+After preprocessing, one evaluation of $S$
+or its derivative costs $O(n)$.
+A safeguarded inversion with $k$ scalar
+iterations costs $O(kn)$ per target.
+A full $M$-target grid therefore requires
+$O(Mkn)$ arithmetic \emph{in addition to}
+the spectral setup. If a banded Cholesky
+backend does not already have the spectrum,
+obtaining the mapping has a separate setup
+cost; the banded factorization is not itself
+a free $S^{-1}$ routine.
+
+Suppose $P$ criteria use the same $M$ finite
+$S$ targets. Writing $T_{\rm inv}$ for
+a candidate inversion and $T_{\rm score}$
+for a typical matched criterion evaluation,
+the two strategies satisfy the idealized
+accounting identity
+\begin{equation}
+\begin{aligned}
+T_{\rm native}&\approx T_{\rm prep}
+  +PM(T_{\rm inv}+T_{\rm score}),\\
+T_{\rm cached}&\approx T_{\rm prep}
+  +MT_{\rm inv}+PMT_{\rm score},\\
+T_{\rm native}-T_{\rm cached}
+  &\approx (P-1)MT_{\rm inv}.
+\end{aligned}
+\label{eq:sncs-mapping-reuse}
+\end{equation}
+For unequal criterion costs, replace the
+common score term by the sum over criteria.
+This relationship assumes a \emph{matched}
+candidate set and a one-time cached
+translation shared among all criteria.
+At $P=1$ the conversion cannot generally
+be eliminated: it is merely moved to an
+earlier stage. For repeated series with the
+same $(n,d)$ and target grid, the cached
+mapping remains reusable.
+
+By contrast, searching in $\lambda$
+and reporting $S(\widehat\lambda)$
+at the end avoids repeated inverse
+calculations. It can be cheaper for
+one-off selection. However, sampling a
+uniform $S$ grid and a log-$\lambda$
+grid produces \emph{different} interior
+candidates; any different discrete
+minimum may arise from grid design.
+Exact monotonic reparameterization
+preserves the global mathematical
+minimizer on the full domain.
+
+\subsection{Measured solver crossovers and grid reuse}
+\label{sec:sncs-measured-crossovers}
+Our paired full-trend results
+(Table~\ref{tab:expanded-solver-orders})
+show that no backend universally wins.
+For $n=32,d=2,\mu=0$, the SVD/banded
+Cholesky total-time ratio was $1.554$
+for $M=1$ (pointwise 95\% interval
+$[1.541,1.568]$), favoring Cholesky,
+but $0.419$ for $M=64$
+($[0.417,0.421]$), favoring SVD.
+At $n=96,d=2,M=16,\mu=0$,
+the ratio was $2.093$
+($[2.084,2.101]$), again favoring
+banded Cholesky. These host-specific
+measurements do not justify a
+universal crossover threshold.
+
+An independent Windows result
+(Table~\ref{tab:expanded-coordinates})
+shows the value of reusing the
+\emph{same} translated grid across
+multiple statistical selectors:
+$n=48,d=2,\mu=0$ required
+$11.234$\,ms for five repeated native
+$S$ searches, compared with
+$3.980$\,ms for one $S$-to-$\lambda$
+translation plus five backend
+searches. The ratio $2.823$ is
+a descriptive measured advantage
+of avoiding redundant inversions,
+not proof that $S$ is intrinsically
+faster than $\lambda$. An
+independent log-$\lambda$ grid
+is not an exact matched comparison.
+
+\subsection{A public interface that exposes $S$, not $\lambda$}
+\label{sec:sncs-s-only-api}
+The package can make normalized $S$
+the only \emph{required user-specified}
+smoothing parameter while retaining
+$\lambda$ internally as a numerical
+representation. The new additive
+\texttt{fit\_smoothness} interface
+calls the existing, validated
+$S^{-1}$ algorithm and then the
+usual PLS solver:
+\begin{verbatim}
+from trendestimation import fit_smoothness
+
+result = fit_smoothness(
+    y, smoothness=0.86, order=2, mu=0.15,
+)
+trend = result.trend
+\end{verbatim}
+The returned penalty remains
+available as optional reproducibility
+metadata. Reusing
+\texttt{TrendSmoother.fit\_smoothness}
+avoids repeating spectral setup
+between calls, although repeated
+grid inversions should themselves
+be cached when appropriate.
+The familiar $\lambda$-based API
+remains supported for compatibility.
+Thus eliminating $\lambda$ from
+the interface does \emph{not}
+eliminate its internal computation
+or constitute a new estimator.

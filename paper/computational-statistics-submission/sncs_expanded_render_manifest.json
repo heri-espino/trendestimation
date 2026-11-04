@@ -34,17 +34,19 @@
     "library": "awesomefigures",
     "library_version": "0.1.0",
     "source": "https://github.com/awesomefigures/awesomefigures",
-    "source_commit": "54c8bf2374551fa39428f47f69580b4822d4b938",
+    "source_commit": "a9760351c1f72ccf7a1a2ef2ff14136d6e280d88",
     "style": "elegante",
     "palette": "okabe-ito",
     "preview_font": "DejaVu Sans",
     "publication_pdf_font": "measured TeX manuscript font, embedded via PGF/PDF",
-    "typography": "af.inspect_latex + af.latex_style + PublicationStyle.fit/audit",
+    "typography": "af.paper + TeX-preamble exact PDF and embedded-font audit",
     "apis": [
       "awesomefigures.set_style",
       "awesomefigures.plot_scheme",
       "awesomefigures.named_colormap",
-      "awesomefigures.save_figure"
+      "awesomefigures.save_figure",
+      "awesomefigures.paper",
+      "awesomefigures.Publication.savefig"
     ]
   },
   "notes": "Archived solver, mapping, selection and timing results only. PLS curves reconstructed deterministically at saved lambda and mu; no criterion optimization, root inversion or benchmark performed. Native S and mapped S-to-lambda share penalty candidates, whereas the independent log-lambda grid differs."

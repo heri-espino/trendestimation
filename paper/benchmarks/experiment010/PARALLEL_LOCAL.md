@@ -1,0 +1,175 @@
+# Experiment010 — parallel local VM execution
+
+## Why this exists
+
+The uncapped sequential VM run on 2026-11-03 showed times including
+139.45 s for naive inverse, 88.31 s for spectral SVD, 220.56 s
+for banded Cholesky, 220.67 s for guarded Cholesky and 244.08 s for
+banded LU in a single high-grid method-case. These were actual
+user-observed subprocess durations, not proof of numerical correctness.
+Sequentially launching the ten methods wastes available throughput
+on a PC with 32 logical processors.
+
+The user requested parallelization. This branch adds
+run_parallel.py, a subprocess-based worker pool that can run
+**independent method/case tasks simultaneously**, without removing
+numerical validation or record preservation.
+
+The result is *throughput parallelism*, not parallelization within one
+PLS criterion evaluation. Each subprocess still uses one BLAS thread.
+Elapsed method times under contention are not equivalent to isolated
+serial method runtimes and should be compared as a separate experiment.
+
+## Start safely, without interfering with a running sequential batch
+
+If the earlier PowerShell command on shard 0 was started with
+StartAttempt=10, MethodAttempts=10, **let that entire batch finish and
+push its raw results** before switching. The sequential launcher prints
+the next cursor in its batch_summary.json and commits results to a
+unique results/experiment010-uncapped-* branch.
+
+Create a new independent worktree from any trendestimation checkout
+after fetching:
+
+```powershell
+git fetch origin
+git worktree add --detach ..\trendestimation-parallel origin/research/experiment010-parallel-local
+Set-Location ..\trendestimation-parallel
+```
+
+Then run eight workers, one BLAS thread each:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment010\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 20 -MethodAttempts 10 -Workers 8
+```
+
+**StartAttempt=20 is ONLY correct if the previous
+StartAttempt=10 / MethodAttempts=10 batch completed and its
+next_attempt_offset is actually 20.** Otherwise read its ledger
+and archive partial output before choosing a nonoverlapping cursor.
+Do not start a new run on the same case IDs while the previous
+batch is active; doing so distorts times and duplicates results.
+
+For additional throughput after testing, increase Workers to 12 or 16
+only when Task Manager confirms headroom. The default per-worker dense
+budget is 2 GiB and the default *aggregate reservation* is 16 GiB:
+Workers*MaxDenseBytes must not exceed TotalParallelDenseBytes.
+These are conservative scheduling/accounting caps, NOT OS-enforced RSS
+limits. Use -TotalParallelDenseBytes only after checking available RAM.
+Going straight to 32 often hurts total throughput and can exhaust RAM,
+despite there being 32 logical CPUs.
+
+Example 12-worker **explicit aggregate reservation**:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment010\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 20 -MethodAttempts 20 -Workers 12 -TotalParallelDenseBytes 25769803776
+```
+
+If your data are currently on a different shard or cursor, substitute
+those numbers. This does not run any new GitHub Actions benchmark.
+
+## Scientific and operational contract
+
+- Exactly the same deterministic case_id, n,d,mu,criterion,
+  amplitude, series seeds, S grid, exact S=1, and ten methods.
+- Each worker calls the existing Experiment006 complete-criterion
+  implementation with no artificial time limit and max-work=infinity.
+- Each worker owns a unique slices/<case_id>/<method>/ directory and
+  streams exceptions/stderr to <method>.log.
+- Experiment006 writes its raw_times.csv atomically after each
+  completed row. If a later task hangs or crashes, previous rows
+  remain on disk.
+- The main process alone writes method_attempts.csv atomically
+  after each worker completes. Status is pending_or_running
+  for not-yet-finished jobs (not numerical failure); only completed
+  jobs are scientific benchmark observations.
+- All status categories, missing optional dependencies and score
+  parity checks are preserved. No invalid method is ranked as a
+  valid timing observation.
+- The launcher runs regression tests first, records source SHA,
+  BLAS/OpenMP caps and environment, then commits and pushes each
+  finished batch to its own results branch. The same result-branch
+  name and output directory are never reused.
+- Max-method-attempts counts tasks in a checkpoint batch; it is
+  NOT a runtime cutoff.
+- A 32-logical-processor machine does not imply a 32x speedup.
+  The speedup of 8 workers must be measured on actual completion.
+- When comparing *algorithm speed* rather than parallel throughput,
+  retain isolated one-worker trials; multi-worker cold timings
+  include CPU, cache and memory-bandwidth contention.
+- Real VM reboot, Ctrl+C, OS memory limits, or power loss can still
+  interrupt a batch. If interrupted, preserve files from runs/
+  and examine unfinished ledger rows before running overlapping tasks.
+
+## Source controls and scope
+
+This work is staged on
+research/experiment010-parallel-local, derived from independent
+PR #103; both are draft and unmerged. Do not alter other agents' branches.
+All older capped and uncapped measurements remain immutable on their
+existing results branches.
+
+The manuscript scope remains a numerical accuracy/error audit and
+a small measured computing-time comparison. This change does NOT
+introduce prediction models, regret/fallback studies or additional
+unimplemented dual solvers.
+
+
+## Windows WinError 5 incident and safe continuation — 2026-11-03
+
+The source revision `8a02f4a52d81994daef83c4d8d1ef168aa9c832e`
+completed all **ten** n=64, d=1, AICc, mu=data, low-amplitude,
+M=100000 method subprocesses for shard 0 at start offset 10.
+On the final CSV checkpoint, Windows raised `PermissionError:
+[WinError 5]` when replacing `method_attempts.csv` with
+`method_attempts.tmp`. The PowerShell launcher nevertheless
+committed and pushed all ten per-method raw files and logs to:
+
+https://github.com/heri-espino/trendestimation/tree/results/experiment010-uncapped-PCAG103A-08-20261103T155726693Z-shard0-offset10
+
+Both the ordinary ledger and temporary ledger show all ten
+`completed_with_csv` subprocess statuses, but sparse Cholesky
+has **zero** valid status=ok rows, consistent with the optional
+CHOLMOD dependency being unavailable. A subprocess status alone
+is never a numerical success certificate. The batch lacks a
+`batch_summary.json` because the final ledger replacement
+raised before aggregation. The *correct continuation cursor is
+20*, NOT 10; never rerun these ten method-case attempts.
+
+The corrected source in this branch retries Windows atomic
+ledger replacement on transient access-denied/share-violation
+errors and, if the lock persists, retains an independently named
+`method_attempts.recovery-*.csv` checkpoint. The parallel
+summary records `ledger_checkpoint_file` so agents know which
+ledger is authoritative if the default CSV was temporarily locked.
+An archive containing a `method_attempts.tmp` remains valuable
+historical evidence; do not delete or rewrite it on its original
+immutable result branch.
+
+**Next command** from the NEW parallel worktree after fetching
+this branch, when the old process has ended:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\\paper\\benchmarks\\experiment010\\run_uncapped_local.ps1 -ShardIndex 0 -ShardCount 16 -StartAttempt 20 -MethodAttempts 10 -Workers 8
+```
+
+The runner checks the Windows ledger-recovery tests before starting
+worker processes. Avoid opening live CSVs in Excel during execution
+or syncing the active output directory through OneDrive, because
+external readers can contribute to Windows access-denied errors.
+
+
+## Focused three-method large experiment
+
+The *current* recommended large-run launcher defaults to
+`-Methods focused` (naive inverse, spectral SVD and sparse
+Cholesky). Read [FOCUSED_THREE.md](FOCUSED_THREE.md) for exact
+PowerShell commands, source branch and selected-method caveats.
+The seven other methods remain in the original ten-slot planning
+manifest but are marked `method_not_selected`, not failed.
+The optional sparse Cholesky backend is absent on the VM
+(`setup_failed_ImportError` in archived run offset20), so it is
+preflight-marked `dependency_unavailable` without repeated worker
+launches. No other solver is secretly substituted. The next
+nonoverlapping shard0 cursor after the archived offset20 batch is
+30. Use `-Methods all` only to intentionally rerun all ten.

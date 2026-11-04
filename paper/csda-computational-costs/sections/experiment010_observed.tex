@@ -1,0 +1,226 @@
+\section{Completed multi-backend experiments}\label{sec:experiment010}
+This section reports only the experiments completed and archived by 3 November
+2026. The planned larger factorial is not presented as measured, and the
+historical small-series results in Sections~\ref{sec:design}--\ref{sec:results}
+are not pooled with the newer Windows timing observations.
+
+\subsection{Full-criterion workloads}
+The experiment varies series length $n$, finite-difference order $d$,
+candidate smoothness count $M$, number of independent series $R$,
+criterion $C$ (CV, GCV, BIC, AICc or Gaussian marginal likelihood),
+reference mean $\mu$, observation amplitude, native-$S$ versus
+pretranslated-$\lambda$ evaluation, and the complete numerical backend.
+Three mean policies are compared:
+\[
+\mu=0,\qquad
+\widehat\mu_{\mathrm{data}}=\frac{\mathbf1^\top D_dy}{n-d},\qquad
+\mu=c=0.15.
+\]
+The sample-derived mean is computed separately for each observed series.
+It produces conditional plug-in scores, not exact leave-one-out
+re-estimation of the mean or joint marginal maximum likelihood.
+For the same $(n,d)$, all three policies share the same exact map
+$\Lambda_{n,d}(S)$, independent of the observations and mean policy.
+
+All complete-criterion pipelines charge their setup, smoothness mapping,
+fit, effective degrees of freedom, leverage and marginal-likelihood
+diagnostics as applicable. The guarded SVD/Cholesky policy is composite;
+sparse and PCG hybrid pipelines include their extra banded diagnostics.
+An incomplete, unavailable or numerically invalid method is never
+assigned a fictitious valid execution time.
+
+\subsection{Completed attempts and archival accounting}
+All new measurements used the existing non-administrator
+\texttt{trendestimation} Conda environment on university Windows 11
+runner \texttt{PCAG103A-08}. The committed source SHA, original
+\texttt{raw\_times.csv}, per-method criterion scores and failure
+statuses, seed, environment and batch summary are preserved in
+immutable GitHub result branches. A status-\texttt{ok} timing row
+is a method--workload--coordinate--repetition observation,
+\emph{not} an independent experimental problem.
+
+\begin{table*}[t]\centering
+\caption{Verified corrected-source Experiment010 evidence. Match
+means selected-score agreement against a valid spectral reference,
+not independent high-precision verification. Failed/partial records
+have no valid complete-criterion time. No-reference rows cannot
+be independently compared with spectral scores.}
+\label{tab:experiment010_coverage}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Batch & Attempts & OK times & Match & Differ & No ref. & Failed/partial\\
+\midrule
+Corrected smoke & 30 & 420 & 420 & 0 & 0 & 30\\
+Initial corrected pilot & 60 & 720 & 704 & 16 & 0 & 180\\
+Pilot continuation offset 60 & 60 & 680 & 680 & 0 & 0 & 208\\
+Pilot continuation offsets 120--240 & 180 & 2520 & 2520 & 0 & 0 & 180\\
+$n=256$ targeted frontier & 60 & 666 & 664 & 2 & 0 & 222\\
+$n=512$ targeted frontier & 60 & 564 & 492 & 0 & 72 & 282\\
+\midrule
+\textbf{Total} & \textbf{450} & \textbf{5570} & \textbf{5480} &
+\textbf{18} & \textbf{72} & \textbf{1102}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+The pilot advanced only 300 out of 1800 scheduled method--case
+attempts. The 50,400-method--case and 403,200 workload/policy-row
+factorial \emph{manifests} remain plans, not completed time observations.
+The original 80,640-row historical Windows study, Experiment007 fit-only
+runs and other Experiment008/009 measurements remain separate datasets.
+
+\subsection{All ten pipelines under a matched smoothness grid}
+Table~\ref{tab:experiment010_methods} compares the corrected
+$n=256,d=1$ GCV experiment: $\mu=0$, high input amplitude,
+one observed series, and pretranslated $\lambda$ corresponding to
+\emph{identical} $S$ candidates for every numerical backend.
+The reported number is the median \emph{total cold} time in
+milliseconds over two repetitions, including grid mapping,
+factorization and the extra criterion diagnostics where required.
+
+\begin{table*}[t]\centering
+\caption{Ten complete-criterion policies in one matched Windows
+case ($n=256,d=1$, GCV, $\mu=0$), measured median cold milliseconds.
+A dash means the optional method was unavailable or the full
+candidate workload did not produce a valid completed measurement;
+it does not represent an infinite or estimated time.}
+\label{tab:experiment010_methods}
+\begin{tabular}{@{}p{.49\textwidth}rr@{}}
+\toprule
+Pipeline & One $S$ & 100 $S$ candidates\\
+\midrule
+Naive inverse & 9.74 & ---\\
+Shift-free spectral SVD & 13.80 & \textbf{26.68}\\
+Banded Cholesky + selected inverse & \textbf{8.13} & 61.31\\
+Guarded SVD/Cholesky composite & 8.26 & 58.85\\
+Banded LU + banded diagnostics & 8.55 & 63.38\\
+Sparse LU + banded diagnostics & 9.71 & 72.89\\
+Sparse CHOLMOD + banded diagnostics & --- & ---\\
+FFT-preconditioned PCG + diagnostics & 9.09 & 73.63\\
+DST-preconditioned PCG + diagnostics & 8.30 & 79.87\\
+Jacobi-preconditioned PCG + diagnostics & 8.39 & 147.84\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Naive dense inversion completed the single-$S$ evaluation but not
+the complete 100-point workload within the resource gate.
+Optional sparse CHOLMOD was not installed. The guarded policy
+uses banded Cholesky at $d=1$ and should be regarded as a composite,
+not a separate factorization algorithm. The numerical pipelines
+therefore exhibit a \emph{descriptive} reversal: banded Cholesky
+led at one $S$, whereas spectral SVD led at 100 candidates.
+This is not an established universal computational crossover.
+
+The same pattern was recorded for all three mean policies:
+\begin{table}[t]\centering
+\caption{Measured cold median milliseconds, $n=256,d=1$,
+GCV; one series and two repetitions.}
+\label{tab:experiment010_mean}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+$\mu$ & Chol.\ 1 & SVD 1 & Chol.\ 100 & SVD 100\\
+\midrule
+$0$ & 8.13 & 13.80 & 61.31 & 26.68\\
+data plug-in & 8.4 & 13.5 & 60.2 & 25.6\\
+$0.15$ & 8.1 & 12.9 & 59.5 & 24.9\\
+\bottomrule
+\end{tabular}
+\end{table}
+These two-repetition measurements describe one implementation
+and host and cannot support a population-level confidence interval.
+At $n=256,d=5$, some structured 100-candidate MLE pipelines
+did not finish with completely acceptable criterion records,
+whereas SVD and the guarded policy did. At $n=512$, 72 timing
+records lacked a valid matched spectral reference.
+They must remain unverified rather than declared correct.
+
+\subsection{High-order reliability and a discovered MLE normalization error}
+The independent Experiment006 85-decimal-digit fitted-trend audit
+(Table~\ref{tab:experiment006-highd}) used $n=128$, $d=5,6$,
+fixed $\mu=0.15$, and 28 reference problems per backend.
+Under its $10^{-6}$ relative forward-error threshold, full
+shift-free SVD passed 28/28, banded Cholesky 16/28, sparse LU
+22/28 and FFT--PCG 14/28 accepted its convergence gate.
+This is separate \emph{fit accuracy} evidence, not a high-precision
+certificate for each Experiment010 criterion timing.
+
+The original \emph{pre-correction} Experiment010 pilot reported
+104 disagreements in selected criterion scores; 100 occurred
+for $n=64,d=5$, data-derived $\mu$, and the profiled
+Gaussian marginal-likelihood criterion. The original finite-penalty
+banded, hybrid and naive benchmark implementations omitted
+$\log\det(D_dD_d^\top)$ from that criterion, whereas the spectral
+score and exact $S=1$ endpoint retained it. For $r=n-d$ and
+positive eigenvalues $\delta_j$ of $D_d^\top D_d$,
+\begin{equation}\label{eq:experiment010_mle}
+\begin{aligned}
+&\log\det(I+\lambda D_d^\top D_d)-r\log\lambda\\
+&\quad=\sum_{j=1}^r\log\left(1+\frac1{\lambda\delta_j}\right)
++\log\det(D_dD_d^\top).
+\end{aligned}
+\end{equation}
+Although the last term is constant among \emph{finite}
+penalty candidates, omitting it destroys objective-value
+comparability with the correctly normalized exact
+$S=1$ candidate. The implemented correction evaluates
+this term without a dense determinant using the identity
+\begin{equation}\label{eq:experiment010_gram}
+\det(D_dD_d^\top)=
+\prod_{j=0}^{d-1}
+\frac{\binom{n+j}{2j+1}}{\binom{2j}{j}}.
+\end{equation}
+After revising the MLE benchmarks and regression tests,
+the repeated pilot had only 16 score disagreements, all
+from the high-order naive inverse. The remaining discrepancies
+and forward-error risks are not dismissed by score parity.
+Old and corrected raw results are preserved on distinct
+immutable GitHub branches. Correcting a statistical
+criterion is a scientific finding, not a claimed speedup.
+
+\subsection{Conditional computational minimum: a testable hypothesis}
+For a future workload $w$, let $A_b,M_b,N_b$ be binary indicators
+of complete-criterion availability, sufficient memory/resources and
+independent numerical certification, respectively. Define the eligible
+complete pipelines
+\begin{equation}
+\mathcal F(w)=
+\{b:A_b(w)M_b(w)N_b(w)=1\}.
+\end{equation}
+An operational hypothesis is to estimate the machine-specific
+full execution time $\widehat T_b(w)$---including setup,
+$S\mapsto\lambda$ mapping, factorization, criterion
+diagnostics and reuse---then choose
+\begin{equation}\label{eq:experiment010_selector}
+\widehat b(w)\in\arg\min_{b\in\mathcal F(w)}\widehat T_b(w).
+\end{equation}
+On failure, a future dispatcher would try the next
+valid, feasible candidate and record extra time.
+The existing results do \emph{not} establish a calibrated
+ten-method model, independent class-balanced held-out
+prediction of crossovers, or measured fallback regret.
+Leading-order arithmetic alone cannot predict actual
+execution time without constants, conditioning,
+iterative-solver convergence and memory constraints.
+Thus~\eqref{eq:experiment010_selector} is a \emph{research
+proposal}, not a deployed, empirically proven selector.
+
+\subsection{Reproducibility and precise limits}
+The corrected-source Actions runs are
+\texttt{41587467639} (smoke and initial pilot),
+\texttt{41587723422} (pilot continuations) and
+\texttt{41642508020} (targeted $n=256,512$ frontier).
+The pre-correction failure-discovery run is
+\texttt{41586066141}. Each individual result branch
+and precise case path is indexed by
+\url{paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md}
+and \url{paper/benchmarks/experiment010/RESULTS_INDEX.md}.
+The full original CSVs, including failures and no-reference
+statuses, are the data source rather than any plotted
+or theoretical extrapolation. No execution at
+$n=16384$ or $131072$ and no completion of a
+10,000--100,000-point search is inferred from the
+smaller archived batches. Numerical certification,
+large-series feasibility and the general conditional
+winner rule remain separate research questions.

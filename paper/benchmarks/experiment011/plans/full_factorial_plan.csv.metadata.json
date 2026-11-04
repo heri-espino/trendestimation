@@ -1,0 +1,134 @@
+{
+  "amplitude_note": "low=1e-3, high=1e6 in the inherited sample generator",
+  "axes": {
+    "amplitude": [
+      "low",
+      "high"
+    ],
+    "coordinate": [
+      "direct_s",
+      "mapped_lambda"
+    ],
+    "criterion": [
+      "cv",
+      "gcv",
+      "bic",
+      "aicc",
+      "mle"
+    ],
+    "d": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "grid_denominator": [
+      100,
+      1000,
+      10000,
+      100000
+    ],
+    "method": [
+      "naive_inverse",
+      "spectral_svd",
+      "banded_cholesky",
+      "guarded_svd_cholesky",
+      "banded_lu_banded_trace",
+      "sparse_lu_banded_trace",
+      "sparse_cholesky_banded_trace",
+      "pcg_fft_banded_trace",
+      "pcg_dst_banded_trace",
+      "pcg_jacobi_banded_trace"
+    ],
+    "mu": [
+      "0",
+      "data",
+      "0.15"
+    ],
+    "n": [
+      64,
+      128,
+      256,
+      512,
+      1024,
+      16384,
+      131072
+    ],
+    "workload": [
+      "one_s_one_series",
+      "grid_one_series",
+      "one_s_multiple_series",
+      "grid_multiple_series"
+    ]
+  },
+  "coordinate_note": "direct_s and mapped_lambda evaluate the exact same candidate S grid; neither is an independent log-lambda optimization search",
+  "data_type": "planned_method_workload_eligibility_only",
+  "generator_sha256": "4f0eccada2c4d5a6fa9430d926cf26fea280dd1ee28031de06d75600f1428015",
+  "manifest_sha256": "45a594cc417769476c0a2e67bb6f224d02d7ad0b2906347648f4005339207b80",
+  "max_dense_bytes": 2147483648,
+  "max_work": 500000000.0,
+  "mean_note": "0 and 0.15 fixed, data=mean(D_d y); non-MLE plug-in scores are conditional, not refitted LOOCV",
+  "method": "Reuse Experiment008 planned_cells without running any solver",
+  "not_a_timing_dataset": true,
+  "planned_cells": 252000,
+  "requested_repeats": 6,
+  "resource_guard_sha256": "cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89",
+  "resource_note": "eligibility is model-based. Dense n=131072 matrix is 128 GiB before factorization workspaces.",
+  "resource_status_counts": {
+    "budget_exceeded": 92640,
+    "eligible": 138960,
+    "infeasible_dense_memory": 16800,
+    "infeasible_naive_runtime": 3600
+  },
+  "sample_only": [
+    {
+      "M": "1",
+      "coordinate": "direct_s",
+      "criterion": "cv",
+      "d": "1",
+      "method": "naive_inverse",
+      "mu": "0",
+      "n": "64",
+      "plan_status": "eligible",
+      "workload": "one_s_one_series"
+    },
+    {
+      "M": "1",
+      "coordinate": "mapped_lambda",
+      "criterion": "cv",
+      "d": "1",
+      "method": "naive_inverse",
+      "mu": "0",
+      "n": "64",
+      "plan_status": "eligible",
+      "workload": "one_s_one_series"
+    },
+    {
+      "M": "1000",
+      "coordinate": "direct_s",
+      "criterion": "cv",
+      "d": "1",
+      "method": "naive_inverse",
+      "mu": "0",
+      "n": "64",
+      "plan_status": "budget_exceeded",
+      "workload": "grid_one_series"
+    },
+    {
+      "M": "100000",
+      "coordinate": "mapped_lambda",
+      "criterion": "mle",
+      "d": "6",
+      "method": "pcg_jacobi_banded_trace",
+      "mu": "0.15",
+      "n": "131072",
+      "plan_status": "budget_exceeded",
+      "workload": "grid_multiple_series"
+    }
+  ],
+  "series_count_for_multiple_series": 3,
+  "statistic_note": "Repeated runtime outcomes need real independent blocks, status masks, and paired naive speedups; no RMSE is part of this study.",
+  "study": "experiment011_full_factorial_index"
+}

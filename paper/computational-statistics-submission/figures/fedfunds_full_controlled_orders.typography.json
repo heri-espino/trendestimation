@@ -7,17 +7,32 @@
   "font_family": "cmr",
   "font_name": "cmr10",
   "inclusion_fraction": 1.0,
-  "export_width_pt": 372.0,
-  "minimum_text_pt": 7.5281175000000005,
+  "export_width_pt": 372.00079124999996,
+  "minimum_text_pt": 7.499999999999999,
   "audit_warnings": [
     "A text label extends beyond the figure canvas."
   ],
   "font_backend": "pdfLaTeX PGF-generated vector PDF",
+  "typography_provenance": "exact-tex-preamble",
+  "pdf_fonts": [
+    {
+      "name": "/BJUHQF+CMR8",
+      "embedded": true
+    },
+    {
+      "name": "/HSQXWC+CMR7",
+      "embedded": true
+    },
+    {
+      "name": "/QACPUZ+CMR9",
+      "embedded": true
+    }
+  ],
+  "pdf_sha256": "2bc2b5eafd2cc2406e0b578a4ea27b611c0748da8627306a2126f4c59ef29f19",
   "awesomefigures_apis": [
-    "inspect_latex",
-    "latex_style",
-    "PublicationStyle.fit",
-    "PublicationStyle.audit",
-    "PublicationStyle.savefig"
+    "paper",
+    "Publication.savefig",
+    "Publication.records",
+    "audit_figure"
   ]
 }

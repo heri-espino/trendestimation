@@ -1,0 +1,29 @@
+{
+  "analytic_figures_not_measured_times": [
+    "theory_regime_map",
+    "theory_cost_curves"
+  ],
+  "empirical_figure": "matched_bic_timings",
+  "benchmark_csv": "paper/csda-computational-costs/data/experiment010_matched_three_methods.csv",
+  "benchmark_sha": "f16f2bab6cfa37c6423c7f2d4554208efa9f683a",
+  "benchmark_workers": 1,
+  "benchmark_records": 48,
+  "application_figure": "ngsim_jerk_application",
+  "application": {
+    "provenance_reference": "paper/ngsim-jerk-case-study/data/provenance.json",
+    "track": 1,
+    "origin": 185,
+    "n_train": 80,
+    "frames_holdout": 20,
+    "dt_s": 0.1,
+    "d": 3,
+    "mu_policy": "data",
+    "mu_from_training": -0.00013854545454539558,
+    "criterion": "GCV",
+    "selected_S": 0.4,
+    "lambda": 0.08083672630198052,
+    "forecast_method": "local degree-2 after removing cubic particular solution",
+    "is_intrinsic_PLS_forecast": false,
+    "ground_truth_jerk_available": false
+  }
+}
