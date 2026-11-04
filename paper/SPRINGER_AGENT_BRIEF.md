@@ -13,8 +13,8 @@
 **Deliverable:** CI-tested reproducible scripts and a PR with CLI evidence, tests and limitations.
 
 ### Agent 2 — Windows runtime and archival
-**Own:** new `paper/benchmarks/experiment011/runs/<machine-run-id>/...` outputs *only* on a dedicated `results/experiment011-* ` branch. Never write in another agent's experiment files.
-**Machine:** university Windows 11 `PCAG103A-08`, Conda `trendestimation`, up to 32 logical CPU processors. Favor one worker and one BLAS thread for single-method latency. Rotate method ordering across independently seeded blocks to control temporal drift; document CPU contention and caches.
+**Own:** new `paper/benchmarks/experiment011/runs/<machine-run-id>/...` serial outputs and separate `runs_parallel/<machine-run-id>/...` throughput outputs *only* on a dedicated `results/experiment011-* ` branch. Never write in another agent's experiment files.
+**Machine:** university Windows 11 `PCAG103A-08`, Conda `trendestimation`, up to 32 logical CPU processors. Favor one worker and one BLAS thread for single-method latency. On the 32-logical-processor host, optionally study independent small-series multiprocessing with 2/8/16/32 process workers using `campaign.py parallel-series`; archive these throughput records separately, never mix them into serial timing summaries. Rotate method ordering across independently seeded blocks to control temporal drift; document CPU contention and caches.
 **Procedure:** run Experiment011 smoke first, then carefully bounded pilot cases; archive *every* raw row, including ineligible and failed statuses, metadata and QA; commit and push promptly. If CHOLMOD is unavailable, report it and run the core methods rather than substituting SuperLU under its name.
 **Do not:** redo Experiment010's 100,000-candidate BIC pilot or start a 50,400-cell full factorial without a separate rationale and approval.
 **Deliverable:** a permanent results branch and a reviewable machine-specific pilot results PR (not merged).
