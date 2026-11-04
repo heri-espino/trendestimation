@@ -1,0 +1,51 @@
+{
+  "experiment": "experiment011",
+  "mode": "independent_series_parallel_throughput",
+  "not_comparable_to_serial_r_cache_latency": true,
+  "case": {
+    "id": "smoke_gcv_n64_d1_m100",
+    "stage": "smoke",
+    "n": 64,
+    "d": 1,
+    "grid_denominator": 100,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "low",
+    "methods": [
+      "spectral_svd",
+      "banded_cholesky",
+      "naive_inverse"
+    ],
+    "series_count": 2,
+    "repeats_per_block": 1,
+    "planned_blocks": 1,
+    "conditional_data_mu": false
+  },
+  "method_order": [
+    "spectral_svd",
+    "banded_cholesky",
+    "naive_inverse"
+  ],
+  "source_commit": "9d5daca249ab7fa433af8273a921c41fc636a847",
+  "source_sha256": {
+    "experiment006": "cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89",
+    "experiment011_cases": "d256e29fdc9df779a93fe4a0ed9848bb3981362d9a03fe5deb7a8112eb42fe69",
+    "experiment011_parallel_series": "462549b0116a263dc94861bac87d4344a71eb80fd2bac30a77646466f407d42c"
+  },
+  "run_tag": "parallel_gha_41795200262",
+  "block": 0,
+  "series_count": 3,
+  "series_workers": 2,
+  "blas_threads_per_worker": 1,
+  "max_work": 500000000,
+  "max_dense_bytes": 2147483648,
+  "seed_base": 20261103,
+  "host": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "python": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "note": "R separate processes use private factorization/SVD/mapping. Per-method wall time includes process scheduler/IPC and is NOT a replacement for serial R-series cache reuse.",
+  "status": "completed_with_recorded_rows",
+  "row_count": 36,
+  "qa_classification": "float64_parity_only_not_precision_certified",
+  "complete_utc": "2026-11-04T07:52:09.130815+00:00",
+  "raw_sha256": "f4f76a4e01ed0fc2709cc97c403d8cd3f9e4473cde002673619218546812910e"
+}
