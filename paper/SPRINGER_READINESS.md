@@ -2,6 +2,26 @@
 
 **Owner of this ledger:** independent review agent (see `SPRINGER_AGENT_BRIEF.md`). This is the authoritative checklist; keep it updated with exact commit hashes, source branches and measurable findings. Do not infer a result from the existence of a manifest or a successful smoke test.
 
+
+**Author's explicit full tensor requirement.** The planned coverage
+extends beyond Experiment011's 21-case pilot: seven n values through
+131072, d=1..6, zero/fixed-nonzero/observed-difference means,
+low/high magnitudes, five criteria, all ten full-criterion
+pipelines, both direct and mapped smoothness coordinate policies,
+four one/grid × one/multiple-series workloads, and M in
+{100,1000,10000,100000} on grid workloads. Deduplicating
+single-S work gives **252,000 planned cells**, not yet measured.
+`paper/benchmarks/experiment011/full_plan.py` generates
+an auditable compressed index with resource skip statuses
+by invoking the existing Experiment008 plan; it never runs
+the full experiment. The 21 cases remain the targeted
+first stage, and Experiment008/009/010 real prior records
+must be reconciled before computing a new result.
+The end goal is paired runtime per backend versus
+naive inversion (where feasible) with repeated block-level
+mean/median, dispersion and theory comparison; **no RMSE**.
+
+
 ## Editorial state at setup (2026-11-03)
 
 | Gate | Status | Evidence / gap |
