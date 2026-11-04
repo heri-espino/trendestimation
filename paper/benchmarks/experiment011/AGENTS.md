@@ -11,8 +11,8 @@ Re-use the already tracked Experiment006 run_slice; no fork of its solver is per
 
 ## Source files and immutable evidence
 
-- `cases.json`: predeclared 21 cases (2 smoke, 13 pilot, 6 confirm); stage and resource gates are binding. It is a **plan**, never measured data.
-- `campaign.py`: prints/list plans or runs **one case, one independent block**. Defaults to no numerical run. Phase `confirm` requires explicit `--allow-confirm`.
+- `cases.json`: predeclared **29 focused cases** (2 smoke, 15 pilot, 12 confirm), including d=4 CV/GCV at n=256/1024/2048/4096; stage and resource gates are binding. It is a **plan**, never measured data.
+- `campaign.py`: prints/lists immutable checksum-addressed plans, runs **one case, one independent block**, or invokes the explicitly opt-in separate parallel-series throughput mode. Defaults to no numerical run. Phase `confirm` requires explicit `--allow-confirm`.
 - `verify.py`: independently audits all complete-status/skip rows and matched \(S\)/score parity; MLE scores may have a lambda-independent additive difference. It does not certify high-precision forward error.
 - `tests/test_campaign.py`: fast stdlib regression tests.
 - `reference/experiment010_matched_n64_d1_bic.csv`: 48 copied historical **single-worker** rows from original `results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20` (source SHA `f16f2bab6cfa37c6423c7f2d4554208efa9f683a`). It is **not** Experiment011 output and is not independent replication.
@@ -44,6 +44,24 @@ The output `theory_big_o_work_not_seconds` is not a
 calibrated runtime prediction. Commit/push all derived CSVs
 and their source SHA; no RMSE research belongs in this paper.
 
+
+## Parallel-series archival and numerical boundaries
+
+The primary experiment remains isolated one-worker latency. The
+optional `campaign.py parallel-series --series-count R
+--series-workers W` runs **small** cases only (n<=256,
+M<=1000) with one independent data series per Windows
+spawned worker, 1 BLAS thread each, W<=min(R,32).
+It records group wall throughput and a per-series
+criterion-selection row for every method/policy/workload;
+no across-process spectral basis or Cholesky-factor reuse
+is claimed. Raw outputs stay under `runs_parallel/`,
+**not** the serial `runs/` path consumed by `analyze.py`.
+Do not combine these data to claim a serial method speedup.
+Document actual worker count and source SHA, and never
+overwrite another agent's run tag. Banded-only d=4
+n=2048/4096 cases have valid standalone timing but no
+independent cross-backend parity certificate.
 
 ## Numerical boundaries
 
