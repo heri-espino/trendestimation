@@ -12,6 +12,7 @@ import unittest
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 import campaign
+import full_plan
 from verify import audit_rows, SCENARIOS, POLICIES
 
 
@@ -60,6 +61,26 @@ class Experiment011PlanningTests(unittest.TestCase):
                             for c in design["cases"]))
         self.assertTrue(all(c["conditional_data_mu"] == (c["mu"] == "data")
                             for c in design["cases"]))
+
+    def test_full_tensor_is_declared_without_running_a_solver(self):
+        axes=full_plan.full_axes()
+        self.assertEqual(axes["n"],
+                         [64,128,256,512,1024,16384,131072])
+        self.assertEqual(axes["d"],list(range(1,7)))
+        self.assertEqual(axes["mu"],["0","data","0.15"])
+        self.assertEqual(len(axes["method"]),10)
+        self.assertEqual(axes["criterion"],
+                         ["cv","gcv","bic","aicc","mle"])
+        self.assertEqual(axes["grid_denominator"],
+                         [100,1000,10000,100000])
+        self.assertEqual(len(axes["workload"]),4)
+        self.assertEqual(len(axes["coordinate"]),2)
+        expected=(len(axes["n"])*len(axes["d"])*
+                  len(axes["mu"])*len(axes["amplitude"])*
+                  len(axes["criterion"])*len(axes["method"])*
+                  len(axes["coordinate"])*
+                  (2+2*len(axes["grid_denominator"])))
+        self.assertEqual(expected,252_000)
 
     def test_rotation_logic_preserves_method_set(self):
         methods = ("spectral_svd", "banded_cholesky", "naive_inverse")
