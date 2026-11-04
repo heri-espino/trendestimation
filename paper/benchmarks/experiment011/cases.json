@@ -1,7 +1,7 @@
 {
   "experiment": "experiment011",
   "schema_version": 1,
-  "description": "Source-controlled, bounded complete-criterion latency campaign; PLAN, not measured observations.",
+  "description": "Targeted 29-case complete-criterion latency campaign (21 original plus d=4 and n=1024/2048/4096 confirmation coverage); full factorial archive is background only.",
   "parent_runner": "paper/benchmarks/experiment006/run.py",
   "max_work": 500000000,
   "max_dense_bytes": 2147483648,
@@ -392,6 +392,146 @@
       "repeats_per_block": 2,
       "planned_blocks": 3,
       "conditional_data_mu": true
+    },
+    {
+      "id": "pilot_gcv_n256_d4_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n256_d4_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n1024_d4_m100",
+      "stage": "confirm",
+      "n": 1024,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n1024_d4_m100",
+      "stage": "confirm",
+      "n": 1024,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n2048_d4_m100",
+      "stage": "confirm",
+      "n": 2048,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n2048_d4_m100",
+      "stage": "confirm",
+      "n": 2048,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n4096_d4_m100",
+      "stage": "confirm",
+      "n": 4096,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n4096_d4_m100",
+      "stage": "confirm",
+      "n": 4096,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
     }
   ]
 }
