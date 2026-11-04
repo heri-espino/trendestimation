@@ -1,0 +1,24 @@
+# Paper work — mandatory manuscript/experiment routing
+
+This file applies to all manuscript and benchmark artifacts below `paper/`. Read the root `README.md`, `AGENTS.md`, `AI_HANDOFF.md` and `paper/PUBLICATION_MAP.md` **before editing**. Preserve previously accepted experiments, raw data and all other agents' open PR branches.
+
+## Authoritative manuscript routing
+
+- **CSDA A (precision/spectral mathematics):** `paper/csda-spectral-smoothness/`. High-precision numerical validation, shift-free spectra and intrinsic estimator reliability.
+- **CSDA B (cost theory):** `paper/csda-computational-costs/`; current authoring is on **PR #109**, which is not main. Mathematical operation-count and memory models, proof of selected-inverse sufficiency, conditional crossover, plus only bounded illustrative timings and jerk context. Do not duplicate the theoretical contribution in another journal.
+- **Springer Computational Statistics (actual implementation and timing):** `paper/main.tex` and `paper/sections/`, using the official Springer `sn-jnl` class. Existing PDF is archived. This research follow-up is `paper/benchmarks/experiment011/`, with agent brief `paper/SPRINGER_AGENT_BRIEF.md` and readiness ledger `paper/SPRINGER_READINESS.md`. Source-controlled stage cases and numerical QA come **before** any new best-method assertion.
+- **NGSIM physical application:** `paper/ngsim-jerk-case-study/`. Real FHWA vehicle-position data, d=3 third differences, training-only data mean, separate extrapolation and observed-future errors. No measured true jerk or native TrendSmoother forecasting claim.
+- **Historical SN Computer Science draft:** `paper/computational-statistics-submission/`. This is **not** the canonical Springer Computational Statistics source `paper/main.tex`. Do not change its journal or formatting by mistake.
+
+## General scientific standards
+
+1. Preserve every original CSV, JSON, source program, TeX, figure, log and environment manifest. New outputs get new paths or branches, never overwrites.
+2. Distinguish mathematical arithmetic counts from measured seconds and separate solver fit-only timings from *complete* CV/GCV/AICc/BIC/ML selection cost. CHOLMOD plus separately charged banded diagnostics is a hybrid, not pure CHOLMOD.
+3. Compare matched statistical objectives, candidate S values, input seeds, n,d,R,M,mean policy, criterion, numerical validity and hardware. Do not mix one-worker latency and eight-worker throughput or call a resource skip a completed fast result.
+4. `mu='data'` is a response-dependent plug-in of observed d-th differences. Fixed-mu leave-one-out CV is only conditional when that mean is estimated on full training observations. RSS-BIC has an ill-posed interpolation boundary. MLE score conventions may differ by a lambda-independent offset.
+5. Use AwesomeFigures and the **actual journal's LaTeX style**; document fonts, output dimensions, and retain vector PDF/PGF where appropriate. Never fabricate computational or physical results for illustrations.
+6. Independently validate numerical scores before attributing measured winner rankings. The Experiment010 matched 48-row BIC pilot has just two repeats and cannot certify an n/d/C surface.
+7. Separate source branches, worktrees, tasks and PRs for concurrent agents. Do not merge a research or manuscript PR without explicit authorization.
+8. At handoff, update `AGENTS.md`, `AI_HANDOFF.md`, the relevant experiment README and the Springer readiness ledger with exact completed work, what was not done, reproduction commands, PR/branch SHA and required next steps.
+
+For the Springer campaign, only `campaign.py run --case ...` executes a declared case. The default plan/list commands never start an expensive full factorial. A confirmation-stage run requires `--allow-confirm`. The tiny GitHub Actions smoke is not the user's Windows VM runtime dataset. The source of truth for results is the committed, user-verified result branch and its raw rows.
