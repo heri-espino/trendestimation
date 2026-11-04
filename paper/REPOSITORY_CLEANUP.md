@@ -56,3 +56,9 @@ The d=4 and n=1024/2048/4096 cases remain prepared; Windows completion is not cl
 - All 15 original PR head commits verified as ancestors.
 - No timing ranks or new Windows observations were generated.
 - Historical manuscript PDFs were not rebuilt during integration; the Paper B theory PDF is retained from its validated source branch.
+
+## Completed integration
+
+PR #111 merged as `0ae5a4651c0339c796b503b28d2eef659a543263` after all five GitHub workflows passed (CI Python 3.10/3.12 and documentation, Sphinx checks, numerical QA, benchmark smoke and Springer smoke). GitHub marked ten original PRs merged automatically. Stacked PRs #82/#101/#103/#104/#105 were closed as incorporated; changing their bases to main was rejected because no new commits remained. No open PRs remain.
+
+All 15 original PR source branches and the integration branch were deleted through recoverable GitHub branch controls after ancestry verification. Forty `results/*` branches, backup branches and other unmerged research branches were retained. Original heads remain recoverable from this ledger and main history.
