@@ -82,6 +82,16 @@ class Experiment011PlanningTests(unittest.TestCase):
                 self.assertIn("banded_cholesky", case["methods"])
                 if n >= 2048:
                     self.assertEqual(case["methods"], ["banded_cholesky"])
+                if n == 1024:
+                    self.assertEqual(case["max_work"], 750_000_000)
+                    self.assertIn("spectral_svd", case["methods"])
+                    states = campaign.preflights(case,design)
+                    self.assertEqual(
+                        [x["preflight"] for x in states
+                         if x["method"]=="spectral_svd"
+                         and x["scenario"]=="grid_multiple_series"],
+                        ["eligible"]
+                    )
         for criterion in ("gcv", "cv"):
             self.assertIn(f"pilot_{criterion}_n256_d4_m100", cases)
         # No old case was renamed or removed.
