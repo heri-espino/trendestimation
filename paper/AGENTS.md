@@ -1,5 +1,9 @@
 # Paper work — mandatory manuscript/experiment routing
 
+The intended complete empirical tensor is 252,000 planned method-workload-coordinate cells, from seven n values, six d values, three reference-mean policies, two data scales, five criteria, 10 implemented complete pipelines, two coordinate mapping policies, two single-S workloads and eight grid-workload variants. See `paper/benchmarks/experiment011/full_plan.py` (a non-executing Experiment008 planner wrapper). Experiment011's 21 cases are a pilot only. Never present the full eligibility manifest as real observations or imply that all infeasible dense large-n cells have been timed. Benchmark goal is computing time against the genuine naive inverse, not RMSE.
+
+
+
 This file applies to all manuscript and benchmark artifacts below `paper/`. Read the root `README.md`, `AGENTS.md`, `AI_HANDOFF.md` and `paper/PUBLICATION_MAP.md` **before editing**. Preserve previously accepted experiments, raw data and all other agents' open PR branches.
 
 ## Authoritative manuscript routing
