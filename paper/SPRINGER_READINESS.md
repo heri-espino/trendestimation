@@ -144,3 +144,31 @@ Agents do not automatically execute work merely because these comments or files 
 - Hosted smoke analysis `paper/benchmarks/experiment011/analysis/gha_41780451438/`: 24/24 actual successful numerical timing rows, 24 aggregate cells and **16 genuinely paired naive-baseline ratios**; one independent block, so **zero confidence intervals** and no crossover inferred. Source executable SHA `cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89`, hosted GitHub Linux runner (not PCAG103A-08).
 - Unit tests verify the exact factorial axes, float64 parity, invalid/skip statuses, paired naive ratios, no confidence interval with one block, and duplicate-seed prevention.
 - **Still missing:** Windows factorial timing observations beyond previously archived Experiment008/010 partial subsets, three independent selected Experiment011 blocks for CV/GCV comparisons, high-order numerical checks, full aggregate empirical vs Big-O crossover figures, and journal author review.
+
+## Current focused design and multiprocessing verification (November 4, 2026)
+
+**Author approval supersedes the earlier full-factorial execution target.**
+Experiment011 now has 29 active cases (2 smoke, 15 pilot, 12 confirm).
+The only changes to the initial 21 cases are eight targeted CV/GCV
+comparisons at d=4 for n=256,1024,2048,4096. The 1024-point
+confirmation uses an explicit 750-million-unit per-case work cap
+for both SVD and banded Cholesky on the full M=100,R=3 grid.
+For n=2048 and 4096, banded-only time is retained and labeled
+`single_backend_timing_only_no_parity_reference`—never a
+cross-method numerical certificate. The older Experiment008
+252,000-cell index remains archived, not a requested execution set.
+
+The *optional* separate `campaign.py parallel-series` mode
+supports independent small series only (n<=256, M<=1000),
+R<=32 and up to 32 Windows spawn workers, one BLAS thread each.
+It writes `runs_parallel/`, not the serial `runs/` tensor.
+Each process has private mapper/factors; report its
+per-method/repeat wall time as **parallel throughput**,
+never mix it with serial shared-cache latency.
+
+**Verified hosted smoke:** [Actions #41796045403](https://github.com/heri-espino/trendestimation/actions/runs/41796045403) passed tests, generated the
+checksum-versioned 29-case plan, and recorded **36/36 successful
+per-series rows, 24 float64 paired comparisons, zero issues**
+using 2 worker processes. This is Linux hosted QA, not measured
+32-worker Windows performance. Windows d=4 measurements and
+large-n confirmations are not yet executed.
