@@ -445,7 +445,8 @@
       "series_count": 3,
       "repeats_per_block": 2,
       "planned_blocks": 3,
-      "conditional_data_mu": false
+      "conditional_data_mu": false,
+      "max_work": 750000000
     },
     {
       "id": "confirm_cv_n1024_d4_m100",
@@ -463,7 +464,8 @@
       "series_count": 3,
       "repeats_per_block": 2,
       "planned_blocks": 3,
-      "conditional_data_mu": false
+      "conditional_data_mu": false,
+      "max_work": 750000000
     },
     {
       "id": "confirm_gcv_n2048_d4_m100",
