@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -42,6 +43,25 @@ METHODS = (
 )
 VALID_IDS = re.compile(r"^[a-z0-9][a-z0-9_]{2,90}$")
 VALID_TAGS = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{1,48}$")
+
+
+@contextmanager
+def approved_experiment011_size(engine, n: int):
+    """Admit 2048/4096 only for this one Experiment011 run.
+
+    Experiment006 and Experiment008 keep their original declared
+    factor levels and published full-factorial plan. This changes
+    only run_slice's admission check, not a numerical algorithm.
+    """
+    old_levels = engine.N_LEVELS
+    if n not in old_levels and n not in (2048, 4096):
+        raise ValueError("Unsupported Experiment011 size")
+    try:
+        if n not in old_levels:
+            engine.N_LEVELS = (*old_levels, n)
+        yield
+    finally:
+        engine.N_LEVELS = old_levels
 
 
 def sha256_file(path: Path) -> str:
@@ -238,25 +258,18 @@ def run_one(args: argparse.Namespace) -> None:
         # Extend ONLY that input-admission tuple during this one call;
         # no solver, criterion, work guard, old manifest or other
         # experiment is modified. Restore it on success or failure.
-        original_levels = inherited_runner.N_LEVELS
-        try:
-            if case["n"] not in original_levels:
-                if case["n"] not in (2048, 4096):
-                    raise ValueError("Only explicitly declared Experiment011 sizes")
-                inherited_runner.N_LEVELS = (*original_levels, case["n"])
+        with approved_experiment011_size(inherited_runner, case["n"]):
             rows, _ = inherited_runner.run_slice(
-            n=case["n"], d=case["d"], mu=mu,
-            amplitude=case["amplitude"], criterion=case["criterion"],
-            denominator=case["grid_denominator"], methods=tuple(methods),
-            repeats=case["repeats_per_block"], R=case["series_count"],
-            max_work=design["max_work"],
-            max_dense_bytes=design["max_dense_bytes"],
-            output=path / "measurements", threads=1,
-            seed=config["seed"],
-            conditional_data_mu=case["conditional_data_mu"],
+                n=case["n"], d=case["d"], mu=mu,
+                amplitude=case["amplitude"], criterion=case["criterion"],
+                denominator=case["grid_denominator"], methods=tuple(methods),
+                repeats=case["repeats_per_block"], R=case["series_count"],
+                max_work=design["max_work"],
+                max_dense_bytes=design["max_dense_bytes"],
+                output=path / "measurements", threads=1,
+                seed=config["seed"],
+                conditional_data_mu=case["conditional_data_mu"],
             )
-        finally:
-            inherited_runner.N_LEVELS = original_levels
         # Independent post-run QA is always persisted, even when some
         # rows have numerical_failed or budget_exceeded status.
         from verify import audit_run
