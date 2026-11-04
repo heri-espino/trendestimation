@@ -202,6 +202,18 @@ class Experiment011AuditTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing complete"):
             audit_rows(rows[:-1], manifest, env)
 
+    def test_single_banded_backend_keeps_valid_time_without_fake_parity(self):
+        rows, manifest, env = fixture()
+        rows = [r for r in rows if r["method"]=="banded_cholesky"]
+        manifest["method_order"]=["banded_cholesky"]
+        env["methods"]=["banded_cholesky"]
+        qa=audit_rows(rows,manifest,env)
+        self.assertEqual(qa["status_counts"],{"ok":8})
+        self.assertEqual(qa["paired_method_comparisons"],[])
+        self.assertEqual(
+            qa["classification"],"single_backend_timing_only_no_parity_reference"
+        )
+
     def test_wrong_git_commit_fails(self):
         rows, manifest, env = fixture()
         env["git_sha"] = "other"
