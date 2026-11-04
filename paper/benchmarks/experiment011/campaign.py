@@ -96,6 +96,11 @@ def load_design() -> dict:
         seen.add(case_id)
         if case["stage"] not in VALID_STAGES:
             raise ValueError("Unrecognized stage")
+        if "max_work" in case:
+            if case["stage"]!="confirm" or case["n"]!=1024 or case["d"]!=4:
+                raise ValueError("Per-case work increase is only allowed for n1024 d4 confirm")
+            if not design["max_work"] < case["max_work"] <= 750_000_000:
+                raise ValueError("Case work budget exceeds predeclared cap")
         if case["criterion"] not in VALID_CRITERIA:
             raise ValueError("Unrecognized criterion")
         if case["n"] not in (64, 128, 256, 512, 1024, 2048, 4096):
@@ -138,7 +143,8 @@ def preflights(case: dict, design: dict) -> list[dict]:
             r = 1 if "one_series" in scenario else case["series_count"]
             state = memory_budget_status(
                 case["n"], case["d"], method, case["grid_denominator"],
-                design["max_dense_bytes"], design["max_work"],
+                design["max_dense_bytes"],
+                case.get("max_work",design["max_work"]),
                 scenario, r, case["repeats_per_block"]
             )
             result.append({
@@ -164,6 +170,7 @@ def plan(args: argparse.Namespace) -> None:
             "planned_blocks": case["planned_blocks"],
             "repeats_per_block": case["repeats_per_block"],
             "preflights": cases,
+            "max_work_for_this_case":case.get("max_work",design["max_work"]),
             "status": "planned_not_measured",
         })
     summary = Counter(v["preflight"] for row in records for v in row["preflights"])
@@ -226,6 +233,7 @@ def run_one(args: argparse.Namespace) -> None:
         "case_design_sha256": sha256_file(CASE_FILE),
         "inherited_runner": design["parent_runner"],
         "preflights": preflights(case, design),
+        "max_work_for_this_case":case.get("max_work",design["max_work"]),
         "n_level_extension": (
             "Experiment011-only admission of 2048/4096, no change to the"
             " Experiment006 or Experiment008 factorial"
@@ -264,7 +272,7 @@ def run_one(args: argparse.Namespace) -> None:
                 amplitude=case["amplitude"], criterion=case["criterion"],
                 denominator=case["grid_denominator"], methods=tuple(methods),
                 repeats=case["repeats_per_block"], R=case["series_count"],
-                max_work=design["max_work"],
+                max_work=case.get("max_work",design["max_work"]),
                 max_dense_bytes=design["max_dense_bytes"],
                 output=path / "measurements", threads=1,
                 seed=config["seed"],
