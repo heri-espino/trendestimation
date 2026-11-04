@@ -40,6 +40,20 @@ mean/median, dispersion and theory comparison; **no RMSE**.
 | Updated Springer results tables/figures | **pending validated data** | use AwesomeFigures with Springer `sn-jnl` font/width, archive vector sources |
 | Coauthor, correspondence, disclosures, novelty and submission approval | **not confirmed** | do not invent, submit or assert accepted |
 
+
+**Tensor analysis implementation now available.**
+`paper/benchmarks/experiment011/analyze.py` reads preserved
+actual `runs/<tag>/<case>/blockNNN` folders and generates
+a sparse long-form timing tensor, baseline-paired naive speedups,
+per-cell independent-block means and bootstrap intervals
+(with >=3 distinct seed blocks), plus source/host/BLAS-qualified
+Big-O class descriptions. It never fills infeasible cells with
+invented times and never computes RMSE. CI runs this analyzer
+on a small hosted smoke before the Windows campaign.
+The full 252,000-row resource-status plan and the measured
+long-form table are **separate** data structures.
+
+
 ## Specific scientific questions for Springer
 
 1. **CV versus GCV:** Does the complete leverage/residual requirement alter SVD-versus-banded-Cholesky crossover, controlling n,d,M,R,mu and hardware? Theoretical expectation is conditional; actual crossover is a measured result only after pilot data.
