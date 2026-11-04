@@ -1,5 +1,9 @@
 # AI_HANDOFF — latest
 
+The user explicitly requires the ENTIRE original Experiment008 252,000-cell factorial to be the ultimate indexed timing tensor (NOT just Experiment011's 21 pilot cases). To preserve the prior validated design instead of multiplying ad-hoc scripts, `paper/benchmarks/experiment011/full_plan.py` invokes the Experiment008 manifest generator, validates all n=64/128/256/512/1024/16384/131072, d=1..6, mu=0/data/0.15, high/low amplitude, CV/GCV/BIC/AICc/MLE, ten complete pipelines, direct_s/mapped_lambda, and four workloads with M=100/1000/10000/100000 for grid workloads, deduplicating single-S cells. This is 252,000 PLANNED cells, not a 252,000-run result. The explicit 2GiB/compute-budget preflight marks infeasible operations. Real timing samples will be archived per independent block/repeat/host and paired to the naive baseline where feasible. No RMSE analysis. Caveat: current direct_s versus mapped_lambda is *on-demand versus cached S→lambda mapping of the SAME candidate set*, not two independent continuous minimizers.
+
+
+
 
 ## ACTIVE: Springer implementation article and Experiment011 (2026-11-03)
 
