@@ -11,8 +11,8 @@
 | Original older factorial | **archived / partial** | Experiments006–010 retained; do not relabel unexecuted factorial as completed |
 | Experiment010 measured n64/d1/BIC three-way **mixed concurrency** | **verified limited** | `paper/benchmarks/experiment010/publication_evidence/` contains 48 rows, but different simultaneous worker counts. Springer main-branch table is descriptive only |
 | Experiment010 measured n64/d1/BIC **matched serial comparison** | **archived / limited** | `results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`, 48 rows, 1 worker and 1 BLAS thread. Two repeats; no general scaling inference |
-| Experiment011 deterministic experiment plan | **prepared** | `paper/benchmarks/experiment011/campaign.py plan`; bounded cases and safety guards, no expensive runs in preparation |
-| Experiment011 CI smoke | **pending first CI** | check new dedicated workflow before stating success |
+| Experiment011 deterministic experiment plan | **generated and committed** | 21 cases; plan records 187 eligible and 5 budget-exceeded method/scenario preflights. These are planning statuses, not measured times |
+| Experiment011 CI smoke | **passed, hosted (not Windows)** | [Actions #41767817861](https://github.com/heri-espino/trendestimation/actions/runs/41767817861): 24/24 rows `ok`, 16 paired float64 checks, zero issues; raw CSV, plan, QA and environment committed to this branch |
 | Experiment011 Windows multi-criterion pilot | **not measured** | requires VM; use `runs/<machine-id>/` plus permanent results branch |
 | Experiment011 cross-machine or multithread throughput | **not measured** | optional separate study, never blend with isolated-latency data |
 | Numerical checks beyond float64 parity | **not complete** | CSDA A has high-precision references; specific high-order experiment011 cases require independent forward-error audit before any winner claims |
@@ -59,3 +59,14 @@
 [ ] All coauthors have approved manuscript, affiliation, contact information, funding/ethics statements and journal-specific policies.
 
 **Do not merge** any Springer or Experiment011 PR until the review gates are explicitly met and the user authorizes it.
+
+## Latest reproducible preparation verification
+
+- **CI:** hosted GitHub Actions workflow #41767817861 finished `success`.
+- **Immutable run:** `paper/benchmarks/experiment011/runs/gha_41767817861/smoke_gcv_n64_d1_m100/block000/`.
+- **Source revision measured by that hosted run:** `c52291e77b6375c77e4aecfef55e2dd53362b0b7`.
+- **Actual validation:** all 24 smoke records `ok`; 16 matched method comparisons of selected `S` and GCV score, no issues; float64 parity **only**, not an independent precision certificate.
+- **Planned eligibility:** 21 case definitions; 187 eligible and five budget-exceeded method/scenario preflights from the inherited Experiment006 resource gate. These have **not** been measured.
+- **Not done:** any Windows Experiment011 paired multi-criterion run; any multi-core throughput study; actual CV/GCV crossover, independent high-order precision certification, submission/revision of the main Springer manuscript.
+
+**Next author action:** review the new preparation PR and use the Windows PowerShell commands in `paper/benchmarks/experiment011/README.md` to run selected pilot cases on a separate results branch. After validating their QA, update this ledger, run only confirmatory cases supported by the observed pilot, and prepare measured tables/figures.
