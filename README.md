@@ -2,6 +2,32 @@
 
 [![CI](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml/badge.svg)](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml)
 
+
+## Publication and active research workstreams
+
+Four distinct manuscripts are coordinated by
+[the authoritative publication map](paper/PUBLICATION_MAP.md):
+CSDA A (spectral and numerical reliability),
+CSDA B (mathematical computational complexity, open PR #109),
+Springer Computational Statistics
+([canonical manuscript](paper/main.tex): implemented algorithms and
+**measured complete-criterion runtime**), and a separate
+[real NGSIM jerk application](paper/ngsim-jerk-case-study/).
+
+Springer's staged follow-up is
+[Experiment011](paper/benchmarks/experiment011/README.md). Its
+[21 predeclared test cases](paper/benchmarks/experiment011/cases.json),
+independent validator, one-block launcher, Windows instructions,
+agent assignments and release ledger are preserved in the repo.
+The hosted smoke is a software-validation check, not the user's
+Windows hardware evidence; the new multi-criterion VM study is
+still pending. Read
+[Springer agent instructions](paper/SPRINGER_AGENT_BRIEF.md) and
+[Springer readiness](paper/SPRINGER_READINESS.md) before making changes.
+Do not merge the open Experiment010 PR stack or duplicate the
+theoretical CSDA B contribution to obtain a Springer result.
+
+
 **Candidate v0.1.0a0** — a Python library for finite-difference penalized
 least-squares (PLS) trend estimation. Both distribution and import names are
 `trendestimation`.
