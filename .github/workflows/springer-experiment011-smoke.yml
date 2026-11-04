@@ -8,6 +8,7 @@ on:
       - .github/workflows/springer-experiment011-smoke.yml
       - paper/benchmarks/experiment011/campaign.py
       - paper/benchmarks/experiment011/full_plan.py
+      - paper/benchmarks/experiment011/analyze.py
       - paper/benchmarks/experiment011/verify.py
       - paper/benchmarks/experiment011/cases.json
       - paper/benchmarks/experiment011/tests/**
@@ -79,6 +80,28 @@ jobs:
           assert q['status_counts']=={'ok':24},q['status_counts']
           print('SMOKE ONLY: 24 valid actual rows, NOT Windows benchmark results')
           PY
+      - name: Assemble measured sparse tensor and paired naive comparisons
+        env:
+          EXP011_TAG: gha_${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/benchmarks/experiment011/analyze.py \
+            --runs paper/benchmarks/experiment011/runs \
+            --run-tag "$EXP011_TAG" \
+            --output "paper/benchmarks/experiment011/analysis/$EXP011_TAG"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path('paper/benchmarks/experiment011/analysis')/os.environ['EXP011_TAG']
+          d=json.loads((root/'analysis_summary.json').read_text())
+          assert d['actual_rows']==24
+          assert d['success_rows']==24
+          assert d['matched_naive_pairs']==16
+          assert d['cells_with_3_or_more_complete_blocks']==0
+          assert d['block_count']==1
+          print('Timing tensor analyzed: one hosted block, no fabricated interval or Windows result')
+          PY
       - name: Preserve plan and hosted smoke on the dedicated paper branch
         if: success() && github.ref == 'refs/heads/paper/springer-implementation-experiment011'
         env:
@@ -91,7 +114,8 @@ jobs:
           git add paper/benchmarks/experiment011/plans/experiment011_plan.json \
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz \
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json \
-            "paper/benchmarks/experiment011/runs/$EXP011_TAG"
+            "paper/benchmarks/experiment011/runs/$EXP011_TAG" \
+            "paper/benchmarks/experiment011/analysis/$EXP011_TAG"
           if ! git diff --cached --quiet; then
             git commit -m 'experiment011: archive isolated hosted GCV smoke and explicit planned matrix [skip ci]'
             git fetch origin "$GITHUB_REF_NAME"
@@ -111,8 +135,11 @@ jobs:
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json
             paper/benchmarks/experiment011/runs/gha_${{ github.run_id }}/
+            paper/benchmarks/experiment011/analysis/gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/cases.json
             paper/benchmarks/experiment011/campaign.py
+            paper/benchmarks/experiment011/full_plan.py
+            paper/benchmarks/experiment011/analyze.py
             paper/benchmarks/experiment011/verify.py
           if-no-files-found: warn
           retention-days: 30
