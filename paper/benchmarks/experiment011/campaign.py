@@ -78,7 +78,7 @@ def load_design() -> dict:
             raise ValueError("Unrecognized stage")
         if case["criterion"] not in VALID_CRITERIA:
             raise ValueError("Unrecognized criterion")
-        if case["n"] not in (64, 128, 256, 512, 1024):
+        if case["n"] not in (64, 128, 256, 512, 1024, 2048, 4096):
             raise ValueError("Case exceeds declared finite-size pilot design")
         if case["d"] not in (1, 2, 3, 4, 5, 6) or case["d"] >= case["n"]:
             raise ValueError("Invalid finite-difference order")
@@ -159,7 +159,9 @@ def plan(args: argparse.Namespace) -> None:
                 "No actual numerical run is implied.",
     }
     content = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-    path = args.output or HERE / "plans" / "experiment011_plan.json"
+    # Keep the original 21-case plan immutable; the eight additional
+    # d=4/large-n cases require their own versioned plan.
+    path = args.output or HERE / "plans" / "experiment011_plan_expanded.json"
     if path.is_file() and path.read_text(encoding="utf-8") != content:
         raise FileExistsError(
             f"Existing plan differs: {path}; review the proposed change first"
@@ -204,6 +206,11 @@ def run_one(args: argparse.Namespace) -> None:
         "case_design_sha256": sha256_file(CASE_FILE),
         "inherited_runner": design["parent_runner"],
         "preflights": preflights(case, design),
+        "n_level_extension": (
+            "Experiment011-only admission of 2048/4096, no change to the"
+            " Experiment006 or Experiment008 factorial"
+            if case["n"] in (2048, 4096) else "unchanged"
+        ),
         "status": "not_measured" if args.dry_run else "started",
         "caveats": [
             "One worker per invocation; exactly one BLAS thread",
@@ -223,10 +230,21 @@ def run_one(args: argparse.Namespace) -> None:
     manifest.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
     # Actual analysis and timestamps stay in the run folder; no fake rows.
     sys.path.insert(0, str(SOURCE.parent))
-    from run import run_slice
+    import run as inherited_runner
     try:
         mu = "data" if case["mu"] == "data" else float(case["mu"])
-        rows, _ = run_slice(
+        # Experiment006 deliberately froze its older factorial n levels.
+        # Its run_slice rejects additional n before any numerical work.
+        # Extend ONLY that input-admission tuple during this one call;
+        # no solver, criterion, work guard, old manifest or other
+        # experiment is modified. Restore it on success or failure.
+        original_levels = inherited_runner.N_LEVELS
+        try:
+            if case["n"] not in original_levels:
+                if case["n"] not in (2048, 4096):
+                    raise ValueError("Only explicitly declared Experiment011 sizes")
+                inherited_runner.N_LEVELS = (*original_levels, case["n"])
+            rows, _ = inherited_runner.run_slice(
             n=case["n"], d=case["d"], mu=mu,
             amplitude=case["amplitude"], criterion=case["criterion"],
             denominator=case["grid_denominator"], methods=tuple(methods),
@@ -236,7 +254,9 @@ def run_one(args: argparse.Namespace) -> None:
             output=path / "measurements", threads=1,
             seed=config["seed"],
             conditional_data_mu=case["conditional_data_mu"],
-        )
+            )
+        finally:
+            inherited_runner.N_LEVELS = original_levels
         # Independent post-run QA is always persisted, even when some
         # rows have numerical_failed or budget_exceeded status.
         from verify import audit_run
