@@ -147,10 +147,14 @@ def audit_rows(rows: list[dict], manifest: dict, environment: dict) -> dict:
     all_ok = all(status == "ok" for status in statuses.elements())
     if issues:
         state = "needs_independent_numerical_review"
-    elif not comparisons:
-        state = "insufficient_paired_comparisons"
     elif not all_ok:
         state = "partial_success_with_skips_or_failures"
+    elif not comparisons:
+        # Large-n banded-only cases yield legitimate measured times
+        # without an independent backend to certify selected scores.
+        state = ("single_backend_timing_only_no_parity_reference"
+                 if len(methods) == 1
+                 else "insufficient_paired_comparisons")
     else:
         state = "float64_parity_only_not_precision_certified"
     return {
