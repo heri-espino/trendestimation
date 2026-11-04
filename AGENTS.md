@@ -1,6 +1,29 @@
 # AGENTS.md — trendestimation research repository
 
-Full Springer target is the 252,000-cell *planned* Experiment008 factorial, not the 21-case Experiment011 pilot. `paper/benchmarks/experiment011/full_plan.py` reuses the existing Experiment008 planner to index all n,d,mu,amplitude,criteria, 10 methods, four workloads and grid densities, including explicit memory/work skips. The full index does NOT contain observed times. Experiment011 `cases.json` stays a targeted execution subset, avoiding rerunning expensive old samples; the end dataset is long-form raw timing plus eligibility/status masks, paired naive speedups, mean/median and independent-block uncertainty. Direct-S and mapped-lambda compare mapping strategies over the same S values, not separately optimized continuous objectives. No RMSE. Preserve all original Experiment008–010 rows and do not trigger 252,000 full runs without explicit review.
+## Current author decision — focused Experiment011 (November 4, 2026)
+
+Keep the original 21-case Experiment011 protocol and add only targeted
+CV/GCV comparisons at **d=4** for **n=256, 1024, 2048, 4096**:
+two pilot cases at n=256 and six confirm-stage cases at larger n,
+**29 cases in total**. The n1024 confirm cells explicitly permit
+a 750-million-work-unit cap so SVD can be compared with banded Cholesky
+on the full M=100, R=3 grid; n2048/4096 use the feasible banded
+backend only. All larger cases require the existing opt-in
+`--allow-confirm`. No older run, criterion, or historical result
+is overwritten.
+
+An **optional throughput-only** `campaign.py parallel-series`
+mode runs independent small series (n<=256, M<=1000) in spawned
+processes, up to 32 workers, each with one BLAS thread. It writes
+`runs_parallel/` with per-series checkpoints and real wall times.
+It deliberately **does not replace** the serial shared-cache
+single/multiple-series latency benchmark. The author's 32 logical
+processors are a capacity ceiling, not proof that 32 workers
+will run faster than 8 or 16. The old 252,000-cell factorial is
+retained only as an archival index, **not** a new study mandate.
+
+
+The current author-approved Springer timing study is the focused 29-case Experiment011 design. The historical 252,000-cell Experiment008 planned factorial is retained for provenance but is **not** a requested execution schedule. `paper/benchmarks/experiment011/full_plan.py` reuses the existing Experiment008 planner to index all n,d,mu,amplitude,criteria, 10 methods, four workloads and grid densities, including explicit memory/work skips. The full index does NOT contain observed times. Experiment011 `cases.json` is the author-approved targeted experiment, avoiding rerunning expensive old samples; the end dataset is long-form raw timing plus eligibility/status masks, paired naive speedups, mean/median and independent-block uncertainty. Direct-S and mapped-lambda compare mapping strategies over the same S values, not separately optimized continuous objectives. No RMSE. Preserve all original Experiment008–010 rows and do not trigger 252,000 full runs without explicit review.
 
 
 
