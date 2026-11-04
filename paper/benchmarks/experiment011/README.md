@@ -23,7 +23,68 @@ will run faster than 8 or 16. The old 252,000-cell factorial is
 retained only as an archival index, **not** a new study mandate.
 
 
-**Status: prepared experimental protocol, not a completed numerical study.**
+**Status:** the 29-case staged design is implemented; small hosted serial
+and process-pool smoke checks have passed. The real Windows 29-case
+measurement campaign has **not** been executed.
+
+## Practical PowerShell commands for the approved additions
+
+Run from the repository root on the university Windows computer with
+the existing `trendestimation` Conda environment:
+
+```powershell
+# See every existing and newly added case; no benchmarks are started.
+python paper/benchmarks/experiment011/campaign.py list
+python paper/benchmarks/experiment011/campaign.py plan
+
+# One actual small d=4 CV pilot.
+python paper/benchmarks/experiment011/campaign.py run --case pilot_cv_n256_d4_m100 --run-tag PCAG103A08_002 --block 0
+
+# Inspect larger confirmation cases without executing numerical work.
+python paper/benchmarks/experiment011/campaign.py run --case confirm_cv_n1024_d4_m100 --run-tag PCAG103A08_002 --block 0 --allow-confirm --dry-run
+python paper/benchmarks/experiment011/campaign.py run --case confirm_cv_n4096_d4_m100 --run-tag PCAG103A08_002 --block 0 --allow-confirm --dry-run
+```
+
+For `n=1024,d=4,M=100`, the confirm-stage work cap is
+750 million nominal units, explicitly permitting SVD and banded
+Cholesky under the resource preflight. For `n=2048` and
+`n=4096`, only banded Cholesky is predeclared.
+Their timings are useful for scaling, but are **not**
+an independent SVD/Cholesky numerical-parity comparison.
+Those larger runs remain optional and should be reviewed after
+the smaller pilot.
+
+### Optional: process one independent series per worker
+
+```powershell
+# Example: 16 independent short series on up to 16 processes.
+python paper/benchmarks/experiment011/campaign.py parallel-series --case smoke_gcv_n64_d1_m100 --run-tag PCAG103A08_parallel001 --block 0 --series-count 16 --series-workers 16
+
+# Explore 32 workers only if the machine remains idle and resources permit.
+python paper/benchmarks/experiment011/campaign.py parallel-series --case pilot_cv_n128_d3_m100 --run-tag PCAG103A08_parallel032 --block 0 --series-count 32 --series-workers 32
+```
+
+This is genuinely per-independent-series multiprocessing using
+`spawn` (Windows compatible), at most 32 processes, each with
+one BLAS thread. It is **not** a change to the serial four-workload
+timing experiment. Every process privately constructs the
+factorization and smoothness mapping, so the wall time reflects
+parallel throughput **without sharing** spectral/Cholesky caches
+across series. Thus these timings must not be pooled with the
+serial common-factor-cache results. The separate
+`runs_parallel/<run-tag>/<case>/blockNNN/` archive records
+individual per-series rows, completion status, method/repeat
+wall time, throughput, and numerical parity. Only
+`n<=256` and `M<=1000` are allowed. Start with
+8 or 16 workers when possible: 32 logical processors do
+not guarantee that 32 concurrent processes are optimal.
+
+Persist the new `runs_parallel/` output and `runs/` output
+on the dedicated results branch via `git add .`,
+`git commit` and `git push`. Do not overwrite prior
+run tags or force-push other agents' results.
+
+
 
 
 ### Focused 29-case Experiment011 is the active study; the full factorial is historical context
