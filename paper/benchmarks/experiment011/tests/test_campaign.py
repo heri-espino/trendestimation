@@ -5,6 +5,7 @@ No expensive PLS smoothing, no data download, no benchmark timings.
 from __future__ import annotations
 
 import copy
+from types import SimpleNamespace
 from pathlib import Path
 import sys
 import unittest
@@ -52,7 +53,7 @@ class Experiment011PlanningTests(unittest.TestCase):
     def test_declared_design_and_safe_cases(self):
         design = campaign.load_design()
         self.assertEqual(design["experiment"], "experiment011")
-        self.assertGreaterEqual(len(design["cases"]), 15)
+        self.assertEqual(len(design["cases"]), 29)
         self.assertEqual(
             {case["stage"] for case in design["cases"]},
             {"smoke", "pilot", "confirm"},
@@ -61,6 +62,50 @@ class Experiment011PlanningTests(unittest.TestCase):
                             for c in design["cases"]))
         self.assertTrue(all(c["conditional_data_mu"] == (c["mu"] == "data")
                             for c in design["cases"]))
+
+    def test_targeted_d4_and_medium_large_size_extensions(self):
+        design = campaign.load_design()
+        cases = {c["id"]: c for c in design["cases"]}
+        self.assertEqual(
+            {(c["stage"], c["n"], c["d"], c["criterion"])
+             for c in cases.values() if c["n"] in (2048, 4096)},
+            {("confirm", n, 4, criterion)
+             for n in (2048, 4096) for criterion in ("gcv", "cv")}
+        )
+        for n in (1024, 2048, 4096):
+            for criterion in ("gcv", "cv"):
+                name = f"confirm_{criterion}_n{n}_d4_m100"
+                self.assertIn(name, cases)
+                case = cases[name]
+                self.assertEqual(case["stage"], "confirm")
+                self.assertEqual(case["grid_denominator"], 100)
+                self.assertIn("banded_cholesky", case["methods"])
+                if n >= 2048:
+                    self.assertEqual(case["methods"], ["banded_cholesky"])
+        for criterion in ("gcv", "cv"):
+            self.assertIn(f"pilot_{criterion}_n256_d4_m100", cases)
+        # No old case was renamed or removed.
+        for name in ("smoke_gcv_n64_d1_m100",
+                     "pilot_cv_n128_d3_m100",
+                     "confirm_mle_n512_d3_m100"):
+            self.assertIn(name, cases)
+
+    def test_extended_n_is_temporary_and_old_factor_levels_unchanged(self):
+        baseline = (64, 128, 256, 512, 1024, 16384, 131072)
+        engine = SimpleNamespace(N_LEVELS=baseline)
+        with campaign.approved_experiment011_size(engine, 4096):
+            self.assertIn(4096, engine.N_LEVELS)
+            self.assertEqual(engine.N_LEVELS[:-1], baseline)
+        self.assertEqual(engine.N_LEVELS, baseline)
+        with self.assertRaisesRegex(RuntimeError, "deliberate"):
+            with campaign.approved_experiment011_size(engine, 2048):
+                self.assertIn(2048, engine.N_LEVELS)
+                raise RuntimeError("deliberate")
+        self.assertEqual(engine.N_LEVELS, baseline)
+        with self.assertRaises(ValueError):
+            with campaign.approved_experiment011_size(engine, 8192):
+                pass
+        self.assertEqual(engine.N_LEVELS, baseline)
 
     def test_full_tensor_is_declared_without_running_a_solver(self):
         axes=full_plan.full_axes()
