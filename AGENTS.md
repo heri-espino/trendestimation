@@ -1,5 +1,35 @@
 # AGENTS.md — trendestimation research repository
 
+
+## Publication map and Springer experiment011 agent routing (2026-11-03)
+
+**First read** `paper/PUBLICATION_MAP.md`, `paper/AGENTS.md`,
+`paper/SPRINGER_AGENT_BRIEF.md` and
+`paper/SPRINGER_READINESS.md` before touching any manuscript,
+paper figure or benchmark. The canonical Springer *Computational
+Statistics* source is `paper/main.tex`; it is **not** the
+historical `paper/computational-statistics-submission/` SN
+Computer Science paper, the two Elsevier CSDA drafts, or the
+separate FHWA NGSIM jerk/forecast application.
+CSDA A owns numerical precision, CSDA B owns the theory of
+complexity, Springer owns measured complete-criterion implementation
+and criterion-specific crossover, and NGSIM owns physical
+third-difference applications.
+
+New `paper/benchmarks/experiment011/` is a **prepared,
+bounded** 21-case design that calls the existing reviewed
+Experiment006 complete-criterion runner without pulling in the
+open nested Experiment010 research PR stack. It has explicit
+smoke/pilot/confirm gates, independent blocks with rotated
+method ordering, source/hardware provenance and float64
+selected-S/score QA; do not claim its plan is measured
+data. A successful hosted smoke is not Windows benchmark
+evidence. Never run the full factorial automatically.
+Future agents must work on separate branches and scopes,
+push all actual raw results with QA, and update the readiness
+ledger. Never merge without explicit authorization.
+
+
 Read README.md, this file, paper/benchmarks/README.md,
 paper/benchmarks/experiment005/README.md, source modules, and tests
 before editing. Existing numerical decisions and archived results are
