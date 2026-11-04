@@ -48,7 +48,11 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json')
+          root=Path('paper/benchmarks/experiment011')
+          import sys
+          sys.path.insert(0,str(root))
+          from campaign import CASE_FILE,sha256_file
+          p=root/'plans'/f'experiment011_plan_{sha256_file(CASE_FILE)[:12]}.json'
           j=json.loads(p.read_text())
           assert len(j['cases'])==29
           assert all(c['status']=='planned_not_measured' for c in j['cases'])
@@ -142,9 +146,7 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json \
-            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz \
-            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json \
+          git add paper/benchmarks/experiment011/plans \
             "paper/benchmarks/experiment011/runs/$EXP011_TAG" \
             "paper/benchmarks/experiment011/analysis/$EXP011_TAG" \
             "paper/benchmarks/experiment011/runs_parallel/parallel_$EXP011_TAG"
@@ -163,9 +165,7 @@ jobs:
         with:
           name: springer-experiment011-hosted-smoke-${{ github.run_id }}
           path: |
-            paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json
-            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz
-            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json
+            paper/benchmarks/experiment011/plans/
             paper/benchmarks/experiment011/runs/gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/analysis/gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/runs_parallel/parallel_gha_${{ github.run_id }}/
