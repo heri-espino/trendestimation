@@ -1,5 +1,82 @@
 # AI_HANDOFF — latest
 
+
+## ACTIVE: Springer implementation article and Experiment011 (2026-11-03)
+
+The user selected a **four-manuscript** structure:
+(1) CSDA spectral numerical reliability at
+`paper/csda-spectral-smoothness/`;
+(2) CSDA theoretical computational costs at
+`paper/csda-computational-costs/` (open PR #109);
+(3) Springer *Computational Statistics*, measured
+complete-criterion software implementation and runtime,
+canonical `paper/main.tex` (main's old 36-page draft already
+compiled);
+(4) separate real FHWA NGSIM d=3/jerk application at
+`paper/ngsim-jerk-case-study/`.
+Also preserve the historical distinct SN Computer
+Science `paper/computational-statistics-submission/` draft.
+
+NEW branch `paper/springer-implementation-experiment011`
+introduces `paper/PUBLICATION_MAP.md`,
+`paper/AGENTS.md`, `paper/SPRINGER_AGENT_BRIEF.md`,
+`paper/SPRINGER_READINESS.md`, and
+`paper/SPRINGER_MANUSCRIPT_PLAN.md`.
+Root/paper agent handoffs must route all future agents
+there; do not duplicate CSDA B theory in Springer.
+
+Experiment011 under `paper/benchmarks/experiment011/`:
+21 predeclared case configurations in `cases.json`
+(2 smoke, 13 pilot, 6 confirm), `campaign.py`
+one-block runner (no implicit heavy run; confirm must
+pass `--allow-confirm`), `verify.py` independent
+status and parity validator, tests, source-controlled
+plan, CI smoke workflow, Windows reproduction README,
+and frozen `reference/experiment010_matched_n64_d1_bic.csv`
+(48 real one-worker BIC rows, not new measurements).
+It invokes `paper/benchmarks/experiment006/run.py`
+from main instead of copying open Experiment010 research
+branches (#100/101/103/104/105). Rotating method order
+across 3 blocks supports a later paired pilot; an isolated
+single worker measures latency, not 8-way task throughput.
+
+CI hosted smoke run: https://github.com/heri-espino/trendestimation/actions/runs/41767817861
+SUCCESS, 24/24 actual rows `ok`, 16 float64
+paired comparisons, 0 reported parity issues.
+Source SHA for that hosted run:
+`c52291e77b6375c77e4aecfef55e2dd53362b0b7`.
+Plan preflight declares 187 eligible and 5 budget
+exceeded method/scenario cells (not measurements).
+Results, plan and environment committed to the
+source branch by CI. **No Windows multi-criterion
+pilot has yet been measured.** The Windows command and
+result-branch workflow are in Experiment011 README.
+Any numerical winner or confidence claim requires
+independent multi-block Windows data and stronger
+numerical checks where appropriate.
+
+The existing Springer main-branch Experiment010
+table mixes 8-worker SVD/naive with 1-worker CHOLMOD
+archived runs; it must not be used for an
+unconfounded solver rank. The independent matched
+one-worker BIC source is
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`;
+it has two repeats, one n/d/criterion setting only.
+Current Springer's new study must compare full
+CV and scalar GCV on matched candidate grids
+and identical machine conditions, with all
+resource skips and hybrid diagnostics accounted for.
+
+DO NEXT: review preparation PR; run the two
+smoke cases/targeted pilot on idle university Windows
+VM (not whole factorial), store all raw output
+on a new `results/experiment011-PCAG103A08-001`
+branch, update `paper/SPRINGER_READINESS.md`,
+independently audit, THEN write results-driven
+Springer figures and revise `paper/main.tex`.
+Do not merge without user authorization.
+
+
 ## Experiment005: sparse/iterative PLS, current branch
 
 Branch: feature/experiment005-structured-solvers; PR #94.
