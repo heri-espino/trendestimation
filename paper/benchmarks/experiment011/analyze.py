@@ -106,8 +106,10 @@ def load_block(path: Path) -> list[dict]:
     return result
 
 
-def load_all(runs: Path) -> list[dict]:
-    roots=sorted(runs.glob("*/*/block*/experiment011_case.json"))
+def load_all(runs: Path, run_tag: str | None = None) -> list[dict]:
+    if run_tag is not None and not (run_tag.replace("_","").replace("-","").isalnum()):
+        raise ValueError("Invalid run tag")
+    roots=sorted(runs.glob(f"{run_tag or '*'}/*/block*/experiment011_case.json"))
     if not roots:
         raise FileNotFoundError(f"No Experiment011 blocks under {runs}")
     results=[]
@@ -272,10 +274,10 @@ def summaries(rows: list[dict], required_blocks=3) -> list[dict]:
     return entries
 
 
-def analyze(runs: Path, output: Path) -> dict:
+def analyze(runs: Path, output: Path, run_tag: str | None = None) -> dict:
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite prior analysis: {output}")
-    rows=load_all(runs)
+    rows=load_all(runs,run_tag=run_tag)
     pairs=paired_naive(rows)
     agg=summaries(rows)
     output.mkdir(parents=True,exist_ok=False)
@@ -293,6 +295,7 @@ def analyze(runs: Path, output: Path) -> dict:
         "experiment":"experiment011",
         "kind":"measured_sparse_tensor_not_full_factorial",
         "source_run_directory":str(runs),
+        "requested_run_tag":run_tag or "all_available_runs",
         **status_and_measured(rows),
         "matched_naive_pairs":len(pairs),
         "aggregated_cells":len(agg),
@@ -315,8 +318,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs",type=Path,required=True)
     parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--run-tag",type=str,default=None,
+                        help="Select exactly one machine-run campaign; default is all")
     args=parser.parse_args()
-    analyze(args.runs,args.output)
+    analyze(args.runs,args.output,run_tag=args.run_tag)
 
 
 if __name__=="__main__":
