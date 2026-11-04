@@ -141,6 +141,49 @@ The dedicated `.github/workflows/springer-experiment011-smoke.yml` runs the dete
 
 The file `reference/experiment010_matched_n64_d1_bic.csv` contains 48 real n64/d1/BIC rows copied verbatim from `results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`. It was measured with **one worker and one BLAS thread**, two repeats, and is **not** a new Experiment011 run. A different 48-row pilot in main's `publication_evidence/` was collected under *mixed worker counts*, so do not pool the two sets.
 
+
+## Assemble the measured timing tensor and naive-baseline speedups
+
+After the Windows blocks are committed, derive **one long-form table
+of actual measured seconds** and matched paired speedups:
+
+```powershell
+python paper/benchmarks/experiment011/analyze.py --runs paper/benchmarks/experiment011/runs --run-tag PCAG103A08_001 --output paper/benchmarks/experiment011/analysis/PCAG103A08_001
+```
+
+The outputs are `measured_timing_tensor.csv`,
+`paired_naive_speedups.csv`, `block_aggregated_times.csv`
+and `analysis_summary.json`. The first preserves every actual
+successful/failed/undefined or budget-limited row with its full
+experiment keys. The second produces **naive_seconds / method_seconds**
+only on the same case, block, repeat, coordinate, workload, source
+revision and environment when both outcomes are valid and their
+selected S/criterion scores agree to the reported float64 tolerance.
+At large n the naive method is often ineligible; it has
+**no invented baseline speedup**.
+
+The aggregate uses **independent block means**, not 4 workload
+rows or 2 coordinate rows as independent replicates. It requires
+at least 3 complete independent seed blocks before outputting
+a deterministic block-bootstrap 95% interval. If two run tags
+repeat the same deterministic seed, they are not counted as
+independent blocks. A one-block smoke produces a mean
+but **no confidence interval**. Cells remain separated by
+host, software/BLAS fingerprint, runner source hash, criterion,
+data magnitude, n, d, mu, M, R and coordinate policy; it does
+not silently pool Linux and Windows timings.
+
+The adjacent `theory_big_o_work_not_seconds` column contains
+theoretical complexity families, **not calibrated predictions**.
+Numerical crossover fits/plots must be based on valid measured
+cells across multiple n,d,M and compared with theoretical
+slopes only after the data exist. There is **no RMSE output**.
+The source files, analysis outputs and run-specific README
+must all be committed and pushed. The default source path
+selection uses only the requested `--run-tag`, preventing
+accidental aggregation of previous smoke tags.
+
+
 ## Outputs and mathematical validity
 
 - `cases.json`: immutable plan with 21 declared cases. `plans/experiment011_plan.json` is an **eligibility plan**, not real timings.
