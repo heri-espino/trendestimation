@@ -186,9 +186,11 @@ def plan(args: argparse.Namespace) -> None:
                 "No actual numerical run is implied.",
     }
     content = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-    # Keep the original 21-case plan immutable; the eight additional
-    # d=4/large-n cases require their own versioned plan.
-    path = args.output or HERE / "plans" / "experiment011_plan_expanded.json"
+    # Never overwrite a previously archived plan when the case file or
+    # permitted resource caps change; each revision is content-addressed.
+    # The original 21-case plan and earlier 29-case plans stay intact.
+    plan_id = sha256_file(CASE_FILE)[:12]
+    path = args.output or HERE / "plans" / f"experiment011_plan_{plan_id}.json"
     if path.is_file() and path.read_text(encoding="utf-8") != content:
         raise FileExistsError(
             f"Existing plan differs: {path}; review the proposed change first"
