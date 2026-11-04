@@ -1,12 +1,36 @@
 # Experiment011 — measured complete-criterion runtime frontiers
 
+## Current author decision — focused Experiment011 (November 4, 2026)
+
+Keep the original 21-case Experiment011 protocol and add only targeted
+CV/GCV comparisons at **d=4** for **n=256, 1024, 2048, 4096**:
+two pilot cases at n=256 and six confirm-stage cases at larger n,
+**29 cases in total**. The n1024 confirm cells explicitly permit
+a 750-million-work-unit cap so SVD can be compared with banded Cholesky
+on the full M=100, R=3 grid; n2048/4096 use the feasible banded
+backend only. All larger cases require the existing opt-in
+`--allow-confirm`. No older run, criterion, or historical result
+is overwritten.
+
+An **optional throughput-only** `campaign.py parallel-series`
+mode runs independent small series (n<=256, M<=1000) in spawned
+processes, up to 32 workers, each with one BLAS thread. It writes
+`runs_parallel/` with per-series checkpoints and real wall times.
+It deliberately **does not replace** the serial shared-cache
+single/multiple-series latency benchmark. The author's 32 logical
+processors are a capacity ceiling, not proof that 32 workers
+will run faster than 8 or 16. The old 252,000-cell factorial is
+retained only as an archival index, **not** a new study mandate.
+
+
 **Status: prepared experimental protocol, not a completed numerical study.**
 
 
-### Full factorial is the target; the 21 cases are only the pilot
+### Focused 29-case Experiment011 is the active study; the full factorial is historical context
 
-The user's complete factorial specification is NOT the 21-case
-`cases.json` subset. It is the originally audited Experiment008 grid,
+The previously requested comprehensive-factorial indexing specification is
+preserved from Experiment008 as historical background. It is **not** the
+currently authorized run schedule. The existing full factorial has axes
 now exposed through `full_plan.py` in this experiment. Its axes are:
 
 - n={64,128,256,512,1024,16384,131072};
@@ -21,7 +45,7 @@ now exposed through `full_plan.py` in this experiment. Its axes are:
 - candidate grids M={100,1000,10000,100000}, including exact S=1
   for full grids; a one-S workload at S=0.5 is NOT duplicated four times.
 
-The factorial therefore contains
+That archived factorial therefore contains
 7*6*3*2*5*10*2*(2+2*4) = **252,000 unique planned
 method-workload-coordinate cells**. Those are the index of a long-form
 timing tensor, not 252,000 observed seconds. The full design records
@@ -42,7 +66,7 @@ This command only produces
 `plans/full_factorial_plan.csv.metadata.json`; it does not
 execute solver benchmarks. The script delegates to the original
 Experiment008 manifest implementation, checking its source SHA
-and all expected factor levels. The plan uses three series and
+and all expected factor levels. The historical factorial plan uses three series and
 six planned repeats per cell (three independent blocks and
 two repeats each), with explicit 2-GiB dense-memory and work
 budget safeguards. A method/case with a resource skip remains a
@@ -78,13 +102,13 @@ The primary outputs are actual complete-criterion latency (seconds or millisecon
 
 We reuse `paper/benchmarks/experiment006/run.py` **as is**: it already implements and times complete criteria with naive inversion, spectral SVD, banded Cholesky plus exact selected inverse and explicitly named hybrids. The new Experiment011 controller adds a small predeclared design, work/memory caps, one-case runs, rotating method order across blocks, immutable metadata and independent paired QA. It does not merge or duplicate the unmerged Experiment010 orchestration PR stack.
 
-### Explicit stages
+### Focused stages (currently 29 cases)
 
 | Stage | Cases | Purpose | Execution |
 |---|---:|---|---|
 | Smoke | 2 | Wiring/numerical QA, n64 d1/d3, M100 | GitHub Actions or Windows, single block and repeat |
-| Pilot | 13 | GCV-vs-CV crossover probes, n64/128; AICc and ML controls at n256, conditional mu=data controls and optional CHOLMOD | Windows VM, three blocks × two repeats per block |
-| Confirm | 6 | Selected n/d/M scaling up to M10000 and n512; **only after pilot** | Requires explicit `--allow-confirm` and new resource review |
+| Pilot | 15 | GCV-vs-CV crossover probes, n64/128; AICc and ML controls at n256, conditional mu=data controls and optional CHOLMOD | Windows VM, three blocks × two repeats per block |
+| Confirm | 12 | Selected n/d/M scaling up to M10000 and n512; **only after pilot** | Requires explicit `--allow-confirm` and new resource review |
 
 The parameter grid is the same `S={j/M: j=1,...,M}` for every backend including exact S=1. In the inherited runner, the single-candidate workload uses S=.5. All four configurations are evaluated for every case: one S / one series, full S-grid / one series, one S / three series, full S-grid / three series (two series in smoke). Both direct-S and once-mapped-lambda policies are evaluated. No grid outcome has been measured merely by writing `cases.json`.
 
