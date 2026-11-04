@@ -30,7 +30,7 @@ HERE = Path(__file__).resolve().parent
 MEASURE_FIELDS = ("method_setup_s", "s_to_lambda_s",
                   "candidate_evaluation_s", "total_cold_s", "total_warm_s")
 MEASURED_COLUMNS = (
-    "run_tag", "case_id", "block", "repeat", "n", "d", "mu",
+    "run_tag", "case_id", "block", "block_seed", "repeat", "n", "d", "mu",
     "amplitude", "criterion", "grid_denominator", "coordinate", "workload",
     "method", "R", "M", "status", "selected_s", "selected_score",
     "method_setup_s", "s_to_lambda_s", "candidate_evaluation_s",
@@ -89,6 +89,7 @@ def load_block(path: Path) -> list[dict]:
             "run_tag":path.parent.parent.name,
             "case_id":manifest["case"]["id"],
             "block":manifest["block"],
+            "block_seed":manifest["seed"],
             "host":environment["host"],
             "environment_fingerprint":finger,
             "blas_threads":environment["blas_threads"],
@@ -137,7 +138,7 @@ def paired_naive(rows: list[dict]) -> list[dict]:
     matched=defaultdict(dict)
     for row in rows:
         key=(row["run_tag"],row["case_id"],int(row["block"]),
-             int(row["repeat"]),row["coordinate"],row["workload"],
+             int(row["block_seed"]),int(row["repeat"]),row["coordinate"],row["workload"],
              row["environment_fingerprint"],row["experiment006_source_sha256"])
         if row["method"] in matched[key]:
             raise ValueError("Duplicate method cell for "+str(key))
@@ -154,14 +155,28 @@ def paired_naive(rows: list[dict]) -> list[dict]:
         for method,measured in sorted(methods.items()):
             if method=="naive_inverse" or measured["status"]!="ok":
                 continue
-            if measured["qa_classification"]!="float64_parity_only_not_precision_certified":
+            if measured["qa_classification"] in (
+                    "needs_independent_numerical_review",
+                    "insufficient_paired_comparisons"):
+                continue
+            s_error=abs(float(measured["selected_s"])-
+                        float(baseline["selected_s"]))
+            # Marginal ML scores may differ by an additive normalizing
+            # constant; report minimizer parity but not absolute score parity.
+            score_error=(
+                abs(float(measured["selected_score"])-
+                    float(baseline["selected_score"]))/
+                max(1.0,abs(float(baseline["selected_score"])))
+                if measured["criterion"]!="mle" else 0.)
+            if s_error>1e-10 or score_error>1e-7:
                 continue
             t=float(measured["total_cold_s"])
             if t<=0:
                 continue
             pairs.append({
                 "run_tag":measured["run_tag"],"case_id":measured["case_id"],
-                "block":measured["block"],"repeat":measured["repeat"],
+                "block":measured["block"],"block_seed":measured["block_seed"],
+                "repeat":measured["repeat"],
                 "coordinate":measured["coordinate"],"workload":measured["workload"],
                 "n":measured["n"],"d":measured["d"],"mu":measured["mu"],
                 "criterion":measured["criterion"],"M":measured["M"],
@@ -210,7 +225,9 @@ def summaries(rows: list[dict], required_blocks=3) -> list[dict]:
     for key,records in sorted(bycell.items()):
         blocks=defaultdict(list)
         for row in records:
-            blocks[(row["run_tag"],row["block"])].append(row)
+            # Two run tags with the same deterministic block seed are
+            # repeated inputs, NOT independent timing blocks.
+            blocks[row["block_seed"]].append(row)
         complete=[]
         for block,subset in blocks.items():
             expected_repeats=2 if any(row["case_id"].startswith(
@@ -218,8 +235,9 @@ def summaries(rows: list[dict], required_blocks=3) -> list[dict]:
             indices={int(x["repeat"]) for x in subset if x["status"]=="ok"}
             if (len(subset)==expected_repeats and
                     indices==set(range(expected_repeats)) and
-                    all(x["qa_classification"]==
-                        "float64_parity_only_not_precision_certified"
+                    all(x["qa_classification"] not in
+                        ("needs_independent_numerical_review",
+                         "insufficient_paired_comparisons")
                         for x in subset) and
                     all(x["status"]=="ok" for x in subset)):
                 complete.append(statistics.mean(
@@ -262,7 +280,7 @@ def analyze(runs: Path, output: Path) -> dict:
     agg=summaries(rows)
     output.mkdir(parents=True,exist_ok=False)
     write_csv(output/"measured_timing_tensor.csv",rows,MEASURED_COLUMNS)
-    pairfields=("run_tag","case_id","block","repeat","coordinate","workload",
+    pairfields=("run_tag","case_id","block","block_seed","repeat","coordinate","workload",
                 "n","d","mu","criterion","M","R","method",
                 "naive_total_cold_s","method_total_cold_s",
                 "paired_naive_speedup","source_sha256",
