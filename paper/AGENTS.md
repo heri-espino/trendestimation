@@ -1,5 +1,7 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 ## Current author decision — focused Experiment011 (November 4, 2026)
 
 Keep the original 21-case Experiment011 protocol and add only targeted

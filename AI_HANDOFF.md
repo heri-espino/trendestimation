@@ -1,5 +1,7 @@
 # AI_HANDOFF — latest
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](paper/SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 ## Current author decision — focused Experiment011 (November 4, 2026)
 
 Keep the original 21-case Experiment011 protocol and add only targeted
@@ -53,8 +55,8 @@ Root/paper agent handoffs must route all future agents
 there; do not duplicate CSDA B theory in Springer.
 
 Experiment011 under `paper/benchmarks/experiment011/`:
-21 predeclared case configurations in `cases.json`
-(2 smoke, 13 pilot, 6 confirm), `campaign.py`
+29 predeclared case configurations in `cases.json`
+(2 smoke, 15 pilot, 12 confirm), `campaign.py`
 one-block runner (no implicit heavy run; confirm must
 pass `--allow-confirm`), `verify.py` independent
 status and parity validator, tests, source-controlled
@@ -72,8 +74,9 @@ SUCCESS, 24/24 actual rows `ok`, 16 float64
 paired comparisons, 0 reported parity issues.
 Source SHA for that hosted run:
 `c52291e77b6375c77e4aecfef55e2dd53362b0b7`.
-Plan preflight declares 187 eligible and 5 budget
-exceeded method/scenario cells (not measurements).
+The original 21-case plan declared 187 eligible and 5 budget
+exceeded method/scenario cells (historical, not measurements or current
+29-case counts). Generate the current checksum-versioned plan when needed.
 Results, plan and environment committed to the
 source branch by CI. **No Windows multi-criterion
 pilot has yet been measured.** The Windows command and

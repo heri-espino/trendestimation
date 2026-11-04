@@ -1,5 +1,7 @@
 # Experiment011 — controlled Springer complete-criterion runtime study
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](../../SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 **Do not edit or launch before reading:** root `README.md`, `AGENTS.md`, `AI_HANDOFF.md`, `paper/PUBLICATION_MAP.md`, `paper/SPRINGER_READINESS.md`, `paper/benchmarks/experiment006/{README.md,run.py,selected_inverse.py}`, `paper/benchmarks/experiment008/README.md`, `paper/benchmarks/experiment009/README.md`, `paper/benchmarks/experiment010/publication_evidence/README.md`, then `cases.json`, `campaign.py`, `verify.py`, the tests and all relevant open PRs.
 
 ## Objective

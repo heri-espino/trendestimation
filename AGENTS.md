@@ -1,5 +1,7 @@
 # AGENTS.md — trendestimation research repository
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](paper/SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 ## Current author decision — focused Experiment011 (November 4, 2026)
 
 Keep the original 21-case Experiment011 protocol and add only targeted
@@ -44,7 +46,7 @@ and criterion-specific crossover, and NGSIM owns physical
 third-difference applications.
 
 New `paper/benchmarks/experiment011/` is a **prepared,
-bounded** 21-case design that calls the existing reviewed
+bounded** 29-case design (2 smoke, 15 pilot, 12 confirm) that calls the existing reviewed
 Experiment006 complete-criterion runner without pulling in the
 open nested Experiment010 research PR stack. It has explicit
 smoke/pilot/confirm gates, independent blocks with rotated

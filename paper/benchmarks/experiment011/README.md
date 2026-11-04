@@ -1,5 +1,7 @@
 # Experiment011 — measured complete-criterion runtime frontiers
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](../../SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 ## Current author decision — focused Experiment011 (November 4, 2026)
 
 Keep the original 21-case Experiment011 protocol and add only targeted
@@ -169,7 +171,7 @@ We reuse `paper/benchmarks/experiment006/run.py` **as is**: it already implement
 |---|---:|---|---|
 | Smoke | 2 | Wiring/numerical QA, n64 d1/d3, M100 | GitHub Actions or Windows, single block and repeat |
 | Pilot | 15 | GCV-vs-CV crossover probes, n64/128; AICc and ML controls at n256, conditional mu=data controls and optional CHOLMOD | Windows VM, three blocks × two repeats per block |
-| Confirm | 12 | Selected n/d/M scaling up to M10000 and n512; **only after pilot** | Requires explicit `--allow-confirm` and new resource review |
+| Confirm | 12 | Selected scaling up to M10000; d=4 CV/GCV at n1024/2048/4096; **only after pilot** | Requires explicit `--allow-confirm` and new resource review |
 
 The parameter grid is the same `S={j/M: j=1,...,M}` for every backend including exact S=1. In the inherited runner, the single-candidate workload uses S=.5. All four configurations are evaluated for every case: one S / one series, full S-grid / one series, one S / three series, full S-grid / three series (two series in smoke). Both direct-S and once-mapped-lambda policies are evaluated. No grid outcome has been measured merely by writing `cases.json`.
 
@@ -177,7 +179,7 @@ The parameter grid is the same `S={j/M: j=1,...,M}` for every backend including 
 
 ## Windows PowerShell (the university VM)
 
-Do this after CI passes and when the workstation is idle. From the current repository checkout:
+Use the complete exit-checked worktree procedure in [SESSION_HANDOFF.md](../../SESSION_HANDOFF.md#exact-next-windows-run-fresh-results-worktree) for the pending parallel pilot. The older serial example below remains useful for serial runs; its worktree/branch names must be new. Use the existing Conda environment and repository `src` on PYTHONPATH, without package installation. Run when the workstation is idle:
 
 ```powershell
 git fetch origin
@@ -185,7 +187,7 @@ git worktree add --detach ..\trendestimation-springer origin/paper/springer-impl
 Set-Location ..\trendestimation-springer
 git switch -c results/experiment011-PCAG103A08-001
 conda activate trendestimation
-python -m pip install -e .
+$env:PYTHONPATH = (Join-Path (Get-Location).Path "src") + [IO.Path]::PathSeparator + $env:PYTHONPATH
 python -m unittest discover -s paper/benchmarks/experiment011/tests -v
 python paper/benchmarks/experiment011/campaign.py list
 python paper/benchmarks/experiment011/campaign.py plan
@@ -271,7 +273,7 @@ accidental aggregation of previous smoke tags.
 
 ## Outputs and mathematical validity
 
-- `cases.json`: immutable plan with 21 declared cases. `plans/experiment011_plan.json` is an **eligibility plan**, not real timings.
+- `cases.json`: 29 declared cases. Current plans use `plans/experiment011_plan_<design-checksum>.json`; the preserved `plans/experiment011_plan.json` belongs to the original 21-case version. All are **eligibility plans**, not real timings.
 - `measurements/raw_times.csv`: all actual rows, including failed/ineligible states; `summary.csv` and `paired_speedups.csv` are derived, *conditional* summaries from the inherited runner.
 - `measurements/environment.json`: host, source commit, numerical package versions, BLAS pools, seed and conditional-data-mu status.
 - `experiment011_case.json`: controller source SHA, rotated method order, block seed, stages, and status.

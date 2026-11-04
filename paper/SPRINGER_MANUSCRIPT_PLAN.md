@@ -1,5 +1,7 @@
 # Springer Computational Statistics — planned implementation article
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 **Canonical LaTeX:** `paper/main.tex` using the repository's official Springer `sn-jnl` class. This document is an authoring plan, not a separate conflicting manuscript. Do not replace it with `paper/computational-statistics-submission/main.tex` (historical SN Computer Science), and do not swap in the Elsevier CAS style.
 
 ## Differentiated submission objective
@@ -34,7 +36,7 @@ Preserve all existing `paper/sections/*.tex` and figures until they are individu
 | F2 | per-candidate and full-grid amortization with setup split | validated matching n/d/C/M/R raw rows | pending |
 | F3 | cost of direct-S inversion vs once-mapped lambda (same exact candidates) | both coordinate policies in Experiment011 | pending |
 | F4 | memory/feasibility matrix and failed method status categories | full plan and actual outcome flags | pending |
-| F5 | distinct throughput chart under 8-worker pool (optional) | separately run and identified multi-case throughput study | not measured |
+| F5 | independent-series throughput at fixed R, varying up to 8/16/32 process workers (optional) | separate `parallel-series` outputs; private per-worker setup/caches; never pooled with serial latency | hosted 2-worker QA exists; Windows throughput not measured |
 
 The previously archived Experiment010 matched one-worker n64/d1/BIC case may provide a narrowly scoped introductory illustration; the main Springer's mixed-worker BIC table cannot be reused to claim matched speedups. The two-repeat matched pilot remains descriptive.
 

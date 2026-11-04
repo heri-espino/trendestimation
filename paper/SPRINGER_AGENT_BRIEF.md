@@ -1,5 +1,7 @@
 # Springer Computational Statistics — agent coordination brief
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 **Primary object:** `paper/main.tex`, Springer Nature `sn-jnl` (`Computational Statistics`), as distinct from `paper/computational-statistics-submission/` (historical SN Computer Science draft) and the two Elsevier `cas-dc` CSDA manuscripts.
 
 **First read, in this order:** `README.md`, `AGENTS.md`, `AI_HANDOFF.md`, `paper/PUBLICATION_MAP.md`, `paper/SPRINGER_READINESS.md`, `paper/main.tex`, `paper/sections/experiment010_three_backend.tex`, `paper/benchmarks/experiment010/publication_evidence/README.md`, `paper/benchmarks/experiment006/README.md`, `paper/benchmarks/experiment006/{run.py,selected_inverse.py}`, `paper/benchmarks/experiment011/{README.md,campaign.py}`, the relevant tests, and the open experimental PR stacks. Consult the CSDA B and NGSIM sources only for cross-reference and attribution.

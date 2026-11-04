@@ -1,5 +1,7 @@
 # Springer Computational Statistics — readiness and decision ledger
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
 ## Current author decision — focused Experiment011 (November 4, 2026)
 
 Keep the original 21-case Experiment011 protocol and add only targeted
@@ -45,7 +47,11 @@ naive inversion (where feasible) with repeated block-level
 mean/median, dispersion and theory comparison; **no RMSE**.
 
 
-## Editorial state at setup (2026-11-03)
+## Historical editorial state at initial setup (2026-11-03)
+
+This table preserves the original 21-case setup evidence; current 29-case
+status and the pending Windows run are in SESSION_HANDOFF.md and the latest
+focused-design entry below. Historical counts are not current plan totals.
 
 | Gate | Status | Evidence / gap |
 |---|---|---|
@@ -85,7 +91,7 @@ long-form table are **separate** data structures.
 4. **Numerical admissibility:** At high d and mu=data, do finite precision, memory limits, or criterion undefinedness remove a nominally fast pipeline? Compare high-precision or independent reference where feasible.
 5. **CHOLMOD vs canonical banded Cholesky:** The implemented `sparse_cholesky_banded_trace` is a hybrid requiring another diagnostic factorization. Report its `fit + diagnostic` cost, not a pure CHOLMOD speed.
 
-## Predeclared staged design
+## Original staged design (historical; current 29-case extension below)
 
 **Stage 0 (safe smoke):** n64, d1, GCV, M100, numeric mu0; one block/one repeat, 3 core methods; no large experiment claims.
 
@@ -117,7 +123,7 @@ long-form table are **separate** data structures.
 
 **Do not merge** any Springer or Experiment011 PR until the review gates are explicitly met and the user authorizes it.
 
-## Latest reproducible preparation verification
+## Historical initial preparation verification (21-case version)
 
 - **CI:** hosted GitHub Actions workflow #41767817861 finished `success`.
 - **Immutable run:** `paper/benchmarks/experiment011/runs/gha_41767817861/smoke_gcv_n64_d1_m100/block000/`.
@@ -143,7 +149,7 @@ Agents do not automatically execute work merely because these comments or files 
 - Verified compressed full-factorial plan `paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz`: exactly **252,000** planned method/workload/coordinate cells, with 138,960 preflight eligible, 92,640 work-budget exceeded, 16,800 dense-memory infeasible and 3,600 naive-runtime infeasible at the currently chosen budgets (2 GiB, 5e8 nominal work, six planned repeats). These are **preflight classifications**, not observations or failure rates.
 - Hosted smoke analysis `paper/benchmarks/experiment011/analysis/gha_41780451438/`: 24/24 actual successful numerical timing rows, 24 aggregate cells and **16 genuinely paired naive-baseline ratios**; one independent block, so **zero confidence intervals** and no crossover inferred. Source executable SHA `cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89`, hosted GitHub Linux runner (not PCAG103A-08).
 - Unit tests verify the exact factorial axes, float64 parity, invalid/skip statuses, paired naive ratios, no confidence interval with one block, and duplicate-seed prevention.
-- **Still missing:** Windows factorial timing observations beyond previously archived Experiment008/010 partial subsets, three independent selected Experiment011 blocks for CV/GCV comparisons, high-order numerical checks, full aggregate empirical vs Big-O crossover figures, and journal author review.
+- **Still missing for the active study:** matched Windows observations for the approved selected Experiment011 cases, independent blocks for CV/GCV comparisons, high-order numerical checks, empirical scaling figures, and journal author review. The historical factorial is not a pending execution requirement.
 
 ## Current focused design and multiprocessing verification (November 4, 2026)
 
