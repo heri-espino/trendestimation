@@ -27,7 +27,7 @@ retained only as an archival index, **not** a new study mandate.
 
 
 **Preserved historical full-factorial index (not the active Experiment011 run schedule).** The archived coverage
-extends beyond Experiment011's 21-case pilot: seven n values through
+extends beyond the currently approved 29-case staged study: seven n values through
 131072, d=1..6, zero/fixed-nonzero/observed-difference means,
 low/high magnitudes, five criteria, all ten full-criterion
 pipelines, both direct and mapped smoothness coordinate policies,
