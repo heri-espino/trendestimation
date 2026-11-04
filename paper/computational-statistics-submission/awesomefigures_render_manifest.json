@@ -298,23 +298,23 @@
   ],
   "commands": [
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/render_all_figures.py",
       "--scope",
       "submission",
       "--no-pdf"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "paper/benchmarks/report_windows_full_s.py",
       "--images-only"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_expand_results.py"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "zero",
@@ -322,7 +322,7 @@
       "co2_full"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "zero",
@@ -330,7 +330,7 @@
       "co2_recent"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "zero",
@@ -338,7 +338,7 @@
       "fedfunds_full"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "data",
@@ -346,7 +346,7 @@
       "co2_full"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "data",
@@ -354,7 +354,7 @@
       "co2_recent"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/sncs_dashboard.py",
       "--mu",
       "data",

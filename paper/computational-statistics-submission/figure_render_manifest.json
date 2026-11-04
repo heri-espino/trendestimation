@@ -1,7 +1,7 @@
 {
   "mode": "render_only_from_archived_results",
   "theme": "AwesomeFigures pinned Okabe-Ito high-contrast palette",
-  "timestamp_utc": "2026-10-28T20:53:55.059188+00:00",
+  "timestamp_utc": "2026-11-04T21:12:07.593288+00:00",
   "scope": "submission",
   "rebuilt_manuscript": false,
   "experiment_source_sha256": {
@@ -139,9 +139,17 @@
     "paper/computational-statistics-submission/figures/final_solver_inference.pdf",
     "paper/computational-statistics-submission/figures/final_solver_inference.png",
     "paper/computational-statistics-submission/figures/final_solver_inference.svg",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard-img0.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard-img1.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard-img2.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard-img3.png",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard.pdf",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard.png",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard.svg",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data-img0.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data-img1.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data-img2.png",
+    "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data-img3.png",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data.pdf",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data.png",
     "paper/computational-statistics-submission/figures/sncs_compact_dashboard_mu_data.svg",
@@ -188,17 +196,17 @@
   ],
   "commands": [
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/make_current_examples.py",
       "--render-only"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/make_selection_dashboards.py",
       "--render-only"
     ],
     [
-      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
       "/home/runner/work/trendestimation/trendestimation/paper/computational-statistics-submission/render_final_computation.py"
     ]
   ],
