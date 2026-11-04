@@ -35,16 +35,29 @@ The exact endpoints are interpolation at $s=0$ and the polynomial-constrained li
 \label{fig:coordinate}
 \end{figure}
 
-\subsection{Higher-order differences and physical interpretation}
-When $y_t$ represents a sampled position at equally spaced times $t_j=j\Delta t$, the rescaled finite differences $(D_d\tau)_j/(\Delta t)^d$ approximate the $d$th time derivative as $\Delta t\to0$ for sufficiently smooth trajectories. Thus $d=1$ penalizes departures from constant velocity (first differences), $d=2$ from constant acceleration (second differences), and $d=3$ from constant jerk (third differences). This interpretation requires that the measured variable is position and the sampling step is meaningful; for generic economic or environmental series these are merely algebraic difference orders.
-
-At the maximum-smoothness limit, the penalty constraint is $D_d\tau=\mu\mathbf1$. For $\mu=0$, the limiting fit belongs to the polynomial nullspace of $D_d$ and has degree at most $d-1$: $d=1$ gives a constant, $d=2$ a straight line, $d=3$ a quadratic and $d=4$ a cubic. For a \emph{nonzero fixed} $\mu$, the limiting fit has degree $d$ (for example, $d=3$ permits a cubic with constant third difference, corresponding to constant nonzero jerk for uniformly spaced positions). In the physical units of position, $\mu/(\Delta t)^3$ approximates jerk; $\mu$ alone is not a jerk value without units and spacing.
-
-\begin{figure*}[t]\centering
-\includegraphics[width=\textwidth]{figures/derivative_orders.pdf}
-\caption{Deterministic illustration of limiting ($S=1$) polynomial trends on a sample position trajectory, not a timing experiment. Left: zero-mean $d$th differences give polynomial degree at most $d-1$. Right: $d=3$, $\mu=0$ gives a quadratic; a nonzero fixed third-difference mean gives a cubic, which corresponds to constant jerk only after scaling by the time step cubed.}
-\label{fig:physics}
-\end{figure*}
+\subsection{Polynomial limits and endpoint conventions}
+At $S=1$ the exact constrained fit minimizes $\|y-\tau\|^2$
+subject to $D_d\tau=\mu\mathbf1$. For $\mu=0$ its degree is
+at most $d-1$; for fixed nonzero $\mu$ it may have degree $d$.
+This follows from the polynomial nullspace of the forward-difference
+operator and does not require factoring a matrix at
+$\lambda=\infty$. At $S=0$, $\widehat\tau=y$ and the smoother
+is the identity; some cross-validation and information-criterion
+expressions are undefined at this interpolation endpoint.
+The penalties corresponding to the same interior $S$ can
+differ considerably across $d$, which motivates
+using the normalized coordinate rather than a common raw
+penalty value.
 
 \subsection{Research questions}
-A single fitted curve, one criterion score, a complete grid search, and $R$ independent searches are different workloads. We distinguish: setup costs; full fitted-trend reconstruction; trace and leverage evaluation for CV/GCV/AICc/BIC/MLE; one-point evaluation; matched 17-point grids; locally optimized continuous searches; and repeated-series reuse. Spectral preprocessing may be expensive for one query yet efficient when amortized. The question is not whether $s$ magically lowers the cost of optimizing $\lambda$, but whether the \emph{same exact set} $\Lambda_{n,d}(s_j)$ can be calculated once, reused, and exposed to users as interpretable $s_j\in[0,1]$.
+A single fitted curve, one criterion score, a complete $M$-point
+grid search, and $R$ independent series define distinct workloads.
+We separate spectral or banded preparation, parameter inversion,
+fitted-curve reconstruction, trace/leverage computation, marginal
+likelihood determinants and repeated-series reuse. The theoretical
+question is not whether the bounded coordinate always saves time,
+but whether the \emph{same exact candidate set}
+$\{\Lambda_{n,d}(s_j)\}$ can be shared across criteria
+and observed series without changing the statistical problem.
+Sections~\ref{sec:complexity}--\ref{sec:crossover} establish
+the corresponding arithmetic and memory bounds.

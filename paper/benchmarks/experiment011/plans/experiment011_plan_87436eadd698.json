@@ -1,0 +1,2458 @@
+{
+  "cases": [
+    {
+      "candidate_count": 100,
+      "case": "smoke_gcv_n64_d1_m100",
+      "criterion": "gcv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "n": 64,
+      "planned_blocks": 1,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 2,
+          "case": "smoke_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 1,
+      "stage": "smoke",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "smoke_cv_n64_d3_m100",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 64,
+      "planned_blocks": 1,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 2,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 2,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 2,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 2,
+          "case": "smoke_cv_n64_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 1,
+      "stage": "smoke",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_gcv_n64_d1_m100",
+      "criterion": "gcv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "pilot_gcv_n64_d1_m1000",
+      "criterion": "gcv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "budget_exceeded",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_gcv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "budget_exceeded",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_cv_n64_d1_m100",
+      "criterion": "cv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m100",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "pilot_cv_n64_d1_m1000",
+      "criterion": "cv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "budget_exceeded",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_cv_n64_d1_m1000",
+          "method": "naive_inverse",
+          "preflight": "budget_exceeded",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_gcv_n128_d3_m100",
+      "criterion": "gcv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "pilot_gcv_n128_d3_m1000",
+      "criterion": "gcv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_gcv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_cv_n128_d3_m100",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "pilot_cv_n128_d3_m1000",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "pilot_cv_n128_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_aicc_n256_d2_m100",
+      "criterion": "aicc",
+      "d": 2,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_aicc_n256_d2_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_mle_n256_d3_m100",
+      "criterion": "mle",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_mle_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_data_gcv_n128_d3_m100",
+      "criterion": "gcv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_data_gcv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_data_cv_n128_d3_m100",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_data_cv_n128_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_hybrid_gcv_n64_d1_m100",
+      "criterion": "gcv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_cholesky_banded_trace"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "sparse_cholesky_banded_trace",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "sparse_cholesky_banded_trace",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "sparse_cholesky_banded_trace",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_hybrid_gcv_n64_d1_m100",
+          "method": "sparse_cholesky_banded_trace",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 10000,
+      "case": "confirm_gcv_n64_d3_m10000",
+      "criterion": "gcv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 64,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 10000,
+          "R": 1,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 10000,
+          "R": 3,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 10000,
+          "R": 1,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 10000,
+          "R": 3,
+          "case": "confirm_gcv_n64_d3_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 10000,
+      "case": "confirm_gcv_n128_d1_m10000",
+      "criterion": "gcv",
+      "d": 1,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 128,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 10000,
+          "R": 1,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 10000,
+          "R": 3,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "spectral_svd",
+          "preflight": "budget_exceeded",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 10000,
+          "R": 1,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 10000,
+          "R": 3,
+          "case": "confirm_gcv_n128_d1_m10000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "confirm_gcv_n256_d3_m1000",
+      "criterion": "gcv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "confirm_gcv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 1000,
+      "case": "confirm_cv_n256_d3_m1000",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 1000,
+          "R": 1,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 1000,
+          "R": 3,
+          "case": "confirm_cv_n256_d3_m1000",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_mle_n512_d3_m100",
+      "criterion": "mle",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 512,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_mle_n512_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_data_cv_n256_d3_m100",
+      "criterion": "cv",
+      "d": 3,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_data_cv_n256_d3_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_gcv_n256_d4_m100",
+      "criterion": "gcv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_gcv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "pilot_cv_n256_d4_m100",
+      "criterion": "cv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 256,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "pilot_cv_n256_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "pilot",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_gcv_n1024_d4_m100",
+      "criterion": "gcv",
+      "d": 4,
+      "max_work_for_this_case": 750000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 1024,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_gcv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_cv_n1024_d4_m100",
+      "criterion": "cv",
+      "d": 4,
+      "max_work_for_this_case": 750000000,
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "n": 1024,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "spectral_svd",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        },
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_cv_n1024_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_gcv_n2048_d4_m100",
+      "criterion": "gcv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "banded_cholesky"
+      ],
+      "n": 2048,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_gcv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_gcv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_cv_n2048_d4_m100",
+      "criterion": "cv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "banded_cholesky"
+      ],
+      "n": 2048,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_cv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_cv_n2048_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_gcv_n4096_d4_m100",
+      "criterion": "gcv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "banded_cholesky"
+      ],
+      "n": 4096,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_gcv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_gcv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_gcv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_gcv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    },
+    {
+      "candidate_count": 100,
+      "case": "confirm_cv_n4096_d4_m100",
+      "criterion": "cv",
+      "d": 4,
+      "max_work_for_this_case": 500000000,
+      "methods": [
+        "banded_cholesky"
+      ],
+      "n": 4096,
+      "planned_blocks": 3,
+      "preflights": [
+        {
+          "M": 1,
+          "R": 1,
+          "case": "confirm_cv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_one_series"
+        },
+        {
+          "M": 100,
+          "R": 1,
+          "case": "confirm_cv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_one_series"
+        },
+        {
+          "M": 1,
+          "R": 3,
+          "case": "confirm_cv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "one_s_multiple_series"
+        },
+        {
+          "M": 100,
+          "R": 3,
+          "case": "confirm_cv_n4096_d4_m100",
+          "method": "banded_cholesky",
+          "preflight": "eligible",
+          "scenario": "grid_multiple_series"
+        }
+      ],
+      "repeats_per_block": 2,
+      "stage": "confirm",
+      "status": "planned_not_measured"
+    }
+  ],
+  "data_type": "planned_eligibility_not_observed_timing",
+  "design_sha256": "87436eadd69886641d427e64381bbfc82b3c23a3ed4a3cc06f03ea90f15e4472",
+  "experiment": "experiment011",
+  "note": "Budget and memory feasibility are only preflight predictions. No actual numerical run is implied.",
+  "preflight_counts": {
+    "budget_exceeded": 5,
+    "eligible": 235
+  },
+  "runner_sha256": "cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89",
+  "schema": 1
+}

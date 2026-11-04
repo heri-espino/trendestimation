@@ -1,9 +1,28 @@
 # Mathematical research notes
 
+- [Experiment003 Windows findings (28 October 2026)](experiment003_windows_findings_20261028.md):
+  archived quick/full/large observations, matched-grid timing tables,
+  banded-eigenvalues versus full-SVD crossover, grid/factor reuse,
+  numerical parity, experimental limitations, and reproducible source paths.
+
+- [Smoothness-first solver-cost synthesis](smoothness_first_solver_costs.md):
+  algorithmic complexity, measured full-trend crossover, the cost of
+  pretranslating a shared S grid, and S-only public fitting. This is
+  a synthesis of archived evidence, not a new benchmark experiment.
+
+
 This directory records derivations, mathematical assumptions, boundary cases,
 computational decisions, and reproducibility checks for methods explored in
 `trendestimation`. Notes do not necessarily imply release-quality implementation
 or inclusion in a scientific manuscript.
+
+- [Experiment003: large-series cached S-grid and backend trade-offs](experiment003_large_series_s_grid.md):
+  new n=256–2048 factorial comparing known-lambda, S-to-lambda conversion,
+  banded eigenvalues-only setup, SVD, cold/cached banded Cholesky,
+  spectral GCV, single-series versus repeated-series costs, and
+  automatic GitHub archiving of reproducible results. Windows timings
+  remain pending until the author runs the full/large presets.
+
 
 - [Experiment002: full S=[0,1] × seven solvers × five criteria](experiment002_full_s_factorial.md):
   mathematical endpoint treatment, fixed mu, all difference orders d=0..5,
@@ -29,6 +48,8 @@ or inclusion in a scientific manuscript.
   mathematical equivalence of lambda/S search, distinct Cholesky/SVD/eigh
   score workloads, fair matched-candidate design, the actual public
   selector experiment, scripts, statistical cautions and spline outlook.
+
+- [Future project: smoothness-integrated trend comparison](../future_projects/smoothness_integrated_trend_comparison/README.md): archived LaTeX derivations, rolling-window comparisons, change-point research questions, and independent-agent handoff. Research proposal only; no completed empirical claims.
 
 When changing code or Sphinx documentation, preserve an explanation here
 of the underlying mathematical relationship and its limitations.

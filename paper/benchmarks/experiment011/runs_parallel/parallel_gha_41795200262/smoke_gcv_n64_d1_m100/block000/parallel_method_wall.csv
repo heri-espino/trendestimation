@@ -1,0 +1,4 @@
+method,repeat,series_count,series_workers,group_elapsed_wall_s,series_per_wall_second,complete_row_count
+spectral_svd,0,3,2,0.8192166209999954,3.6620350748474584,12
+banded_cholesky,0,3,2,0.2019947980000012,14.851867620868049,12
+naive_inverse,0,3,2,0.12795545099999828,23.44566000552833,12

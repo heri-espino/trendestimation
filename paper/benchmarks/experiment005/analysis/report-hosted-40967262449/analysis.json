@@ -1,0 +1,105 @@
+{
+  "experiment": "experiment005_joint_accuracy_runtime_analysis",
+  "input": "paper/benchmarks/experiment005/runs/pilot-hosted-40966276100",
+  "source_summary_sha256": "02d3385be0d1b19ef507dd96cb237f6db891b7669c6ea3cde2161d085248ec03",
+  "raw_fit_count": 3264,
+  "raw_selection_count": 960,
+  "fit_counts": {
+    "svd": {
+      "valid": 1088
+    },
+    "eigh": {
+      "valid": 983,
+      "inaccurate": 105
+    },
+    "banded_cholesky": {
+      "valid": 907,
+      "inaccurate": 141,
+      "failure": 40
+    }
+  },
+  "selection_counts": {
+    "svd": {
+      "valid": 320
+    },
+    "eigh": {
+      "valid": 252,
+      "invalid_complete_grid": 63,
+      "selected_fit_inaccurate": 5
+    },
+    "banded_cholesky": {
+      "invalid_complete_grid": 120,
+      "failed": 200
+    }
+  },
+  "selected_valid_by_order": {
+    "2": {
+      "svd": {
+        "valid": 80,
+        "total": 80
+      },
+      "eigh": {
+        "valid": 80,
+        "total": 80
+      },
+      "banded_cholesky": {
+        "valid": 0,
+        "total": 80
+      }
+    },
+    "3": {
+      "svd": {
+        "valid": 80,
+        "total": 80
+      },
+      "eigh": {
+        "valid": 80,
+        "total": 80
+      },
+      "banded_cholesky": {
+        "valid": 0,
+        "total": 80
+      }
+    },
+    "5": {
+      "svd": {
+        "valid": 80,
+        "total": 80
+      },
+      "eigh": {
+        "valid": 55,
+        "total": 80
+      },
+      "banded_cholesky": {
+        "valid": 0,
+        "total": 80
+      }
+    },
+    "6": {
+      "svd": {
+        "valid": 80,
+        "total": 80
+      },
+      "eigh": {
+        "valid": 37,
+        "total": 80
+      },
+      "banded_cholesky": {
+        "valid": 0,
+        "total": 80
+      }
+    }
+  },
+  "eigh_svd_complete_paired_cases": 252,
+  "eigh_over_svd_warm_time_median_ratio": 1.0615584740061967,
+  "eigh_svd_max_selected_s_absolute_gap": 9.999778782798785e-13,
+  "eigh_svd_max_selected_rmse_absolute_gap": 1.4097425440895428e-07,
+  "limitations": [
+    "One seed per shape/noise cell: no independent-seed confidence intervals.",
+    "Reported paired times are descriptive host-specific medians.",
+    "Banded Cholesky had no fully valid selection grid in this pilot.",
+    "Complete grid includes extreme S near 1 and analytic endpoints.",
+    "Do not infer algorithmic universal optimum or forecasting accuracy.",
+    "Endpoint fitting error is against an analytic, not 85-digit independent, reference."
+  ]
+}

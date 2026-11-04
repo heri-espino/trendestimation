@@ -2,7 +2,8 @@
 #   python -m pip install -e .
 # Pin an immutable commit so published plots can be reproduced across machines.
 # Source: https://github.com/awesomefigures/awesomefigures
-awesomefigures @ git+https://github.com/awesomefigures/awesomefigures.git@54c8bf2374551fa39428f47f69580b4822d4b938
+awesomefigures @ git+https://github.com/awesomefigures/awesomefigures.git@a9760351c1f72ccf7a1a2ef2ff14136d6e280d88
+pypdf>=4  # exact TeX PDF typography and physical-width audits
 statsmodels>=0.14
 pandas>=2.0
 threadpoolctl>=3.0

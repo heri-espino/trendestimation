@@ -29,10 +29,8 @@ def test_external_fit_plus_exact_banded_diagnostics(method,d,criterion):
     spectral=TrendSmoother(n,d)
     expected=score_lambda(spectral,y,lambda_=lam,
                           criterion=criterion,mu=mu)
-    if criterion=="mle":
-        # Stable positive spectrum, not determinant of ill-conditioned
-        # D D.T when d=6.
-        expected+=2.*float(np.log(spectral._singular_values).sum())
+    # The corrected hybrid MLE objective shares the spectral
+    # normalization; no extra difference-Gram constant is permitted.
     np.testing.assert_allclose(actual,expected,rtol=1e-5,atol=1e-5)
 
 

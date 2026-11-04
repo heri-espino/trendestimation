@@ -1,0 +1,192 @@
+name: CSDA computational theory — deterministic verification and Elsevier CAS PDF
+
+on:
+  push:
+    branches:
+      - paper/csda-computational-theory
+    paths:
+      - ".github/workflows/csda-computational-theory.yml"
+      - "paper/csda-computational-costs/main.tex"
+      - "paper/csda-computational-costs/README.md"
+      - "paper/csda-computational-costs/THEORY_HANDOFF.md"
+      - "paper/csda-computational-costs/SOURCE_AUDIT.md"
+      - "paper/csda-computational-costs/sections/**"
+      - "paper/csda-computational-costs/verify_theory.py"
+      - "paper/csda-computational-costs/render_theory_figures.py"
+      - "paper/csda-computational-costs/publication_style.py"
+      - "paper/csda-computational-costs/data/**"
+      - "paper/ngsim-jerk-case-study/data/**"
+      - "paper/ngsim-jerk-case-study/results/selection_rows.json"
+      - "paper/ngsim-jerk-case-study/run_case.py"
+      - "paper/csda-computational-costs/references.bib"
+      - "paper/csda-computational-costs/figures/coordinate_map.pdf"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csda-computational-theory-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check theory algebra without benchmarking
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install numpy scipy
+          python paper/csda-computational-costs/verify_theory.py
+          ! grep -q 'input{sections/benchmarks}' paper/csda-computational-costs/main.tex
+          ! grep -q 'input{sections/results}' paper/csda-computational-costs/main.tex
+          ! grep -q 'input{sections/experiment006_status}' paper/csda-computational-costs/main.tex
+          test -s paper/csda-computational-costs/figures/coordinate_map.pdf
+          test -s paper/csda-computational-costs/data/experiment010_matched_three_methods.csv
+      - name: Install Elsevier CAS compatible TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+      - name: Copy exact repository Elsevier CAS template
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/csda-computational-costs/$f"
+          done
+      - name: Install pinned AwesomeFigures and the existing trendestimation library
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python -m pip install -r paper/requirements.txt
+          python - <<'PY'
+          import awesomefigures as af
+          print("Pinned AwesomeFigures version:",getattr(af,"__version__","unknown"))
+          assert callable(af.inspect_latex) and callable(af.latex_style)
+          PY
+      - name: Render analytical and real-data figures using AwesomeFigures
+        shell: bash
+        run: |
+          set -euo pipefail
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-computational-costs/render_theory_figures.py
+          for f in theory_regime_map theory_cost_curves matched_bic_timings ngsim_jerk_application; do
+            for ext in pdf pgf svg; do
+              test -s "paper/csda-computational-costs/figures/$f.$ext"
+            done
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("paper/csda-computational-costs")
+          m=json.loads((p/"theory_awesomefigures_manifest.json").read_text())
+          f=json.loads((p/"theory_figure_sources.json").read_text())
+          assert len(m["figures"]) == 4
+          assert all(x["layout"]=="text" for x in m["figures"])
+          assert all(x["smallest_text_pt"] >= 7. for x in m["figures"])
+          assert f["benchmark_records"]==48 and f["benchmark_workers"]==1
+          assert f["application"]["mu_policy"]=="data" 
+          assert f["application"]["d"]==3
+          assert not f["application"]["is_intrinsic_PLS_forecast"]
+          assert not f["application"]["ground_truth_jerk_available"]
+          print("Verified 4 TeX-vector families, 48 frozen timing rows, NGSIM attribution.")
+          PY
+      - name: Build theoretical article and audit cross references
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/csda-computational-costs
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | head -18
+          if grep -Eq 'Citation .* undefined|There were undefined references' main.log; then
+            echo 'Undefined bibliography or cross-reference in final LaTeX log'
+            exit 1
+          fi
+          sha256sum main.tex references.bib README.md THEORY_HANDOFF.md \
+            SOURCE_AUDIT.md sections/foundations.tex \
+            sections/algorithms.tex sections/structured_criteria.tex \
+            sections/amortized_frontier.tex sections/decision_examples.tex \
+            sections/theory_discussion.tex verify_theory.py render_theory_figures.py \
+            publication_style.py data/experiment010_matched_three_methods.csv \
+            figures/coordinate_map.pdf figures/theory_regime_map.pdf \
+            figures/theory_cost_curves.pdf figures/matched_bic_timings.pdf \
+            figures/ngsim_jerk_application.pdf theory_awesomefigures_manifest.json \
+            theory_figure_sources.json \
+            ../ngsim-jerk-case-study/data/ngsim_us101_selected_raw_positions.csv \
+            ../ngsim-jerk-case-study/data/provenance.json \
+            ../ngsim-jerk-case-study/results/selection_rows.json main.pdf \
+            > theory_publication_sha256.txt
+          git rev-parse HEAD > theory_source_commit.txt
+      - name: Preserve PDF and provenance on dedicated paper branch
+        if: success() && github.ref == 'refs/heads/paper/csda-computational-theory'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f paper/csda-computational-costs/main.pdf \
+            paper/csda-computational-costs/theory_publication_sha256.txt \
+            paper/csda-computational-costs/theory_source_commit.txt \
+            paper/csda-computational-costs/theory_awesomefigures_manifest.json \
+            paper/csda-computational-costs/theory_figure_sources.json
+          for name in theory_regime_map theory_cost_curves matched_bic_timings ngsim_jerk_application; do
+            git add -f "paper/csda-computational-costs/figures/$name.pdf" \
+              "paper/csda-computational-costs/figures/$name.pgf" \
+              "paper/csda-computational-costs/figures/$name.svg"
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'paper: archive verified theoretical CSDA PDF [skip ci]'
+            git fetch origin "$GITHUB_REF_NAME"
+            if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+              echo 'Branch changed during build; refuse to overwrite newer work'
+              exit 1
+            fi
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+      - name: Upload compiled theoretical paper and full editable source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-computational-theory-${{ github.run_id }}
+          path: |
+            paper/csda-computational-costs/main.pdf
+            paper/csda-computational-costs/main.tex
+            paper/csda-computational-costs/README.md
+            paper/csda-computational-costs/THEORY_HANDOFF.md
+            paper/csda-computational-costs/SOURCE_AUDIT.md
+            paper/csda-computational-costs/sections/foundations.tex
+            paper/csda-computational-costs/sections/algorithms.tex
+            paper/csda-computational-costs/sections/structured_criteria.tex
+            paper/csda-computational-costs/sections/amortized_frontier.tex
+            paper/csda-computational-costs/sections/decision_examples.tex
+            paper/csda-computational-costs/sections/theory_discussion.tex
+            paper/csda-computational-costs/verify_theory.py
+            paper/csda-computational-costs/render_theory_figures.py
+            paper/csda-computational-costs/publication_style.py
+            paper/csda-computational-costs/data/
+            paper/csda-computational-costs/references.bib
+            paper/csda-computational-costs/figures/coordinate_map.pdf
+            paper/csda-computational-costs/figures/theory_regime_map.*
+            paper/csda-computational-costs/figures/theory_cost_curves.*
+            paper/csda-computational-costs/figures/matched_bic_timings.*
+            paper/csda-computational-costs/figures/ngsim_jerk_application.*
+            paper/csda-computational-costs/theory_awesomefigures_manifest.json
+            paper/csda-computational-costs/theory_figure_sources.json
+            paper/csda-computational-costs/theory_publication_sha256.txt
+            paper/csda-computational-costs/theory_source_commit.txt
+          if-no-files-found: warn
+          retention-days: 30

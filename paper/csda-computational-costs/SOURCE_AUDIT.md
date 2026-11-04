@@ -1,3 +1,45 @@
+## Current source audit: theory with two bounded illustrations
+
+This revision has four additional AwesomeFigures vector plots:
+`theory_regime_map`, `theory_cost_curves`,
+`matched_bic_timings` and `ngsim_jerk_application`.
+The first two use explicitly stated unit-coefficient arithmetic
+work models, **not measured seconds or fitted crossover surfaces**.
+The third is computed from the verbatim matched single-worker
+Experiment010 CSV in this directory's `data/` subfolder.
+The fourth reuses original FHWA US-101 vehicle positions and
+GCV-selected training-only parameters from the separate
+`paper/ngsim-jerk-case-study` project, without synthetic or
+future-informed fitting. Forecast continuation is distinct
+from PLS trend estimation; no measured physical jerk truth is claimed.
+The citations to FHWA and van Breugel et al. were added to
+`references.bib`. The original historical timing CSVs and
+AwesomeFigures files remain unmodified and tracked.
+
+**The single-worker 48-row pilot is an illustration**, not
+an empirical proof of a universal crossover, nor a substitute for
+the distinct Springer implementation paper. Source archive:
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`
+(commit `8d8ac0aff0e585343b37865bdbb9b47bbc7d730d`).
+See `THEORY_HANDOFF.md` for the full reproducible contracts.
+
+# Current evidence status (November 2026)
+
+The theoretical Paper B at `paper/csda-computational-costs/main.tex`
+has **no runtime-based theorem claims**. Its proofs and deterministic
+algebraic checks are in `sections/amortized_frontier.tex` and
+`verify_theory.py`. This audit's historical timing sources remain
+preserved for the separate implementation/runtime paper.
+
+The user's newer single-worker `experiment010` three-method run
+is on the immutable result branch
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`.
+It contains 48 valid timing rows but is not an empirical claim
+of this theoretical article. Exact provenance and summary values are
+in `THEORY_HANDOFF.md`.
+
+---
+
 # Computational-cost companion — archived evidence audit
 
 This manuscript is a **separate companion** to

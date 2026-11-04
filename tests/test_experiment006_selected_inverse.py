@@ -53,13 +53,8 @@ def test_selected_inverse_classical_scores_agree_with_spectral(d,criterion,mu):
         result=structured.fit_stats(y,lam,mu,criterion)
         expected=score_lambda(
             spectral,y,lambda_=lam,criterion=criterion,mu=mu)
-        if criterion=="mle":
-            # Independent dual determinant omits lambda-invariant
-            # log det(D D.T); this is an additive constant only.
-            D=difference_matrix(n,d)
-            sign,logdet=np.linalg.slogdet(D@D.T)
-            assert sign>0
-            expected+=logdet
+        # All criteria, including finite-lambda MLE and exact S=1,
+        # must use a single shared score normalization.
         np.testing.assert_allclose(
             result["score"],expected,rtol=3e-6,atol=3e-6)
 

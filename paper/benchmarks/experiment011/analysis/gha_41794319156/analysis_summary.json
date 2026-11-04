@@ -1,0 +1,23 @@
+{
+  "actual_rows": 24,
+  "aggregated_cells": 24,
+  "block_count": 1,
+  "case_count": 1,
+  "cells_with_3_or_more_complete_blocks": 0,
+  "experiment": "experiment011",
+  "hosts": [
+    "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+  ],
+  "kind": "measured_sparse_tensor_not_full_factorial",
+  "matched_naive_pairs": 16,
+  "note": "The 252000-cell factorial is an independent PLAN index. These rows are only genuinely measured cells. No RMSE is computed; theory Big-O entries are NOT seconds. One smoke block gives no block-bootstrap interval. A naive baseline speedup exists only when the naive pipeline completed on the same independent block.",
+  "requested_run_tag": "gha_41794319156",
+  "source_file_hashes": [
+    "cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89"
+  ],
+  "source_run_directory": "paper/benchmarks/experiment011/runs",
+  "status_counts": {
+    "ok": 24
+  },
+  "success_rows": 24
+}

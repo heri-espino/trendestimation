@@ -1,5 +1,92 @@
 # AGENTS.md — trendestimation research repository
 
+**Integration status (2026-11-04):** the author authorized merging the open research PRs.
+Read [cleanup audit](paper/REPOSITORY_CLEANUP.md) and the current session handoff.
+Use `origin/main` after integration; older “open/unmerged” statements below
+are historical. Experiment011 remains 29 cases; Windows measurements are pending.
+
+
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](paper/SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
+## Current author decision — focused Experiment011 (November 4, 2026)
+
+Keep the original 21-case Experiment011 protocol and add only targeted
+CV/GCV comparisons at **d=4** for **n=256, 1024, 2048, 4096**:
+two pilot cases at n=256 and six confirm-stage cases at larger n,
+**29 cases in total**. The n1024 confirm cells explicitly permit
+a 750-million-work-unit cap so SVD can be compared with banded Cholesky
+on the full M=100, R=3 grid; n2048/4096 use the feasible banded
+backend only. All larger cases require the existing opt-in
+`--allow-confirm`. No older run, criterion, or historical result
+is overwritten.
+
+An **optional throughput-only** `campaign.py parallel-series`
+mode runs independent small series (n<=256, M<=1000) in spawned
+processes, up to 32 workers, each with one BLAS thread. It writes
+`runs_parallel/` with per-series checkpoints and real wall times.
+It deliberately **does not replace** the serial shared-cache
+single/multiple-series latency benchmark. The author's 32 logical
+processors are a capacity ceiling, not proof that 32 workers
+will run faster than 8 or 16. The old 252,000-cell factorial is
+retained only as an archival index, **not** a new study mandate.
+
+
+The current author-approved Springer timing study is the focused 29-case Experiment011 design. The historical 252,000-cell Experiment008 planned factorial is retained for provenance but is **not** a requested execution schedule. `paper/benchmarks/experiment011/full_plan.py` reuses the existing Experiment008 planner to index all n,d,mu,amplitude,criteria, 10 methods, four workloads and grid densities, including explicit memory/work skips. The full index does NOT contain observed times. Experiment011 `cases.json` is the author-approved targeted experiment, avoiding rerunning expensive old samples; the end dataset is long-form raw timing plus eligibility/status masks, paired naive speedups, mean/median and independent-block uncertainty. Direct-S and mapped-lambda compare mapping strategies over the same S values, not separately optimized continuous objectives. No RMSE. Preserve all original Experiment008–010 rows and do not trigger 252,000 full runs without explicit review.
+
+
+
+
+## Publication map and Springer experiment011 agent routing (2026-11-03)
+
+**First read** `paper/PUBLICATION_MAP.md`, `paper/AGENTS.md`,
+`paper/SPRINGER_AGENT_BRIEF.md` and
+`paper/SPRINGER_READINESS.md` before touching any manuscript,
+paper figure or benchmark. The canonical Springer *Computational
+Statistics* source is `paper/main.tex`; it is **not** the
+historical `paper/computational-statistics-submission/` SN
+Computer Science paper, the two Elsevier CSDA drafts, or the
+separate FHWA NGSIM jerk/forecast application.
+CSDA A owns numerical precision, CSDA B owns the theory of
+complexity, Springer owns measured complete-criterion implementation
+and criterion-specific crossover, and NGSIM owns physical
+third-difference applications.
+
+New `paper/benchmarks/experiment011/` is a **prepared,
+bounded** 29-case design (2 smoke, 15 pilot, 12 confirm) that calls the existing reviewed
+Experiment006 complete-criterion runner without pulling in the
+open nested Experiment010 research PR stack. It has explicit
+smoke/pilot/confirm gates, independent blocks with rotated
+method ordering, source/hardware provenance and float64
+selected-S/score QA; do not claim its plan is measured
+data. A successful hosted smoke is not Windows benchmark
+evidence. Never run the full factorial automatically.
+Future agents must work on separate branches and scopes,
+push all actual raw results with QA, and update the readiness
+ledger. Never merge without explicit authorization.
+
+## Paper B reproducibility revision (November 2026)
+
+Open PR #109 targets the theory-first CAS article
+`paper/csda-computational-costs/main.tex`. Read its new
+`sections/decision_examples.tex`, `THEORY_HANDOFF.md`,
+`SOURCE_AUDIT.md`, frozen `data/` CSV, and
+`render_theory_figures.py` before changing figures or
+theory claims. The four new plot sets include two theoretical
+unit-coefficient **work counts** (never claim machine time),
+one controlled isolated 48-row n64/d1/BIC timing illustration,
+and one real NGSIM jerk-proxy vehicle-position training/heldout
+illustration (d3 training-only mean, GCV S=.4; separately appended
+local polynomial forecast). The large theoretical picture is
+**criterion-dependent**: dense spectral SVD can amortize scalar
+scores on many S candidates, but exact CV can favor banded
+Cholesky with selected inversion for large n and small d.
+Do not conclude a universal optimal method, mix runtimes from
+different contention, rerun archived full grids unnecessarily,
+or publish an implied PLS-native forecast. Preserve
+the third NGSIM paper's original FHWA attribution/CC BY-SA
+3.0 source. Do not merge concurrent branches without consent.
+
+
 Read README.md, this file, paper/benchmarks/README.md,
 paper/benchmarks/experiment005/README.md, source modules, and tests
 before editing. Existing numerical decisions and archived results are
@@ -150,3 +237,181 @@ targeted tests. Modern scikit-sparse requires cho_factor(csc_array(A))
 followed by .solve(rhs); keep old Factor.solve_A() compatibility.
 Never substitute SuperLU silently; keep large-run score/timing claims
 separate from single-fit validation.
+
+
+## Paper B theoretical CSDA manuscript (November 2026)
+
+The active dedicated branch is paper/csda-computational-theory.
+Read paper/csda-computational-costs/THEORY_HANDOFF.md before editing.
+Paper B is mathematical computational complexity, NOT an end-to-end
+Windows timing-paper claim. Current main.tex includes foundations,
+algorithms, structured_criteria, amortized_frontier and
+theory_discussion only. All prior empirical sections, historical CSVs,
+AwesomeFigures and result branches are retained but excluded from the
+theory article. The analytical identity
+logdet(C_lambda)=logdet(A_lambda)-(n-d)log(lambda)-logdet(D_d D_d.T)
+and its quadratic objective equality are verified on deterministic
+small cases by paper/csda-computational-costs/verify_theory.py.
+A new .github/workflows/csda-computational-theory.yml compiles the
+exact Elsevier CAS class, without rerunning computational benchmarks.
+Do not introduce a runtime ranking from mixed-concurrency evidence.
+The new matched one-worker Experiment010 n64/d1/BIC run is archived
+in the user's results/...20261103T222938857Z-shard0-offset20 branch;
+use it for the SEPARATE Springer implementation paper. Keep theory
+claims qualified against Weinert 2007, Biessy 2026 and
+Erisman--Tinney 1975; do not claim algorithmic novelty for their work.
+Do not merge a Paper B PR without explicit authorization.
+
+## Historical Experiment010 runner handoff (not the active Experiment011 schedule)
+
+## Experiment010 — multi-backend feasible runtime frontier (draft research plan)
+
+Read paper/benchmarks/experiment010/README.md before new computational
+benchmark work. Compare all ten complete-criterion Experiment006/008
+pipelines, separately identifying composite guarded policy versus actual
+solver, across mu=0, observed-difference mu='data', and fixed nonzero
+mu=c. Use *identical S candidate grids*, including analytic S=1, for
+both direct-S and once-pretranslated lambda policies. Include every
+mapping, factorization, diagnostic and cache cost. Fit-only timing is
+not an honest complete criterion comparison. Rank only memory-feasible,
+installed, numerically certified pipelines; record failures and retry
+an independently validated next-best method. Validate machine-specific
+theoretical cost rankings on held-out empirically measured boundary cases.
+This is a design protocol, NOT an implemented dispatcher or completed
+Experiment010 benchmark. Do not change the library's default policy.
+
+
+### Experiment010 mathematical scoring audit after first Windows run
+
+First university VM run #41586066141 succeeded (smoke and pilot), yielding
+420 + 720 measured status=ok timing rows. The pilot's 104 selected-score
+disagreements included 100 for n64,d5,mu='data',MLE and 4 for n64,d6,
+mu=0.15,CV. Read notes/experiment010_mle_normalization_audit.md BEFORE
+ranking MLE methods. The old banded/hybrid/naive experimental MLE finite
+lambda scores omitted logdet(D_d D_d.T), unlike spectral MLE and the exact
+S=1 endpoint. Corrected on PR #100 using an O(d) analytic log-gamma
+formula; keep original immutable result branches as PRE-correction evidence.
+Use fresh measurements/tests and high-precision accuracy certificates
+before claiming reliable winners or updating the CSDA manuscript.
+
+
+## Experiment010 full-grid execution (2026-11-03)
+
+Current independent branch research/experiment010-comprehensive-grid
+is based on draft PR #100; it does NOT change PR #100 and must NOT be
+merged without authorization. Read paper/benchmarks/experiment010/
+COMPREHENSIVE_GRID.md. The 403200-cell feasibility DESIGN is archived
+at results/experiment010-41647428485-a1-comprehensive-plan.
+The first bounded actual measurement action #41647428485 runs
+shards 0..3 of 16, each with at most 40 method-case attempts;
+completion and results must be verified separately.
+Preserve correct source SHA, complete raw timing and failure
+logs, machine fingerprint and independent numerical certificates.
+Resource-ineligible-all-workloads is an explicit status, never
+a measured zero-second winner. A complete manifest does not
+mean that the full feasible experiment has run.
+The user declined further cost-prediction and fallback-regret
+research for the current manuscript. Scope = accuracy and
+measured time of ten existing complete-criterion pipelines.
+
+
+## Experiment010 uncapped manual VM protocol (2026-11-03)
+
+The user requested reruns WITHOUT artificial per-method runtime
+timeouts or estimated-work exclusions. Source branch:
+research/experiment010-uncapped-checkpointed (draft PR #103
+stacked on PR #101). Read
+paper/benchmarks/experiment010/UNCAPPED_LOCAL.md for the exact
+PowerShell worktree/conda commands and immutable result-archive
+script. The `--no-time-limit` option disables both per-method
+and whole-batch time thresholds and uses unlimited estimated-work
+budget. It does NOT bypass 2 GiB default dense-memory safety,
+any numerical criteria, or actual OS/VM interruption. A small
+`--max-method-attempts` is a checkpoint size, NOT a timeout.
+Preserve real per-row times, numerical failures, and stderr logs,
+including incomplete interrupted attempts. Never claim that
+local runs have executed unless the corresponding results branches
+exist and have been inspected.
+
+
+## Experiment010 VM parallel local work (2026-11-03)
+
+The user's 32-logical-processor Windows VM was bottlenecked by
+sequential method subprocesses. The independent branch
+research/experiment010-parallel-local (draft PR #104 stacked on
+#103) adds `paper/benchmarks/experiment010/run_parallel.py` and
+`-Workers 8` in `run_uncapped_local.ps1`. Follow
+`paper/benchmarks/experiment010/PARALLEL_LOCAL.md` precisely.
+Each method runs in its own process at one BLAS thread. The main
+process is the sole atomic method-ledger writer and records all
+numerical failures, timeout absence, resource exclusions, and
+separate logs; final raw outputs are committed and pushed to a
+unique branch. Eight workers is a conservative start; 32 logical
+processors does not imply 32 safe concurrent processes. The default
+RAM reservation is 2 GiB x 8 workers = 16 GiB; this is a scheduling
+budget, not actual operating-system memory enforcement. Parallel
+elapsed times involve CPU/resource contention and must not be
+pooled as isolated serial latencies. Do not overwrite running
+serial shard0 offset10 outputs or run duplicate case IDs.
+Do not merge this stacked draft PR without authorization.
+
+
+## Experiment010: Windows locked-CSV checkpoint and parallel safety
+
+The manually completed shard0 offset10 batch archived all 10
+method subprocess outputs despite final `PermissionError
+[WinError 5]` replacing `method_attempts.tmp` to CSV. Archive:
+results/experiment010-uncapped-PCAG103A-08-20261103T155726693Z-shard0-offset10.
+It lacks batch_summary.json; both archived ledgers show all ten
+completed subprocesses, with 0 valid rows for optional CHOLMOD.
+The next correct shard0 cursor is **20**; never rerun offset10.
+Source branch research/experiment010-parallel-local now retries
+transient Windows locked-ledger replacement with backoff, preserves
+unique recovery CSV if replacement remains denied, and adds
+regression tests simulating this error. The parallel batch summary
+identifies the effective ledger path. Read PARALLEL_LOCAL.md before
+running. Keep source and archives distinct; do not merge.
+
+
+## Experiment010 focused three-method large campaign (2026-11-03)
+
+The user explicitly requests `naive_inverse`, `spectral_svd`,
+`sparse_cholesky_banded_trace` ONLY for the upcoming large numerical
+experiment. Read `paper/benchmarks/experiment010/FOCUSED_THREE.md`.
+The 8-worker uncapped parallel n64/d1/BIC/high-amplitude/
+mu=data/M100000 result batch at shard0 offset20 finished and is
+archived at
+results/experiment010-uncapped-PCAG103A-08-20261103T165925192Z-shard0-offset20.
+It measured 144 valid score-parity-only rows; eight setup failure
+rows belong to optional CHOLMOD (sparse Cholesky has no valid
+numeric timing). Workload wall time was 1109.3s, with strong
+parallel resource contention. No independent 85-digit accuracy
+certificate is established. Next original ten-method shard0
+cursor is **30**; do not repeat offsets 20–29.
+
+The new independent research/experiment010-focused-three branch
+keeps all ten methods and historical results intact but selects
+only the requested three at launch. Nonselected full-design
+positions get explicit `method_not_selected` ledger/manifest status.
+Missing CHOLMOD is preflight `dependency_unavailable`, not a
+zero-second success. The original ten-method shard cursor is
+unchanged for conflict-free resumption. Dense naive/SVD also remain
+RAM-infeasible at very large n. DO NOT merge other agent branches
+or claim a genuine three-method comparison where one is missing.
+
+
+## Experiment010 scikit-sparse 0.5 compatibility (2026-11-03)
+
+The Windows Conda optional `scikit-sparse` install now imports,
+but a user-supplied legacy `cholesky(A)(b)` smoke command fails
+with `TypeError: 'tuple' object is not callable` due to
+scikit-sparse 0.5's revised API. Correct public call:
+`cho_factor(csc_array(A)).solve(b)`. Branch
+research/experiment010-cholmod-v05-compat (stacked on #105)
+explicitly uses SciPy CSC arrays for modern CHOLMOD while
+preserving old 0.4 `Factor.solve_A`; a functional tiny PLS parity
+preflight prevents unverified long benchmark attempts. Read
+paper/benchmarks/experiment010/FOCUSED_THREE.md.
+Do not claim the actual Windows installed build passed the solver
+tests until its real VM output is archived. Never rerun previously
+archived naive/SVD results just because optional CHOLMOD was installed.

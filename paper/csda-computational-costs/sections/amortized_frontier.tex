@@ -1,0 +1,384 @@
+\section{An amortized cost model for complete smoothing-criterion workflows}
+\label{sec:amortized}
+We now distinguish a single mathematical evaluation from a
+\emph{workload}. The former concerns the arithmetic complexity of
+solving a PLS problem at one fixed penalty; the latter concerns
+candidate searches over multiple independent series and multiple
+selection criteria. The distinction is crucial because the
+smoother matrix and the smoothness-to-penalty map are independent
+of the observed series for fixed $(n,d)$.
+
+\subsection{Workload definition and numerical admissibility}
+Fix sample length $n$, difference order $1\le d<n$, and write
+$r=n-d$. Let $\mathcal{S}=\{s_1,\ldots,s_M\}\subset(0,1)$
+be a specified set of $M$ \emph{distinct} interior normalized
+smoothness levels, and let $y^{(1)},\ldots,y^{(R)}\in\R^n$
+be $R$ observed series. A set $\mathcal C$ of statistical
+criteria is evaluated on identical penalties
+$\lambda_j=\Lambda_{n,d}(s_j)$.
+The criterion label $C$ is allowed to be a singleton
+(e.g., CV or GCV) or a set of criteria, so
+$c=|\mathcal C|$ need not equal one. Define
+\begin{equation}\label{eq:theory_cost_function}
+\begin{aligned}
+T_{\mathcal A}
+={}&T_{\rm setup}+T_{\rm map}+T_{\rm factors}\\
+&+T_{\rm series}+T_{\rm scores}+T_{\rm overhead}.
+\end{aligned}
+\end{equation}
+Here $\mathcal A$ denotes the complete numerical pipeline,
+$\varepsilon$ its requested accuracy tolerances, and $\theta$
+the implementation and machine constants. A value of
+$T_{\mathcal A}$ is an \emph{execution time}; an asymptotic bound
+on its arithmetic work is not an observed number of
+milliseconds. We use a single-threaded exact-arithmetic
+cost model for proofs, with floating-point admissibility
+checked separately.
+
+A pipeline is \emph{admissible} on a prescribed workload only
+if every required score is defined, its numerical checks pass,
+and its working memory fits the available budget. A small
+runtime on a failed or truncated search does not define a
+valid winner. This constraint makes the theoretical
+frontier a conditional statement rather than a universal
+solver ranking.
+
+\subsection{Proposition: reuse of a smoothness grid}
+\noindent\textbf{Proposition 1 (data-independent penalty grid).}
+For fixed $(n,d)$, the inverse image
+$\{\Lambda_{n,d}(s_j)\}_{j=1}^M$ is the same for every
+observed series, every fixed numerical difference mean,
+and every criterion in $\mathcal C$.
+
+\noindent\emph{Proof.}
+Equation~\eqref{eq:S} depends only on the nonzero
+eigenvalues of $D_d^\top D_d$. For each finite
+$\lambda\ge0$, its derivative is
+\[
+S_d'(\lambda)=\frac1r\sum_{j=1}^r
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.
+\]
+Thus each $s_j\in(0,1)$ has a unique inverse
+$\lambda_j$ that is independent of $y$, $\mu$ and
+the criterion score. Calculating the inverse twice
+for the same $(n,d,s_j)$ cannot change the
+mathematical candidate. \hfill$\square$
+
+The proposition does \emph{not} imply that an independently
+spaced grid in $\log\lambda$ has the same candidates.
+It also does not imply that continuous local optimizers
+in $s$ and $\log\lambda$ traverse the same numerical path.
+
+\subsection{Proposition: complete criteria from banded information}
+\noindent\textbf{Proposition 2 (banded sufficiency).}
+At fixed finite $\lambda>0$ and fixed numeric $\mu$,
+an SPD banded Cholesky factorization of
+$A_\lambda=I+\lambda D_d^\top D_d$, together with
+the selected inverse on its sparsity band, suffices
+to evaluate the fitted curve, conditional CV/GCV/AICc/residual BIC, and
+profiled Gaussian marginal likelihood,
+without forming a dense $n\times n$ inverse.
+
+\noindent\emph{Proof.}
+The direct normal equations are
+\begin{equation}\label{eq:theory_rhs}
+A_\lambda\widehat\tau_\lambda
+=y+\lambda\mu D_d^\top\mathbf1.
+\end{equation}
+One banded triangular solve gives $\widehat\tau$.
+A backward selected-inverse recursion
+(Section~\ref{sec:structured}) gives
+$h_i=(A_\lambda^{-1})_{ii}$, and hence
+$\nu=\sum_i h_i$. Residuals $e=y-\widehat\tau$
+and $\mathrm{RSS}=e^\top e$ then determine
+CV, GCV, AICc and residual BIC through
+Eqs.~\eqref{eq:cv_gcv}--\eqref{eq:information}.
+
+For the Gaussian reduced-coordinate likelihood,
+choose $p_\mu$ with $D_dp_\mu=\mu\mathbf1$, and put
+$z=y-p_\mu$. Let $w_j=\lambda\delta_j/(1+\lambda\delta_j)$.
+Then
+\begin{equation}\label{eq:theory_profile_quad}
+\begin{aligned}
+J_\lambda
+&:=\sum_{j=1}^r w_j(v_j^\top z)^2\\
+&=z^\top(I-H_\lambda)z\\
+&=\|y-\widehat\tau_\lambda\|^2\\
+&\quad+\lambda\|D_d\widehat\tau_\lambda-\mu\mathbf1\|^2.
+\end{aligned}
+\end{equation}
+The final equality follows by substituting the
+normal-equation minimizer in the strictly convex
+penalized objective. Thus $J_\lambda$ is available
+from the fitted curve and a banded difference pass;
+there is no need to construct the potentially
+ill-scaled polynomial $p_\mu$.
+
+For $\lambda>0$, the marginal variance multipliers are
+$c_j=1+1/(\lambda\delta_j)$. Since the $r$ nonzero
+eigenvalues of $Q_d$ are the eigenvalues of
+$D_dD_d^\top$, the determinant identity is
+\begin{equation}\label{eq:theory_logdet}
+\begin{aligned}
+\sum_{j=1}^r\log c_j
+&=\sum_{j=1}^r\log(1+\lambda\delta_j)
+-r\log\lambda-\sum_{j=1}^r\log\delta_j\\
+&=\log\det A_\lambda-r\log\lambda
+-\log\det(D_dD_d^\top).
+\end{aligned}
+\end{equation}
+The first log determinant is the sum of twice the
+logarithms of the diagonal Cholesky entries
+of $A_\lambda$. The last determinant is independent
+of $\lambda$, $y$ and $\mu$ and can be prepared
+once using a banded factorization of
+$D_dD_d^\top$. Profiling the observational variance
+gives $\widehat\sigma^2_\varepsilon=J_\lambda/r$
+and a negative twice-log-likelihood, up to constants,
+\begin{equation}\label{eq:theory_mle}
+\begin{aligned}
+\mathcal L(\lambda)
+={}&r\log(J_\lambda/r)+\log\det A_\lambda\\
+&-r\log\lambda-\log\det(D_dD_d^\top).
+\end{aligned}
+\end{equation}
+Consequently all the stated quantities can be
+evaluated from banded information alone.
+\hfill$\square$
+
+The likelihood statement assumes the latent-difference
+Gaussian variance model of Eq.~\eqref{eq:gauss}.
+It is not ordinary residual least squares and is
+not joint likelihood optimization over $\mu$.
+For $\mu=\operatorname{mean}(D_dy)$ computed from the
+same series, the fixed-$\mu$ leverage formula is
+\emph{conditional}, not an exact leave-one-out
+refit of the plug-in estimator. At $\lambda=0$
+some selection formulas are undefined and the
+Gaussian prior limit is improper; $s=0$ and $s=1$
+must be treated by their own endpoint conventions.
+
+\subsection{Theorem: arithmetic and memory bounds}
+We assume a conventional full retained SVD of $D_d$,
+an SPD banded factor and Takahashi-type selected
+inversion, and fixed $d$-banded operations.
+Set $\chi_{\mathrm{CV}}=1$ when ordinary
+conditional CV belongs to $\mathcal C$ and zero
+otherwise. Let $I$ be a uniform upper bound on
+the number of function evaluations used to
+invert each interior $s_j$ to the required
+scalar tolerance.
+
+\noindent\textbf{Theorem 1 (amortized work).}
+With reusable full spectral preprocessing and a
+single shared smoothness-to-penalty map, the
+arithmetic work for $R$ series and $M$ candidates
+is bounded by
+\begin{equation}\label{eq:theory_spectral_bound}
+W_{\rm SVD}
+=O\bigl(nr^2+MIr+Rnr+MRcr
++\chi_{\rm CV}MRnr\bigr).
+\end{equation}
+Its retained dense-basis memory is $O(nr)$, in
+addition to $O(M+Rn)$ if all the observed
+series are held simultaneously.
+
+Using banded Cholesky and exact selected-inverse
+diagnostics, and evaluating $S_d(\lambda)$
+by banded trace calculations during root finding,
+the arithmetic work is bounded by
+\begin{equation}\label{eq:theory_banded_bound}
+W_{\rm band}
+=O\bigl(nd^2+MI\,nd^2+Mnd^2
++MRnd+MRcn\bigr).
+\end{equation}
+When the penalty grid has already been mapped,
+the $MI\,nd^2$ term is absent. A streamed
+implementation retains $O(nd+M+Rn)$ storage;
+retaining \emph{all} $M$ banded factors instead
+requires $O(Mnd)$ storage.
+
+\noindent\emph{Proof.}
+The reduced SVD has cost $O(nr^2)$ and
+stores $O(nr)$ entries. Each spectral
+smoothness evaluation is a sum of $r$
+scalars, so $M$ inversions of at most $I$
+evaluations cost $O(MIr)$. One projection
+per observed series requires $O(Rnr)$.
+Once projected, any of the $c$ scalar
+scores at each $(j,k)$ is $O(r)$.
+If CV is included, exact leverage and
+full residual reconstruction are bounded
+by $O(nr)$ per candidate and series,
+giving the additional CV term.
+This is a conservative bound; leverage
+vectors can be shared among the $R$
+series at each candidate.
+
+For the banded method, preparation of the
+banded difference-penalty matrix and the
+constant Gaussian determinant costs
+$O(nd^2)$. Every trace-based root-solver
+evaluation factors an SPD matrix and
+computes the needed selected inverse in
+$O(nd^2)$ operations. After mapping,
+factorization and selected inversion are
+done once per candidate in $O(Mnd^2)$,
+reused across all criteria and all
+observed series. For each candidate
+and series, two triangular solves,
+difference passes and quadratic summaries
+use $O(nd)$ arithmetic, followed by
+at most $O(cn)$ score formation.
+Processing one candidate at a time
+requires one banded factor and selected
+inverse; keeping all observations
+uses $O(Rn)$ additional storage.
+Caching all factors produces the
+stated $O(Mnd)$ alternative.
+\hfill$\square$
+
+These are upper bounds for explicit, fully specified
+implementation families. They do not prove
+a lower bound for every other possible algorithm;
+fast transforms for selected difference orders
+or alternative numerical approximations can
+produce different costs. Furthermore, a large
+root-iteration count $I$ can erase the benefit of
+banded factorization when the user insists on
+inverting an extremely fine $s$ grid.
+
+\subsection{Corollary: order-one difference spectra}
+\noindent\textbf{Corollary 1.}
+For the first-difference matrix with the
+ordinary finite-interval boundary convention,
+\begin{equation}\label{eq:theory_dct}
+\delta_j=2-2\cos(\pi j/n),\qquad j=1,\ldots,n-1.
+\end{equation}
+Thus the entire positive penalty spectrum
+is available in $O(n)$ arithmetic and
+storage without a dense SVD, and the
+$M$-point smoothness grid can be inverted
+in $O(MIn)$ arithmetic through direct
+spectral sums.
+
+\noindent\emph{Proof.}
+$D_1^\top D_1$ is the path-graph
+Laplacian with endpoint diagonal values
+one, interior diagonal values two, and
+adjacent off-diagonals $-1$. Its cosine
+eigenvectors have eigenvalues
+$2-2\cos(\pi j/n)$, $j=0,\ldots,n-1$.
+The zero eigenvalue corresponds to the
+constant vector. Summing the remaining
+$n-1$ eigenvalues in Eq.~\eqref{eq:S}
+takes $O(n)$ arithmetic per root evaluation.
+\hfill$\square$
+
+This special case is an established discrete-cosine
+identity, not a claimed new spectral algorithm.
+For general $d>1$, endpoint effects mean that
+the same elementary eigenvalue expression
+cannot simply be substituted.
+
+\subsection{When can a crossover exist?}
+\label{sec:crossover}
+A method crossover depends on the machine,
+statistical workload, numerical tolerance and
+actual pipeline implementation. To expose
+this dependence, write a local empirical
+calibration model for a \emph{fixed}
+$(n,d,R,\mathcal C,\varepsilon,\theta)$:
+\begin{equation}\label{eq:theory_affine_time}
+T_{\mathcal A}(M)=a_{\mathcal A}
++b_{\mathcal A}M+\rho_{\mathcal A}(M),
+\end{equation}
+where $a_{\mathcal A}\ge0$ is fixed preparation,
+$b_{\mathcal A}\ge0$ is per-candidate effective
+work at that workload, and
+$\rho_{\mathcal A}(M)$ records cache changes,
+allocation, nonlinear solver iterations
+and contention effects. This is a
+\emph{calibration ansatz}, not an
+exact equality implied by big-$O$.
+
+\noindent\textbf{Proposition 3 (conditional crossover).}
+If $\rho_{\rm SVD}=\rho_{\rm band}=0$
+over a declared workload interval,
+$a_{\rm SVD}>a_{\rm band}$ and
+$b_{\rm band}>b_{\rm SVD}$, then banded
+Cholesky is faster for
+$M<M_\star$, spectral SVD is faster for
+$M>M_\star$, and
+\begin{equation}\label{eq:theory_threshold}
+M_\star=
+\frac{a_{\rm SVD}-a_{\rm band}}
+{b_{\rm band}-b_{\rm SVD}}.
+\end{equation}
+If the sign conditions do not hold, no
+positive crossover of that direction
+follows from the affine model.
+
+\noindent\emph{Proof.}
+Subtract the two affine time functions:
+\[
+\begin{aligned}
+T_{\rm SVD}(M)-T_{\rm band}(M)
+&=(a_{\rm SVD}-a_{\rm band})\\
+&\quad-M(b_{\rm band}-b_{\rm SVD}).
+\end{aligned}
+\]
+Its unique zero is $M_\star>0$ under
+the stated inequalities, and its
+sign changes once at this point.
+\hfill$\square$
+
+The proposition does \emph{not} supply a
+universal observed threshold: constants
+must be calibrated on comparable,
+numerically admissible workloads.
+When ordinary CV is required, the
+$O(nr)$ spectral candidate work may
+change the signs. When multiple series
+share an already-mapped $s$ grid and
+reuse banded factors, the effective
+$b_{\rm band}$ can decrease. Consequently,
+a universal difference-order-only
+dispatcher is not justified by these
+complexity bounds.
+
+\subsection{Finite-memory frontier and candidate streaming}
+For an eight-byte floating-point type,
+one dense $n\times n$ matrix occupies
+$8n^2$ bytes before copies or solver
+workspaces. At $n=131\,072$ this is
+$128$ GiB, so an ordinary dense inverse
+can fail the memory budget before any
+statistical criterion is evaluated.
+Banded factorizations instead require
+$O(nd)$ storage for fixed $d$.
+An implementation may stream penalty
+candidates one at a time, updating the
+best valid criterion score per series
+and criterion, without retaining $M$
+full smoothing matrices.
+
+The total-time functional
+\eqref{eq:theory_cost_function} should
+therefore be minimized over the
+\emph{admissible set} of algorithms:
+\begin{equation}\label{eq:theory_frontier}
+\mathcal A^\star
+\in\arg\min_{\mathcal A\in\mathfrak A_{\rm valid}}
+T_{\mathcal A}(n,d,M,R,\mathcal C;\varepsilon,\theta).
+\end{equation}
+Here $\mathfrak A_{\rm valid}$ is
+workload-specific: statistical
+undefinedness, forward-error limits,
+numerical nonconvergence and the memory
+budget can remove a method from the
+comparison. The formula is a
+decision framework and not a claim
+that its minimizer has been
+empirically identified across the
+full design space.

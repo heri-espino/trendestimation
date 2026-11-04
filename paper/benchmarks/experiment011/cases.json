@@ -1,0 +1,539 @@
+{
+  "experiment": "experiment011",
+  "schema_version": 1,
+  "description": "Targeted 29-case complete-criterion latency campaign (21 original plus d=4 and n=1024/2048/4096 confirmation coverage); full factorial archive is background only.",
+  "parent_runner": "paper/benchmarks/experiment006/run.py",
+  "max_work": 500000000,
+  "max_dense_bytes": 2147483648,
+  "seed_base": 20261103,
+  "blas_threads": 1,
+  "analysis_caution": "n<=512 legacy mapping uses common SVD for all backends; setup includes shared mapper cost. Cold time is evaluator accounting, not an independently spawned fresh process. Paired blocks rotate method execution order.",
+  "cases": [
+    {
+      "id": "smoke_gcv_n64_d1_m100",
+      "stage": "smoke",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "low",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "series_count": 2,
+      "repeats_per_block": 1,
+      "planned_blocks": 1,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "smoke_cv_n64_d3_m100",
+      "stage": "smoke",
+      "n": 64,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "low",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 2,
+      "repeats_per_block": 1,
+      "planned_blocks": 1,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_gcv_n64_d1_m100",
+      "stage": "pilot",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_gcv_n64_d1_m1000",
+      "stage": "pilot",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 1000,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n64_d1_m100",
+      "stage": "pilot",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n64_d1_m1000",
+      "stage": "pilot",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 1000,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "naive_inverse"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_gcv_n128_d3_m100",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_gcv_n128_d3_m1000",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 1000,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n128_d3_m100",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n128_d3_m1000",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 1000,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_aicc_n256_d2_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 2,
+      "grid_denominator": 100,
+      "criterion": "aicc",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_mle_n256_d3_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "mle",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_data_gcv_n128_d3_m100",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "data",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": true
+    },
+    {
+      "id": "pilot_data_cv_n128_d3_m100",
+      "stage": "pilot",
+      "n": 128,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "data",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": true
+    },
+    {
+      "id": "pilot_hybrid_gcv_n64_d1_m100",
+      "stage": "pilot",
+      "n": 64,
+      "d": 1,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky",
+        "sparse_cholesky_banded_trace"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n64_d3_m10000",
+      "stage": "confirm",
+      "n": 64,
+      "d": 3,
+      "grid_denominator": 10000,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n128_d1_m10000",
+      "stage": "confirm",
+      "n": 128,
+      "d": 1,
+      "grid_denominator": 10000,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n256_d3_m1000",
+      "stage": "confirm",
+      "n": 256,
+      "d": 3,
+      "grid_denominator": 1000,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n256_d3_m1000",
+      "stage": "confirm",
+      "n": 256,
+      "d": 3,
+      "grid_denominator": 1000,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_mle_n512_d3_m100",
+      "stage": "confirm",
+      "n": 512,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "mle",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_data_cv_n256_d3_m100",
+      "stage": "confirm",
+      "n": 256,
+      "d": 3,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "data",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": true
+    },
+    {
+      "id": "pilot_gcv_n256_d4_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "pilot_cv_n256_d4_m100",
+      "stage": "pilot",
+      "n": 256,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n1024_d4_m100",
+      "stage": "confirm",
+      "n": 1024,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false,
+      "max_work": 750000000
+    },
+    {
+      "id": "confirm_cv_n1024_d4_m100",
+      "stage": "confirm",
+      "n": 1024,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "spectral_svd",
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false,
+      "max_work": 750000000
+    },
+    {
+      "id": "confirm_gcv_n2048_d4_m100",
+      "stage": "confirm",
+      "n": 2048,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n2048_d4_m100",
+      "stage": "confirm",
+      "n": 2048,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_gcv_n4096_d4_m100",
+      "stage": "confirm",
+      "n": 4096,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "gcv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    },
+    {
+      "id": "confirm_cv_n4096_d4_m100",
+      "stage": "confirm",
+      "n": 4096,
+      "d": 4,
+      "grid_denominator": 100,
+      "criterion": "cv",
+      "mu": "0",
+      "amplitude": "high",
+      "methods": [
+        "banded_cholesky"
+      ],
+      "series_count": 3,
+      "repeats_per_block": 2,
+      "planned_blocks": 3,
+      "conditional_data_mu": false
+    }
+  ]
+}

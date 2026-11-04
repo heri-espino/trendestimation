@@ -1,0 +1,109 @@
+name: Experiment005 paired accuracy-runtime report
+
+on:
+  push:
+    branches:
+      - experiment005/joint-accuracy-runtime
+    paths:
+      - .github/workflows/experiment005-report.yml
+      - paper/benchmarks/experiment005/analyze_joint.py
+  workflow_dispatch:
+
+concurrency:
+  group: experiment005-joint-report
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  summarize-and-plot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install AwesomeFigures and plotting dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install "numpy==2.3.5" "scipy==1.17.0" "matplotlib==3.10.7"
+          python -m pip install -r paper/requirements.txt
+          python - <<'PY'
+          import awesomefigures as af
+          assert hasattr(af,"set_style")
+          print("AwesomeFigures:",af.__version__)
+          PY
+      - name: Analyze original immutable matched pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          DATA="paper/benchmarks/experiment005/runs/pilot-hosted-40966276100"
+          OUT="paper/benchmarks/experiment005/analysis/report-hosted-$GITHUB_RUN_ID"
+          echo "EXPERIMENT005_REPORT=$OUT" >> "$GITHUB_ENV"
+          python paper/benchmarks/experiment005/analyze_joint.py \
+            --input "$DATA" --out "$OUT"
+          git rev-parse HEAD > "$OUT/input_commit.txt"
+          sha256sum paper/benchmarks/experiment005/analyze_joint.py \
+            paper/benchmarks/experiment005/run_joint.py \
+            "$DATA/summary.json" > "$OUT/source_sha256.txt"
+          python - "$OUT" <<'PY'
+          import json,sys,pathlib
+          p=pathlib.Path(sys.argv[1])
+          report=json.loads((p/"analysis.json").read_text())
+          assert report["raw_fit_count"]==3264
+          assert report["raw_selection_count"]==960
+          assert report["selection_counts"]["svd"]["valid"]==320
+          assert report["selection_counts"]["banded_cholesky"].get("valid",0)==0
+          assert report["eigh_svd_complete_paired_cases"]==252
+          assert 0.9<report["eigh_over_svd_warm_time_median_ratio"]<1.25
+          for stem in ("paired_fit_error_vs_time","complete_grid_validity",
+                       "paired_valid_selection_times"):
+              for ext in ("pdf","svg"):
+                  assert (p/"figures"/(stem+"."+ext)).stat().st_size>1000
+          print("Original run and three AwesomeFigures families verified")
+          PY
+      - name: Upload figures, findings and source checksums
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment005-joint-pilot-analysis
+          path: paper/benchmarks/experiment005/analysis/report-hosted-*/
+          if-no-files-found: warn
+      - name: Archive derived artifacts in the experiment branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --mixed "origin/$GITHUB_REF_NAME"
+          git add -f -- "$EXPERIMENT005_REPORT"
+          if git diff --cached --quiet; then
+            echo "Equivalent generated outputs already archived."
+          else
+            git commit -m "experiment005: archive verified joint accuracy-time report $GITHUB_RUN_ID [skip ci]"
+            local_commit="$(git rev-parse HEAD)"
+            if ! git push origin "HEAD:$GITHUB_REF_NAME"; then
+              # A concurrent repository writer can update the branch before
+              # the push response arrives. First check if ours landed.
+              git fetch origin "$GITHUB_REF_NAME"
+              if git merge-base --is-ancestor "$local_commit" "origin/$GITHUB_REF_NAME"; then
+                echo "Archive commit already present on remote."
+              else
+                # Never force-push. Rebase the generated working tree atop
+                # latest branch and retry exactly once without lost files.
+                git reset --mixed "origin/$GITHUB_REF_NAME"
+                git add -f -- "$EXPERIMENT005_REPORT"
+                if ! git diff --cached --quiet; then
+                  git commit -m "experiment005: archive verified joint report after concurrent update [skip ci]"
+                  git push origin "HEAD:$GITHUB_REF_NAME"
+                fi
+              fi
+            fi
+          fi

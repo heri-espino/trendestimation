@@ -1,6 +1,57 @@
 # trendestimation
 
+**Session continuation (2026-11-04): read [SESSION_HANDOFF.md](paper/SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
+
+## Current author decision — focused Experiment011 (November 4, 2026)
+
+Keep the original 21-case Experiment011 protocol and add only targeted
+CV/GCV comparisons at **d=4** for **n=256, 1024, 2048, 4096**:
+two pilot cases at n=256 and six confirm-stage cases at larger n,
+**29 cases in total**. The n1024 confirm cells explicitly permit
+a 750-million-work-unit cap so SVD can be compared with banded Cholesky
+on the full M=100, R=3 grid; n2048/4096 use the feasible banded
+backend only. All larger cases require the existing opt-in
+`--allow-confirm`. No older run, criterion, or historical result
+is overwritten.
+
+An **optional throughput-only** `campaign.py parallel-series`
+mode runs independent small series (n<=256, M<=1000) in spawned
+processes, up to 32 workers, each with one BLAS thread. It writes
+`runs_parallel/` with per-series checkpoints and real wall times.
+It deliberately **does not replace** the serial shared-cache
+single/multiple-series latency benchmark. The author's 32 logical
+processors are a capacity ceiling, not proof that 32 workers
+will run faster than 8 or 16. The old 252,000-cell factorial is
+retained only as an archival index, **not** a new study mandate.
+
+
 [![CI](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml/badge.svg)](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml)
+
+
+## Publication and active research workstreams
+
+Four distinct manuscripts are coordinated by
+[the authoritative publication map](paper/PUBLICATION_MAP.md):
+CSDA A (spectral and numerical reliability),
+CSDA B (mathematical computational complexity, open PR #109),
+Springer Computational Statistics
+([canonical manuscript](paper/main.tex): implemented algorithms and
+**measured complete-criterion runtime**), and a separate
+[real NGSIM jerk application](paper/ngsim-jerk-case-study/).
+
+Springer's staged follow-up is
+[Experiment011](paper/benchmarks/experiment011/README.md). Its
+[29 focused, predeclared test cases](paper/benchmarks/experiment011/cases.json),
+independent validator, one-block launcher, Windows instructions,
+agent assignments and release ledger are preserved in the repo.
+The hosted smoke is a software-validation check, not the user's
+Windows hardware evidence; the new multi-criterion VM study is
+still pending. Read
+[Springer agent instructions](paper/SPRINGER_AGENT_BRIEF.md) and
+[Springer readiness](paper/SPRINGER_READINESS.md) before making changes.
+Do not merge the open Experiment010 PR stack or duplicate the
+theoretical CSDA B contribution to obtain a Springer result.
+
 
 **Candidate v0.1.0a0** — a Python library for finite-difference penalized
 least-squares (PLS) trend estimation. Both distribution and import names are
@@ -23,6 +74,10 @@ The canonical project repository is [trendestimation/trendestimation](https://gi
   selection, EDF, and normalized smoothness continue to use spectral methods.
 - Reusable SVD-based solver, exact infinite-penalty limit, both smoothness
   indices (normalized and Guerrero's original), and conditional EDF.
+- Smoothness-first fitting with `fit_smoothness(y, smoothness=0.86, order=2)`
+  or `TrendSmoother.fit_smoothness(...)`, which hides the internal lambda
+  inversion without changing the classical PLS estimator. The existing
+  lambda API remains supported for compatibility.
 - Optional parameter search in either penalty **lambda** (existing default)
   or bounded, normalized **smoothness S in [0, 1]**. Classical CV supports
   analytical derivative refinement in both coordinates; other criteria
@@ -307,6 +362,10 @@ study-run directory. No source code or Marp presentation branch is changed.
 For details and safety restrictions, see
 [Publishing research outputs](docs/publishing-research-outputs.md).
 
+## Future projects (not part of the library API)
+
+- [Smoothness-integrated trend comparison](future_projects/smoothness_integrated_trend_comparison/README.md): a separate, exploratory two-column LaTeX research note on global and rolling Hilbert-space trend distances, fixed or nonzero difference drift, level/shape decomposition, and a proposed change-point extension. **Not yet implemented or validated.**
+
 ## Development
 
 ```bash
@@ -373,3 +432,17 @@ GCV selection in the recorded reference cases. Results and
 [executed charts](docs/notebooks/13-grid-search-repeated-solvers-orders.ipynb)
 are specific to a declared hosted-Linux environment; no universal
 ranking or faster uniform-S search is claimed.
+
+
+## Archived computational paper: completed bounded study
+
+The separate Elsevier computational-costs research paper is preserved at
+[paper/csda-computational-costs/main.pdf](paper/csda-computational-costs/main.pdf)
+with [LaTeX sources](paper/csda-computational-costs/main.tex),
+[immutable observed-result ledger](paper/csda-computational-costs/OBSERVED_RESULTS_SNAPSHOT.md),
+and [research chronology](paper/csda-computational-costs/PROJECT_HISTORY.md).
+It reports an evidence-limited ten-policy experiment (450 method–case
+attempts and 5,570 successful corrected-source raw timings),
+not the unexecuted full factorial or a deployed fastest-method selector.
+The research source and original figures remain versioned; author
+approval is required before journal submission.

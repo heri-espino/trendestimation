@@ -18,6 +18,7 @@ from time import perf_counter
 import numpy as np
 from scipy.linalg import cho_solve_banded, cholesky_banded
 from scipy.optimize import brentq
+from scipy.special import gammaln
 from scipy.sparse import diags
 
 from trendestimation.solvers import _penalty_lower_bands
@@ -56,6 +57,28 @@ def forward_difference(n:int,d:int):
     )
 
 
+def difference_gram_logdet(n: int, d: int) -> float:
+    """Exact log(det(D_d @ D_d.T)) for consecutive forward differences.
+
+    Product identity (n>d>=1):
+        det(D_d D_d.T) = product_{j=0}^{d-1}
+              binom(n+j, 2*j+1) / binom(2*j, j).
+
+    Log-gamma avoids a dense (n-d)-square determinant and is stable
+    when the difference Gram matrix is ill-conditioned.
+    Crucially, use the SAME MLE additive normalization for finite
+    lambda and the exact infinite-penalty endpoint S=1.
+    """
+    if not (isinstance(n, int) and isinstance(d, int)
+            and 1 <= d < n):
+        raise ValueError("Expected integers n>d>=1")
+    j = np.arange(d, dtype=float)
+    values = (gammaln(n+j+1) - gammaln(n-j)
+              - gammaln(2*j+2) - gammaln(2*j+1)
+              + 2*gammaln(j+1))
+    return float(np.sum(values))
+
+
 class BandedTrace:
     """Data-independent structure for fixed (n,d), d=1..6 in this study."""
 
@@ -69,6 +92,7 @@ class BandedTrace:
         self.shift=np.asarray(self.D.T@np.ones(n-d)).reshape(n)
         self.factor_calls=0
         self.trace_calls=0
+        self.logdet_difference_gram=difference_gram_logdet(n,d)
 
     def factor(self,lam:float):
         if not np.isfinite(lam) or lam<=0:
@@ -231,8 +255,9 @@ class BandedTrace:
             if weighted<=0 or not np.isfinite(weighted):
                 raise ArithmeticError("Marginal likelihood quadratic invalid")
             logdetA=2.*float(np.log(L[0]).sum())
-            # omit logdet(D D.T), common across all positive lambdas.
-            score=(m*np.log(weighted/m)+logdetA-m*np.log(lam))
+            # Match spectral MLE, including the exact S=1 endpoint.
+            score=(m*np.log(weighted/m)+logdetA-m*np.log(lam)
+                   -self.logdet_difference_gram)
         t3=perf_counter()
         if np.isnan(score):
             raise ArithmeticError("Criterion returned NaN")
@@ -303,7 +328,8 @@ class BandedTrace:
             if weighted<=0 or not np.isfinite(weighted):
                 raise ArithmeticError("External MLE quadratic invalid")
             score=(m*np.log(weighted/m)+
-                   2.*float(np.log(L[0]).sum())-m*np.log(lam))
+                   2.*float(np.log(L[0]).sum())-m*np.log(lam)
+                   -self.logdet_difference_gram)
         else:
             raise ValueError("Unknown criterion")
         if np.isnan(score):

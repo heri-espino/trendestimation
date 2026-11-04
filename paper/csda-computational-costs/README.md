@@ -1,3 +1,109 @@
+> **Current source:** `main.tex` and `main.pdf` are CSDA Paper B theory from PR #109.
+> The older empirical manuscript from PR #100 is retained in Git at
+> `5eb5b30ae8a172dc1d56f2d46f1024c6ce9370ab`; its sections and evidence are
+> historical material for the Springer track, not a replacement for Paper B.
+> Read `../PUBLICATION_MAP.md` and `../SESSION_HANDOFF.md` first.
+
+## Revised research article with four verified figures
+
+Paper B remains **theory-first**, with two carefully bounded illustrations.
+The main draft now includes `sections/decision_examples.tex`:
+a plain-language solver-regime comparison with exact CV versus scalar
+criterion distinctions; compact exact-solver and hybrid tables; and
+two theoretical work-count figures (NOT calibrated runtimes).
+It also includes one reproducible, matched, one-worker BIC example and
+one real FHWA NGSIM vehicle trajectory illustrating $d=3$,
+training-only `mu='data'`, a fitted trend and a **separate**
+local-polynomial forecast. The latter is not a native PLS forecast,
+does not measure ground-truth jerk, and does not substitute for the
+independent NGSIM application study.
+
+Run `python paper/csda-computational-costs/render_theory_figures.py`
+with the pinned AwesomeFigures dependency and original CAS class.
+It produces `theory_regime_map`, `theory_cost_curves`,
+`matched_bic_timings` and `ngsim_jerk_application` in PDF/PGF/SVG
+plus `theory_awesomefigures_manifest.json` and
+`theory_figure_sources.json`. The GitHub Actions workflow runs
+this exact script, validates 48 archived rows and all source
+provenance, and commits the compiled manuscript and vector figures.
+
+All 48 records were copied, without timing recomputation, from
+`results/experiment010-uncapped-PCAG103A-08-20261103T222938857Z-shard0-offset20`
+to `data/experiment010_matched_three_methods.csv`.
+The values represent **one worker, one BLAS thread**, two repeats
+per workload and method, and only n=64/d=1/BIC/mu=data.
+These outcomes do not identify a universal SVD/Cholesky crossover.
+
+The independent NGSIM source in
+`paper/ngsim-jerk-case-study/` selects, by training-only GCV,
+`S=0.40` for the illustrated track and origin; use the already
+archived real track, never fabricated observations or future leakage.
+This Paper B illustration is not a substitute for the third paper.
+
+# Current Paper B — theoretical computational analysis (November 2026)
+
+**Entry point:** `main.tex`, title *Amortized complexity of smoothness-indexed
+penalized least squares*. This is a **theoretical
+CSDA working manuscript**. Read [THEORY_HANDOFF.md](THEORY_HANDOFF.md)
+for the full proof/validation contract.
+
+The principal contribution is the workload-dependent mathematical model
+
+\[
+T_{\mathcal A}(n,d,M,R,\mathcal C;\varepsilon,\theta),
+\]
+
+and its proof-based decomposition into mapping preparation, factorization,
+conditional criterion diagnostics and reuse across smoothing candidates
+and independent observed series. The paper proves a banded
+Gaussian likelihood log-determinant identity, gives full-SVD versus
+banded-selected-inverse arithmetic and memory bounds, an exact
+first-difference cosine-eigenvalue formula, and the sign conditions for
+a conditional calibrated crossover. These are not machine timings.
+
+**The original empirical manuscript sections and all six AwesomeFigures
+figure families remain in the repository unchanged**, but the
+theoretical `main.tex` no longer inputs the historical
+`sections/benchmarks.tex`, `sections/results.tex`,
+`sections/experiment006_design.tex` or
+`sections/experiment006_status.tex`.
+The newly completed three-backend, one-worker Windows comparison is
+preserved on the user's timestamped GitHub results branch and documented
+in THEORY_HANDOFF.md as evidence for a **different implementation/runtime
+Springer manuscript**. No new benchmark is needed to compile Paper B.
+
+## Reproduce theory checks and the PDF
+
+From the repository root:
+
+```powershell
+conda activate trendestimation
+python paper/csda-computational-costs/verify_theory.py
+Copy-Item paper\els-cas-templates\cas-dc.cls,paper\els-cas-templates\cas-common.sty,paper\els-cas-templates\cas-model2-names.bst -Destination paper\csda-computational-costs
+Push-Location paper\csda-computational-costs
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+Pop-Location
+Start-Process ".\paper\csda-computational-costs\main.pdf"
+```
+
+The dedicated [CSDA theory build](../../.github/workflows/csda-computational-theory.yml)
+verifies mathematical identities and compiles the Elsevier CAS PDF
+without rerunning statistical simulations, benchmark workflows or
+the historical timing renderers. Its committed PDF and SHA256 input
+manifest remain on the paper branch.
+
+The author metadata and disclosures remain provisional. A mathematical
+theory paper still requires novelty assessment against Weinert (2007),
+Erisman--Tinney (1975), and Biessy (2026) before journal submission.
+
+---
+
+## Preserved historical computational-timing manuscript documentation
+
+The remainder of this file documents the **prior empirical draft**,
+whose sources and figures are retained for reproducibility but are
+no longer input by the current theoretical `main.tex`.
+
 # Computational costs of smoothness-indexed PLS
 
 **Independent, pre-submission computational companion** to the separate
@@ -113,8 +219,7 @@ New LaTeX material:
   title, abstract, interpretation and verified selected-inverse
   reference (Erisman and Tinney, 1975).
 
-**The historical 80,640 timing records remain the only fully archived
-multi-criterion measured dataset in this paper until new work completes.**
+**Historical status, superseded by the newer completed bounded Experiment010 results reported below:** the 80,640 original historical rows remain independently archived.
 The initial PCAG103A-08 pilot from separate Experiment006 PR #95 is not
 promoted into a publication result without its raw data and validation.
 Fast fit-only timing is not substituted for complete CV/GCV/AICc/BIC/MLE
@@ -130,3 +235,36 @@ The primary unresolved publication steps are: complete matched
 factorial measurements and quality gates, paired CPU timing analysis
 with confidence intervals, high-order/nonzero-mean S=1 numerical
 validation, cached S-grid mapping at large n, and author approval.
+
+
+## Completed bounded empirical manuscript — November 2026
+
+The paper now incorporates the real Experiment010 ten-policy numerical
+comparison, rather than describing it only as a planned factorial.
+The LaTeX section is sections/experiment010_observed.tex, with
+a revised title, abstract, discussion and historical-status bridge.
+The current immutable evidence ledger is OBSERVED_RESULTS_SNAPSHOT.md.
+
+**Observed corrected-source study:** 450 method–case attempts, 5,570
+successful raw timing records, 5,480 selected-criterion score
+agreements, 18 disagreements, 72 without a valid spectral reference,
+and 1,102 failed/partial records. These are related timing observations,
+not independent problems or universally precision-certified solutions.
+Original and corrected MLE results remain separate.
+
+The manuscript includes all ten existing complete-criterion policies
+(guarded is composite; optional CHOLMOD was unavailable), uses matched
+S candidates under three reference-mean policies (zero, empirical
+mean of observed differences, fixed 0.15), and presents the measured
+n=256 one-S vs 100-S GCV winner reversal. The independent 85-digit
+Experiment006 fit audit remains distinct from full-criterion timing.
+No automatic solver dispatcher, empirically calibrated cost surface
+or full 50,400-case factorial completion is claimed.
+
+**Status:** completed, reproducible research snapshot; not
+journal-submission ready. Both authors must approve author order,
+declarations and interpretation. The existing historical figures
+and raw sources are retained and no numerical benchmarks are rerun
+for this paper build. PDF generation uses the same author-supplied
+Elsevier CAS template on GitHub-hosted Linux; no university Windows
+installation or administrator access is needed.

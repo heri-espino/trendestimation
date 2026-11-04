@@ -1,9 +1,11 @@
-% Computational companion to the numerical-reliability CSDA draft.
-% Uses author-provided Elsevier CAS Bundle v2.4, copied verbatim by CI.
+% Theoretical computational-analysis companion to the numerical-reliability
+% paper. Uses original user-provided Elsevier CAS Bundle v2.4 (cas-dc).
+% Existing empirical figures/analyses remain archived, but are not inputs
+% to this theoretical manuscript. See SOURCE_AUDIT.md and THEORY_HANDOFF.md.
 \documentclass[a4paper,fleqn]{cas-dc}
 \usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage{graphicx,booktabs,url}
+\usepackage{graphicx,booktabs,tabularx,url}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
 \newcommand{\R}{\mathbb R}
@@ -17,29 +19,30 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Four-workload computation with smoothness-indexed PLS}
+\shorttitle{Amortized complexity of smoothness-indexed PLS}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
-\title[mode=title]{Fast and reliable smoothness-indexed penalized least squares across difference orders: numerical algorithms, grid reuse and computational scaling}
-% Provisional authorship and order; confirm together before submission.
+\title[mode=title]{Amortized complexity of smoothness-indexed penalized least squares}
+% Author list and order are provisional; verify together before submission.
 \author[1]{Heriberto Espino-Montelongo}
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Finite-difference penalized least-squares (PLS) trends can be parameterized by a normalized, interpretable smoothness index $s\in[0,1]$ rather than the scale-dependent penalty $\lambda$. Efficient use of this coordinate requires more than a fast linear solver: exact smoothness inversion, conditional effective degrees of freedom, leave-one-out leverage values, criterion evaluation and repeated-grid reuse can dominate complete computational time. We present an algorithmic analysis for difference orders $d=1,\ldots,6$ and fixed zero or nonzero means of penalized differences, including an exact banded selected-inverse formulation for full conditional CV, GCV, AICc, residual BIC and Gaussian marginal-likelihood evaluation. We define four crossed workloads: one or many smoothness candidates evaluated for one or many independent series. Nine full-criterion pipelines---naive dense inversion, spectral SVD, banded Cholesky and six explicitly costed banded/sparse/iterative hybrids---form a staged, resource-gated evaluation design over seven sample sizes through $131072$, four positive smoothness grids through $100000$ candidates, two observation magnitudes and fixed reference means. This large-scale factorial is a \emph{planned experiment, not an empirical result}. The existing two-seed, $80640$-row Windows timing corpus supplies a historical baseline: sharing one exactly matched smoothness-grid translation across five criteria reduced measured elapsed time by factors of $2.67$ at $d=3$ and $2.82$ at $d=2$ for specified $n=48$ workflows. We distinguish these host-specific observations from theoretical complexity and future results, require numerical validity before timing comparisons and preserve $s=1$ as an exact constrained endpoint.
+A normalized trace-based smoothness index provides an interpretable coordinate for finite-difference penalized least-squares trend estimation, but its numerical cost depends on how smoothing parameters, fitted series and statistical selection criteria are reused. We formalize complete criterion-evaluation work as a function of sample length, difference order, number of candidate smoothness values, number of series and requested criterion set. For fixed reference-difference means, we establish the data-independent smoothness-to-penalty mapping and show that banded Cholesky with selected inversion is sufficient to evaluate conditional cross-validation, generalized cross-validation, information criteria and a profiled Gaussian marginal likelihood without a dense inverse. A log-determinant identity supplies a banded expression for the reduced-coordinate likelihood. We derive arithmetic and storage bounds for reusable spectral and streamed banded pipelines, identify an explicit order-one eigenvalue simplification and characterize when a calibrated candidate-count crossover may exist. The results distinguish theoretical operation counts from execution time, account for numerical admissibility and explain why no solver is universally optimal. The analysis synthesizes established smoother, factorization and selected-inversion theory rather than proposing a new smoothing penalty. Two supporting illustrations distinguish measured one-worker BIC pipeline timings from the theoretical bounds and relate a third-difference smoother to a real vehicle-position segment. Broader runtime and forecasting evaluations remain separate research studies.
 \end{abstract}
 \begin{keywords}
-Smoothness index \sep penalized least squares \sep banded selected inverse \sep algorithmic complexity \sep sparse factorization \sep numerical reliability \sep computational benchmarking \sep reuse
+Penalized least squares \sep normalized smoothness \sep amortized complexity
+\sep banded Cholesky \sep selected inversion \sep computational frontier
 \end{keywords}
 \maketitle
+
 \input{sections/foundations}
 \input{sections/algorithms}
 \input{sections/structured_criteria}
-\input{sections/experiment006_design}
-\input{sections/benchmarks}
-\input{sections/results}
-\input{sections/experiment006_status}
-\input{sections/discussion}
+\input{sections/amortized_frontier}
+\input{sections/decision_examples}
+\input{sections/theory_discussion}
+
 \bibliographystyle{cas-model2-names}
 \bibliography{references}
 \end{document}

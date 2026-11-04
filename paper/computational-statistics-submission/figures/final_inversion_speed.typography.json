@@ -7,15 +7,38 @@
   "font_family": "cmr",
   "font_name": "cmr10",
   "inclusion_fraction": 0.86,
-  "export_width_pt": 319.92,
-  "minimum_text_pt": 7.5281175000000005,
+  "export_width_pt": 319.919215,
+  "minimum_text_pt": 7.499999999999999,
   "audit_warnings": [],
   "font_backend": "pdfLaTeX PGF-generated vector PDF",
+  "typography_provenance": "exact-tex-preamble",
+  "pdf_fonts": [
+    {
+      "name": "/BAODNV+CMR9",
+      "embedded": true
+    },
+    {
+      "name": "/HDBZDK+CMSY7",
+      "embedded": true
+    },
+    {
+      "name": "/HDWSXK+CMR8",
+      "embedded": true
+    },
+    {
+      "name": "/HOWYBM+CMR7",
+      "embedded": true
+    },
+    {
+      "name": "/THGOAZ+CMR5",
+      "embedded": true
+    }
+  ],
+  "pdf_sha256": "b3833d2301f6ca9ca73454be1827fece33ca7f768ba93ca86db15c4593a81080",
   "awesomefigures_apis": [
-    "inspect_latex",
-    "latex_style",
-    "PublicationStyle.fit",
-    "PublicationStyle.audit",
-    "PublicationStyle.savefig"
+    "paper",
+    "Publication.savefig",
+    "Publication.records",
+    "audit_figure"
   ]
 }

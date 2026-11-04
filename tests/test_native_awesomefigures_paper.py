@@ -50,6 +50,7 @@ def test_theme_uses_real_awesomefigures_apis(monkeypatch, tmp_path):
     monkeypatch.setattr(af, "save_figure", save)
     monkeypatch.setattr(af, "named_colormap", cmap)
     theme.apply(strict=True)
+    assert hasattr(af, "paper") and hasattr(af, "Publication")
     assert styles and styles[0][0][0] == "elegante"
     assert styles[0][1]["palette"] == "okabe-ito"
     assert len(theme.SCHEME) == 8
@@ -81,7 +82,7 @@ def test_render_only_plan_covers_all_archived_figures():
     assert "formal_solver_study.py" not in joined
     assert len(plan["source_sha256"]) >= 17
     assert plan["awesomefigures"]["source_commit"] == (
-        "54c8bf2374551fa39428f47f69580b4822d4b938"
+        "a9760351c1f72ccf7a1a2ef2ff14136d6e280d88"
     )
 
 
