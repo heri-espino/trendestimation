@@ -2,6 +2,24 @@
 
 **Status:** research drafts and separate submissions; no journal acceptance or submission is implied. Updated 2026-11-03. Read this before creating an experiment, editing a manuscript, or merging a paper PR.
 
+
+**Full timing design clarification:** The author requests the *entire*
+original 252,000-cell Experiment008 factorial as the target tensor
+(n=7 sizes, d=1..6, mean=0/data/0.15, low/high amplitudes,
+5 criteria, 10 complete pipelines, 2 direct/mapped coordinate
+modes, and 2 single-S workloads plus 2 grid workloads at
+M=100/1000/10000/100000). The one-S cells occur only once per
+base configuration, not four times. Experiment011's 21 cases
+are a **pilot subset**, not the definitive tensor. Its
+`full_plan.py` now reuses Experiment008's full-factorial
+manifest logic and saves all cells/status flags without
+running the expensive factorial. Full-grid CV may be
+substantially more expensive than GCV; the final empirical
+paper must measure supported cells on the Windows host
+and preserve the infeasible mask as a scientific result.
+
+
+
 ## Four distinct scientific questions
 
 | Track | Canonical source | Core contribution | Allowed evidence | Claims that belong elsewhere |
