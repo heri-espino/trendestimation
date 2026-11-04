@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/springer-experiment011-smoke.yml
       - paper/benchmarks/experiment011/campaign.py
+      - paper/benchmarks/experiment011/full_plan.py
       - paper/benchmarks/experiment011/verify.py
       - paper/benchmarks/experiment011/cases.json
       - paper/benchmarks/experiment011/tests/**
@@ -41,6 +42,7 @@ jobs:
           python -m unittest discover -s paper/benchmarks/experiment011/tests -v
           python paper/benchmarks/experiment011/campaign.py list
           python paper/benchmarks/experiment011/campaign.py plan
+          python paper/benchmarks/experiment011/full_plan.py
           python - <<'PY'
           import json
           from pathlib import Path
@@ -48,7 +50,12 @@ jobs:
           j=json.loads(p.read_text())
           assert len(j['cases'])==21
           assert all(c['status']=='planned_not_measured' for c in j['cases'])
-          print('Prepared manifest without pretending any times were measured')
+          full=Path('paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json')
+          f=json.loads(full.read_text())
+          assert f['planned_cells']==252000
+          assert f['not_a_timing_dataset'] is True
+          assert sum(f['resource_status_counts'].values())==252000
+          print('Prepared 21 pilot cases + 252000 full-factorial PLANNED cells; no full solver runs')
           PY
       - name: Execute ONE tiny hosted GCV pipeline case
         env:
@@ -82,6 +89,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add paper/benchmarks/experiment011/plans/experiment011_plan.json \
+            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz \
+            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json \
             "paper/benchmarks/experiment011/runs/$EXP011_TAG"
           if ! git diff --cached --quiet; then
             git commit -m 'experiment011: archive isolated hosted GCV smoke and explicit planned matrix [skip ci]'
@@ -99,6 +108,8 @@ jobs:
           name: springer-experiment011-hosted-smoke-${{ github.run_id }}
           path: |
             paper/benchmarks/experiment011/plans/experiment011_plan.json
+            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz
+            paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json
             paper/benchmarks/experiment011/runs/gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/cases.json
             paper/benchmarks/experiment011/campaign.py
