@@ -2,6 +2,74 @@
 
 **Status: prepared experimental protocol, not a completed numerical study.**
 
+
+### Full factorial is the target; the 21 cases are only the pilot
+
+The user's complete factorial specification is NOT the 21-case
+`cases.json` subset. It is the originally audited Experiment008 grid,
+now exposed through `full_plan.py` in this experiment. Its axes are:
+
+- n={64,128,256,512,1024,16384,131072};
+- d={1,2,3,4,5,6};
+- mean policy={fixed 0, observed-difference plug-in data, fixed 0.15};
+- amplitude={low,high};
+- criterion={CV,GCV,BIC,AICc,Gaussian MLE};
+- 10 complete-criterion algorithm/hybrid names (including naive inverse);
+- two coordinate implementations={direct_s,mapped_lambda};
+- four workloads={one S/one series, full S-grid/one series,
+  one S/R series, full S-grid/R series};
+- candidate grids M={100,1000,10000,100000}, including exact S=1
+  for full grids; a one-S workload at S=0.5 is NOT duplicated four times.
+
+The factorial therefore contains
+7*6*3*2*5*10*2*(2+2*4) = **252,000 unique planned
+method-workload-coordinate cells**. Those are the index of a long-form
+timing tensor, not 252,000 observed seconds. The full design records
+resource ineligibility, numerical failures, undefined criteria, and
+missing observations explicitly. Dense n=131072 inverses are physically
+infeasible for the 2-GiB benchmark budget and must not be run.
+A successful measured cell also has an independent `block` and
+`repeat` index. No RMSE is part of this experiment.
+
+From the repository root:
+
+```powershell
+python paper/benchmarks/experiment011/full_plan.py
+```
+
+This command only produces
+`plans/full_factorial_plan.csv.gz` and
+`plans/full_factorial_plan.csv.metadata.json`; it does not
+execute solver benchmarks. The script delegates to the original
+Experiment008 manifest implementation, checking its source SHA
+and all expected factor levels. The plan uses three series and
+six planned repeats per cell (three independent blocks and
+two repeats each), with explicit 2-GiB dense-memory and work
+budget safeguards. A method/case with a resource skip remains a
+tensor cell with no fictitious timing.
+
+**Critical comparison:** In the current Experiment006 runner,
+`direct_s` and `mapped_lambda` both evaluate the *same*
+candidate S values. The first inverts S on demand, while the
+second precomputes S→lambda once per candidate grid.
+This is a timing comparison of coordinate-translation
+strategies, **not** a test of two different continuous
+optimization algorithms or of a separately sampled log-lambda grid.
+Any true continuous-optimizer comparison must be designed,
+implemented and validated as a separate method factor.
+
+**Prior evidence:** Experiment008 already planned the same 252,000
+cells and archived partial real measurements; Experiment009
+analyzed theoretical/empirical crossover from those data;
+Experiment010 archived the matched n64/d1/BIC pilot.
+Reconcile these existing rows by n,d,mu,amplitude,criterion,
+M,R,coordinate,source SHA, machine and concurrency before
+spending time on a repeated study. Do not import a time
+measurement from a different source revision into a supposedly
+paired block.
+
+
+
 ## Question and scientific design
 
 Can a reusable SVD be faster than banded Cholesky with selected inversion for repeated full S-grids, and how does the crossover change when the criterion is ordinary conditional **CV** rather than scalar **GCV** (or AICc/ML)? Which techniques remain admissible as n, d, candidate count M and independent series count R grow?
