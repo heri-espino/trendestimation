@@ -1,5 +1,9 @@
 # AGENTS.md — trendestimation research repository
 
+Full Springer target is the 252,000-cell *planned* Experiment008 factorial, not the 21-case Experiment011 pilot. `paper/benchmarks/experiment011/full_plan.py` reuses the existing Experiment008 planner to index all n,d,mu,amplitude,criteria, 10 methods, four workloads and grid densities, including explicit memory/work skips. The full index does NOT contain observed times. Experiment011 `cases.json` stays a targeted execution subset, avoiding rerunning expensive old samples; the end dataset is long-form raw timing plus eligibility/status masks, paired naive speedups, mean/median and independent-block uncertainty. Direct-S and mapped-lambda compare mapping strategies over the same S values, not separately optimized continuous objectives. No RMSE. Preserve all original Experiment008–010 rows and do not trigger 252,000 full runs without explicit review.
+
+
+
 
 ## Publication map and Springer experiment011 agent routing (2026-11-03)
 
