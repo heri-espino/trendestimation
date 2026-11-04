@@ -8,6 +8,7 @@ on:
       - .github/workflows/springer-experiment011-smoke.yml
       - paper/benchmarks/experiment011/campaign.py
       - paper/benchmarks/experiment011/full_plan.py
+      - paper/benchmarks/experiment011/parallel_series.py
       - paper/benchmarks/experiment011/analyze.py
       - paper/benchmarks/experiment011/verify.py
       - paper/benchmarks/experiment011/cases.json
@@ -47,16 +48,16 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('paper/benchmarks/experiment011/plans/experiment011_plan.json')
+          p=Path('paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json')
           j=json.loads(p.read_text())
-          assert len(j['cases'])==21
+          assert len(j['cases'])==29
           assert all(c['status']=='planned_not_measured' for c in j['cases'])
           full=Path('paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json')
           f=json.loads(full.read_text())
           assert f['planned_cells']==252000
           assert f['not_a_timing_dataset'] is True
           assert sum(f['resource_status_counts'].values())==252000
-          print('Prepared 21 pilot cases + 252000 full-factorial PLANNED cells; no full solver runs')
+          print('Prepared 29 focused cases + preserved 252000 historical PLANNED cells; no full solver runs')
           PY
       - name: Execute ONE tiny hosted GCV pipeline case
         env:
@@ -102,6 +103,36 @@ jobs:
           assert d['block_count']==1
           print('Timing tensor analyzed: one hosted block, no fabricated interval or Windows result')
           PY
+      - name: Verify separate small-series process-pool throughput mode
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+          PARALLEL_TAG: parallel_gha_${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/benchmarks/experiment011/campaign.py parallel-series \
+            --case smoke_gcv_n64_d1_m100 --run-tag "$PARALLEL_TAG" \
+            --block 0 --series-count 3 --series-workers 2
+          python - <<'PY'
+          import csv,json,os
+          from pathlib import Path
+          root=(Path('paper/benchmarks/experiment011/runs_parallel')/
+                os.environ['PARALLEL_TAG']/'smoke_gcv_n64_d1_m100'/'block000')
+          qa=json.loads((root/'parallel_qa.json').read_text())
+          manifest=json.loads((root/'parallel_manifest.json').read_text())
+          with (root/'parallel_raw_times.csv').open(newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==3*3*1*2*2
+          assert qa['status_counts']=={'ok':36},qa
+          assert qa['classification']=='float64_parity_only_not_precision_certified',qa
+          assert manifest['series_workers']==2
+          assert manifest['blas_threads_per_worker']==1
+          assert manifest['not_comparable_to_serial_r_cache_latency']
+          print('Separate process pool smoke: 36 real per-series rows; '
+                'no mixing with one-worker cached-latency timings')
+          PY
       - name: Preserve plan and hosted smoke on the dedicated paper branch
         if: success() && github.ref == 'refs/heads/paper/springer-implementation-experiment011'
         env:
@@ -111,11 +142,12 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add paper/benchmarks/experiment011/plans/experiment011_plan.json \
+          git add paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json \
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz \
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json \
             "paper/benchmarks/experiment011/runs/$EXP011_TAG" \
-            "paper/benchmarks/experiment011/analysis/$EXP011_TAG"
+            "paper/benchmarks/experiment011/analysis/$EXP011_TAG" \
+            "paper/benchmarks/experiment011/runs_parallel/parallel_$EXP011_TAG"
           if ! git diff --cached --quiet; then
             git commit -m 'experiment011: archive isolated hosted GCV smoke and explicit planned matrix [skip ci]'
             git fetch origin "$GITHUB_REF_NAME"
@@ -131,15 +163,17 @@ jobs:
         with:
           name: springer-experiment011-hosted-smoke-${{ github.run_id }}
           path: |
-            paper/benchmarks/experiment011/plans/experiment011_plan.json
+            paper/benchmarks/experiment011/plans/experiment011_plan_expanded.json
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz
             paper/benchmarks/experiment011/plans/full_factorial_plan.csv.metadata.json
             paper/benchmarks/experiment011/runs/gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/analysis/gha_${{ github.run_id }}/
+            paper/benchmarks/experiment011/runs_parallel/parallel_gha_${{ github.run_id }}/
             paper/benchmarks/experiment011/cases.json
             paper/benchmarks/experiment011/campaign.py
             paper/benchmarks/experiment011/full_plan.py
             paper/benchmarks/experiment011/analyze.py
+            paper/benchmarks/experiment011/parallel_series.py
             paper/benchmarks/experiment011/verify.py
           if-no-files-found: warn
           retention-days: 30
