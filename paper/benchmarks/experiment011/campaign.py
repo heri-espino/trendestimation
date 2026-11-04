@@ -304,6 +304,19 @@ def main() -> None:
     r.add_argument("--block", type=int, default=0)
     r.add_argument("--allow-confirm", action="store_true")
     r.add_argument("--dry-run", action="store_true")
+    ps = sub.add_parser(
+        "parallel-series",
+        help="OPT-IN separate throughput experiment for independent small series"
+    )
+    ps.add_argument("--case", required=True)
+    ps.add_argument("--run-tag", required=True)
+    ps.add_argument("--block", type=int, default=0)
+    ps.add_argument("--series-count", type=int, default=None,
+                    help="Independent series, default case R; may increase to 32")
+    ps.add_argument("--series-workers", type=int, default=None,
+                    help="Separate processes; default min(8,R), maximum 32")
+    ps.add_argument("--allow-confirm", action="store_true")
+    ps.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     if args.command == "list":
         for c in load_design()["cases"]:
@@ -311,6 +324,38 @@ def main() -> None:
                   "M",c["grid_denominator"],"criterion",c["criterion"])
     elif args.command == "plan":
         plan(args)
+    elif args.command == "parallel-series":
+        if not VALID_TAGS.fullmatch(args.run_tag):
+            raise ValueError("Invalid --run-tag")
+        design=load_design()
+        case=select_case(design,args.case)
+        if case["stage"]=="confirm" and not args.allow_confirm:
+            raise PermissionError("Confirm cases require --allow-confirm")
+        if Path.cwd().resolve()!=ROOT.resolve():
+            raise RuntimeError("Run from repository root for provenance")
+        from parallel_series import run_parallel
+        count=case["series_count"] if args.series_count is None else args.series_count
+        workers=min(8,count) if args.series_workers is None else args.series_workers
+        result=run_parallel(
+            case,run_tag=args.run_tag,block=args.block,
+            series_count=count,series_workers=workers,
+            max_work=design["max_work"],
+            max_dense_bytes=design["max_dense_bytes"],
+            seed_base=design["seed_base"],source_commit=git_sha(),
+            source_hashes={
+                "experiment006":sha256_file(SOURCE),
+                "experiment011_cases":sha256_file(CASE_FILE),
+                "experiment011_parallel_series":sha256_file(
+                    HERE/"parallel_series.py"
+                ),
+            },
+            dry_run=args.dry_run
+        )
+        if args.dry_run:
+            print(json.dumps(result,indent=2))
+        else:
+            print("Separate throughput archive:",result["output"])
+            print("NOT interchangeable with serial shared-cache timing results.")
     else:
         run_one(args)
 
