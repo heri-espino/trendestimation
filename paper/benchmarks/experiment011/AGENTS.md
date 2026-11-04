@@ -28,6 +28,23 @@ Re-use the already tracked Experiment006 run_slice; no fork of its solver is per
 
 **Agent 4 (publication QA)** checks all analysis, numerical validity, provenance, and author/submission gates; updates `paper/SPRINGER_READINESS.md`. Never merge without authorization.
 
+
+### Aggregation ownership and statistical rule
+
+`analyze.py` is the canonical Experiment011 long-form
+measured-timing aggregator; Agent 3 may extend it only on
+their own branch and after reviewing existing outputs/tests.
+It requires explicit `--runs`, `--run-tag`, `--output`,
+refuses to overwrite archived analyses, never fills missing
+full-grid cells with fabricated times, and compares against
+the genuine naive pipeline only on the identical seed/block,
+criterion, n,d,mu,M,R,coordinate and machine/source.
+Independent seed blocks are the bootstrap units (>=3).
+The output `theory_big_o_work_not_seconds` is not a
+calibrated runtime prediction. Commit/push all derived CSVs
+and their source SHA; no RMSE research belongs in this paper.
+
+
 ## Numerical boundaries
 
 - Full SVD score/fit work differs by criterion. For CV, the leverage vector requires \(O(n(n-d))\) per candidate; scalar GCV/AICc/BIC/ML scores can amortize more efficiently.
