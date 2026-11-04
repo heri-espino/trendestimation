@@ -1,0 +1,107 @@
+name: Springer Experiment011 staged QA and tiny hosted smoke
+
+on:
+  push:
+    branches:
+      - paper/springer-implementation-experiment011
+    paths:
+      - .github/workflows/springer-experiment011-smoke.yml
+      - paper/benchmarks/experiment011/campaign.py
+      - paper/benchmarks/experiment011/verify.py
+      - paper/benchmarks/experiment011/cases.json
+      - paper/benchmarks/experiment011/tests/**
+      - paper/benchmarks/experiment006/run.py
+      - paper/benchmarks/experiment006/selected_inverse.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment011-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-prepare-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing experimental runtime dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python -m pip install threadpoolctl
+      - name: Run fast independent plan/QA regression tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s paper/benchmarks/experiment011/tests -v
+          python paper/benchmarks/experiment011/campaign.py list
+          python paper/benchmarks/experiment011/campaign.py plan
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('paper/benchmarks/experiment011/plans/experiment011_plan.json')
+          j=json.loads(p.read_text())
+          assert len(j['cases'])==21
+          assert all(c['status']=='planned_not_measured' for c in j['cases'])
+          print('Prepared manifest without pretending any times were measured')
+          PY
+      - name: Execute ONE tiny hosted GCV pipeline case
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+          EXP011_TAG: gha_${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python paper/benchmarks/experiment011/campaign.py run \
+            --case smoke_gcv_n64_d1_m100 --run-tag "$EXP011_TAG" --block 0
+          python paper/benchmarks/experiment011/verify.py \
+            "paper/benchmarks/experiment011/runs/$EXP011_TAG/smoke_gcv_n64_d1_m100/block000"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path('paper/benchmarks/experiment011/runs')/os.environ['EXP011_TAG']
+          q=json.loads((root/'smoke_gcv_n64_d1_m100/block000/experiment011_qa.json').read_text())
+          if q['classification']!='float64_parity_only_not_precision_certified':
+              raise RuntimeError('Smoke numerical QA needs review: '+q['classification'])
+          assert q['status_counts']=={'ok':24},q['status_counts']
+          print('SMOKE ONLY: 24 valid actual rows, NOT Windows benchmark results')
+          PY
+      - name: Preserve plan and hosted smoke on the dedicated paper branch
+        if: success() && github.ref == 'refs/heads/paper/springer-implementation-experiment011'
+        env:
+          EXP011_TAG: gha_${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add paper/benchmarks/experiment011/plans/experiment011_plan.json \
+            "paper/benchmarks/experiment011/runs/$EXP011_TAG"
+          if ! git diff --cached --quiet; then
+            git commit -m 'experiment011: archive isolated hosted GCV smoke and explicit planned matrix [skip ci]'
+            git fetch origin "$GITHUB_REF_NAME"
+            if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+              echo 'Branch changed; do not rewrite or rebase another agent'
+              exit 1
+            fi
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+      - name: Upload ALL smoke records, including failure states
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-experiment011-hosted-smoke-${{ github.run_id }}
+          path: |
+            paper/benchmarks/experiment011/plans/experiment011_plan.json
+            paper/benchmarks/experiment011/runs/gha_${{ github.run_id }}/
+            paper/benchmarks/experiment011/cases.json
+            paper/benchmarks/experiment011/campaign.py
+            paper/benchmarks/experiment011/verify.py
+          if-no-files-found: warn
+          retention-days: 30
