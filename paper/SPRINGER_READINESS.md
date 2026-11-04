@@ -113,3 +113,11 @@ long-form table are **separate** data structures.
 - **CI:** [hosted smoke #41767817861](https://github.com/heri-espino/trendestimation/actions/runs/41767817861) passed and committed its raw rows and source/QA manifest on this branch. Hosted Linux measurements are not a substitute for the planned Windows multi-criterion pilot.
 
 Agents do not automatically execute work merely because these comments or files exist. Future agent sessions must explicitly read this ledger and claim nonoverlapping branches/file ownership before proceeding.
+
+## Complete-factorial manifest and measured-tensor parser verified
+
+- Full requested factorial (not measured): [GitHub Actions #41780451438](https://github.com/heri-espino/trendestimation/actions/runs/41780451438) completed successfully after adding `full_plan.py` and `analyze.py`.
+- Verified compressed full-factorial plan `paper/benchmarks/experiment011/plans/full_factorial_plan.csv.gz`: exactly **252,000** planned method/workload/coordinate cells, with 138,960 preflight eligible, 92,640 work-budget exceeded, 16,800 dense-memory infeasible and 3,600 naive-runtime infeasible at the currently chosen budgets (2 GiB, 5e8 nominal work, six planned repeats). These are **preflight classifications**, not observations or failure rates.
+- Hosted smoke analysis `paper/benchmarks/experiment011/analysis/gha_41780451438/`: 24/24 actual successful numerical timing rows, 24 aggregate cells and **16 genuinely paired naive-baseline ratios**; one independent block, so **zero confidence intervals** and no crossover inferred. Source executable SHA `cad1b3bf7c37a013ccd8593a02a1d4d9f60ff989d8185bdbc479017087d35f89`, hosted GitHub Linux runner (not PCAG103A-08).
+- Unit tests verify the exact factorial axes, float64 parity, invalid/skip statuses, paired naive ratios, no confidence interval with one block, and duplicate-seed prevention.
+- **Still missing:** Windows factorial timing observations beyond previously archived Experiment008/010 partial subsets, three independent selected Experiment011 blocks for CV/GCV comparisons, high-order numerical checks, full aggregate empirical vs Big-O crossover figures, and journal author review.
