@@ -1,5 +1,28 @@
 # trendestimation
 
+## Current author decision — focused Experiment011 (November 4, 2026)
+
+Keep the original 21-case Experiment011 protocol and add only targeted
+CV/GCV comparisons at **d=4** for **n=256, 1024, 2048, 4096**:
+two pilot cases at n=256 and six confirm-stage cases at larger n,
+**29 cases in total**. The n1024 confirm cells explicitly permit
+a 750-million-work-unit cap so SVD can be compared with banded Cholesky
+on the full M=100, R=3 grid; n2048/4096 use the feasible banded
+backend only. All larger cases require the existing opt-in
+`--allow-confirm`. No older run, criterion, or historical result
+is overwritten.
+
+An **optional throughput-only** `campaign.py parallel-series`
+mode runs independent small series (n<=256, M<=1000) in spawned
+processes, up to 32 workers, each with one BLAS thread. It writes
+`runs_parallel/` with per-series checkpoints and real wall times.
+It deliberately **does not replace** the serial shared-cache
+single/multiple-series latency benchmark. The author's 32 logical
+processors are a capacity ceiling, not proof that 32 workers
+will run faster than 8 or 16. The old 252,000-cell factorial is
+retained only as an archival index, **not** a new study mandate.
+
+
 [![CI](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml/badge.svg)](https://github.com/trendestimation/trendestimation/actions/workflows/ci.yml)
 
 
@@ -16,7 +39,7 @@ Springer Computational Statistics
 
 Springer's staged follow-up is
 [Experiment011](paper/benchmarks/experiment011/README.md). Its
-[21 predeclared test cases](paper/benchmarks/experiment011/cases.json),
+[29 focused, predeclared test cases](paper/benchmarks/experiment011/cases.json),
 independent validator, one-block launcher, Windows instructions,
 agent assignments and release ledger are preserved in the repo.
 The hosted smoke is a software-validation check, not the user's
