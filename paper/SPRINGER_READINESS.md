@@ -70,3 +70,12 @@
 - **Not done:** any Windows Experiment011 paired multi-criterion run; any multi-core throughput study; actual CV/GCV crossover, independent high-order precision certification, submission/revision of the main Springer manuscript.
 
 **Next author action:** review the new preparation PR and use the Windows PowerShell commands in `paper/benchmarks/experiment011/README.md` to run selected pilot cases on a separate results branch. After validating their QA, update this ledger, run only confirmatory cases supported by the observed pilot, and prepare measured tables/figures.
+
+## Coordination record — existing agents notified through PR conversations
+
+- **Springer preparation:** [PR #110](https://github.com/heri-espino/trendestimation/pull/110), branch `paper/springer-implementation-experiment011`; not merged.
+- **CSDA B:** a non-invasive coordination comment was posted to [open PR #109](https://github.com/heri-espino/trendestimation/pull/109) (comment ID `6621889147`) explaining that theoretical novelty remains in CSDA B and measured implementations belong to Springer. No code changes to that branch.
+- **Existing Experiment010 runner:** a coordination comment was posted to [open PR #105](https://github.com/heri-espino/trendestimation/pull/105) (comment ID `6621890104`) preserving the nested PR stack, result archives and concurrency rules.
+- **CI:** [hosted smoke #41767817861](https://github.com/heri-espino/trendestimation/actions/runs/41767817861) passed and committed its raw rows and source/QA manifest on this branch. Hosted Linux measurements are not a substitute for the planned Windows multi-criterion pilot.
+
+Agents do not automatically execute work merely because these comments or files exist. Future agent sessions must explicitly read this ledger and claim nonoverlapping branches/file ownership before proceeding.
