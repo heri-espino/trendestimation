@@ -89,12 +89,11 @@ class ArticleScopeTests(unittest.TestCase):
             self.main,
         )
         self.assertIn(r"$s=S(\lambda)\in[0,1]$", self.main)
-        self.assertIn(
-            "mapped-grid equivalence checks and numerical validation",
-            self.main,
-        )
+        self.assertIn("mapped-grid equivalence checks", self.main)
+        self.assertIn("numerical validation", self.main)
         self.assertIn("not a new smoothing criterion", self.main)
-        self.assertIn(r"\emph{not} a head-to-head timing comparison", self.main)
+        self.assertIn(r"\emph{not} a controlled comparison", self.main)
+        self.assertIn("end-to-end optimizers", self.main)
 
     def test_existing_numeric_evidence_remains_included(self):
         for dependency in (
