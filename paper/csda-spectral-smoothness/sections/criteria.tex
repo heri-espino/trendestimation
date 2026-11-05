@@ -10,6 +10,7 @@ For fixed numeric $\mu$, let $e=y-\widehat\tau_{\lambda,\mu}$, $h_{ii}=(H_\lambd
 \mathrm{BIC}_{\mathrm{RSS}}(\lambda)&=\log(\RSS/n)+\frac{\nu\log n}{n}.
 \label{eq:aicbic}
 \end{align}
+In the notation of \citet{cortes2017}, the AICc expression is written with $\log\RSS$; our $\log(\RSS/n)$ subtracts the constant $\log n$ and therefore yields the same minimizing penalty for fixed $n$. The reported residual-based BIC is unchanged by this rewriting. These normalization conventions should be kept explicit when comparing \emph{score values} across implementations.
 Undefined denominators and inadmissible limits are recorded rather than treated as finite scores. GCV and CV at exact interpolation require special care because the formula is indeterminate; an interior limit is not identical to scoring a uniquely defined full interpolation refit.
 
 Separately, we consider a Gaussian variance-component criterion: a profiled marginal likelihood on the $r=n-d$ positive singular modes. For $z=V^\top(y-p_\mu)$ and $c_j(\lambda)=1+1/(\lambda\delta_j)$, it is
