@@ -1,6 +1,6 @@
 # Paper C — extrapolation with third-difference PLS and nonzero reference jerk
 
-**Updated:** 2026-11-05. **Status:** A research and agent handoff; no new experiments, LaTeX manuscript claims, or submissions. The current five-vehicle evidence is unchanged.
+**Updated:** 2026-11-05. **Status:** A research and agent handoff plus [one deterministic algebra regression test](../tests/test_reference_jerk_extrapolation.py); no new statistical experiments, forecast results, LaTeX manuscript claims, or submissions. The current five-vehicle evidence is unchanged.
 
 ## Question to test
 
