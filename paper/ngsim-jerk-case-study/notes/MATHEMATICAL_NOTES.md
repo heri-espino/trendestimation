@@ -98,6 +98,10 @@ The full Jacobian (hat matrix) thus includes a **rank-one correction**; its trac
 
 The normalized smoothness coordinate $S_d(\lambda)$ itself depends only on the penalty spectrum, and is therefore still the same for a fixed $(n,d,\lambda)$; interpreting it as the data-adaptive procedure's effective degrees of freedom requires the correction above.
 
+### Further exact forecast attribution (added 2026-11-05)
+
+Our archived continuation uses **the same** reference mean during fitting and local polynomial extrapolation. At fixed smoothing parameter and with the future degree-2 local regression denoted by a linear map $L$, the forecast equals $F_{\mu,\mu}=LHy+\mu(q_f-LHq)$, with $D_3q=\mathbf1$. Its difference from $F_{0,0}$ separates exactly into **historical fit** and **continuation** terms. See [EXTRAPOLATION_DECOMPOSITION.md](EXTRAPOLATION_DECOMPOSITION.md) for proof, a 2×2 ablation, and the special fact that $\mu$ can change the forecast even at **$S=0$**, when no smoothing is applied. This is a derived identity, not new experiment data. A catalogue of robust and regression-based training-only $\mu$ candidates is in [MU_POLICY_CATALOG.md](MU_POLICY_CATALOG.md).
+
 ## 5. How to evaluate jerk correctly
 
 1. In **synthetic** position trajectories, construct known $x(t)$, acceleration and $j(t)$, then add documented observation errors. Evaluate historical **jerk RMSE in m/s³**, position RMSE in meters and future position RMSE separately.

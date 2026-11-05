@@ -1,5 +1,23 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Paper C new research question (2026-11-05)
+
+See [extrapolation research handoff](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
+[fit-versus-continuation proof](ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),
+[mu policy catalogue](ngsim-jerk-case-study/notes/MU_POLICY_CATALOG.md),
+and [planned factorial ablation](ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md).
+The distinctive **hypothesis** is a training-derived nonzero
+jerk reference at d=3 with separate local polynomial continuation,
+not first-in-history PLS forecasting: Biessy (2025 online/2026
+volume) already develops WH extrapolation. At fixed S the mu
+difference has an exact decomposition into fitted-trend and
+continuation contributions. Only existing `zero` and `sample`
+mu policies are currently implemented. **No future Paper C
+experiment has been run**. Preserve its original pilot and do not
+confuse this independent workstream with the Windows Experiment011
+algorithm timing study below.
+
+
 ## Paper C annotated literature review (2026-11-05)
 
 The user requested **Markdown annotations and a merged repository record**,

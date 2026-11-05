@@ -1,5 +1,19 @@
 # Publication map — source of truth for all TrendEstimation agents
 
+**Paper C focus update (2026-11-05):** The proposed scientific
+question is whether **d=3 third-difference PLS with a nonzero
+training-derived reference jerk**, followed by an **explicitly
+separate local polynomial continuation**, improves vehicle-position
+forecasts and/or estimated jerk behavior. This is an **unproven
+applied novelty/performance claim**, not a new PLS estimator or first
+WH extrapolation. Biessy (2025/2026) previously developed WH
+extrapolation. Read the [Paper C extrapolation handoff](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
+and [planned experiment](ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md).
+The existing five-track pilot remains descriptive; Paper C retains
+exclusive ownership of any future physical forecasts. No shared
+Springer/CSDA manuscript is changed by this documentation.
+
+
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
 Read [cleanup audit](REPOSITORY_CLEANUP.md) and the current session handoff.
 Use `origin/main` after integration; older “open/unmerged” statements below

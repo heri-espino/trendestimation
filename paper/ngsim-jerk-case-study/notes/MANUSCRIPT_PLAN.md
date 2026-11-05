@@ -2,6 +2,8 @@
 
 **Purpose:** Working notes and an action-oriented outline for the **existing** NGSIM paper; **not** a rewrite of the current LaTeX, an experiment report, or a submission decision.
 
+**Extrapolation-focused continuation (2026-11-05):** See the [central research handoff](EXTRAPOLATION_RESEARCH_HANDOFF.md), [the exact two-effect decomposition](EXTRAPOLATION_DECOMPOSITION.md), [the $\mu$ policy catalogue](MU_POLICY_CATALOG.md), and [the planned factorial ablation](EXTRAPOLATION_ABLATION_PLAN.md). **Biessy (2025 online; 2026 journal volume) has already developed WH/PLS extrapolation**; any novelty claim should target the nonzero *reference-jerk* policy, its attribution and validated vehicle application, not PLS extrapolation generically. The experiment001–003 sections below remain plans, not completed results.
+
 ## 1. Key message to test
 
 **Candidate contribution:** A comparison of zero-jerk and training-derived, potentially nonzero reference-jerk shrinkage within finite-difference PLS, evaluated on observed vehicle trajectories using a common bounded smoothness coordinate and independent checks of derivative behavior.

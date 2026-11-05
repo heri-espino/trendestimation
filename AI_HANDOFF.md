@@ -1,5 +1,28 @@
 # AI_HANDOFF — latest
 
+**Paper C extrapolation/jerk-reference continuation (2026-11-05):**
+Read [the new research handoff](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
+[exact fixed-S attribution](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),
+[mu-policy catalog](paper/ngsim-jerk-case-study/notes/MU_POLICY_CATALOG.md),
+[predeclared follow-up experiment](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md),
+and [Biessy WH-extrapolation annotation](paper/ngsim-jerk-case-study/notes/papers/biessy_2026_extrapolation.md).
+The user proposes that the specific d=3, nonzero-mu PLS trend
+**plus a separate local-polynomial forecast** could be distinctive;
+this remains an unverified **applied novelty hypothesis**, not a
+claim of first PLS extrapolation (Biessy already extrapolated WH).
+An exact algebraic 2x2 counterfactual separates the impact of mu
+on the **historical fit** from its impact on the **cubic continuation**,
+at the *same* smoothing parameter. The raw training mean of third
+differences telescopes to boundary second differences; proposed
+replacement mu policies are NOT implemented. This update contains
+research notes, handoffs and **one deterministic algebra regression test**;
+no Paper C empirical data, simulations, benchmarks, forecasts,
+algorithm changes or manuscript changes.
+Next agent: run a deterministic algebraic test and planned Paper C
+experiment001 on a separate branch with reproducible output. Do not
+merge or conflate with Springer Experiment011.
+
+
 **Paper C literature notes (2026-11-05):** A source-grounded Markdown
 literature review and annotations now live in
 [paper/ngsim-jerk-case-study/notes/](paper/ngsim-jerk-case-study/notes/README.md),

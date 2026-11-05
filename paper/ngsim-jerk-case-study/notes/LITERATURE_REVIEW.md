@@ -46,6 +46,10 @@ This is an approximately 18.5% difference between the two PLS policies **within 
 
 The normalized $S$ grid is identical across policies, so the empirical comparison is interpretable in terms of conditional degrees of smoothing, but $S$ does not make $d=2$ and $d=3$ curves geometrically identical.
 
+### Added extrapolation-specific prior art (2026-11-05)
+
+**Biessy (2025 online/2026 volume)** [DOI 10.1017/asb.2025.10061](https://doi.org/10.1017/asb.2025.10061) explicitly develops Whittaker–Henderson extrapolation via future zero-weight observations and discusses consistency constraints and credible intervals. Thus it is **incorrect** to claim that the act of extrapolating a penalized least-squares/Whittaker–Henderson trend is new. What remains to test is the **vehicle-specific effect of a nonzero reference third difference** and our *distinct* local-polynomial continuation. See the [detailed source annotation](papers/biessy_2026_extrapolation.md), [research handoff](EXTRAPOLATION_RESEARCH_HANDOFF.md), and [exact mechanistic decomposition](EXTRAPOLATION_DECOMPOSITION.md). The three sources establish a precise distinction but not first-in-literature priority or superior forecasts.
+
 ## 5. Where the article can contribute
 
 **Narrow empirical hypothesis:** A data-informed nonzero reference third difference improves trend and derivative reconstruction or short-horizon extrapolation when vehicles exhibit locally sustained nonzero jerk, relative to zero-jerk shrinkage.
