@@ -1,0 +1,59 @@
+Command: C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation\python.exe paper/figures/make_updated_mauna_loa.py
+{
+  "dataset": "NOAA GML Mauna Loa monthly mean CO2 (ppm), frozen derived slice",
+  "snapshot_file": "paper\\figures\\noaa_mlo_monthly_1990_2026_09.csv",
+  "snapshot_sha256": "4296c717b3b3906fd6f0156847cff9038c5feadbc1aa9889d95b5c14ac24fb0a",
+  "data_vintage": "2026-10-09",
+  "accessed": "2026-10-25",
+  "period": "1990-01 to 2026-09",
+  "n_months": 441,
+  "latest_observed_ppm": 426.07,
+  "source_noaa_url": "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.csv",
+  "source_note": "1990-01..2026-08 NOAA average via datasets/co2-ppm public mirror; 2026-09 426.07 verified from NOAA October 9 release. Different source and aggregation from legacy statsmodels weekly dataset.",
+  "normalized_target_smoothness": 0.86,
+  "fixed_mu": 0.0,
+  "orders": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "limits": "Two-sided descriptive PLS fits; no held-out forecasts, seasonal adjustment, uncertainty intervals, or new measured-data claim.",
+  "by_order": {
+    "2": {
+      "lambda": 41.77328863188906,
+      "smoothness": 0.8599999999999999,
+      "edf_conditional": 63.46000000000003,
+      "residual_rmse_ppm": 1.6835824500389955,
+      "final_fitted_trend_ppm": 428.13762224839974
+    },
+    "3": {
+      "lambda": 175.71946909434803,
+      "smoothness": 0.8600000000000007,
+      "edf_conditional": 64.31999999999971,
+      "residual_rmse_ppm": 1.71901852983062,
+      "final_fitted_trend_ppm": 426.92486738884946
+    },
+    "4": {
+      "lambda": 787.5287009425974,
+      "smoothness": 0.8600000000000001,
+      "edf_conditional": 65.17999999999996,
+      "residual_rmse_ppm": 1.766859599714369,
+      "final_fitted_trend_ppm": 425.8151236605919
+    },
+    "5": {
+      "lambda": 3564.464268555504,
+      "smoothness": 0.8600000000000001,
+      "edf_conditional": 66.03999999999999,
+      "residual_rmse_ppm": 1.8139481471580559,
+      "final_fitted_trend_ppm": 425.1103052875509
+    }
+  }
+}
+Command: C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation\python.exe paper/figures/render_awesomefigures.py --figures-only
+[awesomefigures] Springer Nature TeX measurements: textwidth=372.00pt, body font=10.0pt, family=cmr, name=cmr10
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+[awesomefigures] figures\cortes_toto_synthetic.pdf
+[awesomefigures] figures\mauna_loa_1990_1999.pdf
+[awesomefigures] figures\mauna_loa_1990_2026_09.pdf
+[awesomefigures] figures\high_order_numerics.pdf
