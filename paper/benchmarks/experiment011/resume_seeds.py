@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import hashlib
 import os
@@ -34,13 +35,26 @@ def remaining(report, design):
     return [job for key,job in expected.items() if key not in seen]
 
 
+def checkpoint_paths(archive, tag, result=None):
+    """Never stage a sibling worker's in-progress logs or measurements."""
+    paths = [archive/'report.json']
+    if result is not None:
+        paths += [archive/result['log'],
+                  campaign.RUNS/f"{tag}_s{result['seed_index']:03d}"/
+                  result['case']/f"block{result['block']:03d}"]
+    return [str(p.relative_to(campaign.ROOT)) for p in paths if p.exists()]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--previous-report', type=Path, required=True)
     parser.add_argument('--run-tag', required=True)
     parser.add_argument('--publish', action='store_true')
+    parser.add_argument('--workers', type=int, default=1)
     parser.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
+    if not 1 <= args.workers <= 12:
+        raise ValueError('workers must be between 1 and 12')
     if Path.cwd().resolve() != campaign.ROOT:
         raise ValueError('Run from repository root')
     if not campaign.VALID_TAGS.fullmatch(args.run_tag) or len(args.run_tag)>43:
@@ -52,7 +66,7 @@ def main():
                     'paper/benchmarks/experiment011/cases.json',
                     'paper/benchmarks/experiment011/campaign.py'], check=True)
     work = remaining(previous,campaign.load_design())
-    print(f'Preserved {len(previous["results"])} jobs; remaining {len(work)}; workers=1',flush=True)
+    print(f'Preserved {len(previous["results"])} jobs; remaining {len(work)}; workers={args.workers}',flush=True)
     if args.dry_run:
         return
     archive = campaign.HERE/'campaigns'/args.run_tag
@@ -64,33 +78,34 @@ def main():
                   previous_report_sha256=campaign.sha256_file(args.previous_report),
                   preserved_jobs=len(previous['results']),planned_jobs=previous['planned_jobs'],
                   continuation_planned_jobs=len(work),
-                  source_commit=campaign.git_sha(), workers=1,
-                  mode='serial_continuation_of_concurrent_campaign',
+                  source_commit=campaign.git_sha(), workers=args.workers,
+                  nominal_dense_reservation_bytes=args.workers*2147483648,
+                  mode='continuation_with_recorded_worker_count',
                   large_svd_opt_in=True, cases_sha256=previous['cases_sha256'],
                   results=list(previous['results']), status='in_progress')
     def save():
         temp=archive/'report.tmp'
         temp.write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
         temp.replace(archive/'report.json')
-    def publish(number):
+    def publish(number, result=None):
         if not args.publish:
             return
-        # Only this new continuation's output paths; no unrelated files.
-        paths=[str(archive.relative_to(campaign.ROOT))]
-        paths += [str(p.relative_to(campaign.ROOT))
-                  for p in campaign.RUNS.glob(args.run_tag+'_s*')]
+        paths=checkpoint_paths(archive,args.run_tag,result)
         subprocess.run(['git','add','-f','--',*paths],check=True)
         subprocess.run(['git','commit','-m',f'experiment011: continuation checkpoint {number}/{len(work)}'],check=True)
         subprocess.run(['git','push','-u','origin','HEAD'],check=True)
     save()
-    for number,job in enumerate(work,1):
-        result=extra.execute(job,args.run_tag,archive,large_svd=True)
-        result['phase_workers']=1
-        report['results'].append(result)
-        save()
-        print(f'[{number}/{len(work)}] seed={result["seed_index"]} {result["case"]} '
-              f'exit={result["returncode"]} statuses={result["counts"]}',flush=True)
-        publish(number)
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        pending=[pool.submit(extra.execute,job,args.run_tag,archive,large_svd=True)
+                 for job in work]
+        for number,future in enumerate(as_completed(pending),1):
+            result=future.result()
+            result['phase_workers']=args.workers
+            report['results'].append(result)
+            save()
+            print(f'[{number}/{len(work)}] seed={result["seed_index"]} {result["case"]} '
+                  f'exit={result["returncode"]} statuses={result["counts"]}',flush=True)
+            publish(number,result)
     totals=defaultdict(Counter)
     for result in report['results']:
         for method,counts in result['counts'].items():

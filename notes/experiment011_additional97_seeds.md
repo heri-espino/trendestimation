@@ -33,3 +33,11 @@ The author uploaded `results/experiment011-PC08_add97svd_20261105_025108` after 
 Publication is synchronous after each case finishes: stage only the new continuation campaign and its new run-tag paths, commit and push to the current results branch. A push error stops before launching another job. The new controller must be committed on the results branch before launch. Do not modify the old raw data or confuse recorded numerical failures with process errors. The optional --dry-run validates without running solvers.
 
 Verified on the uploaded checkpoint: exactly 2272 preserved / 541 remaining. All 28 Experiment011 checks pass, including duplicate rejection and retention of failed numerical outcomes. Windows execution of the continuation is pending.
+
+## Author-approved 12-worker continuation
+
+The author requested faster completion after the serial large-n phase. `resume_seeds.py --workers 12` now runs up to twelve independent case processes, one BLAS thread each; default remains one and accepted range is 1..12. This supersedes the previous one-worker preference only when explicitly selected. Existing numerical memory guards remain; nominal dense reservation is workers*2GiB (24 GiB at twelve), not a hard OS memory cap. Concurrent-load times must stay labeled separately from earlier one-worker measurements.
+
+Only the parent writes the cumulative report and commits. Each publication stages that report, the finished job's closed log and its unique case/block directory. It never stages a sibling worker's active log or partial raw CSV. Preserved outcomes are skipped regardless of numerical success, and fresh attempt tags prevent overwriting interrupted paths. Stop the earlier controller and ensure its case subprocess has exited before starting the new continuation. Choose the latest cumulative report, not necessarily the original 2272-job report.
+
+Verification: 29 Experiment011 tests pass, including exclusion of active sibling files from publication. A dry run against the archived 2272-job checkpoint confirms 541 remaining jobs with workers=12. Actual twelve-worker Windows continuation is pending; no speedup factor is promised.

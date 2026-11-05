@@ -78,3 +78,24 @@ class SeedTests(unittest.TestCase):
         report['results'].append(done[0])
         with self.assertRaises(ValueError):
             resume_seeds.remaining(report,design)
+
+    def test_parallel_checkpoint_excludes_active_sibling(self):
+        import tempfile
+        from unittest.mock import patch
+        import resume_seeds
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            archive=root/'campaigns'/'new'
+            archive.mkdir(parents=True)
+            (archive/'report.json').write_text('{}')
+            (archive/'done.log').write_text('finished')
+            (archive/'active.log').write_text('still running')
+            done=root/'runs'/'new_s003'/'done_case'/'block000'
+            done.mkdir(parents=True)
+            active=root/'runs'/'new_s003'/'active_case'/'block000'
+            active.mkdir(parents=True)
+            with patch.object(campaign,'ROOT',root), patch.object(campaign,'RUNS',root/'runs'):
+                paths=resume_seeds.checkpoint_paths(archive,'new',
+                      dict(seed_index=3,case='done_case',block=0,log='done.log'))
+            self.assertEqual(set(paths),{'campaigns/new/report.json',
+                             'campaigns/new/done.log','runs/new_s003/done_case/block000'})
