@@ -1,0 +1,17 @@
+method,coordinate,workload,valid_all,valid_repeats,expected_repeats,mean_total_s,sd_total_s,mean_bootstrap_ci95_low_s,mean_bootstrap_ci95_high_s,median_total_cold_s,median_total_warm_s
+banded_cholesky,direct_s,one_s_one_series,True,2,2,0.26316974999645026,0.011048897022412286,0.2553569999872707,0.27098250000562984,0.26316974999645026,0.24555590000090888
+banded_cholesky,mapped_lambda,one_s_one_series,True,2,2,0.26621170000726124,0.006913100164591863,0.2613234000018565,0.271100000012666,0.26621170000726124,0.2485972499998752
+banded_cholesky,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,direct_s,one_s_multiple_series,True,2,2,0.944186400003673,0.02733872805812998,0.9248550000047544,0.9635178000025917,0.944186400003673,0.9265723499993328
+banded_cholesky,mapped_lambda,one_s_multiple_series,True,2,2,0.3608465500146849,0.0005598164208446485,0.3604507000272861,0.36124240000208374,0.3608465500146849,0.34323265001148684
+banded_cholesky,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,direct_s,one_s_one_series,True,2,2,9.733740650030086,0.003523159528648211,9.731249400036177,9.736231900023995,9.733740650030086,0.323914650012739
+spectral_svd,mapped_lambda,one_s_one_series,True,2,2,9.71536065001419,0.010528890687210019,9.707915600010892,9.722805700017489,9.71536065001419,0.30691855000623036
+spectral_svd,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,direct_s,one_s_multiple_series,True,2,2,10.332892850019562,0.04547637054878298,10.300736200020765,10.365049500018358,10.332892850019562,0.9125604000073508
+spectral_svd,mapped_lambda,one_s_multiple_series,True,2,2,9.694922750000842,0.008708373566355542,9.688764999998966,9.701080500002718,9.694922750000842,0.2791703499897267
+spectral_svd,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
