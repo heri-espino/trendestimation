@@ -62,3 +62,19 @@ class SeedTests(unittest.TestCase):
                                dry_run=True, large_svd=True)
         with self.assertRaises(ValueError):
             campaign.run_one(args)
+
+    def test_resume_preserves_numerical_failures_and_only_schedules_missing(self):
+        import resume_seeds
+        design=campaign.load_design()
+        work=extra.jobs(design)
+        done=[]
+        for i,seed,case,block in work[:5]:
+            done.append(dict(seed_index=i+3, seed=seed,case=case['id'],
+                             block=block,returncode=0,
+                             counts={'spectral_svd':{'numerical_failed':4}}))
+        report=dict(cases_sha256=campaign.sha256_file(campaign.CASE_FILE),
+                    large_svd_opt_in=True,results=done)
+        self.assertEqual(resume_seeds.remaining(report,design),work[5:])
+        report['results'].append(done[0])
+        with self.assertRaises(ValueError):
+            resume_seeds.remaining(report,design)
