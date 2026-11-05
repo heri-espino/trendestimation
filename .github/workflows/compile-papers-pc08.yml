@@ -1,6 +1,10 @@
 name: Compile research manuscripts on PC08 (Conda trendestimation)
 
 on:
+  # One-shot diagnostic replay on the isolated branch only.
+  push:
+    branches: [ci/pc08-springer-retry-20261105]
+    paths: ['.github/workflows/compile-papers-pc08.yml']
   workflow_dispatch:
     inputs:
       paper:
@@ -80,7 +84,7 @@ jobs:
         id: build
         run: |
           $output = "paper/builds/pc08/${{ github.run_id }}-a${{ github.run_attempt }}"
-          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper '${{ inputs.paper }}' --output-dir $output --require-runner
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper '${{ inputs.paper || 'springer' }}' --output-dir $output --require-runner
           if ($LASTEXITCODE -ne 0) {
             throw "At least one TeX build or toolchain preflight failed; inspect the build_manifest.json and per-paper logs."
           }
@@ -89,7 +93,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pc08-papers-${{ inputs.paper }}-${{ github.run_id }}-a${{ github.run_attempt }}
+          name: pc08-papers-${{ inputs.paper || 'springer' }}-${{ github.run_id }}-a${{ github.run_attempt }}
           path: paper/builds/pc08/${{ github.run_id }}-a${{ github.run_attempt }}/
           if-no-files-found: warn
           retention-days: 90
