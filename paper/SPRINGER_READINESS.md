@@ -1,5 +1,7 @@
 # Springer Computational Statistics — readiness and decision ledger
 
+**Editorial proposal (2026-11-04):** [Draft PR #112](https://github.com/heri-espino/trendestimation/pull/112) tightens the archived-timing claims in `paper/main.tex` and documents manuscript-level source and mathematical checks in [EDITORIAL_LITERATURE_AUDIT.md](EDITORIAL_LITERATURE_AUDIT.md). It adds **no new Windows Experiment011 measurements**, runtime rankings or publication authorization. The 29-case study and its evidence gates below are unchanged.
+
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
 Read [cleanup audit](REPOSITORY_CLEANUP.md) and the current session handoff.
 Use `origin/main` after integration; older “open/unmerged” statements below
