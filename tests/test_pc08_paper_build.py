@@ -6,13 +6,13 @@ a Windows runner, data downloads, or scientific benchmark execution.
 from __future__ import annotations
 
 import subprocess
+import sys
 import tempfile
+import unittest
 from pathlib import Path
 from unittest import mock
 
 import scripts.build_papers_pc08 as pc08
-import sys
-import unittest
 
 from scripts.build_papers_pc08 import (
     CAS_FILES,
