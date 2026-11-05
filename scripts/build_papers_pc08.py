@@ -13,7 +13,7 @@ Examples:
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -144,6 +144,48 @@ def ensure_tex_tools() -> dict[str, str]:
     return result
 
 
+def prepare_springer_inputs(output_root: Path) -> list[dict[str, str]]:
+    """Restore two missing, *derived* inputs, never benchmark outputs.
+
+    The author already committed the seed-19 synthetic criteria table as
+    criteria_table.example.tex. The September-2026 NOAA figure is
+    regenerated only when absent, using the frozen 441-month data and
+    the repository's existing figure scripts (not a new experiment).
+    """
+    table = ROOT / "paper" / "criteria_table.tex"
+    example = ROOT / "paper" / "criteria_table.example.tex"
+    figure = ROOT / "paper" / "figures" / "mauna_loa_1990_2026_09.pdf"
+    data = ROOT / "paper" / "figures" / "mauna_loa_1990_2026_09.dat"
+    if not table.is_file():
+        if not example.is_file() or not example.read_text(encoding="utf-8").strip():
+            raise RuntimeError("Frozen synthetic criteria_table.example.tex is missing")
+        shutil.copy2(example, table)
+    if not figure.is_file():
+        preplog = output_root / "springer-preparation.log"
+        commands = (
+            [sys.executable, "paper/figures/make_updated_mauna_loa.py"],
+            [sys.executable, "paper/figures/render_awesomefigures.py", "--figures-only"],
+        )
+        with preplog.open("w", encoding="utf-8", errors="replace") as handle:
+            for command in commands:
+                handle.write("Command: " + " ".join(command) + "\n")
+                handle.flush()
+                subprocess.run(
+                    command, cwd=ROOT, stdout=handle, stderr=subprocess.STDOUT,
+                    check=True, timeout=600,
+                )
+        if not data.is_file():
+            raise RuntimeError("NOAA 441-month trend input was not generated")
+    if not figure.is_file() or figure.stat().st_size < 100:
+        raise RuntimeError("NOAA figure was not generated")
+    if not table.is_file() or table.stat().st_size < 100:
+        raise RuntimeError("Frozen synthetic criteria table is empty")
+    return [
+        {"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)}
+        for p in (table, figure, data) if p.is_file()
+    ]
+
+
 def compile_one(paper: Paper, output_root: Path) -> dict[str, object]:
     folder = ROOT / paper.folder
     log = output_root / f"{paper.id}.log"
@@ -164,6 +206,9 @@ def compile_one(paper: Paper, output_root: Path) -> dict[str, object]:
         "source_sha256": input_fingerprints(paper),
     }
     try:
+        if paper.id == "springer":
+            record["prepared_inputs"] = prepare_springer_inputs(output_root)
+            record["source_sha256"] = input_fingerprints(paper)
         if paper.template == "cas":
             for name in CAS_FILES:
                 shutil.copy2(CAS_TEMPLATE / name, folder / name)

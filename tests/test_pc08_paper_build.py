@@ -7,7 +7,12 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import tempfile
 import unittest
+from pathlib import Path
+from unittest import mock
+
+import scripts.build_papers_pc08 as pc08
 
 from scripts.build_papers_pc08 import (
     CAS_FILES,
@@ -49,6 +54,27 @@ class TestPC08ManuscriptBuild(unittest.TestCase):
         self.assertEqual(len(selected_papers("all")), 7)
         for paper in PAPERS:
             self.assertEqual(selected_papers(paper.id), (paper,))
+
+    def test_springer_missing_table_restored_from_tracked_example(self) -> None:
+        # No solver run or figure regeneration is needed if NOAA PDF is present.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            paper = root / "paper"
+            figures = paper / "figures"
+            figures.mkdir(parents=True)
+            original = (
+                "\\begin{tabular}{lrrr}\n" + ("Example & 2 & 3 & 4 \\\\\n" * 8)
+                + "\\end{tabular}\n"
+            )
+            (paper / "criteria_table.example.tex").write_text(original)
+            pdf = figures / "mauna_loa_1990_2026_09.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n" + b"x" * 120)
+            with mock.patch.object(pc08, "ROOT", root):
+                with mock.patch.object(pc08.subprocess, "run") as run:
+                    result = pc08.prepare_springer_inputs(root)
+                    run.assert_not_called()
+            self.assertEqual((paper / "criteria_table.tex").read_text(), original)
+            self.assertTrue(any(x["path"] == "paper/criteria_table.tex" for x in result))
 
     def test_dry_run_leaves_papers_untouched(self) -> None:
         source = ROOT / "scripts/build_papers_pc08.py"
