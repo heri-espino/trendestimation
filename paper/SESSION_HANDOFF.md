@@ -8,6 +8,10 @@ The case file specifies the executable design; earlier 21-case and full-factoria
 notes are historical. Do not expand the experiment or change its algorithms
 as part of resuming this session.
 
+## Parallel manuscript editorial review — November 4, 2026
+
+A separate **draft** [PR #112](https://github.com/heri-espino/trendestimation/pull/112) proposes prose improvements and two mathematical clarifications across the manuscript portfolio. Read [EDITORIAL_LITERATURE_AUDIT.md](EDITORIAL_LITERATURE_AUDIT.md) for the source-to-claim ledger, tested CV leverage correction, and remaining primary-source checks. This editorial work has **not** run Experiment011, replaced numerical results, recompiled every paper or authorized submission. The four-paper split and pending 29-case Windows protocol are unchanged. Do not merge this editorial PR without review and author approval.
+
 ## Integration update — November 4, 2026
 
 The author explicitly authorized merging and repository cleanup. The integration

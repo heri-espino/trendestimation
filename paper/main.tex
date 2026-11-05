@@ -25,7 +25,7 @@
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We investigate an alternative computational coordinate: normalized trace smoothness $s=S(\lambda)\in[0,1]$. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We also examine the computation supporting repeated candidate evaluations: numerical agreement and conditioning across difference orders, and measured costs of naive dense, cached dense, reusable singular-value, general banded, dense Cholesky, and banded Cholesky solvers under matched workloads. Archived GCV searches and a 48-row Windows BIC check document measured solver costs, selected-score agreement and the limitations of comparing runs under different processor contention. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
+\abstract{Penalized least-squares smoothing is commonly tuned by a nonnegative penalty parameter whose numerical scale varies with the order of differencing. We study the normalized trace smoothness coordinate $s=S(\lambda)\in[0,1]$ for this established estimator. For a specified difference order and fixed reference-difference mean, $S$ is strictly increasing, so optimizing an existing selection criterion over $s$ is mathematically equivalent to optimizing it over $\lambda$, with the endpoints represented explicitly. We present the spectral inverse, the derivative transformation for classical cross-validation, and an implementation supporting both search spaces without changing the statistical criteria. Deterministic regression tests compare scores on corresponding penalty and smoothness grids, including nonzero reference means and boundary cases. We examine numerical agreement and conditioning across difference orders, together with archived timing examples for dense, spectral and structured solvers. Archived GCV searches and a limited Windows BIC study illustrate solver costs and selected-score agreement. Results collected under different processor contention are not treated as a controlled backend ranking. A nonlinear synthetic example illustrates classical selection rules, while an observed carbon-dioxide series demonstrates smoothing across orders at prescribed normalized smoothness. The bounded coordinate improves interpretability, but its inversion adds numerical work; we do not infer faster optimization or improved forecast accuracy without corresponding comparisons. Joint estimation of the reference mean and smoothing parameter is left for future work.}
 
 \keywords{normalized smoothness index, penalized least squares, smoothing parameter selection, spectral computation, numerical benchmarking}
 
@@ -60,17 +60,17 @@ $s$ values, and objective evaluation may require either a complete
 trend fit or only a spectral trace and residual sum of squares.
 The banded structure of PLS normal equations can favor an individual
 fit, whereas a reusable decomposition can favor repeated evaluations
-\cite{weinert2007wh,weinert2012fast,biessy2026wh}. Accordingly, we supplement the
-parameterization with numerical agreement, higher-order conditioning,
-and measured comparisons of fresh and cached dense solves, spectral
-reuse, and a banded solver under matched workloads. These measurements
-describe solver costs, \emph{not} a head-to-head timing comparison of
-end-to-end optimizers in $\lambda$ and $s$.
+\cite{weinert2007wh,weinert2012fast,biessy2026wh}. We therefore examine numerical agreement, higher-order conditioning,
+and archived timings for fresh and cached dense solves, spectral reuse,
+and a banded solver. We identify the limits of comparisons made under
+different execution conditions. The archived measurements describe particular solver costs,
+\emph{not} a controlled comparison of end-to-end optimizers
+in $\lambda$ and $s$.
 
-We report mapped-grid equivalence checks and numerical validation of
-the CV derivative, a single illustrative nonlinear simulation for CV,
-GCV, AICc, and BIC, and a historical atmospheric carbon-dioxide
-example at prescribed normalized smoothness. Neither one synthetic
+We report mapped-grid equivalence checks, numerical validation of
+the CV derivative, a small nonlinear example comparing CV, GCV,
+AICc and BIC, and an atmospheric carbon-dioxide example at
+prescribed smoothness. Neither one synthetic
 realization nor mapped-grid agreement establishes a general statistical
 ranking or speed advantage. Arbitrary difference orders and fixed
 nonzero reference means belong to the published PLS family

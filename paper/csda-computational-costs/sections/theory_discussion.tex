@@ -1,15 +1,14 @@
 \section{Implementation-independent computational policy}
 \label{sec:policy}
-The preceding bounds suggest a reproducible decision procedure,
-but not a universal numerical winner. In practice the expensive
+The bounds suggest a reproducible way to select a computational method,
+but they do not identify a universally fastest implementation. In practice the expensive
 operations must be attributed to the correct level of reuse:
 a factorization is specific to $(n,d,\lambda)$, whereas
 a smoothing-grid inverse is specific only to $(n,d,s)$.
-A fitted curve is specific to the observations and to the
-reference-difference mean. A scalar selection criterion
-depends on the already-computed residual and diagnostic
-summaries, whereas its numerical definition is unchanged
-by a reparameterization of the candidate grid.
+A fitted trend depends on the observations and the
+reference-difference mean. A selection score may depend
+on fitted residuals, leverages, traces or likelihood diagnostics;
+changing the smoothing coordinate does not change its definition.
 
 \subsection{Cost-aware organization of a complete search}
 For each fixed $(n,d)$ the following abstract procedure
@@ -58,25 +57,23 @@ for the likelihood merely because both involve
 $D_d^\top D_d$.
 
 \subsection{Rival algorithmic explanations}
-One explanation for good observed performance is
-\emph{arithmetic sparsity}: the $d$-banded positive
-definite system admits a direct solve and its
-selected-inverse diagnostic in nearly linear
-arithmetic for fixed $d$. This is the strong
+The first possible source of good performance is
+\emph{arithmetic sparsity}: for fixed $d$, the banded
+positive-definite system and its selected-inverse
+diagnostics require work proportional to $n$. This is the strong
 case for banded Cholesky when $n$ is large.
 
-A rival explanation is \emph{amortization}:
-dense spectral preprocessing is expensive,
-but the same singular basis can serve many
-smoothed-series and scalar-criterion evaluations.
+A second source is \emph{amortization}: a dense spectral
+decomposition is expensive to construct, but the basis
+can be reused across candidates, series and scalar criteria.
 The second explanation is especially relevant
 for large $M$ and scalar GCV/AICc/BIC/ML scoring.
 Neither explanation dominates without the
 actual workload and implementation constants,
 and both can be affected by numerical conditioning.
-The synthesis is the conditional admissible
-frontier of Eq.~\eqref{eq:theory_frontier}, rather
-than a globally preferred factorization.
+The resulting choice is the workload- and validity-dependent
+frontier in Eq.~\eqref{eq:theory_frontier}, not one preferred
+factorization for every problem.
 
 The importance of exploiting Whittaker--Henderson
 structure was demonstrated long before this paper:

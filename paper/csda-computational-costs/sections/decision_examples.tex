@@ -1,11 +1,10 @@
 \section{Practical algorithm regimes and worked illustrations}
 \label{sec:decision-regimes}
-Theorems provide work and storage bounds, but a reader must also
-know what changes when the scientific workload changes.
-We distinguish a \emph{derived preference under stated assumptions}
-from an \emph{observed numerical comparison}. The former cannot
-be read off from milliseconds, and the latter cannot establish
-an asymptotic ordering.
+Operation and memory bounds depend on the requested workload.
+We distinguish predictions derived from a cost model under stated
+assumptions from comparisons based on measured execution times.
+Neither kind of evidence, by itself, establishes a universal
+performance ranking.
 
 \subsection{When is SVD preferable, and when is Cholesky?}
 \label{sec:which-method}
@@ -32,16 +31,15 @@ not be called a pure sparse-Cholesky timing.
 
 For \emph{conditional ordinary CV}, the spectral method
 needs the leverage diagonal
-$h_i=\sum_{k}v_{ik}^{\,2}/(1+\lambda\delta_k)$ and
-the fitted residual vector, costing up to $O(nr)$
+$h_i=1-\sum_k v_{ik}^{\,2}\lambda\delta_k/(1+\lambda\delta_k)$
+and the fitted residual vector, costing up to $O(nr)$
 per new candidate; the leverage is reusable across
 the $R$ series. By contrast, the banded selected-inverse
 recursion obtains all $h_i$ with the same $O(nd^2)$
-factorization order. Therefore the crossover
-for CV need not coincide with the scalar-GCV crossover.
-In the fixed-$d$, increasing-$n$ asymptotic regime,
-the banded CV path has a structural arithmetic advantage
-over the full dense-spectral CV calculation.
+factorization order. The crossover for CV therefore need not coincide
+with the crossover for scalar GCV.
+With fixed small $d$ and growing $n$, the banded CV path
+has a more favorable arithmetic order than full dense-spectral CV.
 Nevertheless, optimized matrix kernels and numerical
 tolerances can reverse a \emph{finite-size measured}
 ranking. Neither family is universally the fastest.

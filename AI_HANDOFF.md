@@ -1,5 +1,7 @@
 # AI_HANDOFF — latest
 
+**Parallel manuscript edit, 2026-11-04:** Draft [PR #112](https://github.com/heri-espino/trendestimation/pull/112) improves prose in the four primary papers and the direct-spectral-weights draft, corrects the CSDA B fixed-mean CV leverage diagonal and the CSDA A nonzero-mean polynomial endpoint, and adds a deterministic test plus [paper/EDITORIAL_LITERATURE_AUDIT.md](paper/EDITORIAL_LITERATURE_AUDIT.md). This is not a claim of exhaustive publisher-PDF verification. It does not produce Windows Experiment011 timing measurements, change scientific manuscript ownership or authorize submission/merge. Read the PR and source-to-claim ledger before revising any affected section.
+
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
 Read [cleanup audit](paper/REPOSITORY_CLEANUP.md) and the current session handoff.
 Use `origin/main` after integration; older “open/unmerged” statements below

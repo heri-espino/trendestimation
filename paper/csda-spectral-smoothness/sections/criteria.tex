@@ -1,5 +1,5 @@
 \section{Selection criteria and boundary behavior}\label{sec:criteria}
-For fixed numeric $\mu$, let $e=y-\widehat\tau_{\lambda,\mu}$, $h_{ii}=(H_\lambda)_{ii}$, $\nu=\tr(H_\lambda)$ and $\RSS=\|e\|_2^2$. We evaluate the published conditional scores \citep{cortes2017}
+For fixed numeric $\mu$, let $e=y-\widehat\tau_{\lambda,\mu}$, $h_{ii}=(H_\lambda)_{ii}$, $\nu=\tr(H_\lambda)$ and $\RSS=\|e\|_2^2$. We evaluate the following conditional smoothing scores, as used by \citet{cortes2017}
 \begin{align}
 \mathrm{CV}(\lambda)&=\frac1n\sum_i\left(\frac{e_i}{1-h_{ii}}\right)^2,
 &
@@ -10,16 +10,17 @@ For fixed numeric $\mu$, let $e=y-\widehat\tau_{\lambda,\mu}$, $h_{ii}=(H_\lambd
 \mathrm{BIC}_{\mathrm{RSS}}(\lambda)&=\log(\RSS/n)+\frac{\nu\log n}{n}.
 \label{eq:aicbic}
 \end{align}
+In the notation of \citet{cortes2017}, the AICc expression is written with $\log\RSS$; our $\log(\RSS/n)$ subtracts the constant $\log n$ and therefore yields the same minimizing penalty for fixed $n$. The reported residual-based BIC is unchanged by this rewriting. These normalization conventions should be kept explicit when comparing \emph{score values} across implementations.
 Undefined denominators and inadmissible limits are recorded rather than treated as finite scores. GCV and CV at exact interpolation require special care because the formula is indeterminate; an interior limit is not identical to scoring a uniquely defined full interpolation refit.
 
-The Gaussian variance-component criterion is a profiled marginal likelihood on the $r=n-d$ positive singular modes. For $z=V^\top(y-p_\mu)$ and $c_j(\lambda)=1+1/(\lambda\delta_j)$, it is
+Separately, we consider a Gaussian variance-component criterion: a profiled marginal likelihood on the $r=n-d$ positive singular modes. For $z=V^\top(y-p_\mu)$ and $c_j(\lambda)=1+1/(\lambda\delta_j)$, it is
 \begin{equation}\label{eq:mle}
 C_{\mathrm{ML}}(\lambda)=r\log\left(\frac1r\sum_{j=1}^r
 \frac{z_j^2}{c_j(\lambda)}\right)+\sum_{j=1}^r\log c_j(\lambda),
 \end{equation}
 up to additive constants. The objective uses a Gaussian hierarchical assumption; it is not the PLS objective \eqref{eq:pls} minimized over $\lambda$.
 
-We compare two mean policies: fixed $\mu=0$ and empirical plug-in $\widehat\mu=\operatorname{mean}(D_dy)$, which is \emph{not} the mean of $y$ when $d\ge1$. Substitution of this estimate into the fixed-$\mu$ scores is a conditional plug-in analysis. In particular, it is not exact leave-one-out CV re-estimating the mean after deletion, an adaptive effective-degrees-of-freedom calculation, or joint Gaussian maximum likelihood. Classical score values are not compared numerically across different criterion definitions.
+We compare two mean policies: fixed $\mu=0$ and empirical plug-in $\widehat\mu=\operatorname{mean}(D_dy)$, which is \emph{not} the mean of $y$ when $d\ge1$. Substitution of this estimate into the fixed-$\mu$ scores is a conditional plug-in analysis. In particular, it is not exact leave-one-out CV re-estimating the mean after deletion, an adaptive effective-degrees-of-freedom calculation, or joint Gaussian maximum likelihood. Because the criteria have different definitions and scales, their numerical score values are compared only within the same criterion.
 
 Classical leave-one-out smoothing scores must not be confused with chronological prediction validation. Time-series CV for kernel smoothing under serial dependence was studied by \citet{hart1994}; dependent-data cross-validation also motivates withholding blocks rather than indiscriminately treating observations as independent \citep{burman1994}. Different validity conditions for autoregressive prediction are analyzed by \citet{bergmeir2018}, while \citet{tashman2000} distinguishes rolling-origin forecasting evaluation from historical in-sample reconstruction. We therefore report the present results as trend recovery and do not claim that their CV scores provide an evaluated multi-step forecasting procedure.
 
