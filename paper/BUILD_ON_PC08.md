@@ -55,6 +55,28 @@ avoid competing compile processes on the same machine. This workflow has
    the workflow's runs-on list. Without a dedicated label, another
    Windows runner could be assigned and will refuse to execute.
 
+## Springer generated-input recovery
+
+The first PC08 run (41985165397) compiled six of seven papers.
+The canonical Springer source failed because paper/criteria_table.tex
+was absent. Inspection also identified a missing NOAA carbon-dioxide figure
+at paper/figures/mauna_loa_1990_2026_09.pdf.
+
+For a clean checkout, the compilation helper now:
+1. Copies the original tracked paper/criteria_table.example.tex into
+   paper/criteria_table.tex, only if that file is absent.
+2. If the NOAA figure is absent, reconstructs its 441-month fitted data
+   from the frozen source CSV using the existing original script, then
+   executes the existing AwesomeFigures figure-only renderer. No network
+   download or computational benchmark is performed.
+3. Records the preparation commands in springer-preparation.log and
+   archives the input table, figure, derived data, and provenance JSON
+   with the compiled PDF on the distinct Git results branch.
+
+These operations reproduce a predeclared descriptive figure, not new
+scientific measurements. The six successfully compiled PDFs from
+the first run remain preserved in their original results branch.
+
 ## Manuscript source and result isolation
 
 CSDA A, CSDA B, NGSIM and direct spectral weights copy the exact
