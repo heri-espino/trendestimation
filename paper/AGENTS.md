@@ -1,5 +1,21 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C extrapolation handoff (2026-11-05):** In addition to the
+literature index below, read
+[EXTRAPOLATION_RESEARCH_HANDOFF](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
+[EXTRAPOLATION_DECOMPOSITION](ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),
+[MU_POLICY_CATALOG](ngsim-jerk-case-study/notes/MU_POLICY_CATALOG.md),
+and [EXTRAPOLATION_ABLATION_PLAN](ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md).
+The user's new hypothesis is **d=3 PLS with nonzero reference
+jerk plus local-polynomial extrapolation**, not a new PLS model.
+Biessy 2025/2026 already performs WH extrapolation.
+An exact fixed-S 2x2 decomposition is provided for testing
+fit versus continuation contributions. No new data, policies,
+tests, results or manuscript edits are implied by these notes.
+Any new scientific results belong in **Paper C** and a
+separate reproducible experiment, not Springer Experiment011.
+
+
 **Paper C primary literature notes (2026-11-05):** Before editing the NGSIM
 manuscript, read [NGSIM annotated notes](ngsim-jerk-case-study/notes/README.md),
 [the literature comparison](ngsim-jerk-case-study/notes/LITERATURE_REVIEW.md),
