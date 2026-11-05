@@ -5,8 +5,8 @@ compiles the existing manuscript sources and archived figures/tables. It does
 not rerender figures, redownload NGSIM data, choose smoothing parameters, run
 Experiment011 or start any timing benchmark.
 
-- Workflow: [Compile research manuscripts on PC08](../../.github/workflows/compile-papers-pc08.yml)
-- Builder: [scripts/build_papers_pc08.py](../../scripts/build_papers_pc08.py)
+- Workflow: [Compile research manuscripts on PC08](../.github/workflows/compile-papers-pc08.yml)
+- Builder: [scripts/build_papers_pc08.py](../scripts/build_papers_pc08.py)
 - Workstation: **PCAG103A-08** (pc08), Windows x64
 - Existing Conda environment: **trendestimation**
 - Conda installation: C:\Users\175199\AppData\Local\miniconda3
