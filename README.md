@@ -1,5 +1,14 @@
 # trendestimation
 
+**Paper C research continuation (2026-11-05):**
+[nonzero-reference jerk extrapolation notes](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
+and [the proposed ablation](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md)
+document a potential applied contribution, not a proven novelty or
+new measured result. Existing NGSIM data and article outputs are
+unchanged; PLS itself remains a historical smoother, not a
+built-in forecast model.
+
+
 **Session continuation (2026-11-04): read [SESSION_HANDOFF.md](paper/SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
 
 ## Current author decision — focused Experiment011 (November 4, 2026)
