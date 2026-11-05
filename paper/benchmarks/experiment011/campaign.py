@@ -209,6 +209,8 @@ def run_one(args: argparse.Namespace) -> None:
     if not args.run_tag or not VALID_TAGS.fullmatch(args.run_tag):
         raise ValueError("--run-tag must be a safe machine/run ID, e.g. PCAG103A08_001")
     case = select_case(design, args.case)
+    if getattr(args, "seed", None) is not None and args.seed < 0:
+        raise ValueError("Seed must be nonnegative")
     if case["stage"] == "confirm" and not args.allow_confirm:
         raise PermissionError("Confirm-sized cases require --allow-confirm")
     if args.block < 0 or args.block >= case["planned_blocks"]:
@@ -228,7 +230,8 @@ def run_one(args: argparse.Namespace) -> None:
         "experiment": "experiment011", "case": case,
         "block": args.block, "method_order": methods,
         "threads": 1, "python_executable": sys.executable,
-        "seed": design["seed_base"] + 10000 * args.block,
+        "seed": (getattr(args, "seed", None) if getattr(args, "seed", None) is not None
+                 else design["seed_base"] + 10000 * args.block),
         "source_commit": git_sha(),
         "source_file_sha256": sha256_file(SOURCE),
         "case_design_sha256": sha256_file(CASE_FILE),
@@ -311,6 +314,8 @@ def main() -> None:
     r.add_argument("--case", required=True)
     r.add_argument("--run-tag", required=True)
     r.add_argument("--block", type=int, default=0)
+    r.add_argument("--seed", type=int, default=None,
+                   help="Explicit nonnegative data seed; block still rotates method order")
     r.add_argument("--allow-confirm", action="store_true")
     r.add_argument("--dry-run", action="store_true")
     ps = sub.add_parser(
