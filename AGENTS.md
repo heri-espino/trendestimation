@@ -1,5 +1,19 @@
 # AGENTS.md — trendestimation research repository
 
+**New Paper C handoff (2026-11-05):** Future agents working on
+the FHWA NGSIM application **must** begin with
+[nonzero-reference extrapolation research](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
+and its [exact fit-vs-continuation decomposition](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),
+[training-only mu options](paper/ngsim-jerk-case-study/notes/MU_POLICY_CATALOG.md),
+and [planned experiment001 protocol](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md).
+The `d=3, mu!=0` extrapolation claim is **unverified novelty**;
+Whittaker-Henderson extrapolation is established by Biessy (2025/2026).
+The current code implements a **separate** local continuation and
+only `zero`/`sample` mu. Do not mistake planned policies or
+2x2 ablations for completed experiments. Preserve original NGSIM
+figures, raw data, results, and other agents' branches/PRs.
+
+
 **Paper-only compilation (2026-11-04):** See [paper/BUILD_ON_PC08.md](paper/BUILD_ON_PC08.md). The manual workflow uses `PCAG103A-08` and Conda `trendestimation` to compile seven LaTeX entrypoints without figure regeneration, downloads or benchmarks. Its output is an independent archive branch with PDF/log/hash provenance, not a direct write to `main`. Do not confuse this with the Experiment011 Windows benchmark runner. Editorial PR #112 has been merged; older descriptions of it as unmerged are historical.
 
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
