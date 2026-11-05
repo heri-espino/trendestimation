@@ -32,6 +32,19 @@ The CV leverage identity is also important for scientific interpretation: for fi
 
 Other corpus items and prior repository reviews discuss GCV, smoothing splines, dependent-data CV, forecast evaluation, trend filters and HP alternatives. Their presence in the index is useful for follow-up, but this pass does not certify every individual assertion or bibliographic field.
 
+## Selection-score notation checked against the extracted Cortés-Toto text
+
+The extraction of Cortés-Toto et al. (2017) presents
+$\mathrm{AICc}(\lambda)=\log\mathrm{RSS}(\lambda)+(2\nu+1)/(n-\nu-2)$
+and $\mathrm{BIC}(\lambda)=\log\mathrm{RSS}(\lambda)-\log n+\nu\log n/n$,
+using $\nu=\operatorname{tr}(H_\lambda)$. CSDA A writes AICc with
+$\log(\mathrm{RSS}/n)$ instead: this is a $-\log n$ additive constant
+independent of $\lambda$, so the selected optimum is unchanged at fixed
+$n$. Its residual-BIC expression is algebraically identical to the
+extracted formula. Score values may differ across implementations that
+use different constants, even when minimizers agree. The publisher PDF
+remains the final authority where the extraction may be imperfect.
+
 ## Editorial changes
 
 - Replaced grand or unnatural formulations with direct statements of the scientific question, method and limits.
@@ -44,7 +57,7 @@ Other corpus items and prior repository reviews discuss GCV, smoothing splines, 
 ## Outstanding before submission
 
 1. **Scientific audit, not just copyediting:** Independently verify key derived results and implementation details (especially selected inversion, the Gaussian marginal likelihood normalization, conditional plug-in CV and all endpoint conventions). The small leverage identity test cannot certify the rest of the paper.
-2. **Primary-source checks:** Recheck all exact formula references, publication dates and bibliographic fields against publisher PDFs. OCR or text extraction is not sufficient to resolve disputed equations. Verify whether the cited BIC expression and AICc form match the original Cortés-Toto paper under the draft's normalization.
+2. **Primary-source checks:** Recheck all exact formula references, publication dates and bibliographic fields against publisher PDFs. OCR or text extraction is not sufficient to resolve disputed equations. Visually verify the precise AICc/BIC equations in the publisher PDF; the extracted formulas and their additive normalization relation have now been checked as described above.
 3. **Numerical evidence:** CSDA A's 85-digit precision, BIC sensitivity and pilot RMSE numbers remain archived claims. This copyedit did not rerun or independently certify their full original provenance. The CSDA B 48-row BIC illustration has only two repeats.
 4. **Springer:** Experiment011's 29-case Windows data are not established by the handoff. Do not publish a cross-criterion performance frontier until matched real observations, numerical checks and independent blocks are archived. Existing Springer text is preliminary and will require a results-driven rewrite.
 5. **NGSIM:** Five vehicles and overlapping forecast origins provide a descriptive application, not independent population-level confidence intervals, measured ground-truth jerk or validated vehicle safety predictions.
