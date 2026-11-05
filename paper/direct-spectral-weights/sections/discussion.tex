@@ -1,7 +1,7 @@
 \section{Discussion, falsifiable claims and research agenda}\label{sec:discussion}
 
 \subsection{What has been proved}
-The PLS objective \eqref{eq:objective} is unchanged.
+The objective \eqref{eq:objective} remains the classical PLS objective.
 Theorem~\ref{thm:odds} characterizes exactly which shrinkage
 weights belong to a single quadratic-penalty family;
 Theorem~\ref{thm:root} proves a unique scalar root for
@@ -14,8 +14,8 @@ separates weight stability from scalar-root conditioning.
 Theorem~\ref{thm:plugin} supplies the full Jacobian trace
 when the difference mean is computed from the observations.
 The results are algebraic consequences of an established
-linear smoother. Their formal presentation is not evidence
-that every identity is historically novel.
+linear smoother. These are algebraic results for an established estimator;
+their presentation does not establish historical priority.
 
 \subsection{Why using weights can nevertheless be useful}
 For an interior target $s$ and a known positive spectrum,
@@ -27,17 +27,15 @@ that expression. It may therefore be possible to
 reconstruct a trend in a regime where $\lambda$ itself
 cannot be represented as a finite floating-point
 number, provided the singular values and the weight
-root remain numerically resolvable. This is a \emph{conditional
-representation advantage}, not a universal proof of
-greater numerical accuracy. If the smallest singular
+root remain numerically resolvable. This is a possible advantage of the representation,
+not a general proof of numerical superiority. If the smallest singular
 values have already been corrupted or lost to underflow,
 the method cannot recover that information.
 
 Caching $w(s)$ for repeated series with identical $(n,d,s)$
-also avoids repeated inversion. An equally optimized
-penalty-based implementation can cache the same weights,
-so no intrinsic asymptotic advantage follows from the
-new interface. The correct comparison distinguishes
+also avoids repeated inversion. A well-optimized penalty-based implementation can cache
+the same weights. The new parameterization therefore has
+no automatic asymptotic advantage. The correct comparison distinguishes
 (i) initial SVD cost, (ii) scalar inversion, (iii) repeated
 full-vector reconstruction, (iv) memory, and (v) failed
 or inaccurate candidate fits. Prior structured
@@ -117,10 +115,9 @@ classical penalized problem. The exact
 endpoint projection, sensitivity bound and
 plug-in degrees-of-freedom correction help
 clarify what prescribing $s\in[0,1]$
-mathematically controls. Whether this direct
-execution path is preferable in practice
-is an open empirical question for the
-proposed paired precision--runtime benchmark.
+mathematically controls. The proposed paired precision--runtime study is needed
+to determine whether direct reconstruction improves
+accuracy or execution time in practice.
 
 \section*{Software and evidence status}
 The implementation is maintained at
