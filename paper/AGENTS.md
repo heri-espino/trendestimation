@@ -1,5 +1,7 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Parallel editorial review (2026-11-04):** [draft PR #112](https://github.com/heri-espino/trendestimation/pull/112) contains targeted writing and mathematical corrections for the four publication tracks and a separate direct-weights draft. The [editorial literature audit](EDITORIAL_LITERATURE_AUDIT.md) records source support and unresolved checks. It does not supersede the Experiment011 case design or authorize merges/submissions. Preserve manuscript branches and experimental data.
+
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
 Read [cleanup audit](REPOSITORY_CLEANUP.md) and the current session handoff.
 Use `origin/main` after integration; older “open/unmerged” statements below
