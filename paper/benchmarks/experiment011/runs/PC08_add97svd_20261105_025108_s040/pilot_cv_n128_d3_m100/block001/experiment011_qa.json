@@ -1,0 +1,191 @@
+{
+  "block": 1,
+  "case_id": "pilot_cv_n128_d3_m100",
+  "classification": "float64_parity_only_not_precision_certified",
+  "experiment": "experiment011",
+  "has_all_methods_successful": true,
+  "interpretation": "This checks only recorded success status, matching selected S and candidate score in float64 (except ML constants). It does not certify forward error at arbitrary penalty, estimate a universal crossover or establish statistical forecast accuracy.",
+  "issues": [],
+  "paired_method_comparisons": [
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.901053085588053e-09,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.988272458807735e-10,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.1528367704489228e-10,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_one_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 7.923979649017527e-10,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_one_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.3956723127735126e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 7.626518638869946e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 4.1723412309129545e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 3.4873619152781755e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.901053085588053e-09,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.988272458807735e-10,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.1528367704489228e-10,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 7.923979649017527e-10,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "grid_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.3956723127735126e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 7.626518638869946e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 4.1723412309129545e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 3.4873619152781755e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    }
+  ],
+  "raw_rows": 32,
+  "status_counts": {
+    "ok": 32
+  }
+}

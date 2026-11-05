@@ -1,0 +1,114 @@
+{
+  "experiment": "experiment011",
+  "case": {
+    "id": "confirm_gcv_n64_d3_m10000",
+    "stage": "confirm",
+    "n": 64,
+    "d": 3,
+    "grid_denominator": 10000,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "high",
+    "methods": [
+      "spectral_svd",
+      "banded_cholesky"
+    ],
+    "series_count": 3,
+    "repeats_per_block": 2,
+    "planned_blocks": 3,
+    "conditional_data_mu": false
+  },
+  "block": 2,
+  "method_order": [
+    "spectral_svd",
+    "banded_cholesky"
+  ],
+  "threads": 1,
+  "python_executable": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\python.exe",
+  "seed": 1023000000,
+  "source_commit": "a8a9c4704eccfad8461a3c0e5f8502f18c2a6199",
+  "source_file_sha256": "dc7ff10ed51bcf746726e143512c61573c38f69f177d5fcbab6648830f55a9e5",
+  "case_design_sha256": "67694c0f3dda785b598658a660bf853de30cd8ab6d9d83aa92befba212c6c88d",
+  "inherited_runner": "paper/benchmarks/experiment006/run.py",
+  "preflights": [
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "spectral_svd",
+      "scenario": "one_s_one_series",
+      "R": 1,
+      "M": 1,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "spectral_svd",
+      "scenario": "grid_one_series",
+      "R": 1,
+      "M": 10000,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "spectral_svd",
+      "scenario": "one_s_multiple_series",
+      "R": 3,
+      "M": 1,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "spectral_svd",
+      "scenario": "grid_multiple_series",
+      "R": 3,
+      "M": 10000,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "banded_cholesky",
+      "scenario": "one_s_one_series",
+      "R": 1,
+      "M": 1,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "banded_cholesky",
+      "scenario": "grid_one_series",
+      "R": 1,
+      "M": 10000,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "banded_cholesky",
+      "scenario": "one_s_multiple_series",
+      "R": 3,
+      "M": 1,
+      "preflight": "eligible"
+    },
+    {
+      "case": "confirm_gcv_n64_d3_m10000",
+      "method": "banded_cholesky",
+      "scenario": "grid_multiple_series",
+      "R": 3,
+      "M": 10000,
+      "preflight": "eligible"
+    }
+  ],
+  "large_svd_opt_in": false,
+  "max_work_for_this_case": 500000000,
+  "n_level_extension": "unchanged",
+  "status": "measured_pending_review",
+  "caveats": [
+    "One worker per invocation; exactly one BLAS thread",
+    "total_cold_s uses inherited setup attribution; not fresh-process cold start",
+    "conditional mu=data CV is not refitted leave-one-out CV",
+    "Gaussian MLE score levels may have constant-offset differences",
+    "fit-only times must not be compared with complete criterion runs"
+  ],
+  "completed_utc": "2026-11-05T08:57:50.268564+00:00",
+  "actual_rows": 32,
+  "qa_status": "partial_success_with_skips_or_failures",
+  "raw_sha256": "b441f6431c6ddcb012a4a9746233f4422f0de18f3ddf0e3d0fc909a57cb041ac"
+}

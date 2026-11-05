@@ -1,0 +1,76 @@
+{
+  "n": 256,
+  "d": 3,
+  "mu": 0.0,
+  "amplitude": "high",
+  "criterion": "cv",
+  "mean_policy_note": "fixed_numeric_reference_mean",
+  "denominator": 1000,
+  "methods": [
+    "banded_cholesky",
+    "spectral_svd"
+  ],
+  "R": 3,
+  "repeats": 2,
+  "policies": [
+    "direct_s",
+    "mapped_lambda"
+  ],
+  "scenarios": [
+    "one_s_one_series",
+    "grid_one_series",
+    "one_s_multiple_series",
+    "grid_multiple_series"
+  ],
+  "exact_S_one": true,
+  "grid_starts_at_positive_s": true,
+  "mapping_backend": "full_svd",
+  "mapper_setup_s": 0.007917599999927916,
+  "max_work": 500000000,
+  "max_dense_bytes": 2147483648,
+  "allow_unbounded_runtime": false,
+  "seed": 1004000000,
+  "host": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "mkl",
+      "num_threads": 1,
+      "prefix": "mkl_rt",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Library\\bin\\mkl_rt.3.dll",
+      "version": "2026.1-Product",
+      "threading_layer": "intel"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 1,
+      "prefix": "vcomp",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\vcomp140.dll",
+      "version": null
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 1,
+      "prefix": "libiomp",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Library\\bin\\libiomp5md.dll",
+      "version": null
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 1,
+      "prefix": "libomp",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Library\\bin\\libomp.dll",
+      "version": null
+    }
+  ],
+  "blas_threads": 1,
+  "code_sha256": "dc7ff10ed51bcf746726e143512c61573c38f69f177d5fcbab6648830f55a9e5",
+  "git_sha": "a8a9c4704eccfad8461a3c0e5f8502f18c2a6199",
+  "note": "Selection is minimum of actually evaluated candidate scores. BIC mathematical divergence at S->0+ is not repaired. Scores across criteria are not directly comparable. All incomplete/invalid records excluded from winner rankings. n<=512 mapping uses a shared SVD; larger n uses selected inversion."
+}
