@@ -1,0 +1,129 @@
+name: Compile research manuscripts on PC08 (Conda trendestimation)
+
+on:
+  workflow_dispatch:
+    inputs:
+      paper:
+        description: 'Which manuscript to compile? "all" builds seven entrypoints sequentially.'
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - csda-a
+          - csda-b
+          - springer
+          - ngsim
+          - direct-weights
+          - historical-springer
+          - historical-sncs
+
+permissions:
+  contents: write
+
+# A single university workstation must never compile two manuscripts in
+# separate jobs simultaneously; do not disrupt numerical timing experiments.
+concurrency:
+  group: manuscript-compile-pc08
+  cancel-in-progress: false
+
+jobs:
+  compile:
+    name: Compile manuscript PDF(s) using PCAG103A-08
+    # Existing PC08 installation advertises standard self-hosted Windows/X64
+    # labels. Runner name is checked below (not automatically a GitHub label).
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 150
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - name: Check out exactly the requested manuscript source
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Require the PC08 runner and existing Conda environment
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "Runner: $env:RUNNER_NAME"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') {
+            throw "The selected host is not PCAG103A-08. Never compile on a different workstation."
+          }
+          if (-not (Test-Path -LiteralPath $env:CONDA_EXE)) {
+            throw "Conda was not found at $env:CONDA_EXE"
+          }
+          $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+          if (-not (Test-Path -LiteralPath $python)) {
+            throw "The existing trendestimation Conda environment is missing: $python"
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python --version
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to run Python in trendestimation.' }
+          # No conda create/update, no pip install and no scientific experiments.
+
+      - name: Verify seven known manuscript source entrypoints
+        run: |
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list
+          if ($LASTEXITCODE -ne 0) { throw 'Manuscript inventory validation failed.' }
+
+      - name: Build selected papers from already archived TeX and figure inputs
+        id: build
+        run: |
+          $output = "paper/builds/pc08/${{ github.run_id }}-a${{ github.run_attempt }}"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper '${{ inputs.paper }}' --output-dir $output --require-runner
+          if ($LASTEXITCODE -ne 0) {
+            throw "At least one TeX build or toolchain preflight failed; inspect the build_manifest.json and per-paper logs."
+          }
+
+      - name: Upload PDFs, LaTeX logs and reproducibility manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc08-papers-${{ inputs.paper }}-${{ github.run_id }}-a${{ github.run_attempt }}
+          path: paper/builds/pc08/${{ github.run_id }}-a${{ github.run_attempt }}/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Permanently preserve build records on a distinct Git branch
+        if: always() && steps.checkout.outcome == 'success'
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08/${{ github.run_id }}-a${{ github.run_attempt }}"
+          $manifest = Join-Path $dir 'build_manifest.json'
+          if (-not (Test-Path -LiteralPath $manifest)) {
+            Write-Host 'No build manifest to archive (preflight failed before compilation).'
+            exit 0
+          }
+          $data = Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
+          $branch = "artifacts/papers-pc08-${{ github.run_id }}-a${{ github.run_attempt }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create a separate build-results branch.' }
+
+          git add -f -- $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Could not stage immutable build records.' }
+          # Add only PDFs that were successfully rebuilt; never archive a
+          # previous tracked PDF as proof of a failed new compilation.
+          foreach ($item in $data.results) {
+            if ($item.status -eq 'ok' -and (Test-Path -LiteralPath $item.repository_pdf)) {
+              git add -f -- $item.repository_pdf
+              if ($LASTEXITCODE -ne 0) { throw "Cannot stage PDF $($item.repository_pdf)" }
+            }
+          }
+          git commit -m "paper: archive PC08 LaTeX build ${{ github.run_id }} attempt ${{ github.run_attempt }}"
+          if ($LASTEXITCODE -ne 0) { throw 'Build record commit failed.' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Build record push failed.' }
+          Write-Host "Source-specific compiled PDFs, manifest and logs: $branch"
+          Write-Host 'This branch is not merged automatically into main.'
