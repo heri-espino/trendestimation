@@ -132,7 +132,7 @@ def select_case(design: dict, name: str) -> dict:
     return candidates[0]
 
 
-def preflights(case: dict, design: dict) -> list[dict]:
+def preflights(case: dict, design: dict, *, allow_unbounded_runtime=False) -> list[dict]:
     # Numerical resource gates are imported from the actual benchmark source.
     sys.path.insert(0, str(SOURCE.parent))
     from run import SCENARIOS, memory_budget_status
@@ -144,7 +144,8 @@ def preflights(case: dict, design: dict) -> list[dict]:
                 case["n"], case["d"], method, case["grid_denominator"],
                 design["max_dense_bytes"],
                 case.get("max_work",design["max_work"]),
-                scenario, r, case["repeats_per_block"]
+                scenario, r, case["repeats_per_block"],
+                allow_unbounded_runtime=allow_unbounded_runtime
             )
             result.append({
                 "case": case["id"], "method": method,
@@ -209,6 +210,8 @@ def run_one(args: argparse.Namespace) -> None:
     if not args.run_tag or not VALID_TAGS.fullmatch(args.run_tag):
         raise ValueError("--run-tag must be a safe machine/run ID, e.g. PCAG103A08_001")
     case = select_case(design, args.case)
+    if getattr(args, "seed", None) is not None and args.seed < 0:
+        raise ValueError("Seed must be nonnegative")
     if case["stage"] == "confirm" and not args.allow_confirm:
         raise PermissionError("Confirm-sized cases require --allow-confirm")
     if args.block < 0 or args.block >= case["planned_blocks"]:
@@ -217,6 +220,12 @@ def run_one(args: argparse.Namespace) -> None:
         raise RuntimeError("Run from the repository root to preserve Git/environment provenance")
     if not SOURCE.exists():
         raise FileNotFoundError(SOURCE)
+    large_svd = bool(getattr(args, "large_svd", False))
+    if large_svd:
+        if case["n"] not in (2048, 4096):
+            raise ValueError("--large-svd applies only to n=2048/4096")
+        case = dict(case, methods=["spectral_svd", "banded_cholesky"],
+                    max_work=2**63-1)
     # Rotating the order across blocks reduces (but does not eliminate)
     # the fixed-order/thermal drift of the inherited sequential engine.
     methods = list(case["methods"])
@@ -228,12 +237,14 @@ def run_one(args: argparse.Namespace) -> None:
         "experiment": "experiment011", "case": case,
         "block": args.block, "method_order": methods,
         "threads": 1, "python_executable": sys.executable,
-        "seed": design["seed_base"] + 10000 * args.block,
+        "seed": (getattr(args, "seed", None) if getattr(args, "seed", None) is not None
+                 else design["seed_base"] + 10000 * args.block),
         "source_commit": git_sha(),
         "source_file_sha256": sha256_file(SOURCE),
         "case_design_sha256": sha256_file(CASE_FILE),
         "inherited_runner": design["parent_runner"],
-        "preflights": preflights(case, design),
+        "preflights": preflights(case, design, allow_unbounded_runtime=large_svd),
+        "large_svd_opt_in": large_svd,
         "max_work_for_this_case":case.get("max_work",design["max_work"]),
         "n_level_extension": (
             "Experiment011-only admission of 2048/4096, no change to the"
@@ -278,6 +289,7 @@ def run_one(args: argparse.Namespace) -> None:
                 output=path / "measurements", threads=1,
                 seed=config["seed"],
                 conditional_data_mu=case["conditional_data_mu"],
+                allow_unbounded_runtime=large_svd,
             )
         # Independent post-run QA is always persisted, even when some
         # rows have numerical_failed or budget_exceeded status.
@@ -311,7 +323,11 @@ def main() -> None:
     r.add_argument("--case", required=True)
     r.add_argument("--run-tag", required=True)
     r.add_argument("--block", type=int, default=0)
+    r.add_argument("--seed", type=int, default=None,
+                   help="Explicit nonnegative data seed; block still rotates method order")
     r.add_argument("--allow-confirm", action="store_true")
+    r.add_argument("--large-svd", action="store_true",
+                   help="Try SVD at 2048/4096 with memory guard and expanded work budget")
     r.add_argument("--dry-run", action="store_true")
     ps = sub.add_parser(
         "parallel-series",
