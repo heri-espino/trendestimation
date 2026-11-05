@@ -1,0 +1,16 @@
+{
+  "block": 2,
+  "case_id": "confirm_cv_n2048_d4_m100",
+  "classification": "partial_success_with_skips_or_failures",
+  "experiment": "experiment011",
+  "has_all_methods_successful": false,
+  "interpretation": "This checks only recorded success status, matching selected S and candidate score in float64 (except ML constants). It does not certify forward error at arbitrary penalty, estimate a universal crossover or establish statistical forecast accuracy.",
+  "issues": [],
+  "paired_method_comparisons": [],
+  "raw_rows": 16,
+  "status_counts": {
+    "mapping_failed_ArithmeticError": 4,
+    "numerical_failed": 4,
+    "ok": 8
+  }
+}
