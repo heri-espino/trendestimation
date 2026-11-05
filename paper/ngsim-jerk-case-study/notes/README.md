@@ -2,6 +2,8 @@
 
 **Status:** Research notes for the NGSIM/jerk case study, not a submitted paper or a claim of historical priority. Updated 2026-11-05.
 
+**New extrapolation research handoff (2026-11-05):** Read [the nonzero-reference forecast research question](EXTRAPOLATION_RESEARCH_HANDOFF.md), [the exact fit-versus-extrapolation decomposition](EXTRAPOLATION_DECOMPOSITION.md), [alternative training-only reference means](MU_POLICY_CATALOG.md), and [the predeclared ablation plan](EXTRAPOLATION_ABLATION_PLAN.md). The broad claim “first PLS extrapolation” is not defensible: see [Biessy's 2025/2026 WH extrapolation method](papers/biessy_2026_extrapolation.md). **These are notes and hypotheses, not measured new results.**
+
 Start with [the evidence-based review](LITERATURE_REVIEW.md), then the individual annotations below. The [earlier targeted novelty audit](../NOVELTY_AUDIT.md) is preserved for provenance; the notes here add the user's primary PDF manuscripts and Tang et al.'s LaTeX source. The [mathematical annotations](MATHEMATICAL_NOTES.md) and [manuscript checklist](MANUSCRIPT_PLAN.md) describe what to do with the literature rather than altering the existing results.
 
 ## Paper-by-paper notes
@@ -14,6 +16,7 @@ Start with [the evidence-based review](LITERATURE_REVIEW.md), then the individua
 | Tang, Yoon & Barfoot (2019) | Continuous-time GP motion prior with white noise on jerk | [Tang et al.](papers/tang_2019.md) |
 | Fan, Jin & Yin (2024) | Closest NGSIM/third-derivative constrained-QP predecessor | [Fan et al.](papers/fan_2024.md) |
 | Zhu et al. (2024) | Two-stage quadratic/absolute trend filtering and physical constraints | [Zhu et al.](papers/zhu_2024.md) |
+| Biessy (2025 online; 2026 volume) | Explicit Whittaker–Henderson extrapolation with zero-weight future samples and uncertainty | [Biessy (extrapolation)](papers/biessy_2026_extrapolation.md) |
 
 ## Reading rules
 
