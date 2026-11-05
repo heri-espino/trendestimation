@@ -1,0 +1,19 @@
+banded_cholesky: one_s_one_series direct_s complete
+banded_cholesky: one_s_one_series mapped_lambda complete
+banded_cholesky: grid_one_series direct_s complete
+banded_cholesky: grid_one_series mapped_lambda complete
+banded_cholesky: one_s_multiple_series direct_s complete
+banded_cholesky: one_s_multiple_series mapped_lambda complete
+banded_cholesky: grid_multiple_series direct_s complete
+banded_cholesky: grid_multiple_series mapped_lambda complete
+spectral_svd: one_s_one_series direct_s complete
+spectral_svd: one_s_one_series mapped_lambda complete
+spectral_svd: grid_one_series direct_s complete
+spectral_svd: grid_one_series mapped_lambda complete
+spectral_svd: one_s_multiple_series direct_s complete
+spectral_svd: one_s_multiple_series mapped_lambda complete
+spectral_svd: grid_multiple_series direct_s complete
+spectral_svd: grid_multiple_series mapped_lambda complete
+ARCHIVE THIS FOLDER (including failures): C:\Users\175199\trendestimation-PC08_add97svd_20261105_025108\paper\benchmarks\experiment011\runs\PC08_resume97_20261105_151552_s010\confirm_gcv_n4096_d4_m100\block001
+QA: partial_success_with_skips_or_failures {'mapping_failed_ArithmeticError': 8, 'numerical_failed': 8, 'ok': 16}
+Do not claim a speed winner before independent numerical audit.
