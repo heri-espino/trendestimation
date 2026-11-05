@@ -1,5 +1,9 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Parallel manuscript editorial review — November 4, 2026
+
+A separate **draft** [PR #112](https://github.com/heri-espino/trendestimation/pull/112) proposes prose improvements and two mathematical clarifications across the manuscript portfolio. Read [EDITORIAL_LITERATURE_AUDIT.md](EDITORIAL_LITERATURE_AUDIT.md) for the source-to-claim ledger, tested CV leverage correction, and remaining primary-source checks. This editorial work has **not** run Experiment011, replaced numerical results, recompiled every paper or authorized submission. The four-paper split and pending 29-case Windows protocol are unchanged. Do not merge this editorial PR without review and author approval.
+
 Updated: 2026-11-04 (America/Mexico_City). This is the compact session-continuation
 record requested by the author before a context reset. Read this, root
 `AGENTS.md`, `AI_HANDOFF.md`, `PUBLICATION_MAP.md`, `SPRINGER_READINESS.md`, and
