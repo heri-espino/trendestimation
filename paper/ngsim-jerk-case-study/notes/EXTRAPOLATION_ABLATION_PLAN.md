@@ -21,7 +21,15 @@ The analytic fixed-\(S\) decomposition is in [EXTRAPOLATION_DECOMPOSITION.md](EX
 
 No novelty or performance claim follows from stating these hypotheses.
 
-## Phase 0 — deterministic implementation checks
+## Phase 0 — deterministic implementation checks (test source now added)
+
+The non-experimental regression source `../tests/test_reference_jerk_extrapolation.py` checks the existing continuation's identities and the telescoping mean. Run from the repository root with
+
+```powershell
+python -m unittest discover -s paper/ngsim-jerk-case-study/tests -v
+```
+
+This is **algebraic QA only**: it does not run synthetic parameter searches, NGSIM forecasts, or a published Monte Carlo evaluation.
 
 Use a new test module, not a rewrite of current published output, to validate
 
