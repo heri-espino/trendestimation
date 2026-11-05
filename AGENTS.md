@@ -1,5 +1,7 @@
 # AGENTS.md — trendestimation research repository
 
+**Paper-only compilation (2026-11-04):** See [paper/BUILD_ON_PC08.md](paper/BUILD_ON_PC08.md). The manual workflow uses `PCAG103A-08` and Conda `trendestimation` to compile seven LaTeX entrypoints without figure regeneration, downloads or benchmarks. Its output is an independent archive branch with PDF/log/hash provenance, not a direct write to `main`. Do not confuse this with the Experiment011 Windows benchmark runner. Editorial PR #112 has been merged; older descriptions of it as unmerged are historical.
+
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
 Read [cleanup audit](paper/REPOSITORY_CLEANUP.md) and the current session handoff.
 Use `origin/main` after integration; older “open/unmerged” statements below
