@@ -1,5 +1,5 @@
 \section{Introduction and smoothness coordinate}\label{sec:foundation}
-Quadratic finite-difference penalized least squares (PLS) has a long history in Whittaker--Henderson smoothing \citep{whittaker1923,guerrero2007}. The penalty $\lambda$ is mathematically convenient, but the same numerical value need not express the same smoothness for different difference orders or sample lengths. Guerrero's trace-based smoothing measure \citep{guerrero2008} and its use with CV, GCV, AICc and BIC \citep{cortes2017} are established precedents. We do not claim to invent the smoother or its tuning criteria; instead, we investigate the \emph{computational cost of an interpretable bounded coordinate and the reuse of its mapping across many evaluations}.
+Quadratic finite-difference penalized least squares (PLS) is a classical smoothing method \citep{whittaker1923,guerrero2007}. Its penalty $\lambda$ controls the trade-off between fidelity and smoothness, but an identical penalty value can have different effects across sample sizes and difference orders. Guerrero introduced a trace-based smoothness measure \citep{guerrero2008}, and \citet{cortes2017} studied its behavior under established selection criteria. We examine the \emph{computational cost of using a normalized smoothness coordinate}, including the work that can be shared across candidates, criteria and observed series.
 
 For $y\in\R^n$, difference order $1\le d<n$, and fixed mean of the penalized differences $\mu$, let $D_d\in\R^{(n-d)\times n}$ denote forward differences and define
 \begin{equation}\label{eq:pls}
@@ -7,7 +7,7 @@ For $y\in\R^n$, difference order $1\le d<n$, and fixed mean of the penalized dif
 =\arg\min_\tau\{\|y-\tau\|_2^2+
 \lambda\|D_d\tau-\mu\mathbf1\|_2^2\}.
 \end{equation}
-Put $r=n-d$, $Q_d=D_d^\top D_d$, and $H_\lambda=(I+\lambda Q_d)^{-1}$. A polynomial particular solution is $p_{\mu,t}=\mu\binom{t-1}{d}$, and $\widehat\tau=p_\mu+H_\lambda(y-p_\mu)$. The penalty has a $d$-dimensional polynomial nullspace, so $\tr(H_\lambda)\to d$ as $\lambda\to\infty$.
+Put $r=n-d$, $Q_d=D_d^\top D_d$, and $H_\lambda=(I+\lambda Q_d)^{-1}$. One particular solution of $D_dp_\mu=\mu\mathbf1$ is $p_{\mu,t}=\mu\binom{t-1}{d}$, giving $\widehat\tau=p_\mu+H_\lambda(y-p_\mu)$. The penalty has a $d$-dimensional polynomial nullspace, so $\tr(H_\lambda)\to d$ as $\lambda\to\infty$.
 
 Write $\delta_1,\ldots,\delta_r>0$ for the positive eigenvalues of $Q_d$. We use the normalized smoothness index
 \begin{equation}\label{eq:S}
@@ -25,7 +25,7 @@ Let $D_d=U\diag(\sigma)V^\top$ be a reduced SVD over the $r$ positive singular m
 &-\mu(w\oslash\sigma)\odot(U^\top\mathbf1)\bigr],
 \end{aligned}
 \end{equation}
-where multiplication and division are componentwise. It avoids forming the potentially enormous polynomial $p_\mu$ at high $d$ and costs $O(nr)$ for a complete curve once the SVD is available. A separate high-precision companion manuscript evaluates its numerical accuracy. Here we study \emph{runtime costs} without treating a numerically invalid fast method as a winner.
+where multiplication and division are componentwise. It avoids forming the potentially enormous polynomial $p_\mu$ at high $d$ and costs $O(nr)$ for a complete curve once the SVD is available. Numerical accuracy is evaluated in a separate high-precision companion manuscript. This paper addresses \emph{computational work} and does not rank methods whose numerical outputs are invalid.
 
 The exact endpoints are interpolation at $s=0$ and the polynomial-constrained limit at $s=1$, which is evaluated analytically rather than factorizing a matrix at $\lambda=\infty$. Figure~\ref{fig:coordinate} illustrates why a user benefits from a common unit-interval smoothness coordinate even though the corresponding penalty scales vary with $d$.
 
@@ -50,8 +50,8 @@ using the normalized coordinate rather than a common raw
 penalty value.
 
 \subsection{Research questions}
-A single fitted curve, one criterion score, a complete $M$-point
-grid search, and $R$ independent series define distinct workloads.
+A single trend fit, one criterion score, a full $M$-candidate
+grid search and a batch of $R$ series are different computational workloads.
 We separate spectral or banded preparation, parameter inversion,
 fitted-curve reconstruction, trace/leverage computation, marginal
 likelihood determinants and repeated-series reuse. The theoretical
