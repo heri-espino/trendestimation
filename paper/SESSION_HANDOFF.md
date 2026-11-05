@@ -1,5 +1,19 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Paper C annotated literature review (2026-11-05)
+
+The user requested **Markdown annotations and a merged repository record**,
+not an image. Read [Paper C literature index](ngsim-jerk-case-study/notes/README.md),
+[comparison](ngsim-jerk-case-study/notes/LITERATURE_REVIEW.md), and
+[math observations](ngsim-jerk-case-study/notes/MATHEMATICAL_NOTES.md)
+before future NGSIM study edits. Source notes distinguish uploaded
+Marczak/Cao/Zhu PDFs, the Tang arXiv source, Fan's published abstract
+and the existing Guerrero/Cortés-Toto extracted literature.
+No evidence has been added to the five-vehicle pilot and no broader
+originality claim has been established. This does not change Experiment011
+or any other paper's research scope.
+
+
 ## Manuscript compilation workflow (2026-11-04)
 
 Editorial [PR #112](https://github.com/heri-espino/trendestimation/pull/112) was merged into `main` at `9b64b244`. An independent PC08 manuscript-only workflow is documented in [BUILD_ON_PC08.md](BUILD_ON_PC08.md). It compiles five active and two historical LaTeX entrypoints on the named university Windows runner using the existing `trendestimation` Conda Python and preinstalled TeX. Run it manually; it does **not** run Experiment011 or update measured results. Each execution archives PDFs, LaTeX logs and SHA-256 provenance to an isolated results branch rather than `main`. A first successful PC08 run is still required before claiming that all sources compile.

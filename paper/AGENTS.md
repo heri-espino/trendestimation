@@ -1,5 +1,17 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C primary literature notes (2026-11-05):** Before editing the NGSIM
+manuscript, read [NGSIM annotated notes](ngsim-jerk-case-study/notes/README.md),
+[the literature comparison](ngsim-jerk-case-study/notes/LITERATURE_REVIEW.md),
+[the mathematical notes](ngsim-jerk-case-study/notes/MATHEMATICAL_NOTES.md)
+and [prior novelty audit](ngsim-jerk-case-study/NOVELTY_AUDIT.md).
+The examined primary sources include Fan (2024), Marczak–Buisson (2012),
+Cao (2021), Zhu (2024), and Tang's arXiv source archive. No new empirical
+evaluation or manuscript submission follows from the review.
+**Do not describe estimated jerk as true physical jerk, the plug-in
+mean as robust, or unconstrained PLS as guaranteeing kinematic limits.**
+
+
 **Parallel editorial review (2026-11-04):** [draft PR #112](https://github.com/heri-espino/trendestimation/pull/112) contains targeted writing and mathematical corrections for the four publication tracks and a separate direct-weights draft. The [editorial literature audit](EDITORIAL_LITERATURE_AUDIT.md) records source support and unresolved checks. It does not supersede the Experiment011 case design or authorize merges/submissions. Preserve manuscript branches and experimental data.
 
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.

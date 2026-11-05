@@ -1,5 +1,24 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Literature review and annotated notes (2026-11-05)
+
+The source-grounded, **Markdown-first** [literature review index](notes/README.md)
+links six annotated prior-work groups, a [method comparison](notes/LITERATURE_REVIEW.md),
+[mathematical deductions](notes/MATHEMATICAL_NOTES.md), the
+[original-PDF/source inventory](notes/SOURCE_INVENTORY.md), and a
+[manuscript/experiment plan](notes/MANUSCRIPT_PLAN.md).
+The earlier [targeted novelty audit](NOVELTY_AUDIT.md) is also preserved.
+
+**Main warning:** Guerrero-style nonzero-mean PLS is established mathematics.
+Fan et al. (2024) already study NGSIM, jerk-related third-order constraints
+and physically bounded quadratic programming. The current five-vehicle
+pilot estimates **held-out position**, not observed true jerk; no
+first-in-literature, physical superiority or independent vehicle-level
+inference is established. The training reference `mean(D3*y)` depends
+algebraically on endpoint second differences. These notes do **not**
+change the archived data, manuscript, figures, or existing pilot outcomes.
+
+
 Separate third manuscript in paper/ngsim-jerk-case-study.
 
 ## Public real measurements

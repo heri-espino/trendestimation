@@ -1,5 +1,21 @@
 # AI_HANDOFF — latest
 
+**Paper C literature notes (2026-11-05):** A source-grounded Markdown
+literature review and annotations now live in
+[paper/ngsim-jerk-case-study/notes/](paper/ngsim-jerk-case-study/notes/README.md),
+with source inventory, individual paper notes, mathematical analysis,
+manuscript outline and a future sequential experiment plan. The earlier
+[NOVELTY_AUDIT.md](paper/ngsim-jerk-case-study/NOVELTY_AUDIT.md) is
+preserved. The strongest close prior study is Fan et al. (2024);
+Guerrero's nonzero-mean PLS formulation is established. A new essential
+observation is that `mean(D3*y)` telescopes to endpoint second differences.
+The six candidate BibTeX records have been staged in Paper C's references.
+**No new simulations, NGSIM data downloads, results, figures or LaTeX
+manuscript edits were performed.** The five-vehicle pilot and publication
+ownership remain unchanged. Next: coauthor-approved literature incorporation,
+a known-truth jerk simulation, and independent-vehicle evaluation.
+
+
 **Parallel manuscript edit, 2026-11-04:** Draft [PR #112](https://github.com/heri-espino/trendestimation/pull/112) improves prose in the four primary papers and the direct-spectral-weights draft, corrects the CSDA B fixed-mean CV leverage diagonal and the CSDA A nonzero-mean polynomial endpoint, and adds a deterministic test plus [paper/EDITORIAL_LITERATURE_AUDIT.md](paper/EDITORIAL_LITERATURE_AUDIT.md). This is not a claim of exhaustive publisher-PDF verification. It does not produce Windows Experiment011 timing measurements, change scientific manuscript ownership or authorize submission/merge. Read the PR and source-to-claim ledger before revising any affected section.
 
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
