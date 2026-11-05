@@ -1,5 +1,11 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Extrapolation and reference-jerk research handoff (2026-11-05)
+
+**Start here for new Paper C agents:** [EXTRAPOLATION_RESEARCH_HANDOFF.md](notes/EXTRAPOLATION_RESEARCH_HANDOFF.md) documents the precise d=3, nonzero-$\mu$ forecasting hypothesis, what the existing `continuation()` actually implements, and why a first-use claim is unverified. [EXTRAPOLATION_DECOMPOSITION.md](notes/EXTRAPOLATION_DECOMPOSITION.md) derives the exact **fit-vs-continuation** attribution at fixed smoothness; [MU_POLICY_CATALOG.md](notes/MU_POLICY_CATALOG.md) registers proposed alternative training-only $\mu$ estimators; [EXTRAPOLATION_ABLATION_PLAN.md](notes/EXTRAPOLATION_ABLATION_PLAN.md) defines a future sequential experiment, explicitly **not yet run**. Biessy (2025/2026) already develops Whittaker–Henderson extrapolation: [source note](notes/papers/biessy_2026_extrapolation.md).
+
+The current NGSIM experiment has **only two** $\mu$ policies (`zero` and `sample`), 5 recorded vehicles, and no true jerk measurements. No new policies, tests, experiments, numerical results, or manuscript figures were created by documenting the research question.
+
 ## Literature review and annotated notes (2026-11-05)
 
 The source-grounded, **Markdown-first** [literature review index](notes/README.md)
