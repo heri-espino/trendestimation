@@ -121,6 +121,23 @@ jobs:
               if ($LASTEXITCODE -ne 0) { throw "Cannot stage PDF $($item.repository_pdf)" }
             }
           }
+          # Preserve generated Springer inputs required for a clean future
+          # checkout. All data derive from committed reference materials;
+          # never stage unrelated numerical experiments or benchmark files.
+          $springer = @($data.results | Where-Object { $_.id -eq 'springer' -and $_.status -eq 'ok' })
+          if ($springer.Count -eq 1) {
+            foreach ($input in @(
+              'paper/criteria_table.tex',
+              'paper/figures/mauna_loa_1990_2026_09.pdf',
+              'paper/figures/mauna_loa_1990_2026_09.dat',
+              'paper/real_data_2026_summary.json'
+            )) {
+              if (Test-Path -LiteralPath $input) {
+                git add -f -- $input
+                if ($LASTEXITCODE -ne 0) { throw "Cannot stage Springer input $input" }
+              }
+            }
+          }
           git commit -m "paper: archive PC08 LaTeX build ${{ github.run_id }} attempt ${{ github.run_attempt }}"
           if ($LASTEXITCODE -ne 0) { throw 'Build record commit failed.' }
           git push origin "HEAD:refs/heads/$branch"
