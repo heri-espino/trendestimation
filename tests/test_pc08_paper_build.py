@@ -5,7 +5,6 @@ a Windows runner, data downloads, or scientific benchmark execution.
 """
 from __future__ import annotations
 
-from pathlib import Path
 import subprocess
 import sys
 import unittest
