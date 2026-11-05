@@ -15,8 +15,9 @@ on the **historical fit** from its impact on the **cubic continuation**,
 at the *same* smoothing parameter. The raw training mean of third
 differences telescopes to boundary second differences; proposed
 replacement mu policies are NOT implemented. This update contains
-**only research notes and handoffs**; no Paper C data, simulations,
-benchmark results, forecasts, algorithm or manuscript changes.
+research notes, handoffs and **one deterministic algebra regression test**;
+no Paper C empirical data, simulations, benchmarks, forecasts,
+algorithm changes or manuscript changes.
 Next agent: run a deterministic algebraic test and planned Paper C
 experiment001 on a separate branch with reproducible output. Do not
 merge or conflate with Springer Experiment011.
