@@ -49817,6 +49817,30 @@
       "qa_issues": [],
       "log": "s020_confirm_cv_n1024_d4_m100.log",
       "phase_workers": 12
+    },
+    {
+      "seed_index": 16,
+      "seed": 1013000000,
+      "case": "confirm_cv_n4096_d4_m100",
+      "block": 1,
+      "returncode": 1,
+      "wall_s": 1136.5583234000078,
+      "counts": {
+        "banded_cholesky": {
+          "ok": 8,
+          "numerical_failed": 4,
+          "mapping_failed_ArithmeticError": 4
+        },
+        "spectral_svd": {
+          "ok": 8,
+          "numerical_failed": 4,
+          "mapping_failed_ArithmeticError": 4
+        }
+      },
+      "qa_classification": "missing_qa",
+      "qa_issues": [],
+      "log": "s016_confirm_cv_n4096_d4_m100.log",
+      "phase_workers": 12
     }
   ],
   "status": "in_progress"
