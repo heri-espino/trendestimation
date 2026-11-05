@@ -1,0 +1,1662 @@
+Command: latexmk -pdf -g -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+
+Initial Win CP for (console input, console output, system): (CP65001, CP65001, CP1252)
+I changed them all to CP1252
+Rc files read (in order):
+  NONE
+Latexmk: This is Latexmk, John Collins, 9 March 2026. Version 4.88.
+No existing .aux file, so I'll make a simple one, and require run of *latex.
+Force everything to be remade.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Category 'other':
+  Rerun of 'pdflatex' forced or previously required:
+    Reason or flag: 'go_mode'
+
+------------
+Run number 1 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(cas-dc.cls
+Document Class: cas-dc 2024/05/04, 2.4: Formatting class for CAS double column 
+articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/preprint\balance.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\dcolumn.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\svgnam.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty))) (cas-common.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/moreverb\moreverb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\stix.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\inconsolat
+a.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+))))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.st
+y (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\t1stix.fd)
+(main.aux)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixscr.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixex.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixfrak.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixbb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixcal.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixsf.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixtt.fd)
+Overfull \hbox (123.62721pt too wide) detected at line 37
+[]
+(main.abs)
+
+Package hyperref Warning: Ignoring empty anchor on input line 37.
+
+(sections/foundations.tex
+
+Package natbib Warning: Citation `whittaker1923' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `guerrero2007' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `guerrero2008' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `cortes2017' on page 1 undefined on input line
+ 2.
+
+
+LaTeX Warning: Reference `fig:coordinate' on page 1 undefined on input line 30.
+
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `') on input line 32.
+
+[1{C:/Users/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc}]
+
+LaTeX Warning: Reference `sec:complexity' on page 2 undefined on input line 62.
+
+
+
+LaTeX Warning: Reference `sec:crossover' on page 2 undefined on input line 62.
+
+) (sections/algorithms.tex
+Overfull \hbox (28.588pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 tion, pa-ram-e-ter in-ver-sion, fitted-curve re-con-struc-tion,
+ trace/leverage
+
+Overfull \hbox (1.87636pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 com-pu-ta-tion, marginal like-li-hood de-ter-mi-nants and repea
+ted-
+
+LaTeX Warning: Reference `sec:amortized' on page 2 undefined on input line 2.
+
+
+LaTeX Warning: Reference `eq:S' on page 2 undefined on input line 8.
+
+
+Package natbib Warning: Citation `weinert2007' on page 2 undefined on input lin
+e 10.
+
+
+Package natbib Warning: Citation `biessy2026' on page 2 undefined on input line
+ 10.
+
+
+LaTeX Warning: Reference `sec:amortized' on page 2 undefined on input line 38.
+
+
+Overfull \hbox (4.27469pt too wide) in paragraph at lines 43--44
+[]\T1/stix/m/n/10 The la-bel \T1/stix/m/it/10 ML \T1/stix/m/n/10 means pro-file
+d Gaus-sian \T1/stix/m/it/10 marginal \T1/stix/m/n/10 variance-
+[2]) (sections/structured_criteria.tex
+
+Package natbib Warning: Citation `erisman1975' on page 3 undefined on input lin
+e 17.
+
+[3]
+
+LaTeX Warning: Reference `sec:complexity' on page 4 undefined on input line 46.
+
+
+
+LaTeX Warning: Reference `eq:cv_gcv' on page 4 undefined on input line 48.
+
+
+LaTeX Warning: Reference `tab:structured_cost' on page 4 undefined on input lin
+e 121.
+
+
+LaTeX Warning: Reference `sec:decision-regimes' on page 4 undefined on input li
+ne 123.
+
+
+LaTeX Warning: Reference `tab:structured_hybrids' on page 4 undefined on input 
+line 123.
+
+) (sections/amortized_frontier.tex
+
+LaTeX Warning: Reference `eq:S' on page 4 undefined on input line 54.
+
+[4]
+
+LaTeX Warning: Reference `sec:structured' on page 5 undefined on input line 90.
+
+
+
+LaTeX Warning: Reference `eq:cv_gcv' on page 5 undefined on input line 95.
+
+
+LaTeX Warning: Reference `eq:information' on page 5 undefined on input line 95.
+
+
+
+Overfull \hbox (2.97546pt too wide) in paragraph at lines 109--116
+\T1/stix/m/n/10 The fi-nal equal-ity fol-lows by sub-sti-tut-ing the normal-equ
+ation
+[5]
+
+LaTeX Warning: Reference `eq:gauss' on page 6 undefined on input line 150.
+
+
+Overfull \hbox (0.33295pt too wide) in paragraph at lines 194--200
+\T1/stix/m/n/10 When the penalty grid has al-ready been mapped, the $\LS1/stix/
+m/it/10 MI nd[]$
+
+Overfull \hbox (4.9604pt too wide) in paragraph at lines 201--217
+\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 MIr\LS1/stix/m/n/10 /$\T
+1/stix/m/n/10 . One pro-jec-tion per ob-served se-ries re-quires $\LS1/stix/m/i
+t/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 Rnr\LS1/stix/m/n/10 /$\T1/stix/m/n/10
+ .
+
+Overfull \hbox (15.85638pt too wide) in paragraph at lines 218--240
+[]\T1/stix/m/n/10 For the banded method, prepa-ra-tion of the banded difference
+-
+
+Underfull \hbox (badness 1472) in paragraph at lines 218--240
+\T1/stix/m/n/10 in $\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 nd[]
+\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 op-er-a-tions. Af-ter map-ping, fac-tor-iza
+-tion and
+
+Underfull \hbox (badness 1024) in paragraph at lines 218--240
+\T1/stix/m/n/10 keep-ing all ob-ser-va-tions uses $\LS1/stix/m/it/10 O\LS1/stix
+/m/n/10 .\LS1/stix/m/it/10 Rn\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 ad-di-tional s
+tor-age.
+
+LaTeX Warning: Reference `eq:S' on page 6 undefined on input line 274.
+
+[6]
+
+LaTeX Warning: Reference `eq:theory_cost_function' on page 7 undefined on input
+ line 367.
+
+) (sections/decision_examples.tex
+Underfull \hbox (badness 1297) in paragraph at lines 374--1
+\T1/stix/m/n/10 forward-error lim-its, nu-mer-i-cal non-con-ver-gence and the
+
+LaTeX Warning: Reference `fig:theory-curves' on page 7 undefined on input line 
+66.
+
+
+LaTeX Warning: Reference `fig:theory-regime' on page 7 undefined on input line 
+69.
+
+
+Underfull \hbox (badness 1097) in paragraph at lines 103--107
+\T1/stix/m/n/10 o-ret-i-cal work-load vari-ables mat-ter. We use the ex-ist-ing
+
+[7]
+
+LaTeX Warning: Reference `tab:matched-pilot' on page 8 undefined on input line 
+177.
+
+
+LaTeX Warning: Reference `tab:matched-pilot' on page 8 undefined on input line 
+177.
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\t1zi4.fd)
+
+Package natbib Warning: Citation `fhwa2016' on page 8 undefined on input line 2
+01.
+
+
+Underfull \hbox (badness 1005) in paragraph at lines 198--210
+[]\T1/stix/m/n/10 A sep-a-rate ap-pli-ca-tion manuscript in this repos-i-tory
+
+LaTeX Warning: Reference `fig:jerk-application' on page 8 undefined on input li
+ne 250.
+
+
+Package natbib Warning: Citation `vanbreugel2020' on page 8 undefined on input 
+line 271.
+
+) (sections/theory_discussion.tex
+Overfull \hbox (0.97632pt too wide) in paragraph at lines 19--25
+[]\T1/stix/m/n/10 Fix the re-quested cri-te-rion set $\LS2/stixcal/m/n/10 C$\T1
+/stix/m/n/10 , the target-smoothness
+
+Overfull \hbox (1.06557pt too wide) in paragraph at lines 25--30
+[]\T1/stix/m/n/10 Choose a math-e-mat-i-cally ad-mis-si-ble smooth-ness map-
+
+Underfull \hbox (badness 1675) in paragraph at lines 30--36
+[]\T1/stix/m/n/10 Choose the candidate-score fam-ily sub-ject to the
+[8{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4
+-t1-0.enc}]
+
+LaTeX Warning: Reference `eq:theory_frontier' on page 9 undefined on input line
+ 75.
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 66--77
+\T1/stix/m/n/10 scalar GCV/AICc/BIC/ML scor-ing. Nei-ther ex-pla-na-tion
+
+Package natbib Warning: Citation `weinert2007' on page 9 undefined on input lin
+e 80.
+
+
+Package natbib Warning: Citation `biessy2026' on page 9 undefined on input line
+ 81.
+
+
+Package natbib Warning: Citation `erisman1975' on page 9 undefined on input lin
+e 85.
+
+
+Overfull \hbox (5.53549pt too wide) in paragraph at lines 78--94
+[]\T1/stix/m/n/10 The im-por-tance of ex-ploit-ing Whittaker--Henderson struc-
+
+Underfull \hbox (badness 1960) in paragraph at lines 78--94
+\T1/stix/m/n/10 smoothness in-ver-sion, cri-te-rion di-ag-nos-tics, reuse, end-
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 78--94
+\T1/stix/m/n/10 se-lected in-ver-sion, the Gaus-sian vari-ance model or the
+
+LaTeX Warning: Reference `eq:theory_threshold' on page 9 undefined on input lin
+e 100.
+
+
+Underfull \hbox (badness 1024) in paragraph at lines 96--109
+\T1/stix/m/n/10 al-lo-ca-tion, garbage col-lec-tion and CPU con-tention. The
+
+Underfull \hbox (badness 1655) in paragraph at lines 110--121
+\T1/stix/m/n/10 quadratic losses, spa-tial lat-tices and higher-dimensional
+
+Underfull \hbox (badness 1226) in paragraph at lines 110--121
+\T1/stix/m/n/10 CV ex-pres-sion pre-sented here es-tab-lishes out-of-sample
+
+Underfull \hbox (badness 1817) in paragraph at lines 136--153
+\T1/stix/m/n/10 coordinate Gaus-sian de-ter-mi-nant and pro-filed quadratic
+
+LaTeX Warning: Reference `sec:matched-example' on page 9 undefined on input lin
+e 155.
+
+
+LaTeX Warning: Reference `sec:jerk-illustration' on page 9 undefined on input l
+ine 160.
+
+
+Underfull \hbox (badness 1067) in paragraph at lines 169--188
+\T1/stix/m/n/10 notes are main-tained at [][]$\T1/zi4/m/n/10 https : / / github
+ . com / heri-[]espino /
+[9])
+No file main.bbl.
+
+Package natbib Warning: There were undefined citations.
+
+[10 <./figures/coordinate_map.pdf>] [11 <./figures/theory_regime_map.pdf> <./fi
+gures/theory_cost_curves.pdf>] [12 <./figures/matched_bic_timings.pdf> <./figur
+es/ngsim_jerk_application.pdf>] (main.aux)Trying to make PK font ecsi0900 at 600 DPI...
+The METAFONT mode is: ljfour
+Creating ecsi0900.pk...
+Running miktex-mf.exe...
+This is METAFONT, Version 2.71828182 (MiKTeX 25.12)
+
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\ecsi090
+0.mf
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exbase.
+mf)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\ecsi.mf
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exroman
+.mf
+ Ok
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exacces
+s.mf
+ Ok)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\expseud
+o.mf
+ Ok)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exruwes
+t.mf
+ Ok [192] [193] [194] [195] [196] [197] [198] [199] [200] [201] [202] [203]
+[204] [205] [206] [207] [208] [209] [210] [211] [212] [213] [214] [215]
+[216] [217] [218] [219] [220] [221] [222] [223])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrlwes
+t.mf
+ Ok [224] [225] [226] [227] [228] [229] [230] [231] [232] [233] [234] [235]
+[236] [237] [238] [239] [240] [241] [242] [243] [244] [245] [246] [247]
+[248] [249] [250] [251] [252] [253] [254] [255])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrueas
+t.mf
+ Ok [128] [129] [130] [131] [132] [133] [134] [135] [136] [137] [138] [139]
+[140] [141] [142] [143] [144] [145] [146] [147] [148] [149] [150] [151]
+[152] [153] [154] [155] [156] [157])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrleas
+t.mf
+ Ok [158] [160] [161] [162] [163] [164] [165] [166] [167] [168] [169] [170]
+[171] [172] [173] [174] [175] [176] [177] [178] [179] [180] [181] [182]
+[183] [184] [185] [186] [187] [188])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exbrace
+s.mf
+ Ok [94] [126] [23] [40] [41] [60] [124] [62] [91] [93] [92] [123] [125]
+[95] [127] [32])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\expunct
+.mf
+ Ok [14] [15] [19] [20] [13] [18] [33] [39] [42] [43] [44] [46] [47] [58]
+[59] [61] [96] [189] [17] [45] [16] [21] [22])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exaccen
+t.mf
+ Ok [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exsign.
+mf
+ Ok [24] [34] [35] [36] [37] [64] [191] [159])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrlig.
+mf
+ Ok [25] [26] [28] [27] [29] [30] [31])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exromp.
+mf
+ Ok [38] [63] [190])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrulet
+t.mf
+ Ok [65] [66] [67] [68] [69] [70] [71] [72] [73] [74] [75] [76] [77] [78]
+[79] [80] [81] [82] [83] [84] [85] [86] [87] [88] [89] [90])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrllet
+t.mf
+ Ok [97] [98] [99] [100] [101] [102] [103] [104] [105] [106] [107] [108]
+[109] [110] [111] [112] [113] [114] [115] [116] [117] [118] [119] [120]
+[121] [122])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrdigi
+t.mf
+ Ok [48] [49] [50] [51] [52] [53] [54] [55] [56] [57])
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\fonts/source/jknappen/ec\exrligt
+b.mf
+ Ok) ) ) )
+Font metrics written on ecsi0900.tfm.
+Output written on ecsi0900.600gf (256 characters, 42056 bytes).
+Transcript written on ecsi0900.log.
+Running miktex-gftopk.exe...
+This is GFtoPK, Version 2.4 (MiKTeX 25.12)
+'METAFONT output 2026.11.05:0149'
+42056 bytes packed to 22084 bytes.
+Installing C:\Users\175199\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi0900.pk...
+miktex-makepk: major issue: So far, you have not checked for MiKTeX updates.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information) <C:\Users\175199\AppData\L
+ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi0900.pk> <C:\Users\175199\Ap
+pData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\17
+5199\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk><C:/Us
+ers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/inconsolata/Inconso
+lata-zi4r.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/STIXGeneral-Bold.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/stix/STIXGeneral-Italic.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/stix/STIXGeneral-Regular.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.p
+fb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmmi12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmmi6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/
+Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.
+pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmr9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/stix/stix-mathbb.pfb><C:/Users/175199/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/stix/stix-mathcal.pfb><C:/Users/175199/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/stix/stix-mathex.pfb><C:/Users/175199/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathfrak.pfb><C:/Users/17519
+9/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathit.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathrm-bol
+d.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/st
+ix-mathrm.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/stix-mathscr.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/stix/stix-mathsf.pfb>
+Output written on main.pdf (12 pages, 607714 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Missing bbl file 'main.bbl' in following:
+ No file main.bbl.
+Latexmk: References changed.
+Latexmk: References changed.
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+Create bibtex main
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: applying rule 'bibtex main'...
+Rule 'bibtex main':  Reasons for rerun
+Category 'other':
+  Rerun of 'bibtex main' forced or previously required:
+    Reason or flag: 'Initial set up of rule'
+
+------------
+Run number 1 of rule 'bibtex main'
+------------
+------------
+Running 'bibtex  "main.aux"'
+------------
+This is BibTeX, Version 0.99e (MiKTeX 25.12)
+The top-level auxiliary file: main.aux
+The style file: cas-model2-names.bst
+Database file #1: references.bib
+bibtex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  main.abs
+  main.aux
+  main.bbl
+  main.out
+
+------------
+Run number 2 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(cas-dc.cls
+Document Class: cas-dc 2024/05/04, 2.4: Formatting class for CAS double column 
+articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/preprint\balance.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\dcolumn.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\svgnam.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty))) (cas-common.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/moreverb\moreverb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\stix.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\inconsolat
+a.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+))))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.st
+y (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\t1stix.fd)
+(main.aux)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg)) (main.out) (main.out)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixscr.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixex.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixfrak.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixbb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixcal.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixsf.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixtt.fd)
+Overfull \hbox (123.62721pt too wide) detected at line 37
+[]
+(main.abs)
+
+Package hyperref Warning: Ignoring empty anchor on input line 37.
+
+(sections/foundations.tex
+
+Package natbib Warning: Citation `whittaker1923' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `guerrero2007' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `guerrero2008' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `cortes2017' on page 1 undefined on input line
+ 2.
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `') on input line 32.
+
+[1{C:/Users/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc}])
+(sections/algorithms.tex
+Overfull \hbox (28.588pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 tion, pa-ram-e-ter in-ver-sion, fitted-curve re-con-struc-tion,
+ trace/leverage
+
+Overfull \hbox (1.87636pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 com-pu-ta-tion, marginal like-li-hood de-ter-mi-nants and repea
+ted-
+
+Package natbib Warning: Citation `weinert2007' on page 2 undefined on input lin
+e 10.
+
+
+Package natbib Warning: Citation `biessy2026' on page 2 undefined on input line
+ 10.
+
+
+Overfull \hbox (4.27469pt too wide) in paragraph at lines 43--44
+[]\T1/stix/m/n/10 The la-bel \T1/stix/m/it/10 ML \T1/stix/m/n/10 means pro-file
+d Gaus-sian \T1/stix/m/it/10 marginal \T1/stix/m/n/10 variance-
+[2]) (sections/structured_criteria.tex
+
+Package natbib Warning: Citation `erisman1975' on page 3 undefined on input lin
+e 17.
+
+[3]) (sections/amortized_frontier.tex [4]
+Overfull \hbox (2.97546pt too wide) in paragraph at lines 109--116
+\T1/stix/m/n/10 The fi-nal equal-ity fol-lows by sub-sti-tut-ing the normal-equ
+ation
+[5]
+Overfull \hbox (0.33295pt too wide) in paragraph at lines 194--200
+\T1/stix/m/n/10 When the penalty grid has al-ready been mapped, the $\LS1/stix/
+m/it/10 MI nd[]$
+
+Overfull \hbox (4.9604pt too wide) in paragraph at lines 201--217
+\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 MIr\LS1/stix/m/n/10 /$\T
+1/stix/m/n/10 . One pro-jec-tion per ob-served se-ries re-quires $\LS1/stix/m/i
+t/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 Rnr\LS1/stix/m/n/10 /$\T1/stix/m/n/10
+ .
+
+Overfull \hbox (15.85638pt too wide) in paragraph at lines 218--240
+[]\T1/stix/m/n/10 For the banded method, prepa-ra-tion of the banded difference
+-
+
+Underfull \hbox (badness 1472) in paragraph at lines 218--240
+\T1/stix/m/n/10 in $\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 nd[]
+\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 op-er-a-tions. Af-ter map-ping, fac-tor-iza
+-tion and
+
+Underfull \hbox (badness 1024) in paragraph at lines 218--240
+\T1/stix/m/n/10 keep-ing all ob-ser-va-tions uses $\LS1/stix/m/it/10 O\LS1/stix
+/m/n/10 .\LS1/stix/m/it/10 Rn\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 ad-di-tional s
+tor-age.
+[6]) (sections/decision_examples.tex
+Underfull \hbox (badness 1297) in paragraph at lines 374--1
+\T1/stix/m/n/10 forward-error lim-its, nu-mer-i-cal non-con-ver-gence and the
+
+Underfull \hbox (badness 1097) in paragraph at lines 103--107
+\T1/stix/m/n/10 o-ret-i-cal work-load vari-ables mat-ter. We use the ex-ist-ing
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\t1zi4.fd)
+[7{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4
+-t1-0.enc}]
+
+Package natbib Warning: Citation `fhwa2016' on page 8 undefined on input line 2
+01.
+
+
+Underfull \hbox (badness 1005) in paragraph at lines 198--210
+[]\T1/stix/m/n/10 A sep-a-rate ap-pli-ca-tion manuscript in this repos-i-tory
+
+Package natbib Warning: Citation `vanbreugel2020' on page 8 undefined on input 
+line 271.
+
+) (sections/theory_discussion.tex
+Overfull \hbox (0.97632pt too wide) in paragraph at lines 19--25
+[]\T1/stix/m/n/10 Fix the re-quested cri-te-rion set $\LS2/stixcal/m/n/10 C$\T1
+/stix/m/n/10 , the target-smoothness
+
+Overfull \hbox (1.06557pt too wide) in paragraph at lines 25--30
+[]\T1/stix/m/n/10 Choose a math-e-mat-i-cally ad-mis-si-ble smooth-ness map-
+
+Underfull \hbox (badness 1675) in paragraph at lines 30--36
+[]\T1/stix/m/n/10 Choose the candidate-score fam-ily sub-ject to the
+[8]
+Underfull \hbox (badness 2012) in paragraph at lines 66--77
+\T1/stix/m/n/10 scalar GCV/AICc/BIC/ML scor-ing. Nei-ther ex-pla-na-tion
+
+Package natbib Warning: Citation `weinert2007' on page 9 undefined on input lin
+e 80.
+
+
+Package natbib Warning: Citation `biessy2026' on page 9 undefined on input line
+ 81.
+
+
+Package natbib Warning: Citation `erisman1975' on page 9 undefined on input lin
+e 85.
+
+
+Overfull \hbox (5.53549pt too wide) in paragraph at lines 78--94
+[]\T1/stix/m/n/10 The im-por-tance of ex-ploit-ing Whittaker--Henderson struc-
+
+Underfull \hbox (badness 1960) in paragraph at lines 78--94
+\T1/stix/m/n/10 smoothness in-ver-sion, cri-te-rion di-ag-nos-tics, reuse, end-
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 78--94
+\T1/stix/m/n/10 se-lected in-ver-sion, the Gaus-sian vari-ance model or the
+
+Underfull \hbox (badness 1024) in paragraph at lines 96--109
+\T1/stix/m/n/10 al-lo-ca-tion, garbage col-lec-tion and CPU con-tention. The
+
+Underfull \hbox (badness 1655) in paragraph at lines 110--121
+\T1/stix/m/n/10 quadratic losses, spa-tial lat-tices and higher-dimensional
+
+Underfull \hbox (badness 1226) in paragraph at lines 110--121
+\T1/stix/m/n/10 CV ex-pres-sion pre-sented here es-tab-lishes out-of-sample
+
+Underfull \hbox (badness 1817) in paragraph at lines 136--153
+\T1/stix/m/n/10 coordinate Gaus-sian de-ter-mi-nant and pro-filed quadratic
+
+Underfull \hbox (badness 1067) in paragraph at lines 169--188
+\T1/stix/m/n/10 notes are main-tained at [][]$\T1/zi4/m/n/10 https : / / github
+ . com / heri-[]espino /
+) (main.bbl [9]
+Underfull \hbox (badness 1688) in paragraph at lines 70--77
+[]\T1/stix/m/n/8 U.S. De-part-ment of Trans-porta-tion, Fed-eral High-way Ad-mi
+n-is-tra-tion,
+
+Underfull \hbox (badness 1270) in paragraph at lines 78--85
+[]\T1/stix/m/n/8 Weinert, H.L., 2007.  Ef-fi-cient com-pu-ta-tion for whittaker
+--henderson
+)
+
+Package natbib Warning: There were undefined citations.
+
+[10 <./figures/coordinate_map.pdf>] [11 <./figures/theory_regime_map.pdf> <./fi
+gures/theory_cost_curves.pdf>] [12 <./figures/matched_bic_timings.pdf> <./figur
+es/ngsim_jerk_application.pdf>] (main.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+) )
+(see the transcript file for additional information) <C:\Users\175199\AppData\L
+ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi0900.pk> <C:\Users\175199\Ap
+pData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\17
+5199\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk><C:/Us
+ers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/inconsolata/Inconso
+lata-zi4r.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/STIXGeneral-Bold.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/stix/STIXGeneral-Italic.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/stix/STIXGeneral-Regular.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.p
+fb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmmi12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmmi6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/
+Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.
+pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmr9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/stix/stix-mathbb.pfb><C:/Users/175199/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/stix/stix-mathcal.pfb><C:/Users/175199/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/stix/stix-mathex.pfb><C:/Users/175199/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathfrak.pfb><C:/Users/17519
+9/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathit.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathrm-bol
+d.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/st
+ix-mathrm.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/stix-mathscr.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/stix/stix-mathsf.pfb>
+Output written on main.pdf (12 pages, 622531 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Found input bbl file 'main.bbl'
+Latexmk: References changed.
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: applying rule 'bibtex main'...
+Rule 'bibtex main':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 2 of rule 'bibtex main'
+------------
+------------
+Running 'bibtex  "main.aux"'
+------------
+This is BibTeX, Version 0.99e (MiKTeX 25.12)
+The top-level auxiliary file: main.aux
+The style file: cas-model2-names.bst
+Database file #1: references.bib
+bibtex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 3 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(cas-dc.cls
+Document Class: cas-dc 2024/05/04, 2.4: Formatting class for CAS double column 
+articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/preprint\balance.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\dcolumn.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\svgnam.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty))) (cas-common.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/moreverb\moreverb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\stix.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\inconsolat
+a.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+))))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.st
+y (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\t1stix.fd)
+(main.aux)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg)) (main.out) (main.out)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixscr.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixex.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixfrak.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixbb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixcal.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixsf.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixtt.fd)
+Overfull \hbox (123.62721pt too wide) detected at line 37
+[]
+(main.abs)
+
+Package hyperref Warning: Ignoring empty anchor on input line 37.
+
+(sections/foundations.tex
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `') on input line 32.
+
+[1{C:/Users/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc}])
+(sections/algorithms.tex
+Overfull \hbox (28.588pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 tion, pa-ram-e-ter in-ver-sion, fitted-curve re-con-struc-tion,
+ trace/leverage
+
+Overfull \hbox (1.87636pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 com-pu-ta-tion, marginal like-li-hood de-ter-mi-nants and repea
+ted-
+
+Overfull \hbox (4.27469pt too wide) in paragraph at lines 43--44
+[]\T1/stix/m/n/10 The la-bel \T1/stix/m/it/10 ML \T1/stix/m/n/10 means pro-file
+d Gaus-sian \T1/stix/m/it/10 marginal \T1/stix/m/n/10 variance-
+[2]) (sections/structured_criteria.tex [3]) (sections/amortized_frontier.tex
+[4]
+Overfull \hbox (2.97546pt too wide) in paragraph at lines 109--116
+\T1/stix/m/n/10 The fi-nal equal-ity fol-lows by sub-sti-tut-ing the normal-equ
+ation
+[5]
+Overfull \hbox (0.33295pt too wide) in paragraph at lines 194--200
+\T1/stix/m/n/10 When the penalty grid has al-ready been mapped, the $\LS1/stix/
+m/it/10 MI nd[]$
+
+Overfull \hbox (4.9604pt too wide) in paragraph at lines 201--217
+\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 MIr\LS1/stix/m/n/10 /$\T
+1/stix/m/n/10 . One pro-jec-tion per ob-served se-ries re-quires $\LS1/stix/m/i
+t/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 Rnr\LS1/stix/m/n/10 /$\T1/stix/m/n/10
+ .
+
+Overfull \hbox (15.85638pt too wide) in paragraph at lines 218--240
+[]\T1/stix/m/n/10 For the banded method, prepa-ra-tion of the banded difference
+-
+
+Underfull \hbox (badness 1472) in paragraph at lines 218--240
+\T1/stix/m/n/10 in $\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 nd[]
+\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 op-er-a-tions. Af-ter map-ping, fac-tor-iza
+-tion and
+
+Underfull \hbox (badness 1024) in paragraph at lines 218--240
+\T1/stix/m/n/10 keep-ing all ob-ser-va-tions uses $\LS1/stix/m/it/10 O\LS1/stix
+/m/n/10 .\LS1/stix/m/it/10 Rn\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 ad-di-tional s
+tor-age.
+[6]) (sections/decision_examples.tex
+Underfull \hbox (badness 1297) in paragraph at lines 374--1
+\T1/stix/m/n/10 forward-error lim-its, nu-mer-i-cal non-con-ver-gence and the
+
+Underfull \hbox (badness 1097) in paragraph at lines 103--107
+\T1/stix/m/n/10 o-ret-i-cal work-load vari-ables mat-ter. We use the ex-ist-ing
+
+[7]
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\t1zi4.fd)
+Underfull \hbox (badness 1005) in paragraph at lines 198--210
+[]\T1/stix/m/n/10 A sep-a-rate ap-pli-ca-tion manuscript in this repos-i-tory
+) (sections/theory_discussion.tex
+Overfull \hbox (0.97632pt too wide) in paragraph at lines 19--25
+[]\T1/stix/m/n/10 Fix the re-quested cri-te-rion set $\LS2/stixcal/m/n/10 C$\T1
+/stix/m/n/10 , the target-smoothness
+
+Overfull \hbox (1.06557pt too wide) in paragraph at lines 25--30
+[]\T1/stix/m/n/10 Choose a math-e-mat-i-cally ad-mis-si-ble smooth-ness map-
+
+Underfull \hbox (badness 1675) in paragraph at lines 30--36
+[]\T1/stix/m/n/10 Choose the candidate-score fam-ily sub-ject to the
+[8{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4
+-t1-0.enc}]
+Underfull \hbox (badness 2012) in paragraph at lines 66--77
+\T1/stix/m/n/10 scalar GCV/AICc/BIC/ML scor-ing. Nei-ther ex-pla-na-tion
+
+Overfull \hbox (5.53549pt too wide) in paragraph at lines 78--94
+[]\T1/stix/m/n/10 The im-por-tance of ex-ploit-ing Whittaker--Henderson struc-
+
+Underfull \hbox (badness 1565) in paragraph at lines 78--94
+\T1/stix/m/n/10 ture was demon-strated long be-fore this pa-per: [][]Wein-ert[]
+[]
+
+Underfull \hbox (badness 1215) in paragraph at lines 78--94
+\T1/stix/m/n/10 ([][]2007[][]) de-vel-oped ef-fi-cient fit-ted trends and GCV c
+om-
+
+Underfull \hbox (badness 1960) in paragraph at lines 78--94
+\T1/stix/m/n/10 smoothness in-ver-sion, cri-te-rion di-ag-nos-tics, reuse, end-
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 78--94
+\T1/stix/m/n/10 se-lected in-ver-sion, the Gaus-sian vari-ance model or the
+
+Underfull \hbox (badness 1024) in paragraph at lines 96--109
+\T1/stix/m/n/10 al-lo-ca-tion, garbage col-lec-tion and CPU con-tention. The
+
+Underfull \hbox (badness 1655) in paragraph at lines 110--121
+\T1/stix/m/n/10 quadratic losses, spa-tial lat-tices and higher-dimensional
+
+Underfull \hbox (badness 1226) in paragraph at lines 110--121
+\T1/stix/m/n/10 CV ex-pres-sion pre-sented here es-tab-lishes out-of-sample
+
+Underfull \hbox (badness 1817) in paragraph at lines 136--153
+\T1/stix/m/n/10 coordinate Gaus-sian de-ter-mi-nant and pro-filed quadratic
+
+Underfull \hbox (badness 1067) in paragraph at lines 169--188
+\T1/stix/m/n/10 notes are main-tained at [][]$\T1/zi4/m/n/10 https : / / github
+ . com / heri-[]espino /
+[9]) (main.bbl
+Underfull \hbox (badness 1688) in paragraph at lines 70--77
+[]\T1/stix/m/n/8 U.S. De-part-ment of Trans-porta-tion, Fed-eral High-way Ad-mi
+n-is-tra-tion,
+
+Underfull \hbox (badness 1270) in paragraph at lines 78--85
+[]\T1/stix/m/n/8 Weinert, H.L., 2007.  Ef-fi-cient com-pu-ta-tion for whittaker
+--henderson
+) [10 <./figures/coordinate_map.pdf>] [11 <./figures/theory_regime_map.pdf> <./
+figures/theory_cost_curves.pdf>] [12 <./figures/matched_bic_timings.pdf> <./fig
+ures/ngsim_jerk_application.pdf>] (main.aux) )
+(see the transcript file for additional information) <C:\Users\175199\AppData\L
+ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi0900.pk> <C:\Users\175199\Ap
+pData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\17
+5199\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk><C:/Us
+ers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/inconsolata/Inconso
+lata-zi4r.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/STIXGeneral-Bold.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/stix/STIXGeneral-Italic.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/stix/STIXGeneral-Regular.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.p
+fb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmmi12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmmi6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/
+Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.
+pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmr9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/stix/stix-mathbb.pfb><C:/Users/175199/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/stix/stix-mathcal.pfb><C:/Users/175199/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/stix/stix-mathex.pfb><C:/Users/175199/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathfrak.pfb><C:/Users/17519
+9/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathit.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathrm-bol
+d.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/st
+ix-mathrm.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/stix-mathscr.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/stix/stix-mathsf.pfb>
+Output written on main.pdf (12 pages, 628056 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Found input bbl file 'main.bbl'
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: applying rule 'bibtex main'...
+Rule 'bibtex main':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 3 of rule 'bibtex main'
+------------
+------------
+Running 'bibtex  "main.aux"'
+------------
+This is BibTeX, Version 0.99e (MiKTeX 25.12)
+The top-level auxiliary file: main.aux
+The style file: cas-model2-names.bst
+Database file #1: references.bib
+bibtex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 4 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(cas-dc.cls
+Document Class: cas-dc 2024/05/04, 2.4: Formatting class for CAS double column 
+articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/preprint\balance.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\dcolumn.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\svgnam.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty))) (cas-common.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/moreverb\moreverb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\stix.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\inconsolat
+a.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+))))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.st
+y (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\t1stix.fd)
+(main.aux)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stix.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg)) (main.out) (main.out)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixscr.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixex.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixfrak.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixbb.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixcal.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixsf.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixtt.fd)
+Overfull \hbox (123.62721pt too wide) detected at line 37
+[]
+(main.abs)
+
+Package hyperref Warning: Ignoring empty anchor on input line 37.
+
+(sections/foundations.tex
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `') on input line 32.
+
+[1{C:/Users/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc}])
+(sections/algorithms.tex
+Overfull \hbox (28.588pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 tion, pa-ram-e-ter in-ver-sion, fitted-curve re-con-struc-tion,
+ trace/leverage
+
+Overfull \hbox (1.87636pt too wide) in paragraph at lines 53--1
+\T1/stix/m/n/10 com-pu-ta-tion, marginal like-li-hood de-ter-mi-nants and repea
+ted-
+
+Overfull \hbox (4.27469pt too wide) in paragraph at lines 43--44
+[]\T1/stix/m/n/10 The la-bel \T1/stix/m/it/10 ML \T1/stix/m/n/10 means pro-file
+d Gaus-sian \T1/stix/m/it/10 marginal \T1/stix/m/n/10 variance-
+[2]) (sections/structured_criteria.tex [3]) (sections/amortized_frontier.tex
+[4]
+Overfull \hbox (2.97546pt too wide) in paragraph at lines 109--116
+\T1/stix/m/n/10 The fi-nal equal-ity fol-lows by sub-sti-tut-ing the normal-equ
+ation
+[5]
+Overfull \hbox (0.33295pt too wide) in paragraph at lines 194--200
+\T1/stix/m/n/10 When the penalty grid has al-ready been mapped, the $\LS1/stix/
+m/it/10 MI nd[]$
+
+Overfull \hbox (4.9604pt too wide) in paragraph at lines 201--217
+\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 MIr\LS1/stix/m/n/10 /$\T
+1/stix/m/n/10 . One pro-jec-tion per ob-served se-ries re-quires $\LS1/stix/m/i
+t/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 Rnr\LS1/stix/m/n/10 /$\T1/stix/m/n/10
+ .
+
+Overfull \hbox (15.85638pt too wide) in paragraph at lines 218--240
+[]\T1/stix/m/n/10 For the banded method, prepa-ra-tion of the banded difference
+-
+
+Underfull \hbox (badness 1472) in paragraph at lines 218--240
+\T1/stix/m/n/10 in $\LS1/stix/m/it/10 O\LS1/stix/m/n/10 .\LS1/stix/m/it/10 nd[]
+\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 op-er-a-tions. Af-ter map-ping, fac-tor-iza
+-tion and
+
+Underfull \hbox (badness 1024) in paragraph at lines 218--240
+\T1/stix/m/n/10 keep-ing all ob-ser-va-tions uses $\LS1/stix/m/it/10 O\LS1/stix
+/m/n/10 .\LS1/stix/m/it/10 Rn\LS1/stix/m/n/10 /$ \T1/stix/m/n/10 ad-di-tional s
+tor-age.
+[6]) (sections/decision_examples.tex
+Underfull \hbox (badness 1297) in paragraph at lines 374--1
+\T1/stix/m/n/10 forward-error lim-its, nu-mer-i-cal non-con-ver-gence and the
+
+Underfull \hbox (badness 1097) in paragraph at lines 103--107
+\T1/stix/m/n/10 o-ret-i-cal work-load vari-ables mat-ter. We use the ex-ist-ing
+
+[7]
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\t1zi4.fd)
+Underfull \hbox (badness 1005) in paragraph at lines 198--210
+[]\T1/stix/m/n/10 A sep-a-rate ap-pli-ca-tion manuscript in this repos-i-tory
+) (sections/theory_discussion.tex
+Overfull \hbox (0.97632pt too wide) in paragraph at lines 19--25
+[]\T1/stix/m/n/10 Fix the re-quested cri-te-rion set $\LS2/stixcal/m/n/10 C$\T1
+/stix/m/n/10 , the target-smoothness
+
+Overfull \hbox (1.06557pt too wide) in paragraph at lines 25--30
+[]\T1/stix/m/n/10 Choose a math-e-mat-i-cally ad-mis-si-ble smooth-ness map-
+
+Underfull \hbox (badness 1675) in paragraph at lines 30--36
+[]\T1/stix/m/n/10 Choose the candidate-score fam-ily sub-ject to the
+[8{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4
+-t1-0.enc}]
+Underfull \hbox (badness 2012) in paragraph at lines 66--77
+\T1/stix/m/n/10 scalar GCV/AICc/BIC/ML scor-ing. Nei-ther ex-pla-na-tion
+
+Overfull \hbox (5.53549pt too wide) in paragraph at lines 78--94
+[]\T1/stix/m/n/10 The im-por-tance of ex-ploit-ing Whittaker--Henderson struc-
+
+Underfull \hbox (badness 1565) in paragraph at lines 78--94
+\T1/stix/m/n/10 ture was demon-strated long be-fore this pa-per: [][]Wein-ert[]
+[]
+
+Underfull \hbox (badness 1215) in paragraph at lines 78--94
+\T1/stix/m/n/10 ([][]2007[][]) de-vel-oped ef-fi-cient fit-ted trends and GCV c
+om-
+
+Underfull \hbox (badness 1960) in paragraph at lines 78--94
+\T1/stix/m/n/10 smoothness in-ver-sion, cri-te-rion di-ag-nos-tics, reuse, end-
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 78--94
+\T1/stix/m/n/10 se-lected in-ver-sion, the Gaus-sian vari-ance model or the
+
+Underfull \hbox (badness 1024) in paragraph at lines 96--109
+\T1/stix/m/n/10 al-lo-ca-tion, garbage col-lec-tion and CPU con-tention. The
+
+Underfull \hbox (badness 1655) in paragraph at lines 110--121
+\T1/stix/m/n/10 quadratic losses, spa-tial lat-tices and higher-dimensional
+
+Underfull \hbox (badness 1226) in paragraph at lines 110--121
+\T1/stix/m/n/10 CV ex-pres-sion pre-sented here es-tab-lishes out-of-sample
+
+Underfull \hbox (badness 1817) in paragraph at lines 136--153
+\T1/stix/m/n/10 coordinate Gaus-sian de-ter-mi-nant and pro-filed quadratic
+
+Underfull \hbox (badness 1067) in paragraph at lines 169--188
+\T1/stix/m/n/10 notes are main-tained at [][]$\T1/zi4/m/n/10 https : / / github
+ . com / heri-[]espino /
+[9]) (main.bbl
+Underfull \hbox (badness 1688) in paragraph at lines 70--77
+[]\T1/stix/m/n/8 U.S. De-part-ment of Trans-porta-tion, Fed-eral High-way Ad-mi
+n-is-tra-tion,
+
+Underfull \hbox (badness 1270) in paragraph at lines 78--85
+[]\T1/stix/m/n/8 Weinert, H.L., 2007.  Ef-fi-cient com-pu-ta-tion for whittaker
+--henderson
+) [10 <./figures/coordinate_map.pdf>] [11 <./figures/theory_regime_map.pdf> <./
+figures/theory_cost_curves.pdf>] [12 <./figures/matched_bic_timings.pdf> <./fig
+ures/ngsim_jerk_application.pdf>] (main.aux) )
+(see the transcript file for additional information) <C:\Users\175199\AppData\L
+ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi0900.pk> <C:\Users\175199\Ap
+pData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\17
+5199\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk><C:/Us
+ers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/inconsolata/Inconso
+lata-zi4r.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/STIXGeneral-Bold.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/stix/STIXGeneral-Italic.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/stix/STIXGeneral-Regular.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.p
+fb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmmi12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmmi6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/
+Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.
+pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmr9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/stix/stix-mathbb.pfb><C:/Users/175199/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/stix/stix-mathcal.pfb><C:/Users/175199/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/stix/stix-mathex.pfb><C:/Users/175199/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathfrak.pfb><C:/Users/17519
+9/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathit.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathrm-bol
+d.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/st
+ix-mathrm.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/stix/stix-mathscr.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/stix/stix-mathsf.pfb>
+Output written on main.pdf (12 pages, 628056 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Found input bbl file 'main.bbl'
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: All targets (main.pdf) are up-to-date
+
+Reverting Windows console CPs to (in,out) = (65001,65001)
+latexmk: major issue: So far, you have not checked for MiKTeX updates.
