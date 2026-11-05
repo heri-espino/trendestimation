@@ -82,14 +82,19 @@ def git_head() -> str:
 
 def input_fingerprints(paper: Paper) -> dict[str, str]:
     folder = ROOT / paper.folder
+    # Include source, precomputed LaTeX tables, graphics and input imagery.
+    # Figure rendering and scientific experiments are deliberately not run.
     paths = [folder / paper.entry]
-    paths.extend(sorted(folder.glob("*.bib")))
-    paths.extend(sorted(folder.glob("sections/*.tex")))
+    for pattern in (
+        "*.tex", "*.bib", "sections/*.tex", "generated/*.tex",
+        "figures/*.pdf", "figures/*.png", "figures/*.pgf",
+    ):
+        paths.extend(folder.glob(pattern))
     if paper.template == "cas":
         paths.extend(CAS_TEMPLATE / name for name in CAS_FILES)
     return {
         path.relative_to(ROOT).as_posix(): sha256(path)
-        for path in paths if path.is_file()
+        for path in sorted(set(paths)) if path.is_file()
     }
 
 
