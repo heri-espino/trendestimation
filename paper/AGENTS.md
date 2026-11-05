@@ -10,8 +10,9 @@ The user's new hypothesis is **d=3 PLS with nonzero reference
 jerk plus local-polynomial extrapolation**, not a new PLS model.
 Biessy 2025/2026 already performs WH extrapolation.
 An exact fixed-S 2x2 decomposition is provided for testing
-fit versus continuation contributions. No new data, policies,
-tests, results or manuscript edits are implied by these notes.
+fit versus continuation contributions. No new empirical data, mu policies, forecast results or manuscript
+edits are implied by these notes; a deterministic algebra regression
+is provided in `ngsim-jerk-case-study/tests/`.
 Any new scientific results belong in **Paper C** and a
 separate reproducible experiment, not Springer Experiment011.
 
