@@ -21,12 +21,14 @@ def jobs(design):
             for i in range(97) for c in design['cases']]
 
 
-def execute(job, tag, archive):
+def execute(job, tag, archive, large_svd=False):
     index, seed, case, block = job
     seed_tag = f'{tag}_s{index+3:03d}'
     cmd = [sys.executable, str(campaign.HERE/'campaign.py'), 'run',
            '--case', case['id'], '--run-tag', seed_tag, '--block', str(block),
            '--seed', str(seed), '--allow-confirm']
+    if large_svd and case["n"] in (2048, 4096):
+        cmd.append("--large-svd")
     started = time.perf_counter()
     log = archive/f"s{index+3:03d}_{case['id']}.log"
     with log.open('w', encoding='utf8') as handle:
@@ -56,6 +58,8 @@ def main():
     parser.add_argument('--run-tag', required=True)
     parser.add_argument('--workers', type=int, default=24)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--large-svd', action='store_true',
+                        help='Add SVD at 2048/4096; serialize all n>=1024 cases')
     args = parser.parse_args()
     if not campaign.VALID_TAGS.fullmatch(args.run_tag) or len(args.run_tag)>43:
         raise ValueError('Use a safe run tag at most 43 characters long')
@@ -65,6 +69,8 @@ def main():
         raise ValueError('Run from repository root')
     design = campaign.load_design()
     work = jobs(design)
+    if args.large_svd:
+        print('Large-SVD opt-in: n>=1024 phase runs alone after small cases finish', flush=True)
     print(f'97 additional base seeds; {len(design["cases"])} cases; {len(work)} jobs', flush=True)
     if args.dry_run:
         print('PLAN ONLY; no observations generated')
@@ -76,6 +82,8 @@ def main():
         os.environ[key] = '1'
     report = dict(mode='concurrent_case_blocks_not_isolated_latency',
                   source_commit=campaign.git_sha(), workers=args.workers,
+                  large_svd_opt_in=args.large_svd,
+                  serial_large_n_threshold=1024 if args.large_svd else None,
                   blas_threads_per_job=1, cases_sha256=campaign.sha256_file(campaign.CASE_FILE),
                   planned_jobs=len(work), additional_base_seeds=97, results=[])
     def save():
@@ -83,17 +91,26 @@ def main():
         temp.write_text(json.dumps(report, indent=2)+'\n', encoding='utf8')
         temp.replace(archive/'report.json')
     save()
-    with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        pending = [pool.submit(execute, job, args.run_tag, archive) for job in work]
-        for number, future in enumerate(as_completed(pending), 1):
-            result = future.result()
-            report['results'].append(result)
-            save()
-            non_ok = sum(v for counts in result['counts'].values()
-                         for status,v in counts.items() if status != 'ok')
-            print(f'[{number}/{len(work)}] seed={result["seed_index"]} '
-                  f'{result["case"]} exit={result["returncode"]} '
-                  f'non_ok_rows={non_ok} QA={result["qa_classification"]}', flush=True)
+    phases = ([(args.workers, [j for j in work if j[2]['n']<1024]),
+               (1, [j for j in work if j[2]['n']>=1024])]
+              if args.large_svd else [(args.workers, work)])
+    number = 0
+    for workers, phase_jobs in phases:
+        print(f'Phase: {len(phase_jobs)} jobs, maximum {workers} concurrent processes', flush=True)
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            pending = [pool.submit(execute, job, args.run_tag, archive, args.large_svd)
+                       for job in phase_jobs]
+            for future in as_completed(pending):
+                number += 1
+                result = future.result()
+                result['phase_workers'] = workers
+                report['results'].append(result)
+                save()
+                non_ok = sum(v for counts in result['counts'].values()
+                             for status,v in counts.items() if status != 'ok')
+                print(f'[{number}/{len(work)}] seed={result["seed_index"]} '
+                      f'{result["case"]} exit={result["returncode"]} '
+                      f'non_ok_rows={non_ok} QA={result["qa_classification"]}', flush=True)
     totals = defaultdict(Counter)
     for result in report['results']:
         for method, counts in result['counts'].items():

@@ -41,3 +41,24 @@ class SeedTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             campaign.run_one(SimpleNamespace(case='smoke_gcv_n64_d1_m100',
                               seed=-1, run_tag='seed_test', block=0))
+
+    def test_large_svd_preflight_explicit_opt_in(self):
+        before = campaign.CASE_FILE.read_bytes()
+        args = SimpleNamespace(case='confirm_gcv_n4096_d4_m100', seed=1000000000,
+                               run_tag='large_seed_test', block=0, allow_confirm=True,
+                               dry_run=True, large_svd=True)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            campaign.run_one(args)
+        config = json.loads(out.getvalue())['config']
+        self.assertEqual(config['method_order'], ['spectral_svd', 'banded_cholesky'])
+        self.assertTrue(config['large_svd_opt_in'])
+        self.assertTrue(all(p['preflight']=='eligible' for p in config['preflights']))
+        self.assertEqual(before, campaign.CASE_FILE.read_bytes())
+
+    def test_large_svd_rejects_unintended_sizes(self):
+        args = SimpleNamespace(case='smoke_gcv_n64_d1_m100', seed=1000000000,
+                               run_tag='large_seed_test', block=0, allow_confirm=True,
+                               dry_run=True, large_svd=True)
+        with self.assertRaises(ValueError):
+            campaign.run_one(args)
