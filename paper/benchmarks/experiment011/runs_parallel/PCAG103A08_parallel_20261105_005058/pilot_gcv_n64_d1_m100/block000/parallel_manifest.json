@@ -1,0 +1,51 @@
+{
+  "experiment": "experiment011",
+  "mode": "independent_series_parallel_throughput",
+  "not_comparable_to_serial_r_cache_latency": true,
+  "case": {
+    "id": "pilot_gcv_n64_d1_m100",
+    "stage": "pilot",
+    "n": 64,
+    "d": 1,
+    "grid_denominator": 100,
+    "criterion": "gcv",
+    "mu": "0",
+    "amplitude": "high",
+    "methods": [
+      "spectral_svd",
+      "banded_cholesky",
+      "naive_inverse"
+    ],
+    "series_count": 3,
+    "repeats_per_block": 2,
+    "planned_blocks": 3,
+    "conditional_data_mu": false
+  },
+  "method_order": [
+    "spectral_svd",
+    "banded_cholesky",
+    "naive_inverse"
+  ],
+  "source_commit": "f58506a61cb1c5103237a5af2634dd6173ab8740",
+  "source_sha256": {
+    "experiment006": "dc7ff10ed51bcf746726e143512c61573c38f69f177d5fcbab6648830f55a9e5",
+    "experiment011_cases": "67694c0f3dda785b598658a660bf853de30cd8ab6d9d83aa92befba212c6c88d",
+    "experiment011_parallel_series": "871bf1b96d9077ebbd2be02de922748777c8c79f0efc6b2d9a182289a71c75e1"
+  },
+  "run_tag": "PCAG103A08_parallel_20261105_005058",
+  "block": 0,
+  "series_count": 16,
+  "series_workers": 16,
+  "blas_threads_per_worker": 1,
+  "max_work": 500000000,
+  "max_dense_bytes": 2147483648,
+  "seed_base": 20261103,
+  "host": "Windows-10-10.0.26100-SP0",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "note": "R separate processes use private factorization/SVD/mapping. Per-method wall time includes process scheduler/IPC and is NOT a replacement for serial R-series cache reuse.",
+  "status": "completed_with_recorded_rows",
+  "row_count": 384,
+  "qa_classification": "float64_parity_only_not_precision_certified",
+  "complete_utc": "2026-11-05T06:51:05.941925+00:00",
+  "raw_sha256": "6b96ca3c78c325710f81900af84ce28da0f53cb9034c8ae92b461a7a88147e4a"
+}

@@ -1,0 +1,10 @@
+{
+  "classification": "float64_parity_only_not_precision_certified",
+  "actual_rows": 384,
+  "status_counts": {
+    "ok": 384
+  },
+  "paired_method_comparisons": 256,
+  "issues": [],
+  "caveat": "One independent series per spawned process; setup, mapper and factor caches are not shared. Group wall time is throughput latency and cannot be pooled with serial R-series timings. Selection-score parity is float64, not a precision certificate."
+}
