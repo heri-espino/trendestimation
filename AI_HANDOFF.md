@@ -1,5 +1,21 @@
 # AI_HANDOFF — latest
 
+**Paper C primary-source forecasting correction (2026-11-07):** The original
+Guerrero (2007) PLS paper has now been checked visually (printed
+pp. 1228, 1233). It **already gives nonzero-$\mu$ trend-forecasting
+formulas for $d=1,2$ and applies estimated $\mu$ to GDP forecasts**.
+Do not claim the first PLS-based trend forecast or first forecast with
+estimated nonzero $\mu$. A 2020 pollutant-forecasting application
+uses $d=2,\mu=0$, and Python `pybaselines` already implements
+Whittaker smoothing (though not established to implement all our
+features). The specific $d=3$ vehicle reference-jerk application,
+last-25-point local continuation and held-out comparison remain a
+hypothesis of distinctive applied contribution. Detailed page-level
+findings, equations, software comparison and links are in
+[the primary-source note](paper/ngsim-jerk-case-study/notes/papers/guerrero_2007_forecasting_primary_source.md).
+No NGSIM code, outcomes or figures were changed by this finding.
+
+
 **Paper C extrapolation/jerk-reference continuation (2026-11-05):**
 Read [the new research handoff](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
 [exact fixed-S attribution](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),
