@@ -1,6 +1,6 @@
 # Mathematical lineage: Guerrero (2007, 2008) and Cortés-Toto et al. (2017)
 
-**Source:** Existing [Trend-Estimation extracted literature](https://github.com/heri-espino/Trend-Estimation/tree/main/literature/extracted) and the manuscript's bibliographic entries. Primary journal PDFs were not revalidated here; extracted OCR/transcriptions can contain incorrect symbols.
+**Source status:** The original Guerrero (2007) PDF was independently inspected on 2026-11-07, including printed pp. 1228 and 1233; see [direct forecasting-source annotation](guerrero_2007_forecasting_primary_source.md). Guerrero (2008) and Cortés-Toto et al. (2017) continue to use the existing [extracted literature](https://github.com/heri-espino/Trend-Estimation/tree/main/literature/extracted) and references; exact OCR-transcribed formulas remain subject to publisher-PDF checks.
 
 ## Guerrero (2007): the established PLS estimator
 
@@ -18,7 +18,9 @@ The model explicitly accommodates **nonzero mean of the differences**. The parti
 $\widehat\tau=p_\mu+(I+\lambda D_d^\top D_d)^{-1}(y-p_\mu)$.
 At $\lambda\to\infty$, the fit lies in the affine class $D_d\tau=\mu\mathbf1$, allowing degree-$d$ polynomials if $\mu\ne0$.
 
-**Implication:** Our $\mu\ne0$ objective is an **application/interpretation of established mathematics**, not a newly invented penalty or convex optimizer.
+**Critical extrapolation evidence:** Remark (v), printed p. 1228, **explicitly derives h-step trend extrapolation for d=1 and d=2 with nonzero $\mu$**. Equation (17) estimates $\mu$ from observed differences, and Example 2 (printed p. 1233) forecasts Mexico's GDP using a nonzero estimated second-difference mean. This means **PLS trend estimation followed by forecasting, including data-estimated nonzero $\mu$, is prior art from 2007**. See the [source-level annotation and the distinct d=3 extrapolation recurrence](guerrero_2007_forecasting_primary_source.md).
+
+**Implication:** Our $\mu\ne0$ objective and generic trend extrapolation are **established mathematics**, not a new penalty, optimizer or forecasting paradigm. What remains worth testing is the physical third-derivative interpretation, specific local-continuation rule, software implementation and held-out evidence.
 
 ## Guerrero (2008): user-controlled percentage smoothness
 
