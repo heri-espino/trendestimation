@@ -1,0 +1,34 @@
+{
+  "experiment_id": "experiment002",
+  "status": "descriptive_archived_ngsim_baseline_comparison",
+  "source_doi": "10.21949/1504477",
+  "data_subset_sha256": "61a41fd70a4b89cf7e32d4bc2aaf40083ce3ea86bc9b7d1175108bd674d2733e",
+  "n_tracks": 5,
+  "distinct_vehicle_ids": 2,
+  "n_origins": 15,
+  "n_rows": 315,
+  "n_summary_rows": 21,
+  "n_train": 80,
+  "sample_dt_seconds": 0.1,
+  "horizon_frames": [
+    5,
+    10,
+    20
+  ],
+  "methods": [
+    "spline_cubic_taylor2",
+    "spline_cubic_taylor3",
+    "spline_cubic_local25",
+    "savgol_21_taylor2",
+    "savgol_21_taylor3",
+    "raw_local_quad25",
+    "raw_local_cubic25"
+  ],
+  "spline_k": 3,
+  "spline_s_rule": "n*(clip(1.4826*MAD(D3 y)/sqrt(20),0.01,0.75))**2",
+  "scipy_version": "1.17.1",
+  "numpy_version": "2.4.6",
+  "runner_name": "PCAG103A-08",
+  "run_id": "42522187489",
+  "qualifier": "retrospective 15 correlated origins; only 2 unique vehicle ids; no jerk truth"
+}

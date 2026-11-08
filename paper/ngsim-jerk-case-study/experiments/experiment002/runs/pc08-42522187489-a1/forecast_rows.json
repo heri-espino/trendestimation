@@ -1,0 +1,3152 @@
+[
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2965077805524263,
+    "mae_m": 0.45076540905411944,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6151448850501204,
+    "mae_m": 0.6223264274190342,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0034788707104614278,
+    "mae_m": 0.05307421957521115,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05496055523201582,
+    "mae_m": 0.21856027359438884,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05930275555299595,
+    "mae_m": 0.22560041332117747,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0032352950014583118,
+    "mae_m": 0.05102172274243344,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.01356995130102145,
+    "mae_m": 0.1095769648964506,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.8497025231581645,
+    "mae_m": 1.333817666837963,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 11.329538753431143,
+    "mae_m": 2.4870889569576646,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.02197532088332524,
+    "mae_m": 0.12342085612519042,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.21582637794867457,
+    "mae_m": 0.40907194516115625,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2810176282183222,
+    "mae_m": 0.45639732888010653,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.020939299832875412,
+    "mae_m": 0.12012246103673903,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05335010015605809,
+    "mae_m": 0.20340919749160663,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 33.6452447303069,
+    "mae_m": 4.469617800925734,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 333.72731845876865,
+    "mae_m": 12.876107700806529,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.26378655109988836,
+    "mae_m": 0.39306364952183015,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.2091869447521946,
+    "mae_m": 0.9257873071165555,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.5468349636908933,
+    "mae_m": 1.270754153729058,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.25614466225212745,
+    "mae_m": 0.38645918862869094,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.3899097832797315,
+    "mae_m": 0.5109560070511655,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.353646237992849e-06,
+    "mae_m": 0.0015607284040527248,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.952425997955288e-06,
+    "mae_m": 0.0016747876277975137,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.012406954699209483,
+    "mae_m": 0.1040573734202809,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04366680166313138,
+    "mae_m": 0.18661750475805547,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.050652914317849775,
+    "mae_m": 0.19860670635641497,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.013378700011792342,
+    "mae_m": 0.10818187308800305,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.01809020873337252,
+    "mae_m": 0.1256572997020669,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.323746516555826e-05,
+    "mae_m": 0.0039333474795114395,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.503805839312679e-05,
+    "mae_m": 0.004700078928017604,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.047922688107597755,
+    "mae_m": 0.19316699905707538,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2564988223890764,
+    "mae_m": 0.42439508843241497,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.38570191977194257,
+    "mae_m": 0.5049891658436181,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.051143760762185055,
+    "mae_m": 0.19981644655509,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.07125540274706507,
+    "mae_m": 0.23502130307699928,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00022800880353774397,
+    "mae_m": 0.011895911224134182,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0005429758981112519,
+    "mae_m": 0.01748481318761108,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.28885276774062923,
+    "mae_m": 0.4478534550772778,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.2221415277273193,
+    "mae_m": 1.1893028045024656,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 5.531298224512213,
+    "mae_m": 1.7767736828221437,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.30569281352746236,
+    "mae_m": 0.46121333601991166,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4561163283624192,
+    "mae_m": 0.5588649023246539,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.017939891085824854,
+    "mae_m": 0.11320672902879778,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.02849261800446014,
+    "mae_m": 0.13845515274629747,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05393270987579467,
+    "mae_m": 0.2094852541063176,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.08203730330531153,
+    "mae_m": 0.24979232470623175,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.08789937867554815,
+    "mae_m": 0.2572178218111503,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.052945214605614944,
+    "mae_m": 0.2074254949905594,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.019034914704592773,
+    "mae_m": 0.13277269082728935,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.047493595994109225,
+    "mae_m": 0.1950854958612979,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.19988245488541923,
+    "mae_m": 0.36481101085111334,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1426329834829849,
+    "mae_m": 0.3447842323551157,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.32198144994647704,
+    "mae_m": 0.49563427535372284,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.40368691718406735,
+    "mae_m": 0.5455501170034524,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1398145407758616,
+    "mae_m": 0.3413432363320396,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.19192608908331393,
+    "mae_m": 0.3439978763766646,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.029581395931512367,
+    "mae_m": 0.1435557629719753,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.4005038303832436,
+    "mae_m": 1.343838394768278,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.15300323969246077,
+    "mae_m": 0.3737345348856508,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.072264895422834,
+    "mae_m": 0.9077986996077015,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.399710421710007,
+    "mae_m": 1.2716480577486948,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.14734874586514257,
+    "mae_m": 0.3665579008804471,
+    "valid": true
+  },
+  {
+    "track": 1,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 4.3866500602110765,
+    "mae_m": 1.5344478046093228,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03661013633475706,
+    "mae_m": 0.15494330744443802,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1281650355518909,
+    "mae_m": 0.27340617504112286,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.12304100464072673,
+    "mae_m": 0.3400777722733409,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.030155030396153127,
+    "mae_m": 0.16795154830734305,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.031371777872338656,
+    "mae_m": 0.17083413368630146,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1245453884503696,
+    "mae_m": 0.34213524682280366,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.08443079782321064,
+    "mae_m": 0.24756461080372957,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.33041220870855204,
+    "mae_m": 0.4521613714536613,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.021733872977428,
+    "mae_m": 1.2484950925202711,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.20951561901474705,
+    "mae_m": 0.44079545599728365,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03706395423328306,
+    "mae_m": 0.18866651050247613,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04606149704881293,
+    "mae_m": 0.2080438899943772,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.21277305642587646,
+    "mae_m": 0.4440889894649601,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.8900448796433429,
+    "mae_m": 0.7438819446489277,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 5.006424046350964,
+    "mae_m": 1.6883131520282055,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 118.25771076380973,
+    "mae_m": 7.492993664265813,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5295357641582334,
+    "mae_m": 0.6762056387719916,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.06187239891534587,
+    "mae_m": 0.2411835849869881,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.18981755043560217,
+    "mae_m": 0.38243026855607026,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5405001616406071,
+    "mae_m": 0.6827709188964384,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 11.876627785287106,
+    "mae_m": 2.6124341721574766,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03153000102770004,
+    "mae_m": 0.1519012496405736,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04587231831455691,
+    "mae_m": 0.17846918093227657,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.044656341218269544,
+    "mae_m": 0.1819379051753202,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.12425424686833923,
+    "mae_m": 0.32509434209388244,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.12039458795511701,
+    "mae_m": 0.32084310093515567,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.044039921021467456,
+    "mae_m": 0.18046526204373947,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6619913932769089,
+    "mae_m": 0.7422622908199003,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.22841171121435724,
+    "mae_m": 0.392209872784737,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5385189773631286,
+    "mae_m": 0.5708054109123026,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.3193060076248656,
+    "mae_m": 0.4586148777040492,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5686830744572102,
+    "mae_m": 0.6493345859061292,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5102560806853521,
+    "mae_m": 0.6207567981169178,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.31662649788629277,
+    "mae_m": 0.4563435476810184,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.5095070776039066,
+    "mae_m": 1.588103259721325,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.9852672964645273,
+    "mae_m": 1.1037192367595843,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 11.1232425206231,
+    "mae_m": 2.4055478700530926,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.370904792243972,
+    "mae_m": 1.4477382606747788,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 4.444329398860546,
+    "mae_m": 1.7193974156324798,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.281212482034512,
+    "mae_m": 1.5110865988549207,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.352979321003075,
+    "mae_m": 1.4434028277812743,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 33.374568540566145,
+    "mae_m": 4.582688695702479,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0654315374393221,
+    "mae_m": 0.2085542926653318,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.106134399210903,
+    "mae_m": 0.2585854410429704,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03450441947097986,
+    "mae_m": 0.16050168780910212,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.029245609171746047,
+    "mae_m": 0.1456725984792513,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.029354154913278245,
+    "mae_m": 0.14590379369803372,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.034296076664784195,
+    "mae_m": 0.15992562030464227,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.022965449835240355,
+    "mae_m": 0.12829151232191408,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5615396068934498,
+    "mae_m": 0.5983371083159852,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.5272314122238675,
+    "mae_m": 0.9346576057434447,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.19739728023716724,
+    "mae_m": 0.37243907685042077,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.17681411413696907,
+    "mae_m": 0.3498276926874183,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.17865572573469685,
+    "mae_m": 0.35138183832475817,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1966384388868871,
+    "mae_m": 0.3716090989185261,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1366640146148659,
+    "mae_m": 0.3078810848718973,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 5.723398628061011,
+    "mae_m": 1.872346656330572,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 36.17704445018814,
+    "mae_m": 4.323872926834871,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.3721449731778979,
+    "mae_m": 0.958020975290664,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.2657312427722265,
+    "mae_m": 0.9166255124921904,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.3024945207082488,
+    "mae_m": 0.9279540782122737,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.3684023065080715,
+    "mae_m": 0.9565710263432237,
+    "valid": true
+  },
+  {
+    "track": 2,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.8993513478644211,
+    "mae_m": 0.7798016540471551,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.16053403701814745,
+    "mae_m": 0.33035576986571585,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.35713698968654367,
+    "mae_m": 0.47105899678943786,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.060084000090021225,
+    "mae_m": 0.23317504849882767,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0015231978996145818,
+    "mae_m": 0.031052955186359553,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0026871983339004173,
+    "mae_m": 0.039882496175198415,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.060348356852933036,
+    "mae_m": 0.23368075719797615,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04864360952943388,
+    "mae_m": 0.21032267956558712,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.6913071682717216,
+    "mae_m": 1.0135684886235452,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 7.185820811673736,
+    "mae_m": 1.9594068473885868,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.21200937004162174,
+    "mae_m": 0.4076729560108447,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.023275514491339914,
+    "mae_m": 0.1191182910535403,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05971044503331535,
+    "mae_m": 0.18324976388790476,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.21296029546986955,
+    "mae_m": 0.4085906796431473,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.16569081051598472,
+    "mae_m": 0.3615350174359776,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 25.8470354209373,
+    "mae_m": 3.8383657458654525,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 234.77746623249715,
+    "mae_m": 10.73282386512798,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.4189597236144964,
+    "mae_m": 1.229589536146338,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.023204538668832875,
+    "mae_m": 0.13360697588250686,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6652211950661211,
+    "mae_m": 0.6036840602663552,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.4266065828154537,
+    "mae_m": 1.2316606813153292,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.942623510732967,
+    "mae_m": 1.1011372373357786,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1078714064032883,
+    "mae_m": 0.2700184286625301,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.11808512122970871,
+    "mae_m": 0.2809752983949295,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.01591136995886097,
+    "mae_m": 0.09481314993913088,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04717221307546378,
+    "mae_m": 0.1695933097408897,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04941117448754223,
+    "mae_m": 0.17323183376835233,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.015117903769922303,
+    "mae_m": 0.09236708896028176,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.010972987909551452,
+    "mae_m": 0.0819255054558596,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.8599763228055686,
+    "mae_m": 0.7458744131546269,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.0666059369211012,
+    "mae_m": 0.8195289263557555,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.18864604332986085,
+    "mae_m": 0.33468875052734576,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4242352619181723,
+    "mae_m": 0.5147498582092226,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.47113691511558525,
+    "mae_m": 0.5392088252827051,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.18333298162722333,
+    "mae_m": 0.32938504501910304,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.146799145649617,
+    "mae_m": 0.29439156825264945,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 6.544566834981836,
+    "mae_m": 2.0567329386179964,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 11.139772461321659,
+    "mae_m": 2.5936195555055606,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.260857270532806,
+    "mae_m": 0.9091692018840462,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.0172682634542647,
+    "mae_m": 1.4023018344360025,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.975364289620321,
+    "mae_m": 1.5805895117815425,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.2303219236237823,
+    "mae_m": 0.8975891646781136,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.9445671269180194,
+    "mae_m": 0.7900457690758586,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0966142179070851,
+    "mae_m": 0.2732776782936696,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.08201859183002838,
+    "mae_m": 0.2549158442083524,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2981240872304302,
+    "mae_m": 0.47904571131821283,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2535487105747042,
+    "mae_m": 0.44351456828161984,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.24907879736087724,
+    "mae_m": 0.44018993224735825,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.3026437444443956,
+    "mae_m": 0.483117583649431,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.45661882154400857,
+    "mae_m": 0.6002910481944127,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.17110046771167245,
+    "mae_m": 0.3802830056790327,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.09483777076826291,
+    "mae_m": 0.2727898266459562,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.9850147421697202,
+    "mae_m": 0.8820702001881188,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.7652520574067194,
+    "mae_m": 0.7846248480306344,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.7156817170585617,
+    "mae_m": 0.7622759058003397,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.9989594205087912,
+    "mae_m": 0.8885508177817627,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.6146927180491688,
+    "mae_m": 1.124600849554102,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4022899504050619,
+    "mae_m": 0.5175654571143624,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.615451507491424,
+    "mae_m": 1.2821132946667446,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.214797964377788,
+    "mae_m": 1.3582774131751307,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.2686489706792894,
+    "mae_m": 1.0551656336817061,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.8818546717822896,
+    "mae_m": 0.8922584680030397,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.2584133182482335,
+    "mae_m": 1.3711093962099823,
+    "valid": true
+  },
+  {
+    "track": 3,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 5.298320230580833,
+    "mae_m": 2.0258672224357666,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0005326303357970597,
+    "mae_m": 0.021071246380489583,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0005804086045179851,
+    "mae_m": 0.02183955223600975,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.004921635823630093,
+    "mae_m": 0.0670954283082068,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.8256341530531608e-05,
+    "mae_m": 0.0038246765906635007,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.0703661182640886e-05,
+    "mae_m": 0.004032092858608394,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.004428908422170094,
+    "mae_m": 0.06365092819765579,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.010347217755315196,
+    "mae_m": 0.09205966133644239,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0026283519354335927,
+    "mae_m": 0.04389685007749122,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.003425567645608433,
+    "mae_m": 0.049061572772927775,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.014839804498022538,
+    "mae_m": 0.1108685933994579,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00010328725814206582,
+    "mae_m": 0.008555029446154805,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00014736589166830782,
+    "mae_m": 0.009949327691776944,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.013348252561766031,
+    "mae_m": 0.10515523306572802,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.06213901885239549,
+    "mae_m": 0.20852918131546402,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.015871615923320155,
+    "mae_m": 0.10527330182332158,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.032395480113809653,
+    "mae_m": 0.14292028874377216,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.07955370165327423,
+    "mae_m": 0.23808709934372202,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0021548710154291493,
+    "mae_m": 0.03282915805681021,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.003788349819808236,
+    "mae_m": 0.042992555186052786,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.07196261347119455,
+    "mae_m": 0.2262569900891176,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6844745004502485,
+    "mae_m": 0.6438438259920634,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.09732443505418757,
+    "mae_m": 0.25483586797397206,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2595079000126546,
+    "mae_m": 0.39575851279498553,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6239094593634594,
+    "mae_m": 0.7173023688644136,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4522121198751029,
+    "mae_m": 0.6115571789732869,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.44313608268766247,
+    "mae_m": 0.6063894219696095,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6260747050943103,
+    "mae_m": 0.7184787714530187,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.709182615285815,
+    "mae_m": 0.7657380390452928,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5999387742140673,
+    "mae_m": 0.6365714971315413,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 4.610583050699086,
+    "mae_m": 1.5838848317616772,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.3760387016881452,
+    "mae_m": 1.3552582031669544,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.6065504328749305,
+    "mae_m": 1.12279079051712,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.4898840367805075,
+    "mae_m": 1.0880519795479615,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.3864725633998605,
+    "mae_m": 1.3580766941025941,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.7391236782884056,
+    "mae_m": 1.4532821372463487,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 5.539888641910862,
+    "mae_m": 1.8576450024153508,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 158.99086908857257,
+    "mae_m": 8.762854598644932,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 13.14006662552516,
+    "mae_m": 3.042201534765595,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 8.059998860025132,
+    "mae_m": 2.4091655655947237,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 6.1741173451118865,
+    "mae_m": 2.155945472414582,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 13.20838114888752,
+    "mae_m": 3.049799517179525,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 15.721601270418034,
+    "mae_m": 3.313881282090223,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0003393729924880123,
+    "mae_m": 0.016162835180878687,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0004138663856370807,
+    "mae_m": 0.01757731074380615,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0002918118861560748,
+    "mae_m": 0.014749515537823754,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 6.0083338144139426e-05,
+    "mae_m": 0.007716069481946875,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.884933587767111e-05,
+    "mae_m": 0.006078697940446886,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00014873908244583624,
+    "mae_m": 0.009866988242183083,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.010746366317578788,
+    "mae_m": 0.09502098252628173,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0015350741041094123,
+    "mae_m": 0.03080148393652422,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.002443219958447945,
+    "mae_m": 0.0401335985208533,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.004086439046704018,
+    "mae_m": 0.04415579571214181,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0008692778274053141,
+    "mae_m": 0.017080906419182897,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0004050580922446514,
+    "mae_m": 0.01307284905937962,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0031778365488308946,
+    "mae_m": 0.036193313901765126,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.06268368933546294,
+    "mae_m": 0.20773900587520872,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.026470240563364705,
+    "mae_m": 0.10493048494133035,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05309552763392056,
+    "mae_m": 0.12621282894322688,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.07055166367392193,
+    "mae_m": 0.19339521747098445,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.029921880236437437,
+    "mae_m": 0.12335302865813133,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.033495635547210384,
+    "mae_m": 0.11279882074800866,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0625450528996715,
+    "mae_m": 0.1806196141090915,
+    "valid": true
+  },
+  {
+    "track": 4,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.6539670585444755,
+    "mae_m": 0.652992964487425,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.16766009603476195,
+    "mae_m": 0.3304078202035754,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.34058912886516074,
+    "mae_m": 0.4544520599362102,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.003788335110828178,
+    "mae_m": 0.05073421026506253,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.05067895885152427,
+    "mae_m": 0.20269523326570607,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04855247805820361,
+    "mae_m": 0.19909441475450648,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.003592456057414086,
+    "mae_m": 0.04961879463246817,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.5362158629803557,
+    "mae_m": 0.6617717358555268,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.6478789622393948,
+    "mae_m": 1.009402316599595,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 6.232454595803473,
+    "mae_m": 1.8432552614689997,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04869778039809107,
+    "mae_m": 0.17128790249334144,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.22927517395335065,
+    "mae_m": 0.4132425292566424,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.19847322834343978,
+    "mae_m": 0.38903702704247395,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04687962101374963,
+    "mae_m": 0.16791783287175263,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.9123655089869778,
+    "mae_m": 1.4437162908249603,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 19.09874967855228,
+    "mae_m": 3.3676800105020073,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 179.11151934578103,
+    "mae_m": 9.44584775740131,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4882939610669613,
+    "mae_m": 0.5450909136503576,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.3250373874903758,
+    "mae_m": 0.9595681593691012,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.8166711723117528,
+    "mae_m": 0.7831280523203787,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.47518003167008355,
+    "mae_m": 0.5371931188717148,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 95,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 26.9100323901667,
+    "mae_m": 4.10798951013936,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00021098868290070897,
+    "mae_m": 0.010398658886487055,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00020697464211652728,
+    "mae_m": 0.010379137769328394,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.007867828373609734,
+    "mae_m": 0.08099608397642725,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0018470230517911221,
+    "mae_m": 0.0396322717511822,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.0020557861223259944,
+    "mae_m": 0.04171170556298023,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.008653019481218096,
+    "mae_m": 0.0852093323001668,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.001539716444506005,
+    "mae_m": 0.03527241723523104,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.13937287111434987,
+    "mae_m": 0.23260133310053277,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.13808794841818456,
+    "mae_m": 0.23149838998104855,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.26244013686859946,
+    "mae_m": 0.36566877152405797,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.07895745763462406,
+    "mae_m": 0.17928235216791819,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.06822177120139694,
+    "mae_m": 0.16738336980038754,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2695345694904258,
+    "mae_m": 0.37248800768103507,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.06770493658037675,
+    "mae_m": 0.16504573762545363,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.1503968134864553,
+    "mae_m": 1.1018848056374637,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 2.1140947835928845,
+    "mae_m": 1.0933150352046446,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.2874664226714017,
+    "mae_m": 1.397433863006465,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.3773300911395556,
+    "mae_m": 0.8813567531870639,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.056041203623121,
+    "mae_m": 0.7805042133147104,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 3.3446861371095844,
+    "mae_m": 1.4111926570120672,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 140,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.9824984479675105,
+    "mae_m": 0.7555845544538968,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.02582320241152352,
+    "mae_m": 0.1373923781286294,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03724997944465852,
+    "mae_m": 0.1608296504894895,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.00733615946960541,
+    "mae_m": 0.07306790506069945,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03881153631587657,
+    "mae_m": 0.17979354180477572,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.03923840124996726,
+    "mae_m": 0.1806161236298948,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.007906855794352612,
+    "mae_m": 0.07632487697503336,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 5,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.08456744682556275,
+    "mae_m": 0.26430682574707304,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.21900248210783638,
+    "mae_m": 0.3729345710164935,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.4850709159887613,
+    "mae_m": 0.5304851241089281,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.044640424854712715,
+    "mae_m": 0.1767694077405082,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.1746796365380698,
+    "mae_m": 0.3630635314938161,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.18108965838824,
+    "mae_m": 0.36859310931823186,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04703869526759879,
+    "mae_m": 0.18199267238564118,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 10,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.42936902665057486,
+    "mae_m": 0.560688865696747,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 4.9321390990603735,
+    "mae_m": 1.6310544264285844,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 15.415830441211611,
+    "mae_m": 2.7794807721106194,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "spline_cubic_local25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04926314325544397,
+    "mae_m": 0.19017898931634464,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor2",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.25116975944484315,
+    "mae_m": 0.4660707839201038,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "savgol_21_taylor3",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.2987059777443136,
+    "mae_m": 0.5063772933509803,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_quad25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 0.04873695424134217,
+    "mae_m": 0.1896897499122879,
+    "valid": true
+  },
+  {
+    "track": 5,
+    "origin": 185,
+    "horizon": 20,
+    "method": "raw_local_cubic25",
+    "noise_sigma_training_only_m": 0.01,
+    "mse_m2": 1.677837884118997,
+    "mae_m": 1.11629831162767,
+    "valid": true
+  }
+]
