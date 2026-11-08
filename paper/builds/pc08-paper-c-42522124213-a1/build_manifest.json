@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "source_commit": "d0eccd236b4c56197c7a7ce044af2d477f1e1b84",
+  "started_utc": "2026-11-08T20:50:24.807276+00:00",
+  "finished_utc": "2026-11-08T20:50:33.314600+00:00",
+  "requested": "ngsim",
+  "runner": "PCAG103A-08",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "python": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\python.exe",
+  "conda_environment": "trendestimation",
+  "tools": {
+    "latexmk": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\latexmk.EXE",
+    "pdflatex": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+    "bibtex": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\bibtex.EXE"
+  },
+  "results": [
+    {
+      "id": "ngsim",
+      "title": "NGSIM real-vehicle jerk case study",
+      "entry": "paper/ngsim-jerk-case-study/main.tex",
+      "repository_pdf": "paper/ngsim-jerk-case-study/main.pdf",
+      "artifact_pdf": "paper/builds/pc08-paper-c-42522124213-a1/ngsim.pdf",
+      "log": "paper/builds/pc08-paper-c-42522124213-a1/ngsim.log",
+      "template": "cas",
+      "status": "ok",
+      "source_sha256": {
+        "paper/els-cas-templates/cas-common.sty": "afc0d69f90bf85fe646e2d435f04120933b8ef315c8251b04329c552b9b87021",
+        "paper/els-cas-templates/cas-dc.cls": "06c00def8a669e925053aa906cfdc9cc805ad9fec64e0607590eb7b4bacfd028",
+        "paper/els-cas-templates/cas-model2-names.bst": "6f785e822c562b7015eed6794ccb44d5156556bda6b24bef59db83ee021d416b",
+        "paper/ngsim-jerk-case-study/figures/backend_comparison.pdf": "66630f91962e4c5ea61a130a87ca7607a5800caaa536d0fa3a355e6ef9ea11f0",
+        "paper/ngsim-jerk-case-study/figures/backend_comparison.pgf": "e55712782a7f14687a8e6b388107fcc91bea1ac1ec76fc337b81fbc30917df55",
+        "paper/ngsim-jerk-case-study/figures/criterion_heatmap-img0.png": "608666bc28681bc585d40103279fdfefd3961a013c0bfbdf54d665172ffe8c44",
+        "paper/ngsim-jerk-case-study/figures/criterion_heatmap-img1.png": "6e6119592a4c927aa751af4ac45eed5361e2c2d779b600067c2f8d65b821dcde",
+        "paper/ngsim-jerk-case-study/figures/criterion_heatmap-img2.png": "75725a1cf268c3d3254f622d3df8aae30c9095c9acfd6d583c0c29def971cac7",
+        "paper/ngsim-jerk-case-study/figures/criterion_heatmap.pdf": "c248ca124b8f33a4da403fd8881d2439628da4343f517d77d8f6b297d78428cd",
+        "paper/ngsim-jerk-case-study/figures/criterion_heatmap.pgf": "71f317c686fdc9559042d3d851da9e5e7a5a41c4259a85157efade88204bd3c1",
+        "paper/ngsim-jerk-case-study/figures/forecast_horizons.pdf": "66a4247c8007fce9f62223ce9b94f84869d1f600639864351f2fa46dec60b8ae",
+        "paper/ngsim-jerk-case-study/figures/forecast_horizons.pgf": "e7a9126565417da93a893875a204a9c922fe578bd1f9fa75e897ea1de65fe3ed",
+        "paper/ngsim-jerk-case-study/figures/heldout_forecast-img0.png": "2a76b8f2ac4eac8baed6f7b9332f3026dad832c451113c18daf55735c6c9b805",
+        "paper/ngsim-jerk-case-study/figures/heldout_forecast.pdf": "e2e7b8d9d77207058e4237902c136eb81272aa0c3619dbe52031948b23eda385",
+        "paper/ngsim-jerk-case-study/figures/heldout_forecast.pgf": "87060863a680524a8b47aba1c83dc329677e96005675cab9f4266a8e8ef41361",
+        "paper/ngsim-jerk-case-study/figures/jerk_comparison.pdf": "da0d3a9057d540059815b17c73b50a1e486257dde81cba9564dd87f5915a711b",
+        "paper/ngsim-jerk-case-study/figures/jerk_comparison.pgf": "6650061a01fe755234a2685f914e2c8f9d8afd3ccb6efa1148785cfe86516ed3",
+        "paper/ngsim-jerk-case-study/generated/empirical_summary.tex": "508ef2f31e78bd6d223aeedb6de0453caac6047fed05ea9ff5fed8b90b4464fa",
+        "paper/ngsim-jerk-case-study/generated/forecast_table.tex": "b9dc0abdc572daacb42ce991927b6037321f53c4ef9a836aad3596587d59ce27",
+        "paper/ngsim-jerk-case-study/generated/solver_table.tex": "38c251c95b96ee1ff551d1e2811cbe5dda385377f6a68ae8ede6fa91abc38c22",
+        "paper/ngsim-jerk-case-study/main.tex": "9b49f1a4455f1786a4b1c10bdf9566731631dbeae03144195b7e646d51673043",
+        "paper/ngsim-jerk-case-study/references.bib": "2bc964d7b0232c97eafa54648f22a9f329bca382cbedf6a77a0941f4d59b3139",
+        "paper/ngsim-jerk-case-study/sections/discussion.tex": "0748da4edfc7b524742439a8c9d6a28e4935301b21b7f63f6efc8d1bf146ad0d",
+        "paper/ngsim-jerk-case-study/sections/introduction.tex": "644062aa1db4493da16b5030a8e60ddd980c701ca81d7bb0263c9077a09a5bef",
+        "paper/ngsim-jerk-case-study/sections/methods.tex": "e77abb2e20631398227c36a01bb5f87b94dea62c8bb0a796cf05087ec46e9f9d",
+        "paper/ngsim-jerk-case-study/sections/results.tex": "512257f80f5c7ba165c0259689f5a808b1de6a8c6ea8efcd5068a80cc31dcac8"
+      },
+      "exit_code": 0,
+      "pdf_sha256": "d23f77bf614cb49a14e2f5425280c3889fa90bc38bea7f57a594ec39ff11b0bc",
+      "pdf_bytes": 488539,
+      "elapsed_seconds": 8.463
+    }
+  ]
+}
