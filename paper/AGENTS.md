@@ -1,5 +1,25 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C new empirical results (2026-11-08):**
+Read [the active Experiment001–003 handoff](ngsim-jerk-case-study/README.md)
+and [PR #121](https://github.com/heri-espino/trendestimation/pull/121)
+before editing its manuscript or rerunning numerical studies. Saved
+chronological holdout data under `experiments/experiment001/results`,
+`experiment002/results`, and `experiment003/results` are real
+observed-position forecast errors, *not* independent jerk truth. The
+nominal five recorded NGSIM segments correspond to only **two original
+vehicle IDs**. Experiments002 and 003 ran successfully on
+PCAG103A-08; source code, full rows, GCV spline comparisons, manifest,
+and environment versions are preserved. The updated CAS manuscript
+compiled on PC08 into a separate PDF-artifact branch. The new recurrence
+is a (d=3) algebraic extension of a classical forecast idea, not a
+new PLS family; whether the full implementation/application is first
+requires further literature verification. Preserve all original
+NGSIM and Springer/CSDA artifacts. Next research experiment ID is
+`experiment004` for known-jerk simulation/independent validation.
+Never merge or submit without author authorization.
+
+
 **Paper C extrapolation handoff (2026-11-05):** In addition to the
 literature index below, read
 [EXTRAPOLATION_RESEARCH_HANDOFF](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
