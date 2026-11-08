@@ -32,5 +32,19 @@ The public PLS fitting API estimates only the observed-period trend. For every s
 
 All methods receive identical held-out future positions. Physical comparators are 20-point local linear (constant-velocity) extrapolation, 30-point local quadratic (constant-acceleration) extrapolation, and a 21-point order-three Savitzky--Golay smoother followed by a 20-point local linear continuation \citep{savitzky1964}. Forecast RMSE is the square root of mean squared position errors in meters; MAE is likewise in meters.
 
+\subsection{Three-point recurrence and spline-based forecast comparators}
+Following the published trend-extrapolation construction for lower orders in \citet{guerrero2007}, we investigate its direct algebraic extension to $d=3$. Write the final fitted trend as $\widehat\tau_N$ and its backward differences as $\nabla\widehat\tau_N=\widehat\tau_N-\widehat\tau_{N-1}$ and $\nabla^2\widehat\tau_N=\widehat\tau_N-2\widehat\tau_{N-1}+\widehat\tau_{N-2}$. Imposing a constant third difference equal to the fitted reference mean $\mu$ beyond the observation boundary yields
+\begin{equation}\label{eq:d3-recurrence}
+\begin{aligned}
+\widehat\tau_N(h)
+&=\widehat\tau_N+h\nabla\widehat\tau_N\\
+&\quad+\binom{h+1}{2}\nabla^2\widehat\tau_N
++\binom{h+2}{3}\mu,\qquad h\ge1.
+\end{aligned}
+\end{equation}
+This $d=3$ recurrence is derived here as a forecasting rule from the constant-difference condition, rather than claimed as a new PLS estimator or a formula explicitly printed by Guerrero. It uses only the last three \emph{fitted} historical values; the previously described local-polynomial continuation uses the last 25. For each trial the fitted PLS trend, $\lambda$, $S$ and $\mu$ are identical across the two continuation rules.
+
+For comparison with established local and global numerical differentiation methods \citep{ahnert2007,cao2021}, we fit a \emph{natural cubic smoothing spline} to the same training positions, selecting its second-derivative penalty by training-only generalized cross-validation (SciPy's \texttt{make\_smoothing\_spline}). Four predeclared continuations use second- or third-order Taylor terms from its endpoint derivatives, a local quadratic fitted to the last 25 spline-smoothed positions, or the spline's native polynomial extrapolation. Secondary comparisons include a separately specified cubic spline with fixed training-only noise-scale heuristic, Savitzky--Golay endpoint derivatives, and local quadratic or cubic polynomial fits. No spline tuning parameter is selected from future observations. Each approach forecasts \emph{position}, not independently measured jerk.
+
 \subsection{Separately comparing numerical implementations}
 On the same recorded training windows at $d=3$, $S=0.90$, with both $\mu$ policies, we evaluate seven pathways: full shift-free SVD, fresh dense solve, dense Cholesky, general banded LU, banded Cholesky, symmetric Gram eigendecomposition and dual SVD. Each has three within-run wall-clock repetitions and a numerical fit discrepancy measured against full SVD. These are \emph{one-fit} timings; they do not include the computational cost of evaluating full CV/GCV/AICc/BIC/ML grids. Any failed or nonfinite pathway is reported as unavailable rather than treated as a fast winner.

@@ -1,5 +1,42 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Paper C empirical follow-up and publication draft (2026-11-08)
+
+**Active research PR:** [#121](https://github.com/heri-espino/trendestimation/pull/121).
+The new Paper C subdirectory `ngsim-jerk-case-study/experiments/`
+contains **three sequential experiments**, with permanent output records:
+[experiment001](ngsim-jerk-case-study/experiments/experiment001/README.md)
+(Guerrero-inspired third-order recurrence; 900 rows),
+[experiment002](ngsim-jerk-case-study/experiments/experiment002/README.md)
+(spline/SG/local-polynomial rules; 315 rows), and
+[experiment003](ngsim-jerk-case-study/experiments/experiment003/README.md)
+(training-only GCV spline; 180 rows). The latter two completed on the
+self-hosted PCAG103A-08 runner
+([run 42521326853](https://github.com/heri-espino/trendestimation/actions/runs/42521326853),
+[run 42521725044](https://github.com/heri-espino/trendestimation/actions/runs/42521725044)).
+An updated NGSIM manuscript including the matching table compiled
+successfully on PC08
+([run 42522124213](https://github.com/heri-espino/trendestimation/actions/runs/42522124213));
+its PDF/logs are preserved on a separate results-only branch.
+
+**Findings:** PLS with (d=3,mu=0) and the last-3 recurrence:
+RMSE 0.0745, 0.2958 and 1.2998,m at 0.5/1/2,s. A GCV spline with
+quadratic Taylor continuation gives 0.1233, 0.2951 and 0.8085,m:
+PLS is favorable at 0.5,s, tied at 1,s, worse at 2,s. Nonzero-(mu)
+benefit reverses by continuation. The five track segments represent
+**only two distinct original vehicle IDs**, 15 overlapping origins,
+and no independent jerk truth. These are historical exploratory results,
+not proof of first use, physical jerk fidelity, or population efficacy.
+Old statements below saying no Paper C experiment has run are dated
+historical notes and superseded by this section.
+
+Future research: independent vehicle-ID validation, known-jerk
+synthetic experiment (next free identifier `experiment004`), then
+fit-versus-continuation (mu) ablation, without mixing them into
+the independent Springer Experiment011 timing workstream.
+Do not merge open PRs without explicit user authorization.
+
+
 ## Paper C new research question (2026-11-05)
 
 See [extrapolation research handoff](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),

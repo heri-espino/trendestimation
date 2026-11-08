@@ -1,5 +1,21 @@
 # Publication map — source of truth for all TrendEstimation agents
 
+**Paper C update (2026-11-08):** Author-led experiments
+[001](ngsim-jerk-case-study/experiments/experiment001/README.md),
+[002](ngsim-jerk-case-study/experiments/experiment002/README.md)
+and [003](ngsim-jerk-case-study/experiments/experiment003/README.md)
+now compare (d=3) three-point PLS continuation with local-25 and
+predeclared splines, Savitzky--Golay and other conventional baselines.
+All new results and source code are in [PR #121](https://github.com/heri-espino/trendestimation/pull/121),
+with verified PC08 runs and successful revised CAS compilation.
+This remains an **NGSIM real-position forecasting paper**, not
+the separate numerical complexity, precision or Springer timing
+papers. Five track segments represent **only two vehicle IDs**.
+The GCV spline outperforms the PLS recurrence at 2,s, though PLS
+is better at 0.5,s. Do not claim universal forecasting or jerk
+accuracy. Next step: true-jerk simulation and independent vehicles.
+
+
 **Paper C focus update (2026-11-05):** The proposed scientific
 question is whether **d=3 third-difference PLS with a nonzero
 training-derived reference jerk**, followed by an **explicitly

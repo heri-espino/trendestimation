@@ -3,7 +3,9 @@ Vehicle trajectories provide a physical interpretation for higher-order trend sm
 
 We study the PLS model of \citet{guerrero2007}, its trace-based smoothness index \citep{guerrero2008} and classical tuning criteria \citep{cortes2017}. Companion papers examine numerical accuracy and computational complexity. Here we focus on a limited empirical study using recorded vehicle trajectories. We examine the estimated historical trends and assess how a \emph{separate} local extrapolation rule predicts held-out vehicle positions.
 
-The dataset supplies physical position, but not independently measured latent truth or jerk. We do not treat estimated jerk as a direct measurement, add synthetic noise or conflate smoothing, parameter selection, extrapolation and held-out evaluation.
+We also compare two boundary continuation rules for the same fitted $d=3$ PLS trend and benchmark them against natural cubic smoothing splines with GCV-selected penalties, Savitzky--Golay differentiation and local polynomial fits. These are standard local/global families for estimating derivatives from noisy experimental data \citep{ahnert2007}, rather than independent numerical matrix-factorization methods. The resulting analysis tests an implementation and application of an established PLS model, not an assertion of historically first use of $d=3$ differences.
+
+The dataset supplies physical position, but not independently measured latent truth or jerk.The dataset supplies physical position, but not independently measured latent truth or jerk. We do not treat estimated jerk as a direct measurement, add synthetic noise or conflate smoothing, parameter selection, extrapolation and held-out evaluation.
 
 \subsection{The noise amplification motivating third-order smoothing}
 If measurement noise $\varepsilon_t$ has independent variance $\sigma_\varepsilon^2$, third forward differentiation uses stencil $(-1,3,-3,1)$, hence

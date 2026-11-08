@@ -1,5 +1,20 @@
 # Paper C — predeclared reference-mean × continuation ablation
 
+**Execution ledger correction, 2026-11-08:** This is an **older planning
+protocol** whose original proposed experiment001 designation is now
+superseded. Actual Paper C
+[experiment001](../experiments/experiment001/README.md) tested
+the last-three-point recurrence against the local25 extrapolator,
+[experiment002](../experiments/experiment002/README.md) benchmarked
+conventional splines/SG/local-polynomials on PCAG103A-08, and
+[experiment003](../experiments/experiment003/README.md) tested a
+training-only GCV spline on PCAG103A-08. The proposed **known-jerk
+simulation and full 2x2 mu ablation remain UNEXECUTED**, now assigned
+to **experiment004 or later**. Preserve this protocol as pre-existing
+research intent, not previously observed results. Five trajectory
+segments constitute only **two distinct vehicle IDs**.
+
+
 **Status:** **PLANNED, NOT EXECUTED**. Updated 2026-11-05. This is the specification for a **future Paper C \`experiment001\`**, not the independent Springer/algorithm Experiment011 and not the previously archived five-vehicle paper result.
 
 ## Research problem

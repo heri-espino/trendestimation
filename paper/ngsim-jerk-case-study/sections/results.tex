@@ -31,6 +31,30 @@ The experiment evaluates $h=5,10,20$ future 100-ms frames rather than labeling i
 \label{fig:horizons}
 \end{figure*}
 
+\subsection{Three-point $d=3$ continuation versus smoothing splines}
+A focused, matched follow-up compares the third-difference recurrence in Eq.~\eqref{eq:d3-recurrence} with the original 25-point continuation using exactly the same archived $d=3$ trend fits and in-sample GCV selections. Conventional natural cubic smoothing splines independently select their penalty by GCV on the 80 training positions. The new numerical results were computed on the named self-hosted Windows runner; original experimental records were left intact.
+
+\begin{table*}[t]
+\centering
+\caption{Descriptive observed-future position RMSE (meters) at three horizons for the $d=3$ PLS forecast variants and established alternatives. All methods use the same 15 chronological origins across five track segments. The segments correspond to only two distinct vehicle identifiers; overlapping origins prevent independent-sample significance claims. Spline GCV parameters are selected on the training windows only. Smaller values are preferable.}
+\label{tab:d3-forecast-comparison}
+\begin{tabular}{lccc}
+\toprule
+Method and reference policy & 0.5\,s & 1.0\,s & 2.0\,s\\
+\midrule
+PLS, three-point recurrence, $\mu=0$ & \textbf{0.0745} & 0.2958 & 1.2998\\
+PLS, three-point recurrence, training $\widehat\mu$ & 0.0769 & 0.3113 & 1.4006\\
+PLS, local 25-point continuation, $\mu=0$ & 0.2945 & 0.5831 & 1.3928\\
+PLS, local 25-point continuation, training $\widehat\mu$ & 0.2441 & 0.4752 & 1.1210\\
+Natural cubic smoothing spline (GCV), quadratic Taylor & 0.1233 & \textbf{0.2951} & \textbf{0.8085}\\
+Natural cubic smoothing spline (GCV), local 25-point & 0.2945 & 0.5830 & 1.3926\\
+Savitzky--Golay, quadratic Taylor & 0.2840 & 0.5704 & 1.3072\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The three-point recurrence performs best at the 0.5-s horizon and nearly matches the GCV spline's quadratic continuation at 1\,s (0.2958 versus 0.2951\,m). At 2\,s the latter has lower observed-future RMSE (0.8085 versus 1.2998\,m). The relative merit of a nonzero third-difference reference depends on the forecast rule: it improves the local 25-point continuation on these observations but does not improve the three-point recurrence. These comparisons are historical, exploratory results for only two vehicle identifiers, not independent validation of a population-level advantage or of the accuracy of estimated physical jerk. Raw outcome rows, environment manifests and replication scripts are archived under \texttt{experiments/experiment001}, \texttt{experiment002}, and \texttt{experiment003}.
+
 \subsection{All seven numerical fitting pathways}
 For completeness, we separately compare shift-free full SVD, dense solve, dense Cholesky, general banded LU, banded Cholesky, symmetric Gram eigendecomposition and dual SVD using the same observed windows at $d=3,S=0.9$. Table~\ref{tab:solver} and Figure~\ref{fig:backend} give fit-only median timings and relative fit discrepancies against SVD. This is a numerical calculation study, not a five-criterion selection runtime study or a measurement of physical jerk accuracy.
 \input{generated/solver_table}

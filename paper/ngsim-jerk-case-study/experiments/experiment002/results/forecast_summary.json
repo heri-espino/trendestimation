@@ -1,0 +1,149 @@
+[
+  {
+    "method": "raw_local_cubic25",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.42339243893945283,
+    "mae_m": 0.2861889509555372
+  },
+  {
+    "method": "raw_local_cubic25",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.932856405411448,
+    "mae_m": 0.616121554667622
+  },
+  {
+    "method": "raw_local_cubic25",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 2.6608162440056957,
+    "mae_m": 1.672455594235353
+  },
+  {
+    "method": "raw_local_quad25",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.2945454446832326,
+    "mae_m": 0.1907646894400264
+  },
+  {
+    "method": "raw_local_quad25",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.5830745995987189,
+    "mae_m": 0.38544493842939354
+  },
+  {
+    "method": "raw_local_quad25",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 1.392788612191703,
+    "mae_m": 0.8928057391951477
+  },
+  {
+    "method": "savgol_21_taylor2",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.2840412700014382,
+    "mae_m": 0.19887122646770555
+  },
+  {
+    "method": "savgol_21_taylor2",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.5703838411113721,
+    "mae_m": 0.4026292156425033
+  },
+  {
+    "method": "savgol_21_taylor2",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 1.307166427317874,
+    "mae_m": 0.8909008811416353
+  },
+  {
+    "method": "savgol_21_taylor3",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.2843935114806791,
+    "mae_m": 0.20068217924767925
+  },
+  {
+    "method": "savgol_21_taylor3",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.5767801409288265,
+    "mae_m": 0.41386275303962605
+  },
+  {
+    "method": "savgol_21_taylor3",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 1.3941933869617538,
+    "mae_m": 0.9732616858205873
+  },
+  {
+    "method": "spline_cubic_local25",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.2937408140886614,
+    "mae_m": 0.1906742422752252
+  },
+  {
+    "method": "spline_cubic_local25",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.5816736394374521,
+    "mae_m": 0.3854441385901271
+  },
+  {
+    "method": "spline_cubic_local25",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 1.390156791264552,
+    "mae_m": 0.8933360188654118
+  },
+  {
+    "method": "spline_cubic_taylor2",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.2714078219121485,
+    "mae_m": 0.18165682665421742
+  },
+  {
+    "method": "spline_cubic_taylor2",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 0.7895282708866077,
+    "mae_m": 0.49609858813683594
+  },
+  {
+    "method": "spline_cubic_taylor2",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 2.7196513551279486,
+    "mae_m": 1.5913720462390717
+  },
+  {
+    "method": "spline_cubic_taylor3",
+    "horizon": 5,
+    "n_origins": 15,
+    "rmse_m": 0.37590798246902174,
+    "mae_m": 0.23604690187813654
+  },
+  {
+    "method": "spline_cubic_taylor3",
+    "horizon": 10,
+    "n_origins": 15,
+    "rmse_m": 1.558552112845253,
+    "mae_m": 0.8627068356611698
+  },
+  {
+    "method": "spline_cubic_taylor3",
+    "horizon": 20,
+    "n_origins": 15,
+    "rmse_m": 8.594327035387499,
+    "mae_m": 4.3612688910843325
+  }
+]
