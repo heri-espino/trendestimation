@@ -35,10 +35,12 @@ All methods receive identical held-out future positions. Physical comparators ar
 \subsection{Three-point recurrence and spline-based forecast comparators}
 Following the published trend-extrapolation construction for lower orders in \citet{guerrero2007}, we investigate its direct algebraic extension to $d=3$. Write the final fitted trend as $\widehat\tau_N$ and its backward differences as $\nabla\widehat\tau_N=\widehat\tau_N-\widehat\tau_{N-1}$ and $\nabla^2\widehat\tau_N=\widehat\tau_N-2\widehat\tau_{N-1}+\widehat\tau_{N-2}$. Imposing a constant third difference equal to the fitted reference mean $\mu$ beyond the observation boundary yields
 \begin{equation}\label{eq:d3-recurrence}
-\widehat\tau_N(h)=\widehat\tau_N+
-h\nabla\widehat\tau_N+
-\binom{h+1}{2}\nabla^2\widehat\tau_N+
-\binom{h+2}{3}\mu,\quad h\ge1.
+\begin{aligned}
+\widehat\tau_N(h)
+&=\widehat\tau_N+h\nabla\widehat\tau_N\\
+&\quad+\binom{h+1}{2}\nabla^2\widehat\tau_N
++\binom{h+2}{3}\mu,\qquad h\ge1.
+\end{aligned}
 \end{equation}
 This $d=3$ recurrence is derived here as a forecasting rule from the constant-difference condition, rather than claimed as a new PLS estimator or a formula explicitly printed by Guerrero. It uses only the last three \emph{fitted} historical values; the previously described local-polynomial continuation uses the last 25. For each trial the fitted PLS trend, $\lambda$, $S$ and $\mu$ are identical across the two continuation rules.
 
