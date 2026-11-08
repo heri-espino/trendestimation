@@ -1,0 +1,17 @@
+method,coordinate,workload,valid_all,valid_repeats,expected_repeats,mean_total_s,sd_total_s,mean_bootstrap_ci95_low_s,mean_bootstrap_ci95_high_s,median_total_cold_s,median_total_warm_s
+spectral_svd,direct_s,one_s_one_series,True,2,2,0.4945830999931786,0.0009462502763903605,0.49391400000604335,0.4952521999803139,0.4945830999931786,0.10850154999934603
+spectral_svd,mapped_lambda,one_s_one_series,True,2,2,0.5008577499975218,0.0012901163294279665,0.49994549999246374,0.5017700000025798,0.5008577499975218,0.11466104999999516
+spectral_svd,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,direct_s,one_s_multiple_series,True,2,2,0.7937383000098635,0.08743700618491639,0.731911000009859,0.8555656000098679,0.7937383000098635,0.4067123500062735
+spectral_svd,mapped_lambda,one_s_multiple_series,True,2,2,0.5027773500041803,0.007416206632227298,0.49753330000385176,0.5080214000045089,0.5027773500041803,0.11600670000188984
+spectral_svd,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,direct_s,one_s_one_series,True,2,2,0.16279855000175303,0.03043818920822667,0.14127550000557676,0.1843215999979293,0.16279855000175303,0.15276725000148872
+banded_cholesky,mapped_lambda,one_s_one_series,True,2,2,0.14044999999168795,0.00311324973442532,0.13824859999294858,0.1426513999904273,0.14044999999168795,0.13041909999446943
+banded_cholesky,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,direct_s,one_s_multiple_series,True,2,2,0.47007450001547113,0.00847071497854639,0.4640848000126425,0.47606420001829974,0.47007450001547113,0.46004285001254175
+banded_cholesky,mapped_lambda,one_s_multiple_series,True,2,2,0.15910974999860628,0.033037513751493046,0.13574869999138173,0.18247080000583082,0.15910974999860628,0.14907825000409503
+banded_cholesky,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan

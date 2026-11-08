@@ -1,0 +1,17 @@
+method,coordinate,workload,valid_all,valid_repeats,expected_repeats,mean_total_s,sd_total_s,mean_bootstrap_ci95_low_s,mean_bootstrap_ci95_high_s,median_total_cold_s,median_total_warm_s
+spectral_svd,direct_s,one_s_one_series,True,2,2,86.65493704999244,0.1393323506728389,86.55641419999301,86.75345989999187,86.65493704999244,0.723965599994699
+spectral_svd,mapped_lambda,one_s_one_series,True,2,2,86.61730364999676,0.030834734675130444,86.59550020001188,86.63910709998163,86.61730364999676,0.6796202000041376
+spectral_svd,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,direct_s,one_s_multiple_series,True,2,2,87.77218834999803,0.027392114635610382,87.75281919998815,87.79155750000791,87.77218834999803,1.7834000500006368
+spectral_svd,mapped_lambda,one_s_multiple_series,True,2,2,86.5991683000102,0.03756335069574393,86.57260700000916,86.62572960001125,86.5991683000102,0.612451000015426
+spectral_svd,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+spectral_svd,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,direct_s,one_s_one_series,True,2,2,0.7084912999926019,0.004180556718331171,0.7055351999879349,0.7114473999972688,0.7084912999926019,0.6537185999914072
+banded_cholesky,mapped_lambda,one_s_one_series,True,2,2,0.7200057500085677,0.01694602613471939,0.7080231000145432,0.7319884000025922,0.7200057500085677,0.66523325000162
+banded_cholesky,direct_s,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_one_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,direct_s,one_s_multiple_series,True,2,2,2.0165875000166125,0.04094035127166773,1.987638300008257,2.045536700024968,2.0165875000166125,1.9618150500173215
+banded_cholesky,mapped_lambda,one_s_multiple_series,True,2,2,0.7301249000083772,0.01388305170482603,0.7203081000043312,0.7399417000124231,0.7301249000083772,0.6753518000041367
+banded_cholesky,direct_s,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan
+banded_cholesky,mapped_lambda,grid_multiple_series,False,0,2,nan,nan,nan,nan,nan,nan

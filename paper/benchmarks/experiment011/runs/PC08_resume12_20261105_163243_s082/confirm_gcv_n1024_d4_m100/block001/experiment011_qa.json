@@ -1,0 +1,105 @@
+{
+  "block": 1,
+  "case_id": "confirm_gcv_n1024_d4_m100",
+  "classification": "partial_success_with_skips_or_failures",
+  "experiment": "experiment011",
+  "has_all_methods_successful": false,
+  "interpretation": "This checks only recorded success status, matching selected S and candidate score in float64 (except ML constants). It does not certify forward error at arbitrary penalty, estimate a universal crossover or establish statistical forecast accuracy.",
+  "issues": [],
+  "paired_method_comparisons": [
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 3.6841802859001505e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.2701774321015068e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 4.3269406511743604e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "direct_s",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.4120884932349437e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 3.6841802859001505e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 1.2701774321015068e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_multiple_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 4.3269406511743604e-16,
+      "repeat": 0,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    },
+    {
+      "coordinate": "mapped_lambda",
+      "method": "banded_cholesky",
+      "reference": "spectral_svd",
+      "relative_score_difference": 2.4120884932349437e-16,
+      "repeat": 1,
+      "score_levels_comparable": true,
+      "selected_s_difference": 0.0,
+      "status": "float64_selected_score_parity",
+      "workload": "one_s_one_series"
+    }
+  ],
+  "raw_rows": 32,
+  "status_counts": {
+    "mapping_failed_ArithmeticError": 8,
+    "numerical_failed": 8,
+    "ok": 16
+  }
+}
