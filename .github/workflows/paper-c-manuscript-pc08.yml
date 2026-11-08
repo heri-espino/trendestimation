@@ -1,0 +1,89 @@
+name: Paper C revised manuscript smoke on PCAG103A-08
+
+on:
+  push:
+    branches: [research/paper-c-experiment001-d3-recurrence]
+    paths:
+      - .github/workflows/paper-c-manuscript-pc08.yml
+      - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/**
+      - paper/ngsim-jerk-case-study/references.bib
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-manuscript-pc08
+  cancel-in-progress: false
+
+jobs:
+  compile-ngsim:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Require designated Windows runner and existing Conda TeX build
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected runner' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda installation missing' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing Python environment missing' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list
+          if ($LASTEXITCODE -ne 0) { throw 'Publication source preflight failed' }
+
+      - name: Compile revised NGSIM paper using existing figures and bibliography
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $dir --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'Revised NGSIM manuscript failed to compile' }
+          if (!(Test-Path (Join-Path $dir 'build_manifest.json'))) { throw 'Missing build manifest' }
+          Get-Content (Join-Path $dir 'build_manifest.json')
+      
+      - name: Publish build manifest, PDF and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-revised-manuscript-pc08
+          path: |
+            paper/builds/pc08-paper-c-*/
+            paper/ngsim-jerk-case-study/main.pdf
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Archive compiled PDF and reproducibility metadata in separate results branch
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $branch = "results/paper-c-pdf-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create artifact branch' }
+          git add -f -- $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage manuscript build' }
+          if (Test-Path 'paper/ngsim-jerk-case-study/main.pdf') {
+            git add -f -- 'paper/ngsim-jerk-case-study/main.pdf'
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot stage revised manuscript PDF' }
+          }
+          git commit -m "paper-c: archive revised compiled manuscript PC08 $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit build' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push build artifact branch' }
+          Write-Host "Saved paper PDF and logs in $branch"
