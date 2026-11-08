@@ -1,5 +1,44 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## New recurrence and spline benchmark evidence (2026-11-08)
+
+The first three **sequential, source-controlled Paper C experiments** now
+compare the (d=3) PLS three-point continuation, the original 25-point
+continuation, smoothing splines, Savitzky--Golay and local polynomial
+forecasts on identical chronological recorded-position holdouts:
+
+- [Experiment001: Guerrero-inspired d=3 recurrence](experiments/experiment001/README.md):
+  900 matched forecast records; preserves original Paper C data and results.
+- [Experiment002: conventional spline/SG/polynomial comparators](experiments/experiment002/README.md):
+  315 raw rows, 21 summaries; [PC08 success #42521326853](https://github.com/heri-espino/trendestimation/actions/runs/42521326853).
+- [Experiment003: GCV-selected natural cubic spline](experiments/experiment003/README.md):
+  180 rows, 12 summaries; [PC08 success #42521725044](https://github.com/heri-espino/trendestimation/actions/runs/42521725044).
+  Primary comparison table: [RESULTS.md](experiments/experiment003/results/RESULTS.md).
+- [Recompiled experimental manuscript](https://github.com/heri-espino/trendestimation/actions/runs/42522124213)
+  using PCAG103A-08; the PDF and build manifest are preserved in the
+  separate branch `results/paper-c-pdf-pc08-42522124213-a1`.
+- [Research PR #121](https://github.com/heri-espino/trendestimation/pull/121)
+  contains all code, reports, raw results and revised TeX. Remains subject to
+  author/coauthor review before a merge or submission.
+
+**New scientific finding:** GCV-selected PLS with (d=3,mu=0) and the
+three-point recurrence performs best at 0.5,s (RMSE 0.074519,m), is
+nearly tied with a GCV-selected cubic smoothing spline at 1,s
+(0.295769 vs 0.295081,m), and is outperformed by the spline at 2,s
+(1.299841 vs 0.808529,m). The effect of nonzero (mu) depends strongly
+on the chosen extrapolator. These are **descriptive errors against future
+camera positions, not measured true jerk**.
+
+**Crucial sampling qualification:** The five saved track segments belong
+to **only two distinct vehicle IDs**, and the 15 forecasting origins are
+correlated. They do not support independent vehicle-level inference.
+A new known-jerk simulation and substantially more independent vehicles
+are needed before a publishable claim of physical jerk accuracy or
+general forecasting superiority. No global first-use assertion is verified.
+The source code represents a new documented use of this repository's own
+Python library; it does not establish the first use of (d=3) PLS itself.
+
+
 ## Extrapolation and reference-jerk research handoff (2026-11-05)
 
 **Start here for new Paper C agents:** [EXTRAPOLATION_RESEARCH_HANDOFF.md](notes/EXTRAPOLATION_RESEARCH_HANDOFF.md) documents the precise d=3, nonzero-$\mu$ forecasting hypothesis, what the existing `continuation()` actually implements, and why a first-use claim is unverified. [EXTRAPOLATION_DECOMPOSITION.md](notes/EXTRAPOLATION_DECOMPOSITION.md) derives the exact **fit-vs-continuation** attribution at fixed smoothness; [MU_POLICY_CATALOG.md](notes/MU_POLICY_CATALOG.md) registers proposed alternative training-only $\mu$ estimators; [EXTRAPOLATION_ABLATION_PLAN.md](notes/EXTRAPOLATION_ABLATION_PLAN.md) defines a future sequential experiment, explicitly **not yet run**. Biessy (2025/2026) already develops Whittaker–Henderson extrapolation: [source note](notes/papers/biessy_2026_extrapolation.md).
