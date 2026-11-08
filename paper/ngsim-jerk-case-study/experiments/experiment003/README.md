@@ -1,6 +1,6 @@
 # Paper C — experiment003: GCV-selected cubic smoothing spline
 
-**Status:** Predeclared, bounded extension of experiments 001–002, designed for execution on PCAG103A-08. Results must be archived and verified before the status is upgraded to completed.
+**Status:** COMPLETED, bounded retrospective experiment on PCAG103A-08 (2026-11-08). [Successful Windows run #42521725044](https://github.com/heri-espino/trendestimation/actions/runs/42521725044). [Full archived RESULTS.md](results/RESULTS.md), [180 individual forecast errors](results/forecast_rows.json), [12 summaries](results/forecast_summary.json), [provenance manifest](results/run_manifest.json), [package snapshot](results/requirements-resolved.txt). Immutable separate Git branch: `results/paper-c-exp003-pc08-42521725044-a1`. Scientific conclusions remain descriptive for only two vehicle IDs.
 
 ## Motivation
 
@@ -21,7 +21,11 @@ From repository root with SciPy and the current library installed:
     python -m pytest tests/test_paper_c_experiment003.py -q
     python paper/ngsim-jerk-case-study/experiments/experiment003/run.py --output-dir paper/ngsim-jerk-case-study/experiments/experiment003/runs/manual
 
-The PC08 workflow archives the full data, version lock, source commit SHA and report in an immutable results-only branch. On successful completion, mirror the exact result files into this experiment's results directory in its research PR, leaving the runner archive intact.
+The PC08 workflow archives the full data, version lock, source commit SHA and report in an immutable results-only branch. The complete immutable Windows output has also been mirrored into this experiment's tracked `results/` directory without modifying the original Paper C experimental dataset or outputs.
+
+## Actual GCV-selected spline comparison
+
+GCV-selected spline + degree-2 endpoint Taylor forecast RMSE = **0.123310 m at 0.5 s, 0.295081 m at 1 s, and 0.808529 m at 2 s**. PLS d=3 with zero mu and the three-point recurrence gives **0.074519 m, 0.295769 m, and 1.299841 m**, respectively. PLS is better at the shortest horizon, virtually tied at one second, while the GCV spline is better at two seconds on these historical observations. The GCV spline's cubic continuation was much worse at longer horizons, emphasizing extrapolation-rule sensitivity.
 
 ## Expected interpretation
 
