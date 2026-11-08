@@ -1,5 +1,21 @@
 # AGENTS.md — trendestimation research repository
 
+**Paper C empirical follow-up (2026-11-08):** New
+[reproducible Experiment001–003 records](paper/ngsim-jerk-case-study/README.md)
+for a (d=3) Guerrero-inspired PLS three-point forecast recurrence,
+splines, Savitzky--Golay, and GCV spline continuation; successful
+PCAG103A-08 runs and a revised compiled manuscript are linked there.
+**There are only two distinct vehicle IDs among the five NGSIM segments.**
+Results are observed future-position errors and do not establish
+independent physical jerk accuracy or first historical use. Read
+[PR #121](https://github.com/heri-espino/trendestimation/pull/121)
+and experiment-specific READMEs before changing numerical results.
+The earlier "no Paper C experiments run" notes are historical.
+Keep separate future known-jerk/independent-vehicle study under the
+next available Paper C sequential number (`experiment004`). Preserve
+old raw data and figures; do not interfere with Springer Experiment011.
+
+
 **New Paper C handoff (2026-11-05):** Future agents working on
 the FHWA NGSIM application **must** begin with
 [nonzero-reference extrapolation research](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
