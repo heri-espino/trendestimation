@@ -1,0 +1,206 @@
+name: Paper C publication visuals and compiled Elsevier PDF (PCAG103A-08)
+
+on:
+  push:
+    branches: [paper/paper-c-visual-suite-exp007]
+    paths:
+      - .github/workflows/paper-c-visual-rebuild-pc08.yml
+      - paper/ngsim-jerk-case-study/visuals/*.py
+      - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/precision_calibration.tex
+      - paper/ngsim-jerk-case-study/sections/introduction.tex
+      - paper/ngsim-jerk-case-study/sections/discussion.tex
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-visuals-pc08
+  cancel-in-progress: false
+
+jobs:
+  render-compile-audit:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - name: Checkout Paper C isolated visual branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Check scientific environment and permanent output location
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Requires designated PCAG103A-08' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda executable missing' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing trendestimation environment missing' }
+          $root = Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\visuals\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $root) { throw "Run directory already exists; no overwrite: $root" }
+          New-Item -Path $root -ItemType Directory -Force | Out-Null
+          foreach($part in @('metadata','logs','figures','manuscript')) {
+            New-Item -Path (Join-Path $root $part) -ItemType Directory -Force | Out-Null
+          }
+          "PC08_VIS_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          "$env:RUNNER_NAME" | Out-File (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Failed scientific environment inventory' }
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m compileall -q paper/ngsim-jerk-case-study/visuals
+          if ($LASTEXITCODE -ne 0) { throw 'Visual source syntax failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import awesomefigures,matplotlib,pypdf,trendestimation; print('Visual and PDF build libraries available')"
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned paper plotting/auditing dependencies not installed' }
+
+      - name: Load original Experiment007/006 completed result sets without rerunning simulation
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $refs = @(
+            @{ Name='EXP007'; Ref='results/paper-c-exp007-pc08-42660204414-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment007/runs/pc08-42660204414-a1' },
+            @{ Name='EXP006'; Ref='results/paper-c-exp006-pc08-42639588117-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1' }
+          )
+          foreach($item in $refs) {
+            git fetch origin "refs/heads/$($item.Ref):refs/remotes/origin/$($item.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw "Cannot fetch frozen source $($item.Ref)" }
+            $checkout = Join-Path $env:RUNNER_TEMP "paper-c-visual-source-$($item.Name)-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+            if (Test-Path $checkout) { throw 'Source worktree already exists' }
+            git worktree add --detach $checkout "refs/remotes/origin/$($item.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw "Cannot mount immutable source $($item.Ref)" }
+            $full=Join-Path $checkout $item.Sub
+            if (!(Test-Path $full)) { throw "Missing full archived records: $full" }
+            "$($item.Name)_VIS_SOURCE=$full" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            "$($item.Ref) : $full" |
+              Out-File (Join-Path $env:PC08_VIS_ROOT "metadata\$($item.Name)-source.txt") -Encoding utf8
+          }
+
+      - name: Generate six multipanel vector-PDF / SVG / PNG publication figures
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_visual_suite.py --exp007-confirm (Join-Path $env:EXP007_VIS_SOURCE 'confirm') --exp006-confirm (Join-Path $env:EXP006_VIS_SOURCE 'confirm') --exp006-real (Join-Path $env:EXP006_VIS_SOURCE 'real') --exp007-config paper/ngsim-jerk-case-study/experiments/experiment007/config.json --out-dir paper/ngsim-jerk-case-study/figures --manifest paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_VIS_ROOT 'logs\render_figures.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Scientific graphic render failed; inspect log' }
+          $manifest = Get-Content paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json -Raw | ConvertFrom-Json
+          if ($manifest.n_new_multipanel_figures -ne 6) { throw 'Expected exactly six audited vector figure sets' }
+          $assets=Get-ChildItem paper/ngsim-jerk-case-study/figures -Filter 'exp00*'
+          if ($assets.Count -ne 18) { throw "Expected 18 PDF/SVG/PNG figure assets, found $($assets.Count)" }
+
+      - name: Compile official Elsevier CAS LaTeX on PC08 without rerunning science
+        run: |
+          $ErrorActionPreference='Stop'
+          $dest="paper/builds/pc08-paper-c-visual-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          "PC08_VIS_BUILD=$dest" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $dest --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_VIS_ROOT 'logs\compile.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Elsevier PDF compile failed' }
+          if (!(Test-Path 'paper/ngsim-jerk-case-study/main.pdf')) { throw 'Compiled main.pdf missing' }
+          $bm=Get-Content (Join-Path $dest 'build_manifest.json') -Raw | ConvertFrom-Json
+          if ($bm.results[0].status -ne 'ok') { throw 'Manuscript build manifest did not report success' }
+
+      - name: Audit compiled PDF text, scientific captions and all source figure hashes
+        run: |
+          $ErrorActionPreference='Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/audit_pdf.py --pdf paper/ngsim-jerk-case-study/main.pdf --manifest paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json --output paper/ngsim-jerk-case-study/generated/visual_suite_pdf_audit.json 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_VIS_ROOT 'logs\pdf_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Published PDF audit failed' }
+
+      - name: Preserve full PDF, source figures, build manifests and generated file paths on VM
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PC08_VIS_ROOT
+          if (!$root) { $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\visuals\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT" }
+          if (!(Test-Path $root)) { New-Item -ItemType Directory -Force -Path $root | Out-Null }
+          foreach($sub in @('figures','manuscript','metadata','logs')) {
+            New-Item -ItemType Directory -Force -Path (Join-Path $root $sub) | Out-Null
+          }
+          foreach($file in Get-ChildItem paper/ngsim-jerk-case-study/figures -Filter 'exp00*' -ErrorAction SilentlyContinue) {
+            Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $root 'figures') -Force
+          }
+          foreach($name in @('main.pdf','main.tex')) {
+            $file=Join-Path 'paper/ngsim-jerk-case-study' $name
+            if (Test-Path $file) {
+              Copy-Item $file -Destination (Join-Path $root 'manuscript') -Force
+            }
+          }
+          foreach($name in @('visual_suite_manifest.json','visual_suite_pdf_audit.json')) {
+            $file=Join-Path 'paper/ngsim-jerk-case-study/generated' $name
+            if (Test-Path $file) { Copy-Item $file (Join-Path $root 'metadata') -Force }
+          }
+          if ($env:PC08_VIS_BUILD -and (Test-Path $env:PC08_VIS_BUILD)) {
+            Copy-Item (Join-Path $env:PC08_VIS_BUILD 'build_manifest.json') (Join-Path $root 'metadata') -Force
+            Copy-Item (Join-Path $env:PC08_VIS_BUILD 'ngsim.log') (Join-Path $root 'logs\ngsim-latexmk.log') -Force
+          }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'metadata\visual_suite_pdf_audit.json')) { $status='figures_and_pdf_compiled_audited' }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory all VM output files' }
+
+      - name: Upload full manuscript PDF, figure previews and audits
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-new-figures-and-compiled-manuscript
+          path: |
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/figures/exp006_*
+            paper/ngsim-jerk-case-study/figures/exp007_*
+            paper/ngsim-jerk-case-study/generated/visual_suite_*.json
+            paper/builds/pc08-paper-c-visual-*/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Publish reviewed source-generated vector figures and PDF to isolated PR branch
+        if: success()
+        run: |
+          $ErrorActionPreference='Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json paper/ngsim-jerk-case-study/generated/visual_suite_pdf_audit.json
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to stage publication outputs' }
+          git commit -m "paper-c: publish six source-derived figures and audited compiled CAS manuscript"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to commit updated paper graphics and PDF' }
+          git push origin "HEAD:refs/heads/paper/paper-c-visual-suite-exp007"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish compiled PDF to isolated paper PR branch' }
+          Write-Host "Compiled paper and new vector figures available in paper/paper-c-visual-suite-exp007"
+
+      - name: Preserve full VM execution records and logs in immutable result branch
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PC08_VIS_ROOT
+          if (!$root) { $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\visuals\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT" }
+          if (!(Test-Path (Join-Path $root 'metadata\file_inventory.json'))) {
+            throw 'Missing persistent VM asset inventory'
+          }
+          $rel="paper/ngsim-jerk-case-study/visuals/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+          $archive="results/paper-c-visual-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Failed creating immutable visual audit branch' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Failed staging audit run data' }
+          git commit -m "paper-c: archive full vector/PDF build and PC08 manifest $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed recording immutable paper audit' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push immutable manuscript results archive' }
+          Write-Host "All VM run files, SHA-256, PDF, and logs: $archive"
