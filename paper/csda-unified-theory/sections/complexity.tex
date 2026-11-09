@@ -34,7 +34,11 @@ Assembling the banded penalty and precomputing the Gaussian constant determinant
 The displayed $O(\cdot)$ expressions are upper bounds for specific computational families, not universal lower bounds on all possible implementations. They omit machine constants, cache contention and implementation-specific allocation; an optimistic operation count is not observed runtime. A solver can be admissible only after its accuracy and memory requirements are satisfied.
 
 \begin{proposition}[Conditional candidate-count crossover]\label{prop:crossover}
-Suppose two \emph{locally calibrated} complete-pipeline times on a fixed $(n,d,R,\mathcal C)$ have affine approximations $T_{\rm SVD}(M)=a_s+b_sM$ and $T_{\rm band}(M)=a_b+b_bM$. If $a_s>a_b$ and $b_b>b_s$, then the equality occurs at the positive threshold
+Suppose two locally calibrated complete-pipeline times for fixed $(n,d,R,\mathcal C)$ admit
+\[
+T_s(M)=a_s+b_sM,\qquad T_b(M)=a_b+b_bM.
+\]
+If $a_s>a_b$ and $b_b>b_s$, equality occurs at the positive threshold
 \begin{equation}\label{eq:Mstar}
 M_\star=\frac{a_s-a_b}{b_b-b_s}.
 \end{equation}
