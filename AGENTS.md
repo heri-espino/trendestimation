@@ -1,5 +1,26 @@
 # AGENTS.md — trendestimation research repository
 
+**Fixed-(mu) Gaussian REML verification (2026-11-09):** The author
+confirmed they intended the Gaussian variance-ratio restricted
+likelihood of z=Dy−mu·1 and covariance
+σ_u²(I+λ DDᵀ), not some distinct forecasting estimator.
+[Exact dense/spectral proof and μ-estimation correction](paper/ngsim-jerk-case-study/notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md)
+and [numerical regression tests](tests/test_paper_c_guerrero_reml_identity.py)
+demonstrate the existing criterion="mle" already minimizes the
+**same fixed-μ objective** up to an additive constant
+−logdet(DDᵀ). No expensive Experiment004 or 005 rerun is needed
+to change this notation. However, replacing μ with sample or
+cubic OLS means is **conditional plug-in estimation**, not
+mean-adjusted joint/REML mean estimation; a separate REML
+method must remove that nuisance mean direction explicitly.
+Do not attribute Gaussian likelihood optimization to Guerrero
+(2007), whose original PLS variance ratio used second moments.
+The PCAG103A-08 Experiment005 workflow previously marked queued
+has now completed successfully; verify both source and results
+branches before making detailed VM reproducibility claims.
+No old results or other PRs were changed in this clarification.
+
+
 **Paper C Experiment005 VERIFIED synthetic run (2026-11-08):** Read [RUN_LEDGER.md](paper/ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md), [frozen config](paper/ngsim-jerk-case-study/experiments/experiment005/config.json) and [successful cloud action #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064). The 96 pilot plus 1,296 disjoint-seed confirmation trials produced 89,424 future clean-position errors, 15,552 historical known-jerk fits, 62,208 fixed-S reference crossings, and **zero invalid cases**, all first-party synthetic trajectories and files permanently archived on Git branch **results/paper-c-exp005-cloud-42547883064-a1** (33 files, ~44.8MB). A Gaussian profile-ML selected d=3 PLS trend recovers the known discrete jerk strongly in these simulated error models; raw sample mu can be unstable, a global cubic mean helps sustained nonzero jerk but not reversal. This does **not** establish real-vehicle jerk accuracy. Separate 200-episode NGSIM Experiment004 favors the spline for recorded-position forecasts. PCAG103A-08 simulation job was still queued; use [verified import script](paper/ngsim-jerk-case-study/experiments/experiment005/sync_cloud_results_to_vm.ps1) for cloud archive copy once Windows VM is available, never claim imported outputs were recomputed on VM. Keep full reproducibility/experiment numbering and no merges without authorization.
 
 
