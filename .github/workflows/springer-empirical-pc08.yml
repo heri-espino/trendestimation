@@ -81,3 +81,69 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Diagnostic commit failed" }
           git push origin "HEAD:refs/heads/$branch"
           if ($LASTEXITCODE -ne 0) { throw "Diagnostic publication failed" }
+
+
+  analyze:
+    if: contains(github.event.head_commit.message, '[pc08-analyze]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      ORIGINAL: 'C:\Users\175199\trendestimation-PC08_add97svd_20261105_025108'
+      BACKUP: 'C:\Users\175199\experiment011-backups\experiment011_20261109_072910742'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Restrict to PC08 and test Python parser without running benchmarks
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner" }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m py_compile paper/benchmarks/experiment011/pc08_empirical/analyze_campaign.py
+          if ($LASTEXITCODE -ne 0) { throw "Analyzer failed to compile" }
+      - name: Reconstruct source lineage and derive sparse measured tensor
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/analyze_campaign.py --original $env:ORIGINAL --backup $env:BACKUP --out $out
+          if ($LASTEXITCODE -ne 0) { throw "Analysis audit failed, inspect traceback; no benchmarks are permitted" }
+          $summary = Get-Content -LiteralPath (Join-Path $out 'analysis_summary.json') -Raw | ConvertFrom-Json
+          if ($summary.recorded_jobs -ne 2813) { throw "Unexpected campaign cardinality" }
+          Write-Host "Data-based complete timing rows: $($summary.valid_complete_rows)/$($summary.tensor_rows)"
+      - name: Upload all compact derived evidence as extra copy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-springer-analysis-${{ github.run_id }}
+          path: paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Preserve derived code/data/figures in source branch and immutable results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner" }
+          $out = "paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}"
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'analysis_summary.json'))) {
+            throw 'Refuse to publish nonexistent analysis.'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage derived files' }
+          git commit -m 'experiment011: archive lineage-audited timing tensor and figures'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit derived files' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish on scoped analysis branch' }
+          $result = "results/experiment011-springer-derived-${{ github.run_id }}"
+          git switch -c $result
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable result ref' }
+          git push origin "HEAD:refs/heads/$result"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable result ref' }
