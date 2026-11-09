@@ -1,5 +1,8 @@
 # AGENTS.md — trendestimation research repository
 
+**Paper C Experiment005 VERIFIED synthetic run (2026-11-08):** Read [RUN_LEDGER.md](paper/ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md), [frozen config](paper/ngsim-jerk-case-study/experiments/experiment005/config.json) and [successful cloud action #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064). The 96 pilot plus 1,296 disjoint-seed confirmation trials produced 89,424 future clean-position errors, 15,552 historical known-jerk fits, 62,208 fixed-S reference crossings, and **zero invalid cases**, all first-party synthetic trajectories and files permanently archived on Git branch **results/paper-c-exp005-cloud-42547883064-a1** (33 files, ~44.8MB). A Gaussian profile-ML selected d=3 PLS trend recovers the known discrete jerk strongly in these simulated error models; raw sample mu can be unstable, a global cubic mean helps sustained nonzero jerk but not reversal. This does **not** establish real-vehicle jerk accuracy. Separate 200-episode NGSIM Experiment004 favors the spline for recorded-position forecasts. PCAG103A-08 simulation job was still queued; use [verified import script](paper/ngsim-jerk-case-study/experiments/experiment005/sync_cloud_results_to_vm.ps1) for cloud archive copy once Windows VM is available, never claim imported outputs were recomputed on VM. Keep full reproducibility/experiment numbering and no merges without authorization.
+
+
 **Paper C simulation decision and Experiment005 (2026-11-08):**
 The author has now **explicitly requested known-jerk simulations**
 after the completed real NGSIM Experiment004. This *supersedes* the
