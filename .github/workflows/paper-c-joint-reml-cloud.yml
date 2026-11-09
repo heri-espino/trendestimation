@@ -1,0 +1,151 @@
+name: Paper C Experiment006 joint REML on known-jerk archives
+
+on:
+  push:
+    branches: [research/paper-c-experiment006-joint-reml]
+    paths:
+      - .github/workflows/paper-c-joint-reml-cloud.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment006/*.py
+      - paper/ngsim-jerk-case-study/experiments/experiment006/config.json
+      - tests/test_paper_c_experiment006*.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp006-cloud
+  cancel-in-progress: false
+
+jobs:
+  joint-reml-synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - name: Checkout isolated Paper C research branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Prepare Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install existing library/test dependencies
+        run: python -m pip install -e '.[dev,plot]'
+
+      - name: Validate direct REML, analytical derivative, interpolation and no leakage
+        run: |
+          python -m compileall -q paper/ngsim-jerk-case-study/experiments/experiment006
+          python -m pytest -q tests/test_paper_c_experiment006.py tests/test_paper_c_experiment006_run.py
+
+      - name: Open unchanged Experiment005 generated observations for reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_BRANCH='results/paper-c-exp005-cloud-42547883064-a1'
+          git fetch origin "refs/heads/$SOURCE_BRANCH:refs/remotes/origin/$SOURCE_BRANCH"
+          SRC="$RUNNER_TEMP/experiment006-source-exp005-$GITHUB_RUN_ID"
+          git worktree add --detach "$SRC" "refs/remotes/origin/$SOURCE_BRANCH"
+          echo "EXP006_SOURCE=$SRC" >> "$GITHUB_ENV"
+          BASE="$SRC/paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-42547883064-a1"
+          for stage in pilot confirm; do
+            test -f "$BASE/$stage/trajectories.jsonl.gz"
+            test -f "$BASE/$stage/forecast_rows.csv"
+            test -f "$BASE/$stage/run_manifest.json"
+          done
+          python -c "import json,sys,pathlib; root=pathlib.Path(sys.argv[1]); assert json.loads((root/'pilot/run_manifest.json').read_text())['synthetic_trial_count']==96; assert json.loads((root/'confirm/run_manifest.json').read_text())['synthetic_trial_count']==1296" "$BASE"
+          echo "EXP006_SOURCE_BASE=$BASE" >> "$GITHUB_ENV"
+
+      - name: Create a unique durable output directory and record environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment006/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          if [[ -e "$ROOT" ]]; then echo 'Run already exists'; exit 1; fi
+          mkdir -p "$ROOT/metadata" "$ROOT/logs"
+          echo "EXP006_ROOT=$ROOT" >> "$GITHUB_ENV"
+          printf '%s\n' "$GITHUB_SHA" > "$ROOT/metadata/source_commit.txt"
+          printf '%s\n' "$EXP006_SOURCE_BASE" > "$ROOT/metadata/source_archive_path.txt"
+          python -m pip freeze > "$ROOT/metadata/requirements-resolved.txt"
+
+      - name: Reanalyze the 96 frozen pilot trajectories
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment006/run.py \
+            --mode synthetic --stage pilot \
+            --source "$EXP006_SOURCE_BASE/pilot/trajectories.jsonl.gz" \
+            --archived-forecasts "$EXP006_SOURCE_BASE/pilot/forecast_rows.csv" \
+            --output-dir "$EXP006_ROOT/pilot" 2>&1 | tee "$EXP006_ROOT/logs/pilot.log"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['EXP006_ROOT'])/'pilot/run_manifest.json').read_text())
+          assert m['n_samples']==96 and m['forecast_count']==96*36, m
+          assert m['cv_rule_horizon_records']==96*6, m
+          PY
+
+      - name: Reanalyze the 1296 frozen confirm trajectories
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment006/run.py \
+            --mode synthetic --stage confirm \
+            --source "$EXP006_SOURCE_BASE/confirm/trajectories.jsonl.gz" \
+            --archived-forecasts "$EXP006_SOURCE_BASE/confirm/forecast_rows.csv" \
+            --output-dir "$EXP006_ROOT/confirm" 2>&1 | tee "$EXP006_ROOT/logs/confirm.log"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['EXP006_ROOT'])/'confirm/run_manifest.json').read_text())
+          assert m['n_samples']==1296 and m['forecast_count']==1296*36, m
+          assert m['cv_rule_horizon_records']==1296*6, m
+          PY
+
+      - name: Always inventory and checksum the generated research artifacts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment006/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          mkdir -p "$ROOT/metadata"
+          STATUS=partial_or_failed
+          if [[ -f "$ROOT/pilot/run_manifest.json" ]]; then STATUS=pilot_complete; fi
+          if [[ -f "$ROOT/confirm/run_manifest.json" ]]; then STATUS=pilot_and_confirm_complete; fi
+          python paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py \
+            --run-root "$ROOT" --status "$STATUS" \
+            --output "$ROOT/metadata/file_inventory.json"
+
+      - name: Preserve compact complete results as Actions artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-experiment006-joint-reml-cloud
+          path: paper/ngsim-jerk-case-study/experiments/experiment006/runs/
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Permanently archive independent results without modifying PR branch
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment006/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          test -f "$ROOT/metadata/file_inventory.json"
+          BRANCH="results/paper-c-exp006-cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
+          git add -f -- "$ROOT"
+          git commit -m "experiment006: archive joint-REML and nested-CV results $GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$BRANCH"
+          echo "Archived full experiment006 scored rows, selections, and file inventory to $BRANCH"

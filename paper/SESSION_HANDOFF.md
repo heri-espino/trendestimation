@@ -1,4 +1,8 @@
 # Start here — publication split and the next Experiment011 Windows run
+## Most recent Paper C verified Experiment006 (Nov 9, 2026)
+
+The author authorized joint optimization of the reference mean mu and penalty lambda, plus a forecast-directed training-only shrinkage comparison. [Completed experiment006 run ledger](ngsim-jerk-case-study/experiments/experiment006/RUN_LEDGER.md), [PC08 success #42639588117](https://github.com/heri-espino/trendestimation/actions/runs/42639588117), [PR #127](https://github.com/heri-espino/trendestimation/pull/127). Reused (not recreated) Experiment005 simulated 96 pilot/1296 confirmation trajectories and Experiment004 real 200 NGSIM episodes. New persistent VM root: C:\Users\175199\Documents\TrendEstimation-PaperC\experiment006\run-42639588117-a1; all 47 files, 18.5MB and SHA-256 paths mirrored to isolated Git results branch. The unknown-mean REML corrects the nuisance mean by GLS and removes one additional likelihood dimension; it is *not* the previous conditional sample plug-in. Under synthetic known truth global OLS mean with fixed-mu profile ML achieves jerk RMSE 2.441 m/s³, compared with 3.295 for joint REML; zero fixed mu is 2.587. Joint REML 1-second synthetic local25 clean-position RMSE 0.498m vs 0.405m for fixed-zero ML. In real camera positions, joint REML selected lambda=0 in 161/200 episodes; its 1-second local25 RMSE was 0.578m versus spline 0.348m. **Early grid analysis incorrectly included zero; corrected strictly predeclared 15-point grid results are used here.** Scientific result is negative/mixed, not a new globally superior estimator. No manuscript revision or merge performed. Older status notes below are dated history.
+
 
 ## Newest Paper C results: Experiment005 simulation complete (2026-11-08)
 
