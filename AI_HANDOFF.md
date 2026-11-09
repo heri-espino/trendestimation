@@ -1,5 +1,30 @@
 # AI_HANDOFF — latest
 
+**Newest author decision, 2026-11-08:** Proceed with
+**synthetic known-jerk simulations** after real-data
+Experiment004. The previous instruction to use only real
+data was specific to Experiment004, not a permanent ban.
+[Experiment005](paper/ngsim-jerk-case-study/experiments/experiment005/README.md)
+is now a predeclared 96-trial pilot followed by 1,296 disjoint
+confirmation trials on PCAG103A-08.
+Methods: `d=3` PLS GCV and profiled Gaussian `mle`,
+mu zero/sample/cubic OLS global/tail25/true oracle,
+two extrapolation rules; GCV cubic spline and Savitzky-Golay.
+Primary known-truth endpoints: historical D3 jerk RMSE
+(m/s^3) and clean-future-position forecast RMSE (m),
+with full fixed-S mu fit/continuation 2x2 attribution.
+Raw per-trial known/noisy trajectories, all selection/error
+rows, plots, config, seeds, logs, and file inventory
+persist at `%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment005\run-<id>-a<attempt>`
+and in a separate results-only Git archive branch.
+**Important:** workflow creation is not proof of completed
+simulation, or that its results favor PLS. Check source
+version/manifest/CI. Synthetic oracle mu is not feasible
+on real FHWA data. Preserve Experiment004 results on
+the VM and its existing Git results branch, without
+editing the older CAS manuscript or Springer work.
+
+
 **Paper C expanded real NGSIM run COMPLETE (2026-11-08):**
 [Experiment004 run ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
 and [successful PCAG103A-08 #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
