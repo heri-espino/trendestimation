@@ -1,0 +1,176 @@
+name: Paper C Experiment005 known-jerk simulations (PCAG103A-08)
+
+on:
+  push:
+    branches: [research/paper-c-experiment005-known-jerk-simulations]
+    paths:
+      - .github/workflows/paper-c-known-jerk-simulations-pc08.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment005/*.py
+      - paper/ngsim-jerk-case-study/experiments/experiment005/config.json
+      - tests/test_paper_c_experiment005.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp005-simulation-pc08
+  cancel-in-progress: false
+
+jobs:
+  simulate-known-jerk:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+
+    steps:
+      - name: Checkout isolated synthetic research branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Preflight deterministic math tests and persistent VM output paths
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected VM runner; PCAG103A-08 required' }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Conda executable missing' }
+          if (!(Test-Path -LiteralPath (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Conda trendestimation env missing' }
+          $base = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment005'
+          $root = Join-Path $base "run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $root) { throw "Refusing to overwrite existing run $root" }
+          New-Item -Path $root -ItemType Directory -Force | Out-Null
+          foreach ($subdir in @('metadata','logs','build')) {
+            New-Item -Path (Join-Path $root $subdir) -ItemType Directory -Force | Out-Null
+          }
+          "PAPER_C_EXP005_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          "$env:RUNNER_NAME" | Out-File (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to capture requirements' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m compileall -q paper/ngsim-jerk-case-study/experiments/experiment005
+          if ($LASTEXITCODE -ne 0) { throw 'Simulation source compilation failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_experiment005.py 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\preflight.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Known-jerk simulation contract tests failed' }
+          Write-Host "Complete persistent VM data directory: $root"
+
+      - name: Run 96 independent-seed synthetic pilot and validate every record
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          $root = $env:PAPER_C_EXP005_ROOT
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment005/run.py --stage pilot --output-dir (Join-Path $root 'pilot') 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\pilot.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Known-jerk pilot failed' }
+          $manifest = Get-Content (Join-Path $root 'pilot\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($manifest.synthetic_trial_count -ne 96) { throw 'Pilot trial count mismatch' }
+          if ($manifest.counts.trials -ne 96) { throw 'Pilot missed intended cases' }
+          if ($manifest.counts.forecasts_invalid -gt 0 -or $manifest.counts.selections_invalid -gt 0 -or $manifest.counts.fits_invalid -gt 0 -or $manifest.counts.ablation_invalid -gt 0) {
+            throw 'Pilot has invalid numerical cases; inspect before confirmation'
+          }
+          Write-Host "Passed 96-trial pilot; independent confirm authorized by predeclared config."
+
+      - name: Run 1296 separate-seed confirmation trajectories and preserve raw trial data
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          $root = $env:PAPER_C_EXP005_ROOT
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment005/run.py --stage confirm --output-dir (Join-Path $root 'confirm') 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\confirm.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Confirmatory simulation failed' }
+          $manifest = Get-Content (Join-Path $root 'confirm\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($manifest.synthetic_trial_count -ne 1296) { throw 'Confirmation size mismatch' }
+          if ($manifest.counts.trials -ne 1296) { throw 'Confirmation missed intended cases' }
+          if ($manifest.counts.forecasts_invalid -gt 0 -or $manifest.counts.selections_invalid -gt 0 -or $manifest.counts.fits_invalid -gt 0 -or $manifest.counts.ablation_invalid -gt 0) {
+            throw 'Confirmation has invalid numerical cases, inspect rather than cherry-picking'
+          }
+          Write-Host "Confirmed 1296 synthetic trajectories with full truth and noisy positions."
+
+      - name: Compile existing Paper C manuscript without modifying older experiments
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = $env:PAPER_C_EXP005_ROOT
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir (Join-Path $root 'build') --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\compile.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Existing Paper C manuscript compilation failed' }
+
+      - name: Always hash and inventory all VM output directories and files
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = $env:PAPER_C_EXP005_ROOT
+          if (!$root) {
+            $root = Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment005\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          if (!(Test-Path -LiteralPath $root)) {
+            New-Item -Path $root -ItemType Directory -Force | Out-Null
+          }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'pilot\run_manifest.json')) { $status='pilot_complete' }
+          if (Test-Path (Join-Path $root 'confirm\run_manifest.json')) { $status='confirm_complete' }
+          if (Test-Path (Join-Path $root 'build\build_manifest.json')) { $status='confirm_and_build_complete' }
+          $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+          if (!(Test-Path $python)) { throw 'VM Python unavailable to inventory results' }
+          & $python paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory VM files' }
+          Write-Host "Persisted full synthetic data, results, plots and source inventory: $root"
+
+      - name: Copy full first-party synthetic results into isolated Git archival worktree
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = $env:PAPER_C_EXP005_ROOT
+          if (!$root) {
+            $root = Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment005\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          $relative = "paper/ngsim-jerk-case-study/experiments/experiment005/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest = Join-Path $env:GITHUB_WORKSPACE $relative
+          New-Item -Path $dest -ItemType Directory -Force | Out-Null
+          if (Test-Path $root) {
+            Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+              Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+            }
+          }
+          "$root" | Out-File -FilePath (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+          Write-Host "Ready for Git archive including full source-generated trial trajectories."
+
+      - name: Upload complete simulation outputs and metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-exp005-pc08-known-jerk
+          path: paper/ngsim-jerk-case-study/experiments/experiment005/runs/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit and push unique immutable first-party simulation data/results branch
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $relative = "paper/ngsim-jerk-case-study/experiments/experiment005/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (!(Test-Path (Join-Path $relative 'vm_run_root.txt'))) { throw 'Missing run root record' }
+          $archive = "results/paper-c-exp005-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create unique archival branch' }
+          git add -f -- $relative
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to stage full simulation outputs' }
+          git commit -m "experiment005: archive known-jerk pilot and confirm complete trajectories $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to commit full simulation data' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to push reproducible data archive branch' }
+          Write-Host "Synthetic data/result/archive branch: $archive"
