@@ -190,7 +190,7 @@ jobs:
             throw 'Build manifest does not contain a successful Springer PDF'
           }
           if ($manifest.source_commit -ne $env:GITHUB_SHA) { throw 'Build source SHA mismatch' }
-          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/inspect_pdf.py --pdf (Join-Path $out 'springer.pdf') --log (Join-Path $out 'springer.log') --output (Join-Path $out 'proof')
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/inspect_pdf.py --pdf (Join-Path $out 'springer.pdf') --log paper/main.log --output (Join-Path $out 'proof')
           if ($LASTEXITCODE -ne 0) { throw 'Fresh PDF inspection failed' }
       - name: Upload newly compiled PDF and audit logs
         if: always()
