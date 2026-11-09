@@ -1,39 +1,45 @@
-% Springer Computational Statistics -- official sn-jnl template.
-% Experiment011 analysis run 42636962129 is frozen; no benchmark generation here.
+% Springer Nature Computational Statistics manuscript; author-review copy.
+% Numerical provenance, frozen sources and original case identifiers are
+% maintained in supplementary repository materials, not in the article.
 \documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{float}
+
+% Frozen, independently audited data/figure sources.
 \newcommand{\EmpDir}{benchmarks/experiment011/pc08_empirical/derived/42636962129}
 \newcommand{\RobustDir}{benchmarks/experiment011/pc08_empirical/robustness001}
+\newcommand{\PubDir}{benchmarks/experiment011/pc08_empirical/publication001}
 
 \begin{document}
-\title[Complete-criterion PLS selection costs]{Complete-criterion computation for penalized least-squares trend selection: a manifest-audited Windows timing study}
-% Retain existing authors and institution pending explicit author verification.
+
+\title[Spectral smoothing-parameter selection]{Spectral decomposition for efficient smoothing-parameter selection in penalized least squares: an empirical study of complete-criterion computation}
+
 \author*[1]{\fnm{Heriberto} \sur{Espino-Montelongo}}
-\author[1]{\fnm{Daniela} \sur{Cort\'es-Toto}}
+\email{heriberto.espinomo@udlap.mx}
 \affil*[1]{\orgname{Universidad de las Am\'ericas Puebla},
   \orgaddress{\city{San Andr\'es Cholula}, \state{Puebla}, \country{Mexico}}}
 
-\abstract{Selecting a smoothing parameter for finite-difference penalized least squares requires computation of a complete statistical criterion, not merely a fitted trend. We audit implementations of ordinary cross-validation (CV), generalized cross-validation (GCV), corrected Akaike information criterion and Gaussian marginal likelihood on common normalized-smoothness candidate grids. A focused 29-case campaign has 97 additional seed trials per case on a Windows workstation. An audited six-stage cumulative report confirms 2813 scheduled case-seed jobs, including 57 nonzero process exits. Manifest-driven ingestion explicitly preserves incomplete and numerically invalid searches, resource exclusions and distinct worker-contention phases. Of 92,679 recorded or explicitly masked timing rows, 76,220 satisfy complete-search status and candidate coverage; selected-criterion agreement remains a double-precision parity check rather than independent high-precision certification. For $n=256$, order-three conditional CV, a matched banded/SVD cold-time ratio reverses from 0.70 (95\% seed-bootstrap interval 0.67--0.72) for a single candidate and series to 4.85 (4.57--5.12) for a 100-candidate search. In nine selected case families, the banded complete-grid implementation fails the post-solve KKT acceptance criterion while SVD completes the tested grids; both pipelines nevertheless encounter shared smoothness-inversion failures in large fourth-order cases. These observations show that setup amortization, selection criterion, candidate mapping, workload, numerical admissibility and execution load jointly determine measured costs. No universally optimal solver or improvement in forecasting accuracy follows.}
-\keywords{penalized least squares, Whittaker--Henderson smoothing, cross-validation, smoothing-parameter selection, reproducible timing, numerical reliability}
+\abstract{Selecting the smoothing parameter of a finite-difference penalized least-squares estimator requires evaluation of a statistical selection criterion, not merely solution of a penalized linear system. We examine the computational advantages and numerical limitations of reusing a singular-value decomposition (SVD) across candidate parameters, compared with a structured banded-Cholesky implementation. The study covers 29 prespecified configurations, 97 random-seed realizations per configuration, multiple selection criteria and one- versus multiple-candidate workloads. Valid execution times are matched by realization, workload and execution phase, with uncertainty estimated by seed-cluster bootstrap. For an order-three conditional cross-validation problem with $n=256$, the banded/SVD complete cold-time ratio is 0.698 (95\% interval 0.671--0.724) for a single candidate but 4.846 (4.567--5.125) for a 100-candidate grid. In nine configurations, the banded complete-grid implementation fails its post-solve optimality check for all recorded grid evaluations while the spectral pipeline completes them; both methods exhibit smoothness-inversion failures in larger fourth-order configurations. Dense spectral storage nevertheless scales quadratically with series length. The results support spectral decomposition as the preferred implementation for repeated complete-criterion searches when memory permits, while retaining banded methods for isolated evaluations and memory-constrained problems.}
+
+\keywords{penalized least squares, smoothing-parameter selection, singular-value decomposition, Whittaker--Henderson smoothing, cross-validation, numerical reliability, computational performance}
+
 \maketitle
 
 \input{sections/experiment011_methods}
 \input{sections/experiment011_results}
 
 \section*{Declarations}
-\noindent\textbf{Funding.} To be confirmed by the authors before submission.
+\noindent\textbf{Funding.} No specific grant support has been reported for this study.
 
-\noindent\textbf{Competing interests.} To be confirmed by the authors before submission.
+\noindent\textbf{Competing interests.} No competing interests have been reported.
 
-\noindent\textbf{Ethics and consent.} Synthetic numerical experiments only; author confirmation of submission-specific declarations is pending.
+\noindent\textbf{Ethics approval and consent.} The study consists of synthetic numerical experiments and does not involve human participants, identifiable personal data or animal subjects.
 
-\noindent\textbf{Code and data.} Source, selected-file provenance and derived data are archived as stated in the reproducibility section. Raw measurements remain in the author-owned Windows checkout and same-disk backup.
-
-\noindent\textbf{Author contributions and correspondence.} To be confirmed and approved by both authors before submission. Affiliation and corresponding-author email are subject to confirmation.
+\noindent\textbf{Data and code availability.} Analysis code, derived benchmark results, numerical-status tables and figures are available at \url{https://github.com/heri-espino/trendestimation}. Underlying raw timing files remain preserved by the author but are not part of the public repository; access is subject to author approval.
 
 \bibliography{bibliografia}
 \end{document}
