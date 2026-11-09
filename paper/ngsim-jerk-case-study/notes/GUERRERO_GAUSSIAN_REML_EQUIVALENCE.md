@@ -1,5 +1,17 @@
 # Guerrero's PLS variance ratio and the exact fixed-mean Gaussian REML identity
 
+**Replicability update (2026-11-09):** Independent
+[PCAG103A-08 Windows simulation #42547250403](https://github.com/heri-espino/trendestimation/actions/runs/42547250403)
+has now completed successfully and archived its complete
+data/compiled manuscript under
+[results/paper-c-exp005-pc08-42547250403-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-pc08-42547250403-a1).
+Its profile-ML known-jerk RMSE agrees with the GitHub cloud
+execution to roughly 1e−13 m/s³. This provides independent
+**numeric reproducibility**, not independent data-generating draws:
+both used the same deterministic seeds. See the [updated
+Experiment005 ledger](../experiments/experiment005/RUN_LEDGER.md).
+
+
 **Status:** Mathematical verification of the existing implementation, **not a new estimator, an independent simulation, or an additional numerical result**. Updated 2026-11-09 following the author's clarification. This note must be read before interpreting Paper C Experiment004 or Experiment005 MLE comparisons.
 
 ## Primary source and provenance
