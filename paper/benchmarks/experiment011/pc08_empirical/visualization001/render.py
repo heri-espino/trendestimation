@@ -471,11 +471,11 @@ def render(timing,pairs,boots,coords,cells,out):
 
 
 def main():
+    global FROZEN
     p=argparse.ArgumentParser()
     p.add_argument("--frozen",type=Path,default=FROZEN)
     p.add_argument("--out",type=Path,default=OUTPUT)
     args=p.parse_args()
-    global FROZEN
     FROZEN=args.frozen
     plt.rcParams.update({"font.family":"DejaVu Sans","font.size":8.6,"pdf.fonttype":42,
                          "ps.fonttype":42,"axes.spines.top":False,
