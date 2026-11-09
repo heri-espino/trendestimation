@@ -1,0 +1,25 @@
+{
+  "experiment": "experiment008",
+  "status": "complete",
+  "mode": "real",
+  "n_samples": 200,
+  "n_fitted_rows": 1000,
+  "n_forecast_rows": 6000,
+  "n_methods": 5,
+  "reference": "global cubic OLS mu and lambda selected from archived Experiment006",
+  "source_sha256": "e6b594edd0cde7165302c4c7b65720645ec940122af23152db24f7eb1230598e",
+  "selection_rows_sha256": "186b6e00d256ba7c792ce552800f36e188cbfdd58b68c28130f26de2f2475903",
+  "source_commit": "d1f7cfdef83b81f6384516cd9816c3c8ad496769",
+  "output_dir": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment008\\run-42720329189-a1\\real",
+  "runner": "PCAG103A-08",
+  "n_synthetic_with_known_truth": 0,
+  "d": 3,
+  "dt_seconds": 0.1,
+  "tsvd": "hard cutoff of ascending singular values of D3, retain quadratic nullspace",
+  "tsvd_gcv": "training-only rank minimization, exclude interpolating r=m",
+  "tsvd_matched_edf": "rank round(sum 1/(1+lambda*sigma_j^2)), lambda from same archived PLS",
+  "continuations": [
+    "local25",
+    "guerrero_last3"
+  ]
+}
