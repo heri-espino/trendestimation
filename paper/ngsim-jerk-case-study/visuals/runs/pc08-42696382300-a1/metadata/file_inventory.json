@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-09T20:48:16.117878+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\visuals\\run-42696382300-a1",
+  "source_commit": "fc4fac8ee9b7658914d15aeb6e0a0be8d601467c",
+  "directory_paths_relative_to_root": [
+    "figures",
+    "logs",
+    "manuscript",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "manuscript/main.pdf",
+      "bytes": 475817,
+      "sha256": "76a0d540738190bff8d1626bc7bf2f721e3e2946c7e2dff09d7911cc854a9c80"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3210,
+      "sha256": "2882f25dfe924134fccb653fadae88c3e914273dac6d5415fba176e589dd2a51"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3240,
+      "sha256": "7241c65fd6ee1de8f7080c090a17a6e8c0427ba4ebea0539b0c47c4844286938"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "b0eaafa27699d4c9c759a66813adcea50e7e6141072c1e3e7536760b8b6827ed"
+    }
+  ],
+  "total_files_excluding_this_inventory": 5,
+  "total_bytes_excluding_this_inventory": 482322,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
