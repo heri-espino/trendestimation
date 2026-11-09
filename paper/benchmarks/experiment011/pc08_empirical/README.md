@@ -108,3 +108,7 @@ release raw results, assert coauthor disclosures or submit to Springer without
 explicit authorization. Before editing the generator or rerendering,
 inspect its actual selected-case filters and verify the associated
 case-level parity and missingness counts.
+
+## Current build request
+
+The canonical paper and workflow refer only to corrected analysis snapshot 42636962129. Compile from this source revision using PCAG103A-08; inspect the final LaTeX pass and fresh PDF, preserving build logs and page proofs in a new immutable artifacts branch.
