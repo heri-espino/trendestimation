@@ -1,0 +1,56 @@
+\section{Introduction}
+Finite-difference penalized least squares (PLS) is an established trend-smoothing technique \cite{whittaker1923graduation,guerrero2007penalized}. Selecting its smoothing parameter by cross-validation (CV), generalized cross-validation (GCV), corrected Akaike information criterion (AICc), BIC, or a Gaussian marginal-likelihood criterion entails evaluating complete statistical scores, rather than merely obtaining a fitted trend \cite{cortes2017smoothness}. Efficient banded matrix algorithms and related Whittaker--Henderson smoothing procedures have been developed for decades \cite{weinert2007wh,weinert2012fast,biessy2026wh}; this article does not claim their invention.
+
+We ask when a one-time dense spectral decomposition can amortize its cost over repeated full-criterion evaluations, and when a banded procedure remains preferable. The answer depends jointly on sample length, difference order, criterion, smoothness-candidate count, number of series, numerical admissibility, and cache reuse. In particular, observationwise leverage required by ordinary CV differs from the scalar trace needed for GCV. Comparison with an explicit dense-inverse reference and a sparse-Cholesky/banded-trace hybrid is possible only where both the full search and its numerical checks succeed.
+
+The principal methodological contribution of this article is a manifest-driven audit of completed empirical results. An experiment may report every scheduled job as recorded while retaining unsuccessful processes, partial searches and interrupted attempts. We recover the authoritative original and continuation runs, preserve error statuses, and estimate matched speedups with seed-cluster rather than rowwise uncertainty. This is an empirical study of complete-criterion implementation costs, separate from the repository's computational-complexity, high-precision numerical and NGSIM application manuscripts.
+
+\section{Statistical and computational framework}
+\subsection{Established estimator and normalized smoothness}
+Let $y\in\mathbb{R}^n$ be equally spaced observations, let $D_d\in\mathbb{R}^{(n-d)\times n}$ denote the order-$d$ forward-difference operator, $1\le d<n$, and let $\mu$ be a specified mean of the penalized differences. The existing PLS estimator is
+\begin{equation}\label{eq:pls}
+\widehat{\tau}_{\lambda,\mu}=\arg\min_{\tau\in\mathbb{R}^n}
+\big\{\|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf{1}\|_2^2\big\},
+\qquad \lambda\ge0.
+\end{equation}
+If $D_dp=\mu\mathbf1$, then
+\begin{equation}\label{eq:hat}
+\widehat{\tau}_{\lambda,\mu}=p+H_\lambda(y-p),\qquad
+H_\lambda=(I+\lambda D_d^\top D_d)^{-1}.
+\end{equation}
+The difference matrix has full row rank in exact arithmetic, with $n-d$ positive penalty eigenvalues $\delta_j$. Normalized trace smoothness is the monotone mapping \cite{guerrero2008smoothness}
+\begin{equation}\label{eq:smoothness}
+S(\lambda)=\frac{n-\operatorname{tr}(H_\lambda)}{n-d}
+=\frac{1}{n-d}\sum_{j=1}^{n-d}\frac{\lambda\delta_j}{1+\lambda\delta_j},
+\qquad S(0)=0,\ S(\infty)=1.
+\end{equation}
+Thus $S$ is a coordinate for the \emph{same} PLS estimators and selection objectives, not a new penalty. The exact $S=1$ endpoint represents the constrained limiting polynomial and is not approximated by an enormous floating-point penalty.
+
+\subsection{Complete statistical criteria}
+Let $r_\lambda=y-\widehat{\tau}_{\lambda,\mu}$ and $h_{ii}=(H_\lambda)_{ii}$. For fixed numeric $\mu$, classical CV and GCV take the forms
+\begin{align}
+\mathrm{CV}(\lambda)&=\frac1n\sum_{i=1}^n
+\left(\frac{r_{\lambda,i}}{1-h_{ii}}\right)^2,\label{eq:cv}\\
+\mathrm{GCV}(\lambda)&=\frac{\|r_\lambda\|_2^2/n}
+{\{1-\operatorname{tr}(H_\lambda)/n\}^2}.\label{eq:gcv}
+\end{align}
+The original, versioned Experiment006 implementation defines finite-precision AICc, BIC and Gaussian marginal likelihood and their endpoint behavior. The observed-difference reference mean $\mu=\overline{D_dy}$ is a conditional full-sample plug-in: the reported CV is \emph{not} the exact leave-one-out procedure that reestimates $\mu$ in every fold. Marginal-likelihood scores from different numerical formulas may differ by a $\lambda$-independent additive normalization; agreement of their minimizing $S$ is checked without requiring identical absolute score levels. Undefined criteria and partial candidate evaluations cannot be timing winners.
+
+Four workloads are measured: one candidate/one series, $M$ candidates/one series, one candidate/$R$ series, and $M$ candidates/$R$ series. Both direct-$S$ mapping and once-mapped-$\lambda$ policies evaluate the same candidates $S=j/M$ for $j=1,\ldots,M$, with the endpoint $S=1$ handled analytically. Single-candidate tasks use the predeclared fixed smoothness. A valid complete-search time accounts for solver setup, smoothness-to-penalty translation and every candidate's criterion evaluation. The evaluator reports cold and warm cost accounting; a warm total is not proof of an independently spawned second process. At small $n$, both backends may pay a common spectral-mapper setup charge.
+
+\subsection{Four complete-criterion implementation families}
+The original benchmark contains full spectral SVD, banded Cholesky with selected-inverse criterion diagnostics, naive explicit dense inversion, and an optional sparse-Cholesky \emph{plus separately charged banded diagnostics} hybrid. The hybrid is not a pure sparse Cholesky benchmark. All computations use one BLAS thread per job. Under fixed small difference order, a banded factorization has a nominal $O(nd^2)$ arithmetic cost, while full dense spectral decomposition incurs asymptotically greater setup time and storage. Neither expression is measured wall time. The full search additionally incurs criterion-dependent residual, leverage or trace calculations, mapping and cache costs. Generalized operation counts and their proofs belong to the separate complexity companion; this paper reports seconds only where measured.
+
+\section{Experiment011 design and canonical ingestion}
+\subsection{Predeclared case-seed campaign}
+The study is the focused 29-case Experiment011 design, not the unrelated 252,000-cell historical factorial \emph{plan}. For each case, 97 additional seeded jobs use base seeds $10^9+10^6i$ for $i=0,\ldots,96$, stored under indices $i+3$. Design case identifiers fix $n,d$, criterion, amplitude, reference-mean policy, candidate count, method list, repeats, and the four workloads. Most non-smoke cases contain two within-seed repeats and rotated method ordering; the rotating block label is not itself an independent seed.
+
+The final cumulative report records 2813 distinct case-seed jobs from the self-hosted Windows X64 runner PCAG103A-08. The controller used one BLAS thread per job but changed maximum concurrent workers during the campaign: 2231 jobs were recorded in the 24-worker phase, 52 in a one-worker phase, and 530 in a 12-worker phase. Phase limits are \emph{not} actual instantaneous CPU occupancy. These phases are not pooled to claim isolated single-process latency, nor do summed per-method times establish campaign throughput.
+
+\subsection{Exact run selection and numerical masks}
+The final report depends on six successive cumulative checkpoints. Their predecessor hashes and inherited arrays were verified, yielding 2272 canonical records from the original run tag, then 11, 55, zero, zero and 475 additional records from successive continuations. Run tags are taken from the stage that first appended a record; selecting every directory recursively would incorrectly treat interrupted attempts as independent replications. The original report, source file, case and QA manifests, environment JSON and raw CSVs remain read-only. Each selected file is compared against its SHA-256 inventory entry and a verified local backup copy.
+
+A row is classified as a complete status-admissible search only if the process completed, its saved status is successful, its time and selected score are finite, and the observed number of criterion evaluations equals $MR$. Paired methods must additionally agree on selected $S$ within $10^{-10}$ and non-likelihood selected-score relative error within $10^{-7}$, using the same case, seed, repeat, workload, coordinate, executable hash, machine environment and worker phase. Failed mappings, resource exclusions, unsuccessful processes, incomplete candidate searches and absent files remain explicitly masked. These tests establish recorded floating-point parity, \emph{not} uniform independent high-precision correctness at large $d$.
+
+\subsection{Paired seed-cluster uncertainty}
+For paired complete cold times $T_A,T_B>0$, the speedup of method $A$ relative to method $B$ is $R=T_B/T_A$. Our summary takes the arithmetic mean of $\log R$ within each case-seed cluster, preserving repeated method/workload outcomes together, then exponentiates the across-seed mean. We estimate percentile 95\% intervals using 700 deterministic bootstrap resamples of independent seed indices. No interval is reported for fewer than three independently seeded clusters. The intervals quantify within-design seed variation under recorded machine conditions, not uncertainty under different CPUs, load, OS installations, or changes in optimization software. Conditioning on successful paired searches can introduce survivor bias.
