@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-09T23:15:50.240065+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\manuscript-methods\\run-42718953508-a1",
+  "source_commit": "630250e0cd28e0e0ef04223b961e5b7473473dfe",
+  "directory_paths_relative_to_root": [
+    "figures",
+    "logs",
+    "manuscript",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.pdf",
+      "bytes": 27991,
+      "sha256": "272b045c9f743a3aae39ca06c9358cd35977b2cfd9ebc32ab9db9a0bc4b5f37b"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.png",
+      "bytes": 92944,
+      "sha256": "b2235332422fbfe65d8de9bf6498a861ee080d33d7e1a9c07c7412d6b70059ad"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.svg",
+      "bytes": 28975,
+      "sha256": "289b995f46f78ced6dadd07e3571a051837e5d0ae1a5f973555547e3ac31bf08"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.pdf",
+      "bytes": 31169,
+      "sha256": "292d84018c2e5b2731b418cc9770ad45eaa17f0149bada5438ff591811773401"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.png",
+      "bytes": 110784,
+      "sha256": "cc5fbd33938d3e588905a19bec7609630547d436eaed645b7da41e66dcfa6a12"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.svg",
+      "bytes": 19540,
+      "sha256": "bb84b626b79d25663899fe9eda54c5f2ab27c22343ce1141fb876b6ae03ce981"
+    },
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 114,
+      "sha256": "c86cba7ff2cff7c356d4314a8938c96f29337cc2f095a68895c982b98e62411f"
+    },
+    {
+      "relative_path": "logs/render.log",
+      "bytes": 3588,
+      "sha256": "2c5b5001ba084ddf4b72e3c1b4a329658f90a3056d535c90fa378dbffbcf0ece"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3346,
+      "sha256": "fec906c220218308506d6bbb16d5219b29ffb97e9decfbc46aba014b26467135"
+    },
+    {
+      "relative_path": "metadata/build_manifest.json",
+      "bytes": 7589,
+      "sha256": "cf9e0fd3f72550f8d3a68c0547609e52a487f42617eea0c1e15da32934f2f22b"
+    },
+    {
+      "relative_path": "metadata/exp008_methods_figure_manifest.json",
+      "bytes": 1793,
+      "sha256": "927e69d58b37fd210da3956f5a7fc8cfc5adc5417f19773be38e9b02ccb12f3d"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3254,
+      "sha256": "a4f960b75dc486574b12788ce6770c17a959f1fb46e402c4638a3be66895af25"
+    },
+    {
+      "relative_path": "metadata/source_branches.txt",
+      "bytes": 415,
+      "sha256": "d75b4ed5c7d33bedbf74b2593b7cdf0a415e35f612e4fd75f8cc5188ab3c5d3b"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "5d0ed116c8cad1fb0389c32d10c11cfc7f3cabd0677c69a452e15524359d7f0a"
+    }
+  ],
+  "total_files_excluding_this_inventory": 14,
+  "total_bytes_excluding_this_inventory": 331544,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
