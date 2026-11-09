@@ -13,6 +13,8 @@ on:
       - paper/ngsim-jerk-case-study/sections/discussion.tex
       - paper/ngsim-jerk-case-study/references.bib
       - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
+      - paper/ngsim-jerk-case-study/visuals/audit_pdf.py
+      - paper/ngsim-jerk-case-study/visuals/audit_methods_pdf.py
   workflow_dispatch:
 
 permissions:
