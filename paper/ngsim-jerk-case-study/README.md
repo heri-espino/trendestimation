@@ -1,5 +1,25 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Gaussian REML clarification (2026-11-09)
+
+The author specified the fixed-reference-mean restricted Gaussian likelihood
+on the differences (Dy-mumathbf 1), with covariance
+(sigma_u^2(I+lambda DD^	op)), as the intended *MLE* criterion.
+[The exact spectral/dense likelihood equivalence proof](notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md)
+shows that **the existing library criterion="mle" already computes
+precisely this objective up to the additive constant (-log|DD^	op|)**,
+for each **fixed** (mu). Therefore Experiment004/005 ML-selected
+results should **not** be relabelled as a different estimator or rerun
+simply to replace an equivalent likelihood representation.
+Both studies used a *finite normalized smoothness grid*, not a continuous
+minimization of the profile objective. When (mu) is estimated from data,
+their likelihood treats that estimate as fixed; the correct
+**mean-adjusted unknown-(mu) REML** additionally eliminates one
+degree of freedom and includes a GLS mean-information determinant.
+This distinction, and Guerrero's non-Gaussian second-moment origin,
+must be retained in the final paper.
+
+
 ## Completed simulation study: known-jerk Experiment005 (2026-11-08)
 
 [Verified RUN_LEDGER.md](experiments/experiment005/RUN_LEDGER.md) and [successful scientific workflow #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064) document 96 pilot plus 1,296 disjoint confirmation trials, with complete analytic true/noisy trajectories, 89,424 confirm forecast-error rows, 15,552 known-jerk fit records, 62,208 fixed-S crossed ablation records and zero invalid numerical cases. All generated first-party datasets, analyses, figures and immutable SHA inventory are [archived in GitHub](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). The VM runner is separately queued; the cloud archive has not yet been copied onto PC08.
