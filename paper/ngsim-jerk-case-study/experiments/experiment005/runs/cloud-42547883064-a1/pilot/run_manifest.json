@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "completed_synthetic_known_jerk",
+  "experiment": "experiment005",
+  "stage": "pilot",
+  "started_utc": "2026-11-09T01:53:42.177136+00:00",
+  "completed_utc": "2026-11-09T01:53:55.046515+00:00",
+  "source_repository_sha": "da7d7a02f0a10ddacea29e4d494bcb2a101e2748",
+  "runner_name": "GitHub Actions 1000016493",
+  "workflow_id": "42547883064",
+  "persistent_run_output": "/home/runner/work/trendestimation/trendestimation/paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-42547883064-a1/pilot",
+  "config_sha256": "19657e6d6510792b47f77e747d1aa76e598af171e5ab417a57cf6430eeeeb482",
+  "synthetic_trial_count": 96,
+  "counts": {
+    "selections_ok": 960,
+    "fits_ok": 1152,
+    "forecasts_ok": 6624,
+    "ablation_ok": 4608,
+    "trials": 96
+  },
+  "errors": {},
+  "elapsed_wall_seconds": 3.525729834999993,
+  "aggregates": {
+    "forecast_methods": 23,
+    "jerk_methods": 12,
+    "n_forecast_rows": 6624,
+    "n_jerk_rows": 1152,
+    "n_ablation_rows": 4608,
+    "pairwise_comparisons": 66
+  },
+  "figures": {
+    "created": true,
+    "files": [
+      "figures/forecast_rmse.png"
+    ]
+  },
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1",
+  "real_ngsim_data_used": false,
+  "jerk_truth_observed": true,
+  "reference_mean_oracle_is_synthetic_only": true
+}
