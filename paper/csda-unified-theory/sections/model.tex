@@ -32,10 +32,11 @@ For large $n,d$, explicitly forming and subtracting $p_\mu$ can cause severe can
 \begin{proposition}[Shift-free nonzero-reference reconstruction]\label{prop:shiftfree}
 For every finite $\lambda\ge0$ and specified real $\mu$,
 \begin{equation}\label{eq:shiftfree}
+\begin{aligned}
 \widehat\tau_{\lambda,\mu}
-=y-V\left[
- w\odot(V^\top y)
--\mu(w\oslash\sigma)\odot(U^\top\mathbf1_r)\right].
+&=y-V\bigl[w\odot(V^\top y)\\
+&\qquad-\mu(w\oslash\sigma)\odot(U^\top\mathbf1_r)\bigr].
+\end{aligned}
 \end{equation}
 Componentwise multiplication and division are denoted by $\odot$ and $\oslash$. This identity avoids building $p_\mu$ or inverting a dense matrix explicitly.
 \end{proposition}
@@ -46,9 +47,11 @@ Since $H_\lambda=I-V\diag(w)V^\top$ and $D_dp_\mu=\mu\mathbf1_r$, we have $V^\to
 \begin{corollary}[Exact limiting fits]\label{cor:endfits}
 At $\lambda=0$, $\widehat\tau=y$. As $\lambda\to\infty$,
 \begin{equation}\label{eq:inftyfit}
+\begin{aligned}
 \widehat\tau_{\infty,\mu}
-=y-V\left[V^\top y-\mu\Sigma^{-1}U^\top\mathbf1_r\right]
-=\arg\min_{\tau:\,D_d\tau=\mu\mathbf1_r}\|y-\tau\|_2^2.
+&=y-V\bigl[V^\top y-\mu\Sigma^{-1}U^\top\mathbf1_r\bigr]\\
+&=\arg\min_{\tau:\,D_d\tau=\mu\mathbf1_r}\|y-\tau\|_2^2.
+\end{aligned}
 \end{equation}
 The limiting fit has degree at most $d-1$ for $\mu=0$, and may have degree $d$ for fixed $\mu\ne0$.
 \end{corollary}
