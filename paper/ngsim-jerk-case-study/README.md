@@ -1,5 +1,32 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Completed simulation study: known-jerk Experiment005 (2026-11-08)
+
+[Verified RUN_LEDGER.md](experiments/experiment005/RUN_LEDGER.md) and [successful scientific workflow #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064) document 96 pilot plus 1,296 disjoint confirmation trials, with complete analytic true/noisy trajectories, 89,424 confirm forecast-error rows, 15,552 known-jerk fit records, 62,208 fixed-S crossed ablation records and zero invalid numerical cases. All generated first-party datasets, analyses, figures and immutable SHA inventory are [archived in GitHub](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). The VM runner is separately queued; the cloud archive has not yet been copied onto PC08.
+
+**Most important scientific result:** profile-ML-selected PLS using a zero or global cubic OLS reference mean can recover known discrete jerk far more accurately than GCV-selected PLS and the benchmark spline/SG under these *specific analytic noise conditions*. A global nonzero reference helps constant nonzero jerk but can worsen a jerk reversal. The earlier 200-episode *real* NGSIM study still favors a GCV cubic spline for **recorded** future-position prediction. Do not present simulation superiority as real-world validation; examine the discrepancy in the eventual Paper C manuscript.
+
+## Next study: controlled known-jerk simulation (Experiment005)
+
+The author authorized a separate
+[known-jerk simulation](experiments/experiment005/README.md)
+after the successful, strictly observational Experiment004.
+The [frozen design](experiments/experiment005/config.json)
+tests six analytic jerk regimes, GCV/profile ML with five
+`mu` references, two forecast continuations and
+spline/SG baselines under three noise structures and
+three error levels. There are 96 pilot and 1,296
+disjoint-seed confirmation trajectories on the designated
+PCAG103A-08 runner, with full clean/noisy series and
+run outputs saved on the VM and immutable Git branch.
+The synthetic-only oracle reference is a diagnostic
+upper bound, not a valid FHWA forecasting procedure.
+Compare *true discrete jerk error* and clean-future-position
+forecast error. **The next manuscript claims must be
+based on actual successful runs, not this planned grid.**
+Existing real NGSIM data and conclusions remain separate.
+
+
 ## Completed expanded real NGSIM Experiment004 (2026-11-08)
 
 **Result and exact VM file record:** [Experiment004 run ledger](experiments/experiment004/RUN_LEDGER.md).

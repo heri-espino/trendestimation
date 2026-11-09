@@ -1,5 +1,37 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Newest Paper C results: Experiment005 simulation complete (2026-11-08)
+
+[Run ledger](ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md), [successful hosted run #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064), [complete Git archive](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). Confirm: 1,296 independent analytic known-jerk trials plus 96-trial pilot; 12,960 PLS selections, 89,424 complete forecast rows, 15,552 historical jerk error rows, 62,208 fixed-S reference ablation rows and no invalid outcomes. All first-party generated true/noisy trajectories, full data, plots, configuration, environment and file hashes are committed. PLS with profile ML and global cubic OLS mean historical jerk RMSE **2.918 m/s³**, zero mean **3.021**, GCV spline **60.913** under the simulated conditions; nonzero reference helps sustained jerk but may worsen reversals, and sample mean is endpoint-sensitive. **Do not claim this proves real camera jerk accuracy:** real FHWA Experiment004 preferred the spline in future recorded-position forecasts. PCAG103A-08 run #42547250403 remains queued as a *separate* Windows computation, not VM-confirmed. Import cloud data using the checksum-verifying PowerShell sync script, which must label the copy as an import. No simulation manuscript rewrite or merge has occurred. Older notes below are dated and superseded by this verification.
+
+
+## Latest Paper C update: known-jerk Experiment005 (2026-11-08)
+
+The author has just authorized **simulations** following
+completed observational Experiment004. Read
+[experiment005 README](ngsim-jerk-case-study/experiments/experiment005/README.md)
+and its fixed [config.json](ngsim-jerk-case-study/experiments/experiment005/config.json).
+A dedicated PCAG103A-08 workflow runs a small pilot of
+96 independently seeded analytic jerk trajectories and,
+only on success, a 1,296-trial confirmation with separate
+seeds. It compares d=3 PLS GCV vs Gaussian profile ML,
+zero/sample/global-OLS/tail-OLS/synthetic-oracle `mu`,
+both existing continuation rules and GCV spline/SG
+baselines. Outputs directly measure **known historical
+discrete jerk** and clean-position forecasts, unlike
+earlier NGSIM only recorded-position error.
+A fixed-S crossed reference-mean ablation separates
+smoother and extrapolation effects. All datasets,
+noisy/clean trajectories, losses, figures, failure
+rows and reproducibility metadata reside in a unique
+non-overwriting PC08 persistent directory, and are
+pushed in full to an independent Git results branch.
+**Do not infer numerical success from workflow creation.**
+This branch is separate from the active PR #122 based
+on earlier Paper C PR #121. No manuscript has yet been
+rewritten with these *not-yet-validated* simulation results.
+
+
 ## Completed expanded real-only Paper C experiment004 (2026-11-08)
 
 [Completed run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md);

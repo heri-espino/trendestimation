@@ -1,5 +1,33 @@
 # AI_HANDOFF — latest
 
+**Newest verified Paper C simulations (2026-11-08):** [Experiment005 RUN_LEDGER](paper/ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md) and [GitHub-hosted success #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064): 96 pilot + **1,296 disjoint confirmation trials** with analytic known jerk, complete clean/noisy per-trial x/v/a/j and all first-party outputs preserved in Git branch **results/paper-c-exp005-cloud-42547883064-a1**. Confirm: **12,960 valid GCV/profile-ML selections, 15,552 known-jerk fits, 89,424 future clean-position forecasts, 62,208 fit/reference crossings, zero invalid**. File inventory: 33 generated files / ~44.8MB. Pooled historical jerk RMSE: PLS profile-ML+global cubic OLS mean **2.918 m/s³** vs GCV spline **60.913**, SG **36.829**, PLS GCV zero **68.242**. Profile-ML PLS zero-mu local25 future RMSE **0.276/0.413/0.861 m** at 0.5/1/2s vs GCV spline **0.567/0.971/2.170 m**. Nonzero global OLS mu helps constant ±jerk, hurts sign reversal; raw sample mu is unstable. **All of these are synthetic DGP-conditional results**, not empirical physical jerk validation or population inference. Actual 200-episode NGSIM Experiment004 favored the spline. The separately configured PCAG103A-08 [Windows workflow #42547250403](https://github.com/heri-espino/trendestimation/actions/runs/42547250403) remained queued: **NO VM simulation completion is claimed**. Use [sync_cloud_results_to_vm.ps1](paper/ngsim-jerk-case-study/experiments/experiment005/sync_cloud_results_to_vm.ps1) to copy/verify the complete cloud archive on VM, clearly labeling it as imported (not rerun). Older notes below are historical and superseded by this record.
+
+
+**Newest author decision, 2026-11-08:** Proceed with
+**synthetic known-jerk simulations** after real-data
+Experiment004. The previous instruction to use only real
+data was specific to Experiment004, not a permanent ban.
+[Experiment005](paper/ngsim-jerk-case-study/experiments/experiment005/README.md)
+is now a predeclared 96-trial pilot followed by 1,296 disjoint
+confirmation trials on PCAG103A-08.
+Methods: `d=3` PLS GCV and profiled Gaussian `mle`,
+mu zero/sample/cubic OLS global/tail25/true oracle,
+two extrapolation rules; GCV cubic spline and Savitzky-Golay.
+Primary known-truth endpoints: historical D3 jerk RMSE
+(m/s^3) and clean-future-position forecast RMSE (m),
+with full fixed-S mu fit/continuation 2x2 attribution.
+Raw per-trial known/noisy trajectories, all selection/error
+rows, plots, config, seeds, logs, and file inventory
+persist at `%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment005\run-<id>-a<attempt>`
+and in a separate results-only Git archive branch.
+**Important:** workflow creation is not proof of completed
+simulation, or that its results favor PLS. Check source
+version/manifest/CI. Synthetic oracle mu is not feasible
+on real FHWA data. Preserve Experiment004 results on
+the VM and its existing Git results branch, without
+editing the older CAS manuscript or Springer work.
+
+
 **Paper C expanded real NGSIM run COMPLETE (2026-11-08):**
 [Experiment004 run ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
 and [successful PCAG103A-08 #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)

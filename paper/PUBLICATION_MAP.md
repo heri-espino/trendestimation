@@ -1,5 +1,26 @@
 # Publication map — source of truth for all TrendEstimation agents
 
+**Paper C Experiment005 successfully simulated (2026-11-08):** [verified RUN_LEDGER.md](ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md) documents 96 pilot and 1,296 confirm independent known-jerk trials, complete cloud data/results in results/paper-c-exp005-cloud-42547883064-a1 and zero numerical failures. PLS Gaussian profile ML strongly outperformed GCV PLS and benchmark splines/SG for known discrete-jerk RMSE in the predeclared simulation mixture; GCV cubic spline remained the best overall for observed-position forecasts on Experiment004 real NGSIM. Both opposite-looking findings are preserved, not selectively reported. Windows PC08 workflow remains queued, the hosted data are not yet VM copies. Paper C results are segregated from Springer numerical optimization and CSDA papers, and only this paper may use this synthetic experiment. No paper submission or merge authorized.
+
+
+**Paper C Experiment005 planned/executing (2026-11-08):**
+The author newly authorized known-jerk simulations
+after the 200-episode observational Experiment004.
+[Fixed config](ngsim-jerk-case-study/experiments/experiment005/config.json)
+and [full handoff](ngsim-jerk-case-study/experiments/experiment005/README.md)
+cover 96 pilot and 1,296 confirm independent
+analytic truth/noisy position trajectories. Compare
+`d=3` PLS GCV/profile ML across zero, sample, OLS
+and oracle `mu` plus last3/local25, against GCV splines
+and SG, with known D3 jerk and clean future position
+truth. The PC08 runner archives **all generated artifacts
+and exact path/SHA index** without overwriting the
+real-data study. This research is solely **Paper C**
+and does not modify Springer or CSDA reports. No
+results or claims are established before the runner's
+actual completed manifest is verified.
+
+
 **Paper C expanded experiment004 completed (2026-11-08):**
 See [run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md),
 [PC08 completed job](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
