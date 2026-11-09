@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 import csv
 from datetime import datetime, timezone
 import gzip
+import importlib.util
 import hashlib
 import json
 import math
@@ -380,8 +381,15 @@ def run(stage: str,output: Path):
     status=Counter(row["status"] for row in selections)
     # This is a diagnostic experiment. An invalid method is not silently
     # dropped, and is reported in the manifest and analyses.
-    from analyze import produce
-    summaries=produce(output,CONFIG,stage)
+    # A different experiment also has an analyze.py. Resolve the explicit
+    # file path under a unique module name to protect full pytest collection.
+    spec = importlib.util.spec_from_file_location(
+        "paper_c_experiment007_diagnostics", HERE / "analyze.py"
+    )
+    assert spec is not None and spec.loader is not None
+    analyzer = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(analyzer)
+    summaries=analyzer.produce(output,CONFIG,stage)
     manifest={
         "schema":1,"experiment":"experiment007","stage":stage,
         "status":"complete" if status["invalid"]==0 else "completed_with_invalid_methods",
