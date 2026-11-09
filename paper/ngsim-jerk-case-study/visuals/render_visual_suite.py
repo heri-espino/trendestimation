@@ -114,8 +114,11 @@ def typography(ax):
 
 
 def panel(ax,text):
-    ax.text(-.08,1.035,text,transform=ax.transAxes,
-            weight="bold",size=10.5,color=INK,va="bottom")
+    # Reserve a visible left gutter for the panel letter. The existing
+    # editorial style left-aligns axis titles: at x=-.08 the letter
+    # touched the first title ("ARecorded") in the compiled PDF.
+    ax.text(-.16,1.045,text,transform=ax.transAxes,
+            weight="bold",size=10.0,color=INK,va="bottom",ha="right")
 
 
 def publish(fig,name,out):
