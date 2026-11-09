@@ -1,3 +1,5 @@
+**Open draft manuscript PR #126 (do not merge):** https://github.com/heri-espino/trendestimation/pull/126 . It is stacked on the still-open PR #124 handoff branch; retarget after integration/review, do not merge or submit without approval. The newly built PDF source revision and verified artifact remain unchanged by these documentation-only updates.
+
 # Experiment011 Springer empirical analysis handoff
 
 Updated 9 November 2026. Read this alongside root and paper AGENTS.md, the
