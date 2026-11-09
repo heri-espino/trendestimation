@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-09T14:46:46.500989+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment006\\run-42637959229-a1",
+  "source_commit": "0603bfad9dbc4024ecfc8347e042433508028edf",
+  "directory_paths_relative_to_root": [
+    "logs",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "logs/pilot.log",
+      "bytes": 298,
+      "sha256": "c36fc7e03d17e81b89ce927bd717039a8ae4fa72f87f8de23fdeff2bd78ef750"
+    },
+    {
+      "relative_path": "logs/preflight.log",
+      "bytes": 204,
+      "sha256": "d6aca85d95a9790bd3657d05597fc9bb749ffd53a830be07a605f34e50f02eb5"
+    },
+    {
+      "relative_path": "metadata/experiment004_source_path.txt",
+      "bytes": 86,
+      "sha256": "e6a58cb73228d087e3517d644c76d5dbc6048b649f9bce1dbd96ab51da0c5fd4"
+    },
+    {
+      "relative_path": "metadata/experiment005_source_path.txt",
+      "bytes": 86,
+      "sha256": "3fd2c8f1ea7c574fe055687cd3818e11790b361d503ea35191d6fa3dfe2681f9"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3240,
+      "sha256": "7241c65fd6ee1de8f7080c090a17a6e8c0427ba4ebea0539b0c47c4844286938"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "bfcc1e4c8b099dccef197d05c8905884cec88b49735c228bc698553ce8fc86c4"
+    }
+  ],
+  "total_files_excluding_this_inventory": 7,
+  "total_bytes_excluding_this_inventory": 3969,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
