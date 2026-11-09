@@ -1,6 +1,6 @@
 # Paper C — experiment004: expanded real NGSIM evaluation
 
-**Status:** Source-controlled implementation, requiring successful PCAG103A-08 run to establish numerical results. No simulations.
+**Status: COMPLETED** on PCAG103A-08, [successful run #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206). See the [verified RUN_LEDGER.md](RUN_LEDGER.md) for actual counts, per-site results, all VM file names, checksums, and the source/ref to the permanent Git results-only branch. This study generated no simulated trajectory data.
 
 ## Scientific question
 
