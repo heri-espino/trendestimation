@@ -1,20 +1,20 @@
 # Experiment006 — verified joint unknown-mean REML results ledger
 
-**Completed on PCAG103A-08, November 9, 2026.** [Successful Windows workflow #42639184183](https://github.com/heri-espino/trendestimation/actions/runs/42639184183). This is the completed scientific comparison on immutable Experiment005 and Experiment004 sources, with the **corrected exact 15-S grid** and all diagnostic outputs. Executed research commit: ed51ac70f77d42a37f44ba8e2c0809785e939338. Subsequent changes correct test import resolution only; scientific formulas and outcomes are unchanged.
+**Completed on PCAG103A-08, November 9, 2026.** [Successful Windows workflow #42639588117](https://github.com/heri-espino/trendestimation/actions/runs/42639588117). This is the completed scientific comparison on immutable Experiment005 and Experiment004 sources, with the **corrected exact 15-S grid** and all diagnostic outputs. Executed research commit: 1eecebd302ba08c661d4dfa88a9eb297d76538d1. Subsequent changes correct test import resolution only; scientific formulas and outcomes are unchanged.
 
 ## Exact saved data and directory paths
 
 **Full persistent VM run:**
 
-    C:\Users\175199\Documents\TrendEstimation-PaperC\experiment006\run-42639184183-a1
+    C:\Users\175199\Documents\TrendEstimation-PaperC\experiment006\run-42639588117-a1
 
-**Git results-only archive:** [results/paper-c-exp006-pc08-42639184183-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp006-pc08-42639184183-a1/paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639184183-a1).
+**Git results-only archive:** [results/paper-c-exp006-pc08-42639588117-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp006-pc08-42639588117-a1/paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1).
 
 Inside Git, all files are below:
 
-    paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639184183-a1/
+    paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1/
 
-The recursive [file_inventory.json](https://github.com/heri-espino/trendestimation/blob/results/paper-c-exp006-pc08-42639184183-a1/paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639184183-a1/metadata/file_inventory.json) records **47 generated files, 18,531,916 bytes excluding itself**, in directories pilot, confirm, real, logs and metadata. It includes every relative path, size and SHA-256.
+The recursive [file_inventory.json](https://github.com/heri-espino/trendestimation/blob/results/paper-c-exp006-pc08-42639588117-a1/paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1/metadata/file_inventory.json) records **47 generated files, 18,531,914 bytes excluding itself**, in directories pilot, confirm, real, logs and metadata. It includes every relative path, size and SHA-256.
 
 Each stage directory preserves complete files named selections_rows.csv, forecasts_rows.csv, jerk_rows.csv, cv_rows.csv, summary.csv, paired_comparisons.csv, selection_diagnostics.csv, shrinkage_diagnostics.csv, regime_forecast_summary.csv, run_manifest.json, RESULTS.md, DIAGNOSTICS.md, plus known_jerk_summary.csv for synthetic stages. The metadata directory contains executed source commit, exact source paths, dependency freeze and file checksums; logs contains all three execution transcripts and preflight tests.
 
@@ -34,7 +34,7 @@ Every original trial was evaluated. Earlier Experiment005/004 forecast rows were
 
 (1) Joint GLS-mean-adjusted Gaussian REML with a continuous scalar lambda search and exact zero/infinite limits; (2) the same corrected REML restricted to **exactly** 15 predeclared normalized smoothness candidates; (3) fixed-mu=0 Gaussian profiled likelihood with continuous lambda search; (4) raw sample third-difference mean plug-in and continuous fixed-mu Gaussian likelihood; (5) training global cubic OLS mean plug-in and continuous fixed-mu Gaussian likelihood; (6) training-only rolling-origin validation of alpha in {0,0.5,1} multiplying the full-history joint-REML reference mean, with lambda fixed by joint REML. Every method uses the same d=3 PLS smoother and both three-point and local-25 forecast rules, evaluated at 0.5, 1 and 2 seconds.
 
-**Audit correction:** Windows workflow #42638094948 initially included an undeclared zero boundary in the nominal grid comparator. Its historical branch and logs are preserved, but not used for this ledger. Corrected run #42639184183 restricts the grid to exactly the declared S values. The continuous optimizer still evaluates both endpoint limits. The mesh/refinement search is **not certified global**.
+**Audit correction:** Windows workflow #42638094948 initially included an undeclared zero boundary in the nominal grid comparator. Its historical branch and logs are preserved, but not used for this ledger. Corrected run #42639588117 restricts the grid to exactly the declared S values. The continuous optimizer still evaluates both endpoint limits. The mesh/refinement search is **not certified global**.
 
 ## Known discrete jerk recovery — simulation confirmation
 
