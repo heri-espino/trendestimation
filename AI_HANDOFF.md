@@ -1,5 +1,28 @@
 # AI_HANDOFF — latest
 
+**Newest mathematical clarification (2026-11-09):**
+The author intended the fixed-reference Gaussian restricted
+likelihood for (z=Dy-mumathbf1) with covariance
+(sigma_u^2(I+lambda DD^	op)).
+Read [the complete proof and unknown-μ caveat](paper/ngsim-jerk-case-study/notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md).
+The repo's existing criterion="mle" is **exactly the same
+objective up to −log|DDᵀ|**; PLS MLE comparisons in
+Experiments004/005 thus already used the intended
+fixed-μ Gaussian variance-ratio estimation *on a 15-value
+smoothness grid*. Do not rerun previous experiments solely
+to replace this algebraic representation. Data-derived
+μ in these experiments is held fixed when scoring lambda
+and is **not mean-adjusted REML**. A correct additional
+unknown-mean REML would require GLS estimation μ_hat(lambda)
+and a reduced (n−d−1) residual dimension plus determinant
+term; treat as separate future science. Guerrero 2007
+provided the variance-ratio PLS estimator without a Gaussian
+likelihood hypothesis. The independent PCAG103A-08
+Experiment005 workflow previously marked queued has now
+**completed successfully**; verify its archived manifests
+before making detailed cross-platform comparisons.
+
+
 **Newest verified Paper C simulations (2026-11-08):** [Experiment005 RUN_LEDGER](paper/ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md) and [GitHub-hosted success #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064): 96 pilot + **1,296 disjoint confirmation trials** with analytic known jerk, complete clean/noisy per-trial x/v/a/j and all first-party outputs preserved in Git branch **results/paper-c-exp005-cloud-42547883064-a1**. Confirm: **12,960 valid GCV/profile-ML selections, 15,552 known-jerk fits, 89,424 future clean-position forecasts, 62,208 fit/reference crossings, zero invalid**. File inventory: 33 generated files / ~44.8MB. Pooled historical jerk RMSE: PLS profile-ML+global cubic OLS mean **2.918 m/s³** vs GCV spline **60.913**, SG **36.829**, PLS GCV zero **68.242**. Profile-ML PLS zero-mu local25 future RMSE **0.276/0.413/0.861 m** at 0.5/1/2s vs GCV spline **0.567/0.971/2.170 m**. Nonzero global OLS mu helps constant ±jerk, hurts sign reversal; raw sample mu is unstable. **All of these are synthetic DGP-conditional results**, not empirical physical jerk validation or population inference. Actual 200-episode NGSIM Experiment004 favored the spline. The separately configured PCAG103A-08 [Windows workflow #42547250403](https://github.com/heri-espino/trendestimation/actions/runs/42547250403) remained queued: **NO VM simulation completion is claimed**. Use [sync_cloud_results_to_vm.ps1](paper/ngsim-jerk-case-study/experiments/experiment005/sync_cloud_results_to_vm.ps1) to copy/verify the complete cloud archive on VM, clearly labeling it as imported (not rerun). Older notes below are historical and superseded by this record.
 
 
