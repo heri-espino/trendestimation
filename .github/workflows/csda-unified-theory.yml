@@ -1,0 +1,120 @@
+name: Unified CSDA theory — verify and compile Elsevier CAS
+
+on:
+  push:
+    branches:
+      - paper/csda-unified-theory
+    paths:
+      - ".github/workflows/csda-unified-theory.yml"
+      - "paper/csda-unified-theory/main.tex"
+      - "paper/csda-unified-theory/sections/**"
+      - "paper/csda-unified-theory/verify_theory.py"
+      - "paper/csda-unified-theory/README.md"
+      - "paper/csda-unified-theory/AGENTS.md"
+      - "paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md"
+      - "paper/csda-computational-costs/references.bib"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csda-unified-theory-build
+  cancel-in-progress: true
+
+jobs:
+  verify-and-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact source branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run deterministic mathematical checks only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install numpy scipy
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-unified-theory/verify_theory.py
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-computational-costs/verify_theory.py
+          test -s paper/csda-computational-costs/references.bib
+      - name: Install exact Elsevier CAS compatible TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/csda-unified-theory/$f"
+          done
+      - name: Compile and verify journal manuscript
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd paper/csda-unified-theory
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          test -s main.log
+          pdfinfo main.pdf | head -20
+          if grep -Eq "Citation .* undefined|There were undefined references" main.log; then
+            echo "Unresolved references or citations in final PDF"
+            exit 1
+          fi
+          if grep -Eq "LaTeX Error|Fatal error occurred" main.log; then
+            echo "LaTeX error in manuscript"
+            exit 1
+          fi
+          sha256sum main.tex sections/*.tex verify_theory.py README.md \
+            AGENTS.md SCOPE_AND_PROOF_AUDIT.md \
+            ../csda-computational-costs/references.bib \
+            ../els-cas-templates/cas-dc.cls \
+            ../els-cas-templates/cas-common.sty \
+            ../els-cas-templates/cas-model2-names.bst main.pdf main.log \
+            > unified_source_sha256.txt
+          git rev-parse HEAD > unified_source_commit.txt
+      - name: Upload compiled paper, source and build provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-unified-theory-build
+          path: |
+            paper/csda-unified-theory/main.tex
+            paper/csda-unified-theory/sections/
+            paper/csda-unified-theory/README.md
+            paper/csda-unified-theory/AGENTS.md
+            paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md
+            paper/csda-unified-theory/verify_theory.py
+            paper/csda-unified-theory/main.pdf
+            paper/csda-unified-theory/main.log
+            paper/csda-unified-theory/unified_source_sha256.txt
+            paper/csda-unified-theory/unified_source_commit.txt
+          if-no-files-found: warn
+          retention-days: 60
+      - name: Commit verified PDF and provenance to isolated paper branch
+        if: success() && github.ref == 'refs/heads/paper/csda-unified-theory'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/csda-unified-theory/main.pdf \
+            paper/csda-unified-theory/main.log \
+            paper/csda-unified-theory/unified_source_sha256.txt \
+            paper/csda-unified-theory/unified_source_commit.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "paper: archive compiled unified CSDA theory and source provenance [skip ci]"
+            git fetch origin "$GITHUB_REF_NAME"
+            if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+              echo "Concurrent paper changes detected; refuse overwrite"
+              exit 1
+            fi
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
