@@ -118,3 +118,29 @@ def test_guerrero_existing_plug_in_not_same_as_unknown_mean_reml():
     proper=model.score(v,5)[0]
     assert np.isfinite(ml) and np.isfinite(proper)
     assert not np.isclose(ml,proper,rtol=1e-8,atol=1e-8)
+
+
+def test_grid_search_evaluates_only_declared_candidate_penalties():
+    s = TrendSmoother(80, order=3)
+    model = DifferenceLikelihood(s)
+    rng = np.random.default_rng(111)
+    y = 18*np.arange(80)*0.1 + rng.normal(0,.12,80)
+    # The grid does NOT include zero or infinity in this regression test.
+    candidate_lambdas = tuple(
+        float(s.lambda_for_smoothness(S)) for S in (.1,.4,.8)
+    )
+    chosen = model.optimize(y, search="grid", grid=candidate_lambdas)
+    assert chosen.lambda_ in candidate_lambdas
+    assert chosen.n_evaluations == len(candidate_lambdas)
+    assert chosen.position == "finite_grid"
+
+
+def test_declared_s_grid_may_explicitly_include_infinity_but_not_zero():
+    s = TrendSmoother(80,order=3)
+    model = DifferenceLikelihood(s)
+    y = 14*np.arange(80)*.1 + np.random.default_rng(24).normal(0,.1,80)
+    grid = tuple(s.lambda_for_smoothness(v) for v in (.05,.5,1.0))
+    fit = model.optimize(y,search="grid",grid=grid)
+    assert fit.lambda_ in grid
+    assert fit.lambda_ != 0
+    assert fit.n_evaluations==3
