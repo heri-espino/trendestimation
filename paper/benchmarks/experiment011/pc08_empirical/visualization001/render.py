@@ -243,10 +243,10 @@ def render(timing,pairs,boots,coords,cells,out):
     example=cells[(cells.case_id=="pilot_gcv_n64_d1_m100")&
                   (cells.phase_workers==24)&(cells.coordinate=="direct_s")&
                   (cells.method.isin(["banded_cholesky","spectral_svd","naive_inverse"]))]
-    workloads=[("one_s_one_series","1 candidate\n1 series"),
-               ("one_s_multiple_series","1 candidate\n3 series"),
-               ("grid_one_series","100 candidates\n1 series"),
-               ("grid_multiple_series","100 candidates\n3 series")]
+    workloads=[("one_s_one_series","1 x 1"),
+               ("one_s_multiple_series","1 x 3"),
+               ("grid_one_series","100 x 1"),
+               ("grid_multiple_series","100 x 3")]
     phases=[("median_method_setup_s","Setup"),("median_s_to_lambda_s",r"$S\!\to\!\lambda$ mapping"),
             ("median_candidate_evaluation_s","Scoring")]
     fig,axs=plt.subplots(1,3,figsize=(9,3.5),sharey=True)
@@ -264,9 +264,9 @@ def render(timing,pairs,boots,coords,cells,out):
         ax.set_title(N[method],fontsize=9,weight="bold",color=C[method])
         ax.grid(axis="y",alpha=.15)
     axs[0].set_ylabel("Component-wise median time (s)",fontsize=8.5)
-    fig.suptitle("Time allocation across smoothing-selection workloads",fontsize=10.5,weight="bold",y=.97)
+    fig.suptitle("Time allocation across workloads (candidates x series)",fontsize=10.5,weight="bold",y=.97)
     fig.legend(handles=[Patch(facecolor=str(x),label=l) for x,l in
-                 zip(["#d0d7e1","#8293aa","#344f72"],[q[1] for q in phases])],
+                 zip(["#d0d7e1","#8293aa","#344f72"],["Light: setup","Medium: mapping","Dark: scoring"])],
                loc="lower center",bbox_to_anchor=(.5,.04),ncol=3,frameon=False,fontsize=8)
     save(fig,figdir,"fig04_workload_stacked",ledger,
          "Representative first-order GCV case; stacked component medians, not the median of the total")
@@ -291,7 +291,7 @@ def render(timing,pairs,boots,coords,cells,out):
     cases.sort(key=lambda r:(r[1],r[2],r[3],r[4]))
     assert len(cases)==9
     fig,ax=plt.subplots(figsize=(7.65,4.4))
-    fig.subplots_adjust(left=.35,right=.98,bottom=.18,top=.88)
+    fig.subplots_adjust(left=.35,right=.98,bottom=.24,top=.88)
     y=np.arange(len(cases))
     for i,(case,crit,n,d,M) in enumerate(cases):
         for meth,offset in (("banded_cholesky",-.17),("spectral_svd",.17)):
@@ -310,8 +310,8 @@ def render(timing,pairs,boots,coords,cells,out):
     ax.set_xlabel("Fraction of complete grid evaluations",fontsize=8.6)
     ax.grid(axis="x",alpha=.16)
     ax.set_title("Observed failure of the banded complete-grid pipeline",fontsize=10.5,weight="bold")
-    ax.legend(handles=[Patch(facecolor=C[k],label=N[k]) for k in ("banded_cholesky","spectral_svd")],
-              loc="lower center",bbox_to_anchor=(.5,-.18),ncol=2,frameon=False,fontsize=8)
+    fig.legend(handles=[Patch(facecolor=C[k],label=N[k]) for k in ("banded_cholesky","spectral_svd")],
+               loc="lower center",bbox_to_anchor=(.5,.045),ncol=2,frameon=False,fontsize=8)
     save(fig,figdir,"fig05_grid_completion",ledger,
          "Nine KKT-failure configurations: 100% single-candidate completion for both backends; 0%/100% grid completion")
  
@@ -321,7 +321,7 @@ def render(timing,pairs,boots,coords,cells,out):
     tab=sub.groupby(["n","method","failure"],observed=True).size().unstack(fill_value=0)
     keys=[(n,m) for n in (256,1024,2048,4096) for m in ("banded_cholesky","spectral_svd")]
     fig,ax=plt.subplots(figsize=(7.5,3.7))
-    fig.subplots_adjust(left=.22,right=.98,bottom=.18,top=.88)
+    fig.subplots_adjust(left=.22,right=.98,bottom=.24,top=.88)
     bottom=np.zeros(len(keys))
     for status in ("complete","kkt","inversion","budget"):
         vals=np.array([tab.loc[(n,m),status] if status in tab.columns else 0 for n,m in keys],float)
@@ -340,10 +340,10 @@ def render(timing,pairs,boots,coords,cells,out):
     ax.grid(axis="x",alpha=.16)
     ax.set_title("Fourth-order numerical acceptance by method and sample length",
                  fontsize=10.4,weight="bold")
-    ax.legend(handles=[Patch(facecolor="#7e8c99",label="Complete"),
+    fig.legend(handles=[Patch(facecolor="#7e8c99",label="Complete"),
                        Patch(facecolor="#eee",edgecolor="#7e8c99",hatch="///",label="KKT"),
                        Patch(facecolor="#eee",edgecolor="#7e8c99",hatch="xx",label="Smoothness inversion")],
-              bbox_to_anchor=(.5,-.18),loc="lower center",frameon=False,ncol=3,fontsize=8)
+               bbox_to_anchor=(.5,.035),loc="lower center",frameon=False,ncol=3,fontsize=8)
     save(fig,figdir,"fig06_order4_failures",ledger,
          "Shared fourth-order inversion failures and banded-specific post-solve KKT rejections")
 
