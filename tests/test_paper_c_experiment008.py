@@ -14,7 +14,7 @@ module=importlib.util.spec_from_file_location("paper_c_exp008_test",HERE/"run.py
 assert module is not None and module.loader is not None
 app=importlib.util.module_from_spec(module)
 module.loader.exec_module(app)
-from trendestimation import TrendSmoother
+from trendestimation import TrendSmoother  # noqa: E402
 
 
 def fixture():
@@ -53,8 +53,10 @@ def test_edf_matched_tsvd_rank_is_fair_soft_to_hard_filter_baseline():
     for lam in (0,1e-3,1,1e3,float("inf")):
         r=svd.matched_rank(lam)
         assert 0<=r<=svd.m
-        if lam==0:assert r==svd.m
-        if np.isinf(lam):assert r==0
+        if lam==0:
+            assert r==svd.m
+        if np.isinf(lam):
+            assert r==0
         if np.isfinite(lam):
             soft=int(np.rint(np.sum(1/(1+lam*svd.sigma**2))))
             assert r==soft
