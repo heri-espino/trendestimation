@@ -172,7 +172,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
-          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42634293076'
+          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
           foreach ($file in @('analysis_summary.json','empirical_results.tex','claim_to_data_ledger.json',
             'figures/fig01_reliability.pdf','figures/fig02_paired_cv_gcv.pdf',
             'figures/fig03_mapping_cost.pdf','figures/fig04_workloads.pdf')) {
