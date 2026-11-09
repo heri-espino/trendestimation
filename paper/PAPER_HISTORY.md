@@ -40,7 +40,7 @@ Last updated: **November 9, 2026**. Compilation only: no benchmark reruns, synth
 
 **PDF:** [freshly compiled 7-page PDF](https://github.com/heri-espino/trendestimation/blob/artifacts/manuscript-compile-ngsim-20261109/paper/builds/history/ngsim-20261109/main.pdf). [Successful standalone compile #42664361469](https://github.com/heri-espino/trendestimation/actions/runs/42664361469). PDF SHA-256: **356410c4e7e83d038a3829a68250a5e43753c399a61991b65c77a4f0402057bd**. [Persistent archival folder, log and manifest](https://github.com/heri-espino/trendestimation/tree/artifacts/manuscript-compile-ngsim-20261109/paper/builds/history/ngsim-20261109).
 
-**Quality status:** compilable draft with overfull-box warnings. Although the branch contains later experiments, its manuscript main.tex is identical in Experiment001, 004, 005, 006 and 007 branches; newer experimental results were not silently inserted into the manuscript.
+**Quality status:** compilable draft with overfull-box warnings. The current source also repeats one sentence about seven numerical implementations in the abstract (in paper/ngsim-jerk-case-study/main.tex); this should be corrected in the active manuscript branch before submission, not silently edited in a compilation archive. Although the branch contains later experiments, its manuscript main.tex is identical in Experiment001, 004, 005, 006 and 007 branches; newer experimental results were not silently inserted into the manuscript.
 
 ## Earlier research-paper versions (preserved, not recompiled in this batch)
 
