@@ -17,9 +17,10 @@
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-We apply fini\begin{abstract}
 Third differences of recorded vehicle position provide a physically interpretable, but noise-sensitive, proxy for jerk. We study third-order penalized least-squares (PLS) trend estimation through the normalized smoothness index $S$, which controls the effective number of fitted degrees of freedom and, under a Gaussian variance-ratio model, represents the average spectral fraction of differenced variation attributable to observation error. We validate this interpretation in a paired factorial simulation with known clean positions and jerk: 1,944 confirmatory noise--dynamics conditions, 72 independent random-innovation parent draws, and four smoothing selectors. Under correctly specified independent Gaussian errors, joint mean-adjusted restricted likelihood yields correlation $0.965$ between selected and theoretical $S$, with mean absolute calibration error $0.0115$. Correlated observation errors increase this error substantially; and equal proportional scaling of observation noise and jerk innovations leaves $S$ unchanged despite different absolute sensor precision. A separate known-jerk simulation compares reference-mean policies and forecast continuations; no selector is uniformly best for both reconstruction and prediction. Finally, chronological extrapolation is assessed on camera-derived Federal Highway Administration NGSIM positions, including a 200-episode follow-up in which a GCV smoothing spline outperforms the investigated PLS forecasting variants in pooled one-second RMSE. We distinguish regularization, relative noise attribution, physical jerk accuracy, and future-position prediction. The contribution is a reproducible, model-conditional characterization of the index for vehicle kinematics, not a new PLS estimator or a universal sensor-quality score.
-\end{abstract}ndexed trend \sep jerk \sep real-world observations \sep NGSIM \sep penalized least squares \sep forecasting \sep numerical validation
+\end{abstract}
+\begin{keywords}
+Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative noise precision \sep calibration \sep NGSIM
 \end{keywords}
 \maketitle
 \input{sections/introduction}
