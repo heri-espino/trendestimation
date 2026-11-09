@@ -1,5 +1,30 @@
 # AI_HANDOFF — latest
 
+**Paper C expanded real NGSIM run COMPLETE (2026-11-08):**
+[Experiment004 run ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
+and [successful PCAG103A-08 #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+document the 100 US-101 plus 100 I-80 episodes, downloaded
+400,000 raw source CSV rows in 20 paginated pages, 6,600/6,600
+valid forecast records, 800 model selections, and 38 VM files
+with path/SHA inventory. The permanent VM root is
+`C:\Users\175199\Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`,
+and the compact complete rows + file inventory were independently
+archived in Git branch `results/paper-c-exp004-pc08-42538556206-a1`.
+The revised existing paper compiled on the VM. **Result: tuned
+GCV cubic splines with quadratic continuation outperform the
+tested PLS methods in pooled future-position RMSE at all
+three horizons**; profile marginal ML is only modestly different
+from GCV. This reverses the smaller earlier pilot's advantage.
+There are only **five coarse recording-session proxies** across
+200 convenience-sampled episodes, reused numeric Vehicle_IDs
+and no ground-truth physical jerk; bootstrap intervals are
+exploratory, not population-level inference. No prior Paper C
+experiments, source data or other paper outputs were overwritten.
+Review [stacked PR #122](https://github.com/heri-espino/trendestimation/pull/122)
+before merging anything. The older “in progress” handoff
+below is a historical entry and is superseded by this success.
+
+
 **Current Paper C run (2026-11-08):** The author selected only real
 NGSIM data, not known-jerk simulations, and asked to preserve
 every generated directory/data file/results file on the university
