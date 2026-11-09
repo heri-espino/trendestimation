@@ -1,0 +1,32 @@
+{
+  "paper": "Springer Computational Statistics empirical",
+  "source_branch": "paper/springer-empirical-tensor-pc08",
+  "upstream_source_sha": "d2158e065a070aa270ae866e9127b13ef4acad34",
+  "build_source_sha": "bfd7eaf2d9411cdb4ccae048f069f91681873a76",
+  "run_id": "42664292757",
+  "runner": "GitHub Actions 1000016993",
+  "pdf_sha256": "1502c8f5d3172b55f3aed0fa055ce772d11de2b5622fca060acf1f8ca3bb9017",
+  "input_sha256": {
+    "paper/main.tex": "02fc9fd86965b06c325494cef275a30440c20852cb36bd46d401b6c14f99b581",
+    "paper/bibliografia.bib": "e531d6bfd88ab5288915d360f478aea7669d368be454a26807b420bdc859a2dd",
+    "paper/criteria_table.tex": "f80118cba903c6c17fdfc21fccb87a313428e4c4099b1d4aeeb6e7ede1f9f7cc",
+    "paper/sections/experiment010_three_backend.tex": "66bb8c77af3bb639b1e280b6a3545d9522a91f0ae870e8e6a84faa4d5f2cd9b4",
+    "paper/sections/experiment011_methods.tex": "6f6a45911a75cbb5b9c83936b45b87509b71e7595f9134750916d418c566ac1d",
+    "paper/sections/experiment011_results.tex": "02f366fcf6e9466776ad27e22552327d7d5f9feb4a72cdcdfdad5ca3e1532dd8",
+    "paper/sections/experiment011_robustness.tex": "5574108c8fe1a72fcc20448f5ecd549cdbf2f1fe33209d46564c2ff58b12d6e2",
+    "paper/sections/full_s_factorial.tex": "33c7c5eaaef4abf070ba5f1813f8548b6a4a12e0f3ac3d44a7a7f1e676a23bef",
+    "paper/sections/gcv_grid_reuse.tex": "997ce0e0294507976e159388552c5ea618b041c4fd13c7b34a1386dff7d878a2",
+    "paper/sections/high_order_numerics.tex": "660ca7c387f3beba2172f2fa70e63b01393533df2e0457905db3cc6bdd0d4335",
+    "paper/sections/kernel_derivatives.tex": "e14e1e597b42e2a12c7dc760f0bae3732d4b3ca883e0b2031796fcc7d7094c9b",
+    "paper/sections/likelihood_mu.tex": "cc8c5db038bdddd3e49ff770245ee30c5a9d10fe0ecd760e46873115a7675c76",
+    "paper/sections/mauna_loa.tex": "19d55e14678bfdf776528e12ec7e558476ca96f32510cb39656cd443e5a9c3fb",
+    "paper/sections/selection_visuals.tex": "d6c84818f686d80e1a6d25b06b5e512cb08829e8fd7b3da7fff042d58c9c0ad2",
+    "paper/sections/smoothness_coordinate_search.tex": "2e3ab1b338210ea59fb625dd22d73313f4bbb09eeb246671f618b054e5528edf",
+    "paper/sections/smoothness_speed.tex": "bcb4f9a53b7ad6b01a7fbb8be4f02a2c1ad0dd615ef19673a1bdf602f768b2a5",
+    "paper/sections/timing_experiments.tex": "ab5b195fae32e804e4f5a31d4622cae7f87a644be2281c63b56f9d14bfb4e51a",
+    "paper/sections/windows_full_s_generated.tex": "0acb70d265cd6e0423b35000a6e2f766811ee2075f3b6451b4fc31a7f89d4ea7",
+    "paper/sections/windows_full_s_results.tex": "a081beb3af16fb3220ee9382442e566de28e414219536e21b110b25355954def"
+  },
+  "source_only_build": true,
+  "benchmarks_executed": false
+}
