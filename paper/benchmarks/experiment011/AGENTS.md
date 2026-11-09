@@ -1,5 +1,7 @@
 # Experiment011 — controlled Springer complete-criterion runtime study
 
+**Experiment011 completion update (2026-11-09):** The author reports **2813/2813 case-seed jobs recorded, remaining 0**, on the Windows VM. Read the [completed-campaign handoff](handoff/COMPLETION_HANDOFF.md) and [Springer analysis prompt](handoff/SPRINGER_ANALYSIS_AGENT_PROMPT.md) before following older pending-run instructions. Final raw data acquisition, verified backup and numerical/timing analysis remain pending; GitHub still has only the inspected 2338-job checkpoint. Preserve local raw files and use the documented no-automatic-publication backup procedure. These observations include 24/1/12-worker phases and must not be pooled as isolated-latency measurements.
+
 **Session continuation (2026-11-04): read [SESSION_HANDOFF.md](../../SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
 
 **Do not edit or launch before reading:** root `README.md`, `AGENTS.md`, `AI_HANDOFF.md`, `paper/PUBLICATION_MAP.md`, `paper/SPRINGER_READINESS.md`, `paper/benchmarks/experiment006/{README.md,run.py,selected_inverse.py}`, `paper/benchmarks/experiment008/README.md`, `paper/benchmarks/experiment009/README.md`, `paper/benchmarks/experiment010/publication_evidence/README.md`, then `cases.json`, `campaign.py`, `verify.py`, the tests and all relevant open PRs.
