@@ -109,7 +109,7 @@ def make_figure(folder,rows):
                  fontsize=10.5,pad=12,weight="bold")
     ax.legend(handles=[Line2D([0],[0],marker="o",color=colors[k],lw=0,
                               label=k,markersize=6) for k in ("CV","GCV")],
-              loc="lower right",frameon=False,ncol=2,fontsize=8)
+              loc="lower left",frameon=False,ncol=2,fontsize=8)
     fig.tight_layout()
     folder.mkdir(parents=True,exist_ok=True)
     fig.savefig(folder/"paired_cv_gcv_publication.pdf",bbox_inches="tight",pad_inches=.10)
