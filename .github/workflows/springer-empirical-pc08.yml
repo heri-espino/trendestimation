@@ -194,6 +194,26 @@ jobs:
               throw "Missing journal-facing table/figure $file"
             }
           }
+          $viz = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          foreach ($name in @('evidence.json',
+            'figures/fig01_reliability_stacked.pdf',
+            'figures/fig02_runtime_distributions.pdf',
+            'figures/fig03_mapping_distributions.pdf',
+            'figures/fig04_workload_stacked.pdf',
+            'figures/fig05_grid_completion.pdf',
+            'figures/fig06_order4_failures.pdf',
+            'figures/fig07_crossover_distributions.pdf',
+            'figures/fig08_memory_scaling.pdf',
+            'tables/table01_runtime.tex',
+            'tables/table02_reliability.tex',
+            'tables/table03_grid_failures.tex')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $viz $name))) {
+              throw "Missing peer-reviewed journal graphic/table $name"
+            }
+          }
+          $visualEvidence = Get-Content -LiteralPath (Join-Path $viz 'evidence.json') -Raw | ConvertFrom-Json
+          if ($visualEvidence.complete -ne 76220 -or $visualEvidence.kkt -ne 9096 -or
+              @($visualEvidence.figures).Count -ne 8) { throw 'Figure source integrity check failed' }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
       - name: Fresh Springer sn-jnl compile with existing reproducible builder
