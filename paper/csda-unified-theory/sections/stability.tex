@@ -35,7 +35,8 @@ Since $A_\lambda$ is SPD, failure of an ordinary float64 primal Cholesky routine
 We define the valid method set for a workload by
 \begin{equation}\label{eq:valid}
 \mathfrak A_{\rm valid}
-=\{\mathcal A:\text{memory, precision, convergence,
-criterion and endpoint checks pass}\}.
+=\{\mathcal A:\operatorname{valid}(\mathcal A)=1\}.
 \end{equation}
+Here validity requires passing the memory, precision,
+convergence, criterion and endpoint checks.
 A nominally inexpensive method outside this set cannot be declared the computational winner.
