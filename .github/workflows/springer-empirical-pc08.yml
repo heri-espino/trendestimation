@@ -466,7 +466,7 @@ jobs:
             throw "Frozen source-to-figure numerical provenance mismatch"
           }
           foreach ($name in @('table01_runtime.tex','table02_reliability.tex','table03_grid_failures.tex')) {
-            if (-not (Test-Path -LiteralPath (Join-Path $out 'tables' $name))) {
+            if (-not (Test-Path -LiteralPath (Join-Path (Join-Path $out 'tables') $name))) {
               throw "Missing LaTeX table $name"
             }
           }
