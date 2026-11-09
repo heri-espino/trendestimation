@@ -178,6 +178,16 @@ jobs:
             'figures/fig03_mapping_cost.pdf','figures/fig04_workloads.pdf')) {
             if (-not (Test-Path -LiteralPath (Join-Path $data $file))) { throw "Missing frozen empirical input $file" }
           }
+          $robust = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          foreach ($file in @('summary.json','claim_to_data_ledger.json',
+            'figures/fig05_complete_grid_failure.pdf',
+            'figures/fig06_fourth_order_failure_modes.pdf',
+            'figures/fig07_single_vs_grid_speedups.pdf',
+            'figures/fig08_memory_policy.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $robust $file))) {
+              throw "Missing validated robustness figure/input $file"
+            }
+          }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
       - name: Fresh Springer sn-jnl compile with existing reproducible builder
@@ -278,3 +288,67 @@ jobs:
           git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
           if ($LASTEXITCODE -ne 0) { throw 'Cannot fast-forward source branch' }
           Write-Host 'Published repaired 21-file analysis artifact and permanent results branch'
+
+
+  robustness:
+    if: contains(github.event.head_commit.message, '[pc08-robustness]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Validate frozen tensor and render four robustness/memory figures
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner identity' }
+          $frozen = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          if (-not (Test-Path -LiteralPath (Join-Path $frozen 'timing_tensor.csv.gz'))) {
+            throw 'Frozen canonical timing tensor missing: no raw-data substitute permitted'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/robustness001/render.py --frozen $frozen --output $out
+          if ($LASTEXITCODE -ne 0) { throw 'Frozen robustness postprocessing failed; no large experiment was run' }
+          $s = Get-Content -LiteralPath (Join-Path $out 'summary.json') -Raw | ConvertFrom-Json
+          if ($s.kkt_failure_rows -ne 9096 -or @($s.robust_cases).Count -ne 9) {
+            throw 'KKT count or nine-case reliability signature mismatch'
+          }
+          if (@($s.figures).Count -ne 4) { throw 'Expected four supplementary figures' }
+          Write-Host "Validated KKT failures: $($s.kkt_failure_rows); figures: $(@($s.figures).Count)"
+      - name: Upload reproducible figures, source, tables and claim ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-robustness001
+          path: paper/benchmarks/experiment011/pc08_empirical/robustness001/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Publish new supplementary outputs to permanent and PR branches
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'summary.json'))) {
+            throw 'Cannot publish without new verified source-to-claim ledger'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage source/figures/derived tables' }
+          git commit -m 'experiment011: archive robustness001 failure maps, speedups and memory policy'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit analysis evidence' }
+          $archive = "results/experiment011-robustness001-pc08-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable evidence branch' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Scoped manuscript source advanced concurrently; immutable result is preserved' }
+          Write-Host "Published immutable evidence branch: $archive"
