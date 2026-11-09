@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "experiment_id": "experiment004",
+  "status": "completed_real_ngsim_expanded",
+  "completed_utc": "2026-11-09T00:10:04.802331+00:00",
+  "persistent_vm_results_dir": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment004\\run-42538556206-a1\\results",
+  "persistent_vm_data_dir": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment004\\run-42538556206-a1\\data",
+  "n_episodes": 200,
+  "by_site": {
+    "i-80": 100,
+    "us-101": 100
+  },
+  "n_forecast_rows": 6600,
+  "n_selections": 800,
+  "n_summary_rows": 99,
+  "n_paired_comparisons": 30,
+  "run_status_counts": {
+    "ok": 6600
+  },
+  "download_manifest_sha256": "13240d8f5798487d77e3f72f79a55666deb4371140625b8e48daec598a445859",
+  "selected_positions_sha256": "e6b594edd0cde7165302c4c7b65720645ec940122af23152db24f7eb1230598e",
+  "source_dataset_doi": "10.21949/1504477",
+  "source_repository_sha": "265f3e17fb3aabfcac608661c2e2f661ae578519",
+  "selection_criteria": [
+    "gcv",
+    "mle"
+  ],
+  "mle_definition": "profiled Gaussian marginal likelihood; mu conditional, not joint MLE",
+  "smoothing_grid": [
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    0.975,
+    0.99,
+    0.995,
+    1.0
+  ],
+  "reference_mean_policies": [
+    "zero",
+    "sample"
+  ],
+  "forecast_rules": [
+    "last3",
+    "local25",
+    "GCV spline Taylor2",
+    "Savitzky-Golay Taylor2",
+    "raw quadratic25"
+  ],
+  "forecast_horizons_frames": [
+    5,
+    10,
+    20
+  ],
+  "training_frames": 80,
+  "origin_frame": 100,
+  "dt_seconds": 0.1,
+  "bootstrap_seed": 20261108,
+  "bootstrap_reps": 2000,
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1",
+  "runner_name": "PCAG103A-08",
+  "github_run_id": "42538556206",
+  "primary_outcome": "recorded_future_position_mse_m2",
+  "jerk_ground_truth": false
+}

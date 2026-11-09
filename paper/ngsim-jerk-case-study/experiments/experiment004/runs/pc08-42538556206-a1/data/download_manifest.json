@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "retrieved_at_utc": "2026-11-09T00:09:52.191093+00:00",
+  "source_title": "FHWA Next Generation Simulation Vehicle Trajectories",
+  "official_doi": "10.21949/1504477",
+  "source_url": "https://data.transportation.gov/d/8ect-6jqj",
+  "license": "CC BY-SA 3.0; FHWA/USDOT attribution required",
+  "selection_type": "first eligible by ordered site, vehicle ID, and start timestamp",
+  "selection_does_not_use_future_forecast_errors": true,
+  "target_episodes_per_site": 100,
+  "origin_frame": 100,
+  "minimum_frames": 140,
+  "max_vehicle_id": 500,
+  "page_size": 20000,
+  "max_pages": 10,
+  "sites": [
+    {
+      "site": "us-101",
+      "source_rows_downloaded": 200000,
+      "pages": [
+        {
+          "site": "us-101",
+          "page": 0,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=0",
+          "file_relative_to_data": "raw/us-101/page0000.csv",
+          "sha256": "8ddf9a07291340418e8384124851aa4d5f1ec76391a6ec2b9243e3143f2fe864",
+          "bytes": 1083769,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 1,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=20000",
+          "file_relative_to_data": "raw/us-101/page0001.csv",
+          "sha256": "6dc90cecb909d89dd19b147635386f212526c717be439bfb9943a682f68de13c",
+          "bytes": 1099992,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 2,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=40000",
+          "file_relative_to_data": "raw/us-101/page0002.csv",
+          "sha256": "e12962b500fa1feae445f14789034436ca63402de63f2c797b9bb3cc07b4ed9c",
+          "bytes": 1100185,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 3,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=60000",
+          "file_relative_to_data": "raw/us-101/page0003.csv",
+          "sha256": "b76c5efc3c9ad3052274fec36ce9fc996d51bee7eb6ef0f64c86ef9a11f7a9d5",
+          "bytes": 1100695,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 4,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=80000",
+          "file_relative_to_data": "raw/us-101/page0004.csv",
+          "sha256": "f781d25f0d4ee679ec160cd39a09521fd5ddd7018ba13f1983c60d8212cec2fb",
+          "bytes": 1102290,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 5,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=100000",
+          "file_relative_to_data": "raw/us-101/page0005.csv",
+          "sha256": "5bf3a9ffa0b8f2df31d8aa15fb8e1f685cc4114f98f917b21b81a7bf1098844b",
+          "bytes": 1104495,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 6,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=120000",
+          "file_relative_to_data": "raw/us-101/page0006.csv",
+          "sha256": "c6ba3d1b25b16ec3d24a87787bdaac3020521fe1ea7aa93d3729253491fe9166",
+          "bytes": 1107106,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 7,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=140000",
+          "file_relative_to_data": "raw/us-101/page0007.csv",
+          "sha256": "2da460f29d5e074c78411802ca40a260ea8f0af97877df45b45ffb10a55e586c",
+          "bytes": 1116109,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 8,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=160000",
+          "file_relative_to_data": "raw/us-101/page0008.csv",
+          "sha256": "ed52533aabbe99ed9e86356a4b2139f7886fc64c1b2857516eab843f42b76c7a",
+          "bytes": 1130082,
+          "n_rows": 20000
+        },
+        {
+          "site": "us-101",
+          "page": 9,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27us-101%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=180000",
+          "file_relative_to_data": "raw/us-101/page0009.csv",
+          "sha256": "69b613627dddf8b9befb28448a5d45fc9f34152427c3d7c7ac0dddbabfa2d36e",
+          "bytes": 1132423,
+          "n_rows": 20000
+        }
+      ],
+      "pagination_exhausted": false,
+      "last_episode_dropped_if_capped": true,
+      "eligibility_counts_until_target": {
+        "ok": 100
+      },
+      "n_selected": 100,
+      "id_reuse_caveat": "Vehicle_ID can repeat; physical independence across sessions or recording episodes is not guaranteed."
+    },
+    {
+      "site": "i-80",
+      "source_rows_downloaded": 200000,
+      "pages": [
+        {
+          "site": "i-80",
+          "page": 0,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=0",
+          "file_relative_to_data": "raw/i-80/page0000.csv",
+          "sha256": "6b741f3009266b3dda0b85df258cbd1fa083898b30c6fdc2f2454374391aa268",
+          "bytes": 1053795,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 1,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=20000",
+          "file_relative_to_data": "raw/i-80/page0001.csv",
+          "sha256": "f361f8dfdba061c2030505451b044331c86257033fe6e396ddb8266509c740af",
+          "bytes": 1066920,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 2,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=40000",
+          "file_relative_to_data": "raw/i-80/page0002.csv",
+          "sha256": "1f3ad4af59dfea437c6877c2a77a39b020264d5ae78008e3ec8f962c6ba8033e",
+          "bytes": 1068039,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 3,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=60000",
+          "file_relative_to_data": "raw/i-80/page0003.csv",
+          "sha256": "cd600126edf877ebec437aab9a98e8079bcb87298b75c0498e911079ada34d1d",
+          "bytes": 1069124,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 4,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=80000",
+          "file_relative_to_data": "raw/i-80/page0004.csv",
+          "sha256": "9befb6cc542fd8491723783aded17a0d8b2d512a5602d25858c05871168ba9df",
+          "bytes": 1071508,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 5,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=100000",
+          "file_relative_to_data": "raw/i-80/page0005.csv",
+          "sha256": "a47677846aacc90aa976ef456fa71d7552553c0df32996605ca915c7d728f9c3",
+          "bytes": 1088918,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 6,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=120000",
+          "file_relative_to_data": "raw/i-80/page0006.csv",
+          "sha256": "ed726ac0477d10d2d44f41e7e86d04aaa76340960a0b808e96f6311f09e7721b",
+          "bytes": 1092729,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 7,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=140000",
+          "file_relative_to_data": "raw/i-80/page0007.csv",
+          "sha256": "d20b5d74501291c467e43d3b1e2534e94c7abf47fdbfea111cc4e3c979313a4f",
+          "bytes": 1093528,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 8,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=160000",
+          "file_relative_to_data": "raw/i-80/page0008.csv",
+          "sha256": "ed5c68cf78f61f1b02194e2e89381e76fe8bc1c7343308f9cbb593ccd9c03036",
+          "bytes": 1096364,
+          "n_rows": 20000
+        },
+        {
+          "site": "i-80",
+          "page": 9,
+          "url": "https://data.transportation.gov/resource/8ect-6jqj.csv?%24select=vehicle_id%2Cframe_id%2Cglobal_time%2Clocal_y%2Clocal_x%2Clocation&%24where=location+%3D+%27i-80%27+AND+vehicle_id+%3E%3D+1+AND+vehicle_id+%3C%3D+500&%24order=vehicle_id+ASC%2C+global_time+ASC%2C+frame_id+ASC&%24limit=20000&%24offset=180000",
+          "file_relative_to_data": "raw/i-80/page0009.csv",
+          "sha256": "01ac585c2844d7dbbcf3e7815eea0b158ad535c1b3b9725c6babdfbf437b0cca",
+          "bytes": 1096245,
+          "n_rows": 20000
+        }
+      ],
+      "pagination_exhausted": false,
+      "last_episode_dropped_if_capped": true,
+      "eligibility_counts_until_target": {
+        "ok": 100
+      },
+      "n_selected": 100,
+      "id_reuse_caveat": "Vehicle_ID can repeat; physical independence across sessions or recording episodes is not guaranteed."
+    }
+  ],
+  "episode_count": 200,
+  "selected_positions_csv_sha256": "e6b594edd0cde7165302c4c7b65720645ec940122af23152db24f7eb1230598e",
+  "selected_positions_csv_bytes": 10694695,
+  "reference_sample_dt_seconds": 0.1,
+  "unit_conversion": "NGSIM Local_Y/Local_X in feet; multiply by exactly 0.3048",
+  "uniqueness_warning": "Episode IDs are (site, vehicle_id, start_ms), NOT certified unique physical vehicle identities."
+}

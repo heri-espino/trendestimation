@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "run_status": "evaluation_and_compilation_complete",
+  "recorded_utc": "2026-11-09T00:10:17.767661+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment004\\run-42538556206-a1",
+  "source_commit": "265f3e17fb3aabfcac608661c2e2f661ae578519",
+  "directory_paths_relative_to_root": [
+    "build",
+    "data",
+    "data/raw",
+    "data/raw/i-80",
+    "data/raw/us-101",
+    "logs",
+    "metadata",
+    "results"
+  ],
+  "files": [
+    {
+      "relative_path": "build/build_manifest.json",
+      "bytes": 4982,
+      "sha256": "69f8f1e37ee1a51588705dea5f882446b416b61563f1bc48cc571b338a1a53da"
+    },
+    {
+      "relative_path": "build/ngsim.log",
+      "bytes": 63765,
+      "sha256": "715e47dc3b61c16e41c47ec003af0d8af6e2c47721e085f2f447f3bcf628d2c2"
+    },
+    {
+      "relative_path": "build/ngsim.pdf",
+      "bytes": 488561,
+      "sha256": "fb035512271869657640e21c4baa06a8d67053e9724b46d4bcc0b3e90ee504a5"
+    },
+    {
+      "relative_path": "data/download_manifest.json",
+      "bytes": 14070,
+      "sha256": "13240d8f5798487d77e3f72f79a55666deb4371140625b8e48daec598a445859"
+    },
+    {
+      "relative_path": "data/episode_catalog.json",
+      "bytes": 48773,
+      "sha256": "32639acdd3098627ef20b65d0a78fdff06755729dbd0447e5fed2e5ffda3d49a"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0000.csv",
+      "bytes": 1053795,
+      "sha256": "6b741f3009266b3dda0b85df258cbd1fa083898b30c6fdc2f2454374391aa268"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0001.csv",
+      "bytes": 1066920,
+      "sha256": "f361f8dfdba061c2030505451b044331c86257033fe6e396ddb8266509c740af"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0002.csv",
+      "bytes": 1068039,
+      "sha256": "1f3ad4af59dfea437c6877c2a77a39b020264d5ae78008e3ec8f962c6ba8033e"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0003.csv",
+      "bytes": 1069124,
+      "sha256": "cd600126edf877ebec437aab9a98e8079bcb87298b75c0498e911079ada34d1d"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0004.csv",
+      "bytes": 1071508,
+      "sha256": "9befb6cc542fd8491723783aded17a0d8b2d512a5602d25858c05871168ba9df"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0005.csv",
+      "bytes": 1088918,
+      "sha256": "a47677846aacc90aa976ef456fa71d7552553c0df32996605ca915c7d728f9c3"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0006.csv",
+      "bytes": 1092729,
+      "sha256": "ed726ac0477d10d2d44f41e7e86d04aaa76340960a0b808e96f6311f09e7721b"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0007.csv",
+      "bytes": 1093528,
+      "sha256": "d20b5d74501291c467e43d3b1e2534e94c7abf47fdbfea111cc4e3c979313a4f"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0008.csv",
+      "bytes": 1096364,
+      "sha256": "ed5c68cf78f61f1b02194e2e89381e76fe8bc1c7343308f9cbb593ccd9c03036"
+    },
+    {
+      "relative_path": "data/raw/i-80/page0009.csv",
+      "bytes": 1096245,
+      "sha256": "01ac585c2844d7dbbcf3e7815eea0b158ad535c1b3b9725c6babdfbf437b0cca"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0000.csv",
+      "bytes": 1083769,
+      "sha256": "8ddf9a07291340418e8384124851aa4d5f1ec76391a6ec2b9243e3143f2fe864"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0001.csv",
+      "bytes": 1099992,
+      "sha256": "6dc90cecb909d89dd19b147635386f212526c717be439bfb9943a682f68de13c"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0002.csv",
+      "bytes": 1100185,
+      "sha256": "e12962b500fa1feae445f14789034436ca63402de63f2c797b9bb3cc07b4ed9c"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0003.csv",
+      "bytes": 1100695,
+      "sha256": "b76c5efc3c9ad3052274fec36ce9fc996d51bee7eb6ef0f64c86ef9a11f7a9d5"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0004.csv",
+      "bytes": 1102290,
+      "sha256": "f781d25f0d4ee679ec160cd39a09521fd5ddd7018ba13f1983c60d8212cec2fb"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0005.csv",
+      "bytes": 1104495,
+      "sha256": "5bf3a9ffa0b8f2df31d8aa15fb8e1f685cc4114f98f917b21b81a7bf1098844b"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0006.csv",
+      "bytes": 1107106,
+      "sha256": "c6ba3d1b25b16ec3d24a87787bdaac3020521fe1ea7aa93d3729253491fe9166"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0007.csv",
+      "bytes": 1116109,
+      "sha256": "2da460f29d5e074c78411802ca40a260ea8f0af97877df45b45ffb10a55e586c"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0008.csv",
+      "bytes": 1130082,
+      "sha256": "ed52533aabbe99ed9e86356a4b2139f7886fc64c1b2857516eab843f42b76c7a"
+    },
+    {
+      "relative_path": "data/raw/us-101/page0009.csv",
+      "bytes": 1132423,
+      "sha256": "69b613627dddf8b9befb28448a5d45fc9f34152427c3d7c7ac0dddbabfa2d36e"
+    },
+    {
+      "relative_path": "data/selected_positions.csv",
+      "bytes": 10694695,
+      "sha256": "e6b594edd0cde7165302c4c7b65720645ec940122af23152db24f7eb1230598e"
+    },
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 456,
+      "sha256": "0a64c4ff18f1124ce8158e9b4841360440faa0045162a7c6dbcf928b1f2c1922"
+    },
+    {
+      "relative_path": "logs/download.log",
+      "bytes": 2286,
+      "sha256": "10f135dabb5785827382746b3cda4fad67f0b1e03a2c79f57af9294cbd7a6759"
+    },
+    {
+      "relative_path": "logs/evaluate.log",
+      "bytes": 10226,
+      "sha256": "ca0d7c86b4af30fd96e26faf28d29b5298eb8ddd6574a45837486773d953f86d"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3240,
+      "sha256": "7241c65fd6ee1de8f7080c090a17a6e8c0427ba4ebea0539b0c47c4844286938"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "c11b1f26a09fb4da93f3de98786a88c4b8c7bf7fb325fcc36b9a6360f51cd742"
+    },
+    {
+      "relative_path": "results/forecast_rows.csv",
+      "bytes": 903594,
+      "sha256": "6081b23437cface9f15bb1d4bd24a82c6caf45ecf94b70bd8b08afec1feb1042"
+    },
+    {
+      "relative_path": "results/paired_bootstrap.csv",
+      "bytes": 4677,
+      "sha256": "ca38245763fc515a8f5effd5b70c09c4e778adaec059bcb64bf035c342defb62"
+    },
+    {
+      "relative_path": "results/RESULTS.md",
+      "bytes": 4766,
+      "sha256": "0211015db4b00bf1eab668b93dab192590aae66f8ca6cf1f6212a510e37916c1"
+    },
+    {
+      "relative_path": "results/run_manifest.json",
+      "bytes": 1919,
+      "sha256": "cba04c6ae5a05d38b6870709ff5eca45bd412896fe3142b2677b9d0ff0bbc13a"
+    },
+    {
+      "relative_path": "results/selection_rows.csv",
+      "bytes": 103532,
+      "sha256": "c55bc1c4de709b7e6c6be0120f9f931339e5d138f4a07ded971375ba397e966b"
+    },
+    {
+      "relative_path": "results/summary.csv",
+      "bytes": 9662,
+      "sha256": "9afdabb2f45f89b211c62550879cc80b3ae37ab3bae921c3e3edceb22cb59a85"
+    }
+  ],
+  "total_files_excluding_this_inventory": 38,
+  "total_bytes_excluding_this_inventory": 34233575,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
