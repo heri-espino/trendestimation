@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-09T20:53:48.689417+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\visuals\\run-42697189744-a1",
+  "source_commit": "f7db803d7763f936e66c8c8dd9b3ef500729307b",
+  "directory_paths_relative_to_root": [
+    "figures",
+    "logs",
+    "manuscript",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "figures/exp006_reconstruction_forecasting.pdf",
+      "bytes": 32239,
+      "sha256": "da5d3310c0c0c3fd5d0109f51546fc543220348f192d5f1f48f8766c4d571008"
+    },
+    {
+      "relative_path": "figures/exp006_reconstruction_forecasting.png",
+      "bytes": 143268,
+      "sha256": "67cae5b9084158e2e622423bf153d3810f6da4fe69741981c9a8d41c646e595d"
+    },
+    {
+      "relative_path": "figures/exp006_reconstruction_forecasting.svg",
+      "bytes": 42544,
+      "sha256": "41f5c4fdfac1b915b9873bf77fa9f18eb6d6818a8c191b9288564a5bda13e428"
+    },
+    {
+      "relative_path": "figures/exp007_calibration.pdf",
+      "bytes": 30567,
+      "sha256": "8276948e3a29cf9e02992ba2eb96e005e5c35a085df4e9f729d5699c900e3228"
+    },
+    {
+      "relative_path": "figures/exp007_calibration.png",
+      "bytes": 105391,
+      "sha256": "18bab166fbb5a69054bca10950514e4abbf5c0fa5e7a5e009499134a7421af8d"
+    },
+    {
+      "relative_path": "figures/exp007_calibration.svg",
+      "bytes": 35873,
+      "sha256": "a0981836b75bdf2fc2ffa799d0169330bcf5604e347692ce6ddc8a2d669bd893"
+    },
+    {
+      "relative_path": "figures/exp007_interventions.pdf",
+      "bytes": 27840,
+      "sha256": "487d7186712efa06951b1b0ce270edfe3f4ca2347e82041c127f643994410d31"
+    },
+    {
+      "relative_path": "figures/exp007_interventions.png",
+      "bytes": 94612,
+      "sha256": "9e05fc2debc76164813f764646ad3fecc7b57b99837008b98d64b1c6a62ccc6c"
+    },
+    {
+      "relative_path": "figures/exp007_interventions.svg",
+      "bytes": 46078,
+      "sha256": "25ebb15ff31ee1fc9120bd986121bb499615c50447137d112a7d849db1d30fe9"
+    },
+    {
+      "relative_path": "figures/exp007_jerk_example.pdf",
+      "bytes": 30215,
+      "sha256": "3045ddb74846e2b476a06c1e5f3a0b0a941116d8fd6c6ede6001558631b52c09"
+    },
+    {
+      "relative_path": "figures/exp007_jerk_example.png",
+      "bytes": 156724,
+      "sha256": "9aef879f0b2e29f78ce60c9f80736d822cafa05e2b2171d15218996a661cf988"
+    },
+    {
+      "relative_path": "figures/exp007_jerk_example.svg",
+      "bytes": 47742,
+      "sha256": "38ded7a087c2fb86e04718f6630da6cded48b79ba1b5a54c7bec2752435f5196"
+    },
+    {
+      "relative_path": "figures/exp007_misspecification.pdf",
+      "bytes": 38157,
+      "sha256": "924c665dc749309dfc0ef2bbe6c052a41aee130e9df635535a0131e63d888318"
+    },
+    {
+      "relative_path": "figures/exp007_misspecification.png",
+      "bytes": 82861,
+      "sha256": "3867cc23490dcce7f6cb136e9b5558c81d97295301a62174f5dcbfcb582e7787"
+    },
+    {
+      "relative_path": "figures/exp007_misspecification.svg",
+      "bytes": 52924,
+      "sha256": "c484c74152c8f127dc76538be8c9cd9fc8141c34b59089fc2edf734ca6221974"
+    },
+    {
+      "relative_path": "figures/exp007_spectral_interpretation.pdf",
+      "bytes": 32389,
+      "sha256": "8323cd8d0455153c19cc00b6610acdc04ce4fe04ebb9d02e352984080371bc14"
+    },
+    {
+      "relative_path": "figures/exp007_spectral_interpretation.png",
+      "bytes": 110400,
+      "sha256": "4d64c1205e0e9b62bbc3fb385c780d9e5829afbd66ca77ac4dbe22876ea92237"
+    },
+    {
+      "relative_path": "figures/exp007_spectral_interpretation.svg",
+      "bytes": 33368,
+      "sha256": "deb9bdd386e86cb9c2a975c5b35966909d8995d82439138a6423abd40e7c5b97"
+    },
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 514,
+      "sha256": "243d0e03b9623160987358c6f931d4a48b65977124897f6a4842c2250d08ff06"
+    },
+    {
+      "relative_path": "logs/ngsim-latexmk.log",
+      "bytes": 73850,
+      "sha256": "89a8c8726879991bc48ac567874bfa4568c32fe8342f298274e21a94be7a3910"
+    },
+    {
+      "relative_path": "logs/render_figures.log",
+      "bytes": 100,
+      "sha256": "da36a5cd94948c5692a87d7c566b5e1786771a614311104c96ad1dcc82dbe0a3"
+    },
+    {
+      "relative_path": "manuscript/main.pdf",
+      "bytes": 712376,
+      "sha256": "bacd726477ea53a9208590219ba418f80560bfcd5ff4a887385a5883cf84111e"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3210,
+      "sha256": "2882f25dfe924134fccb653fadae88c3e914273dac6d5415fba176e589dd2a51"
+    },
+    {
+      "relative_path": "metadata/build_manifest.json",
+      "bytes": 6767,
+      "sha256": "d710510a896b70bf83ff0a22b523e7ce381dace88c9d70c5fe3fa872c4b9b18d"
+    },
+    {
+      "relative_path": "metadata/EXP006-source.txt",
+      "bytes": 215,
+      "sha256": "94360372c0ccfeb536cbcae22938e766b5d65bf6cbbd6afe99f8f286d8fff23a"
+    },
+    {
+      "relative_path": "metadata/EXP007-source.txt",
+      "bytes": 215,
+      "sha256": "0dcddcd07ad30340fc786689cb44e8f8ffcaa5a6ac47e014e880078e4d48dcbe"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3254,
+      "sha256": "a4f960b75dc486574b12788ce6770c17a959f1fb46e402c4638a3be66895af25"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "b3588220a910a38021e92969bf1467ddffed5c443c6d6be28bd21ec56668bca8"
+    },
+    {
+      "relative_path": "metadata/visual_suite_manifest.json",
+      "bytes": 8813,
+      "sha256": "015c7043ed6328150ca1bee21f8f8571a2ea82fe37f42c2b53069a1b733ce16e"
+    }
+  ],
+  "total_files_excluding_this_inventory": 30,
+  "total_bytes_excluding_this_inventory": 1952561,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
