@@ -369,7 +369,7 @@ def summarize(rows,archived,episodes,mode):
     epbyid={e["id"]:e for e in episodes}
     comparison=[]
     rng=np.random.default_rng(20261109)
-    n_resamples=int(CONFIG["bootstrap_repetitions"])
+    n_resamples=int(CONFIG["validation"]["bootstrap_repetitions"])
     for method in alternatives:
         for h in HORIZONS:
             strata=defaultdict(list)
