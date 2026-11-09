@@ -1,5 +1,31 @@
 # AGENTS.md — trendestimation research repository
 
+**Paper C simulation decision and Experiment005 (2026-11-08):**
+The author has now **explicitly requested known-jerk simulations**
+after the completed real NGSIM Experiment004. This *supersedes* the
+older real-data-only note below; neither experimental dataset replaces
+the other. Source code, fixed pilot/confirm seed matrix and
+[full artifact protocol](paper/ngsim-jerk-case-study/experiments/experiment005/README.md)
+are on isolated branch
+`research/paper-c-experiment005-known-jerk-simulations`.
+A self-hosted [PCAG103A-08 workflow](.github/workflows/paper-c-known-jerk-simulations-pc08.yml)
+runs a **96 independent-seed pilot**, followed (only if valid)
+by **1,296 disjoint-seed confirmatory trials**. Each trial saves
+known analytic x,v,a,j, noisy observations, GCV and profile-ML
+PLS fits with zero/sample/OLS/oracle mu, spline and SG comparisons,
+known-discrete-jerk errors, future clean-position forecasts, and
+fixed-S fit-versus-continuation crossings.
+The **oracle** is synthetic-only and must never be offered
+as an implementable real-data method. VM storage is persistent
+`Documents\TrendEstimation-PaperC\experiment005\run-<id>-a<attempt>`;
+the workflow writes and checksums **every output file** and
+archives the complete first-party results and compressed trajectories
+in an immutable GitHub results branch. **Read the workflow run
+and per-stage manifests before claiming completion or superiority.**
+Keep original Paper C real-data records and all other paper
+workstreams unchanged. Do not merge without authorization.
+
+
 **Verified Paper C expanded real NGSIM run (2026-11-08):**
 [Experiment004 ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
 records a successful PCAG103A-08 download/evaluation/compilation
