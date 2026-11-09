@@ -1,0 +1,165 @@
+% Empirical robustness001 supplement: frozen Experiment011 postprocessing only.
+\subsection{Observed Cholesky failure after the factorization}
+For finite $\lambda\geq0$, $A_\lambda=I+\lambda D_d^\top D_d$ is
+symmetric positive definite in exact arithmetic. The benchmarked
+banded implementation computes \texttt{cholesky\_banded} and
+\texttt{cho\_solve\_banded}, and then checks the normalized KKT
+optimality residual
+\begin{equation}\label{eq:kkt}
+\eta_{\mathrm{KKT}}=
+\frac{\|(y-\widehat\tau)-\lambda D_d^\top(D_d\widehat\tau-\mu\mathbf1)\|_2}
+{\max\{1,\|y\|_2,\|y+\lambda\mu D_d^\top\mathbf1\|_2\}}.
+\end{equation}
+The source rejects nonfinite values or $\eta_{\mathrm{KKT}}>10^{-7}$,
+raising \texttt{ArithmeticError: PLS KKT failed}. Thus the saved
+failures concern \emph{post-solve numerical acceptance}, not
+compilation or proof that Cholesky was unable to factor an
+indefinite matrix. This study does not alter any tolerance.
+
+The frozen long-form tensor contains 9096 such banded-Cholesky
+rejection rows. In nine targeted case families covering CV,
+GCV and Gaussian marginal likelihood, both banded Cholesky
+and spectral SVD completed all single-candidate rows, whereas
+banded Cholesky rejected all full-grid rows and spectral SVD
+completed all full-grid rows. The nine cases are:
+CV/GCV with $(n,d,M)=(128,3,1000)$,
+CV/GCV with $(256,4,100)$, CV/GCV with $(256,3,1000)$,
+GCV with $(64,3,10000)$, and MLE with $(256,3,100)$
+and $(512,3,100)$. Each case has 97 independent seed
+indices and 776 grid timing records per method (two repeats,
+two coordinates and two one/multiple-series workloads).
+Hence there are 6984 banded KKT rejections in those nine
+regimes. The remaining 2112 banded KKT rejections occur
+in six large fourth-order confirmation cases.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\RobustDir/figures/fig05_complete_grid_failure.pdf}
+\caption{Nine case families exhibiting a single-candidate/full-grid
+completion reversal. Values are proportions of available method-level
+status rows, not independent Bernoulli experiments. All nine
+case families use 97 seed indices; the repeats, mapping policies
+and workloads within each seed are correlated. Red indicates
+post-solve KKT rejection, not a failed matrix factorization.}
+\label{fig:cholgridfail}
+\end{figure}
+
+This distinction is methodological: the spectral criterion
+implementation does not impose \emph{the identical banded
+KKT rejection gate}. Consequently, recorded SVD completion
+demonstrates practical \emph{pipeline acceptance} in these
+configurations, not a directly comparable proof of superior
+forward-error accuracy at every penalty.
+
+\subsection{Shared fourth-order smoothness-inversion failures}
+A universal claim that spectral SVD always succeeds is
+contradicted by the data. At $d=4$, the $n=1024$, 2048 and
+4096 CV/GCV confirmation cases also contain failures to
+invert normalized smoothness into the penalty. Saved comments
+include \texttt{Inaccurate S inversion} at $S=0.99$,
+with recovered smoothness near $0.98998$. The full campaign
+contains 6336 rows with this mapping-error comment:
+2112 banded rows and 4224 spectral rows. These comprise
+separate numerical and mapping-failure statuses, not
+independent failure events. At larger $n$, both pipelines
+can fail to complete a grid, so no large-sample
+SVD-only winner is inferred.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\RobustDir/figures/fig06_fourth_order_failure_modes.pdf}
+\caption{Observed method-level status composition for
+the order-four cases, by sample length. KKT rejection
+occurs after banded solves; smoothness inversion can
+fail for either method. The denominators are available
+method rows and exclude the 57 nonzero-exit jobs whose
+raw measurements could not be certified.}
+\label{fig:fourthfail}
+\end{figure}
+
+\subsection{Conditional preference reversal as candidates increase}
+For cases with \emph{two valid, matched, full-criterion
+evaluations}, the crossover is sizable and repeatable.
+In the $n=256,d=3$, observed-difference-mean CV
+case, the banded/SVD total cold-time ratio is 0.698
+(95\% seed-bootstrap interval 0.671--0.724) for one
+candidate and one series, but 4.846 (4.567--5.125)
+for 100 candidates and one series. At fixed-mean
+$n=64,d=1$ GCV, the corresponding ratios are 1.001
+(0.982--1.018) and 2.328 (2.282--2.374).
+At fixed-mean $n=128,d=3$ CV, the ratios are
+1.069 (1.052--1.087) and 5.401 (5.244--5.555).
+All three cases have matched 24-worker-phase, direct-$S$
+observations; confidence intervals resample
+independent seed clusters, not correlated repeat rows.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\RobustDir/figures/fig07_single_vs_grid_speedups.pdf}
+\caption{Banded/SVD matched total cold-time ratios for
+one candidate versus 100 candidates, with 95\% independent
+seed-cluster bootstrap intervals. A value below one favors
+banded Cholesky; above one favors spectral SVD.
+No incomplete or invalid full-grid timing is included.}
+\label{fig:onegrid}
+\end{figure}
+
+Accordingly, the empirical statement is not that a
+banded Cholesky factorization is always faster for a
+single penalty. Instead, \emph{when numerically admissible},
+the structured method can be attractive for a single
+complete-criterion evaluation. Reusing a spectral
+decomposition over many grid candidates can make
+SVD much faster, while also avoiding the observed
+banded-KKT rejection mechanism in the nine cases.
+These are full-score timings, not fit-only measurements.
+
+\subsection{Memory constraints and policy-based admission}
+Spectral preprocessing trades setup amortization for
+quadratic dense storage. The Experiment011 design sets
+a 2~GiB dense-resource admission cap. The versioned
+Experiment006 policy conservatively charges five
+$n\times n$ float64 work arrays for spectral SVD
+($40n^2$ bytes), and seven for the naive inverse
+($56n^2$ bytes). By comparison, a lower-band factor
+and a banded selected-inverse array each contain
+approximately $(d+1)n$ float64 elements, requiring
+approximately $16n(d+1)$ bytes for \emph{those two
+buffers only}; other sparse arrays and runtime
+workspaces are not included.
+
+At $n=4096$, the SVD policy allowance is 640~MiB;
+at $n=8192$ it is 2.5~GiB, above the declared
+2~GiB limit. The latter size was \emph{not}
+measured in Experiment011. The memory curves are
+transparent storage and admission-policy
+calculations rather than observed peak RSS.
+The 970 recorded \texttt{budget\_exceeded}
+rows in the 29 selected cases were caused by
+work-limit exclusions (776 naive inverse,
+194 SVD), not by an observed out-of-memory
+event or an explicit dense-memory status.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\RobustDir/figures/fig08_memory_policy.pdf}
+\caption{Memory-admission formulae from the versioned
+source code, not measured peak resident memory.
+The dense allowance is quadratic in series length,
+while two banded working arrays scale linearly
+for fixed $d=4$. Dashed line: 2~GiB
+Experiment011 dense admission policy. The shaded
+range contains observed series lengths.}
+\label{fig:memorytradeoff}
+\end{figure}
+
+Taken together, these observations recommend a
+\emph{conditional} engineering choice: the measured
+SVD pipeline can be especially attractive for
+large, numerically accepted candidate grids at
+small to moderate $n$, while a structured banded
+approach remains memory-efficient and can be
+faster for one accepted candidate. Neither
+theoretical SPD structure nor these measured
+cases establish a universally optimal or
+uniformly reliable solver.
