@@ -147,3 +147,82 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable result ref' }
           git push origin "HEAD:refs/heads/$result"
           if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable result ref' }
+
+
+  build:
+    if: contains(github.event.head_commit.message, '[pc08-build]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Verify expected runner, frozen figure inputs and ingestion unit tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
+          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42634293076'
+          foreach ($file in @('analysis_summary.json','empirical_results.tex','claim_to_data_ledger.json',
+            'figures/fig01_reliability.pdf','figures/fig02_paired_cv_gcv.pdf',
+            'figures/fig03_mapping_cost.pdf','figures/fig04_workloads.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $data $file))) { throw "Missing frozen empirical input $file" }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
+      - name: Fresh Springer sn-jnl compile with existing reproducible builder
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/builds/pc08/springer-empirical-$env:GITHUB_RUN_ID"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper springer --output-dir $out --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'New Springer PDF compilation failed' }
+          $manifest = Get-Content -LiteralPath (Join-Path $out 'build_manifest.json') -Raw | ConvertFrom-Json
+          if (@($manifest.results).Count -ne 1 -or $manifest.results[0].status -ne 'ok') {
+            throw 'Build manifest does not contain a successful Springer PDF'
+          }
+          if ($manifest.source_commit -ne $env:GITHUB_SHA) { throw 'Build source SHA mismatch' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/inspect_pdf.py --pdf (Join-Path $out 'springer.pdf') --log (Join-Path $out 'springer.log') --output (Join-Path $out 'proof')
+          if ($LASTEXITCODE -ne 0) { throw 'Fresh PDF inspection failed' }
+      - name: Upload newly compiled PDF and audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-empirical-pdf
+          path: paper/builds/pc08/springer-empirical-*/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve verified new PDF on source and immutable artifacts branches
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/builds/pc08/springer-empirical-$env:GITHUB_RUN_ID"
+          $manifestPath = Join-Path $out 'build_manifest.json'
+          $pdfPath = Join-Path $out 'springer.pdf'
+          $inspectPath = Join-Path $out 'proof/pdf_inspection.json'
+          if (-not ((Test-Path $manifestPath) -and (Test-Path $pdfPath) -and (Test-Path $inspectPath))) {
+            throw 'Cannot publish without fresh PDF, manifest and PDF inspection'
+          }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          if ($manifest.results[0].status -ne 'ok') { throw 'New compile not successful' }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out paper/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage PDF/provenance' }
+          git commit -m 'paper: archive new Springer empirical PDF, TeX logs and page proof'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit PDF' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push source branch with PDF' }
+          $branch = "artifacts/springer-empirical-pc08-$env:GITHUB_RUN_ID"
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable PDF branch' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push immutable PDF branch' }
+          Write-Host "Published new PDF SHA256=$($manifest.results[0].pdf_sha256)"
