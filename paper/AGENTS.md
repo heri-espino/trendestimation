@@ -1,5 +1,22 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C author's MLE correction (2026-11-09):**
+[GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md](ngsim-jerk-case-study/notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md)
+proves that the repository's profiled Gaussian marginal
+likelihood selector and the dense
+(log|I+lambda DD^	op|+(n-d)log(z^	op
+(I+lambda DD^	op)^{-1}z/(n-d)))
+are **identical in lambda up to a constant** for fixed mu.
+The author intended exactly this criterion; Experiment004/005
+already evaluated it on their finite smoothness grid.
+**No rerun or replacement of archived results is justified.**
+When mu is estimated using noisy data, their existing selection
+is conditional plug-in, not a mean-adjusted REML with one
+additional nuisance mean. Keep fixed- and unknown-mean
+conclusions separate. Guerrero (2007) did not assume
+Gaussianity in his second-moment derivation.
+
+
 **Paper C Experiment005 completed on hosted runner (2026-11-08):** [the full run ledger](ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md) documents completed 96+1,296 separate-seed known-jerk simulations, 89,424 confirmation forecast rows, full analytic x/v/a/j truth, physical finite-difference jerk comparisons, GCV vs profiled ML, 2×2 fixed-S ablation and SHA archive of all 33 first-party output files. Cloud outputs live in immutable Git branch results/paper-c-exp005-cloud-42547883064-a1; Windows PC08 job is *queued*, not known finished. The synthetic profile ML PLS advantage is conditional on chosen noise and DGP; real NGSIM Experiment004 still favors cubic spline. Author-approved new simulation decision supersedes earlier real-only restriction. Preserve older experiments and do not merge stacked PRs without authorization.
 
 
