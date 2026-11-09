@@ -51,14 +51,14 @@ jobs:
       - name: Inspect complete report and its local backup (no benchmark execution)
         run: |
           $ErrorActionPreference = 'Stop'
-          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-\${{ github.run_id }}.json"
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-${{ github.run_id }}.json"
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/preflight.py --root $env:ORIGINAL --backup $env:BACKUP --output $out
           if ($LASTEXITCODE -ne 0) { throw "Read-only preflight failed; output retained where possible" }
       - name: Upload compact diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: experiment011-pc08-preflight-\${{ github.run_id }}
+          name: experiment011-pc08-preflight-${{ github.run_id }}
           path: paper/benchmarks/experiment011/pc08_empirical/outputs/
           retention-days: 90
           if-no-files-found: warn
@@ -66,12 +66,12 @@ jobs:
         if: always()
         run: |
           $ErrorActionPreference = 'Stop'
-          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-\${{ github.run_id }}.json"
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-${{ github.run_id }}.json"
           if (-not (Test-Path -LiteralPath $out)) {
             Write-Host "No diagnostic generated: do not publish an empty evidence claim."
             exit 0
           }
-          $branch = "results/experiment011-pc08-preflight-\${{ github.run_id }}"
+          $branch = "results/experiment011-pc08-preflight-${{ github.run_id }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c $branch
