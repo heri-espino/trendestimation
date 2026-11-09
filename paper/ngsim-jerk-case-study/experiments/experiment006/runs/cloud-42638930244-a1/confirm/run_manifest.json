@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "experiment": "experiment006",
+  "mode": "synthetic",
+  "stage": "confirm",
+  "status": "completed",
+  "source_path": "/home/runner/work/_temp/experiment006-source-exp005-42638930244/paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-42547883064-a1/confirm/trajectories.jsonl.gz",
+  "source_sha256": "9acdcdca4d0dcfdc872dad7b9f75e8a198b03426863cff7961909717c9e51268",
+  "archived_baselines_path": "/home/runner/work/_temp/experiment006-source-exp005-42638930244/paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-42547883064-a1/confirm/forecast_rows.csv",
+  "archived_baselines_sha256": "ede55dfd5ec6e3eeedf59047f42ea9d6b8fad8e0c123da919159b79d4b93aa69",
+  "n_samples": 1296,
+  "n_real_jerk_labels": 1296,
+  "forecast_count": 46656,
+  "selection_count": 6480,
+  "historical_jerk_records": 14256,
+  "cv_rule_horizon_records": 7776,
+  "archived_forecast_records": 89424,
+  "alpha_counts": {
+    "0.0": 2866,
+    "1.0": 4041,
+    "0.5": 869
+  },
+  "output_dir": "/home/runner/work/trendestimation/trendestimation/paper/ngsim-jerk-case-study/experiments/experiment006/runs/cloud-42638930244-a1/confirm",
+  "source_commit": "6ae53be85e198db3e77e6f2b59812ec183d53daf",
+  "runner_name": "GitHub Actions 1000016794",
+  "runner_id": "42638930244",
+  "elapsed_seconds": 62.400123909000015,
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1",
+  "method_estimators": [
+    "joint_reml_continuous",
+    "joint_reml_grid",
+    "fixed_zero_continuous",
+    "plugin_sample_continuous",
+    "plugin_global_ols_continuous"
+  ],
+  "continuations": [
+    "guerrero_last3",
+    "local25"
+  ],
+  "horizons_frames": [
+    5,
+    10,
+    20
+  ],
+  "time_cv_origins": {
+    "5": [
+      45,
+      55,
+      65
+    ],
+    "10": [
+      45,
+      55,
+      65
+    ],
+    "20": [
+      40,
+      50,
+      60
+    ]
+  },
+  "alpha_candidates": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "likelihood": "mean-adjusted Gaussian REML with GLS mu(lambda), fixed-mu comparator",
+  "parameter_search": "61 fixed log-lambda mesh, all observed local minima refined, plus exact 0/infinity limits",
+  "mean_reference_units": "discrete D3 position, physical jerk = mu/0.1^3",
+  "inferential_scope": "simulation-conditional",
+  "existing_archives_preserved": true
+}
