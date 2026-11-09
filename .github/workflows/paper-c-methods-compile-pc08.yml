@@ -117,12 +117,19 @@ jobs:
 
       - name: Compile Elsevier CAS two-column journal PDF with simulation and real case studies
         run: |
-          $ErrorActionPreference='Stop'
+          # Preserve LaTeX diagnostics even if the MiKTeX process writes stderr.
+          $ErrorActionPreference='Continue'
           $output="paper/builds/pc08-paper-c-methods-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
           "PC08_METHODS_BUILD=$output" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $output --require-runner 2>&1 |
             Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\compile.log')
-          if ($LASTEXITCODE -ne 0) { throw 'Paper C latex compile failed' }
+          if ($LASTEXITCODE -ne 0) {
+            $latexlog=Join-Path $output 'ngsim.log'
+            if (Test-Path $latexlog) {
+              Copy-Item $latexlog (Join-Path $env:PC08_METHODS_ROOT 'logs\ngsim-latexmk.log') -Force
+            }
+            throw 'Paper C LaTeX compile failed; see persistent ngsim-latexmk.log'
+          }
           $pdf='paper/ngsim-jerk-case-study/main.pdf'
           if (!(Test-Path $pdf)) { throw 'Compiled journal PDF missing' }
           $manifest=Get-Content (Join-Path $output 'build_manifest.json') -Raw | ConvertFrom-Json
