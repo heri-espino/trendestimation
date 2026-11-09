@@ -1,0 +1,92 @@
+name: Archive updated Springer manuscript PDF (no benchmarks)
+
+on:
+  push:
+    branches:
+      - artifacts/manuscript-compile-springer-20261109
+    paths:
+      - ".github/workflows/archive-springer-20261109.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures latexmk lmodern poppler-utils
+      - name: Verify existing Springer inputs and compile without re-running experiments
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s paper/main.tex
+          test -s paper/sn-jnl.cls
+          test -s paper/sn-mathphys-ay.bst
+          test -s paper/bibliografia.bib
+          test -s paper/criteria_table.tex
+          test -s paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/empirical_results.tex
+          cd paper
+          latexmk -pdf -g -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          test -s main.log
+          pdfinfo main.pdf | head -22
+          if grep -Eq 'Citation .* undefined|There were undefined references|LaTeX Error|Fatal error occurred' main.log; then
+            echo 'Unresolved citation, reference or LaTeX error'
+            exit 1
+          fi
+      - name: Create immutable paper-history build record
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p paper/builds/history/springer-20261109
+          cp paper/main.pdf paper/builds/history/springer-20261109/main.pdf
+          cp paper/main.log paper/builds/history/springer-20261109/main.log
+          python - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          root=pathlib.Path("paper")
+          path=root/"builds/history/springer-20261109"
+          parts=[root/"main.tex",root/"bibliografia.bib",root/"criteria_table.tex"]
+          parts+=sorted((root/"sections").glob("*.tex"))
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          result={"paper":"Springer Computational Statistics empirical",
+                  "source_branch":"paper/springer-empirical-tensor-pc08",
+                  "upstream_source_sha":"d2158e065a070aa270ae866e9127b13ef4acad34",
+                  "build_source_sha":os.environ["GITHUB_SHA"],
+                  "run_id":os.environ["GITHUB_RUN_ID"],
+                  "runner":os.environ.get("RUNNER_NAME"),
+                  "pdf_sha256":sha(path/"main.pdf"),
+                  "input_sha256":{p.as_posix():sha(p) for p in parts if p.is_file()},
+                  "source_only_build":True, "benchmarks_executed":False}
+          (path/"manifest.json").write_text(json.dumps(result,indent=2)+"\n")
+          print(json.dumps({k:result[k] for k in ("paper","pdf_sha256","source_only_build")}))
+          PY
+      - name: Upload PDF, logs and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-20261109-source-build
+          path: paper/builds/history/springer-20261109/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit preserved PDF and manifest on archive branch only
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/builds/history/springer-20261109/
+          git commit -m "archive: verified Springer PDF, LaTeX log and SHA256 [skip ci]"
+          git push origin HEAD:refs/heads/artifacts/manuscript-compile-springer-20261109
