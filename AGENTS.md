@@ -1,5 +1,26 @@
 # AGENTS.md — trendestimation research repository
 
+**Paper C expanded real-data follow-up (2026-11-08):** The author
+explicitly chose **real NGSIM trajectory data only** (no simulated
+physical jerk series), with exploratory vehicle/episode-level paired
+forecast inference. See
+[experiment004 protocol](paper/ngsim-jerk-case-study/experiments/experiment004/README.md),
+[downloader](paper/ngsim-jerk-case-study/experiments/experiment004/fetch_real_ngsim.py),
+[evaluator](paper/ngsim-jerk-case-study/experiments/experiment004/evaluate.py)
+and [Windows workflow](.github/workflows/paper-c-real-ngsim-gcv-mle-pc08.yml).
+It compares profile Gaussian marginal **mle** and GCV from the existing
+library, under zero/sample mu and both PLS continuation rules, against
+GCV splines and Savitzky--Golay. The two likelihood choices are
+different selection criteria, not different PLS estimators. Persist
+**all original FHWA CSV pages and complete results on PCAG103A-08**,
+outside temporary Actions workspaces; the VM file inventory and
+repository results-only branch must report complete paths/hashes.
+Existing experiment001-003 results and Springer/CSDA workstreams must
+not change. Do not claim true jerk accuracy or independent populations
+from observed NGSIM positions. The run is pending verification until
+a successful GitHub Actions record and manifest exist.
+
+
 **Paper C empirical follow-up (2026-11-08):** New
 [reproducible Experiment001–003 records](paper/ngsim-jerk-case-study/README.md)
 for a (d=3) Guerrero-inspired PLS three-point forecast recurrence,
