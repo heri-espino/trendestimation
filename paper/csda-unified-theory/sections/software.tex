@@ -3,15 +3,20 @@ The \texttt{trendestimation} Python package provides an explicit user-facing int
 
 A minimal example with a prescribed nonzero third-difference reference is:
 \begin{verbatim}
-import numpy as np
-from trendestimation import TrendSmoother, select_lambda
+from trendestimation import TrendSmoother
+from trendestimation import select_lambda
 
-y = np.asarray(observations, dtype=float)
 solver = TrendSmoother(len(y), order=3)
-fit = solver.fit_smoothness(y, smoothness=0.8, mu=0.15)
+fit = solver.fit_smoothness(
+    y, smoothness=0.8, mu=0.15
+)
 trend = fit.trend
-choice = select_lambda(solver, y, criterion="gcv", mu=0.15)
-selected = solver.fit(y, lambda_=choice.lambda_, mu=0.15)
+choice = select_lambda(
+    solver, y, criterion="gcv", mu=0.15
+)
+selected = solver.fit(
+    y, lambda_=choice.lambda_, mu=0.15
+)
 \end{verbatim}
 The value $\mu=0.15$ is merely a demonstration of API syntax, \emph{not} a scientifically justified physical reference value. In a real study its units, source and inferential role must be defined. An alternative \texttt{mu="data"} computes an observed-difference plug-in from the supplied sample; it must not be described as fixed, genuinely foldwise-refitted CV, or joint unknown-mean likelihood.
 
