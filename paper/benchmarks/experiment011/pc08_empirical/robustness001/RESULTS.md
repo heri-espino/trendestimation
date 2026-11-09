@@ -104,3 +104,7 @@ Next: incorporate into \`paper/main.tex\` and the new
 \`scripts/build_papers_pc08.py --paper springer\`, inspect
 all pages, then update the draft PR #126. Never merge or
 submit without author authorization.
+
+## Fresh manuscript build requirement
+
+This revision includes four additional vector figures and new numerical failure/memory sections. The PDF must be freshly rebuilt on PCAG103A-08 and inspected; the previously compiled Springer PDF predates robustness001 and must not be presented as the updated manuscript.
