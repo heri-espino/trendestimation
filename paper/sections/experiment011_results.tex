@@ -1,4 +1,5 @@
 \section{Results}
+\input{\EmpDir/empirical_results.tex}
 \subsection{Reported completion and measured admissibility}
 The completed campaign has \EmpiricalJobs{} unique scheduled case-seed jobs. However, \EmpiricalFailedJobs{} processes exited nonzero. The manifest-driven sparse timing tensor has \EmpiricalRows{} measured or explicitly missing rows, of which \EmpiricalValidRows{} (82.24\%) satisfy complete-search status and candidate-coverage requirements. The other 16,459 rows include 11,208 numerical-failure statuses, 4224 mapping-failure statuses, 970 resource-budget exclusions and 57 jobs without necessary input files. The file inventory records 60 missing individual files across those failed jobs. The completed schedule is therefore \emph{not} a full numerical success certificate.
 
@@ -15,8 +16,6 @@ The complete-search distinction is material: for recorded $n=1024,2048,4096$, $d
 
 \subsection{Criterion-specific matched costs}
 The most informative supported comparison is between spectral SVD and banded Cholesky on the same candidate grid. We define the table's reported ratio as banded-Cholesky complete cold time divided by spectral-SVD complete cold time. A ratio exceeding one favors spectral SVD; a ratio below one favors banded Cholesky. Table~\ref{tab:empirical-paired} lists selected valid one-series grid comparisons; Fig.~\ref{fig:paired} displays observed CV/GCV slices with independent-seed uncertainty.
-
-\input{\EmpDir/empirical_results.tex}
 
 \begin{figure}[t]
 \centering
