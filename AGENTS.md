@@ -1,5 +1,45 @@
 # AGENTS.md — trendestimation research repository
 
+**Verified Paper C expanded real NGSIM run (2026-11-08):**
+[Experiment004 ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
+records a successful PCAG103A-08 download/evaluation/compilation
+and full persistent VM SHA-256 file tree: 200 qualifying real
+episodes, 6,600 valid forecast errors, 800 GCV/profile-ML
+PLS selections. Source raw pages (400,000 NGSIM records) remain
+on the VM, all model rows plus file inventory also live on
+Git results branch `results/paper-c-exp004-pc08-42538556206-a1`.
+The observed-position RMSE of a tuned cubic spline is **lower
+at all horizons** than the tested PLS strategies in this sample,
+contradicting a generalizable reading of the small earlier pilot.
+Five coarse capture-time proxies and reused Vehicle_IDs limit
+statistical independence; do not call its bootstrap population
+inference or jerk-truth evaluation. The user explicitly chose
+only real data (not simulations). Open [PR #122](https://github.com/heri-espino/trendestimation/pull/122)
+is stacked on separate Paper C PR #121. Do not merge either PR
+or edit the Springer/CSDA papers without authorization.
+
+
+**Paper C expanded real-data follow-up (2026-11-08):** The author
+explicitly chose **real NGSIM trajectory data only** (no simulated
+physical jerk series), with exploratory vehicle/episode-level paired
+forecast inference. See
+[experiment004 protocol](paper/ngsim-jerk-case-study/experiments/experiment004/README.md),
+[downloader](paper/ngsim-jerk-case-study/experiments/experiment004/fetch_real_ngsim.py),
+[evaluator](paper/ngsim-jerk-case-study/experiments/experiment004/evaluate.py)
+and [Windows workflow](.github/workflows/paper-c-real-ngsim-gcv-mle-pc08.yml).
+It compares profile Gaussian marginal **mle** and GCV from the existing
+library, under zero/sample mu and both PLS continuation rules, against
+GCV splines and Savitzky--Golay. The two likelihood choices are
+different selection criteria, not different PLS estimators. Persist
+**all original FHWA CSV pages and complete results on PCAG103A-08**,
+outside temporary Actions workspaces; the VM file inventory and
+repository results-only branch must report complete paths/hashes.
+Existing experiment001-003 results and Springer/CSDA workstreams must
+not change. Do not claim true jerk accuracy or independent populations
+from observed NGSIM positions. The run is pending verification until
+a successful GitHub Actions record and manifest exist.
+
+
 **Paper C empirical follow-up (2026-11-08):** New
 [reproducible Experiment001–003 records](paper/ngsim-jerk-case-study/README.md)
 for a (d=3) Guerrero-inspired PLS three-point forecast recurrence,

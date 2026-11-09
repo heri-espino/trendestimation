@@ -1,5 +1,53 @@
 # AI_HANDOFF — latest
 
+**Paper C expanded real NGSIM run COMPLETE (2026-11-08):**
+[Experiment004 run ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
+and [successful PCAG103A-08 #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+document the 100 US-101 plus 100 I-80 episodes, downloaded
+400,000 raw source CSV rows in 20 paginated pages, 6,600/6,600
+valid forecast records, 800 model selections, and 38 VM files
+with path/SHA inventory. The permanent VM root is
+`C:\Users\175199\Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`,
+and the compact complete rows + file inventory were independently
+archived in Git branch `results/paper-c-exp004-pc08-42538556206-a1`.
+The revised existing paper compiled on the VM. **Result: tuned
+GCV cubic splines with quadratic continuation outperform the
+tested PLS methods in pooled future-position RMSE at all
+three horizons**; profile marginal ML is only modestly different
+from GCV. This reverses the smaller earlier pilot's advantage.
+There are only **five coarse recording-session proxies** across
+200 convenience-sampled episodes, reused numeric Vehicle_IDs
+and no ground-truth physical jerk; bootstrap intervals are
+exploratory, not population-level inference. No prior Paper C
+experiments, source data or other paper outputs were overwritten.
+Review [stacked PR #122](https://github.com/heri-espino/trendestimation/pull/122)
+before merging anything. The older “in progress” handoff
+below is a historical entry and is superseded by this success.
+
+
+**Current Paper C run (2026-11-08):** The author selected only real
+NGSIM data, not known-jerk simulations, and asked to preserve
+every generated directory/data file/results file on the university
+Windows VM (PCAG103A-08). A new bounded, page-hashed US-101/I-80
+episode downloader and GCV versus Gaussian profiled marginal MLE
+evaluation are in
+[experiment004](paper/ngsim-jerk-case-study/experiments/experiment004/README.md).
+GCV/profile MLE x zero/data-derived third-difference mean x last3/
+local25 forecast compares to GCV spline, Savitzky--Golay and local
+quadratic, always using training-only choices and the same recorded
+future position targets. Paired site-stratified episode bootstrap is
+**exploratory** and not a physical jerk accuracy measure.
+The job is launched from a new branch layered on Paper C PR #121;
+do not merge unrelated PRs. Source FHWA raw CSVs, per-episode losses,
+run logs, compiled PDF and full SHA-256 file inventory are retained
+in a non-overwriting persistent Documents/TrendEstimation-PaperC/
+experiment004/run-<id>-a<attempt> directory on PCAG103A-08.
+The small full loss tables, data provenance and directory inventory
+are also pushed to a separate GitHub results branch (the VM's raw
+page bytes are NOT in Git). **Check the workflow before claiming
+numerical results.** Existing source manifest and studies are unchanged.
+
+
 **Paper C extrapolation/jerk-reference continuation (2026-11-05):**
 Read [the new research handoff](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),
 [exact fixed-S attribution](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_DECOMPOSITION.md),

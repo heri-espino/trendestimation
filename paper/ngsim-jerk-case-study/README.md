@@ -1,5 +1,56 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Completed expanded real NGSIM Experiment004 (2026-11-08)
+
+**Result and exact VM file record:** [Experiment004 run ledger](experiments/experiment004/RUN_LEDGER.md).
+The [PCAG103A-08 workflow #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+successfully downloaded 400,000 real FHWA source position rows in
+20 auditable API pages, selected **200 contiguous episodes** (100 per
+site), and computed **6,600 valid forecast errors and 800 PLS
+GCV/profile-ML selections**. All **38 generated VM files** (about
+34.2 MB) are recorded in SHA-256 inventory under the persistent
+VM folder `Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`;
+the result branch contains complete scored rows and metadata while
+the raw page bytes remain on the VM. The NGSIM paper compiled too.
+
+The real-data study shows **GCV cubic smoothing splines, with
+quadratic Taylor continuation, have lower pooled RMSE at 0.5,
+1 and 2 seconds** than the tested PLS last3/local25 policies on
+this expanded convenience sample. The profiled Gaussian ML selector
+is available and shows modest changes versus GCV; a nonzero mu is
+not uniformly favorable. These outcomes challenge the pilot's
+apparent general PLS advantage, and validate the need to report
+negative or horizon-dependent findings. Only **five coarse recording
+session proxies** appear across the 200 episodes; nominal bootstrap
+inference assuming independent episodes is exploratory, not a
+population-level significance result. True physical jerk is not
+independently observed. The original manuscript's earlier pilot
+results remain intact, not silently replaced.
+
+
+## New decision: expanded **real-only** GCV versus ML study
+
+[Experiment004](experiments/experiment004/README.md) implements
+an expanded, auditable FHWA US-101/I-80 download and selection of
+recorded trajectories, then compares the established d=3 PLS
+smoother using **GCV or the library's Gaussian profiled marginal
+likelihood (`mle`)**, for zero/training-mean mu and last3/local25
+continuations. Baselines are GCV natural cubic splines,
+Savitzky--Golay and local quadratic extrapolation. The author
+explicitly prioritized **real positions over simulations**. Results
+use paired episode-level, site-stratified bootstrap intervals
+against recorded future position, not independently known physical
+jerk.
+
+**External raw/complete results** are kept on PCAG103A-08 outside
+the checkout: see experiment004 for the complete permanent VM
+directory tree, hashes, file inventory, Git results branch and
+PowerShell reproduction commands. The workflow must succeed before
+new sample sizes, method rankings or numerical claims are reported.
+Existing pilot and manuscripts are untouched by the source-code-only
+experiment004 implementation.
+
+
 ## New recurrence and spline benchmark evidence (2026-11-08)
 
 The first three **sequential, source-controlled Paper C experiments** now

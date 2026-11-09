@@ -1,5 +1,59 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Completed expanded real-only Paper C experiment004 (2026-11-08)
+
+[Completed run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md);
+[PCAG103A-08 workflow #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206);
+[stacked code PR #122](https://github.com/heri-espino/trendestimation/pull/122)
+against still-open Paper C PR #121.
+FHWA real data: **200 episodes** (100 each US-101/I-80),
+400,000 downloaded source observations, 6,600 completed forecasts,
+800 PLS GCV/profiled marginal ML selections and a successful
+paper compilation. 38 VM-generated files/8 data/result/log/build
+directories are listed with SHA-256 values in the full
+`file_inventory.json` on the VM and Git results branch.
+All raw original API pages and results reside at
+`%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`.
+The Git results-only branch is
+`results/paper-c-exp004-pc08-42538556206-a1`, including all
+compact numeric records and provenance metadata.
+
+**Scientific finding:** The tuned GCV cubic spline with quadratic
+continuation has pooled RMSE of **0.135, 0.348, 0.879 m** at
+0.5/1/2 seconds, compared to **0.143, 0.512, 1.869 m** for
+PLS d=3, mu=0, profiled Gaussian ML, last3 recurrence.
+Thus the expanded evaluation does **not** confirm a general
+PLS forecast advantage. The study has just five coarse recording
+session proxies; episode-level bootstrap inference is exploratory
+and true physical jerk is unobserved. Do not claim universal
+PLS or nonzero-mu superiority based on the five-track pilot.
+No simulations were requested or conducted. The earlier
+“workflow running” statements below are dated history.
+The source manuscript has **not been rewritten** with the new
+expanded results; this is the next editorial task.
+
+
+## Paper C real NGSIM expansion — new user decision (2026-11-08)
+
+The author chose **not to run synthetic known-jerk experiments** for
+the present manuscript. Instead, expand the official US-101 and I-80
+raw-position dataset, compare PLS with `criterion="gcv"` versus the
+repo's `criterion="mle"` (profiled Gaussian marginal likelihood),
+and include GCV smoothing splines and Savitzky--Golay. The new
+[experiment004 README](ngsim-jerk-case-study/experiments/experiment004/README.md)
+describes input pagination, session-aware episode IDs, fixed training
+window/origin/horizons, bootstrap, file tree and VM-only raw storage.
+Source/data/results must be recorded separately in
+`%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment004\run-<id>-a<attempt>`.
+The self-hosted workflow runs on PCAG103A-08 from a new branch stacked
+on Paper C PR #121 and produces an immutable results-only Git branch
+for complete scored rows, file hashes and references. **Never infer
+success before reading the actual run; do not claim true physical jerk
+accuracy, or unique real drivers from reused numeric Vehicle_IDs.**
+Retain prior simulation ideas as optional future work, not an
+authorized immediate experiment.
+
+
 ## Paper C empirical follow-up and publication draft (2026-11-08)
 
 **Active research PR:** [#121](https://github.com/heri-espino/trendestimation/pull/121).
