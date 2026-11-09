@@ -1,0 +1,216 @@
+\section{Third-order penalized least-squares trend estimation}
+\label{sec:method}
+
+\subsection{Trend and reference third differences}
+Let $y=(y_1,\ldots,y_n)^\top$ denote equally spaced
+longitudinal positions sampled at interval $\Delta t$.
+Write $\tau$ for the unobserved positional trend.
+The order-$d$ difference matrix
+$D_d\in\mathbb R^{(n-d)\times n}$ annihilates
+polynomials of degree at most $d-1$. The penalized
+least-squares (PLS) estimator of \citet{guerrero2007} is
+\begin{equation}
+\label{eq:pls}
+\widehat\tau_{\lambda,\mu}=
+\arg\min_{\tau\in\mathbb R^n}
+\left\{\|y-\tau\|_2^2+
+\lambda\|D_d\tau-\mu\mathbf1\|_2^2\right\},
+\end{equation}
+where $\lambda\ge0$ controls regularization and $\mu$
+is the reference mean of the $d$th differences.
+For $Q_d=D_d^\top D_d$, differentiation gives the
+unique solution at finite $\lambda$:
+\begin{equation}
+\label{eq:pls-solution}
+\widehat\tau_{\lambda,\mu}
+=(I+\lambda Q_d)^{-1}
+(y+\lambda\mu D_d^\top\mathbf1).
+\end{equation}
+The estimator is historical trend reconstruction;
+forecasting requires an additional extension rule.
+
+We focus on $d=3$ because
+$D_3\tau_i/(\Delta t)^3$ is a discrete approximation
+to physical jerk, the time derivative of acceleration.
+When $\mu=0$, strong penalization favors a quadratic
+position trend (approximately constant acceleration).
+For fixed nonzero $\mu$, the limiting trend is cubic
+with prescribed discrete third difference, representing
+approximately constant nonzero jerk. These are
+\emph{modeling assumptions}, not independent physical
+measurements. Results for other difference orders
+provide secondary comparisons, not the central claim.
+
+\subsection{An interpretable smoothing coordinate}
+Let $\delta_1,\ldots,\delta_{n-d}>0$ be the nonzero
+eigenvalues of $Q_d$; the remaining $d$ eigenvalues
+are zero because $\dim\ker D_d=d$. Define the
+normalized smoothness index
+\begin{equation}
+\label{eq:S}
+S_d(\lambda)=\frac{1}{n-d}
+\sum_{j=1}^{n-d}
+\frac{\lambda\delta_j}{1+\lambda\delta_j}
+\in[0,1].
+\end{equation}
+For fixed $d$ and $n$, this is monotone in $\lambda$,
+with $S_d(0)=0$ and $S_d(\infty)=1$.
+Thus $S$ provides a comparable, bounded description
+of imposed trend smoothness rather than requiring the
+reader to interpret arbitrary penalty magnitudes.
+For \emph{fixed} $\mu$, the smoothing matrix is
+$H_\lambda=(I+\lambda Q_d)^{-1}$ and its effective
+degrees of freedom satisfy
+\begin{equation}
+\label{eq:effective-df}
+\operatorname{df}(H_\lambda)
+=\operatorname{tr}(H_\lambda)
+=n-(n-d)S_d(\lambda).
+\end{equation}
+For $d=3$, $n=80$, this varies from 80 to 3.
+If $\mu$ is estimated from the same observations,
+the effective complexity of the \emph{complete}
+fitted estimator may be larger, so
+Eq.~\eqref{eq:effective-df} should not be interpreted
+as its unconditional degrees of freedom.
+
+The stochastic variance-ratio interpretation
+of \citet{guerrero2007} and the percentage-smoothness
+work of \citet{guerrero2008} motivate this index.
+Our contribution is not to introduce PLS or the
+original notion of smoothness, but to examine
+$S$ for third-order vehicle kinematics with
+known-truth calibration and observed trajectories.
+Section~\ref{sec:precision} tests the stronger
+\emph{model-conditional} spectral noise interpretation;
+the index alone does not measure absolute sensor
+precision.
+
+\subsection{Selecting $\lambda$ and the reference $\mu$}
+We distinguish the \emph{reference-mean policy} from
+the \emph{smoothing criterion}. Reference means are
+fixed $\mu=0$, the observed training mean
+$\widehat\mu_{\mathrm{raw}}=\mathbf1^\top
+D_3y/(n-3)$, and a cubic OLS reference
+$\widehat\mu_{\mathrm{OLS}}
+=6\widehat a_3(\Delta t)^3$ when
+a cubic in physical time has coefficient
+$\widehat a_3$. The raw difference mean is
+sensitive to measurement errors at the boundary.
+Our synthetic-only known-$\mu$ method is explicitly
+an oracle \emph{control}, never a practical estimator
+on real observations.
+
+For the same fixed-$\mu$ PLS fit, historical training
+observations select $\lambda$ through generalized
+cross-validation (GCV) or a profiled Gaussian
+variance-components likelihood. Classical ordinary
+leave-one-out CV, AICc and a constrained residual BIC
+are also described for the preliminary real pilot,
+following \citet{cortes2017}; those pilot criteria
+are not five independent pieces of forecast evidence.
+In historical experiments the search is over
+predeclared candidate $S$ values; the later
+likelihood comparisons refine a continuous
+one-dimensional search and explicitly check the
+variance-ratio boundary limits. Grid and continuous
+results are identified separately.
+
+For the Gaussian model
+\begin{equation}
+\label{eq:gaussian-model}
+y=\tau+\varepsilon,\quad
+D_3\tau=\mu\mathbf1+u,\quad
+\varepsilon\sim N(0,\sigma_\varepsilon^2I),
+\quad u\sim N(0,\sigma_u^2I),
+\end{equation}
+with independent disturbances, set
+$B=D_3D_3^\top$, $m=n-3$ and
+$W_\lambda=I_m+\lambda B$.
+The variance ratio
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$
+defines the fixed-$\mu$ Gaussian restricted
+likelihood of $D_3y-\mu\mathbf1$.
+When $\mu$ is unknown, the generalized
+least-squares mean at each penalty is
+\begin{equation}
+\label{eq:gls-mu}
+\widehat\mu(\lambda)=
+\frac{\mathbf1^\top W_\lambda^{-1}D_3y}
+{\mathbf1^\top W_\lambda^{-1}\mathbf1}.
+\end{equation}
+Writing $r_\lambda=D_3y-
+\widehat\mu(\lambda)\mathbf1$, the corresponding
+mean-adjusted profiled restricted likelihood,
+apart from penalty-independent terms, is
+\begin{equation}
+\label{eq:reml-mean}
+\begin{aligned}
+F_R(\lambda)
+={}&\log|W_\lambda|
++\log(\mathbf1^\top W_\lambda^{-1}\mathbf1)\\
+&+(m-1)\log\left(
+\frac{r_\lambda^\top
+W_\lambda^{-1}r_\lambda}{m-1}\right).
+\end{aligned}
+\end{equation}
+This Gaussian extension to Guerrero's original
+second-moment formulation is statistically distinct
+from simply inserting a sample-derived $\mu$ in
+the \emph{fixed}-mean likelihood. It does not
+guarantee minimum physical jerk or forecast error.
+
+\subsection{Conventional smoothers and comparable outcomes}
+To evaluate PLS against established derivative
+estimators, the simulation and real-data studies
+include natural cubic smoothing splines with a
+training-only GCV-selected second-derivative
+penalty \citep{craven1979}, Savitzky--Golay local
+polynomial filtering \citep{savitzky1964},
+and local quadratic or cubic polynomial trends.
+For prediction, simple constant-velocity and
+constant-acceleration extrapolations provide
+additional physical baselines. These methods
+are distinguished from PLS by both their
+regularization constraints and their extrapolation
+rules; in particular, a natural cubic smoothing
+spline penalizes a \emph{second} derivative,
+whereas $D_3$ PLS penalizes discrete
+\emph{third} differences. We do not assert
+that one parameterization of smoothness makes
+these estimators identical \citep{ahnert2007}.
+
+The PLS historical fit is extrapolated either
+by a local polynomial fitted to the final
+25 smoothed observations or by the recurrence
+obtained from the last three fitted values.
+With $\nabla$ denoting a backward difference,
+the latter is
+\begin{equation}
+\label{eq:d3-recurrence}
+\begin{aligned}
+\widehat\tau_N(h)
+={}&\widehat\tau_N+h\nabla\widehat\tau_N
++\binom{h+1}{2}\nabla^2\widehat\tau_N\\
+&+\binom{h+2}{3}\mu,\qquad h\ge1.
+\end{aligned}
+\end{equation}
+It is the direct $d=3$ algebraic extension
+of the constant-difference extrapolation logic
+discussed by \citet{guerrero2007} for lower
+orders, \emph{not} a separate optimal
+probabilistic forecast model.
+Natural cubic smoothing-spline forecasts use
+training-fitted endpoint derivatives or a
+specified local polynomial continuation.
+Every reported forecast is scored on
+chronologically withheld future positions,
+with no future observations used to choose
+the smoothing or reference parameters.
+
+We report jerk RMSE only where a synthetic
+generating trajectory supplies the true
+discrete third difference. On camera-derived
+NGSIM positions, the target is held-out
+\emph{recorded position}; physically true jerk
+and observation error are unavailable.

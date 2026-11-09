@@ -1,0 +1,34 @@
+% The exact author's Elsevier CAS v2.4 class is copied by the build.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,mathtools,booktabs,graphicx,url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue}
+\newcommand{\R}{\mathbb R}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Third-order PLS smoothing and vehicle jerk}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Interpretable third-order penalized trend estimation for vehicle jerk: relative-noise calibration and forecasting}
+% Provisional author attribution, pending coauthor approval.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+Estimating physical jerk from vehicle positions is difficult because third differences amplify observation noise. We investigate third-order penalized least-squares (PLS) trend estimation with a nonzero reference third difference and an interpretable normalized smoothness index $S$. We describe the relationship between $S$, effective degrees of freedom and, under an independent Gaussian variance-ratio model, relative spectral attribution of third-difference variability to observation noise. Two simulation studies supply known position and jerk: a 1,296-trajectory comparison of PLS smoothing choices with established spline and local-polynomial filters, and a 1,944-condition paired calibration study with 72 independent random-innovation parents. In the correctly specified Gaussian calibration setting, joint restricted-likelihood selection achieves Spearman association $0.965$ between estimated and theoretical $S$ (mean absolute error $0.0115$); serially correlated observation errors substantially degrade calibration. In the known-jerk comparison, a global cubic reference mean with profiled Gaussian likelihood performs well for jerk recovery, whereas no smoothing rule is uniformly best for subsequent position forecasts. We then evaluate recorded-future position predictions on 200 real NGSIM trajectory episodes and compare PLS with GCV smoothing splines, Savitzky--Golay and polynomial baselines; the spline has the lowest pooled forecast error at all evaluated horizons. Third-order PLS offers a physically meaningful smoothing coordinate, not a universally optimal forecast or an absolute measure of sensor precision.
+\end{abstract}
+\begin{keywords}
+Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative spectral noise \sep calibration \sep NGSIM
+\end{keywords}
+\maketitle
+\input{sections/introduction}
+\input{sections/methods}
+\input{sections/simulation_benchmarks}
+\input{sections/precision_calibration}
+\input{sections/real_data_study}
+\input{sections/discussion}
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
+\end{document}
