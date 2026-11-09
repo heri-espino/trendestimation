@@ -1,5 +1,24 @@
 # AGENTS.md — trendestimation research repository
 
+**Verified Paper C expanded real NGSIM run (2026-11-08):**
+[Experiment004 ledger](paper/ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
+records a successful PCAG103A-08 download/evaluation/compilation
+and full persistent VM SHA-256 file tree: 200 qualifying real
+episodes, 6,600 valid forecast errors, 800 GCV/profile-ML
+PLS selections. Source raw pages (400,000 NGSIM records) remain
+on the VM, all model rows plus file inventory also live on
+Git results branch `results/paper-c-exp004-pc08-42538556206-a1`.
+The observed-position RMSE of a tuned cubic spline is **lower
+at all horizons** than the tested PLS strategies in this sample,
+contradicting a generalizable reading of the small earlier pilot.
+Five coarse capture-time proxies and reused Vehicle_IDs limit
+statistical independence; do not call its bootstrap population
+inference or jerk-truth evaluation. The user explicitly chose
+only real data (not simulations). Open [PR #122](https://github.com/heri-espino/trendestimation/pull/122)
+is stacked on separate Paper C PR #121. Do not merge either PR
+or edit the Springer/CSDA papers without authorization.
+
+
 **Paper C expanded real-data follow-up (2026-11-08):** The author
 explicitly chose **real NGSIM trajectory data only** (no simulated
 physical jerk series), with exploratory vehicle/episode-level paired
