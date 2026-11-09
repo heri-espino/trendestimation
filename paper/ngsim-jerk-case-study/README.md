@@ -1,4 +1,8 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
+## Experiment006 completed: Gaussian joint mu–lambda REML (Nov 9, 2026)
+
+[Complete methods, results, and exact file inventory](experiments/experiment006/RUN_LEDGER.md); [protocol/reproduction](experiments/experiment006/README.md); [successful PCAG103A-08 run #42639184183](https://github.com/heri-espino/trendestimation/actions/runs/42639184183); [research PR #127](https://github.com/heri-espino/trendestimation/pull/127). Reanalyzed the exact old 96/1296 known-jerk synthetic and 200 NGSIM real episodes, with joint mean-adjusted REML, fixed mean or training plug-in Gaussian profile likelihood, and nested training-only forecast alpha shrinkage. For historical known jerk the best of five tested estimator-level choices was global cubic OLS mean + profile ML (2.441m/s³); joint REML had 3.295m/s³. At 1-second synthetic clean-position forecast local25 fixed-zero profile ML 0.405m versus joint REML 0.498m, shrinkage 0.462m. On real recorded positions GCV spline remains best (0.348m at 1s vs joint REML local25 0.578m). **Joint continuous REML selected the zero-penalty limit in 161/200 real NGSIM episodes**; this is a model-boundary warning, not evidence of optimal jerk. The corrected exact 15-S grid does not include zero and is distinct from continuous boundary-aware optimization. Every generated file, SHA-256 and external VM source path is retained in the results-only branch. All older experimental outputs and original LaTeX paper remain unchanged; author review is required before inserting results into the article or merging.
+
 
 ## Gaussian REML clarification (2026-11-09)
 
