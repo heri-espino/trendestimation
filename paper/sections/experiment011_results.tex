@@ -1,0 +1,73 @@
+\section{Results}
+\subsection{Reported completion and measured admissibility}
+The completed campaign has \EmpiricalJobs{} unique scheduled case-seed jobs. However, \EmpiricalFailedJobs{} processes exited nonzero. The manifest-driven sparse timing tensor has \EmpiricalRows{} measured or explicitly missing rows, of which \EmpiricalValidRows{} (82.24\%) satisfy complete-search status and candidate-coverage requirements. The other 16,459 rows include 11,208 numerical-failure statuses, 4224 mapping-failure statuses, 970 resource-budget exclusions and 57 jobs without necessary input files. The file inventory records 60 missing individual files across those failed jobs. The completed schedule is therefore \emph{not} a full numerical success certificate.
+
+The origin report and its verified same-disk backup have identical SHA-256 digests. The six-stage cumulative lineage is archived in the derived analysis summary and each accepted record is linked to its originating run folder. All original inputs remain untouched. The backup improves protection against accidental edits but not loss of the Windows disk.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\EmpDir/figures/fig01_reliability.pdf}
+\caption{Fraction of complete, status-admissible measured rows by criterion and method. Denominators retain failed, missing and resource-excluded cells. Method availability and difficulty vary by case, so these descriptive rates are not randomized failure-rate comparisons.}
+\label{fig:reliability}
+\end{figure}
+
+The complete-search distinction is material: for recorded $n=1024,2048,4096$, $d=4$ CV/GCV confirmation cases, single-candidate evaluations can complete even when the entire 100-candidate grid fails. A successful one-candidate timing is \emph{not} promoted to an observed full-grid winner. Numerical/mapping issues are encountered by more than one backend and must not automatically be attributed to a single solver.
+
+\subsection{Criterion-specific matched costs}
+The most informative supported comparison is between spectral SVD and banded Cholesky on the same candidate grid. We define the table's reported ratio as banded-Cholesky complete cold time divided by spectral-SVD complete cold time. A ratio exceeding one favors spectral SVD; a ratio below one favors banded Cholesky. Table~\ref{tab:empirical-paired} lists selected valid one-series grid comparisons; Fig.~\ref{fig:paired} displays observed CV/GCV slices with independent-seed uncertainty.
+
+\input{\EmpDir/empirical_results.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\EmpDir/figures/fig02_paired_cv_gcv.pdf}
+\caption{Paired banded/SVD full cold-time ratios for available admissible CV and GCV 100-candidate, one-series direct-$S$ cases. Bars represent seed-cluster 95\% bootstrap intervals within the labeled execution phase, not independent per-row intervals. Missing large-$n$ grids are deliberately omitted.}
+\label{fig:paired}
+\end{figure}
+
+For $n=256$, $d=3$, full-sample observed-difference $\mu$, and conditional CV, we have 97 independent seed clusters in the 24-worker phase. The banded/SVD geometric cold-time ratio equals 0.698 (95\% interval 0.671--0.724) for one candidate/one series; the corresponding 100-candidate grid/one-series ratio is 4.846 (4.567--5.125), and the 100-candidate grid/three-series ratio is 3.655 (3.450--3.860). The observed reversal reflects amortization and the complete criterion. It must not be generalized to an unmeasured $(n,d,M,R)$ region or interpreted as contention-free latency.
+
+For the $n=64$, $d=1$, $M=100$ GCV pilot, complete one-series grid selection yielded a matched ratio of 2.328 (2.282--2.374) across 96 seed clusters. The same case's one-candidate/one-series ratio was 1.001 (0.982--1.018); an apparently decisive grid advantage can coexist with negligible isolated-candidate differences. Thus the number of criterion candidates is not a cosmetic experimental parameter.
+
+\subsection{Coordinate costs and workloads}
+Direct-$S$ versus mapped-$\lambda$ compares computation of \emph{the same} smoothing candidates. In the $n=256$, $d=3$, conditional CV, $M=100$, $R=3$ spectral SVD case, the paired mapped/direct complete cold-time ratio is 0.580 (95\% seed-bootstrap interval 0.570--0.590) in the 24-worker phase. This is evidence that caching the coordinate translation is useful for that particular repeated-grid workload; it is not a universal assertion about smoothness coordinates.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\EmpDir/figures/fig03_mapping_cost.pdf}
+\caption{Cell-level medians of geometric mapped-$\lambda$/direct-$S$ cold-time ratios from numerically eligible grid/multiple-series pairs in the 24-worker phase. Values below one favor mapping once. A plotted point summarizes available design slices, not a randomized causal treatment.}
+\label{fig:mapping}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\EmpDir/figures/fig04_workloads.pdf}
+\caption{Median complete-criterion cold times for one candidate/one series, grid/one series, one candidate/three series and grid/three series in the $n=64$, $d=1$, GCV, $M=100$, direct-$S$ pilot under the 24-worker phase. All times include recorded setup, mapping and candidate evaluation costs.}
+\label{fig:workloads}
+\end{figure}
+
+The underlying \texttt{timing\_cell\_summary.csv} retains medians and 10th--90th percentiles for setup, mapping, candidate evaluation, total cold time and total warm time in each phase. The four workloads in Fig.~\ref{fig:workloads} are repeated measurements within a case-seed, not four statistically independent replications. No fit-only time is silently substituted for complete CV or GCV search time.
+
+\subsection{Reliability and sensitivity to exclusions}
+Figure~\ref{fig:reliability} and the reliability CSV record actual denominators. In the 24-worker phase, banded-Cholesky CV has 10,848 valid complete rows out of 13,176 recorded rows (82.3\%), compared with 13,176/13,176 for spectral CV. For GCV the reported fractions are 13,176/16,280 (80.9\%) and 15,892/16,086 (98.8\%), respectively. These aggregate rows do \emph{not} share identical case denominators because resource gates and case method coverage differ. They describe the observed experiment, not a universal pairwise solver reliability probability. The full uncertainty and failure inventory remains available rather than being hidden by the valid-pair subset.
+
+A series of large-order grids exhibits shared mapping failures and incomplete numerical outcomes, while smaller supported CV and GCV searches give valid paired comparison intervals. Consequently, comparisons based only on successful small grids may overstate the general reliability of either backend. The naive inverse is a reference only where an identical, valid measured pair exists; when dense memory or runtime budgets make it ineligible, no surrogate baseline speedup is invented. The optional sparse-Cholesky implementation is an explicitly diagnostic-charged hybrid and cannot be presented as a standalone sparse solver.
+
+\section{Discussion}
+The principal supported result is conditional, not a global ranking: depending on criterion and candidate count, the same banded and dense spectral implementations reverse their timing preference. A full grid rewards amortized spectral setup, but individual candidates can favor structured banded methods. The numerical status of the \emph{entire} grid is essential to this comparison, especially at large $n$ and high $d$.
+
+The study has four important limitations. First, this was a single Windows host with 24-, one- and 12-worker execution phases, one BLAS thread each, and no complete occupancy instrumentation. The phase count is a concurrency limit, not a constant level of CPU contention, and time comparisons are not transportable estimates of isolated latency. Second, excluding invalid complete searches creates potential survivor bias in otherwise matched speedups. Third, selected-criterion float64 parity does not independently certify forward errors or numerical behavior at all smoothing parameters. Fourth, measured criterion timing is not a measure of trend-estimation RMSE, predictive performance or physical jerk quality. High-precision numerical theory, operation-count complexity and the NGSIM vehicle application belong to separate companion work.
+
+An informative follow-up would randomize method ordering and predeclare a smaller, numerically feasible high-order grid on an otherwise idle workstation, record processor occupancy and validate objective values against independent high-precision arithmetic. That study has not been performed here and no claims about its potential results are made.
+
+\section{Reproduction and data availability}
+The scripts and frozen \emph{derived} results are archived in the public repository \url{https://github.com/heri-espino/trendestimation}, in the \texttt{paper/benchmarks/experiment011/pc08\_empirical} directory. GitHub Actions run \texttt{42634293076} and its permanent results branch contain the source-to-file acceptance manifest, report-chain SHA-256 hashes, compressed sparse timing tensor, status/reliability tables, matched speedups, seed-bootstrap intervals, reproducible figure code, vector PDFs, PNG previews and claim-to-data ledger. The original final cumulative report's SHA-256 is
+\begin{quote}\ttfamily\small c5d4898c83c731ada23a10957f80adc43616200206dc76573f365d38ba37f723\end{quote}
+The underlying \emph{raw} measurements are preserved in an author-owned Windows checkout and a verified same-disk backup; they were not automatically pushed to GitHub or falsely represented as public data. Raw-data access and redistribution are subject to author approval.
+
+The manifest-driven read-only reproduction command from the repository root is
+\begin{quote}\ttfamily\small python paper/benchmarks/experiment011/pc08\_empirical/analyze\_campaign.py --original ORIGINAL --backup BACKUP --out NEW\_OUTPUT\end{quote}
+It does not rerun the numerical experiment. The official \texttt{sn-jnl} manuscript is compiled using the existing \texttt{trendestimation} Conda environment and \texttt{scripts/build\_papers\_pc08.py --paper springer}. The final build artifact and digest must be checked independently of the archived prior manuscript PDFs.
+
+\section{Conclusions}
+An audited schedule of 2813 case-seed jobs supplies many useful complete-criterion timing observations, but also demonstrates why numerical failures and incomplete grids cannot be ignored. For supported paired cases, setup amortization, workload size and mapping policy materially change measured costs. In particular, the $n=256$, $d=3$ CV case changes backend preference between a single candidate and a full grid. These observations motivate criterion-specific and reliability-aware computational choices, not a universally fastest implementation or a new smoothing estimator.
