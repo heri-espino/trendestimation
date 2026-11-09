@@ -268,7 +268,7 @@ def simulate(config: dict, stage: str, output: Path):
         ],
         "ablation": [
             "trial_id","scenario_key","regime","sigma_m","noise_model","rep","seed",
-            "horizon_frames","mu_source","rule","fit_policy","forecast_policy",
+            "horizon_frames","method","mu_source","rule","fit_policy","forecast_policy",
             "fixed_S","mu_reference_m","mse_m2","status","reason",
         ],
     }
@@ -516,6 +516,11 @@ def reduce_results(output: Path, config: dict, info: dict, stage: str):
             "n_valid_trials":len(s),"historical_jerk_rmse_m_s3":float(np.sqrt(np.mean(s))),
         })
     all_scenario = sorted(set(r["scenario_key"] for r in forecast))
+    trial_ids_by_scenario = defaultdict(list)
+    for trial_index, item in enumerate(info["design"]):
+        trial_ids_by_scenario[item["scenario_key"]].append(
+            f"{stage}_{trial_index:06d}"
+        )
     all_methods = sorted(set(r["method"] for r in forecast))
     hor = list(config["forecast_horizons_frames"])
     pool = {}
@@ -555,10 +560,7 @@ def reduce_results(output: Path, config: dict, info: dict, stage: str):
             stratum = []
             for scenario in all_scenario:
                 vals=[]
-                for trial in info["design"]:
-                    if trial["scenario_key"] != scenario:
-                        continue
-                    tid=f"{stage}_{info['design'].index(trial):06d}"
+                for tid in trial_ids_by_scenario[scenario]:
                     a=bykey.get((tid,method,int(h)))
                     b=bykey.get((tid,baseline,int(h)))
                     if a is not None and b is not None and a["status"]=="ok" and b["status"]=="ok":
