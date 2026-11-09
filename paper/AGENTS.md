@@ -1,5 +1,26 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C new Experiment005 (2026-11-08):**
+The author newly requested **known-jerk simulations**, now
+the sequential experiment005 after completed real-data 004.
+See [the exact frozen experiment design](ngsim-jerk-case-study/experiments/experiment005/config.json),
+[agent-ready reproduction instructions](ngsim-jerk-case-study/experiments/experiment005/README.md)
+and [PC08 job](../.github/workflows/paper-c-known-jerk-simulations-pc08.yml).
+Analytic x,v,a,j are saved before observation noise, with
+exact D3 jerk as the physical-discrete validation target.
+The evaluated oracle reference mean uses only **clean
+historical** truth and must never contaminate ordinary real
+data. Pilot and confirmation seed namespaces are disjoint.
+Compare GCV/profile-ML PLS and zero/sample/cubic OLS/oracle
+reference means to GCV spline and SG. Preserve full
+trial observations, methods, results, forecasts, failures,
+source SHA, figures and folder inventory in the persistent
+Windows VM and immutable Git results branch. Do not use
+simulation improvements as a claim of real-world jerk
+validity. Do not overwrite Experiment004 or auto-merge
+stacked PRs without authorization.
+
+
 **Paper C real-only Experiment004 COMPLETE (2026-11-08):**
 [PC08 run #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
 downloaded official US-101/I-80 records, evaluated 200 source
