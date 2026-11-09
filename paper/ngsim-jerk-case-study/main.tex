@@ -9,7 +9,7 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Jerk-aware PLS on observed vehicle trajectories}
+\shorttitle{Third-order PLS smoothing and vehicle jerk}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
 \title[mode=title]{Interpretable third-order penalized trend estimation for vehicle jerk: relative-noise calibration and forecasting}
 % Provisional author attribution, pending coauthor approval.
@@ -17,16 +17,17 @@
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Third differences of recorded vehicle position provide a physically interpretable, but noise-sensitive, proxy for jerk. We study third-order penalized least-squares (PLS) trend estimation through the normalized smoothness index $S$, which controls the effective number of fitted degrees of freedom and, under a Gaussian variance-ratio model, represents the average spectral fraction of differenced variation attributable to observation error. We validate this interpretation in a paired factorial simulation with known clean positions and jerk: 1,944 confirmatory noise--dynamics conditions, 72 independent random-innovation parent draws, and four smoothing selectors. Under correctly specified independent Gaussian errors, joint mean-adjusted restricted likelihood yields correlation $0.965$ between selected and theoretical $S$, with mean absolute calibration error $0.0115$. Correlated observation errors increase this error substantially; and equal proportional scaling of observation noise and jerk innovations leaves $S$ unchanged despite different absolute sensor precision. A separate known-jerk simulation compares reference-mean policies and forecast continuations; no selector is uniformly best for both reconstruction and prediction. Finally, chronological extrapolation is assessed on camera-derived Federal Highway Administration NGSIM positions, including a 200-episode follow-up in which a GCV smoothing spline outperforms the investigated PLS forecasting variants in pooled one-second RMSE. We distinguish regularization, relative noise attribution, physical jerk accuracy, and future-position prediction. The contribution is a reproducible, model-conditional characterization of the index for vehicle kinematics, not a new PLS estimator or a universal sensor-quality score.
+Estimating physical jerk from vehicle positions is difficult because third differences amplify observation noise. We investigate third-order penalized least-squares (PLS) trend estimation with a nonzero reference third difference and an interpretable normalized smoothness index $S$. We describe the relationship between $S$, effective degrees of freedom and, under an independent Gaussian variance-ratio model, relative spectral attribution of third-difference variability to observation noise. Two simulation studies supply known position and jerk: a 1,296-trajectory comparison of PLS smoothing choices with established spline and local-polynomial filters, and a 1,944-condition paired calibration study with 72 independent random-innovation parents. In the correctly specified Gaussian calibration setting, joint restricted-likelihood selection achieves Spearman association $0.965$ between estimated and theoretical $S$ (mean absolute error $0.0115$); serially correlated observation errors substantially degrade calibration. In the known-jerk comparison, a global cubic reference mean with profiled Gaussian likelihood performs well for jerk recovery, whereas no smoothing rule is uniformly best for subsequent position forecasts. We then evaluate recorded-future position predictions on 200 real NGSIM trajectory episodes and compare PLS with GCV smoothing splines, Savitzky--Golay and polynomial baselines; the spline has the lowest pooled forecast error at all evaluated horizons. Third-order PLS offers a physically meaningful smoothing coordinate, not a universally optimal forecast or an absolute measure of sensor precision.
 \end{abstract}
 \begin{keywords}
-Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative noise precision \sep calibration \sep NGSIM
+Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative spectral noise \sep calibration \sep NGSIM
 \end{keywords}
 \maketitle
 \input{sections/introduction}
 \input{sections/methods}
-\input{sections/results}
+\input{sections/simulation_benchmarks}
 \input{sections/precision_calibration}
+\input{sections/real_data_study}
 \input{sections/discussion}
 \bibliographystyle{cas-model2-names}
 \bibliography{references}

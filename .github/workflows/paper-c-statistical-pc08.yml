@@ -1,0 +1,168 @@
+name: Paper C statistical methods, simulation and NGSIM manuscript (PCAG103A-08)
+
+on:
+  push:
+    branches: [paper/paper-c-statistical-methods-simulation-real]
+    paths:
+      - .github/workflows/paper-c-statistical-pc08.yml
+      - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/*.tex
+      - paper/ngsim-jerk-case-study/visuals/check_statistical_focus.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-statistical-pc08
+  cancel-in-progress: false
+
+jobs:
+  compile-and-archive:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+    steps:
+      - name: Checkout independent statistical-paper branch with existing scientific figures
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Prepare permanent non-overwriting run and check model/data visual provenance
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner: $env:RUNNER_NAME" }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Missing existing conda installation' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Missing trendestimation conda environment' }
+          $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\statistical-paper\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $root) { throw "Refusing to overwrite previous run: $root" }
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          foreach($part in @('metadata','logs','manuscript')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $part) | Out-Null
+          }
+          "PAPER_STAT_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          "$env:RUNNER_NAME" | Out-File (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+          "No new simulations, no new NGSIM downloads, no plotting and no solver benchmarking. Inputs already frozen in Experiment004-007 and visual archives." |
+            Out-File (Join-Path $root 'metadata\source_data_policy.txt') -Encoding utf8
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory Python dependencies' }
+          foreach($path in @(
+            'paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json',
+            'paper/ngsim-jerk-case-study/figures/exp007_calibration.pdf',
+            'paper/ngsim-jerk-case-study/figures/exp006_reconstruction_forecasting.pdf',
+            'paper/ngsim-jerk-case-study/figures/heldout_forecast.pdf'
+          )) { if (!(Test-Path $path)) { throw "Unchanged scientific figure missing: $path" } }
+
+      - name: Assert statistical scope, two simulation designs, main NGSIM and exact 10 figures
+        run: |
+          $ErrorActionPreference='Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/check_statistical_focus.py --out (Join-Path $env:PAPER_STAT_ROOT 'metadata\statistical_source_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_STAT_ROOT 'logs\statistical_source_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Statistical manuscript organization or figure validation failed' }
+
+      - name: Compile official two-column Elsevier CAS manuscript from existing vector figures
+        run: |
+          $ErrorActionPreference='Stop'
+          $dest="paper/builds/pc08-paper-c-statistical-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          "PAPER_STAT_BUILD=$dest" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $dest --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_STAT_ROOT 'logs\compile.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Statistical manuscript TeX compilation failed' }
+          $manifest=Get-Content (Join-Path $dest 'build_manifest.json') -Raw | ConvertFrom-Json
+          if ($manifest.results[0].status -ne 'ok') { throw 'LaTeX build did not report success' }
+          if (!(Test-Path 'paper/ngsim-jerk-case-study/main.pdf')) { throw 'Published manuscript PDF not generated' }
+
+      - name: Audit compiled PDF text/captions and hashes of six unchanged new figure sets
+        run: |
+          $ErrorActionPreference='Continue'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/audit_pdf.py --pdf paper/ngsim-jerk-case-study/main.pdf --manifest paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json --output (Join-Path $env:PAPER_STAT_ROOT 'metadata\pdf_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_STAT_ROOT 'logs\pdf_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'PDF source/figure integrity audit failed' }
+
+      - name: Preserve new manuscript, original source files and build proof on PC08
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PAPER_STAT_ROOT
+          if (!$root) { $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\statistical-paper\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT" }
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          foreach($sub in @('metadata','logs','manuscript')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $sub) -Force | Out-Null
+          }
+          $p='paper/ngsim-jerk-case-study'
+          foreach($filename in @('main.tex','main.pdf','references.bib')) {
+            $file=Join-Path $p $filename
+            if (Test-Path $file) { Copy-Item -LiteralPath $file -Destination (Join-Path $root 'manuscript') -Force }
+          }
+          if (Test-Path (Join-Path $p 'sections')) {
+            Copy-Item -Path (Join-Path $p 'sections') -Destination (Join-Path $root 'manuscript') -Recurse -Force
+          }
+          if ($env:PAPER_STAT_BUILD -and (Test-Path $env:PAPER_STAT_BUILD)) {
+            Copy-Item -Path (Join-Path $env:PAPER_STAT_BUILD 'build_manifest.json') -Destination (Join-Path $root 'metadata') -Force
+            Copy-Item -Path (Join-Path $env:PAPER_STAT_BUILD 'ngsim.log') -Destination (Join-Path $root 'logs\ngsim-latexmk.log') -Force
+          }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'metadata\pdf_audit.json')) { $status='compiled_audited' }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to retain full VM file inventory' }
+
+      - name: Upload audited journal manuscript and its figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-statistical-simulations-and-real-ngsim
+          path: |
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/sections/*.tex
+            paper/ngsim-jerk-case-study/figures/*.pdf
+            paper/builds/pc08-paper-c-statistical-*/
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Publish revised PDF on isolated statistical manuscript branch
+        if: success()
+        run: |
+          $ErrorActionPreference='Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- paper/ngsim-jerk-case-study/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage revised compiled paper' }
+          git commit -m "paper C: compile statistical methodology, simulation studies and real NGSIM PDF"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit revised PDF' }
+          git push origin "HEAD:refs/heads/paper/paper-c-statistical-methods-simulation-real"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish journal PDF to paper PR branch' }
+
+      - name: Preserve complete VM logs/TeX audit in unique immutable results branch
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PAPER_STAT_ROOT
+          if (!$root) { $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\statistical-paper\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT" }
+          if (!(Test-Path (Join-Path $root 'metadata\file_inventory.json'))) { throw 'VM file inventory not produced' }
+          $rel="paper/ngsim-jerk-case-study/statistical-runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+          $archive="results/paper-c-statistical-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create audit archive branch' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage audit files' }
+          git commit -m "paper C: archive complete revised statistical manuscript, PDF and audit $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit archive' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push independent run archive' }

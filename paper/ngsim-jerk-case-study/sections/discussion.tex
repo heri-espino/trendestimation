@@ -1,20 +1,208 @@
 \section{Discussion and conclusions}
-The vehicle-position data show why difference order, reference mean and extrapolation rule must be distinguished. For a position series, $d=3$ has a direct relation to the third temporal derivative---jerk---but neither the raw third difference nor its smoothed counterpart is an independent physical reference signal. A smooth estimated jerk curve may miss abrupt maneuvers.
+\label{sec:discussion}
+This study examines a \emph{statistical smoothing
+methodology} and its physical interpretation,
+rather than an algorithmic speed comparison.
+Third-order penalized least squares (PLS)
+places an explicit penalty on deviations
+of discrete jerk from a chosen reference.
+The normalized smoothing coordinate
+$S\in[0,1]$ has an exact relationship
+to conditional effective degrees of
+freedom and allows regularization
+strength to be described without relying
+on the arbitrary magnitude of $\lambda$.
+This remains useful even where PLS is
+not the smallest-RMSE method.
 
-The normalized coordinate $S\in[0,1]$ represents the fraction of penalizable effective degrees of freedom removed. Under the independent Gaussian variance-ratio model, it also equals the average spectral fraction of third-difference variance due to observation noise. Experiment007 validates this conditional interpretation against independently known simulated truth, while showing that correlated measurement errors can cause considerable calibration bias. Crucially, $S$ alone does not identify the absolute observation-noise variance: scaling both noise and genuine jerk volatility together preserves the relative index. Its definition is consistent across difference orders and its inverse is independent of a \emph{fixed} reference-difference mean; fitted degrees of freedom change when that mean is itself estimated.
+\subsection{Statistical meaning and identifiability}
+Under the independent Gaussian
+variance-ratio model,
+$S$ is the average spectral fraction
+of the \emph{third-difference covariance}
+attributable to observation error,
+not the proportion of erroneous position
+observations. The controlled factorial
+simulation confirms that the
+joint-REML-selected index can be
+well calibrated to this theoretical
+fraction when the assumptions hold:
+Spearman association $0.965$ and mean
+absolute calibration error $0.0115$
+in the independently Gaussian condition.
 
-The favorable one-second held-out result for GCV-selected $d=3$ is descriptive. This small sample does not establish a general forecasting advantage for vehicle trajectories. The fifteen training/holdout origins overlap within five recorded segments and do not justify naive independent-window inference. Selection criteria may yield nearly identical smooth trends, and the observed position itself includes unmeasured camera noise.
+We also varied two quantities that
+should not be conflated. Increasing
+measurement noise with true jerk
+volatility fixed raises $S$;
+increasing genuine jerk innovation
+volatility with measurement noise
+fixed lowers it. Increasing both
+scales proportionally leaves $S$
+unchanged, even when absolute
+observation-noise variance changes
+sixteenfold. Consequently, the index
+is a model-conditional \emph{relative
+noise-attribution measure}, not a
+universal indicator of camera
+accuracy or absolute measurement
+precision. Serially correlated
+observation errors induce substantial
+calibration bias; these failures
+must accompany the favorable
+model-correct results.
 
-The training-data mean-difference policy uses no future information, but CV scores computed conditionally on that plug-in mean are not exact re-estimated LOOCV. Profiled Gaussian marginal likelihood requires variance assumptions; it is not point-estimator MLE for $\tau$ or joint ML estimation of $\mu$. Restricted residual BIC remains an exploratory constrained criterion because the original unrestricted interpolation boundary is mathematically pathological.
+\subsection{Recovery of jerk is distinct from forecasting}
+A second simulation family contains
+known analytic motion and its true
+discrete jerk. In that family the
+global cubic OLS reference with
+profiled Gaussian likelihood
+performed well for historical jerk
+recovery. Yet the preferred
+reference policy changes when
+evaluating future \emph{clean
+position}: fixed $\mu=0$ with
+continuous profile likelihood
+had lower one-second forecast
+RMSE among the tested PLS variants.
+Properly mean-adjusted joint REML
+optimizes a likelihood, not
+the jerk-reconstruction or
+forecasting risk, and was not
+uniformly best under either loss.
 
-The joint Gaussian REML extension illustrates a further distinction: statistically well-calibrated relative noise attribution does not imply minimal historical jerk-reconstruction or forecast error. Experiment006 found lower known-jerk RMSE for the global cubic OLS reference with continuous profiled likelihood, and its larger real NGSIM comparison continued to favor a GCV-selected smoothing spline in pooled recorded-future position error. On 161 of 200 real NGSIM episodes, continuous REML selected the zero-smoothing boundary; this emphasizes model sensitivity rather than genuine noise-free observations.
+These differences do not undermine
+the interpretability of $S$.
+They demonstrate that smoothness
+selection, estimation of the
+reference third difference,
+and boundary continuation are
+distinct components of the
+statistical model. A local
+25-point polynomial continuation
+and a last-three-point recurrence
+can forecast very differently
+from the same fitted trend.
+Neither is a complete probabilistic
+forecast model for a driver whose
+acceleration changes unexpectedly.
 
-The matched recurrence and GCV-spline comparisons sharpen this limitation. At the shortest horizon, the $d=3$ PLS recurrence using $\mu=0$ yields the lowest observed-future position RMSE among the reported methods; at two seconds the GCV-selected spline with a quadratic continuation performs better. Moreover, the training-derived nonzero reference mean helps the 25-point continuation in the present pilot but not the three-point recurrence. Thus an apparent benefit of $\mu\ne0$ cannot be attributed solely to smoothing without separating the historical estimator from the extrapolator. The five track segments correspond to only \emph{two distinct vehicle identities}; replication on independent vehicles is essential before generalizing these numerical rankings.
+\subsection{What the recorded NGSIM comparison establishes}
+The 200-episode real-data application
+is an important counterweight
+to favorable synthetic outcomes.
+For the recorded-future position
+criterion, a GCV-selected natural
+cubic smoothing spline with
+quadratic Taylor continuation
+has the lowest pooled RMSE
+at all examined horizons.
+The PLS three-point recurrence
+is relatively close at 0.5\,s,
+but its longer-horizon error
+is larger. Joint REML selects the
+zero-smoothing boundary in 161
+of 200 real episodes, highlighting
+a sensitivity to Gaussian noise
+assumptions and boundary selection,
+not an assertion that the camera
+measurements are noise free.
 
-Forecasts come from a local polynomial fitted to the historical PLS trend. It is \emph{not} a predictive distribution, and it cannot anticipate unobserved changes in acceleration, traffic interactions or lane changes. Future research requires independent maneuvers, substantially more vehicles, genuine measurement-error characterization, and a dedicated dynamic/state-space forecast comparison. The seven fitting backends are benchmarked for single-curve cost and numerical agreement; complete-selection runtime and independent multiprecision accuracy are addressed by companion studies.
+A separate exploratory five-segment
+pilot occasionally favors a
+particular PLS extrapolator, but
+its 15 origins overlap and
+represent only two reported
+vehicle IDs. It cannot outweigh
+the broader comparison.
+Moreover, the larger 200-episode
+sample comes from only five
+coarse recording-time blocks,
+and repeated reported IDs need
+not denote the same physical
+driver. Neither convenience
+sample supports robust
+population-level claims of
+statistical superiority. The
+real data contain no independently
+observed true jerk and thus
+cannot validate physical
+jerk reconstruction directly.
+
+\subsection{Scope of the contribution}
+The underlying PLS estimator,
+difference penalties, and
+percentage smoothness have
+important historical precedents
+in the work of
+\citet{guerrero2007,guerrero2008}
+and subsequent comparisons by
+\citet{cortes2017}. We do not
+claim to have invented PLS
+smoothing or general PLS
+forecasting. The applied
+contribution here is to
+combine a third-difference
+kinematic interpretation,
+an explicit normalized
+smoothness coordinate,
+reference-jerk policies,
+known-truth calibration
+and recovery experiments,
+and a real NGSIM comparison
+against established
+smoothing methods.
+
+Further investigation should
+use independently documented
+measurement noise or multiple
+sensors, more independent
+recording sessions, and
+covariance models allowing
+serial correlation. A
+dynamic physical forecasting
+model is also necessary
+before making broad claims
+about future maneuver prediction.
 
 \section*{Reproducibility and data rights}
-The US DOT/FHWA NGSIM dataset (DOI: 10.21949/1504477) is credited as the sole source of observed positions; the dataset portal identifies a CC BY-SA 3.0 license. Source query and extraction rules, tracked vehicle identifiers, segment starting timestamps, immutable checksums, chronological forecast rows, solver diagnostics, and original TeX-backed PGF figure sources are preserved under the case-study directory. The new Experiment006/007 synthetic and NGSIM follow-up results are preserved separately, including complete generated ground truth, observation errors, selected smoothness values, paired inference, reproducible vector plots, Conda environment records, exact file paths and SHA-256 manifests. The original official-position subset has not been artificially contaminated or pre-smoothed. Figure-derived jerk is explicitly estimated rather than observed.
+The U.S. DOT/FHWA NGSIM dataset
+\citep{fhwa2016} supplies
+the observed positions; the
+dataset portal identifies
+a CC BY-SA 3.0 license.
+Source queries and original
+page hashes, episode catalogs,
+all forecasts and model-selection
+rows, and the distinction
+between recorded and simulated
+truth are documented in
+the case-study repository.
+The two simulation studies
+preserve every generated
+clean position, noisy
+observation, true discrete
+jerk, reference-mean policy,
+fit error and selected $S$.
+All source code, simulation
+configurations, first-party
+data, bootstrap summaries,
+vector figures, and
+run-specific SHA-256
+inventories are retained
+in the Experiment004--007
+and manuscript artifact
+archives. No underlying
+NGSIM observation was
+artificially altered to
+create purported real
+ground-truth jerk.
 
 \section*{Declarations}
-This is an illustrative research draft. Authorship, correspondence, funding, conflicts and any journal submission require coauthor review and agreement.
+This is a research manuscript
+draft. Authorship, correspondence,
+funding, competing interests
+and any journal submission
+require coauthor review
+and agreement.
