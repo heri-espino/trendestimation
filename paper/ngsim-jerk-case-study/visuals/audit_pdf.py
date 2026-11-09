@@ -9,9 +9,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
+import warnings
 from pathlib import Path
 
 from pypdf import PdfReader
+
+# The author-supplied CAS PDF repeats an optional /Group dictionary key.
+# pypdf (strict=False) tolerates it, but its warning to stderr is fatal
+# under PowerShell's ErrorActionPreference=Stop. Mute that benign parser
+# warning while still explicitly checking readable pages, captions and hashes.
+logging.getLogger('pypdf').setLevel(logging.CRITICAL)
+warnings.filterwarnings('ignore', message='Multiple definitions in dictionary*')
 
 
 def sha256(path):
