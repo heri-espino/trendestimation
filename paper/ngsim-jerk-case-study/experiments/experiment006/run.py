@@ -36,6 +36,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO / "src"))
 from trendestimation import TrendSmoother  # noqa: E402
 from reml import DifferenceLikelihood  # noqa: E402
+from analyze import produce as produce_diagnostics  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location("exp006_ngsim_case", PAPER / "run_case.py")
 assert _spec is not None and _spec.loader is not None
@@ -458,6 +459,7 @@ def run(mode,source,output,stage,archived_path=None):
         csv_write(output/(label+"_rows.csv"),rows)
     csv_write(output/"summary.csv",summary)
     csv_write(output/"paired_comparisons.csv",paired)
+    diagnostics = produce_diagnostics(output, mode)
     count=Counter()
     for row in data["cv"]:
         count[str(row["selected_alpha"])]+=1
@@ -473,6 +475,7 @@ def run(mode,source,output,stage,archived_path=None):
         "historical_jerk_records":len(data["jerk"]),
         "cv_rule_horizon_records":len(data["cv"]),"archived_forecast_records":len(old),
         "alpha_counts":dict(count),
+        "diagnostics":diagnostics,
         "output_dir":str(output.resolve()),
         "source_commit":os.environ.get("GITHUB_SHA","manual"),
         "runner_name":os.environ.get("RUNNER_NAME","manual"),
