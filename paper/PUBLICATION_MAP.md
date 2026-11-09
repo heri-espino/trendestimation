@@ -1,5 +1,23 @@
 # Publication map — source of truth for all TrendEstimation agents
 
+**Paper C Experiment005 planned/executing (2026-11-08):**
+The author newly authorized known-jerk simulations
+after the 200-episode observational Experiment004.
+[Fixed config](ngsim-jerk-case-study/experiments/experiment005/config.json)
+and [full handoff](ngsim-jerk-case-study/experiments/experiment005/README.md)
+cover 96 pilot and 1,296 confirm independent
+analytic truth/noisy position trajectories. Compare
+`d=3` PLS GCV/profile ML across zero, sample, OLS
+and oracle `mu` plus last3/local25, against GCV splines
+and SG, with known D3 jerk and clean future position
+truth. The PC08 runner archives **all generated artifacts
+and exact path/SHA index** without overwriting the
+real-data study. This research is solely **Paper C**
+and does not modify Springer or CSDA reports. No
+results or claims are established before the runner's
+actual completed manifest is verified.
+
+
 **Paper C expanded experiment004 completed (2026-11-08):**
 See [run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md),
 [PC08 completed job](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
