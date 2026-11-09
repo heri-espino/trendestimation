@@ -1,0 +1,41 @@
+\section{Numerical conditioning, accuracy and failure mechanisms}
+\label{sec:stability}
+An exact SPD factorization exists for all finite $\lambda$, but finite-precision arithmetic can still produce unusable fitted trends or selection scores. In particular, the difference order, penalty magnitude, extreme smoothness levels and criterion diagnostics affect numerical validity.
+
+\begin{proposition}[Conditioning of the primal system]\label{prop:conditioning}
+For $1\le d<n$ and finite $\lambda\ge0$,
+\begin{equation}\label{eq:kappa}
+\kappa_2(A_\lambda)=1+\lambda\delta_{\max}
+\le 1+\lambda4^d,
+\end{equation}
+where $\delta_{\max}$ is the largest positive eigenvalue of $D_d^\top D_d$.
+\end{proposition}
+\begin{proof}
+By Lemma~\ref{lem:kernel}, $A_\lambda$ has $d$ eigenvalues equal to one and remaining eigenvalues $1+\lambda\delta_j$. The ratio of its largest and smallest eigenvalues is $1+\lambda\delta_{\max}$. Each forward-difference stencil has absolute coefficient sum $2^d$, so $\|D_d\|_\infty\le2^d$ and $\|D_d\|_1\le2^d$. Consequently $\|D_d\|_2\le\sqrt{\|D_d\|_1\|D_d\|_\infty}\le2^d$, yielding $\delta_{\max}=\|D_d\|_2^2\le4^d$.
+\end{proof}
+
+The condition bound becomes demanding near $S=1$, for which $\lambda$ diverges. Forming the normal matrix explicitly also squares the nonzero singular-value condition number relative to working directly with $D_d$. These facts motivate comparing several numerical formulations: shifted SVD, shift-free SVD, banded primal factorization, dual banded systems, and suitably scaled least-squares or QR formulations. The theoretical asymptotic cost alone cannot certify their accuracy.
+
+\paragraph{Three distinct notions of failure.}
+A factorization failure means an algorithm could not produce the required numerical factors. A \emph{post-solve} failure means factors and a candidate fit existed but its residual, objective or KKT check did not satisfy the prescribed tolerance. A \emph{parameter-mapping} failure means the inversion of $S_d(\lambda)=s$ did not attain its tolerance; it is not the same as a failed trend solve. Memory exclusion, a missing optional dependency and an undefined statistical criterion are further distinct statuses. Comparing only successful runtime rows while silently dropping failures can produce misleading algorithm rankings.
+
+For a computed finite-penalty trend $\widetilde\tau$, the first-order residual is
+\begin{equation}\label{eq:kkt}
+g_\lambda=y-\widetilde\tau
+-\lambda D_d^\top(D_d\widetilde\tau-\mu\mathbf1_r).
+\end{equation}
+Its appropriately scaled norm measures a backward or stationarity residual. A small residual is necessary for trusting a fit, but can coexist with substantial forward error when $\kappa_2(A_\lambda)$ is large. Independent higher-precision reference solutions and objective comparisons are therefore useful for hard cases. The originating numerical-reliability manuscript includes archived finite-precision comparisons for high difference orders; they are preserved as supporting material rather than made the empirical center of this theory article.
+
+\paragraph{Stable evaluation of spectral weights.}
+For interior penalties, form $w_j$ from $\log\lambda+2\log\sigma_j$ with overflow-safe logistic arithmetic rather than directly forming $\lambda\sigma_j^2$ when it may overflow. The exact $s=0,1$ trends use Corollary~\ref{cor:endfits}. Likewise $S\mapsto\lambda$ should be inverted with bracketed monotone root finding, explicit convergence checks and suitable endpoint guards; a continuous inverse exists mathematically but its floating-point realization is not automatic.
+
+\paragraph{What Cholesky failure does and does not establish.}
+Since $A_\lambda$ is SPD, failure of an ordinary float64 primal Cholesky routine in high-order and high-smoothness configurations is not a counterexample to positive definiteness. It is evidence about that finite-precision formulation, scaling and implementation. The archived high-precision companion analysis reported primal banded-Cholesky failures in difficult configurations, while shift-free SVD had substantially lower measured forward error there. Those outcomes do not imply that every structured Cholesky algorithm or precision level fails, nor that SVD is globally safer for every order and penalty. Refined and dual structured methods remain admissible candidates after their own verification.
+
+We define the valid method set for a workload by
+\begin{equation}\label{eq:valid}
+\mathfrak A_{\rm valid}
+=\{\mathcal A:\text{memory, precision, convergence,
+criterion and endpoint checks pass}\}.
+\end{equation}
+A nominally inexpensive method outside this set cannot be declared the computational winner.
