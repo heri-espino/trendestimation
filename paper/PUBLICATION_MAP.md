@@ -1,5 +1,22 @@
 # Publication map — source of truth for all TrendEstimation agents
 
+**Paper C expanded experiment004 completed (2026-11-08):**
+See [run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md),
+[PC08 completed job](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+and [stacked PR #122](https://github.com/heri-espino/trendestimation/pull/122).
+The real-only US-101/I-80 comparison produced 200 episodes,
+6,600 valid held-out recorded-position forecasts, 800
+GCV/profiled-Gaussian-ML selections, and a compiled current
+Paper C PDF on PC08. The canonical full original raw downloads
+and results live in documented persistent VM storage; the
+separate Git results branch records the full scored rows,
+provenance and SHA inventory. A GCV spline has the lowest
+pooled RMSE at 0.5, 1 and 2 s. There are only five recording
+session proxy groups and no true physical jerk labels; do
+not claim general inference, novelty, or first-use proof.
+No Springer/CSDA manuscript was altered by this experiment.
+
+
 **Paper C update (2026-11-08):** Author-led experiments
 [001](ngsim-jerk-case-study/experiments/experiment001/README.md),
 [002](ngsim-jerk-case-study/experiments/experiment002/README.md)
