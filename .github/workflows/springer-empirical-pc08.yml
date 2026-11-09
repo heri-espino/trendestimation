@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: experiment011-springer-empirical-pc08
@@ -226,3 +227,54 @@ jobs:
           git push origin "HEAD:refs/heads/$branch"
           if ($LASTEXITCODE -ne 0) { throw 'Cannot push immutable PDF branch' }
           Write-Host "Published new PDF SHA256=$($manifest.results[0].pdf_sha256)"
+
+
+  publish_repaired_analysis:
+    if: contains(github.event.head_commit.message, '[pc08-publish]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Require intended runner
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong PC08 runner' }
+      - uses: actions/download-artifact@v4
+        with:
+          name: experiment011-springer-analysis-42636962129
+          run-id: 42636962129
+          github-token: ${{ github.token }}
+          path: paper/benchmarks/experiment011/pc08_empirical/derived/42636962129
+      - name: Verify and archive repaired derived evidence without rerunning any experiment
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $summary = Get-Content -LiteralPath (Join-Path $out 'analysis_summary.json') -Raw | ConvertFrom-Json
+          if ($summary.recorded_jobs -ne 2813 -or $summary.valid_complete_rows -ne 76220) {
+            throw 'Artifact summary does not match independent audit'
+          }
+          foreach ($file in @('figures/fig02_paired_cv_gcv.pdf',
+            'empirical_results.tex','paired_backend_seed_bootstrap.csv','claim_to_data_ledger.json')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $out $file))) {
+              throw "Missing required repaired artifact $file"
+            }
+          }
+          $table = Get-Content -LiteralPath (Join-Path $out 'empirical_results.tex') -Raw
+          if (-not $table.Contains('confirm-data')) { throw 'Repaired case-labeled table absent' }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage audited files' }
+          git commit -m 'experiment011: archive repaired evidence with case-specific forest plot'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit audited files' }
+          $results = 'results/experiment011-springer-derived-42636962129'
+          git push origin "HEAD:refs/heads/$results"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable repaired result' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot fast-forward source branch' }
+          Write-Host 'Published repaired 21-file analysis artifact and permanent results branch'
