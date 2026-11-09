@@ -1,4 +1,6 @@
 # Paper work — mandatory manuscript/experiment routing
+**Paper C newest scientific study (Nov 9, 2026):** [Experiment006](ngsim-jerk-case-study/experiments/experiment006/RUN_LEDGER.md) completed on PCAG103A-08 and preserved as [immutable complete results](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp006-pc08-42639184183-a1). It compares Gaussian **unknown-mean joint REML** (GLS mean estimated at each lambda) against fixed-zero and plug-in reference means, with exact grid vs continuous search and training-only rolling CV for shrinkage. **Pooled synthetic known jerk:** global cubic OLS/profile ML 2.441, joint REML 3.295 m/s³. **Real NGSIM:** lambda->0 in 161/200 joint REML selections; recorded-position GCV spline best pooled; no independent physical jerk labels. The nominal grid bug from a first attempt is corrected: S starts at .05, whereas continuous REML may select S=0. All previous data, computational figures, Paper C PDFs and separate Springer/CSDA studies are untouched. Actual full VM filesystem with source hashes is documented. Review PR #127; do not merge without authorization.
+
 
 **Paper C author's MLE correction (2026-11-09):**
 [GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md](ngsim-jerk-case-study/notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md)
