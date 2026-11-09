@@ -1,0 +1,92 @@
+name: Archive updated NGSIM manuscript PDF (no experiments)
+
+on:
+  push:
+    branches:
+      - artifacts/manuscript-compile-ngsim-20261109
+    paths:
+      - ".github/workflows/archive-ngsim-20261109.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install TeX toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-pictures latexmk lmodern poppler-utils
+      - name: Verify existing NGSIM inputs and compile without experiments
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" paper/ngsim-jerk-case-study/
+          done
+          cd paper/ngsim-jerk-case-study
+          test -s main.tex
+          test -s references.bib
+          latexmk -pdf -g -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          test -s main.pdf
+          test -s main.log
+          pdfinfo main.pdf | head -22
+          if grep -Eq 'Citation .* undefined|There were undefined references|LaTeX Error|Fatal error occurred' main.log; then
+            echo 'Unresolved citation, reference or LaTeX error'
+            exit 1
+          fi
+      - name: Archive versioned PDF and provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p paper/builds/history/ngsim-20261109
+          cp paper/ngsim-jerk-case-study/main.pdf paper/builds/history/ngsim-20261109/main.pdf
+          cp paper/ngsim-jerk-case-study/main.log paper/builds/history/ngsim-20261109/main.log
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          root=pathlib.Path("paper/ngsim-jerk-case-study")
+          path=pathlib.Path("paper/builds/history/ngsim-20261109")
+          parts=[root/"main.tex",root/"references.bib"]
+          parts+=sorted((root/"sections").glob("*.tex"))
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          result={"paper":"NGSIM vehicle trajectory case study",
+                  "source_branch":"research/paper-c-experiment007-smoothness-precision-calibration",
+                  "upstream_source_sha":"46adc304fd5a9be874239dc24f979fa03a6fa420",
+                  "build_source_sha":os.environ["GITHUB_SHA"],
+                  "run_id":os.environ["GITHUB_RUN_ID"],
+                  "runner":os.environ.get("RUNNER_NAME"),
+                  "pdf_sha256":sha(path/"main.pdf"),
+                  "input_sha256":{p.as_posix():sha(p) for p in parts if p.is_file()},
+                  "source_only_build":True,"experiments_executed":False}
+          (path/"manifest.json").write_text(json.dumps(result,indent=2)+"\n")
+          print(json.dumps({k:result[k] for k in ("paper","pdf_sha256","source_only_build")}))
+          PY
+      - name: Upload PDF and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ngsim-20261109-source-build
+          path: paper/builds/history/ngsim-20261109/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit preserved PDF on archive branch only
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f paper/builds/history/ngsim-20261109/
+          git commit -m "archive: verified NGSIM PDF, LaTeX log and SHA256 [skip ci]"
+          git push origin HEAD:refs/heads/artifacts/manuscript-compile-ngsim-20261109
