@@ -1,0 +1,83 @@
+name: Experiment011 Springer empirical PC08 audit and publication
+
+on:
+  push:
+    branches:
+      - paper/springer-empirical-tensor-pc08
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Read-only preflight'
+        required: true
+        type: choice
+        options:
+          - preflight
+        default: preflight
+
+permissions:
+  contents: write
+
+concurrency:
+  group: experiment011-springer-empirical-pc08
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[pc08-preflight]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      ORIGINAL: 'C:\Users\175199\trendestimation-PC08_add97svd_20261105_025108'
+      BACKUP: 'C:\Users\175199\experiment011-backups\experiment011_20261109_072910742'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Require intended PC08 runner
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "RUNNER_NAME=$env:RUNNER_NAME, USERNAME=$env:USERNAME"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner, expected PCAG103A-08" }
+          if (-not (Test-Path -LiteralPath $env:CONDA_EXE)) { throw "Conda inaccessible" }
+      - name: Inspect complete report and its local backup (no benchmark execution)
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-\${{ github.run_id }}.json"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/preflight.py --root $env:ORIGINAL --backup $env:BACKUP --output $out
+          if ($LASTEXITCODE -ne 0) { throw "Read-only preflight failed; output retained where possible" }
+      - name: Upload compact diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-pc08-preflight-\${{ github.run_id }}
+          path: paper/benchmarks/experiment011/pc08_empirical/outputs/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Preserve metadata on a separate permanent branch
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-\${{ github.run_id }}.json"
+          if (-not (Test-Path -LiteralPath $out)) {
+            Write-Host "No diagnostic generated: do not publish an empty evidence claim."
+            exit 0
+          }
+          $branch = "results/experiment011-pc08-preflight-\${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw "Cannot create diagnostic archive branch" }
+          git add -f -- $out
+          git commit -m "experiment011: archive read-only PC08 preflight"
+          if ($LASTEXITCODE -ne 0) { throw "Diagnostic commit failed" }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw "Diagnostic publication failed" }
