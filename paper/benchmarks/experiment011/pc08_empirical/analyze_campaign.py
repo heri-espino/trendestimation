@@ -467,31 +467,42 @@ def figure_outputs(output,timing,pairs,coord,reliable):
     ax.set_xlim(0,1);ax.set_xlabel("Fraction of complete, status-admissible timing rows")
     ax.invert_yaxis()
     save(fig,"fig01_reliability","All report-selected attempts, grouped by criterion/backend; invalid and missing cells retained in denominators")
-    # selected matched spectral/banded cells: independent seed confidence intervals
+    # Matched complete-grid forest plot: each point is a predeclared case
+    # (not a pooled pseudo-scaling curve across mu, d or case families).
     sel=[r for r in pairs if r.get("baseline")=="banded_cholesky" and
          r.get("method")=="spectral_svd" and r.get("workload")=="grid_one_series" and
-         r.get("coordinate")=="direct_s" and r.get("M")==100 and
+         r.get("coordinate")=="direct_s" and int(r.get("M") or 0)==100 and
+         int(r.get("phase_workers") or 0)==24 and
          r.get("criterion") in ("cv","gcv") and r.get("bootstrap95_low")!=""]
-    fig,ax=plt.subplots(figsize=(6.4,3.2))
+    sel=sorted(sel,key=lambda r:(r["criterion"],int(r["n"]),int(r["d"]),r["case_id"]))
+    fig,ax=plt.subplots(figsize=(6.7,3.95))
     colors={"cv":"#174a7a","gcv":"#58a2b7"}
-    for criterion in ("cv","gcv"):
-        for phase in sorted({r["phase_workers"] for r in sel},key=str):
-            subset=[r for r in sel if r["criterion"]==criterion and r["phase_workers"]==phase]
-            if not subset:continue
-            subset.sort(key=lambda r:int(r["n"]))
-            x=[int(r["n"]) for r in subset]
-            y=[float(r["geometric_ratio"]) for r in subset]
-            errlo=[v-float(r["bootstrap95_low"]) for v,r in zip(y,subset)]
-            errhi=[float(r["bootstrap95_high"])-v for v,r in zip(y,subset)]
-            ax.errorbar(x,y,yerr=[errlo,errhi],fmt="o-",capsize=2,
-                        color=colors[criterion],label=f"{criterion.upper()}, max workers={phase}")
-    ax.axhline(1,color="black",lw=.75,ls="--")
-    ax.set(xlabel="Series length n (observed slices)",ylabel="Banded / SVD total cold time")
-    ax.set_yscale("log")
-    if sel: ax.set_xscale("log",base=2);ax.legend(frameon=False,fontsize=7)
-    else:ax.text(.5,.5,"No numerically admissible matched cells for this filter",
-                 ha="center",va="center",transform=ax.transAxes,wrap=True)
-    save(fig,"fig02_paired_cv_gcv","Ratio >1 means spectral SVD was faster; actual paired cells only; 95% seed-cluster bootstrap; one BLAS thread")
+    labels=[]
+    for i,r in enumerate(sel):
+        tag=r["case_id"]
+        label=(
+            "confirm-data" if tag.startswith("confirm_data") else
+            "pilot-data" if tag.startswith("pilot_data") else
+            "pilot-hybrid" if tag.startswith("pilot_hybrid") else
+            tag.split("_")[0]
+        )
+        labels.append(f'{r["criterion"].upper()}: n={r["n"]}, d={r["d"]} ({label})')
+        y=float(r["geometric_ratio"])
+        lo=float(r["bootstrap95_low"])
+        hi=float(r["bootstrap95_high"])
+        ax.errorbar(y,i,xerr=[[y-lo],[hi-y]],fmt="o",markersize=4,
+                    capsize=2.5,lw=1.2,color=colors[r["criterion"]])
+    ax.set_yticks(range(len(sel)),labels,fontsize=7.5)
+    ax.invert_yaxis()
+    ax.axvline(1,color="black",lw=.8,ls="--")
+    ax.set_xlabel("Banded Cholesky / spectral SVD cold time")
+    if sel:
+        ax.set_xlim(left=0,right=max(1.5,max(float(r["bootstrap95_high"]) for r in sel)*1.06))
+        ax.set_ylim(len(sel)-.25,-.75)
+    else:
+        ax.text(.5,.5,"No numerically admissible matched grid comparisons",
+                ha="center",va="center",transform=ax.transAxes)
+    save(fig,"fig02_paired_cv_gcv","Ten observed CV/GCV 100-point complete-grid matched case slices; 24-worker phase, independent seed-cluster 95% bootstrap")
     # Direct S vs once mapped lambda, M>=100
     sel=[r for r in coord if r.get("workload")=="grid_multiple_series" and
          r.get("method") in ("banded_cholesky","spectral_svd") and
@@ -537,26 +548,33 @@ def figure_outputs(output,timing,pairs,coord,reliable):
 
 
 def tex_summary(output,summary,timing,paired):
+    """Reproducible manuscript table: group names disclose mu/case variation."""
     tex=output/"empirical_results.tex"
-    def latex(s):return str(s).replace("_",r"\_")
     primary=[r for r in paired if r["method"]=="spectral_svd" and
              r["baseline"]=="banded_cholesky" and
              r["workload"]=="grid_one_series" and r["coordinate"]=="direct_s" and
              r["criterion"] in ("cv","gcv") and int(r["M"])==100 and
+             int(r["phase_workers"])==24 and
              r["bootstrap95_low"]!=""]
-    # Choose well-sampled actual slices, not numerically invalid fastest rows.
-    primary=sorted(primary,key=lambda r:(r["criterion"],int(r["n"]),int(r["phase_workers"])))[:14]
+    primary=sorted(primary,key=lambda r:(r["criterion"],int(r["n"]),r["case_id"]))
     lines=[r"\newcommand{\EmpiricalJobs}{"+str(summary["recorded_jobs"])+r"}",
            r"\newcommand{\EmpiricalRows}{"+str(summary["tensor_rows"])+r"}",
            r"\newcommand{\EmpiricalValidRows}{"+str(summary["valid_complete_rows"])+r"}",
            r"\newcommand{\EmpiricalFailedJobs}{"+str(summary["nonzero_process_jobs"])+r"}",
-           r"\begin{table}[t]",r"\caption{Selected matched complete-search ratios. Banded/SVD ratios above one favor SVD. Confidence limits resample independent case-seed clusters; execution phases remain separate. All numerical agreement is float64 selected-score parity only.}",
+           r"\begin{table}[t]",
+           r"\caption{Valid matched complete-search banded/SVD ratios for a 100-candidate, one-series grid in the 24-worker phase. Data denotes the conditional observed-difference mean, versus the default fixed zero mean. Hybrid labels refer to the broader comparison design, not the SVD/banded pairing itself. Confidence limits resample independent seed clusters; numerical agreement is float64 selected-score parity only.}",
            r"\label{tab:empirical-paired}",r"\centering\small",
-           r"\begin{tabular}{lrrrrrr}",r"\toprule",
-           r"Criterion & $n$ & $d$ & workers & seeds & ratio & 95\% CI\\",r"\midrule"]
+           r"\begin{tabular}{llrrrrr}",r"\toprule",
+           r"Criterion & Case design & $n$ & $d$ & seeds & ratio & 95\% CI\\",r"\midrule"]
+    def case_group(name):
+        if name.startswith("pilot_data"):return "pilot-data"
+        if name.startswith("confirm_data"):return "confirm-data"
+        if name.startswith("pilot_hybrid"):return "pilot-hybrid"
+        return name.split("_")[0]
     for r in primary:
-        lines.append(f'{latex(r["criterion"]).upper()} & {r["n"]} & {r["d"]} & {r["phase_workers"]} & {r["independent_seeds"]} & {r["geometric_ratio"]:.2f} & [{float(r["bootstrap95_low"]):.2f}, {float(r["bootstrap95_high"]):.2f}]'+r"\\")
-    if not primary:lines.append(r"\multicolumn{7}{c}{No eligible matched comparisons for this predeclared filter}\\")
+        lines.append(f'{r["criterion"].upper()} & {case_group(r["case_id"])} & {r["n"]} & {r["d"]} & {r["independent_seeds"]} & {r["geometric_ratio"]:.2f} & [{float(r["bootstrap95_low"]):.2f}, {float(r["bootstrap95_high"]):.2f}]'+r"\\")
+    if not primary:
+        lines.append(r"\multicolumn{7}{c}{No eligible matched full-grid comparisons}\\")
     lines += [r"\bottomrule",r"\end{tabular}",r"\end{table}"]
     tex.write_text("\n".join(lines)+"\n",encoding="utf-8")
 
