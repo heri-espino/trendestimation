@@ -107,7 +107,7 @@ F_D(\lambda;\mu)-\sum_{j=1}^m\log\delta_j}
 =F_D(\lambda;\mu)-\log|B|.
 \]
 
-**The two objectives have the same derivatives and exactly the same lambda minimizers for every fixed mu.** The additive constant can be large, so likelihood values themselves need not be numerically identical; only within-model rankings/parameter choices should be compared.
+**For every fixed mu and each strictly positive finite lambda, the two objectives have the same derivatives and identical lambda rankings/minimizers.** The direct difference-variance expression also has a finite one-sided limit as lambda→0⁺ when the quadratic form is nonzero. The repository deliberately assigns +∞ at the exact lambda=0 because its observation-variance/latent-prior parametrization treats this endpoint as inadmissible. Thus an optimizer admitting the exact zero-variance boundary could differ; the existing 15-point experimental S grids contain only S≥0.05, so this endpoint distinction did **not** affect Experiments004–005. The lambda→+∞ limit must likewise be handled by its proper continuous limit. The additive constant can be large, so likelihood values themselves need not be numerically identical; only within-model rankings/parameter choices should be compared.
 
 - The existing public selector is select_lambda(smoother, y, criterion="mle", mu=<fixed mean>).
 - The library's estimator for lambda is a **grid minimizer** when supplied with a 15-point S grid, as in Experiments004–005; it does not perform continuous derivative-based minimization for criterion="mle".
