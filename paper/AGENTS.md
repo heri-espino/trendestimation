@@ -1,5 +1,23 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C author's new design (2026-11-08):** Run only **real
+FHWA NGSIM positions**, download more US-101/I-80 episodes and compare
+profile Gaussian ML versus GCV on our d=3 PLS (zero/sample mean,
+three-point/local25), with GCV spline and Savitzky--Golay controls.
+Read [experiment004](ngsim-jerk-case-study/experiments/experiment004/README.md)
+and its run manifest/inventory before editing the paper. Episodes are
+not guaranteed unique physical vehicles because NGSIM IDs are reused.
+Only recorded future positions are validation targets: no latent jerk
+ground truth or unconditional statistical proof is produced. The
+self-hosted Windows runner writes raw data, every outcome, logs, and
+compiled manuscripts under a **persistent per-run VM directory**,
+and hashes all files; GitHub stores the compact complete result
+tables and inventory on an isolated results branch. Do not confuse
+the repo's profiled marginal MLE with joint MLE for mu/lambda/sigma.
+Paper C PR #121 remains a separate open base; do not merge without
+authorization and never overwrite experiment001-003.
+
+
 **Paper C new empirical results (2026-11-08):**
 Read [the active Experiment001–003 handoff](ngsim-jerk-case-study/README.md)
 and [PR #121](https://github.com/heri-espino/trendestimation/pull/121)
