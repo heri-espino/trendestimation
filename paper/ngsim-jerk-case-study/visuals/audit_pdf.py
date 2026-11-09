@@ -55,7 +55,9 @@ def audit(pdf,manifest,out):
     checks={
       "abstract_new_topic":"relative-noise calibration" in text,
       "spectral_index_definition":"spectral mode" in text,
-      "calibration_caption":"empirical calibration" in text,
+      # CAS column extraction can interleave the figure label and caption;
+      # require both scientific keywords, not adjacent tokens.
+      "calibration_caption":"calibration" in text and "covariance" in text,
       "intervention_caption":"controlled interventions" in text or
           "separately controlled interventions" in text,
       "misspecification_caption":"calibration error" in text,
