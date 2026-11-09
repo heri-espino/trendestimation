@@ -93,6 +93,28 @@ jobs:
       - name: Generate six multipanel vector-PDF / SVG / PNG publication figures
         run: |
           $ErrorActionPreference='Stop'
+          # A successful prior build commits *derived* figure files to this
+          # isolated feature branch. For an intentional editorial rerender,
+          # validate its existing six-figure manifest first, and refresh only
+          # those exact owned generated assets. Prior copies remain in Git
+          # history and immutable per-run audit branches. Original five plots
+          # and all scientific data are NEVER deleted or changed.
+          $paper='paper/ngsim-jerk-case-study'
+          $oldManifest=Join-Path $paper 'generated/visual_suite_manifest.json'
+          if (Test-Path $oldManifest) {
+            $old=Get-Content $oldManifest -Raw | ConvertFrom-Json
+            if ($old.n_new_multipanel_figures -ne 6) { throw 'Unexpected older visual ownership manifest' }
+            $stems=@('exp007_jerk_example','exp007_spectral_interpretation','exp007_calibration','exp007_interventions','exp007_misspecification','exp006_reconstruction_forecasting')
+            foreach($stem in $stems) {
+              foreach($ext in @('pdf','png','svg')) {
+                $owned=Join-Path $paper ("figures/$stem.$ext")
+                if (Test-Path $owned) { Remove-Item -LiteralPath $owned -Force }
+              }
+            }
+            Remove-Item -LiteralPath $oldManifest -Force
+            $oldAudit=Join-Path $paper 'generated/visual_suite_pdf_audit.json'
+            if (Test-Path $oldAudit) { Remove-Item -LiteralPath $oldAudit -Force }
+          }
           $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_visual_suite.py --exp007-confirm (Join-Path $env:EXP007_VIS_SOURCE 'confirm') --exp006-confirm (Join-Path $env:EXP006_VIS_SOURCE 'confirm') --exp006-real (Join-Path $env:EXP006_VIS_SOURCE 'real') --exp007-config paper/ngsim-jerk-case-study/experiments/experiment007/config.json --out-dir paper/ngsim-jerk-case-study/figures --manifest paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json 2>&1 |
             Tee-Object -FilePath (Join-Path $env:PC08_VIS_ROOT 'logs\render_figures.log')
