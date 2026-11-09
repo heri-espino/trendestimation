@@ -1,0 +1,1021 @@
+Command: latexmk -pdf -g -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+
+Initial Win CP for (console input, console output, system): (CP65001, CP65001, CP1252)
+I changed them all to CP1252
+Rc files read (in order):
+  NONE
+Latexmk: This is Latexmk, John Collins, 9 March 2026. Version 4.88.
+No existing .aux file, so I'll make a simple one, and require run of *latex.
+Force everything to be remade.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Category 'other':
+  Rerun of 'pdflatex' forced or previously required:
+    Reason or flag: 'go_mode'
+
+------------
+Run number 1 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(sn-jnl.cls
+Document Class: sn-jnl 2019/11/18 v0.1: An authoring template for Springer Jour
+nal articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\cuted.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/threeparttable\threepa
+rttable.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def) (main.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(sections/experiment011_methods.tex
+
+Package natbib Warning: Citation `whittaker1923graduation' on page 1 undefined 
+on input line 2.
+
+
+Package natbib Warning: Citation `weinert2007wh' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `weinert2012fast' on page 1 undefined on input
+ line 2.
+
+
+Package natbib Warning: Citation `biessy2026wh' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `guerrero2007penalized' on page 1 undefined on
+ input line 2.
+
+
+Package natbib Warning: Citation `guerrero2008smoothness' on page 1 undefined o
+n input line 2.
+
+
+Package natbib Warning: Citation `craven1979gcv' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `cortes2017smoothness' on page 1 undefined on 
+input line 2.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [1{C:/User
+s/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+Underfull \vbox (badness 10000) has occurred while \output is active [2]
+Underfull \vbox (badness 10000) has occurred while \output is active [3]
+Underfull \vbox (badness 10000) has occurred while \output is active [4]
+Underfull \hbox (badness 1057) in paragraph at lines 103--104
+\OT1/cmr/m/n/10 cri-te-rion value within rel-a-tive tol-er-ance $10[]$. These c
+ri-te-ria assess agree-ment
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [5])
+(sections/experiment011_results.tex
+
+LaTeX Warning: Reference `fig:reliability' on page 6 undefined on input line 5.
+
+
+
+LaTeX Warning: Reference `tab:empirical-reliability' on page 6 undefined on inp
+ut line 5.
+
+
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table02_reliab
+ility.tex)
+
+LaTeX Warning: Reference `tab:empirical-paired' on page 6 undefined on input li
+ne 17.
+
+
+LaTeX Warning: Reference `fig:paired' on page 6 undefined on input line 17.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [6
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.18 
+     ]
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table01_runtim
+e.tex)
+
+LaTeX Warning: Reference `tab:empirical-paired' on page 7 undefined on input li
+ne 24.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [7
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.29 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig01
+_reliability_stacked.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [8
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig02
+_runtime_distributions.pdf>]
+
+LaTeX Warning: Reference `fig:mapping' on page 9 undefined on input line 35.
+
+
+LaTeX Warning: Reference `fig:workloads' on page 9 undefined on input line 44.
+
+(sections/experiment011_robustness.tex
+
+LaTeX Warning: Reference `eq:kkt' on page 9 undefined on input line 2.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [9
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.3 
+     <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig03_
+mapping_distributions.pdf>]
+
+LaTeX Warning: Reference `fig:cholgridfail' on page 10 undefined on input line 
+4.
+
+
+Underfull \hbox (badness 1721) in paragraph at lines 4--5
+\OT1/cmr/m/n/10 and pro-filed Gaus-sian marginal like-li-hood with $(256\OML/cm
+m/m/it/10.03749 ; \OT1/cmr/m/n/10 3\OML/cmm/m/it/10.03749 ; \OT1/cmr/m/n/10 100
+)$ and $(512\OML/cmm/m/it/10.03749 ; \OT1/cmr/m/n/10 3\OML/cmm/m/it/10.03749 ; 
+\OT1/cmr/m/n/10 100)$.
+
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table03_grid_f
+ailures.tex)
+
+LaTeX Warning: Reference `fig:fourthfail' on page 10 undefined on input line 20
+.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [10
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.21 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig04
+_workload_stacked.pdf>]
+
+LaTeX Warning: Reference `fig:onegrid' on page 11 undefined on input line 32.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [11
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.33 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig05
+_grid_completion.pdf>]
+
+LaTeX Warning: Reference `eq:spectraltrend' on page 12 undefined on input line 
+41.
+
+
+LaTeX Warning: Reference `eq:rss' on page 12 undefined on input line 41.
+
+
+LaTeX Warning: Reference `fig:memorytradeoff' on page 12 undefined on input lin
+e 44.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [12
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig06
+_order4_failures.pdf>])
+Underfull \vbox (badness 10000) has occurred while \output is active [13
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.61 T
+      he recommendation should not be extended beyond the observed evidence....
+ <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig07_cros
+sover_distributions.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [14
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.66 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig08
+_memory_scaling.pdf>])
+Underfull \hbox (badness 4621) in paragraph at lines 43--44
+\OT1/cmr/bx/n/10.03749 Data and code avail-abil-ity. \OT1/cmr/m/n/10 Anal-y-sis
+ code, derived bench-mark results,
+
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+No file main.bbl.
+
+Package natbib Warning: There were undefined citations.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [16]
+(main.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)<C:/Users/175199/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/175199/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pf
+b><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmbx9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmex10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><
+C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+r10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr17.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr5.pfb><C:/Users/175199/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/175199/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
+:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
+i10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/symbols/msbm10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (16 pages, 680583 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Missing bbl file 'main.bbl' in following:
+ No file main.bbl.
+Latexmk: References changed.
+Latexmk: References changed.
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+Create bibtex main
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./bibliografia.bib
+Latexmk: applying rule 'bibtex main'...
+Rule 'bibtex main':  Reasons for rerun
+Category 'other':
+  Rerun of 'bibtex main' forced or previously required:
+    Reason or flag: 'Initial set up of rule'
+
+------------
+Run number 1 of rule 'bibtex main'
+------------
+------------
+Running 'bibtex  "main.aux"'
+------------
+This is BibTeX, Version 0.99e (MiKTeX 25.12)
+The top-level auxiliary file: main.aux
+The style file: sn-mathphys-ay.bst
+Database file #1: bibliografia.bib
+sn-mathphys-ay.bst [2024/07/19 v1.1 bibliography style]
+bibtex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+  main.bbl
+  main.out
+
+------------
+Run number 2 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(sn-jnl.cls
+Document Class: sn-jnl 2019/11/18 v0.1: An authoring template for Springer Jour
+nal articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\cuted.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/threeparttable\threepa
+rttable.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def) (main.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (main.out) (main.out)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(sections/experiment011_methods.tex
+
+Package natbib Warning: Citation `whittaker1923graduation' on page 1 undefined 
+on input line 2.
+
+
+Package natbib Warning: Citation `weinert2007wh' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `weinert2012fast' on page 1 undefined on input
+ line 2.
+
+
+Package natbib Warning: Citation `biessy2026wh' on page 1 undefined on input li
+ne 2.
+
+
+Package natbib Warning: Citation `guerrero2007penalized' on page 1 undefined on
+ input line 2.
+
+
+Package natbib Warning: Citation `guerrero2008smoothness' on page 1 undefined o
+n input line 2.
+
+
+Package natbib Warning: Citation `craven1979gcv' on page 1 undefined on input l
+ine 2.
+
+
+Package natbib Warning: Citation `cortes2017smoothness' on page 1 undefined on 
+input line 2.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [1{C:/User
+s/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+Underfull \vbox (badness 10000) has occurred while \output is active [2]
+Underfull \vbox (badness 10000) has occurred while \output is active [3]
+Underfull \vbox (badness 10000) has occurred while \output is active [4]
+Underfull \hbox (badness 1057) in paragraph at lines 103--104
+\OT1/cmr/m/n/10 cri-te-rion value within rel-a-tive tol-er-ance $10[]$. These c
+ri-te-ria assess agree-ment
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [5])
+(sections/experiment011_results.tex
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table02_reliab
+ility.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [6
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.18 
+     ]
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table01_runtim
+e.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [7
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.29 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig01
+_reliability_stacked.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [8
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig02
+_runtime_distributions.pdf>] (sections/experiment011_robustness.tex
+Underfull \vbox (badness 10000) has occurred while \output is active [9
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.3 
+     <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig03_
+mapping_distributions.pdf>]
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table03_grid_f
+ailures.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [10
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.21 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig04
+_workload_stacked.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [11
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.33 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig05
+_grid_completion.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [12
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig06
+_order4_failures.pdf>])
+Underfull \vbox (badness 10000) has occurred while \output is active [13
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.61 T
+      he recommendation should not be extended beyond the observed evidence....
+ <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig07_cros
+sover_distributions.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [14
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.66 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig08
+_memory_scaling.pdf>])
+Underfull \hbox (badness 4621) in paragraph at lines 43--44
+\OT1/cmr/bx/n/10.03749 Data and code avail-abil-ity. \OT1/cmr/m/n/10 Anal-y-sis
+ code, derived bench-mark results,
+
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+(main.bbl)
+
+Package natbib Warning: There were undefined citations.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active [16]
+(main.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+) )
+(see the transcript file for additional information)<C:/Users/175199/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/175199/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pf
+b><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmbx9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmex10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><
+C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+r10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr17.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr5.pfb><C:/Users/175199/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/175199/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
+:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
+i10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/symbols/msbm10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (16 pages, 699442 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Found input bbl file 'main.bbl'
+Latexmk: References changed.
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./bibliografia.bib
+Latexmk: applying rule 'bibtex main'...
+Rule 'bibtex main':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 2 of rule 'bibtex main'
+------------
+------------
+Running 'bibtex  "main.aux"'
+------------
+This is BibTeX, Version 0.99e (MiKTeX 25.12)
+The top-level auxiliary file: main.aux
+The style file: sn-mathphys-ay.bst
+Database file #1: bibliografia.bib
+sn-mathphys-ay.bst [2024/07/19 v1.1 bibliography style]
+bibtex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  main.aux
+
+------------
+Run number 3 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -file-line-error -halt-on-error -recorder  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(sn-jnl.cls
+Document Class: sn-jnl 2019/11/18 v0.1: An authoring template for Springer Jour
+nal articles
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\cuted.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f))) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/threeparttable\threepa
+rttable.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty)))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def) (main.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)) (main.out) (main.out)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(sections/experiment011_methods.tex
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [1{C:/User
+s/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+Underfull \vbox (badness 10000) has occurred while \output is active [2]
+Underfull \vbox (badness 10000) has occurred while \output is active [3]
+Underfull \vbox (badness 10000) has occurred while \output is active [4]
+Underfull \hbox (badness 1057) in paragraph at lines 103--104
+\OT1/cmr/m/n/10 cri-te-rion value within rel-a-tive tol-er-ance $10[]$. These c
+ri-te-ria assess agree-ment
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [5])
+(sections/experiment011_results.tex
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table02_reliab
+ility.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [6
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.18 
+     ]
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table01_runtim
+e.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [7
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.29 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig01
+_reliability_stacked.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [8
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.34 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig02
+_runtime_distributions.pdf>] (sections/experiment011_robustness.tex
+Underfull \vbox (badness 10000) has occurred while \output is active [9
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.3 
+     <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig03_
+mapping_distributions.pdf>]
+(benchmarks/experiment011/pc08_empirical/visualization001/tables/table03_grid_f
+ailures.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active [10
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.21 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig04
+_workload_stacked.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [11
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.33 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig05
+_grid_completion.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active [12
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.45 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig06
+_order4_failures.pdf>])
+Underfull \vbox (badness 10000) has occurred while \output is active [13
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.61 T
+      he recommendation should not be extended beyond the observed evidence....
+ <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig07_cros
+sover_distributions.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [14
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.66 
+      <./benchmarks/experiment011/pc08_empirical/visualization001/figures/fig08
+_memory_scaling.pdf>])
+Underfull \hbox (badness 4621) in paragraph at lines 43--44
+\OT1/cmr/bx/n/10.03749 Data and code avail-abil-ity. \OT1/cmr/m/n/10 Anal-y-sis
+ code, derived bench-mark results,
+
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+(main.bbl)
+Underfull \vbox (badness 10000) has occurred while \output is active [16]
+(main.aux) )
+(see the transcript file for additional information)<C:/Users/175199/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/175199/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Use
+rs/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pf
+b><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmbx9.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmex10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/175199/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/17
+5199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><
+C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+r10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr17.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr5.pfb><C:/Users/175199/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/175199/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/175199/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
+:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
+i10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/symbols/msbm10.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (16 pages, 702329 bytes).
+Transcript written on main.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Getting log file 'main.log'
+Latexmk: Examining 'main.fls'
+Latexmk: Examining 'main.log'
+Latexmk: Found input bbl file 'main.bbl'
+Latexmk: Log file says output to 'main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'main.bbl' for 'pdflatex'
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+kpsewhich: major issue: So far, you have not checked for MiKTeX updates.
+Latexmk: Found bibliography file(s):
+  ./bibliografia.bib
+Latexmk: All targets (main.pdf) are up-to-date
+
+Reverting Windows console CPs to (in,out) = (65001,65001)
+latexmk: major issue: So far, you have not checked for MiKTeX updates.
