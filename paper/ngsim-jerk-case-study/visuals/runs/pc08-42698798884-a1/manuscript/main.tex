@@ -1,0 +1,33 @@
+% The exact author's Elsevier CAS v2.4 class is copied by the build.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,mathtools,booktabs,graphicx,url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue}
+\newcommand{\R}{\mathbb R}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Jerk-aware PLS on observed vehicle trajectories}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Interpretable third-order penalized trend estimation for vehicle jerk: relative-noise calibration and forecasting}
+% Provisional author attribution, pending coauthor approval.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+Third differences of recorded vehicle position provide a physically interpretable, but noise-sensitive, proxy for jerk. We study third-order penalized least-squares (PLS) trend estimation through the normalized smoothness index $S$, which controls the effective number of fitted degrees of freedom and, under a Gaussian variance-ratio model, represents the average spectral fraction of differenced variation attributable to observation error. We validate this interpretation in a paired factorial simulation with known clean positions and jerk: 1,944 confirmatory noise--dynamics conditions, 72 independent random-innovation parent draws, and four smoothing selectors. Under correctly specified independent Gaussian errors, joint mean-adjusted restricted likelihood yields correlation $0.965$ between selected and theoretical $S$, with mean absolute calibration error $0.0115$. Correlated observation errors increase this error substantially; and equal proportional scaling of observation noise and jerk innovations leaves $S$ unchanged despite different absolute sensor precision. A separate known-jerk simulation compares reference-mean policies and forecast continuations; no selector is uniformly best for both reconstruction and prediction. Finally, chronological extrapolation is assessed on camera-derived Federal Highway Administration NGSIM positions, including a 200-episode follow-up in which a GCV smoothing spline outperforms the investigated PLS forecasting variants in pooled one-second RMSE. We distinguish regularization, relative noise attribution, physical jerk accuracy, and future-position prediction. The contribution is a reproducible, model-conditional characterization of the index for vehicle kinematics, not a new PLS estimator or a universal sensor-quality score.
+\end{abstract}
+\begin{keywords}
+Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative noise precision \sep calibration \sep NGSIM
+\end{keywords}
+\maketitle
+\input{sections/introduction}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/precision_calibration}
+\input{sections/discussion}
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
+\end{document}

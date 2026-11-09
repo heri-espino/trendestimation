@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "paper": "Paper C NGSIM CAS two-column",
+  "status": "rendered_verified",
+  "renderer": "matplotlib with pinned AwesomeFigures elegant Okabe-Ito style",
+  "journal_asset_policy": "Vector PDF in LaTeX, editable SVG plus 240-dpi PNG previews",
+  "scientific_source_sha256": {
+    "exp007_selections": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\selections.csv",
+      "sha256": "660996b1aa2f7fc9cb5644bcef74517208903e999c99d3aff8ffedf924156a40"
+    },
+    "exp007_trials": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\trials.jsonl.gz",
+      "sha256": "12a85029b02cf29c400f1c349933ae4cf370e66da80e3766def2a24db4aac319"
+    },
+    "exp007_cells": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\per_cell.csv",
+      "sha256": "a91e2eaf3b8dcfbdff867b62bcb27836b88e3841c5322e12255ac60b7a6c6b66"
+    },
+    "exp007_effects": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\effects_summary.csv",
+      "sha256": "24b4526552400ddd0dd7089dc97ebd1d0b2f7f11fcf1e949356a7e7d7738de31"
+    },
+    "exp007_calibration": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\calibration_summary.csv",
+      "sha256": "c8d70910546d0c65364c4324cd1ababd73ea0ce1fdc574852df6a526b4b33fc4"
+    },
+    "exp007_manifest": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP007-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\runs\\pc08-42660204414-a1\\confirm\\run_manifest.json",
+      "sha256": "11527d4eadddf65c11e1eaf2700c0a4244f0960a0279601531a79b1b09a7c7d2"
+    },
+    "exp006_jerk": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP006-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment006\\runs\\pc08-42639588117-a1\\confirm\\known_jerk_summary.csv",
+      "sha256": "cfd096f7358fafe8fdd22718523297695a482becae57f4eb5069aa5e08e1dba3"
+    },
+    "exp006_synthetic_forecast": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP006-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment006\\runs\\pc08-42639588117-a1\\confirm\\summary.csv",
+      "sha256": "8fb379b7cfd1373b8f98f5363748c67f8d971210a50d82f1e7a20116b9c3dffa"
+    },
+    "exp006_real_forecast": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP006-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment006\\runs\\pc08-42639588117-a1\\real\\summary.csv",
+      "sha256": "3f0f7722bfedd652570fe8e4c23ee733d209c51525be3e581b256d22493ac31b"
+    },
+    "exp006_manifest": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-visual-source-EXP006-42698798884-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment006\\runs\\pc08-42639588117-a1\\confirm\\run_manifest.json",
+      "sha256": "b938a228a21acb9587539862e66fa64353f49ada7653d0aceac3ffb6d40e5438"
+    },
+    "exp007_frozen_config": {
+      "path": "C:\\Users\\175199\\actions-runner\\_work\\trendestimation\\trendestimation\\paper\\ngsim-jerk-case-study\\experiments\\experiment007\\config.json",
+      "sha256": "e6494de8a1eaba920446b877e7bc429cee3afad8ad1241ecdf663840a814da77"
+    }
+  },
+  "example": {
+    "trial_id": "confirm_000010",
+    "case": "iid/iid, sigma_e=0.05m, sigma_j=2m/s3",
+    "method": "global_ols_plugin_mle",
+    "source_fitted_lambda": 2736.7544509953086,
+    "source_fitted_S": 0.9266132056445228,
+    "truth_max_abs_residual_m": 4.1536551975696057e-11
+  },
+  "tradeoff": {
+    "synthetic_jerk_rmse": {
+      "fixed_zero_continuous": 2.587379243577994,
+      "joint_reml_continuous": 3.2949941431712664,
+      "joint_reml_grid": 4.101414649135611,
+      "plugin_global_ols_continuous": 2.441257086201657,
+      "plugin_sample_continuous": 7.707732306563559
+    },
+    "spline_ngsim_1s_rmse": 0.34804280776801316
+  },
+  "n_new_multipanel_figures": 6,
+  "no_new_scientific_experiment": true,
+  "no_observation_or_truth_fabrication": true,
+  "model_correct_scope": "independent Gaussian jerk and observation noise",
+  "figure_files": {
+    "exp007_jerk_example": {
+      "pdf": {
+        "relative_path": "figures/exp007_jerk_example.pdf",
+        "sha256": "e139459ad1b4c36523fa23edc3a2ffe4a731dc641ad0c25204bb6901db30e840",
+        "bytes": 30216
+      },
+      "svg": {
+        "relative_path": "figures/exp007_jerk_example.svg",
+        "sha256": "f10299562ba8c7a7b63cb8814485d8bfda73090ecd01b55bf3916a65a2e74857",
+        "bytes": 47728
+      },
+      "png": {
+        "relative_path": "figures/exp007_jerk_example.png",
+        "sha256": "d7db14eb0c6605bf78b398c630178c826887984197fdc0e5e7e42317250216dd",
+        "bytes": 156806
+      }
+    },
+    "exp007_spectral_interpretation": {
+      "pdf": {
+        "relative_path": "figures/exp007_spectral_interpretation.pdf",
+        "sha256": "15081ad8deab82f067fd0eaa1bd2bce1e48d5b41a1d4ff592ce7ba4d661e4e64",
+        "bytes": 32404
+      },
+      "svg": {
+        "relative_path": "figures/exp007_spectral_interpretation.svg",
+        "sha256": "4479245be505104b3921fadfe9db52af0c10e4fbff4d8e930375bd8b89df4297",
+        "bytes": 33326
+      },
+      "png": {
+        "relative_path": "figures/exp007_spectral_interpretation.png",
+        "sha256": "7886750ee79bd5dedeb75d239e483187362c3ec40c00c9497c2607a8523aca6f",
+        "bytes": 110543
+      }
+    },
+    "exp007_calibration": {
+      "pdf": {
+        "relative_path": "figures/exp007_calibration.pdf",
+        "sha256": "a6234eb80fadf46fc57a85d32f16018e0636d0ea652bfc933ccca8cad823f772",
+        "bytes": 30578
+      },
+      "svg": {
+        "relative_path": "figures/exp007_calibration.svg",
+        "sha256": "e3476a3c5243a89c21bea9ac3db7d7e8fa311b39a57508b99f27b92a198e5049",
+        "bytes": 35864
+      },
+      "png": {
+        "relative_path": "figures/exp007_calibration.png",
+        "sha256": "056650bfc96843cb029151e1b7b0671003d9b90033606ea173c4a8d2b3264ae0",
+        "bytes": 104790
+      }
+    },
+    "exp007_interventions": {
+      "pdf": {
+        "relative_path": "figures/exp007_interventions.pdf",
+        "sha256": "7ffca34a20cbe832697f56cf1d05f024676ffe1966acedff4d8525833c4c9493",
+        "bytes": 27836
+      },
+      "svg": {
+        "relative_path": "figures/exp007_interventions.svg",
+        "sha256": "78042dbbe49d083ecead7358b33ea87e7e698252995f40f62cc3f86db8c4e5e5",
+        "bytes": 46088
+      },
+      "png": {
+        "relative_path": "figures/exp007_interventions.png",
+        "sha256": "51e68b26cd496d36e3e0cdb8cb8e08f8c93c10a652975fbe9343784e65096abf",
+        "bytes": 94577
+      }
+    },
+    "exp007_misspecification": {
+      "pdf": {
+        "relative_path": "figures/exp007_misspecification.pdf",
+        "sha256": "5c616a8a06493bedfeec3cd979b82b34ff200d97322bf53edfdd5928dd3416f5",
+        "bytes": 38152
+      },
+      "svg": {
+        "relative_path": "figures/exp007_misspecification.svg",
+        "sha256": "c60ce82313d8e2b2940bcd80ed399d82ca98910ba3aebb629ca45ad8116fbc0e",
+        "bytes": 52917
+      },
+      "png": {
+        "relative_path": "figures/exp007_misspecification.png",
+        "sha256": "6d506fc2dc58c314a9fb8c3d6984bf524789e15635412a76d168110cac4ed019",
+        "bytes": 82854
+      }
+    },
+    "exp006_reconstruction_forecasting": {
+      "pdf": {
+        "relative_path": "figures/exp006_reconstruction_forecasting.pdf",
+        "sha256": "de264a47d275dc861637ebf9ed46468893c124c59f3da8ea1ee8b18bb6b38f30",
+        "bytes": 32241
+      },
+      "svg": {
+        "relative_path": "figures/exp006_reconstruction_forecasting.svg",
+        "sha256": "56f36bee1c342bc33f47aeb0ead9a4da1f650dc7ae712cca818ddeeaae121f3e",
+        "bytes": 42545
+      },
+      "png": {
+        "relative_path": "figures/exp006_reconstruction_forecasting.png",
+        "sha256": "8e3e649988247bc5100e422ed7e9c8d87268742710ea06edee685e262757c4b5",
+        "bytes": 144864
+      }
+    }
+  }
+}
