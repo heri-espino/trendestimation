@@ -1,5 +1,28 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## New decision: expanded **real-only** GCV versus ML study
+
+[Experiment004](experiments/experiment004/README.md) implements
+an expanded, auditable FHWA US-101/I-80 download and selection of
+recorded trajectories, then compares the established d=3 PLS
+smoother using **GCV or the library's Gaussian profiled marginal
+likelihood (`mle`)**, for zero/training-mean mu and last3/local25
+continuations. Baselines are GCV natural cubic splines,
+Savitzky--Golay and local quadratic extrapolation. The author
+explicitly prioritized **real positions over simulations**. Results
+use paired episode-level, site-stratified bootstrap intervals
+against recorded future position, not independently known physical
+jerk.
+
+**External raw/complete results** are kept on PCAG103A-08 outside
+the checkout: see experiment004 for the complete permanent VM
+directory tree, hashes, file inventory, Git results branch and
+PowerShell reproduction commands. The workflow must succeed before
+new sample sizes, method rankings or numerical claims are reported.
+Existing pilot and manuscripts are untouched by the source-code-only
+experiment004 implementation.
+
+
 ## New recurrence and spline benchmark evidence (2026-11-08)
 
 The first three **sequential, source-controlled Paper C experiments** now
