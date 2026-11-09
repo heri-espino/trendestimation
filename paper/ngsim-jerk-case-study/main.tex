@@ -9,24 +9,24 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Jerk-aware PLS on observed vehicle trajectories}
+\shorttitle{Third-order PLS for jerk and vehicle trajectories}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
-\title[mode=title]{Interpretable third-order penalized trend estimation for vehicle jerk: relative-noise calibration and forecasting}
+\title[mode=title]{Interpretable third-order penalized least-squares trend estimation: known-jerk simulations and real vehicle trajectories}
 % Provisional author attribution, pending coauthor approval.
 \author[1]{Heriberto Espino-Montelongo}
 \author[1]{Daniela Cort\'es-Toto}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Third differences of recorded vehicle position provide a physically interpretable, but noise-sensitive, proxy for jerk. We study third-order penalized least-squares (PLS) trend estimation through the normalized smoothness index $S$, which controls the effective number of fitted degrees of freedom and, under a Gaussian variance-ratio model, represents the average spectral fraction of differenced variation attributable to observation error. We validate this interpretation in a paired factorial simulation with known clean positions and jerk: 1,944 confirmatory noise--dynamics conditions, 72 independent random-innovation parent draws, and four smoothing selectors. Under correctly specified independent Gaussian errors, joint mean-adjusted restricted likelihood yields correlation $0.965$ between selected and theoretical $S$, with mean absolute calibration error $0.0115$. Correlated observation errors increase this error substantially; and equal proportional scaling of observation noise and jerk innovations leaves $S$ unchanged despite different absolute sensor precision. A separate known-jerk simulation compares reference-mean policies and forecast continuations; no selector is uniformly best for both reconstruction and prediction. Finally, chronological extrapolation is assessed on camera-derived Federal Highway Administration NGSIM positions, including a 200-episode follow-up in which a GCV smoothing spline outperforms the investigated PLS forecasting variants in pooled one-second RMSE. We distinguish regularization, relative noise attribution, physical jerk accuracy, and future-position prediction. The contribution is a reproducible, model-conditional characterization of the index for vehicle kinematics, not a new PLS estimator or a universal sensor-quality score.
-\end{abstract}
-\begin{keywords}
-Penalized least squares \sep third differences \sep jerk \sep smoothness index \sep relative noise precision \sep calibration \sep NGSIM
+The third difference of recorded vehicle position approximates jerk but strongly amplifies observation noise. We investigate the established third-order penalized least-squares (PLS) trend model, its reference third-difference mean and the normalized, interpretable smoothness index $S$, with a focus on \emph{physical reconstruction and forecasting}, not solver execution time. In the independent Gaussian variance-ratio model, $S$ equals the average spectral fraction of the observed third-difference covariance attributable to measurement noise. A controlled calibration experiment with 1,944 paired noise--jerk conditions (72 independent innovation parents) finds Spearman association $0.965$ and mean absolute calibration error $0.0115$ for joint-REML-selected $S$ under correct covariance assumptions, while correlated observation noise substantially worsens calibration. We also compare PLS with hard truncated-SVD filtering of the same third-difference operator, GCV cubic smoothing splines and Savitzky--Golay filtering using 1,296 archived known-jerk synthetic trajectories. PLS with a historical cubic-OLS reference and Gaussian profile-likelihood selection attains historical discrete-jerk RMSE $2.441$\,m/s$^3$, versus $2.942$\,m/s$^3$ for SVD truncation matched in effective complexity. Real-data forecasting is assessed separately on 200 quality-qualified Federal Highway Administration NGSIM episodes, where the PLS and matched-SVD three-point continuations are comparable and a GCV smoothing spline with quadratic Taylor continuation achieves the smallest pooled recorded-position RMSE. Thus third-order PLS provides a physically interpretable, tunable estimator for noisy jerk, but $S$ is a \emph{relative, model-dependent} noise index rather than absolute sensor precision, and no estimator dominates every physical or forecasting target.
+\end{abstract}\begin{keywords}
+Penalized least squares \sep third differences \sep vehicle jerk \sep smoothness index \sep truncated singular-value decomposition \sep smoothing splines \sep NGSIM
 \end{keywords}
 \maketitle
 \input{sections/introduction}
 \input{sections/methods}
-\input{sections/results}
 \input{sections/precision_calibration}
+\input{sections/synthetic_case}
+\input{sections/real_case}
 \input{sections/discussion}
 \bibliographystyle{cas-model2-names}
 \bibliography{references}
