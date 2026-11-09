@@ -2,24 +2,26 @@
 \subsection{Completion rates and admissible observations}
 Of 2813 scheduled computational jobs, 57 terminated without a successful numerical record. The resulting dataset comprises 92,679 measured or explicitly classified method-level outcomes. A total of 76,220 (82.24\%) satisfy the predefined completeness and status conditions. The remaining 16,459 comprise 11,208 numerical-rejection records, 4224 additional smoothness-inversion failure records, 970 computational-budget exclusions, and 57 records representing unavailable job inputs. The classification retains unsuccessful searches; omitting them would bias subsequent comparisons toward implementations with a higher apparent completion rate.
 
-Figure~\ref{fig:reliability} summarizes status-admissible proportions for the evaluated criteria and implementation families. Because the methods were not all attempted in the same parameter configurations, aggregate percentages should be interpreted descriptively rather than as probabilities from a randomized, identically distributed reliability trial.
+Figure~\ref{fig:reliability} displays stacked status fractions by criterion and implementation, with distinct colors identifying the methods and patterned segments indicating numerical rejection, inversion failure, or resource exclusion. Table~\ref{tab:empirical-reliability} reports the underlying counts by method. Because eligibility varies across configurations, these percentages summarize observed method-level records rather than randomized or matched failure probabilities.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\EmpDir/figures/fig01_reliability.pdf}
-\caption{Proportion of complete, status-admissible method-level observations by selection criterion and implementation. Each denominator includes recorded incomplete searches and explicit exclusions for the associated method. Differences in the evaluated configuration sets preclude interpreting aggregate percentages as matched failure probabilities.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig01_reliability_stacked.pdf}
+\caption{Stacked status composition of complete-criterion evaluations by selection criterion. Solid colors identify the implementation, while patterned segments distinguish the recorded failure mechanisms. Rates are conditional on method-specific eligible observations and do not constitute matched failure probabilities.}
 \label{fig:reliability}
 \end{figure}
 
-\subsection{Complete-grid running time}
-Table~\ref{tab:empirical-paired} and Fig.~\ref{fig:paired} compare complete 100-candidate CV and GCV searches for one series. Each contrast uses the same observations, numerical criterion, smoothing candidates and execution phase. The reported ratio $\rho=T_{\mathrm B}/T_{\mathrm S}$ exceeds one for all eight representative parameter configurations, indicating an advantage for spectral SVD on these measured grids. The strongest among these representative ratios exceed five, whereas the smaller first-order GCV example is approximately 2.33. These findings concern \emph{complete selection}, including setup and diagnostics, not repeated trend fitting alone.
+\input{\VizDir/tables/table02_reliability.tex}
 
-\input{\PubDir/publication_table.tex}
+\subsection{Complete-grid running time}
+Table~\ref{tab:empirical-paired} summarizes the matched cold-time ratios for eight complete 100-candidate CV and GCV searches, reporting both seed-level median and interquartile range and the previously calculated geometric mean with seed-cluster bootstrap intervals. Figure~\ref{fig:paired} displays the corresponding distributions as violin densities, narrow boxplots and individual seed-level paired ratios. Each case uses identical observations and candidates for both methods. Ratios $\rho=T_{\mathrm B}/T_{\mathrm S}>1$ favor spectral SVD; all eight representative grids show this advantage. The distributions reveal variation and asymmetry hidden by the point summaries and must not be interpreted as eight identically distributed experiments.
+
+\input{\VizDir/tables/table01_runtime.tex}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\PubDir/figures/paired_cv_gcv_publication.pdf}
-\caption{Geometric-mean banded-Cholesky/SVD complete cold-time ratios for eight numerically admissible CV and GCV searches over 100 smoothness candidates. Horizontal intervals are 95\% seed-cluster bootstrap confidence intervals. All plotted comparisons were matched within the same execution phase; selected contrasts have 96 or 97 independent seed realizations. The dashed vertical reference denotes equal execution time.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig02_runtime_distributions.pdf}
+\caption{Observed distributions of matched banded-Cholesky/SVD complete cold-time ratios over 100 smoothing candidates. The violin outlines are descriptive kernel-density estimates, the boxes give medians and interquartile ranges, and the dots represent independent-seed cluster summaries. The dashed line denotes equal time; numerical confidence intervals for geometric means are given in Table~\ref{tab:empirical-paired}.}
 \label{fig:paired}
 \end{figure}
 
@@ -34,8 +36,8 @@ For spectral CV with $n=256$, $d=3$, 100 candidates and three series, the geomet
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\EmpDir/figures/fig03_mapping_cost.pdf}
-\caption{Matched cost of once-mapped penalties relative to direct smoothness-coordinate conversion in multiple-series grid workloads. Plotted values summarize geometric time ratios within admissible configurations from the same execution phase. Values below one favor a shared penalty mapping; the aggregates are descriptive rather than universal mappings from grid size to execution time.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig03_mapping_distributions.pdf}
+\caption{Per-case-seed distributions of mapped-penalty/direct-smoothness cold-time ratios, grouped by criterion, method and candidate-grid size. Violin density and boxplots describe heterogeneous admissible cases under the common execution phase. Values below one favor mapping the penalty grid once; the pooled descriptive distributions are not universal algorithmic scaling laws.}
 \label{fig:mapping}
 \end{figure}
 
@@ -43,8 +45,8 @@ Figure~\ref{fig:workloads} illustrates how a fixed first-order GCV configuration
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\EmpDir/figures/fig04_workloads.pdf}
-\caption{Median complete-criterion cold time for the four workload types in a first-order GCV example ($n=64$, 100-candidate grid). The reported time includes initialization, coordinate mapping and all evaluated criterion values. The within-seed workload observations are correlated.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig04_workload_stacked.pdf}
+\caption{Stacked component-wise medians for initialization, smoothness-to-penalty mapping and criterion evaluation in a first-order GCV example ($n=64$, $M=100$). Colors identify the implementation; light, medium and dark sections identify stages. Workload labels denote number of smoothing candidates times number of series. Sums of component medians are not generally the medians of total cold time.}
 \label{fig:workloads}
 \end{figure}
 
