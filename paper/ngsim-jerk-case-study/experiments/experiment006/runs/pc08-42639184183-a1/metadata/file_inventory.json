@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "run_status": "synthetic_and_real_complete",
+  "recorded_utc": "2026-11-09T14:55:21.267405+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment006\\run-42639184183-a1",
+  "source_commit": "ed51ac70f77d42a37f44ba8e2c0809785e939338",
+  "directory_paths_relative_to_root": [
+    "confirm",
+    "logs",
+    "metadata",
+    "pilot",
+    "real"
+  ],
+  "files": [
+    {
+      "relative_path": "confirm/cv_rows.csv",
+      "bytes": 2216948,
+      "sha256": "1967b462bad421c518fac1697c943071d17106c9a2a2b5c900fca8bc4f04bb22"
+    },
+    {
+      "relative_path": "confirm/DIAGNOSTICS.md",
+      "bytes": 2419,
+      "sha256": "a85ae9f3410ec078d5029360f64af1f295fc1508858f2435d33b61ee8444d3f6"
+    },
+    {
+      "relative_path": "confirm/forecasts_rows.csv",
+      "bytes": 9033872,
+      "sha256": "0830c7d322492eb0b3edcbea955f54b7c0ccc5dc1d021417c0dc4cf6a3738396"
+    },
+    {
+      "relative_path": "confirm/jerk_rows.csv",
+      "bytes": 2595887,
+      "sha256": "dcce112b200f7ab19e7b37526398a233e98600c320e523a50341c354bae65388"
+    },
+    {
+      "relative_path": "confirm/known_jerk_summary.csv",
+      "bytes": 613,
+      "sha256": "cfd096f7358fafe8fdd22718523297695a482becae57f4eb5069aa5e08e1dba3"
+    },
+    {
+      "relative_path": "confirm/paired_comparisons.csv",
+      "bytes": 5559,
+      "sha256": "7e77d1d9adc77c6c0bc292c38c75f4109239b1eaffe8e7157e963043eaaf26e1"
+    },
+    {
+      "relative_path": "confirm/regime_forecast_summary.csv",
+      "bytes": 16038,
+      "sha256": "cb8fb61c070f7b2314b4ad623bffd02fa055da35d98eaccd9a7140013b628610"
+    },
+    {
+      "relative_path": "confirm/RESULTS.md",
+      "bytes": 3311,
+      "sha256": "ce49c11fc654cafcf881f82edeb3346e17b744cd49cca0ff4353453b95d897c3"
+    },
+    {
+      "relative_path": "confirm/run_manifest.json",
+      "bytes": 2310,
+      "sha256": "d44f5342596d863a3fd79fec6a83d1a5cb37341ef89ea2cb482c51b50d854619"
+    },
+    {
+      "relative_path": "confirm/selection_diagnostics.csv",
+      "bytes": 760,
+      "sha256": "f75726cd49ab0f8b2ed1afc4ac8b127ca52713189a7073f7087a58ff9f6c3325"
+    },
+    {
+      "relative_path": "confirm/selections_rows.csv",
+      "bytes": 1577555,
+      "sha256": "a2125789842aba76d49be8166012180ffbc85be8d6ab4da214736ea5023211cd"
+    },
+    {
+      "relative_path": "confirm/shrinkage_diagnostics.csv",
+      "bytes": 454,
+      "sha256": "53a67e5c16591769f9f8862853e543c7ef35f64fa34d9cee6a01e2403b6f79c4"
+    },
+    {
+      "relative_path": "confirm/summary.csv",
+      "bytes": 8548,
+      "sha256": "8fb379b7cfd1373b8f98f5363748c67f8d971210a50d82f1e7a20116b9c3dffa"
+    },
+    {
+      "relative_path": "logs/confirm.log",
+      "bytes": 4390,
+      "sha256": "9d0fc0577a925f1d6e560599ab67eb5a0d06b16981f50909ff6d2b8a036a8e3e"
+    },
+    {
+      "relative_path": "logs/pilot.log",
+      "bytes": 298,
+      "sha256": "c36fc7e03d17e81b89ce927bd717039a8ae4fa72f87f8de23fdeff2bd78ef750"
+    },
+    {
+      "relative_path": "logs/preflight.log",
+      "bytes": 204,
+      "sha256": "e601d39d57e497c1d847e790274d10cfb4d1338e86ec20430d8df4c31ea9efdd"
+    },
+    {
+      "relative_path": "logs/real.log",
+      "bytes": 524,
+      "sha256": "f9c2004fb1a38eedfb4b41ae76bbbd7c9864ef6d749192d9115fddb7bc45a91b"
+    },
+    {
+      "relative_path": "metadata/experiment004_source_path.txt",
+      "bytes": 86,
+      "sha256": "e6a58cb73228d087e3517d644c76d5dbc6048b649f9bce1dbd96ab51da0c5fd4"
+    },
+    {
+      "relative_path": "metadata/experiment005_source_path.txt",
+      "bytes": 86,
+      "sha256": "3fd2c8f1ea7c574fe055687cd3818e11790b361d503ea35191d6fa3dfe2681f9"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3240,
+      "sha256": "7241c65fd6ee1de8f7080c090a17a6e8c0427ba4ebea0539b0c47c4844286938"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "f925cff975d2bc7f23182e43e66bd331633f99a9be0dc367c9849b4b13147e91"
+    },
+    {
+      "relative_path": "pilot/cv_rows.csv",
+      "bytes": 165052,
+      "sha256": "b796bbbc7e4e634fa356ace2f4a0c76e3b938a4788e18e6299428d6cdd2f3e4c"
+    },
+    {
+      "relative_path": "pilot/DIAGNOSTICS.md",
+      "bytes": 2384,
+      "sha256": "ac03a053e7d5ad278e52745ed4acfabf55e59ec92188ae8d44ad13943322987e"
+    },
+    {
+      "relative_path": "pilot/forecasts_rows.csv",
+      "bytes": 673157,
+      "sha256": "3a8b36194922a7ce7a0c6afe24e6c25c2308585587076c385af1f2a9f4189a4a"
+    },
+    {
+      "relative_path": "pilot/jerk_rows.csv",
+      "bytes": 195291,
+      "sha256": "b38bb444ee1d14b11baaa3a18e48046cb3629cd5932d138f56167c7db81678c4"
+    },
+    {
+      "relative_path": "pilot/known_jerk_summary.csv",
+      "bytes": 606,
+      "sha256": "9df7b0863a32e49d9fd84e24d12389a8517bb0d2f36b769cd066b270a2ef7137"
+    },
+    {
+      "relative_path": "pilot/paired_comparisons.csv",
+      "bytes": 5488,
+      "sha256": "855b2564d0e5894e033edd1178707600e05765fc4204ae40d76078f9d9aab72f"
+    },
+    {
+      "relative_path": "pilot/regime_forecast_summary.csv",
+      "bytes": 15836,
+      "sha256": "919935182ce9c5e199b36660171d56d597f9769213999f585bb4ae319cf4aa1e"
+    },
+    {
+      "relative_path": "pilot/RESULTS.md",
+      "bytes": 3237,
+      "sha256": "897ec7001bf12b79da195dbdb7afb79f1788bdb11e099d5e9e0abfc0bd42b086"
+    },
+    {
+      "relative_path": "pilot/run_manifest.json",
+      "bytes": 2289,
+      "sha256": "e372d19e7a8c28916eea1b1aed7d6b1ebd613003cabb72d825159029e7079449"
+    },
+    {
+      "relative_path": "pilot/selection_diagnostics.csv",
+      "bytes": 723,
+      "sha256": "7fb8fd87f5e0777131a57297303524c854d890ae1c7f1df48387ec3ac1a171d9"
+    },
+    {
+      "relative_path": "pilot/selections_rows.csv",
+      "bytes": 116457,
+      "sha256": "a79d31b4a985f11d130bffd556ba63474103c1a1510ce9ceedc1cf811e214955"
+    },
+    {
+      "relative_path": "pilot/shrinkage_diagnostics.csv",
+      "bytes": 391,
+      "sha256": "14f7d0c1f4d8808387df07a095426108515b619852c6fb8a72dcfe246814535b"
+    },
+    {
+      "relative_path": "pilot/summary.csv",
+      "bytes": 8321,
+      "sha256": "b5160510b8fac1c10f4d67d83b1e3513fd7bf88b5bf5a8aeceb373cb4b9af009"
+    },
+    {
+      "relative_path": "real/cv_rows.csv",
+      "bytes": 297801,
+      "sha256": "bab406d00ea31f6c7a419b91b9e7f9b1fa5ac1c5923fc8a99d9848a4c418c0d3"
+    },
+    {
+      "relative_path": "real/DIAGNOSTICS.md",
+      "bytes": 1750,
+      "sha256": "e7d9cc82e5d2568e7db222f899f75b44827c0861d508b15307960695e061d6fe"
+    },
+    {
+      "relative_path": "real/forecasts_rows.csv",
+      "bytes": 1132263,
+      "sha256": "a3920354f5a55bfea5eb2b017515ccf4d5f302b67fe51032b9b2bb4003a52af0"
+    },
+    {
+      "relative_path": "real/jerk_rows.csv",
+      "bytes": 225502,
+      "sha256": "4e4a04703baecbf763309d02e4e5fb62ea8f7229e94619ea4bf0286de5d2838d"
+    },
+    {
+      "relative_path": "real/paired_comparisons.csv",
+      "bytes": 5374,
+      "sha256": "1f74958c01ccf0ba3e60a3b6a2b7b7399a9635184bb26f8e6cd6593f9aa74009"
+    },
+    {
+      "relative_path": "real/regime_forecast_summary.csv",
+      "bytes": 4764,
+      "sha256": "2ce23bebce1d9c444a393aea9cdbdf0a19afcf60e81c8680fb39bb42e59b75cb"
+    },
+    {
+      "relative_path": "real/RESULTS.md",
+      "bytes": 2510,
+      "sha256": "eb4108f76b3b4849bfbad597bb1e1045fd41c4ec6ef100e7ed5071f8a1a61941"
+    },
+    {
+      "relative_path": "real/run_manifest.json",
+      "bytes": 2312,
+      "sha256": "a8723906ce3a5240647e3719a2703c247cfaf59b8a4323a794c46d894585a9ce"
+    },
+    {
+      "relative_path": "real/selection_diagnostics.csv",
+      "bytes": 699,
+      "sha256": "161a22de845aeff010616640f0bf3c083e30bd551b3d1463d756b7d498eb5ee6"
+    },
+    {
+      "relative_path": "real/selections_rows.csv",
+      "bytes": 190834,
+      "sha256": "186b6e00d256ba7c792ce552800f36e188cbfdd58b68c28130f26de2f2475903"
+    },
+    {
+      "relative_path": "real/shrinkage_diagnostics.csv",
+      "bytes": 356,
+      "sha256": "2eeceebf0918138f9538cf9f098010068c968341a1101b47aa0afc1f72c23956"
+    },
+    {
+      "relative_path": "real/summary.csv",
+      "bytes": 5362,
+      "sha256": "3f0f7722bfedd652570fe8e4c23ee733d209c51525be3e581b256d22493ac31b"
+    }
+  ],
+  "total_files_excluding_this_inventory": 47,
+  "total_bytes_excluding_this_inventory": 18531916,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}

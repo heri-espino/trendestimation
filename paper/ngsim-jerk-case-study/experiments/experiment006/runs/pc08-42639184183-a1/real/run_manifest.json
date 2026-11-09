@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "experiment": "experiment006",
+  "mode": "real",
+  "stage": "real",
+  "status": "completed",
+  "source_path": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment004\\run-42538556206-a1\\data",
+  "source_sha256": "e6b594edd0cde7165302c4c7b65720645ec940122af23152db24f7eb1230598e",
+  "archived_baselines_path": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment004\\run-42538556206-a1\\results\\forecast_rows.csv",
+  "archived_baselines_sha256": "6081b23437cface9f15bb1d4bd24a82c6caf45ecf94b70bd8b08afec1feb1042",
+  "n_samples": 200,
+  "n_real_jerk_labels": 0,
+  "forecast_count": 7200,
+  "selection_count": 1000,
+  "historical_jerk_records": 2200,
+  "cv_rule_horizon_records": 1200,
+  "archived_forecast_records": 6600,
+  "alpha_counts": {
+    "0.0": 784,
+    "1.0": 277,
+    "0.5": 139
+  },
+  "diagnostics": {
+    "n_methods": 5,
+    "n_alpha_rows": 6,
+    "n_known_jerk_summary": 0,
+    "n_regime_summary": 72
+  },
+  "output_dir": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment006\\run-42639184183-a1\\real",
+  "source_commit": "ed51ac70f77d42a37f44ba8e2c0809785e939338",
+  "runner_name": "PCAG103A-08",
+  "runner_id": "42639184183",
+  "elapsed_seconds": 4.205157899996266,
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1",
+  "method_estimators": [
+    "joint_reml_continuous",
+    "joint_reml_grid",
+    "fixed_zero_continuous",
+    "plugin_sample_continuous",
+    "plugin_global_ols_continuous"
+  ],
+  "continuations": [
+    "guerrero_last3",
+    "local25"
+  ],
+  "horizons_frames": [
+    5,
+    10,
+    20
+  ],
+  "time_cv_origins": {
+    "5": [
+      45,
+      55,
+      65
+    ],
+    "10": [
+      45,
+      55,
+      65
+    ],
+    "20": [
+      40,
+      50,
+      60
+    ]
+  },
+  "alpha_candidates": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "likelihood": "mean-adjusted Gaussian REML with GLS mu(lambda), fixed-mu comparator",
+  "parameter_search": "61 fixed log-lambda mesh, all observed local minima refined, plus exact 0/infinity limits",
+  "mean_reference_units": "discrete D3 position, physical jerk = mu/0.1^3",
+  "inferential_scope": "only five coarse recording-session proxies, descriptive not population CI",
+  "existing_archives_preserved": true
+}
