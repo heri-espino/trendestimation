@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-09T14:45:34.358231+00:00",
+  "host": "GitHub Actions 1000016771",
+  "persistent_run_root": "/home/runner/work/trendestimation/trendestimation/paper/ngsim-jerk-case-study/experiments/experiment006/runs/cloud-42637695535-a1",
+  "source_commit": "f64633c518c0ac0bf11065de5004341287a5b42a",
+  "directory_paths_relative_to_root": [
+    "logs",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "logs/pilot.log",
+      "bytes": 1107,
+      "sha256": "1a266f7efdd64185c9fa89b66e27a788dac911105836f4a44ead2ca3b5ab224a"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 1582,
+      "sha256": "ac08916e48d04c9010355732e0ffbee063d86bed32a99310648cbd35bfd63817"
+    },
+    {
+      "relative_path": "metadata/source_archive_path.txt",
+      "bytes": 144,
+      "sha256": "d3d07e9aa4ff18ad98ec89350e8a2d47ee8bda38117cd465e6580f537e8008eb"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 41,
+      "sha256": "781fb8b2d463aecd943964558d9e142235366008d7ee3924bec2efae032444fc"
+    }
+  ],
+  "total_files_excluding_this_inventory": 4,
+  "total_bytes_excluding_this_inventory": 2874,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
