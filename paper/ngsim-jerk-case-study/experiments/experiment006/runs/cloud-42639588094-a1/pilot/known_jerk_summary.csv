@@ -1,0 +1,12 @@
+method,horizon_frames,n,known_discrete_jerk_rmse_m_s3
+fixed_zero_continuous,all,96,0.20314671223506217
+joint_reml_continuous,all,96,0.19585538113500509
+joint_reml_grid,all,96,0.21465825809275269
+plugin_global_ols_continuous,all,96,0.17900617483007195
+plugin_sample_continuous,all,96,6.845206301547942
+shrink_tscv_guerrero_last3,10,96,0.19079932281815343
+shrink_tscv_guerrero_last3,20,96,0.19128418943277492
+shrink_tscv_guerrero_last3,5,96,0.19015918625992806
+shrink_tscv_local25,10,96,0.19206528377115736
+shrink_tscv_local25,20,96,0.1916491413851516
+shrink_tscv_local25,5,96,0.1906287844519152
