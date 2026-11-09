@@ -1,5 +1,32 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Latest Paper C update: known-jerk Experiment005 (2026-11-08)
+
+The author has just authorized **simulations** following
+completed observational Experiment004. Read
+[experiment005 README](ngsim-jerk-case-study/experiments/experiment005/README.md)
+and its fixed [config.json](ngsim-jerk-case-study/experiments/experiment005/config.json).
+A dedicated PCAG103A-08 workflow runs a small pilot of
+96 independently seeded analytic jerk trajectories and,
+only on success, a 1,296-trial confirmation with separate
+seeds. It compares d=3 PLS GCV vs Gaussian profile ML,
+zero/sample/global-OLS/tail-OLS/synthetic-oracle `mu`,
+both existing continuation rules and GCV spline/SG
+baselines. Outputs directly measure **known historical
+discrete jerk** and clean-position forecasts, unlike
+earlier NGSIM only recorded-position error.
+A fixed-S crossed reference-mean ablation separates
+smoother and extrapolation effects. All datasets,
+noisy/clean trajectories, losses, figures, failure
+rows and reproducibility metadata reside in a unique
+non-overwriting PC08 persistent directory, and are
+pushed in full to an independent Git results branch.
+**Do not infer numerical success from workflow creation.**
+This branch is separate from the active PR #122 based
+on earlier Paper C PR #121. No manuscript has yet been
+rewritten with these *not-yet-validated* simulation results.
+
+
 ## Completed expanded real-only Paper C experiment004 (2026-11-08)
 
 [Completed run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md);
