@@ -1,6 +1,6 @@
 # Paper C Experiment006 — joint unknown-mean REML and forecasting-oriented mu
 
-**Status:** Source-controlled, testable study launched on the GitHub-hosted scientific runner and on designated PCAG103A-08 Windows self-hosted runner. A completed job and validated run manifest are required before reporting any numerical result. The first pilot computation evaluated all 96 trials but exposed a bootstrap-config lookup error before writing reports; that bug was fixed and both workflows retriggered, preserving previous failure logs.
+**Status: COMPLETED AND VERIFIED (2026-11-09).** [PCAG103A-08 successful run #42639588117](https://github.com/heri-espino/trendestimation/actions/runs/42639588117), [separate GitHub-hosted simulation replication #42639588094](https://github.com/heri-espino/trendestimation/actions/runs/42639588094), [full audited results ledger](RUN_LEDGER.md), and [source CI success #42639598576](https://github.com/heri-espino/trendestimation/actions/runs/42639598576) document the actual executed study. Historical earlier failed pilots and the initial grid-boundary coding mistake remain preserved in their independent archival branches and are superseded, not deleted.
 
 ## Research question and scientific isolation
 
