@@ -7,10 +7,12 @@ The nine configurations account for 6984 banded-rejection timing records; anothe
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\RobustDir/figures/fig05_complete_grid_failure.pdf}
-\caption{Observed completion fractions for nine parameter configurations contrasting a single candidate with a full smoothing grid. Each configuration contains 97 independent random-seed realizations. The banded grid fails the post-solve optimality check for all recorded grid observations, whereas the spectral pipeline completes the corresponding grids. Repeated measurements and candidate policies within each realization are not independent trials.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig05_grid_completion.pdf}
+\caption{Full-grid numerical completion in nine parameter configurations, with method-specific coloring and patterned rejection fractions. All recorded single-candidate outcomes complete for both implementations, but the banded full-grid pipeline is rejected while the spectral pipeline completes. Each configuration has 97 independent seed clusters; within-seed repeats, mapping policies and multiple-series workloads are correlated.}
 \label{fig:cholgridfail}
 \end{figure}
+
+\input{\VizDir/tables/table03_grid_failures.tex}
 
 The apparent spectral advantage must be interpreted as \emph{observed computational completion}, not a controlled comparison of identical backward-error tests. The spectral scorer does not impose the same implementation-specific acceptance criterion as the banded scorer. Independent numerical reference calculations would be required to establish a strict relative-accuracy ranking at each penalty.
 
@@ -21,8 +23,8 @@ This error concerns the transformation from the bounded coordinate $S$ to the pe
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\RobustDir/figures/fig06_fourth_order_failure_modes.pdf}
-\caption{Status composition of the fourth-order computations at increasing series lengths. The displayed denominator is the number of available method-level records. Banded post-solve optimality failures and smoothness-coordinate inversion failures are distinguished; the latter affect both implementations. Excluded or unavailable jobs are retained separately in the overall accounting.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig06_order4_failures.pdf}
+\caption{Stacked method-colored fractions of numerically complete evaluations and distinct rejection mechanisms for difference order four. The bands show implementation-specific complete, post-solve KKT-rejected and inaccurate smoothness-inversion outcomes. Denominators consist of available method-level records; both implementations exhibit inversion failures at higher sample lengths.}
 \label{fig:fourthfail}
 \end{figure}
 
@@ -31,8 +33,8 @@ The principal runtime trade-off becomes visible when paired, numerically admissi
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\RobustDir/figures/fig07_single_vs_grid_speedups.pdf}
-\caption{Matched banded-Cholesky/SVD complete cold-time ratios for one smoothing candidate and for 100 candidates. Horizontal bars represent 95\% seed-cluster bootstrap intervals. Values above one favor spectral SVD. Only complete and numerically admissible method pairs contribute to the displayed estimates.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig07_crossover_distributions.pdf}
+\caption{Distributional comparison of matched banded-Cholesky/SVD cold-time ratios for one candidate and 100 candidates. Violin densities, boxplots and individual seed-level points show the pronounced reversal of computational preference. Values above one favor SVD. Corresponding independent-seed bootstrap intervals for geometric means are reported in the text rather than inferred from violin widths.}
 \label{fig:onegrid}
 \end{figure}
 
@@ -45,8 +47,8 @@ For example, the spectral admission allowance is 640~MiB at $n=4096$. At $n=8192
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\RobustDir/figures/fig08_memory_policy.pdf}
-\caption{Quadratic dense memory allowances for spectral SVD and an explicit-inverse reference compared with the storage of two order-four banded working arrays. The horizontal line denotes the computational study's 2~GiB dense allocation limit. These are analytical, implementation-specific storage calculations rather than measured peak memory; only the shaded sample-size range was included in the study.}
+\includegraphics[width=\linewidth]{\VizDir/figures/fig08_memory_scaling.pdf}
+\caption{Analytical source-code memory allowances as a function of series length for dense spectral SVD, an explicit inverse and two fourth-order banded working arrays. The shaded region denotes examined sample lengths and the dashed line the 2~GiB dense allocation policy. These curves are storage-policy calculations, not measured peak memory.}
 \label{fig:memorytradeoff}
 \end{figure}
 
