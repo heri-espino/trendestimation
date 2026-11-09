@@ -212,12 +212,12 @@ def memory(out,meta):
             label="Naive inverse policy: 7 full matrices")
     ax.plot(ns,data["banded_two_arrays_d4_MiB"],"^-",color=RED,lw=1.8,
             label="Banded factor + selected inverse (d=4)")
-    ax.axhline(2048,color=GOLD,ls=(0,(5,3)),lw=1.5,label="Experiment011 policy: 2 GiB dense cap")
+    ax.axhline(2048,color=GOLD,ls=(0,(5,3)),lw=1.5,label="Dense allocation limit (2 GiB)")
     ax.axvspan(64,4096,color="#dde8f0",alpha=.23)
     ax.set(xscale="log",yscale="log")
     ax.set_xticks(ns)
     ax.set_xticklabels([f'{int(n):,}' for n in ns],rotation=35,ha="right",fontsize=7)
-    ax.set_xlabel("Series length n (shaded: observed Experiment011 n-range)",fontsize=9)
+    ax.set_xlabel("Series length n (shaded: evaluated sample-size range)",fontsize=9)
     ax.set_ylabel("Storage scale or admission allowance (MiB; log axis)",fontsize=9)
     ax.set_title("Why dense spectral reuse trades speed for quadratic memory",
                  fontsize=10.5,weight="bold",pad=9)
