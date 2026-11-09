@@ -42,7 +42,7 @@ class IngestionRules(unittest.TestCase):
     def test_pairing_rejects_unequal_sources_and_worker_strata(self):
         r1=row("banded_cholesky",time=2)
         r2=row("spectral_svd",time=1)
-        self.assertEqual(len(a.pair_rows([r1,r2])),2)  # both baseline directions
+        self.assertEqual(len(a.pair_rows([r1,r2])),1)  # only banded baseline is present
         r2["phase_workers"]=12
         self.assertEqual(a.pair_rows([r1,r2]),[])
         r2["phase_workers"]=24
@@ -59,7 +59,7 @@ class IngestionRules(unittest.TestCase):
         r1=row("banded_cholesky",time=2)
         r2=row("spectral_svd",time=1,selected=0.8)
         pairs=a.pair_rows([r1,r2])
-        self.assertEqual(len(pairs),2)
+        self.assertEqual(len(pairs),1)
         self.assertFalse(any(p["float64_pair"] for p in pairs))
         self.assertTrue(all(p["pair_status"]=="score_or_s_disagreement" for p in pairs))
 
