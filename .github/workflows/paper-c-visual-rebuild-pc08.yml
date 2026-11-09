@@ -55,6 +55,11 @@ jobs:
           "PC08_VIS_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
           "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
           "$env:RUNNER_NAME" | Out-File (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+          # pypdf is a small, paper-only auditing dependency (not a
+          # simulation dependency). The original VM env did not contain it.
+          # Install only this pinned package; do not reinstall AwesomeFigures.
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check 'pypdf==6.0.0'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot install pinned pypdf audit requirement' }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
             Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
           if ($LASTEXITCODE -ne 0) { throw 'Failed scientific environment inventory' }
