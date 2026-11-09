@@ -1,5 +1,19 @@
 # Paper C — Experiment005: known-jerk simulations and forecast attribution
 
+**Likelihood clarification, 2026-11-09:** The author explicitly meant
+the Gaussian restricted likelihood of (z=Dy-mumathbf1), covariance
+(sigma_u^2(I+lambda DD^	op)). Our existing criterion="mle"
+is **exactly the same fixed-(mu) restricted profile objective up to
+an additive (lambda)-independent log-determinant constant**;
+[proof and direct-regression tests](../../notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md).
+The Experiment005 ML selection was consequently already the intended
+method **conditionally on each chosen mean**. The sample or cubic OLS
+plug-in reference policies were NOT joint or mean-adjusted Gaussian
+REML, and selection used the frozen 15-point S grid. The new
+unknown-reference REML formula should be investigated separately,
+without rewriting these immutable historical results.
+
+
 **Status: COMPLETED on GitHub-hosted scientific runner (2026-11-08).** [Successful workflow #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064) completed 96 pilot + 1,296 independent confirmation trials, preserved all first-party clean/noisy trajectories, and produced no invalid numerical rows. Read the [verified RUN_LEDGER.md](RUN_LEDGER.md) for actual results, scientific limitations, and the [full permanent Git results archive](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). **PCAG103A-08 remains a separate queued Windows execution at last check; do not claim VM computation or storage until verified.** The author explicitly authorized simulations, superseding the earlier real-only choice for Experiment004.
 
 ## Research questions

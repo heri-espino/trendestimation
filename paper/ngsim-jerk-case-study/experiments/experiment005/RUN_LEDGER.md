@@ -1,5 +1,22 @@
 # Experiment005 — verified known-jerk simulations and reproducibility ledger
 
+## Independent PCAG103A-08 Windows replication now completed (verified 2026-11-09)
+
+The previously queued [Windows workflow #42547250403](https://github.com/heri-espino/trendestimation/actions/runs/42547250403)
+has now **completed successfully**, in addition to the earlier
+successful GitHub-hosted run #42547883064.
+
+- **Executed Windows source SHA:** faec7418ff889bd7434d20afe0807c02c6d8298e.
+- **Persistent full Windows run directory:** C:\Users\175199\Documents\TrendEstimation-PaperC\experiment005\run-42547250403-a1.
+- **Full, independent Windows results archive:** [results/paper-c-exp005-pc08-42547250403-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-pc08-42547250403-a1/paper/ngsim-jerk-case-study/experiments/experiment005/runs/pc08-42547250403-a1).
+- **Windows file inventory:** 38 generated files totaling 45,365,398 bytes (excluding the inventory itself), including the compiled NGSIM manuscript, all simulation trajectories, parameters, losses, plots and environment/version records.
+- **Verified pilot:** 96 independent trials, 960 ML/GCV selections, 6,624 forecasts and 4,608 fixed-S reference ablations.
+- **Verified confirmation:** 1,296 independent trials, 12,960 selections, 15,552 historical known-jerk fits, 89,424 forecasts and 62,208 fixed-S ablation records; no invalid cases.
+- **Numerical replication check:** the confirmation RMSE of known jerk for profile-ML/global OLS mu was 2.9176789110048875 m/s³ on Windows versus 2.9176789110047747 on GitHub Linux; for profile-ML/zero mu it was 3.0206947201422527 versus 3.0206947201420693. These agree to floating-point rounding precision.
+
+The old statements below that PCAG103A-08 was queued are **historical** and superseded by this verified completion. The GitHub cloud run and Windows VM run are separate independent executions using the frozen science design and identical seeded inputs. Do not recompute either to re-express the exact same fixed-μ Gaussian restricted likelihood.
+
+
 **Completed 2026-11-08 (Mexico City local time)** on the GitHub-hosted runner. [Successful workflow #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064). The separate [PCAG103A-08 Windows workflow #42547250403](https://github.com/heri-espino/trendestimation/actions/runs/42547250403) remained **queued at last verification**. No independent Windows execution or VM storage has been confirmed; do not conflate cloud results with a VM run.
 
 ## Permanent research record
