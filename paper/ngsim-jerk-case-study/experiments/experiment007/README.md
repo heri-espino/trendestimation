@@ -1,6 +1,6 @@
 # Paper C Experiment007 — Does normalized PLS smoothness measure relative observation noise?
 
-**Status:** Source-controlled preregistered experiment; interpret numerical results only after verifying a **successful Actions run and its archived \`run_manifest.json\`**. This is the next sequential experiment following completed Experiment006. It does not change any old NGSIM files, existing research branches, the public trendestimation API, or the Paper C manuscript.
+**Status: COMPLETED AND VERIFIED (2026-11-09).** [PCAG103A-08 success #42660204414](https://github.com/heri-espino/trendestimation/actions/runs/42660204414) and [GitHub-hosted independent computation #42660028292](https://github.com/heri-espino/trendestimation/actions/runs/42660028292) completed the 162-case pilot, 1,944-case confirmation and full audited data archive with zero invalid selections. Read [RUN_LEDGER.md](RUN_LEDGER.md) for actual results, qualified claims, 39-file VM directory inventory and unique Git branches. This is the next sequential experiment following completed Experiment006. It does not change any old NGSIM files, existing research branches, the public trendestimation API, or the Paper C manuscript.
 
 The author requested a **focused empirical calibration test** of the *interpretability* of third-difference PLS smoothness, not another parameter-optimization benchmark.
 
