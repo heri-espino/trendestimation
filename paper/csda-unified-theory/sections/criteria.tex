@@ -1,9 +1,11 @@
 \section{Complete statistical criteria}\label{sec:criteria}
 The cost of \emph{selecting} a smoothing level is not the cost of one fit. For fixed numeric $\mu$ and finite $\lambda>0$, write $e_\lambda=y-\widehat\tau_{\lambda,\mu}$, $\RSS_\lambda=e_\lambda^\top e_\lambda$, $h_i=(H_\lambda)_{ii}$, and $\nu=\tr H_\lambda$. The exact classical leave-one-out and generalized cross-validation scores are
 \begin{equation}\label{eq:cvgcv}
-\CV(\lambda)=\frac1n\sum_{i=1}^n
-\left(\frac{e_{\lambda,i}}{1-h_i}\right)^2,\qquad
-\GCV(\lambda)=\frac{\RSS_\lambda/n}{(1-\nu/n)^2}.
+\begin{aligned}
+\CV(\lambda)&=\frac1n\sum_{i=1}^n
+\left(\frac{e_{\lambda,i}}{1-h_i}\right)^2,\\
+\GCV(\lambda)&=\frac{\RSS_\lambda/n}{(1-\nu/n)^2}.
+\end{aligned}
 \end{equation}
 These are retrospective smooth-trend criteria, not chronological forecasting-validation scores. The fixed-$\mu$ leverage diagonal is available spectrally as
 \begin{equation}\label{eq:leverage}
@@ -37,10 +39,12 @@ A strictly positive imposed grid minimum may be a disclosed sensitivity restrict
 \subsection{Gaussian reduced-coordinate likelihood}
 To distinguish statistical selection from penalized training residuals, suppose in addition that
 \begin{equation}\label{eq:gaussian}
-y=\tau+\varepsilon,\quad
-\varepsilon\sim N(0,\sigma_\varepsilon^2I_n),\quad
-D_d\tau-\mu\mathbf1_r\sim N(0,\sigma_u^2I_r),
-\quad \lambda=\sigma_\varepsilon^2/\sigma_u^2,
+\begin{aligned}
+y&=\tau+\varepsilon,\qquad
+\varepsilon\sim N(0,\sigma_\varepsilon^2I_n),\\
+D_d\tau-\mu\mathbf1_r&\sim N(0,\sigma_u^2I_r),\\
+\lambda&=\sigma_\varepsilon^2/\sigma_u^2.
+\end{aligned}
 \end{equation}
 with independent components and a fixed numeric $\mu$. The $r$ penalized SVD coordinates $z=V^\top(y-p_\mu)$ have marginal variances $\sigma_\varepsilon^2c_j(\lambda)$, where $c_j=1+1/(\lambda\delta_j)$. Profiling $\sigma_\varepsilon^2$ gives the criterion
 \begin{equation}\label{eq:ml}
