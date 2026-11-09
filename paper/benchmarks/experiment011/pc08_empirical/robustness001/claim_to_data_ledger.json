@@ -1,0 +1,31 @@
+{
+  "nine_cases": {
+    "table": "nine_failure_cases.csv",
+    "source": "timing_tensor.csv.gz",
+    "checks": "9 x 97 independent seeds, 100% single for both, 0% banded grid, 100% SVD grid"
+  },
+  "kkt": {
+    "count": 9096,
+    "source": "timing_tensor.csv.gz:comment",
+    "mechanism": "selected_inverse.py:BandedTrace.score, after cholesky_banded and cho_solve_banded, backward_error>1e-7"
+  },
+  "inversion": {
+    "counts": {
+      "banded_cholesky": 2112,
+      "spectral_svd": 4224
+    },
+    "source": "timing_tensor.csv.gz:comment",
+    "caveat": "both backends can fail mapping; high-n fourth order"
+  },
+  "speedups": {
+    "source": "paired_backend_seed_bootstrap.csv",
+    "filters": "same source/seed/case/phase=24, direct S, R=1, one-vs-M=100",
+    "file": "representative_paired_speedups.csv"
+  },
+  "memory": {
+    "source": "experiment006/run.py:memory_budget_status; experiment011/cases.json:max_dense_bytes",
+    "file": "memory_policy_model.csv",
+    "measured_peak_RAM": false,
+    "budget_exceeded_causes": "Work gate; no observed infeasible_dense_memory status in selected tensor"
+  }
+}

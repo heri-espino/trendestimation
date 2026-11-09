@@ -1,0 +1,11 @@
+n,spectral_policy_5_dense_matrices_MiB,naive_policy_7_dense_matrices_MiB,banded_two_arrays_d4_MiB,policy_dense_cap_MiB,spectral_policy_under_2GiB
+64,0.15625,0.21875,0.0048828125,2048,True
+128,0.625,0.875,0.009765625,2048,True
+256,2.5,3.5,0.01953125,2048,True
+512,10,14,0.0390625,2048,True
+1024,40,56,0.078125,2048,True
+2048,160,224,0.15625,2048,True
+4096,640,896,0.3125,2048,True
+8192,2560,3584,0.625,2048,False
+16384,10240,14336,1.25,2048,False
+32768,40960,57344,2.5,2048,False

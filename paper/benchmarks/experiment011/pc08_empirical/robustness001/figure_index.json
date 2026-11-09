@@ -1,0 +1,26 @@
+[
+  {
+    "id": "fig05_complete_grid_failure",
+    "pdf": "figures/fig05_complete_grid_failure.pdf",
+    "png": "figures/fig05_complete_grid_failure.png",
+    "description": "Nine case families: one candidate succeeds for both; full grid fails the banded KKT gate but passes SVD"
+  },
+  {
+    "id": "fig06_fourth_order_failure_modes",
+    "pdf": "figures/fig06_fourth_order_failure_modes.pdf",
+    "png": "figures/fig06_fourth_order_failure_modes.png",
+    "description": "Recorded n=256 to 4096, d=4 rows by solver and status; the two methods both encounter mapping failures at large n"
+  },
+  {
+    "id": "fig07_single_vs_grid_speedups",
+    "pdf": "figures/fig07_single_vs_grid_speedups.pdf",
+    "png": "figures/fig07_single_vs_grid_speedups.png",
+    "description": "Same valid paired cases within 24-worker phase: seed-cluster 95% CIs, banded/SVD ratio; one vs 100 candidates"
+  },
+  {
+    "id": "fig08_memory_policy",
+    "pdf": "figures/fig08_memory_policy.pdf",
+    "png": "figures/fig08_memory_policy.png",
+    "description": "Code-policy model (not measured peak RAM): spectral 40n\u00b2 bytes, naive 56n\u00b2, banded two arrays 16n(d+1) bytes, 2 GiB dense cap"
+  }
+]
