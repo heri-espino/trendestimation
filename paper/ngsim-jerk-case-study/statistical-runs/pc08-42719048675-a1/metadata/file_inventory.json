@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "run_status": "compiled_audited",
+  "recorded_utc": "2026-11-09T23:16:30.332659+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\statistical-paper\\run-42719048675-a1",
+  "source_commit": "0363cc8867c270aec3b296443af43f64a045ca72",
+  "directory_paths_relative_to_root": [
+    "logs",
+    "manuscript",
+    "manuscript/sections",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 524,
+      "sha256": "0a9d8264f7d5a1936e68c51088785f5d2c264d86e153ef8445197f1fdd1afe3a"
+    },
+    {
+      "relative_path": "logs/ngsim-latexmk.log",
+      "bytes": 71392,
+      "sha256": "2a7995cf65d856e7f70eeb5c79f372aaab5f5b812c2fe6175ce264e0c5ebdd06"
+    },
+    {
+      "relative_path": "logs/pdf_audit.log",
+      "bytes": 1702,
+      "sha256": "a48049b9f575dac865f7f087386ba3e5a435297bb3009bb26f91ce326278bea3"
+    },
+    {
+      "relative_path": "logs/statistical_source_audit.log",
+      "bytes": 1932,
+      "sha256": "cca35d23126a4dbc78763be16271ed4dbdfe748ea98c1613a0068f1b12e27363"
+    },
+    {
+      "relative_path": "manuscript/main.pdf",
+      "bytes": 701893,
+      "sha256": "b99b62701dbadb449efa2e5775524fad76d12df9cf6c8abbc4c10a237dd6f7cb"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3098,
+      "sha256": "69abf0130ddfe7b09c12432f6f3ba508d4282fdc3d060f55b72232c909e4cfbf"
+    },
+    {
+      "relative_path": "manuscript/references.bib",
+      "bytes": 9466,
+      "sha256": "2bc964d7b0232c97eafa54648f22a9f329bca382cbedf6a77a0941f4d59b3139"
+    },
+    {
+      "relative_path": "manuscript/sections/discussion.tex",
+      "bytes": 6323,
+      "sha256": "423c0f8db89c7df61a75cafe2c00616cfacb2c593d28072812334b26d17a2868"
+    },
+    {
+      "relative_path": "manuscript/sections/introduction.tex",
+      "bytes": 3417,
+      "sha256": "759690923899396f9930450ac62ede04f9847021698de0f626eba43f0cc3238f"
+    },
+    {
+      "relative_path": "manuscript/sections/methods.tex",
+      "bytes": 8193,
+      "sha256": "d75c8945b493623c11c643e47284688b16e97cdaf24deb57ceb80b6b827c0ea8"
+    },
+    {
+      "relative_path": "manuscript/sections/precision_calibration.tex",
+      "bytes": 10826,
+      "sha256": "ecf6441c108daf042ceab0fb957fa997535f077da2d18e75d43c534193f28fa6"
+    },
+    {
+      "relative_path": "manuscript/sections/real_data_study.tex",
+      "bytes": 6934,
+      "sha256": "0d3fd6d5ce664654ba243c415121b454001a339af2d4ec68b717336aa887b47f"
+    },
+    {
+      "relative_path": "manuscript/sections/results.tex",
+      "bytes": 6539,
+      "sha256": "512257f80f5c7ba165c0259689f5a808b1de6a8c6ea8efcd5068a80cc31dcac8"
+    },
+    {
+      "relative_path": "manuscript/sections/simulation_benchmarks.tex",
+      "bytes": 7230,
+      "sha256": "9e1b017a8e9ba1b1f7241f9d041e0a07714e7bcdb1d5d45ae36c02c57703e0d5"
+    },
+    {
+      "relative_path": "metadata/build_manifest.json",
+      "bytes": 7056,
+      "sha256": "6bd49d847dc5edb8d37f529bc418291b055353c4b8cb4bfc10bc491a04dae7dd"
+    },
+    {
+      "relative_path": "metadata/pdf_audit.json",
+      "bytes": 850,
+      "sha256": "2b28d809b9577ddf2b61543b1955a938e2df5576853e8070bddffb12b9f70ea2"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3254,
+      "sha256": "a4f960b75dc486574b12788ce6770c17a959f1fb46e402c4638a3be66895af25"
+    },
+    {
+      "relative_path": "metadata/runner_name.txt",
+      "bytes": 13,
+      "sha256": "c3485160c309d889b8c8637b85f4befb52ff26a7340c6336077787132944b484"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "e0c3358e6b759590ae234d13f582b5f1b85433394cf7ce678bba2f3cd83b485f"
+    },
+    {
+      "relative_path": "metadata/source_data_policy.txt",
+      "bytes": 152,
+      "sha256": "f84e702e56dc45d830c11420d4a129f8778d102a8d001374204c4396a11db483"
+    },
+    {
+      "relative_path": "metadata/statistical_source_audit.json",
+      "bytes": 965,
+      "sha256": "061815638f0afd18037291556357a9fe08466ddf4a2eb20600f7620c44c34d8c"
+    }
+  ],
+  "total_files_excluding_this_inventory": 21,
+  "total_bytes_excluding_this_inventory": 851801,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}

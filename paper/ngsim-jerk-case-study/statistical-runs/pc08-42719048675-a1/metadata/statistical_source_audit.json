@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "section_order": [
+    "sections/introduction.tex",
+    "sections/methods.tex",
+    "sections/simulation_benchmarks.tex",
+    "sections/precision_calibration.tex",
+    "sections/real_data_study.tex",
+    "sections/discussion.tex"
+  ],
+  "n_publication_figures": 10,
+  "n_classical_solver_timing_figures": 0,
+  "figure_paths": [
+    "figures/exp006_reconstruction_forecasting.pdf",
+    "figures/exp007_spectral_interpretation.pdf",
+    "figures/exp007_jerk_example.pdf",
+    "figures/exp007_calibration.pdf",
+    "figures/exp007_interventions.pdf",
+    "figures/exp007_misspecification.pdf",
+    "figures/heldout_forecast.pdf",
+    "figures/jerk_comparison.pdf",
+    "figures/forecast_horizons.pdf",
+    "figures/criterion_heatmap.pdf"
+  ],
+  "n_unique_labels": 30,
+  "n_crossrefs": 17,
+  "assurance": "TeX input path/content preflight only; PDF layout and reference resolution still require actual LaTeX build"
+}
