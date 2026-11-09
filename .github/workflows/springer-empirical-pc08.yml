@@ -188,6 +188,12 @@ jobs:
               throw "Missing validated robustness figure/input $file"
             }
           }
+          $pub = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          foreach ($file in @('publication_evidence.json','publication_table.tex','figures/paired_cv_gcv_publication.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $pub $file))) {
+              throw "Missing journal-facing table/figure $file"
+            }
+          }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
       - name: Fresh Springer sn-jnl compile with existing reproducible builder
@@ -352,3 +358,64 @@ jobs:
           git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
           if ($LASTEXITCODE -ne 0) { throw 'Scoped manuscript source advanced concurrently; immutable result is preserved' }
           Write-Host "Published immutable evidence branch: $archive"
+
+
+
+  publication_figures:
+    if: contains(github.event.head_commit.message, '[pc08-editorial]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Render journal-facing matched comparison and source-linked table
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner' }
+          $src = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/paired_backend_seed_bootstrap.csv'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          if (-not (Test-Path -LiteralPath $src)) { throw 'Missing frozen paired-runtime evidence' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --source $src --output $out
+          if ($LASTEXITCODE -ne 0) { throw 'Figure/table render failed' }
+          $manifest = Get-Content -LiteralPath (Join-Path $out 'publication_evidence.json') -Raw | ConvertFrom-Json
+          if (@($manifest.results).Count -ne 8 -or $manifest.parameter_grid_size -ne 100) {
+            throw 'Journal-facing table source checks failed'
+          }
+          Write-Host 'Eight mathematically identified comparisons with matched bootstrap intervals'
+      - name: Upload source-linked scientific figure/table for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-publication-edit-figure
+          path: paper/benchmarks/experiment011/pc08_empirical/publication001/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Archive publication graphics without modifying frozen raw results
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'publication_evidence.json'))) {
+            throw 'Cannot publish missing publication evidence'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Stage failed' }
+          git commit -m 'paper: archive traceable journal-facing paired SVD figures and table'
+          if ($LASTEXITCODE -ne 0) { throw 'Commit failed' }
+          $archive = "results/experiment011-publication001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable result publication failed' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Manuscript branch advanced concurrently; permanent output is preserved' }
