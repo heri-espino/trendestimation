@@ -1,5 +1,26 @@
 # Start here — publication split and the next Experiment011 Windows run
 
+## Paper C real NGSIM expansion — new user decision (2026-11-08)
+
+The author chose **not to run synthetic known-jerk experiments** for
+the present manuscript. Instead, expand the official US-101 and I-80
+raw-position dataset, compare PLS with `criterion="gcv"` versus the
+repo's `criterion="mle"` (profiled Gaussian marginal likelihood),
+and include GCV smoothing splines and Savitzky--Golay. The new
+[experiment004 README](ngsim-jerk-case-study/experiments/experiment004/README.md)
+describes input pagination, session-aware episode IDs, fixed training
+window/origin/horizons, bootstrap, file tree and VM-only raw storage.
+Source/data/results must be recorded separately in
+`%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment004\run-<id>-a<attempt>`.
+The self-hosted workflow runs on PCAG103A-08 from a new branch stacked
+on Paper C PR #121 and produces an immutable results-only Git branch
+for complete scored rows, file hashes and references. **Never infer
+success before reading the actual run; do not claim true physical jerk
+accuracy, or unique real drivers from reused numeric Vehicle_IDs.**
+Retain prior simulation ideas as optional future work, not an
+authorized immediate experiment.
+
+
 ## Paper C empirical follow-up and publication draft (2026-11-08)
 
 **Active research PR:** [#121](https://github.com/heri-espino/trendestimation/pull/121).
