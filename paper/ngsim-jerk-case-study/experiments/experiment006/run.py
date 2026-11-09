@@ -36,7 +36,16 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO / "src"))
 from trendestimation import TrendSmoother  # noqa: E402
 from reml import DifferenceLikelihood  # noqa: E402
-from analyze import produce as produce_diagnostics  # noqa: E402
+# A generic "analyze" module already exists elsewhere in the repository.
+# Load this experiment's diagnostics under a unique name to avoid pytest
+# collection importing another experiment's analyze.py from sys.modules.
+_analysis_spec = importlib.util.spec_from_file_location(
+    "paper_c_experiment006_diagnostics", HERE / "analyze.py"
+)
+assert _analysis_spec is not None and _analysis_spec.loader is not None
+_analysis_module = importlib.util.module_from_spec(_analysis_spec)
+_analysis_spec.loader.exec_module(_analysis_module)
+produce_diagnostics = _analysis_module.produce
 
 _spec = importlib.util.spec_from_file_location("exp006_ngsim_case", PAPER / "run_case.py")
 assert _spec is not None and _spec.loader is not None
