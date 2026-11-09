@@ -116,7 +116,10 @@ jobs:
 
       - name: Audit compiled PDF text, scientific captions and all source figure hashes
         run: |
-          $ErrorActionPreference='Stop'
+          # Windows PowerShell 5.1 promotes Python stderr tracebacks to
+          # NativeCommandError before Tee-Object can save them with Stop.
+          # Preserve full diagnostic output; enforce process exit afterwards.
+          $ErrorActionPreference='Continue'
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/audit_pdf.py --pdf paper/ngsim-jerk-case-study/main.pdf --manifest paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json --output paper/ngsim-jerk-case-study/generated/visual_suite_pdf_audit.json 2>&1 |
             Tee-Object -FilePath (Join-Path $env:PC08_VIS_ROOT 'logs\pdf_audit.log')
           if ($LASTEXITCODE -ne 0) { throw 'Published PDF audit failed' }
