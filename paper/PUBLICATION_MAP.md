@@ -1,3 +1,5 @@
+> **November 9, 2026 manuscript consolidation and PDF-history update:** [PAPER_HISTORY.md](PAPER_HISTORY.md) is the current build/version ledger. The proposed theoretical CSDA A+B successor is on [draft PR #129](https://github.com/heri-espino/trendestimation/pull/129), while both original papers are preserved. The empirical Springer revision is on [draft PR #126](https://github.com/heri-espino/trendestimation/pull/126), and the latest Paper C branch is [PR #128](https://github.com/heri-espino/trendestimation/pull/128). All three current manuscript versions have independently verified PDF builds; this does not merge the PRs or certify journal submission readiness. Older four-paper statements below document historical ownership before the author's explicit A+B consolidation decision.
+
 # Publication map — source of truth for all TrendEstimation agents
 
 **Paper C focus update (2026-11-05):** The proposed scientific
