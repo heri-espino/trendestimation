@@ -1,5 +1,23 @@
 # Paper work — mandatory manuscript/experiment routing
 
+**Paper C real-only Experiment004 COMPLETE (2026-11-08):**
+[PC08 run #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+downloaded official US-101/I-80 records, evaluated 200 source
+episodes (6,600/6,600 valid forecast rows, 800 GCV/profile
+marginal ML PLS selections), compiled the existing manuscript
+and archived a 38-file VM directory/SHA inventory. Read
+[RUN_LEDGER.md](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md)
+for exact source pages, 8 directories, root paths, and the
+results-only Git branch. The tuned GCV cubic spline had
+**lower pooled future-position RMSE at all 3 horizons** than
+the tested PLS choices. This is NOT measured true jerk or
+general significant superiority: only five coarse recording
+session proxies occur across 200 episodes. Older statements
+below that Experiment004 is pending are dated historical
+notes. Keep original pilots, data, Springer/CSDA papers,
+and separate open PR ownership unchanged.
+
+
 **Paper C author's new design (2026-11-08):** Run only **real
 FHWA NGSIM positions**, download more US-101/I-80 episodes and compare
 profile Gaussian ML versus GCV on our d=3 PLS (zero/sample mean,
