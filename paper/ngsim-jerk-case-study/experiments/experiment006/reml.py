@@ -155,8 +155,12 @@ class DifferenceLikelihood:
         else:
             raise ValueError("search must be continuous or grid")
 
-        evaluate(0.0)
-        evaluate(float("inf"))
+        if search == "continuous":
+            # Explicitly include the limits only for the broad continuous
+            # search. The baseline grid must remain EXACTLY the declared
+            # values: S>=0.05, with infinity only because S=1 is listed.
+            evaluate(0.0)
+            evaluate(float("inf"))
         good = [(score, lam, mu) for lam, (score, mu, _) in evaluations.items()
                 if np.isfinite(score) and np.isfinite(mu)]
         if not good:
