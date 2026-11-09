@@ -419,3 +419,81 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Immutable result publication failed' }
           git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
           if ($LASTEXITCODE -ne 0) { throw 'Manuscript branch advanced concurrently; permanent output is preserved' }
+
+
+
+  visualization:
+    if: contains(github.event.head_commit.message, '[pc08-visuals]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 50
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Check frozen inputs and generate revised journal figures and tables
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Incorrect self-hosted runner" }
+          $src = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          foreach ($file in @('timing_tensor.csv.gz','paired_backend_rows.csv.gz',
+            'paired_coordinate_rows.csv.gz','paired_backend_seed_bootstrap.csv','timing_cell_summary.csv')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $src $file))) {
+              throw "Missing immutable input $file"
+            }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m py_compile (Join-Path $out 'render.py')
+          if ($LASTEXITCODE -ne 0) { throw 'Renderer Python syntax failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --frozen $src --out $out
+          if ($LASTEXITCODE -ne 0) { throw 'Renderer failed, no experiment was run' }
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $out 'evidence.json') | ConvertFrom-Json
+          if (@($summary.figures).Count -ne 8 -or
+              $summary.complete -ne 76220 -or
+              $summary.kkt -ne 9096 -or
+              $summary.mapping -ne 6336 -or
+              $summary.budget -ne 970 -or
+              $summary.missing_jobs -ne 57) {
+            throw "Frozen source-to-figure numerical provenance mismatch"
+          }
+          foreach ($name in @('table01_runtime.tex','table02_reliability.tex','table03_grid_failures.tex')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $out 'tables' $name))) {
+              throw "Missing LaTeX table $name"
+            }
+          }
+          Write-Host 'Generated eight reproducible PDF/PNG figures and three science tables.'
+      - name: Upload revised figures and tables for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-visualization001
+          path: paper/benchmarks/experiment011/pc08_empirical/visualization001/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit reproducible graphics and publish permanent results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'evidence.json'))) {
+            throw 'Cannot publish without passing provenance assertions'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage figures and tables' }
+          git commit -m 'paper: archive validated revised distribution and stacked graphics'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit output' }
+          $archive = "results/experiment011-visualization001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable graphics archive' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Concurrent change to manuscript; archive preserved' }
