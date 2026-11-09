@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "run_status": "pilot_and_confirm_complete",
+  "recorded_utc": "2026-11-09T16:59:20.992447+00:00",
+  "host": "GitHub Actions 1000016970",
+  "persistent_run_root": "/home/runner/work/trendestimation/trendestimation/paper/ngsim-jerk-case-study/experiments/experiment007/runs/cloud-42660028292-a1",
+  "source_commit": "43392d7a904a94fd86fe5bbfe74091ad8dd933c7",
+  "directory_paths_relative_to_root": [
+    "confirm",
+    "confirm/figures",
+    "logs",
+    "metadata",
+    "pilot",
+    "pilot/figures"
+  ],
+  "files": [
+    {
+      "relative_path": "confirm/RESULTS.md",
+      "bytes": 2853,
+      "sha256": "fec3b6036100d36eef8c9a49f2f1d969ffca7d3ecae54cb61661c93f9d5fe80e"
+    },
+    {
+      "relative_path": "confirm/calibration_summary.csv",
+      "bytes": 5241,
+      "sha256": "061c97e2e404ed36764de4b784ce7d91740d7272cba88a7c61fa9503ad759a5a"
+    },
+    {
+      "relative_path": "confirm/config.json",
+      "bytes": 4360,
+      "sha256": "9b5e495a414922619d4e7ca4943e996a3c9f42af9eb97815c240e0d8875c920f"
+    },
+    {
+      "relative_path": "confirm/effects_summary.csv",
+      "bytes": 24630,
+      "sha256": "374cb4611be311d1e066441dae6396ca853882a7bb0ae7d1ebc39b0283fa5c00"
+    },
+    {
+      "relative_path": "confirm/figures/S_calibration_iid.png",
+      "bytes": 83183,
+      "sha256": "c291f27d8ea9abfc3affc3d214e834472d38b5a936109bea895d53051143f793"
+    },
+    {
+      "relative_path": "confirm/figures/S_vs_observation_noise_gcv_zero_mu.png",
+      "bytes": 105568,
+      "sha256": "357ba97c4133d11f27c4ca25ab745c53775bfb8ebb014994bb18957f8c0701b2"
+    },
+    {
+      "relative_path": "confirm/figures/S_vs_observation_noise_global_ols_plugin_mle.png",
+      "bytes": 101665,
+      "sha256": "a92de64546292efeaa79dfc71c63a26f1fce626cc7193f4818cb28c19913c69d"
+    },
+    {
+      "relative_path": "confirm/figures/S_vs_observation_noise_joint_reml.png",
+      "bytes": 100579,
+      "sha256": "3f8a8af0b332e29a468f774d75bf465b411c51c44f8ef616ccba269b1e1dd7dd"
+    },
+    {
+      "relative_path": "confirm/figures/S_vs_observation_noise_known_mu_reml.png",
+      "bytes": 102086,
+      "sha256": "3ef4d79ddb6132b135bbcde5ab414ee2132ce8a26c8a3f8bd64886493b47f720"
+    },
+    {
+      "relative_path": "confirm/interventions.csv",
+      "bytes": 764357,
+      "sha256": "9a97f0cc5e37ab3b83d6ba047268e67b009e96f5f6015dd7ebb3cd976381f573"
+    },
+    {
+      "relative_path": "confirm/per_cell.csv",
+      "bytes": 86409,
+      "sha256": "98e930b9500031d237aa446116d1f707d6d6ae5cb26d9985468a93f5e9ecdd17"
+    },
+    {
+      "relative_path": "confirm/run_manifest.json",
+      "bytes": 1583,
+      "sha256": "63b0bffba3cbc2f250c60f47f1de4c51ab4842b332039762a93ba153ba9747a7"
+    },
+    {
+      "relative_path": "confirm/selections.csv",
+      "bytes": 3228839,
+      "sha256": "aa16bd268607c3833ab4788b997b890711dcacb58f3251ba742fcf33742c09c0"
+    },
+    {
+      "relative_path": "confirm/summary.json",
+      "bytes": 10797,
+      "sha256": "a73470f2902d3d72a93b5506f63f9e6b63086b18b291aaf61ef981462a13e0f7"
+    },
+    {
+      "relative_path": "confirm/theory_cells.csv",
+      "bytes": 9441,
+      "sha256": "c58b56bbfa72d4dcfe8544bdd3ebc617981f1bf6dc1e6f1c4613693e73d7aa20"
+    },
+    {
+      "relative_path": "confirm/trials.jsonl.gz",
+      "bytes": 2387498,
+      "sha256": "f745f3e43834b39bba1c22c474559cf2eff5adad65397f31798411730da08856"
+    },
+    {
+      "relative_path": "logs/confirm.log",
+      "bytes": 4355,
+      "sha256": "ac90f606bdd0ecb2d44fe8533ebeec8ba0798fc3fed3943a9fb7fffd3d290788"
+    },
+    {
+      "relative_path": "logs/pilot.log",
+      "bytes": 2988,
+      "sha256": "5f0c2b5933af8ca1cacf22ad3772b7fbe0cd0a99218e9087787ac9c7a1652c76"
+    },
+    {
+      "relative_path": "metadata/data_provenance.txt",
+      "bytes": 84,
+      "sha256": "d52218f706c2193f5240c6088daa07955aecfb8c0dbeac513333d347c8434a73"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 1582,
+      "sha256": "899a63b96adbe6930c54d1777e0e01e67688badf84c3ae98cfff77ae1c13b479"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 41,
+      "sha256": "2bfcd0c48a2b6d96e0977c72b7ffe372984d3dd3477bc8e35d248549bbd62d94"
+    },
+    {
+      "relative_path": "pilot/RESULTS.md",
+      "bytes": 2848,
+      "sha256": "9615d72df4ab97a9ea4f8a20f11aaf55cb3fffff67698b8262cea5db35fa68c8"
+    },
+    {
+      "relative_path": "pilot/calibration_summary.csv",
+      "bytes": 4962,
+      "sha256": "d82c4948996a2d0fa666495f592c39850f5ef876b55c7dcf88ae55c87bc03fa1"
+    },
+    {
+      "relative_path": "pilot/config.json",
+      "bytes": 4360,
+      "sha256": "9b5e495a414922619d4e7ca4943e996a3c9f42af9eb97815c240e0d8875c920f"
+    },
+    {
+      "relative_path": "pilot/effects_summary.csv",
+      "bytes": 23560,
+      "sha256": "9da8806a476f3fc1fc300e53fd93eb12d0e186b44da63630616f15517e7c3224"
+    },
+    {
+      "relative_path": "pilot/figures/S_calibration_iid.png",
+      "bytes": 82363,
+      "sha256": "3bfd5a675894f5b5883fbba71977eb6465ecbc5546ff5c32cc5041d045c31fb9"
+    },
+    {
+      "relative_path": "pilot/figures/S_vs_observation_noise_gcv_zero_mu.png",
+      "bytes": 102833,
+      "sha256": "b750356470e9f86dff17002b32a047c7854f0ca07b1885e9317920f4249cf3f3"
+    },
+    {
+      "relative_path": "pilot/figures/S_vs_observation_noise_global_ols_plugin_mle.png",
+      "bytes": 103759,
+      "sha256": "57f5c4b68880e6bb517c91c6660465a878f0950dbb7621e52f8e7acd2fa282da"
+    },
+    {
+      "relative_path": "pilot/figures/S_vs_observation_noise_joint_reml.png",
+      "bytes": 101908,
+      "sha256": "7cf998c70f2fb42a3cd458e3b86b983976dfb2a40678101d1e72aa15923b2259"
+    },
+    {
+      "relative_path": "pilot/figures/S_vs_observation_noise_known_mu_reml.png",
+      "bytes": 104004,
+      "sha256": "897a6127f6cacc81d36a7b89f835c51518d9ad218446fd93bf145767f7a6212a"
+    },
+    {
+      "relative_path": "pilot/interventions.csv",
+      "bytes": 62668,
+      "sha256": "2e4484af0a1214d7707ea5a4659918d6a4249080bd3e9b5a5b7d3aee6cef7e37"
+    },
+    {
+      "relative_path": "pilot/per_cell.csv",
+      "bytes": 85191,
+      "sha256": "256c015298b512334aefde0a13f3816d135dfc312838a2e7ec3d4ace2365c3c0"
+    },
+    {
+      "relative_path": "pilot/run_manifest.json",
+      "bytes": 1573,
+      "sha256": "e349b81e0125f88e906e9f31cfa538b4fe8d18dfd586d307082dd604cee5c511"
+    },
+    {
+      "relative_path": "pilot/selections.csv",
+      "bytes": 265565,
+      "sha256": "000e8f27dadf7e6bdf12576f31667a263f65bcecb1bd271dda992cd70dee60af"
+    },
+    {
+      "relative_path": "pilot/summary.json",
+      "bytes": 10692,
+      "sha256": "39c5df1e1b4f9cf3aaf379ea0249c74f36b703ffb25f26fbc6eb4d8953ac9e91"
+    },
+    {
+      "relative_path": "pilot/theory_cells.csv",
+      "bytes": 9441,
+      "sha256": "c58b56bbfa72d4dcfe8544bdd3ebc617981f1bf6dc1e6f1c4613693e73d7aa20"
+    },
+    {
+      "relative_path": "pilot/trials.jsonl.gz",
+      "bytes": 199657,
+      "sha256": "4a9aface657f3b7b855e5f75e53d95aae7a886d0be57ee6f63d6c1723a0295c1"
+    }
+  ],
+  "total_files_excluding_this_inventory": 37,
+  "total_bytes_excluding_this_inventory": 8193523,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}

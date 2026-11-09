@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "experiment": "experiment007",
+  "stage": "pilot",
+  "status": "complete",
+  "started_utc": "2026-11-09T16:58:55.092168+00:00",
+  "source_commit": "43392d7a904a94fd86fe5bbfe74091ad8dd933c7",
+  "runner": "GitHub Actions 1000016970",
+  "source_config_sha256": "9b5e495a414922619d4e7ca4943e996a3c9f42af9eb97815c240e0d8875c920f",
+  "n_trials": 162,
+  "n_selection_rows": 648,
+  "status_counts": {
+    "ok": 648
+  },
+  "n_theory_cells": 81,
+  "n_independent_replicate_parent_draws": 6,
+  "simulation_observation_generation": "new paired factorial Experiment007; no rerun of Experiment005",
+  "theory_truth": "covariance-trace fraction from known DGP; not estimated from observed data",
+  "bootstrap_grouping": "independent parent stage/dynamics/replicate; dependent factorial cases never counted as independent",
+  "statistics": {
+    "n_per_cell": 324,
+    "n_paired_interventions": 504,
+    "n_cluster_effects": 108,
+    "n_calibration_rows": 36,
+    "plots": {
+      "created": true,
+      "files": [
+        "figures/S_vs_observation_noise_gcv_zero_mu.png",
+        "figures/S_vs_observation_noise_global_ols_plugin_mle.png",
+        "figures/S_vs_observation_noise_joint_reml.png",
+        "figures/S_vs_observation_noise_known_mu_reml.png",
+        "figures/S_calibration_iid.png"
+      ]
+    }
+  },
+  "elapsed_seconds": 3.914593584000002,
+  "output_dir": "/home/runner/work/trendestimation/trendestimation/paper/ngsim-jerk-case-study/experiments/experiment007/runs/cloud-42660028292-a1/pilot",
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1"
+}

@@ -1,0 +1,49 @@
+# Experiment007 pilot: Does PLS smoothness indicate relative noise?
+
+**Cases:** 162; **selected S values:** 648;
+**invalid selections:** 0.
+**Paired interventions:** 504, clustered at parent innovations.
+
+## Calibration when Gaussian iid jerk and iid measurement assumptions hold
+
+| Selector | Spearman(selected S, theoretical noise fraction) | MAE(S) | Zero-boundary share |
+| --- | ---: | ---: | ---: |
+| gcv_zero_mu | 0.947 | 0.0139 | 0.0% |
+| global_ols_plugin_mle | 0.987 | 0.0054 | 0.0% |
+| joint_reml | 0.987 | 0.0044 | 0.0% |
+| known_mu_reml | 0.987 | 0.0056 | 0.0% |
+
+## Paired interventions under the model-correct Gaussian iid case
+
+| Selector | Intervention | Mean estimated ΔS | Cluster bootstrap 95% interval | Mean true ΔS |
+| --- | --- | ---: | --- | ---: |
+| gcv_zero_mu | jerk_variability_increase | -0.1250 | [-0.1333, -0.1167] | -0.1337 |
+| gcv_zero_mu | noise_increase | +0.1333 | [+0.1333, +0.1333] | +0.1451 |
+| gcv_zero_mu | same_ratio_precision_change | +0.0000 | [+0.0000, +0.0000] | +0.0000 |
+| global_ols_plugin_mle | jerk_variability_increase | -0.1312 | [-0.1412, -0.1211] | -0.1337 |
+| global_ols_plugin_mle | noise_increase | +0.1419 | [+0.1312, +0.1525] | +0.1451 |
+| global_ols_plugin_mle | same_ratio_precision_change | +0.0000 | [-0.0000, +0.0000] | +0.0000 |
+| joint_reml | jerk_variability_increase | -0.1283 | [-0.1356, -0.1210] | -0.1337 |
+| joint_reml | noise_increase | +0.1390 | [+0.1312, +0.1469] | +0.1451 |
+| joint_reml | same_ratio_precision_change | +0.0000 | [-0.0000, +0.0000] | +0.0000 |
+| known_mu_reml | jerk_variability_increase | -0.1311 | [-0.1409, -0.1212] | -0.1337 |
+| known_mu_reml | noise_increase | +0.1418 | [+0.1313, +0.1522] | +0.1451 |
+| known_mu_reml | same_ratio_precision_change | -0.0000 | [-0.0000, +0.0000] | +0.0000 |
+
+## Interpretation
+
+The reference theory is the unconditional covariance-trace fraction.
+When both observation and jerk innovation disturbances are iid and Gaussian,
+this agrees exactly with Guerrero-style normalized S at the TRUE variance ratio.
+Estimated S comes from likelihood/GCV selection and is not guaranteed
+unbiased or monotone in finite samples. Results must report departures.
+Increasing measurement noise at fixed latent jerk SD should increase true S;
+increasing latent jerk variability at fixed observation noise should decrease it.
+Scaling BOTH observation and jerk SD by the same factor leaves true S unchanged,
+even though absolute observation precision changes. Hence S cannot on its own
+measure sensor precision. Correlated noise, endpoint contamination and
+nonstationary jerk are deliberately included as model stress tests.
+
+All individual known true jerk, position, observation errors, selected
+penalties, lambda, mu, component variance estimates and treatment seeds
+are archived with independent source commit, configs and hashes.
