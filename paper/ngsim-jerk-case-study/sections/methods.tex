@@ -1,50 +1,222 @@
-\section{Observed data and reproducible design}\label{sec:method}
-\subsection{Camera-derived NGSIM US-101 longitudinal tracks}
-The source is the US DOT/Federal Highway Administration NGSIM vehicle trajectory dataset (DOI: 10.21949/1504477) \citep{fhwa2016}. Its \texttt{Local\_Y} field is the longitudinal front-center vehicle coordinate, recorded in feet; \texttt{Global\_Time} is in milliseconds. We convert feet to meters exactly by 0.3048 and use elapsed time since each segment begins. The official dataset indicates CC BY-SA 3.0; extracted position subsets carry attribution and immutable hashes.
+\section{Third-order PLS trend estimation and physical comparisons}
+\label{sec:method}
 
-Data are downloaded directly from the USDOT Socrata API using a fixed query for US-101 vehicle identifiers 1--20. After sorting by vehicle and timestamp, a 100-ms gap splits track segments. In deterministic ascending order, the first five segments meeting minimum duration (200 points), displacement (20\,m), and conservative gross-quality thresholds are kept, without looking at forecast accuracy. The original vehicle identifiers may occur in several distinct recording periods; we retain track start timestamps to distinguish them. The complete extraction rule and source SHA-256 digests reside with the research scripts. Raw positions, rather than an already smoothed NGSIM derivative series, are the input.
-
-The windows contain $n=80$ consecutive observations (8\,s), with prediction origins at segment indices 95, 140 and 185. Futures of $h=5,10,20$ frames (0.5, 1 and 2\,s) are withheld chronologically. The 15 origin windows overlap within five recorded segments. Observed held-out position is the error target, \emph{not} unavailable latent noise-free position or actual jerk; aggregate error scores are descriptive and not independent-sample confidence intervals.
-
-\subsection{Smoothness-indexed quadratic trend}
-For forward differences $D_d$ with $d\in\{1,2,3,4\}$, and fixed numeric mean of differences $\mu$, consider
+\subsection{Observation model and third-order difference penalty}
+Let $y=(y_1,\ldots,y_n)^\top$ be position measurements in
+meters recorded at interval $\Delta t=0.1$\,s and let $\tau$
+be their unknown smooth historical trajectory. The $(n-3)\times n$
+difference matrix $D_3$ uses the stencil $(-1,3,-3,1)$;
+$D_3\tau/(\Delta t)^3$ is a discrete jerk proxy in m/s$^3$.
+Following \citet{guerrero2007}, we estimate the trajectory
+by minimizing
 \begin{equation}\label{eq:pls}
 \widehat\tau_{\lambda,\mu}=
-\arg\min_{\tau\in\R^n}\Bigl\{
-\|y-\tau\|_2^2+
-\lambda\|D_d\tau-\mu\mathbf1\|_2^2
-\Bigr\}.
+\arg\min_{\tau\in\mathbb R^n}
+\left\{\|y-\tau\|_2^2+
+\lambda\|D_3\tau-\mu\mathbf1\|_2^2\right\},
 \end{equation}
-If $\delta_j>0$ are the $n-d$ positive eigenvalues of $D_d^\top D_d$, the normalized degree-of-smoothing index is
+where $\mu$ is the reference \emph{discrete} third difference,
+and $\lambda\ge0$ controls regularization. Its physically
+scaled reference jerk equals $\mu/(\Delta t)^3$.
+Writing $Q=D_3^\top D_3$, the unique finite-$\lambda$
+solution is
+\begin{equation}
+\label{eq:pls-solution}
+\widehat\tau_{\lambda,\mu}
+=(I+\lambda Q)^{-1}
+(y+\lambda\mu D_3^\top\mathbf1).
+\end{equation}
+
+The $d=3$ polynomial nullspace has dimension three: unpenalized
+quadratic position, linear velocity and constant acceleration.
+At strong regularization, $\mu=0$ imposes a quadratic limit,
+whereas fixed $\mu\ne0$ imposes a cubic position trajectory
+with constant discrete third difference. These \emph{limits}
+are not assumptions that real vehicles have constant jerk
+throughout the observed interval.
+
+\subsection{An interpretable, normalized smoothness index}
+Let $\delta_1,\ldots,\delta_m>0$ be the positive eigenvalues
+of $Q$, with $m=n-3$. The smoothness index used throughout the
+\texttt{trendestimation} library is
 \begin{equation}\label{eq:S}
-S_d(\lambda)=\frac1{n-d}\sum_{j=1}^{n-d}
-\frac{\lambda\delta_j}{1+\lambda\delta_j}\in[0,1].
+S(\lambda)=\frac1m\sum_{j=1}^{m}
+\frac{\lambda\delta_j}{1+\lambda\delta_j}
+\in[0,1].
 \end{equation}
-It is continuous and strictly increasing for $\lambda>0$, and independent of observed $y$ and fixed $\mu$. We invert $S$ once on the shared 16-point grid, including exact $S=0$ and $S=1$ endpoints, then reuse penalties across methods. No independently spaced log-$\lambda$ grid is a competitor here.
+It is monotone in $\lambda$ and therefore provides an
+interpretable, comparable normalized regularization coordinate.
+For fixed $\mu$, if $H_\lambda=(I+\lambda Q)^{-1}$,
+\begin{equation}\label{eq:edf}
+\operatorname{df}(\lambda)=\operatorname{tr}(H_\lambda)
+=n-mS(\lambda).
+\end{equation}
+This \emph{conditional} degrees-of-freedom formula must not
+be applied unchanged when $\mu$ is estimated from the same
+observations. Under the independent Gaussian variance-ratio
+model, the smoothness index also admits the relative-noise
+interpretation tested in Section~\ref{sec:precision};
+it is not the absolute measurement precision of a sensor.
 
-For $d=3$, the finite difference $D_3\tau_t$ divided by $(\Delta t)^3$ approximates physical jerk of a position signal. At $S=1$, fixed $\mu=0$ produces a quadratic trend (constant acceleration), whereas a fixed $\mu\ne0$ produces a cubic trend with approximately constant nonzero jerk. At finite $S$, the estimated third differences can vary over time. The two investigated policies are fixed $\mu=0$ and training-only plug-in $\widehat\mu=\operatorname{mean}(D_dy_{\rm train})$. Conditional CV scores for the latter do not re-estimate $\mu$ after each observation deletion, so cannot be interpreted as exactly refitted LOOCV.
+\subsection{Smoothing, reference jerk and choice of regularization}
+We compare the existing PLS policies: a fixed reference
+$\mu=0$; the sample mean of the noisy third differences;
+a global cubic polynomial fitted to \emph{historical}
+positions (its discrete third difference gives $\mu$);
+and a jointly estimated reference from Gaussian restricted
+likelihood. For the stochastic interpretation,
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$ is the ratio
+of observation noise variance to genuine discrete
+third-difference innovation variance. The Gaussian
+interpretation adds distributional assumptions beyond
+the second-moment PLS construction of \citet{guerrero2007}.
+When $\mu$ is estimated rather than fixed, the
+mean-adjusted restricted likelihood must also eliminate
+its nuisance mean direction.
 
-\subsection{Five smoothing criteria}
-On each training window and difference order, we minimize ordinary fixed-$\mu$ observation-deletion CV, generalized CV (GCV), AICc, residual-based BIC and Gaussian profiled marginal likelihood (ML) over the same bounded $S$ candidates. Residual BIC is explicitly restricted to $S\ge0.10$ because its unrestricted interpolation boundary is ill-posed; this is a sensitivity choice, not a theoretical correction. The Gaussian criterion profiles observation variance in a variance-components model with $\lambda=\sigma_\varepsilon^2/\sigma_\eta^2$, treating the polynomial nullspace as a nuisance component. A plug-in $\widehat\mu$ is not joint ML estimation of all variance and mean parameters. As a result, the criterion rows describe \emph{distinct in-sample selectors}, not directly comparable likelihood functions.
+We retain the library's GCV and Gaussian profile-ML choices
+and explicitly separate \emph{fixed-$\mu$ profile likelihood}
+from \emph{joint unknown-$\mu$ REML}; they need not minimize
+the same physical loss. The original historical case
+also screened LOOCV, AICc and restricted residual BIC,
+as shown in its archived selection comparison. Here
+they are background sensitivity analyses, not a paper
+about computational methods or root-finding performance.
+All tuning uses the training portion, never the held-out future.
 
-\subsection{Extrapolating a trend is a separate forecasting heuristic}
-The public PLS fitting API estimates only the observed-period trend. For every selected fit, we use the final 25 smoothed points and fit a local polynomial of degree $d-1$ after removing the particular solution $\mu\binom{t}{d}$, then extrapolate that polynomial and add the particular solution back at future indices. This imposes the local limiting-$d$ polynomial pattern but \emph{is not} a model-based predictive distribution or an intrinsic TrendEstimation forecasting algorithm. It can fail when the next driver action changes acceleration.
+\subsection{Truncated SVD as an \emph{estimator} baseline}
+A full singular-value decomposition used solely to evaluate
+Eq.~\eqref{eq:pls-solution} is a numerical implementation
+of \emph{the same PLS estimator}, not a competitor. For a
+meaningful comparison we instead use \emph{hard spectral
+truncation} of the \emph{same} third-difference operator.
+Write
+\begin{equation}
+D_3=U\,\operatorname{diag}(\sigma_1,\ldots,\sigma_m)V_+^\top,
+\qquad 0<\sigma_1\le\cdots\le\sigma_m,
+\end{equation}
+where the $V_+$ columns are ordered from lowest to
+highest difference roughness, and let $V_0$ span
+$\ker D_3$. Choose $q$ satisfying
+$D_3q=\mu\mathbf1$, for example
+$q_i=\mu\binom{i-1}{3}$. PLS may be written as a
+\emph{soft spectral filter}:
+\begin{equation}\label{eq:pls-filter}
+\widehat\tau_{\rm PLS}
+=q+V_0V_0^\top(y-q)
++\sum_{j=1}^{m}
+\frac{v_jv_j^\top(y-q)}{1+\lambda\sigma_j^2}.
+\end{equation}
+The truncated-SVD comparison is instead the
+\emph{hard cutoff}
+\begin{equation}\label{eq:tsvd-filter}
+\widehat\tau_{{\rm TSVD},r}
+=q+V_0V_0^\top(y-q)+
+\sum_{j=1}^{r}v_jv_j^\top(y-q),
+\quad 0\le r\le m.
+\end{equation}
+This is a genuine, distinct low-roughness spectral
+smoother. We specify two training-only comparisons:
+(i) choose $r$ by GCV over the noninterpolating ranks
+$0,\ldots,m-1$; (ii) match the PLS effective complexity
+with $r=\operatorname{round}(\operatorname{df}_{\rm PLS}-3)$.
+The latter is a matched-complexity \emph{ablation}, not
+an independently optimized SVD procedure. Both use the
+same training-only global cubic reference $\mu$ as
+the corresponding profile-ML PLS comparator.
+Their normalized hard-filter index is
+$S_{\mathrm{TSVD}}=1-r/m$.
+Classical truncated singular-value regularization has
+a broader inverse-problem literature; we do not claim
+the hard-cutoff construction is new
+\citep{renaut2019tsvd}.
 
-All methods receive identical held-out future positions. Physical comparators are 20-point local linear (constant-velocity) extrapolation, 30-point local quadratic (constant-acceleration) extrapolation, and a 21-point order-three Savitzky--Golay smoother followed by a 20-point local linear continuation \citep{savitzky1964}. Forecast RMSE is the square root of mean squared position errors in meters; MAE is likewise in meters.
+\subsection{Other physical jerk and trajectory baselines}
+The baseline families are (i) natural cubic smoothing
+splines with their second-derivative roughness penalty
+chosen by training-only GCV, (ii) Savitzky--Golay local
+polynomial smoothing (window 21, degree three),
+(iii) ordinary local polynomial and constant-velocity
+or constant-acceleration extrapolations, and
+(iv) raw third differences as an intentionally noisy
+derivative reference \citep{savitzky1964,ahnert2007,cao2021}.
+A classical cubic spline penalizes the \emph{second}
+derivative, whereas Eq.~\eqref{eq:pls} penalizes
+\emph{deviations of the third difference from $\mu$};
+these are different physical smoothness assumptions.
+The comparison measures historical discrete jerk only
+when a synthetic trajectory supplies known truth, and
+future position when a chronological future is available.
 
-\subsection{Three-point recurrence and spline-based forecast comparators}
-Following the published trend-extrapolation construction for lower orders in \citet{guerrero2007}, we investigate its direct algebraic extension to $d=3$. Write the final fitted trend as $\widehat\tau_N$ and its backward differences as $\nabla\widehat\tau_N=\widehat\tau_N-\widehat\tau_{N-1}$ and $\nabla^2\widehat\tau_N=\widehat\tau_N-2\widehat\tau_{N-1}+\widehat\tau_{N-2}$. Imposing a constant third difference equal to the fitted reference mean $\mu$ beyond the observation boundary yields
+\subsection{Forecast continuation is separate from historical smoothing}
+Given a fitted historical trend, the primary $d=3$
+continuation assumes constant future third difference
+equal to the chosen reference $\mu$. At future
+integer horizon $h$,
 \begin{equation}\label{eq:d3-recurrence}
 \begin{aligned}
 \widehat\tau_N(h)
 &=\widehat\tau_N+h\nabla\widehat\tau_N\\
 &\quad+\binom{h+1}{2}\nabla^2\widehat\tau_N
-+\binom{h+2}{3}\mu,\qquad h\ge1.
++\binom{h+2}{3}\mu.
 \end{aligned}
 \end{equation}
-This $d=3$ recurrence is derived here as a forecasting rule from the constant-difference condition, rather than claimed as a new PLS estimator or a formula explicitly printed by Guerrero. It uses only the last three \emph{fitted} historical values; the previously described local-polynomial continuation uses the last 25. For each trial the fitted PLS trend, $\lambda$, $S$ and $\mu$ are identical across the two continuation rules.
+This is the algebraic $d=3$ extension of the
+lower-order forecasting construction of
+\citet{guerrero2007}, \emph{not a new
+probabilistic prediction model}. A secondary
+continuation fits a quadratic to the last 25
+fitted positions after subtracting the polynomial
+particular solution $q$, then adds the future $q$.
+Both schemes use only historical data; neither can
+anticipate future changes in driver behavior.
+A separate spline baseline uses a quadratic Taylor
+continuation from spline endpoint derivatives.
+Horizon-specific observed-position RMSE is reported
+in meters.
 
-For comparison with established local and global numerical differentiation methods \citep{ahnert2007,cao2021}, we fit a \emph{natural cubic smoothing spline} to the same training positions, selecting its second-derivative penalty by training-only generalized cross-validation (SciPy's \texttt{make\_smoothing\_spline}). Four predeclared continuations use second- or third-order Taylor terms from its endpoint derivatives, a local quadratic fitted to the last 25 spline-smoothed positions, or the spline's native polynomial extrapolation. Secondary comparisons include a separately specified cubic spline with fixed training-only noise-scale heuristic, Savitzky--Golay endpoint derivatives, and local quadratic or cubic polynomial fits. No spline tuning parameter is selected from future observations. Each approach forecasts \emph{position}, not independently measured jerk.
+\subsection{Two complementary experimental cases}
+\paragraph{Known-truth simulation.}
+In the completed Experiment005, we generated $1{,}296$
+confirmatory analytic trajectories spanning six jerk
+regimes, three observation-noise levels and three error
+structures, with 80 historical observations and 20
+clean future observations at 10\,Hz. Historical jerk
+is scored against the \emph{same discrete operator}
+applied to the true clean positions, not against an
+unmatched instantaneous derivative. Experiment006
+compared fixed and estimated references and Gaussian
+parameter selection on these preserved cases. The
+new Experiment008 compares the PLS and TSVD filters
+with splines and Savitzky--Golay on \emph{exactly
+these archived simulations}, without regenerating
+them or refitting the original PLS parameter search.
+Experiment007 separately generated $1{,}944$ paired
+noise--dynamics calibration conditions, based on
+72 independent innovation parents; its known-covariance
+analysis is described in Section~\ref{sec:precision}.
 
-\subsection{Separately comparing numerical implementations}
-On the same recorded training windows at $d=3$, $S=0.90$, with both $\mu$ policies, we evaluate seven pathways: full shift-free SVD, fresh dense solve, dense Cholesky, general banded LU, banded Cholesky, symmetric Gram eigendecomposition and dual SVD. Each has three within-run wall-clock repetitions and a numerical fit discrepancy measured against full SVD. These are \emph{one-fit} timings; they do not include the computational cost of evaluating full CV/GCV/AICc/BIC/ML grids. Any failed or nonfinite pathway is reported as unavailable rather than treated as a fast winner.
+\paragraph{Real recorded trajectories.}
+The Federal Highway Administration/USDOT NGSIM
+dataset (DOI: 10.21949/1504477) supplies camera-derived
+longitudinal vehicle position at 10\,Hz
+\citep{fhwa2016}. Source \texttt{Local\_Y} values
+are converted from feet to meters by $0.3048$.
+The initial descriptive illustration used 15 overlapping
+chronological windows from five US-101 track segments
+that contain only two distinct integer vehicle IDs.
+A larger fixed-source follow-up selected 200 quality-qualified
+episodes (100 US-101 and 100 I-80); their IDs
+cannot be equated with 200 unique physical vehicles.
+Every episode supplies 80 historical positions and
+withholds $h=5,10,20$ future frames at a prespecified
+origin. The new TSVD comparison reuses the
+\emph{same} archived 200 episodes and training-only
+PLS parameter choices. Real jerk truth and sensor
+precision are \emph{not independently observed}.
+The 200 episodes represent five coarse recording-time
+blocks, so pooled forecasting scores describe this
+convenience sample, not independent vehicle-population
+inference. Source queries, file checksums, configuration
+and raw/fitted outcome rows remain documented separately
+for every experiment.

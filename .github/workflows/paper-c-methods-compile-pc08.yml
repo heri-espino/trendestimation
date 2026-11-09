@@ -1,0 +1,239 @@
+name: Paper C statistical jerk manuscript with SVD baseline (PCAG103A-08)
+
+on:
+  push:
+    branches: [paper/paper-c-methods-simulation-real-svd]
+    paths:
+      - .github/workflows/paper-c-methods-compile-pc08.yml
+      - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/methods.tex
+      - paper/ngsim-jerk-case-study/sections/synthetic_case.tex
+      - paper/ngsim-jerk-case-study/sections/real_case.tex
+      - paper/ngsim-jerk-case-study/sections/precision_calibration.tex
+      - paper/ngsim-jerk-case-study/sections/discussion.tex
+      - paper/ngsim-jerk-case-study/references.bib
+      - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
+      - paper/ngsim-jerk-case-study/visuals/audit_pdf.py
+      - paper/ngsim-jerk-case-study/visuals/audit_methods_pdf.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-physical-manuscript
+  cancel-in-progress: false
+
+jobs:
+  build-verified-paper:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+
+    steps:
+      - name: Checkout existing derived visual paper on dedicated branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Verify existing 6 figures and create permanent append-only PDF-build root
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Must use PCAG103A-08' }
+          $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\manuscript-methods\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $root) { throw "No overwrite of past paper build: $root" }
+          New-Item -ItemType Directory -Path $root | Out-Null
+          foreach($sub in @('metadata','logs','manuscript','figures')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $sub) | Out-Null
+          }
+          "PC08_METHODS_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          if (!(Test-Path 'paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json')) {
+            throw 'Missing archived prior 6-figure manifest'
+          }
+          if (!(Test-Path 'paper/ngsim-jerk-case-study/figures/exp007_calibration.pdf')) {
+            throw 'Missing original source-based calibration figure'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot save dependency provenance' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m compileall -q paper/ngsim-jerk-case-study/visuals
+          if ($LASTEXITCODE -ne 0) { throw 'Python scientific plotting syntax error' }
+
+      - name: Read exact immutable Experiment008 and Experiment006 results without repeating simulations
+        run: |
+          $ErrorActionPreference='Stop'
+          $sources=@(
+            @{Name='EXP008'; Ref='results/paper-c-exp008-pc08-42717662044-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment008/runs/pc08-42717662044-a1'},
+            @{Name='EXP006'; Ref='results/paper-c-exp006-pc08-42639588117-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1'}
+          )
+          foreach($src in $sources) {
+            git fetch origin "refs/heads/$($src.Ref):refs/remotes/origin/$($src.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw "Could not fetch $($src.Ref)" }
+            $worktree=Join-Path $env:RUNNER_TEMP "paper-c-methods-$($src.Name)-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+            if (Test-Path $worktree) { throw 'Existing source checkout would be reused' }
+            git worktree add --detach $worktree "refs/remotes/origin/$($src.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot mount immutable source' }
+            $path=Join-Path $worktree $src.Sub
+            if (!(Test-Path $path)) { throw "Missing saved science $path" }
+            "$($src.Name)_SOURCE=$path" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            "$($src.Ref) : $path" | Out-File (Join-Path $env:PC08_METHODS_ROOT 'metadata\source_branches.txt') -Append -Encoding utf8
+          }
+
+      - name: Generate the two new SVD/PLS/spline/SG scientific vector figures
+        run: |
+          $ErrorActionPreference='Stop'
+          $p='paper/ngsim-jerk-case-study'
+          $manifest=Join-Path $p 'generated/exp008_methods_figure_manifest.json'
+          if (Test-Path $manifest) {
+            $old=Get-Content $manifest -Raw | ConvertFrom-Json
+            if ($old.plots.PSObject.Properties.Count -ne 2) {
+              throw 'Unrecognized previous figure manifest; do not overwrite'
+            }
+            foreach($base in @('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')) {
+              foreach($ext in @('pdf','png','svg')) {
+                $owned=Join-Path $p "figures/$base.$ext"
+                if (Test-Path $owned) { Remove-Item -LiteralPath $owned -Force }
+              }
+            }
+            Remove-Item -LiteralPath $manifest -Force
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/render_method_comparison.py" --synthetic (Join-Path $env:EXP008_SOURCE 'synthetic\summary.csv') --real (Join-Path $env:EXP008_SOURCE 'real\summary.csv') --exp006-real (Join-Path $env:EXP006_SOURCE 'real\summary.csv') --figures "$p/figures" --manifest $manifest 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\render.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Figure generation failed' }
+          foreach($base in @('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')) {
+            foreach($ext in @('pdf','png','svg')) {
+              if (!(Test-Path "$p/figures/$base.$ext")) { throw "Missing $base.$ext" }
+            }
+          }
+
+      - name: Compile Elsevier CAS two-column journal PDF with simulation and real case studies
+        run: |
+          # Preserve LaTeX diagnostics even if the MiKTeX process writes stderr.
+          $ErrorActionPreference='Continue'
+          $output="paper/builds/pc08-paper-c-methods-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          "PC08_METHODS_BUILD=$output" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $output --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\compile.log')
+          if ($LASTEXITCODE -ne 0) {
+            $latexlog=Join-Path $output 'ngsim.log'
+            if (Test-Path $latexlog) {
+              Copy-Item $latexlog (Join-Path $env:PC08_METHODS_ROOT 'logs\ngsim-latexmk.log') -Force
+            }
+            throw 'Paper C LaTeX compile failed; see persistent ngsim-latexmk.log'
+          }
+          $pdf='paper/ngsim-jerk-case-study/main.pdf'
+          if (!(Test-Path $pdf)) { throw 'Compiled journal PDF missing' }
+          $manifest=Get-Content (Join-Path $output 'build_manifest.json') -Raw | ConvertFrom-Json
+          if ($manifest.results[0].status -ne 'ok') { throw 'Latex manifest reports failure' }
+
+      - name: Validate all new and archived figures and statistical manuscript text
+        run: |
+          # Windows PowerShell 5.1 sometimes treats benign Python stderr as
+          # NativeCommandError. Capture it; process exit code is authoritative.
+          $ErrorActionPreference='Continue'
+          $p='paper/ngsim-jerk-case-study'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_pdf.py" --pdf "$p/main.pdf" --manifest "$p/generated/visual_suite_manifest.json" --output (Join-Path $env:PC08_METHODS_ROOT 'metadata\legacy_six_figure_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\pdf_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Compiled PDF audit failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_methods_pdf.py" --pdf "$p/main.pdf" --figures "$p/figures" --manifest "$p/generated/exp008_methods_figure_manifest.json" --output (Join-Path $env:PC08_METHODS_ROOT 'metadata\methods_pdf_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\methods_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Physical methods PDF audit failed' }
+
+      - name: Preserve the exact new compiled paper, logs, figure files, and root directory hashes on Windows
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PC08_METHODS_ROOT
+          if (!$root) {
+            $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\manuscript-methods\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          if (!(Test-Path $root)) { New-Item -ItemType Directory -Path $root -Force | Out-Null }
+          foreach($sub in @('metadata','logs','manuscript','figures')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $sub) -Force | Out-Null
+          }
+          $p='paper/ngsim-jerk-case-study'
+          foreach($name in @('main.pdf','main.tex')) {
+            if (Test-Path "$p/$name") {
+              Copy-Item "$p/$name" (Join-Path $root 'manuscript') -Force
+            }
+          }
+          Get-ChildItem "$p/figures" -Filter 'exp008_*' -ErrorAction SilentlyContinue |
+            Copy-Item -Destination (Join-Path $root 'figures') -Force
+          if (Test-Path "$p/generated/exp008_methods_figure_manifest.json") {
+            Copy-Item "$p/generated/exp008_methods_figure_manifest.json" (Join-Path $root 'metadata') -Force
+          }
+          if ($env:PC08_METHODS_BUILD -and (Test-Path "$env:PC08_METHODS_BUILD/build_manifest.json")) {
+            Copy-Item "$env:PC08_METHODS_BUILD/build_manifest.json" (Join-Path $root 'metadata') -Force
+          }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'metadata\methods_pdf_audit.json')) {
+            $status='compiled_complete_audited'
+          }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory complete VM output' }
+
+      - name: Publish compiled PDF and two new vector figure sets as Actions artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-physical-jerk-comparison-pdf-and-figures
+          path: |
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/figures/exp008_*
+            paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit only the audited paper PDF and new authored scientific figure sets to PR
+        if: success()
+        run: |
+          $ErrorActionPreference='Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
+          if ($LASTEXITCODE -ne 0) { throw 'Could not stage paper outputs' }
+          git commit -m "paper-c: publish method-first physical jerk paper, TSVD figures and verified PDF"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit paper PDF' }
+          git push origin "HEAD:refs/heads/paper/paper-c-methods-simulation-real-svd"
+          if ($LASTEXITCODE -ne 0) { throw 'PR branch changed during paper build; do not force-push' }
+
+      - name: Archive complete permanent VM build in unique results-only Git branch
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:PC08_METHODS_ROOT
+          if (!$root) {
+            $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\manuscript-methods\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          if (!(Test-Path (Join-Path $root 'metadata\file_inventory.json'))) {
+            throw 'No audit inventory'
+          }
+          $rel="paper/ngsim-jerk-case-study/visuals/runs/methods-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+          $branch="results/paper-c-methods-pdf-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create unique results archive' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage full figure and PDF build files' }
+          git commit -m "paper-c: archive full audited method-first journal PDF and PC08 provenance"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit permanent paper build' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish full immutable VM build files' }

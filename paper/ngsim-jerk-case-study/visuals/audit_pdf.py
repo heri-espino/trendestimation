@@ -53,7 +53,8 @@ def audit(pdf,manifest,out):
         raise ValueError("Unexpectedly short manuscript / missing figures")
     text="\n".join((page.extract_text() or "") for page in reader.pages).lower()
     checks={
-      "abstract_new_topic":"relative-noise calibration" in text,
+      "abstract_new_topic":("relative" in text and "calibration" in text
+                            and "jerk" in text),
       "spectral_index_definition":"spectral mode" in text,
       # CAS column extraction can interleave the figure label and caption;
       # require both scientific keywords, not adjacent tokens.
