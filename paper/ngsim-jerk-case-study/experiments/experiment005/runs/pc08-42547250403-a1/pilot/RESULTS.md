@@ -1,0 +1,108 @@
+# Experiment005 pilot — known jerk, controlled position observations
+
+**Trials:** 96 independent seeded synthetic series.
+**Duration:** 2.3 seconds on PCAG103A-08.
+**Reference truth:** exact analytic trajectories and discrete third differences;
+future forecasts evaluated against clean **known** positions.
+
+## Pooled future clean-position RMSE (meters)
+
+| Horizon | Method | RMSE (m) |
+| --- | --- | ---: |
+| 5 frames | pls_mle_oracle_local25 | 0.239186 |
+| 5 frames | pls_mle_oracle_guerrero_last3 | 0.255864 |
+| 5 frames | pls_mle_ols_global_local25 | 0.272959 |
+| 5 frames | pls_mle_ols_global_guerrero_last3 | 0.281706 |
+| 5 frames | pls_mle_zero_local25 | 0.298964 |
+| 5 frames | pls_gcv_oracle_local25 | 0.314451 |
+| 5 frames | pls_gcv_ols_global_local25 | 0.324972 |
+| 5 frames | pls_gcv_zero_local25 | 0.332458 |
+| 5 frames | pls_mle_zero_guerrero_last3 | 0.347131 |
+| 5 frames | raw_local_quad25 | 0.360112 |
+| 5 frames | spline_gcv_taylor2 | 0.677288 |
+| 5 frames | pls_mle_ols_tail25_local25 | 0.832220 |
+| 5 frames | pls_gcv_ols_tail25_local25 | 0.856033 |
+| 5 frames | pls_mle_ols_tail25_guerrero_last3 | 0.945882 |
+| 5 frames | savgol21_taylor2 | 1.042867 |
+| 5 frames | pls_gcv_ols_global_guerrero_last3 | 1.221464 |
+| 5 frames | pls_mle_sample_guerrero_last3 | 2.073902 |
+| 5 frames | pls_gcv_oracle_guerrero_last3 | 2.205743 |
+| 5 frames | pls_gcv_zero_guerrero_last3 | 2.209791 |
+| 5 frames | pls_gcv_ols_tail25_guerrero_last3 | 2.328220 |
+| 5 frames | pls_gcv_sample_guerrero_last3 | 2.908630 |
+| 5 frames | pls_mle_sample_local25 | 4.424678 |
+| 5 frames | pls_gcv_sample_local25 | 4.448262 |
+| 10 frames | pls_mle_oracle_local25 | 0.364954 |
+| 10 frames | pls_mle_oracle_guerrero_last3 | 0.389975 |
+| 10 frames | pls_mle_ols_global_local25 | 0.430831 |
+| 10 frames | pls_mle_zero_local25 | 0.436593 |
+| 10 frames | pls_mle_ols_global_guerrero_last3 | 0.439595 |
+| 10 frames | pls_gcv_oracle_local25 | 0.470966 |
+| 10 frames | pls_gcv_zero_local25 | 0.492281 |
+| 10 frames | pls_gcv_ols_global_local25 | 0.503514 |
+| 10 frames | pls_mle_zero_guerrero_last3 | 0.525700 |
+| 10 frames | raw_local_quad25 | 0.537248 |
+| 10 frames | spline_gcv_taylor2 | 1.112331 |
+| 10 frames | pls_mle_ols_tail25_local25 | 1.581659 |
+| 10 frames | pls_gcv_ols_tail25_local25 | 1.614953 |
+| 10 frames | pls_mle_ols_tail25_guerrero_last3 | 1.863846 |
+| 10 frames | savgol21_taylor2 | 2.021937 |
+| 10 frames | pls_gcv_ols_global_guerrero_last3 | 2.708131 |
+| 10 frames | pls_mle_sample_guerrero_last3 | 5.213634 |
+| 10 frames | pls_gcv_oracle_guerrero_last3 | 5.663248 |
+| 10 frames | pls_gcv_zero_guerrero_last3 | 5.667233 |
+| 10 frames | pls_gcv_ols_tail25_guerrero_last3 | 5.933999 |
+| 10 frames | pls_gcv_sample_guerrero_last3 | 7.563597 |
+| 10 frames | pls_mle_sample_local25 | 9.435141 |
+| 10 frames | pls_gcv_sample_local25 | 9.472163 |
+| 20 frames | pls_mle_oracle_local25 | 0.812217 |
+| 20 frames | pls_mle_oracle_guerrero_last3 | 0.839675 |
+| 20 frames | pls_mle_zero_local25 | 0.871316 |
+| 20 frames | pls_gcv_oracle_local25 | 0.973792 |
+| 20 frames | pls_mle_ols_global_guerrero_last3 | 0.981824 |
+| 20 frames | pls_gcv_zero_local25 | 0.981858 |
+| 20 frames | pls_mle_ols_global_local25 | 0.993068 |
+| 20 frames | pls_mle_zero_guerrero_last3 | 1.059467 |
+| 20 frames | raw_local_quad25 | 1.065294 |
+| 20 frames | pls_gcv_ols_global_local25 | 1.100681 |
+| 20 frames | spline_gcv_taylor2 | 2.375167 |
+| 20 frames | pls_mle_ols_tail25_local25 | 4.256586 |
+| 20 frames | pls_gcv_ols_tail25_local25 | 4.313481 |
+| 20 frames | savgol21_taylor2 | 5.071030 |
+| 20 frames | pls_mle_ols_tail25_guerrero_last3 | 5.084774 |
+| 20 frames | pls_gcv_ols_global_guerrero_last3 | 7.588430 |
+| 20 frames | pls_gcv_oracle_guerrero_last3 | 17.590737 |
+| 20 frames | pls_gcv_zero_guerrero_last3 | 17.596481 |
+| 20 frames | pls_mle_sample_guerrero_last3 | 18.375663 |
+| 20 frames | pls_gcv_ols_tail25_guerrero_last3 | 18.566729 |
+| 20 frames | pls_gcv_sample_guerrero_last3 | 25.494383 |
+| 20 frames | pls_mle_sample_local25 | 28.017896 |
+| 20 frames | pls_gcv_sample_local25 | 28.091327 |
+
+## Historical known-discrete-jerk RMSE (m/s³)
+
+| Method | RMSE |
+| --- | ---: |
+| pls_mle_oracle | 0.179329 |
+| pls_mle_ols_global | 0.187779 |
+| pls_mle_zero | 0.233592 |
+| pls_mle_ols_tail25 | 1.273260 |
+| spline_gcv_taylor2 | 6.537854 |
+| pls_mle_sample | 8.714666 |
+| pls_gcv_ols_global | 9.557466 |
+| pls_gcv_oracle | 41.952053 |
+| pls_gcv_zero | 41.952357 |
+| pls_gcv_ols_tail25 | 42.013083 |
+| pls_gcv_sample | 42.457073 |
+| savgol21_taylor2 | 48.231652 |
+
+## Interpretation and limitations
+
+- Scenarios, noise and policy families were frozen in config.json.
+- Future-position target is **clean simulated position**, not a recorded video position.
+- Primary jerk target is exactly D3(true position)/dt³, aligned to the PLS finite-difference operator.
+- The oracle mu is available ONLY in synthetic trials and may not be used on real NGSIM.
+- The pooled mixture weights are constructed by design; results are not traffic-population inference.
+- Paired bootstrap intervals condition on this artificial generating process; competing methods/horizons were not multiplicity-adjusted.
+- Changing the mu fit generally changes the selected lambda; fixed-S crossings in ablation_rows.csv isolate the fit and continuation effects.
+- Retain all failure rows, full known/noisy trajectories and immutable run metadata.

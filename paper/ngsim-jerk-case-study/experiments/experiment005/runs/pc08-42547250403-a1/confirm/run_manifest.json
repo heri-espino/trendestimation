@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "completed_synthetic_known_jerk",
+  "experiment": "experiment005",
+  "stage": "confirm",
+  "started_utc": "2026-11-09T13:41:31.029414+00:00",
+  "completed_utc": "2026-11-09T13:42:18.840605+00:00",
+  "source_repository_sha": "faec7418ff889bd7434d20afe0807c02c6d8298e",
+  "runner_name": "PCAG103A-08",
+  "workflow_id": "42547250403",
+  "persistent_run_output": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\experiment005\\run-42547250403-a1\\confirm",
+  "config_sha256": "688a8d3f4de45c475c2c7337680144115cbc5b60a0caed0121e9d9d7b06f0d82",
+  "synthetic_trial_count": 1296,
+  "counts": {
+    "selections_ok": 12960,
+    "fits_ok": 15552,
+    "forecasts_ok": 89424,
+    "ablation_ok": 62208,
+    "trials": 1296
+  },
+  "errors": {},
+  "elapsed_wall_seconds": 32.71440490000532,
+  "aggregates": {
+    "forecast_methods": 23,
+    "jerk_methods": 12,
+    "n_forecast_rows": 89424,
+    "n_jerk_rows": 15552,
+    "n_ablation_rows": 62208,
+    "pairwise_comparisons": 66
+  },
+  "figures": {
+    "created": true,
+    "files": [
+      "figures/forecast_rmse.png"
+    ]
+  },
+  "numpy_version": "2.4.6",
+  "scipy_version": "1.17.1",
+  "real_ngsim_data_used": false,
+  "jerk_truth_observed": true,
+  "reference_mean_oracle_is_synthetic_only": true
+}
