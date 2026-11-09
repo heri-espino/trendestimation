@@ -1,5 +1,26 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
 
+## Next study: controlled known-jerk simulation (Experiment005)
+
+The author authorized a separate
+[known-jerk simulation](experiments/experiment005/README.md)
+after the successful, strictly observational Experiment004.
+The [frozen design](experiments/experiment005/config.json)
+tests six analytic jerk regimes, GCV/profile ML with five
+`mu` references, two forecast continuations and
+spline/SG baselines under three noise structures and
+three error levels. There are 96 pilot and 1,296
+disjoint-seed confirmation trajectories on the designated
+PCAG103A-08 runner, with full clean/noisy series and
+run outputs saved on the VM and immutable Git branch.
+The synthetic-only oracle reference is a diagnostic
+upper bound, not a valid FHWA forecasting procedure.
+Compare *true discrete jerk error* and clean-future-position
+forecast error. **The next manuscript claims must be
+based on actual successful runs, not this planned grid.**
+Existing real NGSIM data and conclusions remain separate.
+
+
 ## Completed expanded real NGSIM Experiment004 (2026-11-08)
 
 **Result and exact VM file record:** [Experiment004 run ledger](experiments/experiment004/RUN_LEDGER.md).
