@@ -1,6 +1,6 @@
 # Experiment011 completed Windows campaign: acquisition and analysis handoff
 
-Updated 2026-11-09. This update supersedes earlier “Windows pending” instructions for this campaign only. Canonical Springer manuscript: `paper/main.tex`.
+Updated 2026-11-09. **Access correction:** The next agent has no interactive VM access but is expected to use GitHub Actions on the self-hosted PCAG103A-08 to read local data, analyze, render figures and compile. The author has now supplied successful VERIFIED COPY output for `C:\Users\175199\experiment011-backups\experiment011_20261109_072910742`; runner-level independent verification is still required. Read the updated Actions-specific prompt first.  This update supersedes earlier “Windows pending” instructions for this campaign only. Canonical Springer manuscript: `paper/main.tex`.
 
 ## Evidence and current boundary
 

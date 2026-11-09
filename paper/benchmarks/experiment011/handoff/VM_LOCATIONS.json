@@ -23,5 +23,9 @@
     "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/experiment011_qa.json",
     "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/measurements/environment.json"
   ],
-  "policy": "Keep raw data locally for now; no automatic result publication, LFS migration, history rewrite, merge, benchmark rerun or submission."
+  "policy": "Keep raw data locally for now; no automatic result publication, LFS migration, history rewrite, merge, benchmark rerun or submission.",
+  "agent_access": "GitHub Actions self-hosted PCAG103A-08; no interactive VM access",
+  "backup_path": "C:\\Users\\175199\\experiment011-backups\\experiment011_20261109_072910742",
+  "backup_console_success_reported": true,
+  "backup_independently_verified_by_agent": false
 }
