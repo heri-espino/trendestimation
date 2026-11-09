@@ -153,8 +153,8 @@ def render(timing,pairs,boots,coords,cells,out):
     for ax,crit in zip(axs.flat,("cv","gcv","aicc","mle")):
         if crit not in obs.index.get_level_values(0):
             ax.set_axis_off();continue
-        sub=obs.loc[crit].copy()
-        sub["valid_fraction"]=sub.get("complete",0)/sub[["complete","kkt","inversion","budget","other"]].sum(axis=1)
+        sub=obs.loc[crit].reindex(columns=list(STAT),fill_value=0).copy()
+        sub["valid_fraction"]=sub["complete"]/sub[list(STAT)].sum(axis=1)
         sub=sub.sort_values("valid_fraction")
         ypos=np.arange(len(sub))
         left=np.zeros(len(sub),dtype=float)
