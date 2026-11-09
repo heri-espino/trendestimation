@@ -126,7 +126,7 @@ def failure_mechanisms(df,out,meta):
                     color=colors[category])
             left+=vals
     ax.invert_yaxis()
-    ax.set_yticks(y,[f'n={n:,}   {("banded" if meth=="banded_cholesky" else "SVD")}'
+    ax.set_yticks(y,[f'n={int(n):,}   {("banded" if meth=="banded_cholesky" else "SVD")}'
                     for n,meth in order],fontsize=8)
     ax.set_xticks(np.linspace(0,1,6),[f"{j:.0%}" for j in np.linspace(0,1,6)])
     ax.set_xlim(0,1)
