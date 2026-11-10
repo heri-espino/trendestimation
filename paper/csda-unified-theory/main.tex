@@ -1,0 +1,59 @@
+% Consolidated theoretical manuscript; Paper A and Paper B remain preserved.
+% Official user-provided Elsevier CAS 2.4 class: copy three files from
+% paper/els-cas-templates/ into this directory before compilation.
+\documentclass[a4paper,fleqn]{cas-dc}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx,booktabs,tabularx,enumitem,url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\RSS}{\operatorname{RSS}}
+\newcommand{\edf}{\operatorname{edf}}
+\newcommand{\CV}{\operatorname{CV}}
+\newcommand{\GCV}{\operatorname{GCV}}
+\newcommand{\op}{\operatorname{op}}
+\newcommand{\1}{\mathbf 1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Algorithms for smoothness-indexed penalized least squares}
+\shortauthors{Espino-Montelongo and Cort\'es-Toto}
+\title[mode=title]{Spectral and structured algorithms for smoothness-indexed penalized least-squares trend estimation}
+% Provisional author ordering, affiliations, declarations: coauthor review required.
+\author[1]{Heriberto Espino-Montelongo}
+\author[1]{Daniela Cort\'es-Toto}
+\affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
+ city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+\begin{abstract}
+Finite-difference penalized least squares admits efficient structured solvers, yet choosing a smoothing level by cross-validation or an information criterion is a substantially different computational task from fitting one trend. We develop a unified computational treatment of this distinction using a normalized, trace-based smoothness coordinate on the closed unit interval. A singular-value representation of the arbitrary-order difference operator yields a strictly monotone smoothness-to-penalty map, its exact interpolation and constrained-polynomial limits, and a shift-free formula for a prescribed nonzero reference mean of differences. We identify the quantities required by conditional leave-one-out cross-validation, generalized cross-validation, information criteria and a Gaussian reduced-coordinate likelihood. We then derive and compare complete spectral and banded-Cholesky/selected-inverse pipelines, including their preprocessing, inverse smoothness mapping, criterion-specific scoring, memory requirements and reuse across candidate grids and observed series. A structured determinant identity avoids dense likelihood matrices. Exact arithmetic identities, conditional complexity bounds and a numerical-admissibility framework explain why the cost-minimizing algorithm depends on the entire workload: banded methods are natural for isolated fits and long series with small difference order, whereas a retained spectrum can amortize scalar scoring over many smoothness levels, subject to dense memory and conditioning constraints. An open-source Python interface exposes the formulation and the normalized coordinate. The contribution is an integrated theoretical and software-oriented framework; neither the classical difference penalty, trace index, spectral decomposition nor selected inversion is claimed as new.
+\end{abstract}
+\begin{keywords}
+Penalized least squares \sep smoothness index \sep spectral decomposition
+\sep Whittaker--Henderson smoothing \sep finite differences
+\sep banded Cholesky \sep numerical stability \sep amortized complexity
+\end{keywords}
+\maketitle
+
+\input{sections/introduction}
+\input{sections/model}
+\input{sections/smoothness}
+\input{sections/criteria}
+\input{sections/algorithms}
+\input{sections/complexity}
+\input{sections/stability}
+\input{sections/policy}
+\input{sections/software}
+\input{sections/conclusion}
+\bibliographystyle{cas-model2-names}
+% References are reused without duplicating/diverging the existing BibTeX source.
+\bibliography{../csda-computational-costs/references,algorithmic_references}
+\end{document}

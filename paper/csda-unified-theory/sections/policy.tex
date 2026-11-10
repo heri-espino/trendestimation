@@ -1,0 +1,42 @@
+\section{A workload-aware algorithm-selection policy}\label{sec:policy}
+The theoretical problem is to choose a complete pipeline, not a favored numerical library in isolation. For a specified tolerance $\varepsilon$, memory budget $B$, difference order $d$, number of candidates $M$, observed-series count $R$ and criterion set $\mathcal C$, we recommend
+\begin{equation}\label{eq:frontier}
+\mathcal A^\star\in
+\arg\min_{\mathcal A\in\mathfrak A_{\rm valid}}
+T_\mathcal A(n,d,M,R,\mathcal C;\varepsilon,B),
+\end{equation}
+where the constraint \eqref{eq:valid} is evaluated before comparing cost. Neither Theorem~\ref{thm:svdwork} nor Theorem~\ref{thm:bandwork} supplies measured wall-clock constants, so \eqref{eq:frontier} is a conditional decision principle, not an empirically calibrated universal dispatcher.
+
+\begin{table*}[t]
+\caption{Algorithm choices suggested by the derived cost components. Each preference is conditional on accurate outputs, an admissible $S$ inversion and the complete criterion being available.}
+\label{tab:policy}\centering\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\textwidth}{@{}p{.24\textwidth}Xp{.26\textwidth}@{}}
+\toprule
+Workload & Initial candidate and rationale & Important qualification\\
+\midrule
+One curve, known $\lambda$, small fixed $d$ & Banded Cholesky: $O(nd^2)$ factor, $O(nd)$ solve & Large $\lambda$ can amplify finite-precision error.\\
+One curve, prescribed $S$ & Banded fit with a certified $S\mapsto\lambda$ mapper & Do not omit mapping cost. For $d=1$ the spectrum is analytic.\\
+Many $S$ values, scalar GCV or likelihood, moderate $n$ & Retained SVD: costly setup, $O(r)$ candidate scores & Dense basis must fit memory; finite constants can reverse comparisons.\\
+Many $S$ values, exact ordinary CV, small $d$ and large $n$ & Banded Cholesky plus selected inverse & Spectral CV also has $O(nr)$ leverage/residual reconstruction.\\
+Many series sharing $(n,d,\mathcal S)$ & Map $S$ once; reuse spectrum or factors and leverage diagnostics & Each series still needs its own projections or solves.\\
+Near $S=1$, large $d$, difficult conditioning & Validated shift-free spectral or independently verified structured alternative & Prefer analytic endpoint at exact $S=1$; never assume a particular algorithm always passes.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Complete candidate-grid procedure}
+The following abstract algorithm specifies a reproducible computation rather than claiming that an optimal dispatcher is already implemented in the library.
+\begin{enumerate}[leftmargin=*]
+\item Fix $(n,d)$, the reference-mean policy, the criterion set $\mathcal C$, candidate set $\mathcal S$, numerical tolerances and memory limit. Declare whether any mean estimate is conditional or foldwise-refitted.
+\item Determine the exact admissible endpoint conventions. Map each distinct interior $s_j$ to a penalty once, checking its inverse-map residual. Do not independently space a comparison grid in $\log\lambda$ and call it the same statistical workload.
+\item Evaluate complete pipeline feasibility. A spectral method must budget its full basis; a structured method must budget all selected-inverse and likelihood diagnostics, not merely the trend fit.
+\item Reuse calculations at the correct level: the $S$ mapping is shared across all series of the same length and order; a banded factor or leverage vector is shared across series for the same penalty; spectral projections depend on the observed series and fixed mean.
+\item At each candidate, evaluate all requested scores and numerical checks. Record invalid or undefined scores and failed fits rather than assigning them artificial best values.
+\item Return a minimizer \emph{over the explicitly evaluated finite grid} for each requested criterion. The result is not automatically a certified global minimizer of the unrestricted continuous criterion.
+\end{enumerate}
+
+\subsection{What can be concluded without empirical timing}
+The theory proves that structured factorization has favorable asymptotic storage and single-fit arithmetic for fixed small $d$. It also proves that once an SVD has been paid for, many scalar smoothing scores are cheap and share the same spectral basis and smoothness map. It does \emph{not} establish that SVD always beats banded Cholesky on CV grids, that a positive crossover exists in every regime, or that a faster measured fit implies faster complete criterion selection. Those are contingent questions involving operation constants and numerical admissibility.
+
+Finally, changing $d$ is a model-design decision, not merely a computational tuning parameter. Different difference orders impose different nullspaces and different smoothing trajectories. A preference inferred from computational work must not be misreported as a guarantee of better latent-trend recovery or forecasting accuracy.

@@ -1,0 +1,26 @@
+\section{Reproducible software interface}\label{sec:software}
+The \texttt{trendestimation} Python package provides an explicit user-facing interface to the smoothing problem, exposing the difference order, prescribed reference mean and normalized smoothness coordinate. The library's present accuracy-oriented default uses a retained SVD. The analytical computational policy in Section~\ref{sec:policy} should not be mistaken for an already deployed universal automatic backend selector.
+
+A minimal example with a prescribed nonzero third-difference reference is:
+\begin{verbatim}
+from trendestimation import TrendSmoother
+from trendestimation import select_lambda
+
+solver = TrendSmoother(len(y), order=3)
+fit = solver.fit_smoothness(
+    y, smoothness=0.8, mu=0.15
+)
+trend = fit.trend
+choice = select_lambda(
+    solver, y, criterion="gcv", mu=0.15
+)
+selected = solver.fit(
+    y, lambda_=choice.lambda_, mu=0.15
+)
+\end{verbatim}
+The value $\mu=0.15$ is merely a demonstration of API syntax, \emph{not} a scientifically justified physical reference value. In a real study its units, source and inferential role must be defined. An alternative \texttt{mu="data"} computes an observed-difference plug-in from the supplied sample; it must not be described as fixed, genuinely foldwise-refitted CV, or joint unknown-mean likelihood.
+
+The interface distinguishes (i) specifying a penalty, (ii) specifying normalized smoothness and internally inverting it, and (iii) selecting a candidate by a named criterion. The separate functions make the mathematical transformations inspectable and permit independent numerical QA. The library is a research implementation of established PLS smoothing methods; this paper makes no claim that no related smoothing software existed previously.
+
+\paragraph{Reproducibility of the theory.}
+The companion repository retains the source of both predecessor manuscripts, proof derivations, deterministic matrix-identity checks, and the archived numerical and computational studies. The present manuscript neither overwrites nor reruns the expensive experiments. Its independent small deterministic verification reproduces the SVD fit identity, the smoothness map, a banded Cholesky solve and selected inverse, and the determinant identity under nonzero reference means. All mathematical claims and any subsequent measured results must remain associated with exact source revisions, numerical tolerances and software dependencies.
