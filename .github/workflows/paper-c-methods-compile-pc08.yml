@@ -17,6 +17,9 @@ on:
       - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
       - paper/ngsim-jerk-case-study/visuals/audit_pdf.py
       - paper/ngsim-jerk-case-study/visuals/audit_methods_pdf.py
+      - paper/ngsim-jerk-case-study/visuals/audit_frozen_svd_comparison.py
+      - tests/test_paper_c_frozen_svd_audit.py
+      - tests/test_paper_c_plug_in_edf.py
   workflow_dispatch:
 
 permissions:
@@ -91,6 +94,18 @@ jobs:
             "$($src.Name)_SOURCE=$path" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
             "$($src.Ref) : $path" | Out-File (Join-Path $env:PC08_METHODS_ROOT 'metadata\source_branches.txt') -Append -Encoding utf8
           }
+
+      - name: Unit-check plug-in EDF and audit immutable Experiment008 fitted rows
+        run: |
+          $ErrorActionPreference='Stop'
+          $src=Join-Path $env:EXP008_SOURCE 'synthetic\fitted_rows.csv'
+          if (!(Test-Path $src)) { throw 'Missing immutable Experiment008 synthetic fitted outcomes' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_frozen_svd_audit.py tests/test_paper_c_plug_in_edf.py 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\frozen_svd_unit_tests.log')
+          if ($LASTEXITCODE -ne 0) { throw 'PLS/TSVD plug-in EDF or frozen archive tests failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/audit_frozen_svd_comparison.py --fitted-rows $src --output (Join-Path $env:PC08_METHODS_ROOT 'metadata\frozen_svd_pairwise_audit.json') --seed 30133 --resamples 5000 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\frozen_svd_pairwise_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable Experiment008 rank and paired-risk audit failed' }
 
       - name: Generate the two new SVD/PLS/spline/SG scientific vector figures
         run: |
