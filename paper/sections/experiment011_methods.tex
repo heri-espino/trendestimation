@@ -1,5 +1,5 @@
 \section{Introduction}
-Penalized least-squares smoothing is a widely used approach to separating low-frequency variation from noise in an observed series. Finite-difference penalties have connected trend regularity and linear smoothing since the early work on graduation \cite{whittaker1923graduation}. Subsequent developments include structured implementations of Whittaker--Henderson smoothing \cite{weinert2007wh,weinert2012fast,biessy2026wh} and the interpretation of smoothing through a normalized percentage-of-smoothness parameter \cite{guerrero2007penalized,guerrero2008smoothness}. Selection of the penalty by cross-validation, information criteria or marginal likelihood is well established \cite{craven1979gcv,cortes2017smoothness}. Nevertheless, obtaining a fitted trend and evaluating the \emph{complete selection criterion} are computationally different tasks.
+Penalized least-squares smoothing is a widely used approach to separating low-frequency variation from noise in an observed series. Finite-difference penalties have connected trend regularity and linear smoothing since early work on statistical graduation \citep{whittaker1923graduation}. Subsequent developments include structured implementations of Whittaker--Henderson smoothing \citep{weinert2007wh,weinert2012fast,biessy2026wh} and the interpretation of smoothing through a normalized percentage-of-smoothness parameter \citep{guerrero2007penalized,guerrero2008smoothness}. Selection of the penalty by cross-validation, information criteria or marginal likelihood is well established \citep{craven1979gcv,cortes2017smoothness}. Nevertheless, obtaining a fitted trend and evaluating the \emph{complete selection criterion} are computationally different tasks.
 
 A banded Cholesky factorization exploits the sparsity of finite-difference penalties and is economical for an individual smoothing parameter. In contrast, a spectral factorization requires an appreciable initial calculation but exposes all candidate penalties through diagonal transformations in a common basis. Consequently, the apparent superiority of a solver in a single fit need not persist across a grid of smoothing parameters. Moreover, numerical acceptance of the complete criterion depends not only on the matrix factorization but also on leverage calculations, endpoint treatment and the inversion between penalty and smoothness coordinates.
 
@@ -92,7 +92,7 @@ the latter does not constitute an entirely sparse criterion evaluator.
 \paragraph{Optimality equation.}
 For the strictly convex and unconstrained objective in
 Eq.~\eqref{eq:pls}, the first-order condition is both necessary and
-sufficient for global optimality \cite{boyd2004convex}:
+sufficient for global optimality \citep{boyd2004convex}:
 \begin{equation}\label{eq:kktderiv}
 \begin{split}
 \frac12\nabla J_\lambda(\tau)
@@ -122,10 +122,10 @@ r_{\mathrm{opt}}
 Assessing a computed solution through the residual of its
 optimality or linear-system equations is established numerical
 practice, as developed in classical treatments of linear-system
-residuals and backward errors \cite{higham2002accuracy,golub2013matrix}. Residual-based
+residuals and backward errors \citep{higham2002accuracy,golub2013matrix}. Residual-based
 stopping or acceptance rules are also used in practical
 convex quadratic-programming solvers
-\cite{stellato2020osqp}. These references justify the
+\citep{stellato2020osqp}. These references justify the
 \emph{type of diagnostic}, not the particular numerical
 tolerance selected for the present implementation.
 
@@ -156,7 +156,7 @@ Although the numerical code labels this diagnostic a
 \texttt{backward\_error}, its normalization is \emph{not}
 the conventional normwise linear-system backward error,
 which can instead be expressed, for the present norms, as
-shown in classical backward-error analysis \cite{higham2002accuracy}:
+shown in classical backward-error analysis \citep{higham2002accuracy}:
 \begin{equation}\label{eq:standardbackward}
 \eta_{\mathrm{lin}}=
 \frac{\|b_\lambda-A_\lambda\widetilde\tau_\lambda\|_2}
