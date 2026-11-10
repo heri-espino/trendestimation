@@ -25,7 +25,7 @@ A second known-truth simulation case provides a
 different outcome: PLS with the historical cubic-OLS
 reference and continuous Gaussian profile likelihood
 has lower discrete-jerk RMSE than a hard spectral
-SVD cutoff at matched effective degrees of freedom,
+SVD cutoff at nominally matched fixed-reference degrees of freedom,
 and much lower RMSE than the position-GCV
 truncation in the tested regimes. Hard cutoff and
 continuous shrinkage are \emph{different estimators};
@@ -45,7 +45,7 @@ Across 200 quality-qualified NGSIM episodes,
 the three-point PLS and effective-complexity-matched
 SVD forecasts are similar; a GCV natural cubic
 smoothing spline with quadratic Taylor continuation
-has the lowest pooled recorded-future position RMSE
+has the lowest pooled recorded-future position window RMSE
 among the reported procedures. The smaller original
 US-101 exploratory sample favored the PLS
 recurrence at 0.5\,s; its five segments came
