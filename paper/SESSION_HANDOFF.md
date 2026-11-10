@@ -1,3 +1,5 @@
+**Paper C scientific-editorial continuation (2026-11-09):** Review branch `paper/paper-c-scientific-editorial-review` is derived from the unchanged open PR #131, not PR #132. Read [scientific editorial audit](ngsim-jerk-case-study/notes/SCIENCE_EDITORIAL_REVIEW.md) for method-dependent reference-jerk comparability, conditional plug-in TSVD-GCV/EDF caveats, the exact archival near-interpolation error decomposition, and improved known-jerk-before-calibration reading order. **No Experiment004--008 rerun, no merge and no submission.** Publication PDF/build status must be checked against this branch's latest Actions run; the earlier PR #131 11-page PDF remains a valid historical build, not evidence that these new edits have compiled.
+
 # Start here — publication split and the next Experiment011 Windows run
 ## Newest paper request: third-order PLS physical methodology, simulations + real data (Nov 9, 2026)
 
