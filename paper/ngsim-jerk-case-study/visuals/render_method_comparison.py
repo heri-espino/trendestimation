@@ -77,7 +77,7 @@ def build(sim,real,archived,out):
     a.set(ylabel="Historical jerk RMSE (m/s³)",
           title="A. Recovering known synthetic jerk")
     b.bar(x,future,color=colors,width=.7)
-    b.set(ylabel="1-s clean-position RMSE (m)",
+    b.set(ylabel="First-1-s window RMSE (m)",
           title="B. Forecasting clean synthetic position")
     b.set_ylim(0,max(future)*1.3)
     for ax,values in ((a,jerks),(b,future)):
@@ -104,9 +104,9 @@ def build(sim,real,archived,out):
         ref.append(float(data[0]["rmse_m"]))
     ax.plot(t,ref,color=INK,ls="--",lw=1.9,marker="D",
             label="GCV spline, quadratic Taylor")
-    ax.set(xticks=t,xticklabels=["0.5","1","2"],xlabel="Future horizon (s)",
-           ylabel="Future recorded-position RMSE (m)",
-           title="Recorded NGSIM trajectories: 200 episodes, identical historical cutoffs")
+    ax.set(xticks=t,xticklabels=["0.5","1","2"],xlabel="Evaluation window through (s)",
+           ylabel="Recorded-position window RMSE (m)",
+           title="NGSIM: 200 episodes, cumulative forecast windows")
     ax.set_ylim(0,2.65)
     ax.grid(alpha=.15);ax.set_axisbelow(True)
     ax.legend(frameon=False,ncol=3,loc="upper left",fontsize=7)
