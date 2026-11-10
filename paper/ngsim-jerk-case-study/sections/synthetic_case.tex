@@ -95,10 +95,21 @@ as a single aggregate score.}
 \label{fig:sim-svd}
 \end{figure*}
 
-The matched-complexity comparison isolates an
-advantage of soft PLS shrinkage over a hard
-roughness-spectral cutoff in the tested
-synthetic jerk-reconstruction task.
+The nominally matched-complexity comparison shows
+a lower pooled historical jerk error for soft PLS
+shrinkage than for the hard spectral cutoff in this
+synthetic design. A read-only audit of the preserved
+Experiment008 fitted rows resampled complete
+\emph{paired trajectories} within the 54 prespecified
+motion--noise--error cells (24 trials per cell).
+With 5,000 stratified bootstrap resamples, the
+difference in pooled jerk RMSE (TSVD minus PLS)
+was $0.5004$\,m/s$^3$ (95\% bootstrap interval
+$[0.3227,0.7134]$\,m/s$^3$). This interval
+describes Monte Carlo variation \emph{conditional
+on the fixed balanced synthetic mixture}; it
+does not imply general superiority across
+other motion distributions or tuning procedures.
 By contrast, SVD rank chosen to fit observed
 positions through GCV is extremely unstable
 for \emph{third-difference jerk}:
