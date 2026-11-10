@@ -2,10 +2,12 @@ name: Paper C statistical jerk manuscript with SVD baseline (PCAG103A-08)
 
 on:
   push:
-    branches: [paper/paper-c-methods-simulation-real-svd]
+    branches: [paper/paper-c-scientific-editorial-review]
     paths:
       - .github/workflows/paper-c-methods-compile-pc08.yml
       - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/introduction.tex
+      - paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py
       - paper/ngsim-jerk-case-study/sections/methods.tex
       - paper/ngsim-jerk-case-study/sections/synthetic_case.tex
       - paper/ngsim-jerk-case-study/sections/real_case.tex
@@ -21,7 +23,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: paper-c-physical-manuscript
+  group: paper-c-physical-editorial-review
   cancel-in-progress: false
 
 jobs:
@@ -150,6 +152,25 @@ jobs:
             Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\methods_audit.log')
           if ($LASTEXITCODE -ne 0) { throw 'Physical methods PDF audit failed' }
 
+      - name: Render every PDF page and contact sheet for scientific visual review
+        run: |
+          $ErrorActionPreference='Stop'
+          $target=Join-Path $env:RUNNER_TEMP "paper-c-pdf-render-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $target) { throw "Non-unique PDF rasterizer target: $target" }
+          New-Item -ItemType Directory -Path $target | Out-Null
+          # Only a pinned, run-local rasterizer is added; the research Conda
+          # environment is not modified and no experiment is repeated.
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check --no-input --no-deps --target $target pymupdf==1.26.5 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\\pdf_preview_dependency.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned PyMuPDF preview dependency unavailable' }
+          $env:PYTHONPATH=$target
+          $dest=Join-Path $env:PC08_METHODS_ROOT 'pages'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf paper/ngsim-jerk-case-study/main.pdf --output-dir $dest --dpi 144 --columns 3 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\\page_render.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Could not render all scientific manuscript pages' }
+          if (!(Test-Path (Join-Path $dest 'contact-sheet.png'))) { throw 'Missing PDF contact sheet' }
+          Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+
       - name: Preserve the exact new compiled paper, logs, figure files, and root directory hashes on Windows
         if: always()
         run: |
@@ -203,9 +224,9 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
           if ($LASTEXITCODE -ne 0) { throw 'Could not stage paper outputs' }
-          git commit -m "paper-c: publish method-first physical jerk paper, TSVD figures and verified PDF"
+          git commit -m "paper-c: publish audited scientific-editorial review PDF and derived figures"
           if ($LASTEXITCODE -ne 0) { throw 'Could not commit paper PDF' }
-          git push origin "HEAD:refs/heads/paper/paper-c-methods-simulation-real-svd"
+          git push origin "HEAD:refs/heads/paper/paper-c-scientific-editorial-review"
           if ($LASTEXITCODE -ne 0) { throw 'PR branch changed during paper build; do not force-push' }
 
       - name: Archive complete permanent VM build in unique results-only Git branch
