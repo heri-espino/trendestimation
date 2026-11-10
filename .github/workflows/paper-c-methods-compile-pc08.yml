@@ -230,8 +230,12 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Could not stage paper outputs' }
           git commit -m "paper-c: publish audited scientific-editorial review PDF and derived figures"
           if ($LASTEXITCODE -ne 0) { throw 'Could not commit paper PDF' }
+          git fetch origin "refs/heads/paper/paper-c-scientific-editorial-review:refs/remotes/origin/paper/paper-c-scientific-editorial-review"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh review branch before publishing PDF' }
+          git rebase "refs/remotes/origin/paper/paper-c-scientific-editorial-review"
+          if ($LASTEXITCODE -ne 0) { throw 'Concurrent manuscript edit conflicts with built PDF; do not force-push' }
           git push origin "HEAD:refs/heads/paper/paper-c-scientific-editorial-review"
-          if ($LASTEXITCODE -ne 0) { throw 'PR branch changed during paper build; do not force-push' }
+          if ($LASTEXITCODE -ne 0) { throw 'Review branch advanced again; do not force-push' }
 
       - name: Archive complete permanent VM build in unique results-only Git branch
         if: always()
