@@ -214,6 +214,19 @@ jobs:
           $visualEvidence = Get-Content -LiteralPath (Join-Path $viz 'evidence.json') -Raw | ConvertFrom-Json
           if ($visualEvidence.complete -ne 76220 -or $visualEvidence.kkt -ne 9096 -or
               @($visualEvidence.figures).Count -ne 8) { throw 'Figure source integrity check failed' }
+          $kkt = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          foreach ($file in @('summary.json','kkt_rejection_distribution.pdf',
+            'criterion_residual_summary.csv')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $kkt $file))) {
+              throw "Missing numeric residual-diagnostic figure or source ledger: $file"
+            }
+          }
+          $kktStats = Get-Content -LiteralPath (Join-Path $kkt 'summary.json') -Raw | ConvertFrom-Json
+          if ($kktStats.rejected_timing_rows -ne 9096 -or
+              $kktStats.threshold -ne 1e-7 -or
+              $kktStats.median -le 1e-7) {
+            throw 'Scaled optimality residual evidence did not pass source audit'
+          }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
       - name: Fresh Springer sn-jnl compile with existing reproducible builder
@@ -517,3 +530,66 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable graphics archive' }
           git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
           if ($LASTEXITCODE -ne 0) { throw 'Concurrent change to manuscript; archive preserved' }
+
+
+
+  kkt_diagnostic:
+    if: contains(github.event.head_commit.message, '[pc08-kkt]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Derive conditional KKT rejection residual figure from frozen timing log
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected self-hosted runner' }
+          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/timing_tensor.csv.gz'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          if (-not (Test-Path -LiteralPath $data)) { throw 'Missing frozen, hashed timing tensor' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --tensor $data --out $out
+          if ($LASTEXITCODE -ne 0) { throw 'KKT residual visualization failed' }
+          $s = Get-Content -Raw -LiteralPath (Join-Path $out 'summary.json') | ConvertFrom-Json
+          if ($s.rejected_timing_rows -ne 9096 -or
+              $s.recorded_criterion_counts.cv -ne 3384 -or
+              $s.recorded_criterion_counts.gcv -ne 4160 -or
+              $s.recorded_criterion_counts.mle -ne 1552) {
+            throw 'Residual-count provenance verification failed'
+          }
+          Write-Host 'Exact 9,096 rejected residuals verified; zero benchmarks run.'
+      - name: Upload figure, source, and criterion-level summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-kkt-residual-audit
+          path: paper/benchmarks/experiment011/pc08_empirical/kkt001/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Publish reproducible postprocessing output on permanent results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'summary.json'))) {
+            throw 'KKT numerical-evidence manifest missing'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage derived figure and summary' }
+          git commit -m 'paper: preserve residual acceptance figure and verified KKT criteria'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot archive derived evidence' }
+          $archive = "results/experiment011-kkt001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable results branch publication failed' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Source PR changed concurrently; archive branch remains available' }
