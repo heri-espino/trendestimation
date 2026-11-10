@@ -107,7 +107,22 @@ although its one-second clean-position forecast
 RMSE ($0.489$\,m) is not comparably disastrous.
 This distinction is evidence that accurate
 position reconstruction and accurate \emph{higher-order
-differentiation} are different objectives.
+differentiation} are different objectives. The archived
+per-trajectory rows identify a concentrated failure:
+TSVD-GCV selected rank 75 or 76 of the 77
+positive singular directions in 145 of 1,296
+trajectories (11.2\%). These cases contributed
+78.9\% of that estimator's aggregate squared
+historical jerk error. This is an accounting of
+the \emph{existing} Experiment008 outcomes,
+not a new independent experiment or a separate
+selection of particularly favorable trajectories.
+Moreover, its rank criterion conditions on the
+training-estimated cubic reference $\widehat\mu$,
+as explained in Section~\ref{sec:method};
+the label ``TSVD-GCV'' denotes that specific
+conditional plug-in score, not exact GCV
+for the fully data-dependent procedure.
 
 The GCV cubic spline and Savitzky--Golay
 comparators likewise smooth positions,
