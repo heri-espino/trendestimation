@@ -107,6 +107,7 @@ $q_i=\mu\binom{i-1}{3}$. PLS may be written as a
 +\sum_{j=1}^{m}
 \frac{v_jv_j^\top(y-q)}{1+\lambda\sigma_j^2}.
 \end{equation}
+\Needspace{10\baselineskip}
 The truncated-SVD comparison is instead the
 \emph{hard cutoff}
 \begin{equation}\label{eq:tsvd-filter}
@@ -204,8 +205,22 @@ Both schemes use only historical data; neither can
 anticipate future changes in driver behavior.
 A separate spline baseline uses a quadratic Taylor
 continuation from spline endpoint derivatives.
-Horizon-specific observed-position RMSE is reported
-in meters.
+The pooled forecast error at horizon $H\in\{5,10,20\}$
+is a \emph{cumulative evaluation-window RMSE}, not
+an error at only the final future frame:
+\begin{equation}\label{eq:forecast-window-rmse}
+\mathrm{RMSE}_{H} = \left\{\frac{1}{NH}
+\sum_{i=1}^{N}\sum_{h=1}^{H}
+\bigl[\widehat x_i(h)-x_i(h)\bigr]^2\right\}^{1/2}.
+\end{equation}
+Here $N=1{,}296$ for synthetic confirmation and
+$N=200$ for NGSIM, and $H$ counts frames at
+$\Delta t=0.1$\,s. Thus ``1-s RMSE'' is the
+root mean square over frames $1,\ldots,10$,
+\emph{not} just the position at $t=1$\,s.
+The $0.5$, $1$, and $2$-s windows overlap.
+The recorded NGSIM position remains an
+observed proxy, not latent ground truth.
 
 \subsection{Two complementary experimental cases}
 \paragraph{Known-truth simulation.}
