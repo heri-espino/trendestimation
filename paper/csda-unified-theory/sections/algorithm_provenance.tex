@@ -40,14 +40,16 @@ QR algorithm: \citet{francis1961} &
 Dense $O(n^3)$ work and $O(n^2)$
 eigenvector storage: \citet{golubvanloan2013}.\\
 Banded Cholesky &
-Cholesky's method, documented by
-\citet{benoit1924} &
+Cholesky's method documented by
+\citet{benoit1924};
+early WH $LDL^\top$: \citet{henderson1925} &
 Half-bandwidth-$d$ $O(nd^2)$ factorization,
 $O(nd)$ storage: \citet{golubvanloan2013,anderson1999};
 special WH computations: \citet{weinert2007}.\\
 Selected inverse subset &
-\citet{takahashi1973}, later analyzed
-by \citet{erisman1975} &
+Early WH antecedent: \citet{spoerl1943};
+general sparse recursion: \citet{takahashi1973},
+analyzed by \citet{erisman1975} &
 Recursive computational costs:
 \citet{erisman1975};
 banded $O(nd^2)$ count derived here.\\
@@ -64,11 +66,27 @@ Convergence and preconditioning:
 $O(qnd)$ with $q$ local-stencil iterations
 is counted here.\\
 WH smoothing and GCV &
-Quadratic-difference smoothing:
-\citet{whittaker1923} &
-Existing complete WH/GCV algorithms:
-\citet{weinert2007};
+Earlier PLS graduation: \citet{bohlmann1899};
+later \citet{whittaker1923};
+WH cross-validation: \citet{brooks1988} &
+Earlier efficient WH/GCV:
+\citet{weinert2007} (principally order two);
 spectral GCV: \citet{golub1979}.\\
 \bottomrule
 \end{tabularx}
 \end{table*}
+
+
+\paragraph{Historical priority within trend smoothing.}
+The review by \citet{weinert2007} traces penalized-difference
+graduation to \citet{bohlmann1899}, predating
+\citet{whittaker1923}; documents the early WH factorization
+of \citet{henderson1925}; and identifies \citet{spoerl1943}
+as an earlier user of an inverse-trace computation later
+associated with \citet{takahashi1973}. The first published
+WH application of cross-validation cited in that review is
+\citet{brooks1988}. Weinert's especially efficient
+factorization and GCV algorithms focus principally on
+difference order two. We cite these findings as reported
+by Weinert, without claiming independent verification
+of all nineteenth-century and actuarial archival sources.
