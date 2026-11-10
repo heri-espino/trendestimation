@@ -59,3 +59,54 @@ method origin and display our own elementary operation-count derivation.
 
 No archived experiments or predecessor manuscripts were altered in
 this provenance update.
+
+
+## Detailed Whittaker--Henderson historical corrections (primary full-text audit)
+
+The uploaded original Howard L. Weinert (2007) article,
+*Efficient Computation for Whittaker--Henderson Smoothing*,
+published in *Computational Statistics & Data Analysis* 52(2):959--974,
+DOI 10.1016/j.csda.2006.11.038, was read in its original PDF
+(not merely as an abstract). Key material:
+
+- **Page 959--960 / Introduction:** the paper reports that
+  Bohlmann (1899) proposed the regularized least-squares graduation
+  principle before Whittaker's 1923 rediscovery. It documents
+  Henderson (1925) as an early WH matrix-factorization implementation.
+- **Page 961 / Introduction and GCV discussion:** the work credits
+  Brooks, Stone, Chan and Chan (1988) with applying cross-validation
+  to WH graduation. It further reports that the efficient inverse-trace
+  idea often credited to Takahashi et al. (1973) had been employed
+  by Spoerl (1943). It states O(n) floating-point operations
+  for fixed-order inverse-trace/WH computations.
+- **Page 961 / scope statement:** Weinert thereafter restricts
+  its explicit new factorization, state-space and truncated algorithms
+  principally to difference order p=2. Its analysis is not a published
+  proof of every arbitrary-d and nonzero-mu bound stated in our
+  paper.
+- **Page 973 / original bibliography:** supplies the archival
+  title and pages for Bohlmann (1899), Henderson (1925) and
+  Spoerl (1943). Those records are cited here via Weinert
+  and should still be independently checked against the original
+  archives before formal submission.
+- **Brooks et al. (1988)** bibliographic metadata was independently
+  corroborated through the publisher DOI
+  10.1016/0167-6687(88)90097-2, *Insurance: Mathematics and
+  Economics*, 7(1):59--66.
+
+These findings require a sharper novelty statement:
+**The application of cross-validation to WH smoothing and
+linear-time trace computation for fixed difference order were
+already established decades ago.** The present contribution may
+be an integrated, explicit workload accounting over arbitrary
+order, reference mean, smoothness-grid inversion, criteria and
+numerical admissibility. Its originality still requires the
+full specialist literature audit. In particular, do not mistake
+Weinert's inverse penalty convention for the one used in
+our Equation (PLS).
+
+**Archival caveat for Takahashi (1973):** Weinert's own reference
+list spells the third author *Chen*, while other numerical
+analysis literature (including a Stanford bibliography and
+Yousef Saad slides) spells *Chin*. Original-conference
+proceedings must resolve the variant before submission.
