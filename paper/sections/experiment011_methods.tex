@@ -77,17 +77,144 @@ Unlike GCV, ordinary CV requires observationwise residuals and leverages; conseq
 
 A reference mean estimated once as $\mu=\overline{D_dy}$ is used in some computational settings. In those cases the selection criteria are \emph{conditional} on the full-sample plug-in value: the CV score does not re-estimate $\mu$ within each leave-one-out fold. This distinction is preserved throughout the analysis.
 
-\subsection{Banded evaluation and numerical admissibility}
-The banded method factorizes $A_\lambda=I+\lambda D_d^\top D_d$ for individual penalties. A selected-inverse recursion supplies the diagonal leverage values and effective degrees of freedom needed by the complete criteria, without forming a dense inverse. For fixed low difference order, the banded factor and selected inverse have storage proportional to $nd$, whereas the full spectral basis requires storage proportional to $n^2$. An explicit dense-inverse method and an available sparse-factorization/structured-diagnostics hybrid serve only as additional comparison procedures; the latter is not treated as a sparse-only score evaluator.
+\subsection{Banded computation and verification of numerical optimality}
+The banded implementation factorizes
+$A_\lambda=I+\lambda D_d^\top D_d$ for individual finite positive
+penalties. A selected-inverse recursion recovers the diagonal
+leverage values and effective degrees of freedom needed by the
+complete criteria, without assembling a dense inverse. At fixed low
+difference order, the banded factor and selected inverse require
+$O(nd)$ storage, compared with $O(n^2)$ for a dense spectral basis.
+A dense explicit-inverse reference and a sparse-factorization/structured
+diagnostics hybrid are included as additional computational comparisons;
+the latter does not constitute an entirely sparse criterion evaluator.
 
-A numerical completion requirement is especially important for the banded procedure. After factorization and solution of the normal equations, the implementation checks
-\begin{equation}\label{eq:kkt}
-\eta_{\mathrm{KKT}}=
-\frac{\|(y-\widehat{\tau})-
-\lambda D_d^\top(D_d\widehat{\tau}-\mu\mathbf1)\|_2}
-{\max\{1,\|y\|_2,\|y+\lambda\mu D_d^\top\mathbf1\|_2\}}.
+\paragraph{Optimality equation.}
+For the strictly convex and unconstrained objective in
+Eq.~\eqref{eq:pls}, the first-order condition is both necessary and
+sufficient for global optimality \cite{boyd2004convex}:
+\begin{equation}\label{eq:kktderiv}
+\begin{split}
+\frac12\nabla J_\lambda(\tau)
+&=(\tau-y)+\lambda D_d^\top(D_d\tau-\mu\mathbf{1})\\
+&=A_\lambda\tau-b_\lambda=0,\\
+b_\lambda&=y+\lambda\mu D_d^\top\mathbf1.
+\end{split}
 \end{equation}
-Its finite-precision acceptance threshold is $\eta_{\mathrm{KKT}}\leq10^{-7}$. Rejection occurs \emph{after} the banded factorization and solve. A failed check therefore need not imply that Cholesky factorization itself was impossible. The spectral implementation does not apply precisely the same banded-specific acceptance gate; its observed completion rate must not be confused with an independent proof of greater forward accuracy.
+In this setting, the expression often called the
+Karush--Kuhn--Tucker (KKT) condition reduces simply to
+\emph{stationarity}: there are no explicit feasibility,
+complementarity, or dual-multiplier conditions. The Hessian is
+$2A_\lambda\succ0$, and thus every finite $\lambda\geq0$
+possesses a unique minimizer $\tau_\lambda^*$.
+
+\paragraph{Post-solve optimality residual.}
+Given a computed solution $\widetilde\tau_\lambda$, define
+\begin{equation}\label{eq:residualdef}
+\begin{split}
+r_{\mathrm{opt}}
+&=b_\lambda-A_\lambda\widetilde\tau_\lambda\\
+&=(y-\widetilde\tau_\lambda)
+-\lambda D_d^\top(D_d\widetilde\tau_\lambda-\mu\mathbf1)\\
+&=-\tfrac12\nabla J_\lambda(\widetilde\tau_\lambda).
+\end{split}
+\end{equation}
+Assessing a computed solution through the residual of its
+optimality or linear-system equations is established numerical
+practice: see the treatment of linear-system residuals and
+backward errors by Higham \cite{higham2002accuracy} and
+Golub and Van Loan \cite{golub2013matrix}. Residual-based
+stopping or acceptance rules are also used in practical
+convex quadratic-programming solvers
+\cite{stellato2020osqp}. These references justify the
+\emph{type of diagnostic}, not the particular numerical
+tolerance selected for the present implementation.
+
+Specifically, after a successful
+\texttt{cholesky\_banded} factorization and
+\texttt{cho\_solve\_banded} solve, the evaluated banded
+procedure computes the following \emph{scaled first-order
+optimality residual}:
+\begin{equation}\label{eq:kkt}
+\boxed{\quad
+\eta_{\mathrm{opt}}=
+\frac{\|r_{\mathrm{opt}}\|_2}
+{\max\{1,\|y\|_2,\|b_\lambda\|_2\}}.
+\quad}
+\end{equation}
+A finite-penalty criterion evaluation is rejected if the
+computed trend or diagnostic is nonfinite, or if
+$\eta_{\mathrm{opt}}>10^{-7}$. The threshold is an
+\emph{implementation-specific acceptance rule}; it is
+not presented as a canonical KKT tolerance prescribed by
+the cited numerical-analysis literature. The zero-penalty
+and infinite-penalty endpoints are handled by separate
+analytic branches and do not pass through this finite-penalty
+residual check.
+
+\paragraph{Distinction from backward and forward errors.}
+Although the numerical code labels this diagnostic a
+\texttt{backward\_error}, its normalization is \emph{not}
+the conventional normwise linear-system backward error,
+which can instead be expressed, for the present norms, as
+\begin{equation}\label{eq:standardbackward}
+\eta_{\mathrm{lin}}=
+\frac{\|b_\lambda-A_\lambda\widetilde\tau_\lambda\|_2}
+{\|A_\lambda\|_2\|\widetilde\tau_\lambda\|_2+
+ \|b_\lambda\|_2}
+\end{equation}
+\cite{higham2002accuracy}. The distinction matters:
+the recorded threshold is a reproducible residual-based
+\emph{acceptance convention}, not a formal bound on
+relative forward error or a certified backward-stability
+statement.
+
+For this quadratic objective, however, the mathematical
+meaning of the \emph{unscaled} optimality residual is exact.
+With $e=\widetilde\tau_\lambda-\tau_\lambda^*$,
+Eq.~\eqref{eq:residualdef} gives
+$e=-A_\lambda^{-1}r_{\mathrm{opt}}$ and
+\begin{equation}\label{eq:optimalitygap}
+\begin{split}
+J_\lambda(\widetilde\tau_\lambda)-J_\lambda(\tau_\lambda^*)
+&=e^\top A_\lambda e\\
+&=r_{\mathrm{opt}}^\top A_\lambda^{-1}r_{\mathrm{opt}}
+\leq\|r_{\mathrm{opt}}\|_2^2.
+\end{split}
+\end{equation}
+The inequality follows from
+$\lambda_{\min}(A_\lambda)=1$; likewise
+$\|e\|_2\leq\|r_{\mathrm{opt}}\|_2$ in exact arithmetic.
+Neither inequality turns the implemented \emph{scaled}
+criterion into a relative-accuracy guarantee, and
+floating-point evaluation of the residual itself incurs
+rounding error.
+
+\paragraph{Validation of a complete criterion search.}
+For each requested finite penalty, the banded procedure
+(i)~factorizes $A_\lambda$ and solves for the trend,
+(ii)~checks the scaled optimality residual,
+(iii)~calculates selected-inverse entries, effective
+degrees of freedom and observationwise leverage quantities
+when required, and (iv)~evaluates the statistical selection
+criterion. Conversion from a requested smoothness $S$ to
+$\lambda$ is validated separately; inaccurate inversion
+does not count as a KKT rejection. Completion of a full
+search requires all prescribed candidate--series evaluations
+and a finite, admissible selected score. Failure at one
+required candidate cannot be replaced by the runtime of
+a shorter, successful subset. Numerical checks belong to
+the overall computational workload rather than being
+excluded from the measured elapsed time.
+
+Finally, the spectral implementation does not execute
+the \emph{identical} banded-specific optimality-residual
+acceptance test. The observed contrast in successful
+grid completion therefore measures practical pipeline
+admissibility, not a controlled proof that the SVD
+solutions have smaller forward error. Independent
+high-precision or identical-diagnostic comparisons
+would be needed to establish such an accuracy ranking.
 
 \section{Computational study}
 \subsection{Experimental factors and execution environment}
