@@ -1,3 +1,5 @@
+**Paper C scientific-editorial continuation (2026-11-09):** Review branch `paper/paper-c-scientific-editorial-review` is derived from the unchanged open PR #131, not PR #132. Read [scientific editorial audit](SCIENCE_EDITORIAL_REVIEW.md) for method-dependent reference-jerk comparability, conditional plug-in TSVD-GCV/EDF caveats, the exact archival near-interpolation error decomposition, and improved known-jerk-before-calibration reading order. **No Experiment004--008 rerun, no merge and no submission.** Publication PDF/build status must be checked against this branch's latest Actions run; the earlier PR #131 11-page PDF remains a valid historical build, not evidence that these new edits have compiled.
+
 # Paper C method-first editorial handoff — verified 2026-11-09
 
 **Canonical manuscript:** `paper/ngsim-jerk-case-study/main.tex` (Elsevier CAS). **Compiled scientific PDF:** [paper/ngsim-jerk-case-study/main.pdf](../main.pdf). **Working review:** [PR #131](https://github.com/heri-espino/trendestimation/pull/131), branch `paper/paper-c-methods-simulation-real-svd`, stacked on `paper/paper-c-visual-suite-exp007`; **open and unmerged**.
