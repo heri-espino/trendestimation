@@ -18,7 +18,7 @@ The original source trees remain unchanged:
 - paper/main.tex and paper/benchmarks/experiment011: independent Springer measured timing paper.
 - paper/ngsim-jerk-case-study: physical extrapolation and forecast evaluation.
 
-No original experiments, CSVs, figures, PDFs, workflows or branches are overwritten or rerun. No new benchmark measurements are claimed in this manuscript. The shared references come from paper/csda-computational-costs/references.bib.
+No original experiments, CSVs, figures, PDFs, workflows or branches are overwritten or rerun. No new benchmark measurements are claimed in this manuscript. Historical citations are reused from paper/csda-computational-costs/references.bib; the new local algorithmic_references.bib gives authoritative standard complexity references without editing the predecessor bibliography. See COMPLEXITY_REFERENCE_LEDGER.md for the precise source-to-bound map and attribution of the newly combined workload theorems.
 
 ## Reproduce the deterministic algebra checks
 
@@ -43,7 +43,7 @@ The new workflow .github/workflows/csda-unified-theory.yml runs the checks and c
 
 ## Remaining acceptance gates
 
-1. Independently review the mathematics and exact source priority against Guerrero (2007/2008), Cortes-Toto et al. (2017), Weinert (2007), Golub et al. (1979), Erisman--Tinney (1975), and Biessy (2026).
+1. Independently review the mathematics and exact source priority against Guerrero (2007/2008), Cortes-Toto et al. (2017), Weinert (2007), Golub et al. (1979), Erisman--Tinney (1975), Biessy (2026), Golub--Van Loan (2013), Davis (2006), and Saad (2003). Verify exact textbook section citations before submission.
 2. Audit selected inversion, likelihood normalization, conditional plug-in mean, and high-order conditioning claims.
 3. Verify API calls against the intended release.
 4. Confirm coauthor contributions, order, correspondence, affiliation, funding and conflicts.
