@@ -126,6 +126,37 @@ same training-only global cubic reference $\mu$ as
 the corresponding profile-ML PLS comparator.
 Their normalized hard-filter index is
 $S_{\mathrm{TSVD}}=1-r/m$.
+
+\paragraph{Conditioning on the estimated reference.}
+The implemented TSVD rank score uses the residual
+from the training-estimated cubic $\widehat\mu$, but
+its conventional GCV denominator $n-(3+r)=m-r$
+treats that reference as fixed. It is therefore
+\emph{conditional plug-in GCV}, not exact GCV
+for the entire data-dependent fitting map.
+In particular, retaining $r$ near $m$ leaves
+few nominal residual degrees of freedom.
+
+The same issue makes effective-complexity matching
+\emph{nominal} rather than exact. Write
+$\widehat\mu=a^\top y$, where $a$ is the linear
+cubic-OLS reference functional, $q_\mu=\mu q_1$
+with $D_3q_1=\mathbf1$, and let $P_r$ project
+onto the $3+r$ retained TSVD directions.
+The full linear fits have effective degrees
+of freedom
+\begin{align}
+\operatorname{df}_{\rm PLS}^{\rm plug}
+ &=\operatorname{tr}(H_\lambda)
+  +a^\top(I-H_\lambda)q_1,\\
+\operatorname{df}_{\rm TSVD}^{\rm plug}
+ &=3+r+a^\top(I-P_r)q_1 .
+\end{align}
+The rank matching in Experiment008 equates
+only the fixed-reference trace components;
+it does not equate these full plug-in
+degrees of freedom. Both reference
+estimates are based on historical data only.
 Classical truncated singular-value regularization has
 a broader inverse-problem literature; we do not claim
 the hard-cutoff construction is new
