@@ -17,7 +17,7 @@ Paper B adds algorithmic families, complete scoring, time/memory complexity, reu
 - Paper A original: paper/csda-spectral-smoothness/sections/spectral_theory.tex, criteria.tex, introduction.tex, experiments.tex, discussion.tex; numerical 85-digit data archived in experiment004.
 - Paper B original: paper/csda-computational-costs/sections/foundations.tex, algorithms.tex, structured_criteria.tex, amortized_frontier.tex, decision_examples.tex, theory_discussion.tex; proof program verify_theory.py.
 - Source audit: paper/EDITORIAL_LITERATURE_AUDIT.md and the predecessor papers' bibliography audits.
-- Complexity source audit: paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md; standard numerical-analysis citations added in algorithmic_references.bib, with publisher-verified Golub--Van Loan, Davis and Saad metadata. Full-page textbook proof attribution still requires independent review.
+- Complexity source audit: paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md and the **in-manuscript** sections/algorithm_provenance.tex. Both an algorithm's original scientific source (Golub--Kahan 1965, Golub--Reinsch 1970, Cholesky/Benoit 1924, Francis 1961, Takahashi 1973, Erisman--Tinney 1975, Markowitz 1957, Hestenes--Stiefel 1952) and later complexity reference (Golub--Van Loan 2013, LAPACK Users' Guide 1999, Davis 2006, Saad 2003, Weinert 2007) are cited. Exact textbook pages remain a pre-submission verification gate. Takahashi 1973 conference name variants are flagged rather than silently normalized.
 - Actual library API: src/trendestimation/core.py and README.md.
 - Separate empirical companion: paper/main.tex and Experiment011 on the current independently active Springer PR.
 
