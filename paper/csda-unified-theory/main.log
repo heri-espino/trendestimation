@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.11.9)  9 NOV 2026 17:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.11.10)  10 NOV 2026 02:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -752,11 +752,6 @@ Overfull \hbox (10.67455pt too wide) in paragraph at lines 31--32
  []
 
 
-Underfull \hbox (badness 1215) in paragraph at lines 31--32
-\T1/cmr/m/n/10 eigen-de-com-po-si-tion. Nei-ther a uni-ver-sally bounded
- []
-
-
 Underfull \hbox (badness 3590) in paragraph at lines 39--39
 []|\T1/cmss/m/n/9 Candidate fit or com-plete
  []
@@ -774,7 +769,7 @@ Overfull \hbox (12.2205pt too wide) in paragraph at lines 37--38
 ount crossover)\T1/cmr/bx/n/10 .
  []
 
-) (./sections/stability.tex [6]
+[6]) (./sections/stability.tex
 Underfull \hbox (badness 1796) in paragraph at lines 33--34
 \T1/cmr/m/n/10 high-precision com-pan-ion anal-y-sis re-ported pri-mal
  []
@@ -784,7 +779,7 @@ LaTeX Font Info:    Trying to load font information for U+euf on input line 37.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ))
-(./sections/policy.tex
+(./sections/policy.tex [7]
 Underfull \hbox (badness 1484) in paragraph at lines 25--25
 []|\T1/cmss/m/n/9 One curve, known $\OML/cmm/m/it/9 ^^U$\T1/cmss/m/n/9 , small
  []
@@ -795,14 +790,14 @@ Underfull \hbox (badness 7362) in paragraph at lines 25--25
 e-
  []
 
-[7]) (./sections/software.tex
+) (./sections/software.tex
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 ) [8])
-(./sections/conclusion.tex) (./main.bbl [9]) [10
+(./sections/conclusion.tex [9]) (./main.bbl) [10
 
 ] (./main.aux)
  ***********
@@ -813,13 +808,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15175 strings out of 476182
- 236097 string characters out of 5795595
+ 15194 strings out of 476182
+ 236427 string characters out of 5795594
  1951975 words of memory out of 5000000
- 36778 multiletter control sequences out of 15000+600000
+ 36794 multiletter control sequences out of 15000+600000
  583954 words of font info for 101 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,13n,93p,1877b,591s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,93p,1877b,616s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.60
 0pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.
 600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx090
@@ -856,10 +851,10 @@ fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on main.pdf (10 pages, 405529 bytes).
+Output written on main.pdf (10 pages, 411510 bytes).
 PDF statistics:
- 948 PDF objects out of 1000 (max. 8388607)
- 334 compressed objects within 4 object streams
- 95 named destinations out of 1000 (max. 500000)
+ 1010 PDF objects out of 1200 (max. 8388607)
+ 388 compressed objects within 4 object streams
+ 98 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
