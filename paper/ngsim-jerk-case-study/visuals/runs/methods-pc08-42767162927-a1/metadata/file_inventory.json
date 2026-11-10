@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "run_status": "partial_or_failed",
+  "recorded_utc": "2026-11-10T06:14:57.394792+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\manuscript-methods\\run-42767162927-a1",
+  "source_commit": "c9e295602bb0f4bafb6085e8c7e58f26ca1e4d29",
+  "directory_paths_relative_to_root": [
+    "figures",
+    "logs",
+    "manuscript",
+    "metadata"
+  ],
+  "files": [
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.pdf",
+      "bytes": 28453,
+      "sha256": "31280747f63174fe3c4787b28722bcd6d92c5f33b62c24dec5b61dc5418301cf"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.png",
+      "bytes": 92497,
+      "sha256": "fb7729d64c0ea96161b1634ec9a83f21888b208e72ada192ca397b70584d64be"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.svg",
+      "bytes": 28973,
+      "sha256": "f866f2e21417e6d3f9bc17b5a7240597d30f0a8e13f89fab43a004ad46d5d271"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.pdf",
+      "bytes": 28600,
+      "sha256": "9899f909e7f36f257bed118a9b914acf24c0e64c043b6bf70c1fbc457a04b7cb"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.png",
+      "bytes": 113504,
+      "sha256": "8fde0141a088f33273480b0dccc798323a748c2ab1b1ccb5c280e2546a91fbb1"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.svg",
+      "bytes": 19528,
+      "sha256": "77d673f94349a87fc952a375dc6aef24662d86093e46f25b087ba14e5b20ddd3"
+    },
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 1852,
+      "sha256": "2527ec49caaa8f8cdf8904a4ba03e2a77a9ee7c802dcd887330b684385a77132"
+    },
+    {
+      "relative_path": "logs/frozen_svd_pairwise_audit.log",
+      "bytes": 4800,
+      "sha256": "466545c3e5abf4efb0e523b9e0033285c4d492c453f7d8ffe997446add6600c1"
+    },
+    {
+      "relative_path": "logs/frozen_svd_unit_tests.log",
+      "bytes": 202,
+      "sha256": "6f345567f8537894be139c8da7e1ca2dd18d71915aab38814d3ab81fb7ada1b1"
+    },
+    {
+      "relative_path": "logs/ngsim-latexmk.log",
+      "bytes": 14035,
+      "sha256": "fae6d097c30ff2655d5babd53904d1cfe7ac4f22927d511b17ab39c1fe621b6d"
+    },
+    {
+      "relative_path": "logs/render.log",
+      "bytes": 3588,
+      "sha256": "79b7d66738016a1ab53902c94f7375344bb62c8bc1d0f107af8f2ab9d5299866"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3766,
+      "sha256": "2950cbba8f3ad9cb0c85754debf99cad5962ef14442246937c1b0a83c9eac932"
+    },
+    {
+      "relative_path": "metadata/build_manifest.json",
+      "bytes": 7589,
+      "sha256": "d69845eadfc933e9a073b3738ca31dc8682894ba8a779e45f94bb824fdc61ca9"
+    },
+    {
+      "relative_path": "metadata/exp008_methods_figure_manifest.json",
+      "bytes": 1793,
+      "sha256": "277e4715c3d8b51eec5a1348fe2327dd737143524e6693ecaca5b172ebcad98a"
+    },
+    {
+      "relative_path": "metadata/frozen_svd_pairwise_audit.json",
+      "bytes": 2399,
+      "sha256": "5d531aec9010677944592bf9c35c7ca8c8dc45e818c4ceb28df2249187096d8d"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3254,
+      "sha256": "a4f960b75dc486574b12788ce6770c17a959f1fb46e402c4638a3be66895af25"
+    },
+    {
+      "relative_path": "metadata/source_branches.txt",
+      "bytes": 415,
+      "sha256": "1c0c414a32c1566b563e10285c7121327ba18b2018747c8c2888b8448a81b612"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "2c8fa9e356a70870e48622ba6763d7d669842deec1056b90c0443d12f2bc84b9"
+    }
+  ],
+  "total_files_excluding_this_inventory": 18,
+  "total_bytes_excluding_this_inventory": 355290,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}
