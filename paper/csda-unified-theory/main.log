@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.11.10)  10 NOV 2026 02:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.11.10)  10 NOV 2026 06:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -746,30 +746,67 @@ Underfull \hbox (badness 1308) in paragraph at lines 9--11
 \T1/cmr/m/n/10 These are ret-ro-spec-tive smooth-trend cri-te-ria, not
  []
 
-[3]) (./sections/algorithms.tex [4]
-Overfull \hbox (10.67455pt too wide) in paragraph at lines 31--32
+[3]) (./sections/algorithms.tex (./sections/algorithm_provenance.tex
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 Classical Gaus-sian elim-i-na-tion; sparsity-
+ []
+
+
+Underfull \hbox (badness 1077) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 Recursive com-pu-ta-tional costs: [][]Eris-man and Tin-ney[][
+] ([][]1975[][]);
+ []
+
+
+Underfull \hbox (badness 1558) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 General sparse fac-tor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 Sparsity-conscious elim-i-na-tion: [][]Markowitz[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 WH smooth-ing and
+ []
+
+
+Underfull \hbox (badness 6575) in paragraph at lines 73--73
+[]|\T1/cmss/m/n/8 Quadratic-difference smooth-ing: [][]Whit-taker[][]
+ []
+
+) [4]
+Overfull \hbox (10.67455pt too wide) in paragraph at lines 33--34
 []\T1/cmr/m/n/10 Matrix-free pre-con-di-tioned con-ju-gate gra-di-ents (PCG)
  []
 
 
-Underfull \hbox (badness 3590) in paragraph at lines 39--39
+Underfull \hbox (badness 1442) in paragraph at lines 33--34
+\OML/cmm/m/it/10 q$ \T1/cmr/m/n/10 it-er-a-tions, plus pre-con-di-tioner setup 
+and ap-pli-
+ []
+
+[5]
+Underfull \hbox (badness 3590) in paragraph at lines 41--41
 []|\T1/cmss/m/n/9 Candidate fit or com-plete
  []
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 45--45
+Underfull \hbox (badness 1043) in paragraph at lines 47--47
 []|$\OML/cmm/m/it/9 O\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 nd\OT1/cmr/m/n/9 )$ \T1/cm
 ss/m/n/9 solve; $\OML/cmm/m/it/9 O\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 nd[]\OT1/cmr/
 m/n/9 )$ \T1/cmss/m/n/9 com-
  []
 
-) (./sections/complexity.tex [5]
+) (./sections/complexity.tex [6]
 Overfull \hbox (12.2205pt too wide) in paragraph at lines 37--38
 [][]\T1/cmr/bx/n/10 Proposition 10 \T1/cmr/m/n/10 (Con-di-tional can-di-date--c
 ount crossover)\T1/cmr/bx/n/10 .
  []
 
-[6]) (./sections/stability.tex
+) (./sections/stability.tex [7]
 Underfull \hbox (badness 1796) in paragraph at lines 33--34
 \T1/cmr/m/n/10 high-precision com-pan-ion anal-y-sis re-ported pri-mal
  []
@@ -779,7 +816,7 @@ LaTeX Font Info:    Trying to load font information for U+euf on input line 37.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ))
-(./sections/policy.tex [7]
+(./sections/policy.tex
 Underfull \hbox (badness 1484) in paragraph at lines 25--25
 []|\T1/cmss/m/n/9 One curve, known $\OML/cmm/m/it/9 ^^U$\T1/cmss/m/n/9 , small
  []
@@ -790,14 +827,14 @@ Underfull \hbox (badness 7362) in paragraph at lines 25--25
 e-
  []
 
-) (./sections/software.tex
+[8]) (./sections/software.tex
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [8])
-(./sections/conclusion.tex [9]) (./main.bbl) [10
+))
+(./sections/conclusion.tex [9]) (./main.bbl [10]) [11
 
 ] (./main.aux)
  ***********
@@ -808,53 +845,56 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15194 strings out of 476182
- 236427 string characters out of 5795594
- 1951975 words of memory out of 5000000
- 36794 multiletter control sequences out of 15000+600000
- 583954 words of font info for 101 fonts, out of 8000000 for 9000
+ 15251 strings out of 476182
+ 237632 string characters out of 5795594
+ 1956975 words of memory out of 5000000
+ 36836 multiletter control sequences out of 15000+600000
+ 584713 words of font info for 102 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,13n,93p,1877b,616s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,93p,1877b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.60
 0pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.
-600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx090
-0.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1
-095.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ect
-i1095.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec
-/ecti1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecti0900.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappe
-n/ec/ecss0900.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknap
-pen/ec/eccc0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jkn
-appen/ec/ecbx1200.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/j
-knappen/ec/ecrm0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/lj
-four/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/
-ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2023/texmf-var/fonts/p
-k/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on main.pdf (10 pages, 411510 bytes).
+600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecss080
+0.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx0
+900.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecb
+x1095.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/e
+cti1095.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec
+/ecbx1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/
+ec/ecti1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappe
+n/ec/ecti0900.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknap
+pen/ec/ecss0900.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jkn
+appen/ec/eccc0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/j
+knappen/ec/ecbx1200.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfour
+/jknappen/ec/ecrm0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/lj
+four/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2023/texmf-var/fonts/pk/
+ljfour/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2023/texmf-var/fonts/p
+k/ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2023/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (11 pages, 457566 bytes).
 PDF statistics:
- 1010 PDF objects out of 1200 (max. 8388607)
- 388 compressed objects within 4 object streams
- 98 named destinations out of 1000 (max. 500000)
+ 1286 PDF objects out of 1440 (max. 8388607)
+ 488 compressed objects within 5 object streams
+ 109 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
