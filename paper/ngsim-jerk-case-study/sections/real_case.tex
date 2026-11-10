@@ -56,10 +56,13 @@ The SVD comparison is based on the same original
 $200$ recorded episodes and reuses archived,
 training-selected global cubic OLS references
 and continuous Gaussian profile-ML penalties.
-SVD-GCV chooses its rank using the historical
-positions only, while matched-EDF SVD uses
-exactly the degrees of freedom of the
-corresponding PLS estimator. The same
+SVD-GCV chooses its rank using historical
+positions only under the conditional plug-in
+criterion in Eq.~\eqref{eq:tsvd-conditional-gcv}.
+The matched-rank SVD equates \emph{nominal
+fixed-reference} effective complexity with PLS;
+it does not exactly match the full data-dependent
+estimator's degrees of freedom. The same
 three-point continuation \emph{algorithm}
 in Eq.~\eqref{eq:d3-recurrence} is applied
 to each historical fit. Its reference
@@ -136,7 +139,10 @@ despite its stronger known-jerk reconstruction
 performance in Section~\ref{sec:synthetic-case}.
 The GCV cubic smoothing spline with quadratic
 Taylor extrapolation achieves smaller pooled
-recorded-position RMSE at each horizon.
+recorded-position window RMSE at each horizon.
+The comparison changes both the historical smoother
+and its continuation; it cannot attribute the
+entire difference to spline smoothing alone.
 An alternative continuation of the
 \emph{same fitted historical trend} can
 therefore matter as much as the smoother.
