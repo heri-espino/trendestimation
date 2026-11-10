@@ -51,6 +51,23 @@ jobs:
           persist-credentials: true
           fetch-depth: 1
 
+      - name: Clear interrupted rebase metadata from earlier failed runner run
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong dedicated runner' }
+          $mergeDir=(git rev-parse --git-path rebase-merge).Trim()
+          $applyDir=(git rev-parse --git-path rebase-apply).Trim()
+          if ((Test-Path $mergeDir) -or (Test-Path $applyDir)) {
+            # Previous CI interrupted a rebase of generated PDF binaries.
+            # --quit removes rebase machinery without replaying source commits.
+            git rebase --quit
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot clear interrupted runner rebase' }
+          }
+          $checkedOut=(git rev-parse HEAD).Trim()
+          if ($checkedOut -ne $env:GITHUB_SHA) {
+            throw 'Checked-out source must equal invoking workflow source SHA'
+          }
+
       - name: Verify existing 6 figures and create permanent append-only PDF-build root
         run: |
           $ErrorActionPreference='Stop'
