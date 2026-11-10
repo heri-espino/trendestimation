@@ -17,6 +17,7 @@ Paper B adds algorithmic families, complete scoring, time/memory complexity, reu
 - Paper A original: paper/csda-spectral-smoothness/sections/spectral_theory.tex, criteria.tex, introduction.tex, experiments.tex, discussion.tex; numerical 85-digit data archived in experiment004.
 - Paper B original: paper/csda-computational-costs/sections/foundations.tex, algorithms.tex, structured_criteria.tex, amortized_frontier.tex, decision_examples.tex, theory_discussion.tex; proof program verify_theory.py.
 - Source audit: paper/EDITORIAL_LITERATURE_AUDIT.md and the predecessor papers' bibliography audits.
+- Complexity source audit: paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md; standard numerical-analysis citations added in algorithmic_references.bib, with publisher-verified Golub--Van Loan, Davis and Saad metadata. Full-page textbook proof attribution still requires independent review.
 - Actual library API: src/trendestimation/core.py and README.md.
 - Separate empirical companion: paper/main.tex and Experiment011 on the current independently active Springer PR.
 
@@ -40,7 +41,7 @@ Independent line-by-line journal-level referee assessment remains pending. Small
 
 ## Priority and limitation ledger
 
-- Established prior art: Whittaker, Guerrero 2007/2008, Cortes-Toto 2017, Weinert 2007, Golub et al. 1979, Erisman--Tinney 1975, Biessy 2026. Claim only the integrated computational treatment pending a fuller novelty audit.
+- Established prior art: Whittaker, Guerrero 2007/2008, Cortes-Toto 2017, Weinert 2007, Golub et al. 1979, Erisman--Tinney 1975, Biessy 2026, plus Golub--Van Loan (2013) for dense factorization, Davis (2006) for sparse/direct factorization and Saad (2003) for iterative methods. Claim only the integrated computational treatment pending a fuller novelty audit.
 - The original index divided by n reaches **1-d/n**, not 1-n/d. Current index divided by n-d reaches exactly one.
 - Fixed mu=0 is only a special case; prescribed nonzero mu is core. Data-derived mu and joint unknown-mu selection require changed statistical accounting.
 - Residual BIC has no finite unrestricted interior optimum near exact interpolation for nondegenerate samples.
