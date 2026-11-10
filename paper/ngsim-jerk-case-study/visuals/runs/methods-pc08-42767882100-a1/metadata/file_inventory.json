@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "run_status": "compiled_complete_audited",
+  "recorded_utc": "2026-11-10T06:21:33.535131+00:00",
+  "host": "PCAG103A-08",
+  "persistent_run_root": "C:\\Users\\175199\\Documents\\TrendEstimation-PaperC\\manuscript-methods\\run-42767882100-a1",
+  "source_commit": "b33759fc510f90b5f22c0ef43360175dbf61110b",
+  "directory_paths_relative_to_root": [
+    "figures",
+    "logs",
+    "manuscript",
+    "metadata",
+    "pages"
+  ],
+  "files": [
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.pdf",
+      "bytes": 28453,
+      "sha256": "ed64f491ed29c63d73805df7ca9bb20992dbb1173388a9c56cccb956a94d9fd2"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.png",
+      "bytes": 92497,
+      "sha256": "fb7729d64c0ea96161b1634ec9a83f21888b208e72ada192ca397b70584d64be"
+    },
+    {
+      "relative_path": "figures/exp008_known_jerk_benchmarks.svg",
+      "bytes": 28973,
+      "sha256": "489140f5824cf0fd4339c98c435bb9584f3a7512cae8d709076788b4204708aa"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.pdf",
+      "bytes": 28600,
+      "sha256": "df89093d8c5492bbca443c4193abdfc240c2ab9a3b5500e2c902ae31dec3edf5"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.png",
+      "bytes": 113504,
+      "sha256": "8fde0141a088f33273480b0dccc798323a748c2ab1b1ccb5c280e2546a91fbb1"
+    },
+    {
+      "relative_path": "figures/exp008_real_forecast_benchmarks.svg",
+      "bytes": 19528,
+      "sha256": "574e86d9b59b1ea7bf47897dec23a955f8b29eb8a469ba71b24fd9374fb1b60e"
+    },
+    {
+      "relative_path": "logs/compile.log",
+      "bytes": 516,
+      "sha256": "f4c81e0efb43fc45a9d6227f50b0e7c77c70511bdd804e18847127525364025f"
+    },
+    {
+      "relative_path": "logs/frozen_svd_pairwise_audit.log",
+      "bytes": 4800,
+      "sha256": "466545c3e5abf4efb0e523b9e0033285c4d492c453f7d8ffe997446add6600c1"
+    },
+    {
+      "relative_path": "logs/frozen_svd_unit_tests.log",
+      "bytes": 202,
+      "sha256": "d5a7d7a0b40b24db27425cff9c03aaf66b5f64722c8526dc55b797696f6d2745"
+    },
+    {
+      "relative_path": "logs/methods_audit.log",
+      "bytes": 1364,
+      "sha256": "d3915f9d42e254a3378e3a1bb9cee6642cedfb8dd5a596107d4d38ab2e1c6f3b"
+    },
+    {
+      "relative_path": "logs/page_render.log",
+      "bytes": 510,
+      "sha256": "1d012d2f3c927d5e05ab40c187409557956874b481e4577cef24fb6e042e9438"
+    },
+    {
+      "relative_path": "logs/pdf_audit.log",
+      "bytes": 1702,
+      "sha256": "72adc2ebca13c89fd6e5f2da22053fe383dc295e410e19f473c68b2bdd00866b"
+    },
+    {
+      "relative_path": "logs/pdf_preview_dependency.log",
+      "bytes": 488,
+      "sha256": "2c3b86d164b9c741af6eac364f408af443cf96c30edaa161997d7a474230a4da"
+    },
+    {
+      "relative_path": "logs/render.log",
+      "bytes": 3588,
+      "sha256": "7e58a882671594fa4449a8ec73be0fd9a8f084913ffbfeb164967b0c26322672"
+    },
+    {
+      "relative_path": "manuscript/main.pdf",
+      "bytes": 748811,
+      "sha256": "5b6c5305c928e42f4a8b0665f5b2eb0a3a31f9238f86cf427cc3b6defb9ace3f"
+    },
+    {
+      "relative_path": "manuscript/main.tex",
+      "bytes": 3766,
+      "sha256": "2950cbba8f3ad9cb0c85754debf99cad5962ef14442246937c1b0a83c9eac932"
+    },
+    {
+      "relative_path": "metadata/build_manifest.json",
+      "bytes": 7638,
+      "sha256": "3baa117af0b85fc9cf84838c8f34b0ab38e23ec36693dc012752b26bf31fbf57"
+    },
+    {
+      "relative_path": "metadata/exp008_methods_figure_manifest.json",
+      "bytes": 1793,
+      "sha256": "4c88504618929bf3dd00f7563b128669436d49b80669f0187c6ee7a2e47c21e9"
+    },
+    {
+      "relative_path": "metadata/frozen_svd_pairwise_audit.json",
+      "bytes": 2399,
+      "sha256": "5d531aec9010677944592bf9c35c7ca8c8dc45e818c4ceb28df2249187096d8d"
+    },
+    {
+      "relative_path": "metadata/legacy_six_figure_audit.json",
+      "bytes": 850,
+      "sha256": "07c34a5575c543a8bf9288882dc6bf4d9fed3e94c6b0ddc4b700ec36af690008"
+    },
+    {
+      "relative_path": "metadata/methods_pdf_audit.json",
+      "bytes": 681,
+      "sha256": "836b553ed5943ae91808072cde0fccef3cfc9f85e2365d2adadb5fe665eb5903"
+    },
+    {
+      "relative_path": "metadata/requirements-resolved.txt",
+      "bytes": 3254,
+      "sha256": "a4f960b75dc486574b12788ce6770c17a959f1fb46e402c4638a3be66895af25"
+    },
+    {
+      "relative_path": "metadata/source_branches.txt",
+      "bytes": 415,
+      "sha256": "287d0daafcd1a48b64557b6ff93b4f874a7fa1c35bd10d8f5e784dcad367b75c"
+    },
+    {
+      "relative_path": "metadata/source_commit.txt",
+      "bytes": 42,
+      "sha256": "423344102cc23efaedf61eea6b87112d3962ab40b2f471b07149a0523bd41ac3"
+    },
+    {
+      "relative_path": "pages/contact-sheet.png",
+      "bytes": 2712758,
+      "sha256": "4e997583b24b0901c8384c46f928019384ea2e030da4c59190a06812c485714f"
+    },
+    {
+      "relative_path": "pages/page-01.png",
+      "bytes": 575216,
+      "sha256": "00fa8384f98697e4b5d87f3f545db2fba0067b09a116b86b2c1c15632afe145e"
+    },
+    {
+      "relative_path": "pages/page-02.png",
+      "bytes": 498219,
+      "sha256": "a1f40ccc1e9e5c7bff1e788a281e240eef80aeeec3abcc8efa262844e7ef303d"
+    },
+    {
+      "relative_path": "pages/page-03.png",
+      "bytes": 571152,
+      "sha256": "f0dc1e64b2c07dbe86b1ec87bf10edd7cd58e7b0d8f93b903aa15bec6ef912e2"
+    },
+    {
+      "relative_path": "pages/page-04.png",
+      "bytes": 634256,
+      "sha256": "5457781f9d2db8df11d80b0055ba85ccfd5082ebf6431e2a8987b9c49d2fa497"
+    },
+    {
+      "relative_path": "pages/page-05.png",
+      "bytes": 432212,
+      "sha256": "332bc25c83e429774c46dc1c163ce705a93b3fb484e7f625bdd084883f240d67"
+    },
+    {
+      "relative_path": "pages/page-06.png",
+      "bytes": 392775,
+      "sha256": "52ddfb734d6007ef6e5249ccfe6c30934b279dc2c835449c8c02d2ba057efdaf"
+    },
+    {
+      "relative_path": "pages/page-07.png",
+      "bytes": 386553,
+      "sha256": "cc3b936999e9467c729646dbb283fca72713dec34f5a64d8cbdfbcb60c6682df"
+    },
+    {
+      "relative_path": "pages/page-08.png",
+      "bytes": 262216,
+      "sha256": "41d004a87a9c81d31b20dde334501beacdaa45799fe5d9aa0907f4a6e1362902"
+    },
+    {
+      "relative_path": "pages/page-09.png",
+      "bytes": 368033,
+      "sha256": "1cf66329ad9f240a43977b9623c5fb7681084f7bf5794ec6a9219a3da927555a"
+    },
+    {
+      "relative_path": "pages/page-10.png",
+      "bytes": 437798,
+      "sha256": "a9bdf53fc960aa4519735c4f87520c09c24bee98238af20d86f697ad977591d9"
+    },
+    {
+      "relative_path": "pages/page-11.png",
+      "bytes": 499407,
+      "sha256": "b6b595e3c4c0869013c264afdbc8ca69b9fb928d5e3d02ef31ba7cc183571442"
+    },
+    {
+      "relative_path": "pages/page-12.png",
+      "bytes": 470159,
+      "sha256": "a92a56ddc7fbdb137f5cf0cc9a6c9341d57033efa8867f32b5149b94d4abcbf4"
+    },
+    {
+      "relative_path": "pages/preview_manifest.json",
+      "bytes": 2973,
+      "sha256": "d84d130d3b278376d47ddf6d9c2a56b0fece501e9f69d923979e03d42cbef919"
+    }
+  ],
+  "total_files_excluding_this_inventory": 38,
+  "total_bytes_excluding_this_inventory": 9338101,
+  "inventory_file_excluded_from_own_hashes": true,
+  "data_reproducibility_note": "Raw public FHWA NGSIM pages and complete scoring rows reside on persistent VM storage. The Git results branch preserves hashes, the manifest and compact analysis; it is not a byte-for-byte backup of all raw pages."
+}

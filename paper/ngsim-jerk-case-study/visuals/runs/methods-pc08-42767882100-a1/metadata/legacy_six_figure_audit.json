@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "pdf_path": "C:\\Users\\175199\\actions-runner\\_work\\trendestimation\\trendestimation\\paper\\ngsim-jerk-case-study\\main.pdf",
+  "pdf_sha256": "5b6c5305c928e42f4a8b0665f5b2eb0a3a31f9238f86cf427cc3b6defb9ace3f",
+  "pdf_bytes": 748811,
+  "pages": 12,
+  "new_figures": 6,
+  "verified_pdf_svg_png_sets": 6,
+  "caption_text_checks": {
+    "abstract_new_topic": true,
+    "spectral_index_definition": true,
+    "calibration_caption": true,
+    "intervention_caption": true,
+    "misspecification_caption": true,
+    "tradeoff_jerk": true,
+    "discussion_limits": true,
+    "ngsim_reference": true
+  },
+  "source_manifest_sha256": "402ce633663cc0616b3a35f2b03c5a788b19df37311217ad720a5ccca12717e7",
+  "caveat": "PDF-text integrity checks do not replace human page-by-page layout review."
+}
