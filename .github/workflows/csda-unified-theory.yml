@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - paper/csda-unified-theory
+      - paper/csda-algorithm-provenance
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
@@ -21,7 +22,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: csda-unified-theory-build
+  group: csda-unified-theory-build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -104,7 +105,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 60
       - name: Commit verified PDF and provenance to isolated paper branch
-        if: success() && github.ref == 'refs/heads/paper/csda-unified-theory'
+        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance')
         shell: bash
         run: |
           set -euo pipefail
