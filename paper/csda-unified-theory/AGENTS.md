@@ -14,6 +14,7 @@ Work only in an independent feature branch and an appropriate PR. This folder is
 - Fixed-mu leverage and EDF do not give exact foldwise refit for a data-dependent mean.
 - Keep exact CV/GCV/AICc/residual BIC/likelihood definitions. Disclose residual BIC's interpolation pathology.
 - Include every mapping, factorization, selected inverse, determinant, projection and scoring cost before identifying a cheap pipeline.
+- Cite the standard numerical algorithms using algorithmic_references.bib and the inherited references; read COMPLEXITY_REFERENCE_LEDGER.md and clearly separate their published baseline bounds from the authors' workload-specific complexity theorems.
 - Arithmetic O bounds are not measured runtime. SPD existence does not guarantee finite-precision correctness. Distinguish factorization, KKT, S-inversion, memory and undefined-score failure mechanisms.
 - The Python package does not implement every proposed theoretical auto-dispatch policy.
 
