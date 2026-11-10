@@ -8,7 +8,7 @@
 
 The author requested that the spectral Paper A and amortized-complexity Paper B be combined into **one theoretical computational-methodology article**. It uses the **normalized smoothness index S in [0,1]** as the organizing parameter and keeps the fixed **nonzero difference mean mu** in the core mathematics. Contributions cover spectral/shift-free reconstruction for any integer order 1 <= d < n; normalization, unique mapping and exact endpoints; complete CV/GCV/AICc/BIC/ML diagnostics; banded Cholesky with selected inversion; work/memory bounds with reuse across grids and series; numerical failure mechanisms; and the public Python interface.
 
-This paper does not claim invention of classical PLS, diagonalization, SVD, Cholesky, trace smoothness, or cross-validation. The proposed contribution is an integrated workload-aware computational and numerical framework. Section 6 includes a table separating the **original publication of each numerical algorithm** from **published cost analyses** and **our derived PLS workload bounds**; details are in `COMPLEXITY_REFERENCE_LEDGER.md`. The added primary references are local to `algorithmic_references.bib`.
+This paper does not claim invention of classical PLS, diagonalization, SVD, Cholesky, trace smoothness, or cross-validation. The proposed contribution is an integrated workload-aware computational and numerical framework. The Algorithms section includes a table separating the **original publication of each numerical algorithm** from **published cost analyses** and **our derived PLS workload bounds**; details are in `COMPLEXITY_REFERENCE_LEDGER.md`. The added primary references are local to `algorithmic_references.bib`.
 
 ## Previous work preserved
 
