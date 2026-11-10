@@ -29,3 +29,33 @@ Local BibTeX additions are in algorithmic_references.bib, separate from the hist
 ## Audit requirements
 
 Cite foundational work for individual algorithmic methods; explicitly prove the adaptation to the PLS difference operator; label newly combined formulas as derived upper bounds; never claim theoretical work counts are measured wall-clock times. Inspect the final CAS PDF, ensure no undefined citations, archive the source SHA and PDF hash, and obtain coauthor review before submission.
+
+
+## Original-method provenance audit (November 10, 2026)
+
+The in-manuscript algorithm provenance table is located at
+sections/algorithm_provenance.tex. Distinguish three evidence levels:
+
+1. **Original numerical method:** the paper introducing or documenting the algorithm.
+2. **Computational bound:** a numerical-analysis source that actually discusses or analyzes the operation and storage requirements.
+3. **PLS specialization:** arithmetic that follows from the specific order-d difference stencil, smoother, normalized smoothness inversion, candidate grid and statistical scoring; this must be explicitly derived in the new manuscript.
+
+| Numerical method | Origin source | Complexity source and inferential boundary |
+| --- | --- | --- |
+| Full bidiagonal SVD | Golub and Kahan (1965), DOI:10.1137/0702016; Golub and Reinsch (1970), DOI:10.1007/BF02163027 | Standard dense rectangular complexity from Golub and Van Loan (2013). Per-series smoothness and score counts are derived in our manuscript, not in the historical SVD papers. |
+| Banded Cholesky | Cholesky's posthumously documented method by Commandant Benoit (1924), DOI:10.1007/BF03031308 | Standard factorization in Golub and Van Loan (2013) and LAPACK Users' Guide (Anderson et al., 1999), DOI:10.1137/1.9780898719604. Half-bandwidth d yields O(nd^2) factorization and O(nd) storage; do not attribute the banded work theorem to 1924. |
+| Dense symmetric eigenanalysis | QR eigensolver by Francis (1961), DOI:10.1093/comjnl/4.3.265 | Modern dense eigendecomposition analysis from Golub and Van Loan (2013). This cites a foundational family, not the exact implementation of every present eigensolver. |
+| Sparse selected inverse | Takahashi, Fagan, Chin (1973); Erisman and Tinney (1975), DOI:10.1145/360680.360704 | Erisman and Tinney explicitly analyze dependencies and computational costs. The banded O(nd^2) result is a direct operation count for our selected entries. **Bibliographic caveat:** secondary sources disagree about Chin/Chen and Formation/Formulation for the 1973 conference paper. Verify original proceedings before submission. |
+| Sparse direct factorization | Markowitz (1957), DOI:10.1287/mnsc.3.3.255, an early sparsity-conscious elimination example | Davis (2006) for fill-in, ordering, and general sparse work/storage. The bandwidth-based bound does not apply to arbitrary sparse matrices. |
+| CG and PCG | Hestenes and Stiefel (1952), DOI:10.6028/jres.049.044 (original CG) | Saad (2003) for PCG and convergence. The O(qnd) bound is our cost of q order-d local matrix-vector products; preconditioner costs are additional. |
+| Efficient Whittaker-Henderson/GCV | Whittaker (1923) original smoother | Weinert (2007), DOI:10.1016/j.csda.2006.11.038, provides efficient WH trend and GCV algorithms. Golub--Heath--Wahba (1979) previously developed spectral GCV. These results are prior art. |
+
+Publisher pages confirm the publication identities and the algorithmic subjects.
+The exact original textbook sections and any source-specific leading
+constants need a separate pre-submission review. Some primary papers
+do **not** provide the precise Big-O formula claimed for our special
+difference-penalty problem; in those instances, credit them as the
+method origin and display our own elementary operation-count derivation.
+
+No archived experiments or predecessor manuscripts were altered in
+this provenance update.
