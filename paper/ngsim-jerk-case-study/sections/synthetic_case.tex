@@ -50,8 +50,8 @@ optimal rank estimate.
 \centering
 \caption{Same 1,296 frozen simulated trajectories: accuracy
 against known discrete jerk in the 80-point historical
-window, and future \emph{clean} position one second
-ahead. The future-position comparison uses the
+window, and future \emph{clean} position RMSE averaged
+over the first ten future frames (through one second). The future-position comparison uses the
 same last-25-point quadratic continuation for
 all fitted trends. True jerk is scored with the same
 third-difference operator $D_3/(\Delta t)^3$ applied
@@ -61,7 +61,7 @@ the columns describe \emph{different physical targets}.}
 \begin{tabular}{lcc}
 \toprule
 Historical trend estimator & Jerk RMSE (m/s$^3$)
- & 1-s position RMSE (m)\\
+ & First-1-s position RMSE (m)\\
 \midrule
 PLS, cubic OLS $\widehat\mu$ + profile ML
 & \textbf{2.4413} & \textbf{0.4353}\\
@@ -83,8 +83,8 @@ Savitzky--Golay, 21-point cubic fit
 \caption{Known-truth reconstruction and clean-future forecasting
 from the same archived $1{,}296$ simulated trajectories.
 (A) Historical third-difference jerk RMSE on a logarithmic
-vertical scale (m/s$^3$); (B) one-second clean-position
-RMSE under the shared 25-point continuation (m).
+vertical scale (m/s$^3$); (B) clean-position RMSE across the first ten
+future frames under the shared 25-point continuation (m).
 Truncated SVD is a hard spectral-filtering
 \emph{estimator}, not a different implementation
 of the PLS linear solve. The GCV-selected
@@ -95,19 +95,45 @@ as a single aggregate score.}
 \label{fig:sim-svd}
 \end{figure*}
 
-The matched-complexity comparison isolates an
-advantage of soft PLS shrinkage over a hard
-roughness-spectral cutoff in the tested
-synthetic jerk-reconstruction task.
+The nominally matched-complexity comparison shows
+a lower pooled historical jerk error for soft PLS
+shrinkage than for the hard spectral cutoff in this
+synthetic design. A read-only audit of the preserved
+Experiment008 fitted rows resampled complete
+\emph{paired trajectories} within the 54 prespecified
+motion--noise--error cells (24 trials per cell).
+With 5,000 stratified bootstrap resamples, the
+difference in pooled jerk RMSE (TSVD minus PLS)
+was $0.5004$\,m/s$^3$ (95\% bootstrap interval
+$[0.3227,0.7134]$\,m/s$^3$). This interval
+describes Monte Carlo variation \emph{conditional
+on the fixed balanced synthetic mixture}; it
+does not imply general superiority across
+other motion distributions or tuning procedures.
 By contrast, SVD rank chosen to fit observed
 positions through GCV is extremely unstable
 for \emph{third-difference jerk}:
 its historical jerk RMSE is $250.718$\,m/s$^3$,
-although its one-second clean-position forecast
+although its first-second clean-position window
 RMSE ($0.489$\,m) is not comparably disastrous.
 This distinction is evidence that accurate
 position reconstruction and accurate \emph{higher-order
-differentiation} are different objectives.
+differentiation} are different objectives. The archived
+per-trajectory rows identify a concentrated failure:
+TSVD-GCV selected rank 75 or 76 of the 77
+positive singular directions in 145 of 1,296
+trajectories (11.2\%). These cases contributed
+78.9\% of that estimator's aggregate squared
+historical jerk error. This is an accounting of
+the \emph{existing} Experiment008 outcomes,
+not a new independent experiment or a separate
+selection of particularly favorable trajectories.
+Moreover, its rank criterion conditions on the
+training-estimated cubic reference $\widehat\mu$,
+as explained in Section~\ref{sec:method};
+the label ``TSVD-GCV'' denotes that specific
+conditional plug-in score, not exact GCV
+for the fully data-dependent procedure.
 
 The GCV cubic spline and Savitzky--Golay
 comparators likewise smooth positions,
@@ -126,7 +152,7 @@ training-based configurations were evaluated.
 \caption{Additional preexisting Experiment006
 reference-mean and parameter-selection comparison.
 (A) Historical known-discrete-jerk RMSE in m/s$^3$;
-(B) one-second clean-future position RMSE in the
+(B) first-second clean-future position-window RMSE in the
 same synthetic trajectories; and (C) separately
 recorded future-position RMSE from 200 real NGSIM
 episodes, with the spline benchmark shown for

@@ -56,23 +56,33 @@ The SVD comparison is based on the same original
 $200$ recorded episodes and reuses archived,
 training-selected global cubic OLS references
 and continuous Gaussian profile-ML penalties.
-SVD-GCV chooses its rank using the historical
-positions only, while matched-EDF SVD uses
-exactly the degrees of freedom of the
-corresponding PLS estimator. The same
-three-point continuation in
-Eq.~\eqref{eq:d3-recurrence} is applied
-to \emph{each fitted historical trend}, so
-the resulting comparison is not a
+SVD-GCV chooses its rank using historical
+positions only under the conditional plug-in
+criterion in Eq.~\eqref{eq:tsvd-conditional-gcv}.
+The matched-rank SVD equates \emph{nominal
+fixed-reference} effective complexity with PLS;
+it does not exactly match the full data-dependent
+estimator's degrees of freedom. The same
+three-point continuation \emph{algorithm}
+in Eq.~\eqref{eq:d3-recurrence} is applied
+to each historical fit. Its reference
+$\mu$ is the common training-derived
+cubic-OLS value for PLS and TSVD, but zero
+for spline and Savitzky--Golay fits.
+Thus the boundary rule is shared, not every
+model assumption or third-difference
+reference. The comparison is not a
 benchmark of Cholesky versus SVD run time.
 
 \begin{table*}[t]
 \centering
 \caption{Future \emph{recorded-position}
-RMSE (m) over $200$ preselected NGSIM
-episodes, with chronological 80-point
-training windows and the same 5/10/20-frame
-future evaluation. The first five rows
+RMSE (m) averaged over frames 1 through
+$H=5,10,20$ in each of $200$ selected NGSIM
+episodes, with chronological 80-point training
+windows. Values are \emph{cumulative-window}
+errors (Eq.~\eqref{eq:forecast-window-rmse}),
+not terminal-frame errors. The first five rows
 use the common three-point constant-third-
 difference continuation; the final
 GCV spline row uses its \emph{own}
@@ -83,7 +93,7 @@ No independent true jerk is available.}
 \label{tab:real-svd}
 \begin{tabular}{lccc}
 \toprule
-Historical smoother + continuation & 0.5\,s & 1\,s & 2\,s\\
+Historical smoother + continuation & $H=5$ & $H=10$ & $H=20$\\
 \midrule
 PLS, cubic OLS reference + profile ML
 & 0.1434 & 0.5144 & 1.8829\\
@@ -106,8 +116,8 @@ GCV natural cubic spline + quadratic Taylor
 \centering
 \includegraphics[width=\textwidth]{figures/exp008_real_forecast_benchmarks.pdf}
 \caption{Recorded-future longitudinal position
-RMSE across $200$ real NGSIM episodes and
-three horizons. Five historical smoothers
+cumulative-window RMSE across $200$ real NGSIM
+episodes and three evaluation windows (0.5, 1 and 2\,s). Five historical smoothers
 share the same last-three-point continuation,
 with the independently selected GCV cubic
 spline and quadratic Taylor forecast
@@ -121,15 +131,18 @@ appears in these errors.}
 
 In the new matched-complexity comparison,
 PLS and hard-truncated SVD produce very
-similar pooled one-second recorded-position
-RMSE ($0.5144$ and $0.5118$\,m). This
+similar pooled first-second recorded-position
+window RMSE ($0.5144$ and $0.5118$\,m). This
 real-data result does \emph{not} establish
 superiority of PLS over SVD on forecasting,
 despite its stronger known-jerk reconstruction
 performance in Section~\ref{sec:synthetic-case}.
 The GCV cubic smoothing spline with quadratic
 Taylor extrapolation achieves smaller pooled
-recorded-position RMSE at each horizon.
+recorded-position window RMSE at each horizon.
+The comparison changes both the historical smoother
+and its continuation; it cannot attribute the
+entire difference to spline smoothing alone.
 An alternative continuation of the
 \emph{same fitted historical trend} can
 therefore matter as much as the smoother.

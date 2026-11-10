@@ -46,7 +46,8 @@ S(\lambda)=\frac1m\sum_{j=1}^{m}
 \end{equation}
 It is monotone in $\lambda$ and therefore provides an
 interpretable, comparable normalized regularization coordinate.
-For fixed $\mu$, if $H_\lambda=(I+\lambda Q)^{-1}$,
+For a fixed reference $\mu$ and a fixed penalty $\lambda$,
+let $H_\lambda=(I+\lambda Q)^{-1}$; then
 \begin{equation}\label{eq:edf}
 \operatorname{df}(\lambda)=\operatorname{tr}(H_\lambda)
 =n-mS(\lambda).
@@ -107,6 +108,7 @@ $q_i=\mu\binom{i-1}{3}$. PLS may be written as a
 +\sum_{j=1}^{m}
 \frac{v_jv_j^\top(y-q)}{1+\lambda\sigma_j^2}.
 \end{equation}
+\Needspace{10\baselineskip}
 The truncated-SVD comparison is instead the
 \emph{hard cutoff}
 \begin{equation}\label{eq:tsvd-filter}
@@ -117,15 +119,57 @@ The truncated-SVD comparison is instead the
 \end{equation}
 This is a genuine, distinct low-roughness spectral
 smoother. We specify two training-only comparisons:
-(i) choose $r$ by GCV over the noninterpolating ranks
-$0,\ldots,m-1$; (ii) match the PLS effective complexity
-with $r=\operatorname{round}(\operatorname{df}_{\rm PLS}-3)$.
+(i) choose $r$ by conditional GCV over ranks
+$0,\ldots,m-1$; (ii) nominally match the conditional
+PLS complexity with
+$r=\operatorname{round}(\operatorname{df}_{\rm PLS}-3)$.
 The latter is a matched-complexity \emph{ablation}, not
 an independently optimized SVD procedure. Both use the
 same training-only global cubic reference $\mu$ as
 the corresponding profile-ML PLS comparator.
 Their normalized hard-filter index is
 $S_{\mathrm{TSVD}}=1-r/m$.
+
+\paragraph{Conditioning on the estimated reference.}
+With $P_r$ the projector onto the $3+r$ retained
+modes, the implemented TSVD rank criterion is
+\begin{equation}\label{eq:tsvd-conditional-gcv}
+\mathrm{GCV}_{\rm conditional}(r)
+=\frac{n\| (I-P_r)(y-q_{\widehat\mu})\|^2}
+{[n-(3+r)]^2},\qquad 0\le r<m.
+\end{equation}
+It uses the training-estimated cubic $\widehat\mu$ in
+the residual but treats that reference as fixed
+in the denominator $n-(3+r)=m-r$. It is therefore
+\emph{conditional plug-in GCV}, not exact GCV
+for the entire data-dependent fitting map.
+In particular, retaining $r$ near $m$ leaves
+few nominal residual degrees of freedom.
+
+The same issue makes effective-complexity matching
+\emph{nominal} rather than exact. Write
+$\widehat\mu=a^\top y$, where $a$ is the linear
+cubic-OLS reference functional, $q_\mu=\mu q_1$
+with $D_3q_1=\mathbf1$, and let $P_r$ project
+onto the $3+r$ retained TSVD directions.
+For fixed $\lambda$ and $r$ (ignoring their
+additional data-driven selection), the
+linear fits have effective degrees of freedom
+\begin{align}
+\operatorname{df}_{\rm PLS}^{\rm plug}
+ &=\operatorname{tr}(H_\lambda)
+  +a^\top(I-H_\lambda)q_1,\\
+\operatorname{df}_{\rm TSVD}^{\rm plug}
+ &=3+r+a^\top(I-P_r)q_1 .
+\end{align}
+A fixed-rank GCV denominator for the complete
+plug-in linear map would instead be
+$n-\operatorname{df}_{\rm TSVD}^{\rm plug}$.
+The rank matching in Experiment008 equates
+only the fixed-reference trace components;
+it does not equate these full plug-in
+degrees of freedom. Both reference
+estimates are based on historical data only.
 Classical truncated singular-value regularization has
 a broader inverse-problem literature; we do not claim
 the hard-cutoff construction is new
@@ -172,8 +216,22 @@ Both schemes use only historical data; neither can
 anticipate future changes in driver behavior.
 A separate spline baseline uses a quadratic Taylor
 continuation from spline endpoint derivatives.
-Horizon-specific observed-position RMSE is reported
-in meters.
+The pooled forecast error at horizon $H\in\{5,10,20\}$
+is a \emph{cumulative evaluation-window RMSE}, not
+an error at only the final future frame:
+\begin{equation}\label{eq:forecast-window-rmse}
+\mathrm{RMSE}_{H} = \left\{\frac{1}{NH}
+\sum_{i=1}^{N}\sum_{h=1}^{H}
+\bigl[\widehat x_i(h)-x_i(h)\bigr]^2\right\}^{1/2}.
+\end{equation}
+Here $N=1{,}296$ for synthetic confirmation and
+$N=200$ for NGSIM, and $H$ counts frames at
+$\Delta t=0.1$\,s. Thus ``1-s RMSE'' is the
+root mean square over frames $1,\ldots,10$,
+\emph{not} just the position at $t=1$\,s.
+The $0.5$, $1$, and $2$-s windows overlap.
+The recorded NGSIM position remains an
+observed proxy, not latent ground truth.
 
 \subsection{Two complementary experimental cases}
 \paragraph{Known-truth simulation.}

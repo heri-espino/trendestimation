@@ -2,10 +2,12 @@ name: Paper C statistical jerk manuscript with SVD baseline (PCAG103A-08)
 
 on:
   push:
-    branches: [paper/paper-c-methods-simulation-real-svd]
+    branches: [paper/paper-c-scientific-editorial-review]
     paths:
       - .github/workflows/paper-c-methods-compile-pc08.yml
       - paper/ngsim-jerk-case-study/main.tex
+      - paper/ngsim-jerk-case-study/sections/introduction.tex
+      - paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py
       - paper/ngsim-jerk-case-study/sections/methods.tex
       - paper/ngsim-jerk-case-study/sections/synthetic_case.tex
       - paper/ngsim-jerk-case-study/sections/real_case.tex
@@ -15,13 +17,16 @@ on:
       - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
       - paper/ngsim-jerk-case-study/visuals/audit_pdf.py
       - paper/ngsim-jerk-case-study/visuals/audit_methods_pdf.py
+      - paper/ngsim-jerk-case-study/visuals/audit_frozen_svd_comparison.py
+      - tests/test_paper_c_frozen_svd_audit.py
+      - tests/test_paper_c_plug_in_edf.py
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: paper-c-physical-manuscript
+  group: paper-c-physical-editorial-review
   cancel-in-progress: false
 
 jobs:
@@ -45,6 +50,23 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 1
+
+      - name: Clear interrupted rebase metadata from earlier failed runner run
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong dedicated runner' }
+          $mergeDir=(git rev-parse --git-path rebase-merge).Trim()
+          $applyDir=(git rev-parse --git-path rebase-apply).Trim()
+          if ((Test-Path $mergeDir) -or (Test-Path $applyDir)) {
+            # Previous CI interrupted a rebase of generated PDF binaries.
+            # --quit removes rebase machinery without replaying source commits.
+            git rebase --quit
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot clear interrupted runner rebase' }
+          }
+          $checkedOut=(git rev-parse HEAD).Trim()
+          if ($checkedOut -ne $env:GITHUB_SHA) {
+            throw 'Checked-out source must equal invoking workflow source SHA'
+          }
 
       - name: Verify existing 6 figures and create permanent append-only PDF-build root
         run: |
@@ -90,6 +112,18 @@ jobs:
             "$($src.Ref) : $path" | Out-File (Join-Path $env:PC08_METHODS_ROOT 'metadata\source_branches.txt') -Append -Encoding utf8
           }
 
+      - name: Unit-check plug-in EDF and audit immutable Experiment008 fitted rows
+        run: |
+          $ErrorActionPreference='Stop'
+          $src=Join-Path $env:EXP008_SOURCE 'synthetic\fitted_rows.csv'
+          if (!(Test-Path $src)) { throw 'Missing immutable Experiment008 synthetic fitted outcomes' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_frozen_svd_audit.py tests/test_paper_c_plug_in_edf.py 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\frozen_svd_unit_tests.log')
+          if ($LASTEXITCODE -ne 0) { throw 'PLS/TSVD plug-in EDF or frozen archive tests failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/audit_frozen_svd_comparison.py --fitted-rows $src --output (Join-Path $env:PC08_METHODS_ROOT 'metadata\frozen_svd_pairwise_audit.json') --seed 30133 --resamples 5000 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\frozen_svd_pairwise_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable Experiment008 rank and paired-risk audit failed' }
+
       - name: Generate the two new SVD/PLS/spline/SG scientific vector figures
         run: |
           $ErrorActionPreference='Stop'
@@ -97,8 +131,12 @@ jobs:
           $manifest=Join-Path $p 'generated/exp008_methods_figure_manifest.json'
           if (Test-Path $manifest) {
             $old=Get-Content $manifest -Raw | ConvertFrom-Json
-            if ($old.plots.PSObject.Properties.Count -ne 2) {
-              throw 'Unrecognized previous figure manifest; do not overwrite'
+            $plotNames=@($old.plots.PSObject.Properties | ForEach-Object { $_.Name })
+            $expected=@('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')
+            if ($plotNames.Count -ne 2 -or
+                $plotNames -notcontains $expected[0] -or
+                $plotNames -notcontains $expected[1]) {
+              throw 'Unexpected previous figure-manifest keys; preserve existing outputs'
             }
             foreach($base in @('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')) {
               foreach($ext in @('pdf','png','svg')) {
@@ -149,6 +187,25 @@ jobs:
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_methods_pdf.py" --pdf "$p/main.pdf" --figures "$p/figures" --manifest "$p/generated/exp008_methods_figure_manifest.json" --output (Join-Path $env:PC08_METHODS_ROOT 'metadata\methods_pdf_audit.json') 2>&1 |
             Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\methods_audit.log')
           if ($LASTEXITCODE -ne 0) { throw 'Physical methods PDF audit failed' }
+
+      - name: Render every PDF page and contact sheet for scientific visual review
+        run: |
+          $ErrorActionPreference='Stop'
+          $target=Join-Path $env:RUNNER_TEMP "paper-c-pdf-render-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $target) { throw "Non-unique PDF rasterizer target: $target" }
+          New-Item -ItemType Directory -Path $target | Out-Null
+          # Only a pinned, run-local rasterizer is added; the research Conda
+          # environment is not modified and no experiment is repeated.
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check --no-input --no-deps --target $target pymupdf==1.26.5 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\\pdf_preview_dependency.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned PyMuPDF preview dependency unavailable' }
+          $env:PYTHONPATH=$target
+          $dest=Join-Path $env:PC08_METHODS_ROOT 'pages'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf paper/ngsim-jerk-case-study/main.pdf --output-dir $dest --dpi 144 --columns 3 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PC08_METHODS_ROOT 'logs\\page_render.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Could not render all scientific manuscript pages' }
+          if (!(Test-Path (Join-Path $dest 'contact-sheet.png'))) { throw 'Missing PDF contact sheet' }
+          Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
 
       - name: Preserve the exact new compiled paper, logs, figure files, and root directory hashes on Windows
         if: always()
@@ -201,12 +258,32 @@ jobs:
           $ErrorActionPreference='Stop'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
-          if ($LASTEXITCODE -ne 0) { throw 'Could not stage paper outputs' }
-          git commit -m "paper-c: publish method-first physical jerk paper, TSVD figures and verified PDF"
-          if ($LASTEXITCODE -ne 0) { throw 'Could not commit paper PDF' }
-          git push origin "HEAD:refs/heads/paper/paper-c-methods-simulation-real-svd"
-          if ($LASTEXITCODE -ne 0) { throw 'PR branch changed during paper build; do not force-push' }
+          # A manuscript build must only publish if its input source branch is
+          # still exactly the same commit as the checkout. Never rebase the
+          # generated PDF/SVG binaries over concurrent author changes.
+          git fetch origin "refs/heads/paper/paper-c-scientific-editorial-review:refs/remotes/origin/paper/paper-c-scientific-editorial-review"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh review branch before publication' }
+          $current=(git rev-parse "refs/remotes/origin/paper/paper-c-scientific-editorial-review").Trim()
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot identify upstream review SHA' }
+          if ($current -ne $env:GITHUB_SHA) {
+            Write-Host "Source advanced from $env:GITHUB_SHA to $current; do not publish stale PDF. Retain audited run-scoped archive."
+          } else {
+            git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot stage paper outputs' }
+            git diff --cached --quiet
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host 'Verified figure and PDF outputs already match tracked files'
+            } elseif ($LASTEXITCODE -eq 1) {
+              git commit -m "paper-c: publish audited scientific-editorial review PDF and derived figures"
+              if ($LASTEXITCODE -ne 0) { throw 'Cannot commit audited paper outputs' }
+              git push origin "HEAD:refs/heads/paper/paper-c-scientific-editorial-review"
+              if ($LASTEXITCODE -ne 0) {
+                throw 'Review branch advanced during publication; no force-push; audited results are archived'
+              }
+            } else {
+              throw 'Git could not compare staged scientific paper outputs'
+            }
+          }
 
       - name: Archive complete permanent VM build in unique results-only Git branch
         if: always()
