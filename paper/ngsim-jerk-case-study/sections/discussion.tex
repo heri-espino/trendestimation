@@ -25,8 +25,8 @@ A second known-truth simulation case provides a
 different outcome: PLS with the historical cubic-OLS
 reference and continuous Gaussian profile likelihood
 has lower discrete-jerk RMSE than a hard spectral
-SVD cutoff at nominally matched fixed-reference degrees of freedom,
-and much lower RMSE than the position-GCV
+SVD cutoff at nominally matched fixed-reference degrees
+of freedom, and much lower RMSE than the position-GCV
 truncation in the tested regimes. Hard cutoff and
 continuous shrinkage are \emph{different estimators};
 using a full SVD in place of a Cholesky factorization
@@ -42,8 +42,8 @@ SVD-based denoising, smoothing splines, or local filters.
 
 The real recorded-position results are more cautious.
 Across 200 quality-qualified NGSIM episodes,
-the three-point PLS and effective-complexity-matched
-SVD forecasts are similar; a GCV natural cubic
+the three-point PLS and nominally fixed-reference-
+complexity-matched SVD forecasts are similar; a GCV natural cubic
 smoothing spline with quadratic Taylor continuation
 has the lowest pooled recorded-future position window RMSE
 among the reported procedures. The smaller original
@@ -89,7 +89,7 @@ belong in separate computational-statistics
 manuscripts rather than this physical case study.
 
 \section*{Reproducibility and data rights}
-The US DOT/FHWA NGSIM dataset (DOI: 10.21949/1504477) is credited as the sole source of observed positions; the dataset portal identifies a CC BY-SA 3.0 license. Source query and extraction rules, tracked vehicle identifiers, segment starting timestamps, immutable checksums, chronological forecast rows, solver diagnostics, and original TeX-backed PGF figure sources are preserved under the case-study directory. The new Experiment006/007 synthetic and NGSIM follow-up results are preserved separately, including complete generated ground truth, observation errors, selected smoothness values, paired inference, reproducible vector plots, Conda environment records, exact file paths and SHA-256 manifests. The original official-position subset has not been artificially contaminated or pre-smoothed. Figure-derived jerk is explicitly estimated rather than observed.
+The US DOT/FHWA NGSIM dataset (DOI: 10.21949/1504477) is credited as the sole source of observed positions; the dataset portal identifies a CC BY-SA 3.0 license. Source query and extraction rules, tracked vehicle identifiers, segment starting timestamps, immutable checksums, chronological forecast rows, solver diagnostics, and original TeX-backed PGF figure sources are preserved under the case-study directory. The Experiment005--008 studies and their follow-up analyses are archived separately. These archives preserve generated synthetic ground truth and observation errors, historical parameter selections, the frozen 1,296-trajectory PLS--TSVD--spline--Savitzky--Golay comparisons, 72-parent noise-calibration data, paired uncertainty analyses, source-based figures, environment records, exact file paths and SHA-256 inventories. No independently measured jerk ground truth is available for the real NGSIM cases. The original official-position subset has not been artificially contaminated or pre-smoothed. Figure-derived jerk is explicitly estimated rather than observed.
 
 \section*{Declarations}
 This is an illustrative research draft. Authorship, correspondence, funding, conflicts and any journal submission require coauthor review and agreement.
