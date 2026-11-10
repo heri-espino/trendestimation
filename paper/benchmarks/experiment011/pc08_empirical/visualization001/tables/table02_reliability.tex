@@ -1,0 +1,15 @@
+\begin{table}[t]
+\caption{Recorded outcome classifications by numerical method, including all execution phases. Counts refer to correlated method-level observations rather than independent numerical trials. An additional 57 unavailable jobs cannot be assigned to a method.}
+\label{tab:empirical-reliability}
+\centering\scriptsize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Method & Recorded & Complete (rate) & KKT & $S$ inversion & Work gate\\
+\midrule
+Banded Cholesky & 42,544 & 31,336 (73.7\%) & 9,096 & 2,112 & 0\\
+Spectral SVD & 42,350 & 37,932 (89.6\%) & 0 & 4,224 & 194\\
+Dense inverse & 6,176 & 5,400 (87.4\%) & 0 & 0 & 776\\
+Sparse hybrid & 1,552 & 1,552 (100.0\%) & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}

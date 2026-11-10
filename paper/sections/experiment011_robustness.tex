@@ -1,0 +1,87 @@
+\subsection{Post-solve optimality failures in banded computation}
+The banded-Cholesky implementation recorded 9096 method-level
+timing observations rejected by the scaled stationarity-residual
+check in Eq.~\eqref{eq:kkt}. They represent 3384 observations
+under CV, 4160 under GCV, and 1552 under marginal likelihood.
+Among the \emph{rejected} records, the smallest reported value
+of $\eta_{\mathrm{opt}}$ was $1.0013\times10^{-7}$, the median was
+$1.4079\times10^{-7}$, and the largest was
+$1.0587\times10^{-6}$, against the specified threshold
+$10^{-7}$. Figure~\ref{fig:kktresidualdist} displays this
+conditional distribution. The data do not record the
+corresponding residual magnitudes for accepted runs; the
+histogram must not be used as an estimate of the full
+residual distribution or of an independent failure probability.
+Since the check follows factorization and solution, the
+failures establish rejection by the \emph{complete banded
+criterion pipeline}, not an inability of Cholesky to
+factor an SPD matrix.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\KKTDir/kkt_rejection_distribution.pdf}
+\caption{Distribution of the scaled first-order optimality
+residual $\eta_{\mathrm{opt}}$ among \emph{rejected} banded
+complete-criterion computations. Histogram segments are
+colored by statistical criterion (CV, GCV and Gaussian
+marginal likelihood). The dashed line marks the
+implementation-specific $10^{-7}$ acceptance threshold;
+the dotted line marks the median of rejected records.
+Counts are correlated method-level timing observations,
+not independent failures. Residuals of accepted
+evaluations are not available in the archived record.}
+\label{fig:kktresidualdist}
+\end{figure}
+
+A particularly informative contrast occurs in nine parameter configurations. For each configuration, 97 independent realizations were considered. Both methods completed every recorded single-candidate evaluation, but the banded implementation rejected every complete-grid evaluation, whereas the spectral implementation completed the corresponding grids. The configurations comprise CV and GCV with $(n,d,M)=(128,3,1000)$, $(256,4,100)$ and $(256,3,1000)$; GCV with $(64,3,10000)$; and profiled Gaussian marginal likelihood with $(256,3,100)$ and $(512,3,100)$. Figure~\ref{fig:cholgridfail} displays these results.
+
+The nine configurations account for 6984 banded-rejection timing records; another 2112 such records arise from larger fourth-order configurations. These are repeated method-level observations within 97 independent seed clusters per configuration, rather than thousands of independent experimental realizations. The saved status information does not identify the exact smoothing-grid point that first produced each rejection, and hence no candidate-specific instability boundary is inferred.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig05_grid_completion.pdf}
+\caption{Full-grid numerical completion in nine parameter configurations, with method-specific coloring and patterned rejection fractions. All recorded single-candidate outcomes complete for both implementations, but the banded full-grid pipeline is rejected while the spectral pipeline completes. Each configuration has 97 independent seed clusters; within-seed repeats, mapping policies and multiple-series workloads are correlated.}
+\label{fig:cholgridfail}
+\end{figure}
+
+\input{\VizDir/tables/table03_grid_failures.tex}
+
+The apparent spectral advantage must be interpreted as \emph{observed computational completion}, not a controlled comparison of identical backward-error tests. The spectral scorer does not impose the same implementation-specific acceptance criterion as the banded scorer. Independent numerical reference calculations would be required to establish a strict relative-accuracy ranking at each penalty.
+
+\subsection{Smoothness inversion remains a common numerical limitation}
+An additional failure mechanism affects both implementations at larger difference order and series length. In the fourth-order CV/GCV configurations with $n=1024$, 2048 and 4096, the numerical inversion of the normalized smoothness mapping sometimes returned values outside its prescribed tolerance. Across the evaluated configurations, 6336 timing records explicitly describe inaccurate smoothness inversion: 2112 associated with the banded method and 4224 with SVD. The distribution of observed outcomes in the fourth-order settings is given in Fig.~\ref{fig:fourthfail}.
+
+This error concerns the transformation from the bounded coordinate $S$ to the penalty $\lambda$, rather than evidence that a spectral decomposition failed. Crucially, a successfully completed one-candidate evaluation cannot be used as a substitute for an incomplete multi-candidate search. Accordingly, the large-order configurations with shared inversion difficulties do not supply an empirical winner for the full criterion grid.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig06_order4_failures.pdf}
+\caption{Stacked method-colored fractions of numerically complete evaluations and distinct rejection mechanisms for difference order four. The bands show implementation-specific complete, post-solve KKT-rejected and inaccurate smoothness-inversion outcomes. Denominators consist of available method-level records; both implementations exhibit inversion failures at higher sample lengths.}
+\label{fig:fourthfail}
+\end{figure}
+
+\subsection{The single-candidate versus grid-search crossover}
+The principal runtime trade-off becomes visible when paired, numerically admissible observations are compared across candidate counts. Figure~\ref{fig:onegrid} shows three examples evaluated under identical matching rules. In conditional CV with $n=256$, $d=3$, the geometric banded/SVD cold-time ratio changes from 0.698 (95\% interval 0.671--0.724) for one candidate to 4.846 (4.567--5.125) for 100 candidates. In fixed-mean GCV with $n=64$, $d=1$, the corresponding ratios are 1.001 (0.982--1.018) and 2.328 (2.282--2.374). For fixed-mean CV with $n=128$, $d=3$, they are 1.069 (1.052--1.087) and 5.401 (5.244--5.555).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig07_crossover_distributions.pdf}
+\caption{Distributional comparison of matched banded-Cholesky/SVD cold-time ratios for one candidate and 100 candidates. Violin densities, boxplots and individual seed-level points show the pronounced reversal of computational preference. Values above one favor SVD. Corresponding independent-seed bootstrap intervals for geometric means are reported in the text rather than inferred from violin widths.}
+\label{fig:onegrid}
+\end{figure}
+
+These results support the computational interpretation of Eqs.~\eqref{eq:spectraltrend}--\eqref{eq:rss}: spectral setup is paid once, while the attenuation coefficients and the statistics needed for subsequent criterion evaluations are reused. The crossover is observed in complete scoring workloads; it should not be conflated with the cost of fitting a trend for a prescribed penalty.
+
+\subsection{Memory requirements and computational feasibility}
+The principal disadvantage of the spectral approach is its dense storage requirement. For the evaluated implementation, the conservative memory admission allowance corresponds to five $n\times n$ double-precision arrays, or $40n^2$ bytes. An explicit dense-inverse reference is assigned seven such arrays, or $56n^2$ bytes. In contrast, a banded Cholesky factor and a banded selected-inverse buffer together require approximately $16n(d+1)$ bytes, excluding ancillary data structures. Figure~\ref{fig:memorytradeoff} illustrates these storage relations for $d=4$.
+
+For example, the spectral admission allowance is 640~MiB at $n=4096$. At $n=8192$ it rises to 2.5~GiB, exceeding the 2~GiB dense allocation limit imposed in the study. The latter sample length was not evaluated in the present comparison. The curves therefore represent \emph{implementation-specific memory allowances and illustrative buffer sizes}, not measurements of peak resident memory or empirical allocation failures.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig08_memory_scaling.pdf}
+\caption{Analytical source-code memory allowances as a function of series length for dense spectral SVD, an explicit inverse and two fourth-order banded working arrays. The shaded region denotes examined sample lengths and the dashed line the 2~GiB dense allocation policy. These curves are storage-policy calculations, not measured peak memory.}
+\label{fig:memorytradeoff}
+\end{figure}
+
+There were 970 resource-budget exclusions in the recorded timing outcomes: 776 for the explicit-inverse reference and 194 for SVD. These were induced by prescribed computational-work thresholds, not observed out-of-memory errors. Thus the memory analysis establishes a concrete feasibility trade-off without attributing numerical failures to unsupported memory measurements.

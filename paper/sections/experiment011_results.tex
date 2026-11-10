@@ -1,0 +1,73 @@
+\section{Empirical results}
+\subsection{Completion rates and admissible observations}
+Of 2813 scheduled computational jobs, 57 terminated without a successful numerical record. The resulting dataset comprises 92,679 measured or explicitly classified method-level outcomes. A total of 76,220 (82.24\%) satisfy the predefined completeness and status conditions. The remaining 16,459 comprise 11,208 numerical-rejection records, 4224 additional smoothness-inversion failure records, 970 computational-budget exclusions, and 57 records representing unavailable job inputs. The classification retains unsuccessful searches; omitting them would bias subsequent comparisons toward implementations with a higher apparent completion rate.
+
+Figure~\ref{fig:reliability} displays stacked status fractions by criterion and implementation, with distinct colors identifying the methods and patterned segments indicating numerical rejection, inversion failure, or resource exclusion. Table~\ref{tab:empirical-reliability} reports the underlying counts by method. Because eligibility varies across configurations, these percentages summarize observed method-level records rather than randomized or matched failure probabilities.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig01_reliability_stacked.pdf}
+\caption{Stacked status composition of complete-criterion evaluations by selection criterion. Solid colors identify the implementation, while patterned segments distinguish the recorded failure mechanisms. Rates are conditional on method-specific eligible observations and do not constitute matched failure probabilities.}
+\label{fig:reliability}
+\end{figure}
+
+\input{\VizDir/tables/table02_reliability.tex}
+
+\subsection{Complete-grid running time}
+Table~\ref{tab:empirical-paired} summarizes the matched cold-time ratios for eight complete 100-candidate CV and GCV searches, reporting both seed-level median and interquartile range and the previously calculated geometric mean with seed-cluster bootstrap intervals. Figure~\ref{fig:paired} displays the corresponding distributions as violin densities, narrow boxplots and individual seed-level paired ratios. Each case uses identical observations and candidates for both methods. Ratios $\rho=T_{\mathrm B}/T_{\mathrm S}>1$ favor spectral SVD; all eight representative grids show this advantage. The distributions reveal variation and asymmetry hidden by the point summaries and must not be interpreted as eight identically distributed experiments.
+
+\input{\VizDir/tables/table01_runtime.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig02_runtime_distributions.pdf}
+\caption{Observed distributions of matched banded-Cholesky/SVD complete cold-time ratios over 100 smoothing candidates. The violin outlines are descriptive kernel-density estimates, the boxes give medians and interquartile ranges, and the dots represent independent-seed cluster summaries. The dashed line denotes equal time; numerical confidence intervals for geometric means are given in Table~\ref{tab:empirical-paired}.}
+\label{fig:paired}
+\end{figure}
+
+The effect of candidate count is particularly clear for conditional CV at $n=256$ and $d=3$. The banded/SVD time ratio is 0.698 (95\% interval 0.671--0.724) for one candidate and one series, but 4.846 (4.567--5.125) for 100 candidates. For 100 candidates evaluated on three series, the corresponding ratio is 3.655 (3.450--3.860). The reversal is consistent with a sizable spectral setup cost that is recovered through repeated criterion evaluation. It does not imply a universal crossover at $M=100$; both the location and even the existence of a crossover depend on the criterion, series length, order and implementation.
+
+For fixed-mean first-order GCV at $n=64$, the analogous ratio is 1.001 (0.982--1.018) for one candidate and 2.328 (2.282--2.374) for the 100-candidate grid. Thus a negligible single-candidate performance difference can coexist with a substantial grid-search advantage.
+
+\subsection{Reuse across smoothing coordinates and series}
+The candidate representation also influences total cost. Two computational policies were compared: repeated conversion of smoothness values $S$ to the penalty $\lambda$, and a single conversion shared across the search. The candidate set is identical under both policies, so the contrast concerns computational reuse rather than a different optimization problem.
+
+For spectral CV with $n=256$, $d=3$, 100 candidates and three series, the geometric complete cold-time ratio of once-mapped penalties to repeated direct-$S$ conversion is 0.580 (95\% interval 0.570--0.590). In this setting, precomputing the candidate transformation reduces total execution time. Figure~\ref{fig:mapping} displays corresponding descriptive comparisons across other numerically admissible multi-series grid configurations.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig03_mapping_distributions.pdf}
+\caption{Per-case-seed distributions of mapped-penalty/direct-smoothness cold-time ratios, grouped by criterion, method and candidate-grid size. Violin density and boxplots describe heterogeneous admissible cases under the common execution phase. Values below one favor mapping the penalty grid once; the pooled descriptive distributions are not universal algorithmic scaling laws.}
+\label{fig:mapping}
+\end{figure}
+
+Figure~\ref{fig:workloads} illustrates how a fixed first-order GCV configuration responds to four combinations of candidate and series count. The comparisons show why initialization, single-candidate scoring, multiple-series reuse and full-grid selection must be distinguished when assessing an implementation. In particular, a procedure optimized only for one fitted trend need not minimize the cost of selecting a smoothing parameter.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\VizDir/figures/fig04_workload_stacked.pdf}
+\caption{Stacked component-wise medians for initialization, smoothness-to-penalty mapping and criterion evaluation in a first-order GCV example ($n=64$, $M=100$). Colors identify the implementation; light, medium and dark sections identify stages. Workload labels denote number of smoothing candidates times number of series. Sums of component medians are not generally the medians of total cold time.}
+\label{fig:workloads}
+\end{figure}
+
+\subsection{Numerical reliability and its consequences}
+The aggregate status proportions in the 24-worker execution phase are 10,848/13,176 (82.3\%) for banded CV and 13,176/13,176 (100\%) for spectral CV. The corresponding GCV counts are 13,176/16,280 (80.9\%) and 15,892/16,086 (98.8\%), respectively. Their denominators differ because method eligibility and the evaluated configurations differ; they should not be used as an unconditional estimate of solver accuracy. The comparison nevertheless motivates a closer examination of the failure mechanisms, reported next.
+
+\input{sections/experiment011_robustness}
+
+\section{Discussion}
+The empirical evidence supports a clear implementation preference, subject to mathematical and computational feasibility: \emph{reuse of a spectral decomposition is the recommended default for finite-difference PLS smoothing-parameter selection over a moderate-to-large candidate grid}. In contrast to a sequence of penalized normal-equation factorizations, spectral preprocessing represents the complete search in one orthogonal basis. It amortizes setup, supplies degrees of freedom and residual sums of squares directly, and provides a common representation for multiple selection criteria. The advantage is pronounced in the matched CV/GCV grid comparisons and is compatible with the observed numerical-completion differences.
+
+The recommendation should not be extended beyond the observed evidence. First, the banded method is often preferable when evaluating only one penalty. Second, the spectral basis and its work arrays require quadratic memory, which can dominate the decision for long series even when SVD is attractive at moderate $n$. Third, numerical acceptance is not interchangeable with certified forward accuracy: the two implementations apply different diagnostic checks, and both encounter smoothness-inversion difficulties in the larger fourth-order cases. Fourth, the recorded multi-process execution phases limit the transportability of wall-clock ratios to idle workstations or different parallel workloads.
+
+These limitations suggest the following practical selection principle. If the task is a multi-candidate \emph{complete-criterion} search and the dense spectral workspace satisfies a conservative memory budget, prepare the spectral decomposition once, reuse series-specific projections and precompute the candidate penalties when appropriate. If only one candidate is needed, or if dense allocation would be prohibitive, a structured banded method is a reasonable alternative subject to numerical residual checks. When a requested smoothness value cannot be inverted accurately, neither method should silently substitute an approximate grid winner: the affected comparison must be marked invalid or handled by a separately validated numerical strategy.
+
+A further limitation is the restriction to synthetic data and one computational environment. Seed-cluster intervals quantify variability under the observed experimental protocol, but not variability across operating systems, processors, library versions or CPU utilization. The validity masks can induce survivor bias in timing ratios conditional on completed searches. The study does not establish improvements in trend-estimation risk or forecasting accuracy, and it does not constitute an independent high-precision verification of every evaluated penalty. Future work should isolate the source of the large-order smoothness-inversion failures, independently certify residual and criterion accuracy, and compare implementations under controlled processor occupancy.
+
+\section{Conclusions}
+This study establishes that the preferred computational method for penalized least-squares trend smoothing depends on the \emph{parameter-selection workload}, not merely the cost of one linear solve. Across valid matched 100-candidate CV and GCV searches, spectral SVD consistently outperformed banded Cholesky in the representative tested configurations. A measured conditional-CV setting changed from favoring banded Cholesky for one candidate to favoring spectral SVD by a factor of approximately 4.85 for the complete grid. The numerical-status analysis further identified repeated banded post-solve failures on several complete grids, while retaining documented failure modes of the spectral pipeline.
+
+We therefore recommend \emph{spectral decomposition as the primary implementation for complete, repeated smoothing-parameter selection whenever its dense storage is affordable}. Banded methods remain valuable for isolated evaluations and long series, and numerical diagnostics remain mandatory for either implementation. The contribution is a measured, criterion-aware recommendation for computational practice rather than a new trend estimator or an unconditional claim of spectral superiority.
+
+\section{Code and data availability}
+The source implementations, analysis programs, selection-status records, derived timing data and reproducible figures are available in the public project repository at \url{https://github.com/heri-espino/trendestimation}. The underlying raw execution records are retained by the author but are not publicly deposited; their availability is subject to author approval. The publicly archived derived observations preserve incomplete and numerically inadmissible searches, and include the pairing and bootstrap metadata required to reproduce the tabulated comparisons.

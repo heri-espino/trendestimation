@@ -1,0 +1,20 @@
+% Publication-facing table from the frozen paired-runtime bootstrap.
+\begin{table}[t]
+\caption{Matched complete-criterion cold-time ratios for 100 smoothing candidates and one series. The reference mean is fixed at zero ($\mu=0$) or computed once from the observed differences ($\mu=\overline{D_dy}$). All comparisons use the same execution phase and smoothing-coordinate policy. Intervals are 95\% percentile bootstrap intervals over independent random-seed clusters. Ratios exceeding one favor spectral SVD.}
+\label{tab:empirical-paired}
+\centering\small
+\begin{tabular}{lrrlrrl}
+\toprule
+Criterion & $n$ & $d$ & Reference $\mu$ & Seeds & $\rho$ & 95\% CI\\
+\midrule
+CV & 64 & 1 & $0$ & 96 & 2.34 & [2.29, 2.39]\\
+CV & 64 & 3 & $0$ & 97 & 4.03 & [3.95, 4.11]\\
+CV & 128 & 3 & $0$ & 97 & 5.40 & [5.24, 5.55]\\
+CV & 128 & 3 & $\overline{D_dy}$ & 97 & 5.56 & [5.46, 5.65]\\
+CV & 256 & 3 & $\overline{D_dy}$ & 97 & 4.85 & [4.57, 5.12]\\
+GCV & 64 & 1 & $0$ & 96 & 2.33 & [2.28, 2.37]\\
+GCV & 128 & 3 & $0$ & 97 & 4.99 & [4.87, 5.10]\\
+GCV & 128 & 3 & $\overline{D_dy}$ & 97 & 5.12 & [5.01, 5.23]\\
+\bottomrule
+\end{tabular}
+\end{table}
