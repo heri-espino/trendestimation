@@ -1,5 +1,37 @@
 \subsection{Post-solve optimality failures in banded computation}
-The banded-Cholesky implementation reported 9096 method-level timing observations rejected by the relative optimality-residual check in Eq.~\eqref{eq:kkt}. The recorded residuals range from approximately $1.00\times10^{-7}$ to $1.06\times10^{-6}$, compared with the prescribed tolerance $10^{-7}$. Since the check is performed after factorization and solution, these observations do not establish the breakdown of Cholesky factorization itself. They identify loss of admissibility in the \emph{complete banded criterion pipeline} under its implemented numerical diagnostic.
+The banded-Cholesky implementation recorded 9096 method-level
+timing observations rejected by the scaled stationarity-residual
+check in Eq.~\eqref{eq:kkt}. They represent 3384 observations
+under CV, 4160 under GCV, and 1552 under marginal likelihood.
+Among the \emph{rejected} records, the smallest reported value
+of $\eta_{\mathrm{opt}}$ was $1.0013\times10^{-7}$, the median was
+$1.4079\times10^{-7}$, and the largest was
+$1.0587\times10^{-6}$, against the specified threshold
+$10^{-7}$. Figure~\ref{fig:kktresidualdist} displays this
+conditional distribution. The data do not record the
+corresponding residual magnitudes for accepted runs; the
+histogram must not be used as an estimate of the full
+residual distribution or of an independent failure probability.
+Since the check follows factorization and solution, the
+failures establish rejection by the \emph{complete banded
+criterion pipeline}, not an inability of Cholesky to
+factor an SPD matrix.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\KKTDir/kkt_rejection_distribution.pdf}
+\caption{Distribution of the scaled first-order optimality
+residual $\eta_{\mathrm{opt}}$ among \emph{rejected} banded
+complete-criterion computations. Histogram segments are
+colored by statistical criterion (CV, GCV and Gaussian
+marginal likelihood). The dashed line marks the
+implementation-specific $10^{-7}$ acceptance threshold;
+the dotted line marks the median of rejected records.
+Counts are correlated method-level timing observations,
+not independent failures. Residuals of accepted
+evaluations are not available in the archived record.}
+\label{fig:kktresidualdist}
+\end{figure}
 
 A particularly informative contrast occurs in nine parameter configurations. For each configuration, 97 independent realizations were considered. Both methods completed every recorded single-candidate evaluation, but the banded implementation rejected every complete-grid evaluation, whereas the spectral implementation completed the corresponding grids. The configurations comprise CV and GCV with $(n,d,M)=(128,3,1000)$, $(256,4,100)$ and $(256,3,1000)$; GCV with $(64,3,10000)$; and profiled Gaussian marginal likelihood with $(256,3,100)$ and $(512,3,100)$. Figure~\ref{fig:cholgridfail} displays these results.
 
