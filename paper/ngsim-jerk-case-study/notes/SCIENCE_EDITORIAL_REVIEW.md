@@ -14,6 +14,13 @@ Sources examined: root `README.md`, `AGENTS.md`, `AI_HANDOFF.md`, paper-level ro
 - **First revised PDF inspection:** Windows manuscript-only Actions run [#42745055261](https://github.com/heri-espino/trendestimation/actions/runs/42745055261) passed and generated a 12-page PDF, SHA-256 `2c4e6e28c0d16af3bd7396309006a607930e226fe8ed5e0464adc714345569e2`, with all 12 pages rasterized and individually inspected through the results archive `results/paper-c-methods-pdf-pc08-42745055261-a1`. The inspection found a stranded equation number (TSVD hard-filter Eq. 8), the class's misleading stock footer 'Preprint submitted to Elsevier', and underexplained horizon scoring. The subsequent source revisions use `needspace`, override only the footer (not the official CAS class), and clarify window RMSE. A **later** build must be checked for the revised page layout and final PDF identity before claiming completion.
 - Figure content is clear, reference sources resolve, and the original adverse real spline result is visible. No scientific experiment was rerun.
 
+### Final compiled draft (PCAG103A-08)
+
+- **Successful manuscript-only run:** [Actions #42746042540](https://github.com/heri-espino/trendestimation/actions/runs/42746042540), on the independent review branch, no scientific experiment or original data reconstruction.
+- **12-page PDF:** `paper/ngsim-jerk-case-study/main.pdf` in `paper/paper-c-scientific-editorial-review`, **747,073 bytes**, SHA-256 **`97233d49dbd922108ecca7ac72b650640e285b7bb08ec7fb93d19e44996b5ac2`**. All figure checksum and manuscript content checks passed.
+- **Immutable full provenance and PDF page images:** branch `results/paper-c-methods-pdf-pc08-42746042540-a1` under `paper/ngsim-jerk-case-study/visuals/runs/methods-pc08-42746042540-a1/`, including `pages/page-01.png` through `page-12.png`, `pages/contact-sheet.png`, build/requirements/source manifests and logs. ORCID now appears on first page, the CAS footer correctly says **Research draft — not submitted**, and the TSVD equation number is no longer orphaned.
+- Both the original pre-fix 12-page PDF and the intervening revised PDF are independently archived rather than overwritten. This is a **compiled research draft**, not publication or coauthor approval.
+
 ## Scientific audit findings
 
 1. **Finite physical jerk:** the reported historical outcome is `D3(true position)/(0.1 s)^3` versus the same operator on the fitted historical position, not a noisy observed continuous jerk or independent ground truth on NGSIM.
