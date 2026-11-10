@@ -2,7 +2,7 @@
 The principal distinction is between a fitted trend at a \emph{known} penalty and a \emph{complete criterion evaluation} at that penalty. We include every required residual, trace, leverage, determinant and smoothness-mapping computation in the latter.
 
 \subsection{Spectral preparation and candidate scoring}
-A full retained reduced SVD of $D_d$ requires $O(nr^2)$ arithmetic and $O(nr)$ memory for $r=n-d$ (near-square: cubic time and quadratic storage) under a standard dense bidiagonalization-based SVD computation \citep{golubvanloan2013}. The stated count is for a general dense rectangular factorization, not a lower bound on all solvers exploiting $D_d Preparation produces both the positive singular spectrum and the right singular vectors. For one observed series, projections $V^\top y$ and $U^\top\mathbf1_r$ permit scalar evaluations of $S$, $\nu$, $\RSS$, GCV, residual AICc/BIC and the Gaussian criterion using $O(r)$ arithmetic per candidate after an $O(nr)$ projection. A full curve reconstructs via \eqref{eq:shiftfree} in $O(nr)$. Ordinary CV additionally computes the leverage vector \eqref{eq:leverage} and reconstructed residuals, each up to $O(nr)$ per new penalty. Leverages can be shared across series having the same $(n,d,\lambda)$.
+A full retained reduced SVD of $D_d$ requires $O(nr^2)$ arithmetic and $O(nr)$ memory for $r=n-d$ (near-square: cubic time and quadratic storage) under a standard dense bidiagonalization-based SVD computation \citep{golubvanloan2013}. The stated count is for a general dense rectangular factorization, not a lower bound on all algorithms exploiting the special banded structure of $D_d$. Preparation produces both the positive singular spectrum and the right singular vectors. For one observed series, projections $V^\top y$ and $U^\top\mathbf1_r$ permit scalar evaluations of $S$, $\nu$, $\RSS$, GCV, residual AICc/BIC and the Gaussian criterion using $O(r)$ arithmetic per candidate after an $O(nr)$ projection. A full curve reconstructs via \eqref{eq:shiftfree} in $O(nr)$. Ordinary CV additionally computes the leverage vector \eqref{eq:leverage} and reconstructed residuals, each up to $O(nr)$ per new penalty. Leverages can be shared across series having the same $(n,d,\lambda)$.
 
 Dense eigenanalysis of $Q_d$ supplies comparable spectral formulas but explicitly forming $D_d^\top D_d$ squares the nonzero singular-value condition number \citep{golubvanloan2013}. A full SVD of $D_d$ is the reference accuracy-oriented spectral construction in our Python implementation; it is not claimed to minimize runtime.
 
@@ -32,51 +32,6 @@ Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through
 
 \begin{table*}[t]
 \caption{Representative leading computational costs at one known finite $\lambda$. Standard factorization counts follow \citet{golubvanloan2013,davis2006}; selected-inverse and PLS-specialized counts follow \citet{erisman1975,weinert2007}; iterative costs follow \citet{saad2003}. For full spectral methods the decomposition is reusable. The full conditional CV score includes leverage and residual computation. These are arithmetic bounds, not measured seconds.}
-\label{tab:algorithms}\centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}p{.25\textwidth}p{.22\textwidth}p{.23\textwidth}p{.16\textwidth}@{}}
-\toprule
-Pipeline & Preparation / factorization & Candidate fit or complete score & Working memory\\
-\midrule
-Dense inverse/solve & $O(n^3)$ per new $\lambda$ & $O(n^3)$ complete & $O(n^2)$\\
-Full SVD of $D_d$ & $O(nr^2)$ once & $O(r)$ scalar score; $O(nr)$ full fit/CV & $O(nr)$\\
-Dense Gram eigenvectors & $O(n^3)$ once & $O(n)$ scalar score; $O(n^2)$ full fit/CV & $O(n^2)$\\
-Banded Cholesky & $O(nd^2)$ per $\lambda$ & $O(nd)$ one fit; diagnostics extra & $O(nd)$\\
-Banded Cholesky with selected inverse & $O(nd^2)$ per $\lambda$ & $O(nd)$ solve; $O(nd^2)$ complete CV & $O(nd)$\\
-PCG, $q$ iterations & preconditioner-dependent & $O(qnd)$ fit; exact criteria extra & method-dependent\\
-\bottomrule
-\end{tabular}
-\end{table*}
-s additional band structure. Preparation produces both the positive singular spectrum and the right singular vectors. For one observed series, projections $V^\top y$ and $U^\top\mathbf1_r$ permit scalar evaluations of $S$, $\nu$, $\RSS$, GCV, residual AICc/BIC and the Gaussian criterion using $O(r)$ arithmetic per candidate after an $O(nr)$ projection. A full curve reconstructs via \eqref{eq:shiftfree} in $O(nr)$. Ordinary CV additionally computes the leverage vector \eqref{eq:leverage} and reconstructed residuals, each up to $O(nr)$ per new penalty. Leverages can be shared across series having the same $(n,d,\lambda)$.
-
-Dense eigenanalysis of $Q_d$ supplies comparable spectral formulas but explicitly forming $D_d^\top D_d$ squares the nonzero singular-value condition number. A full SVD of $D_d$ is the reference accuracy-oriented spectral construction in our Python implementation; it is not claimed to minimize runtime.
-
-\subsection{Banded Cholesky and selected inversion}
-$A_\lambda$ is SPD and has half-bandwidth $d$. Factor $A_\lambda=L_\lambda L_\lambda^\top$ with lower triangular banded $L_\lambda$, in $O(nd^2)$ arithmetic and $O(nd)$ storage; solve \eqref{eq:rhs} using two triangular solves, $O(nd)$ per right-hand side. The direct right-hand side avoids forming the high-degree polynomial $p_\mu$. For just one fit, this is asymptotically preferable to preparing a dense SVD when $d$ is fixed and $n$ grows.
-
-However, exact CV requires diagonal entries of $Z=A_\lambda^{-1}$. Let $L=L_\lambda$ and denote the selected band of $Z$ by $Z_{ij}$ for $|i-j|\le d$. For $j>i$, backward selected-inverse recurrences are
-\begin{equation}\label{eq:seloff}
-Z_{ij}=-\frac1{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
- L_{ki}Z_{kj},
-\qquad i<j\le\min(n,i+d),
-\end{equation}
-and
-\begin{equation}\label{eq:seldiag}
-Z_{ii}=\frac{1}{L_{ii}^2}
--\frac{1}{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
-L_{ki}Z_{ki}.
-\end{equation}
-By symmetry $Z_{kj}=Z_{jk}$. The off-diagonal recursion follows by expanding $(L^\top Z)_{ij}=0$ for $i<j$, and the diagonal relation from $(L^\top Z)_{ii}=1/L_{ii}$. They are classical selected-inverse identities \citep{erisman1975}, not an original inverse algorithm.
-
-The selected entries are computable in reverse order in $O(nd^2)$ work and $O(nd)$ storage. Their diagonal supplies $h_i=Z_{ii}$ and $\nu=\sum_i h_i$. Consequently exact conditional CV, GCV and information criteria do \emph{not} require solving for all $n$ columns of the inverse or forming the dense $H_\lambda$. The determinant identity in Proposition~\ref{prop:det} completes the same banded pipeline for the Gaussian likelihood.
-
-\subsection{Other exact and iterative approaches}
-General banded LU can solve the finite-penalty system at structured cost but is not SPD Cholesky. Sparse direct solvers can exploit the same graph structure; the particular package and factorization type must be named correctly. A hybrid in which sparse LU or CHOLMOD supplies a trend but a \emph{separate} banded factorization supplies leverage or likelihood diagnostics must charge both steps.
-
-Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through local differences at $O(nd)$ work per iteration, producing a nominal $O(qnd)$ fit for $q$ iterations, plus preconditioner setup and application. FFT or sine-transform preconditioners can introduce $O(qn\log n)$ work. Approximate boundary transforms should not be described as an exact finite-interval eigendecomposition. Neither a universally bounded iteration count nor exact leverage access follows from PCG alone; convergence and added diagnostics are separate requirements.
-
-\begin{table*}[t]
-\caption{Representative leading computational costs at one known finite $\lambda$. For full spectral methods the decomposition is reusable. The full conditional CV score includes leverage and residual computation. These are arithmetic bounds, not measured seconds.}
 \label{tab:algorithms}\centering\small
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}p{.25\textwidth}p{.22\textwidth}p{.23\textwidth}p{.16\textwidth}@{}}
