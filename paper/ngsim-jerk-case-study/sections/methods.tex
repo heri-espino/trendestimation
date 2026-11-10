@@ -46,7 +46,7 @@ S(\lambda)=\frac1m\sum_{j=1}^{m}
 \end{equation}
 It is monotone in $\lambda$ and therefore provides an
 interpretable, comparable normalized regularization coordinate.
-For fixed $\mu$, if $H_\lambda=(I+\lambda Q)^{-1}$,
+For a fixed reference $\mu$ and a fixed penalty $\lambda$,\nlet $H_\lambda=(I+\lambda Q)^{-1}$; then
 \begin{equation}\label{eq:edf}
 \operatorname{df}(\lambda)=\operatorname{tr}(H_\lambda)
 =n-mS(\lambda).
@@ -118,9 +118,10 @@ The truncated-SVD comparison is instead the
 \end{equation}
 This is a genuine, distinct low-roughness spectral
 smoother. We specify two training-only comparisons:
-(i) choose $r$ by GCV over the noninterpolating ranks
-$0,\ldots,m-1$; (ii) match the PLS effective complexity
-with $r=\operatorname{round}(\operatorname{df}_{\rm PLS}-3)$.
+(i) choose $r$ by conditional GCV over ranks
+$0,\ldots,m-1$; (ii) nominally match the conditional
+PLS complexity with
+$r=\operatorname{round}(\operatorname{df}_{\rm PLS}-3)$.
 The latter is a matched-complexity \emph{ablation}, not
 an independently optimized SVD procedure. Both use the
 same training-only global cubic reference $\mu$ as
@@ -129,10 +130,16 @@ Their normalized hard-filter index is
 $S_{\mathrm{TSVD}}=1-r/m$.
 
 \paragraph{Conditioning on the estimated reference.}
-The implemented TSVD rank score uses the residual
-from the training-estimated cubic $\widehat\mu$, but
-its conventional GCV denominator $n-(3+r)=m-r$
-treats that reference as fixed. It is therefore
+With $P_r$ the projector onto the $3+r$ retained
+modes, the implemented TSVD rank criterion is
+\begin{equation}\label{eq:tsvd-conditional-gcv}
+\mathrm{GCV}_{\rm conditional}(r)
+=\frac{n\| (I-P_r)(y-q_{\widehat\mu})\|^2}
+{[n-(3+r)]^2},\qquad 0\le r<m.
+\end{equation}
+It uses the training-estimated cubic $\widehat\mu$ in
+the residual but treats that reference as fixed
+in the denominator $n-(3+r)=m-r$. It is therefore
 \emph{conditional plug-in GCV}, not exact GCV
 for the entire data-dependent fitting map.
 In particular, retaining $r$ near $m$ leaves
@@ -154,6 +161,9 @@ linear fits have effective degrees of freedom
 \operatorname{df}_{\rm TSVD}^{\rm plug}
  &=3+r+a^\top(I-P_r)q_1 .
 \end{align}
+A fixed-rank GCV denominator for the complete
+plug-in linear map would instead be
+$n-\operatorname{df}_{\rm TSVD}^{\rm plug}$.
 The rank matching in Experiment008 equates
 only the fixed-reference trace components;
 it does not equate these full plug-in
