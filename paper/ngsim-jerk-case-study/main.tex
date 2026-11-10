@@ -2,9 +2,21 @@
 \documentclass[a4paper,fleqn]{cas-dc}
 \usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{amsmath,amssymb,mathtools,booktabs,graphicx,url}
-\usepackage{hyperref}
+\usepackage{hyperref,needspace}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue}
 \newcommand{\R}{\mathbb R}
+% The official CAS class default says 'Preprint submitted to Elsevier'.
+% The manuscript has NOT been submitted; override the footer only.
+\ExplSyntaxOn
+\cs_set:Npn \__first_footerline:
+{
+  \group_begin:
+  \small\sffamily
+  \__short_authors: :~
+  {\rmfamily\itshape Research~draft~---~not~submitted}
+  \group_end:
+}
+\ExplSyntaxOff
 \begin{document}
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
