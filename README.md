@@ -1,3 +1,5 @@
+> **Current manuscript versions (November 9, 2026):** The [paper-version history](paper/PAPER_HISTORY.md) lists freshly compiled CSDA consolidated theory, Springer empirical, and NGSIM PDFs, with exact source SHA, reproducible build logs and archival links. Original A/B and historical manuscripts remain preserved. The new journal manuscripts are drafts, not accepted or submitted papers.
+
 # trendestimation
 
 **Paper C research continuation (2026-11-05):**

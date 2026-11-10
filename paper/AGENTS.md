@@ -1,3 +1,5 @@
+> **November 9, 2026 paper-version history:** Before creating or compiling a new paper revision, read [PAPER_HISTORY.md](PAPER_HISTORY.md). It records the A+B consolidated theoretical draft and separate Springer/NGSIM compilations, exact source commits, PDF SHA-256 values, build logs, and retained predecessors. Source and archive branches are deliberately separate; do not overwrite prior results or merge unreviewed research PRs. Historical A/B separation below predates the later author consolidation decision.
+
 # Paper work — mandatory manuscript/experiment routing
 
 **Paper C extrapolation handoff (2026-11-05):** In addition to the

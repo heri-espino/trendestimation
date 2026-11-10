@@ -1,3 +1,9 @@
+# Manuscript history and latest verified PDF builds
+
+The [paper history and version archive](PAPER_HISTORY.md) records the November 9, 2026 verified builds of the consolidated CSDA theory manuscript, the updated Springer empirical manuscript, and the current NGSIM case-study manuscript. It links source commits, preserved PDF/checksum manifests and the earlier Paper A/B and historical journal drafts. Manuscript PDFs are working drafts, not journal submissions or approval to merge research branches.
+
+---
+
 ## Archived Windows full preset: 80,640 search records
 
 The author's original 80,640-cell Windows benchmark (n=24,48,
