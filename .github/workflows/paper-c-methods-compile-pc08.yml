@@ -241,16 +241,32 @@ jobs:
           $ErrorActionPreference='Stop'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
-          if ($LASTEXITCODE -ne 0) { throw 'Could not stage paper outputs' }
-          git commit -m "paper-c: publish audited scientific-editorial review PDF and derived figures"
-          if ($LASTEXITCODE -ne 0) { throw 'Could not commit paper PDF' }
+          # A manuscript build must only publish if its input source branch is
+          # still exactly the same commit as the checkout. Never rebase the
+          # generated PDF/SVG binaries over concurrent author changes.
           git fetch origin "refs/heads/paper/paper-c-scientific-editorial-review:refs/remotes/origin/paper/paper-c-scientific-editorial-review"
-          if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh review branch before publishing PDF' }
-          git rebase "refs/remotes/origin/paper/paper-c-scientific-editorial-review"
-          if ($LASTEXITCODE -ne 0) { throw 'Concurrent manuscript edit conflicts with built PDF; do not force-push' }
-          git push origin "HEAD:refs/heads/paper/paper-c-scientific-editorial-review"
-          if ($LASTEXITCODE -ne 0) { throw 'Review branch advanced again; do not force-push' }
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh review branch before publication' }
+          $current=(git rev-parse "refs/remotes/origin/paper/paper-c-scientific-editorial-review").Trim()
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot identify upstream review SHA' }
+          if ($current -ne $env:GITHUB_SHA) {
+            Write-Host "Source advanced from $env:GITHUB_SHA to $current; do not publish stale PDF. Retain audited run-scoped archive."
+          } else {
+            git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot stage paper outputs' }
+            git diff --cached --quiet
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host 'Verified figure and PDF outputs already match tracked files'
+            } elseif ($LASTEXITCODE -eq 1) {
+              git commit -m "paper-c: publish audited scientific-editorial review PDF and derived figures"
+              if ($LASTEXITCODE -ne 0) { throw 'Cannot commit audited paper outputs' }
+              git push origin "HEAD:refs/heads/paper/paper-c-scientific-editorial-review"
+              if ($LASTEXITCODE -ne 0) {
+                throw 'Review branch advanced during publication; no force-push; audited results are archived'
+              }
+            } else {
+              throw 'Git could not compare staged scientific paper outputs'
+            }
+          }
 
       - name: Archive complete permanent VM build in unique results-only Git branch
         if: always()
