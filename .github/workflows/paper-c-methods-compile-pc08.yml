@@ -99,8 +99,12 @@ jobs:
           $manifest=Join-Path $p 'generated/exp008_methods_figure_manifest.json'
           if (Test-Path $manifest) {
             $old=Get-Content $manifest -Raw | ConvertFrom-Json
-            if ($old.plots.PSObject.Properties.Count -ne 2) {
-              throw 'Unrecognized previous figure manifest; do not overwrite'
+            $plotNames=@($old.plots.PSObject.Properties | ForEach-Object { $_.Name })
+            $expected=@('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')
+            if ($plotNames.Count -ne 2 -or
+                $plotNames -notcontains $expected[0] -or
+                $plotNames -notcontains $expected[1]) {
+              throw 'Unexpected previous figure-manifest keys; preserve existing outputs'
             }
             foreach($base in @('exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')) {
               foreach($ext in @('pdf','png','svg')) {
