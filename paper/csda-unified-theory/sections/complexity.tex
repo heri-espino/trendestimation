@@ -4,7 +4,7 @@ Fix a length $n$, difference order $d$, an interior smoothness grid $\mathcal S=
 T_{\mathcal A}=T_{\rm prep}+T_{\rm map}
  +T_{\rm factor}+T_{\rm series}+T_{\rm scores}+T_{\rm overhead},
 \end{equation}
-where $\mathcal A$ is a particular complete algorithm and its configuration. We derive arithmetic bounds and not numerical values of $T_{\mathcal A}$.
+where $\mathcal A$ is a particular complete algorithm and its configuration. The component costs use classical dense and banded linear algebra \citep{golubvanloan2013,davis2006}, classical selected-inverse identities \citep{erisman1975}, and pre-existing structured Whittaker--Henderson/GCV algorithms \citep{weinert2007}. We derive the following \emph{combined workload-specific upper bounds}; these formulas are not directly quoted from those sources, nor do they imply asymptotic optimality among all possible algorithms.
 
 \begin{theorem}[Work for a retained spectral pipeline]\label{thm:svdwork}
 Assume the full reduced SVD is retained; each interior smoothness inversion requires at most $I$ evaluations of the $r$-term spectral sum; each observed series is projected once; and projected scalar scores use $O(r)$ work. Put $\chi_{\rm CV}=1$ when ordinary conditional CV is requested and zero otherwise. An upper bound on arithmetic work is
@@ -15,7 +15,7 @@ W_{\rm SVD}
 Working storage is $O(nr+M+Rn)$ if all $R$ input series are kept and only best-score summaries are retained.
 \end{theorem}
 \begin{proof}
-The reduced SVD of an $r\times n$ matrix costs $O(nr^2)$ and stores $O(nr)$ numbers. Each of the $MI$ smoothness evaluations sums $r$ positive-mode terms. One projection per observed series costs $O(nr)$. At each of $MR$ candidate-series pairs, each scalar score takes $O(r)$ work after projection. When CV is requested, the leverage diagonal and fitted residual vector can each be formed using $O(nr)$ matrix-vector work; multiplying by $MR$ bounds this additional cost. Caching leverages across series can improve constants but is not needed for the claimed bound. Candidate values and $R$ input series add $O(M+Rn)$ memory.
+For a standard dense reduced SVD of an $r\times n$ matrix, $O(nr^2)$ arithmetic and $O(nr)$ retained storage follow from classical dense factorization bounds \citep{golubvanloan2013}. Each of the $MI$ smoothness evaluations sums $r$ positive-mode terms. One projection per observed series costs $O(nr)$. At each of $MR$ candidate-series pairs, each scalar score takes $O(r)$ work after projection. When CV is requested, the leverage diagonal and fitted residual vector can each be formed using $O(nr)$ matrix-vector work; multiplying by $MR$ bounds this additional cost. Caching leverages across series can improve constants but is not needed for the claimed bound. Candidate values and $R$ input series add $O(M+Rn)$ memory.
 \end{proof}
 
 \begin{theorem}[Work for a streamed banded pipeline]\label{thm:bandwork}
@@ -27,7 +27,7 @@ W_{\rm band}
 A candidate-streamed implementation retaining all input series uses $O(nd+M+Rn)$ working storage. Keeping every candidate factorization instead requires $O(Mnd)$ extra factor storage.
 \end{theorem}
 \begin{proof}
-Assembling the banded penalty and precomputing the Gaussian constant determinant cost at most $O(nd^2)$. A banded factorization and selected inverse cost $O(nd^2)$ per trial value. Up to $MI$ trials yield the second term; factorizing the $M$ accepted penalties yields the third. For each candidate and series, banded triangular solves and difference passes cost $O(nd)$, and forming each criterion's scalar contributions costs at most $O(n)$. One factor and selected band are sufficient while processing all $R$ series at the current candidate. The storage claims follow by retaining or discarding these structures.
+Assembling the banded penalty and precomputing the Gaussian constant determinant cost at most $O(nd^2)$. A banded factorization and selected inverse cost $O(nd^2)$ per trial value, using standard banded-direct and selected-inverse algorithms \citep{golubvanloan2013,erisman1975,weinert2007}. Up to $MI$ trials yield the second term; factorizing the $M$ accepted penalties yields the third. For each candidate and series, banded triangular solves and difference passes cost $O(nd)$, and forming each criterion's scalar contributions costs at most $O(n)$. One factor and selected band are sufficient while processing all $R$ series at the current candidate. The storage claims follow by retaining or discarding these structures.
 \end{proof}
 
 \paragraph{Bounds versus measured crossover.}
