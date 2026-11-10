@@ -60,10 +60,15 @@ SVD-GCV chooses its rank using the historical
 positions only, while matched-EDF SVD uses
 exactly the degrees of freedom of the
 corresponding PLS estimator. The same
-three-point continuation in
-Eq.~\eqref{eq:d3-recurrence} is applied
-to \emph{each fitted historical trend}, so
-the resulting comparison is not a
+three-point continuation \emph{algorithm}
+in Eq.~\eqref{eq:d3-recurrence} is applied
+to each historical fit. Its reference
+$\mu$ is the common training-derived
+cubic-OLS value for PLS and TSVD, but zero
+for spline and Savitzky--Golay fits.
+Thus the boundary rule is shared, not every
+model assumption or third-difference
+reference. The comparison is not a
 benchmark of Cholesky versus SVD run time.
 
 \begin{table*}[t]
