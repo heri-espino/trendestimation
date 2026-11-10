@@ -43,7 +43,9 @@ class PLSOptimalityIdentity(unittest.TestCase):
         for lam in (0.,.2,1.0,1000.):
             with self.subTest(lam=lam):
                 A,b,opt=self.data(lam)
-                self.assertGreaterEqual(np.linalg.eigvalsh(A).min(),1.-1e-12)
+                smallest = float(np.linalg.eigvalsh(A).min())
+                self.assertGreater(smallest,0.)
+                self.assertAlmostEqual(smallest,1.,delta=1e-9)
                 computed=opt+np.linspace(-.01,.03,len(opt))
                 r=b-A@computed
                 gap=self.objective(computed,lam)-self.objective(opt,lam)
