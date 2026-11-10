@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "pages": 12,
+  "pdf_sha256": "97233d49dbd922108ecca7ac72b650640e285b7bb08ec7fb93d19e44996b5ac2",
+  "pdf_bytes": 747073,
+  "six_new_method_assets_hash_checked": true,
+  "source_figure_manifest_sha256": "7223daf98178347d9508de3a722736d66a26f66bee61317b52a28b6f7be15871",
+  "method_comparison_checks": {
+    "method_not_backend": true,
+    "known_jerk_simulation": true,
+    "real_ngsim_case": true,
+    "calibration": true,
+    "physical_comparisons": true,
+    "real_comparison": true,
+    "spline_benchmark": true,
+    "backend_section_removed": true,
+    "no_computational_timing": true
+  },
+  "manual_visual_review_required": true
+}
