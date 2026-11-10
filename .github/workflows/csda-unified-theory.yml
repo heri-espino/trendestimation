@@ -7,6 +7,8 @@ on:
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
+      - "paper/csda-unified-theory/algorithmic_references.bib"
+      - "paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md"
       - "paper/csda-unified-theory/sections/**"
       - "paper/csda-unified-theory/verify_theory.py"
       - "paper/csda-unified-theory/README.md"
@@ -43,6 +45,7 @@ jobs:
           OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-unified-theory/verify_theory.py
           OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-computational-costs/verify_theory.py
           test -s paper/csda-computational-costs/references.bib
+          test -s paper/csda-unified-theory/algorithmic_references.bib
       - name: Install exact Elsevier CAS compatible TeX toolchain
         shell: bash
         run: |
@@ -72,8 +75,8 @@ jobs:
             echo "LaTeX error in manuscript"
             exit 1
           fi
-          sha256sum main.tex sections/*.tex verify_theory.py README.md \
-            AGENTS.md SCOPE_AND_PROOF_AUDIT.md \
+          sha256sum main.tex algorithmic_references.bib sections/*.tex verify_theory.py README.md \
+            AGENTS.md SCOPE_AND_PROOF_AUDIT.md COMPLEXITY_REFERENCE_LEDGER.md \
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
             ../els-cas-templates/cas-common.sty \
@@ -87,6 +90,8 @@ jobs:
           name: csda-unified-theory-build
           path: |
             paper/csda-unified-theory/main.tex
+            paper/csda-unified-theory/algorithmic_references.bib
+            paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md
             paper/csda-unified-theory/sections/
             paper/csda-unified-theory/README.md
             paper/csda-unified-theory/AGENTS.md
