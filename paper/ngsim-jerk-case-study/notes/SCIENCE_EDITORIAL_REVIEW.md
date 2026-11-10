@@ -8,6 +8,12 @@ The author specifically wants a physical/statistical paper, not a computation-ti
 
 Sources examined: root `README.md`, `AGENTS.md`, `AI_HANDOFF.md`, paper-level routing and session files, primary method-first handoff, all six manuscript sections, `references.bib`, Experiment008 `README.md` and `run.py`, both PR #131/#132 metadata, PR #132 statistical structure handoff, the on-branch figure PNGs, and frozen Experiment008 synthetic/real `summary.csv` and synthetic `fitted_rows.csv`. The literature narrative follows the previously source-annotated `notes/LITERATURE_REVIEW.md` and `notes/SOURCE_INVENTORY.md`; claims of historical first use remain excluded.
 
+## Additional source-level and page-by-page review (2026-11-09)
+
+- **Forecast metric definition (correction):** Experiment008 `compare()` computes `mean((prediction[:H]-truth[:H])**2)` for each episode, then its aggregate is `sqrt(mean(case_mse))`. Experiment006 `forecast_metric()` uses the same first-`H` frame averaging. Therefore the published 0.5/1/2-second figures and tables are **cumulative-window RMSE**, not errors only at exactly 0.5/1/2 seconds. Equations, captions, narrative, and the two regenerated Experiment008 figure axes now use this precise definition; none of the archived scores was changed.
+- **First revised PDF inspection:** Windows manuscript-only Actions run [#42745055261](https://github.com/heri-espino/trendestimation/actions/runs/42745055261) passed and generated a 12-page PDF, SHA-256 `2c4e6e28c0d16af3bd7396309006a607930e226fe8ed5e0464adc714345569e2`, with all 12 pages rasterized and individually inspected through the results archive `results/paper-c-methods-pdf-pc08-42745055261-a1`. The inspection found a stranded equation number (TSVD hard-filter Eq. 8), the class's misleading stock footer 'Preprint submitted to Elsevier', and underexplained horizon scoring. The subsequent source revisions use `needspace`, override only the footer (not the official CAS class), and clarify window RMSE. A **later** build must be checked for the revised page layout and final PDF identity before claiming completion.
+- Figure content is clear, reference sources resolve, and the original adverse real spline result is visible. No scientific experiment was rerun.
+
 ## Scientific audit findings
 
 1. **Finite physical jerk:** the reported historical outcome is `D3(true position)/(0.1 s)^3` versus the same operator on the fitted historical position, not a noisy observed continuous jerk or independent ground truth on NGSIM.
