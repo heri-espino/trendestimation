@@ -6,7 +6,13 @@ Last updated: **November 9, 2026**. Compilation only: no benchmark reruns, synth
 
 ## Current compilation record
 
-### 1. Combined CSDA theory manuscript (the successor to Papers A + B)
+### 1a. Latest citation-audited CSDA theory build
+
+**Revision (November 9, 2026):** After the original A+B theoretical compilation, the author requested explicit published references supporting the individual algorithms' time and memory complexities. The manuscript now cites Golub--Van Loan (2013), Davis (2006), Saad (2003), and the existing Erisman--Tinney (1975) and Weinert (2007) sources. The new [complexity source-to-claim ledger](https://github.com/heri-espino/trendestimation/blob/paper/csda-unified-theory/paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md) separates established factorization/selected-inverse bounds from the authors' composite smoothness-grid workload theorems. All original Paper A/B materials remain preserved.
+
+**Source:** [citation revision 970ad820](https://github.com/heri-espino/trendestimation/commit/970ad820de9a5b635caa2cb0ed1dc3dfb1b593c4), [draft PR #129](https://github.com/heri-espino/trendestimation/pull/129). **PDF:** [verified 10-page PDF, frozen at archival commit c69ae8c](https://github.com/heri-espino/trendestimation/blob/c69ae8c37a3963b25a59cbcb26c1958bf3c8c25d/paper/csda-unified-theory/main.pdf); [successful source-only build #42744452605](https://github.com/heri-espino/trendestimation/actions/runs/42744452605). PDF SHA-256: **bcfd91c8cacd489462448e47e17244d782dc5fb20d3ae45fc4969bc8da9b7aac**. Both deterministic algebra checks passed and no final unresolved citations or LaTeX references were reported. CAS front-matter/paragraph overfull-box warnings remain for typography review.
+
+### 1b. Original combined CSDA theory manuscript (preserved predecessor)
 
 **Title:** *Spectral and structured algorithms for smoothness-indexed penalized least-squares trend estimation*.
 
@@ -14,7 +20,7 @@ Last updated: **November 9, 2026**. Compilation only: no benchmark reruns, synth
 
 **Source:** [manuscript tree](https://github.com/heri-espino/trendestimation/tree/paper/csda-unified-theory/paper/csda-unified-theory), exact source commit [9863fd0dc8e0de48e3212cc8fce95d18bd24339d](https://github.com/heri-espino/trendestimation/commit/9863fd0dc8e0de48e3212cc8fce95d18bd24339d), [draft PR #129](https://github.com/heri-espino/trendestimation/pull/129).
 
-**PDF:** [compiled 10-page paper](https://github.com/heri-espino/trendestimation/blob/paper/csda-unified-theory/paper/csda-unified-theory/main.pdf), [successful compile and proof-check run #42663001195](https://github.com/heri-espino/trendestimation/actions/runs/42663001195). PDF SHA-256: **ba774cc3bedd1938771fa08604c47a972dffe7e377378954b3dcc1b9b142bf6f**. Build log, source commit and checksums reside beside the PDF. A previous compiled version was also preserved in the branch history.
+**PDF:** [compiled 10-page paper](https://github.com/heri-espino/trendestimation/blob/9bac744996e092f649a0a1f100fca70bc5450cfe/paper/csda-unified-theory/main.pdf), [successful compile and proof-check run #42663001195](https://github.com/heri-espino/trendestimation/actions/runs/42663001195). PDF SHA-256: **ba774cc3bedd1938771fa08604c47a972dffe7e377378954b3dcc1b9b142bf6f**. Build log, source commit and checksums reside beside the PDF. A previous compiled version was also preserved in the branch history.
 
 **Quality status:** compilable draft with deterministic algebra checks passed. The CAS log still has overfull-box warnings; it needs typographic and independent scholarly review. The author lists and journal declarations are provisional.
 
