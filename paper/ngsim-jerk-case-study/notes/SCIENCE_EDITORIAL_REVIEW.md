@@ -1,3 +1,14 @@
+## Updated and compiled manuscript — November 10, 2026
+
+- Author requested **update, compile, and push** the existing Paper C research draft. Only the separate `paper/paper-c-scientific-editorial-review` branch / [draft PR #133](https://github.com/heri-espino/trendestimation/pull/133) was modified; PR #131, unrelated manuscripts, immutable Experiments004–008, and numerical selections were not altered.
+- Source edits in `sections/discussion.tex`: reconcile nominal (rather than full-estimator exact) effective-complexity matching and explicitly identify Experiments005–008 and their archived source; remove an unbreakable DOI from the final-page reproduction paragraph, referencing the existing dataset bibliography instead, after visually observing its intrusion into the adjacent column.
+- **Latest completed Windows PCAG103A-08 build:** [Actions #42769072781](https://github.com/heri-espino/trendestimation/actions/runs/42769072781), source SHA `b06568453a97f7054b4ae0379dc6672cceec8744`, **success**. Result: 12-page, 749,643-byte Elsevier CAS draft `paper/ngsim-jerk-case-study/main.pdf`, SHA-256 `7b9d8f6b2550f3a43da14a0bd795de16dcf1c705cc83eac43191e80eda03c576`. Both old-six-figure and scientific-methods integrity audits passed; the final page was re-rendered and visually checked, confirming the DOI no longer overlaps the opposite column.
+- All rendered PDF pages, final audited PDF, original frozen-data paired-bootstrap audit, vector figures, build logs, Conda snapshot and exact inventory are stored in immutable [results/paper-c-methods-pdf-pc08-42769072781-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-methods-pdf-pc08-42769072781-a1/paper/ngsim-jerk-case-study/visuals/runs/methods-pc08-42769072781-a1). The immediately preceding [#42768833952](https://github.com/heri-espino/trendestimation/actions/runs/42768833952) build is also preserved independently.
+- Original scientific comparisons remain unchanged: known synthetic jerk PLS 2.4413 versus nominally-EDF-matched TSVD 2.9416 m/s³; synthetic paired-stratum RMSE difference 0.5004 with 95% bootstrap interval [0.3227, 0.7134] m/s³; calibration correlation 0.965 for correct-covariance joint REML; adverse NGSIM spline-plus-Taylor 0.3480 m cumulative first-second window RMSE.
+- This is a **compiled research draft, not a journal submission**. Coauthor approvals, authorship, declarations and journal-specific checks remain required. No merge authorized.
+
+---
+
 ## Latest verified scientific correction — PCAG103A-08 run 42767882100 (2026-11-10)
 
 **Author request:** Resolve the previously identified conditional TSVD-GCV and estimated-reference EDF qualifications, trace the near-interpolation failure, separate forecasting comparisons, and verify on the available self-hosted Windows runner. Completed as a manuscript/mathematical-audit revision; **no original experiment was rerun or retuned**.
