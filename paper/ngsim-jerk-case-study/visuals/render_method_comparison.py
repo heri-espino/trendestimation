@@ -22,11 +22,18 @@ try:
 except ImportError as e:
     raise ImportError("Existing AwesomeFigures is needed for manuscript visuals") from e
 
-BLUE="#27679a";ORANGE="#c07532";CYAN="#3796ae";VIOLET="#76669f";INK="#19344c";GRAY="#8593a1"
+PALETTE=tuple(af.color_palette("okabe-ito",as_hex=True))
+if len(PALETTE)!=8:
+    raise RuntimeError("Pinned AwesomeFigures palette changed")
+BLUE=PALETTE[4];ORANGE=PALETTE[0];CYAN=PALETTE[2]
+VIOLET=PALETTE[6];INK=PALETTE[7];GRAY=PALETTE[5]
+METHOD_SCHEME=tuple(af.plot_scheme("okabe-ito", markers=("o","s","D","^","v","P","X","*")))
+if len(METHOD_SCHEME)!=8:
+    raise RuntimeError("AwesomeFigures scheme changed")
 NAMES={
   "pls_profileml_cubic_ols":"PLS, profile ML",
-  "tsvd_matched_edf":"SVD, matched complexity",
-  "tsvd_gcv_cubic_ols":"SVD, GCV rank",
+  "tsvd_matched_edf":"SVD, nominal matched EDF",
+  "tsvd_gcv_cubic_ols":"SVD, plug-in GCV rank",
   "cubic_spline_gcv":"Smoothing spline, GCV",
   "savitzky_golay_21_3":"Savitzky--Golay",
 }
@@ -116,8 +123,10 @@ def build(sim,real,archived,out):
 
 def save(fig,out,name):
     for fmt in ("pdf","svg","png"):
-        fig.savefig(out/(name+"."+fmt),dpi=220 if fmt=="png" else 130,
-                    format=fmt,bbox_inches="tight",pad_inches=.08)
+        dest=out/(name+"."+fmt)
+        af.save_figure(fig,dest,dpi=240 if fmt=="png" else 160)
+        if not dest.is_file() or dest.stat().st_size<500:
+            raise RuntimeError("AwesomeFigures figure export failed: "+str(dest))
     plt.close(fig)
 
 def main():

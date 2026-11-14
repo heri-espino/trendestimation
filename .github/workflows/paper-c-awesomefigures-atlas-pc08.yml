@@ -1,0 +1,261 @@
+name: Paper C AwesomeFigures frozen-results atlas (PCAG103A-08)
+
+on:
+  push:
+    branches: [feature/paper-c-awesomefigures-atlas]
+    paths:
+      - .github/workflows/paper-c-awesomefigures-atlas-pc08.yml
+      - paper/ngsim-jerk-case-study/visuals/render_awesomefigures_atlas.py
+      - paper/ngsim-jerk-case-study/visuals/audit_awesomefigures_atlas.py
+      - paper/ngsim-jerk-case-study/visuals/render_visual_suite.py
+      - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
+      - paper/ngsim-jerk-case-study/sections/synthetic_case.tex
+      - paper/ngsim-jerk-case-study/sections/real_case.tex
+      - paper/ngsim-jerk-case-study/atlas_supplement.tex
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-awesomefigures-pc08
+  cancel-in-progress: false
+
+jobs:
+  reproduce-and-publish:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+
+    steps:
+      - name: Checkout dedicated visual branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Verify scientific runner and begin immutable build
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows research runner' }
+          if ($env:GITHUB_REF_NAME -ne 'feature/paper-c-awesomefigures-atlas') { throw 'Wrong feature branch' }
+          $rebase=(git rev-parse --git-path rebase-merge).Trim()
+          $apply=(git rev-parse --git-path rebase-apply).Trim()
+          if ((Test-Path $rebase) -or (Test-Path $apply)) {
+            git rebase --quit
+            if ($LASTEXITCODE -ne 0) { throw 'Interrupted runner Git state' }
+          }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source commit mismatch' }
+          $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\awesomefigures\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $root) { throw "Never overwrite prior build $root" }
+          New-Item -ItemType Directory -Path $root | Out-Null
+          foreach($d in @('metadata','logs','manuscript','figures')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $d) | Out-Null
+          }
+          "AF_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import awesomefigures as af; print('AwesomeFigures version',af.__version__, 'scheme',af.color_palette('okabe-ito',as_hex=True))" 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\version.log')
+          if ($LASTEXITCODE -ne 0) { throw 'AwesomeFigures unavailable' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m compileall -q paper/ngsim-jerk-case-study/visuals
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid scientific rendering Python' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+
+      - name: Read completed Experiment006--008 branches without resimulating
+        run: |
+          $ErrorActionPreference='Stop'
+          $sources=@(
+            @{Name='EXP008'; Ref='results/paper-c-exp008-pc08-42717662044-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment008/runs/pc08-42717662044-a1'},
+            @{Name='EXP007'; Ref='results/paper-c-exp007-pc08-42660204414-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment007/runs/pc08-42660204414-a1'},
+            @{Name='EXP006'; Ref='results/paper-c-exp006-pc08-42639588117-a1'; Sub='paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-42639588117-a1'}
+          )
+          foreach($src in $sources) {
+            git fetch origin "refs/heads/$($src.Ref):refs/remotes/origin/$($src.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw "Missing original $($src.Name) results" }
+            $worktree=Join-Path $env:RUNNER_TEMP "paper-c-af-$($src.Name)-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+            if (Test-Path $worktree) { throw 'Prior worktree cannot be replaced' }
+            git worktree add --detach $worktree "refs/remotes/origin/$($src.Ref)"
+            if ($LASTEXITCODE -ne 0) { throw "Cannot mount $($src.Name)" }
+            $dir=Join-Path $worktree $src.Sub
+            if (!(Test-Path $dir)) { throw "Missing frozen $dir" }
+            "$($src.Name)_SOURCE=$dir" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            "$($src.Ref) : $(git rev-parse "refs/remotes/origin/$($src.Ref)") : $dir" |
+              Out-File (Join-Path $env:AF_ROOT 'metadata\source_branches.txt') -Append -Encoding utf8
+          }
+
+      - name: Re-render existing six science visuals and two benchmark panels
+        run: |
+          $ErrorActionPreference='Continue'
+          $p='paper/ngsim-jerk-case-study'
+          $stems=@('exp007_jerk_example','exp007_spectral_interpretation',
+                   'exp007_calibration','exp007_interventions',
+                   'exp007_misspecification','exp006_reconstruction_forecasting',
+                   'exp008_known_jerk_benchmarks','exp008_real_forecast_benchmarks')
+          foreach($stem in $stems) {
+            foreach($ext in @('pdf','svg','png')) {
+              $path="$p/figures/$stem.$ext"
+              if (Test-Path $path) { Remove-Item -LiteralPath $path -Force }
+            }
+          }
+          foreach($n in @('visual_suite_manifest.json','exp008_methods_figure_manifest.json')) {
+            $f="$p/generated/$n"
+            if (Test-Path $f) { Remove-Item -LiteralPath $f -Force }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/render_visual_suite.py" --exp007-confirm (Join-Path $env:EXP007_SOURCE 'confirm') --exp006-confirm (Join-Path $env:EXP006_SOURCE 'confirm') --exp006-real (Join-Path $env:EXP006_SOURCE 'real') --out-dir "$p/figures" --manifest "$p/generated/visual_suite_manifest.json" 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\visual_suite.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Existing six source-backed visuals failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/render_method_comparison.py" --synthetic (Join-Path $env:EXP008_SOURCE 'synthetic\summary.csv') --real (Join-Path $env:EXP008_SOURCE 'real\summary.csv') --exp006-real (Join-Path $env:EXP006_SOURCE 'real\summary.csv') --figures "$p/figures" --manifest "$p/generated/exp008_methods_figure_manifest.json" 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\method_render.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Two benchmark figures failed' }
+
+      - name: Render ten new AwesomeFigures panels using immutable case records
+        run: |
+          $ErrorActionPreference='Continue'
+          $p='paper/ngsim-jerk-case-study'
+          $manifest="$p/generated/awesomefigures_atlas_manifest.json"
+          if (Test-Path $manifest) { Remove-Item -LiteralPath $manifest -Force }
+          Get-ChildItem "$p/figures" -File -Filter 'atlas_*' |
+            Where-Object { $_.Extension -in @('.pdf','.svg','.png') } |
+            Remove-Item -Force
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/render_awesomefigures_atlas.py" --exp008-synthetic-fitted (Join-Path $env:EXP008_SOURCE 'synthetic\fitted_rows.csv') --exp008-synthetic-summary (Join-Path $env:EXP008_SOURCE 'synthetic\summary.csv') --exp008-real-forecasts (Join-Path $env:EXP008_SOURCE 'real\forecast_rows.csv') --exp007-cells (Join-Path $env:EXP007_SOURCE 'confirm\per_cell.csv') --exp007-calibration (Join-Path $env:EXP007_SOURCE 'confirm\calibration_summary.csv') --exp007-effects (Join-Path $env:EXP007_SOURCE 'confirm\effects_summary.csv') --exp006-jerk (Join-Path $env:EXP006_SOURCE 'confirm\known_jerk_summary.csv') --out-dir "$p/figures" --manifest $manifest 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\atlas_render.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Source-verified ten-figure atlas failed' }
+
+      - name: Compile physical Elsevier manuscript and supplemental atlas PDFs
+        run: |
+          $ErrorActionPreference='Continue'
+          $out="paper/builds/pc08-paper-c-atlas-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $out --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\manuscript_compile.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Elsevier main PDF compilation failed' }
+          Push-Location paper/ngsim-jerk-case-study
+          try {
+            # Windows MiKTeX on PCAG103A-08 has pdfLaTeX but not the Perl
+            # interpreter required by latexmk.exe. No BibTeX is needed here:
+            # compile the standalone figure-only document twice directly.
+            foreach ($pass in @(1,2)) {
+              & pdflatex -interaction=nonstopmode -halt-on-error -file-line-error atlas_supplement.tex 2>&1 |
+                Tee-Object -FilePath (Join-Path $env:AF_ROOT "logs\supplement_pdflatex_$pass.log")
+              if ($LASTEXITCODE -ne 0) { throw "Ten-figure supplement pdfLaTeX pass $pass failed" }
+            }
+          } finally { Pop-Location }
+          if (!(Test-Path paper/ngsim-jerk-case-study/atlas_supplement.pdf)) {
+            throw 'Scientific PDF supplement missing'
+          }
+
+      - name: Audit all output figure SHA256s and manuscript text
+        run: |
+          $ErrorActionPreference='Continue'
+          $p='paper/ngsim-jerk-case-study'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_pdf.py" --pdf "$p/main.pdf" --manifest "$p/generated/visual_suite_manifest.json" --output (Join-Path $env:AF_ROOT 'metadata\legacy_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\legacy_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Six science figures not verified' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_methods_pdf.py" --pdf "$p/main.pdf" --figures "$p/figures" --manifest "$p/generated/exp008_methods_figure_manifest.json" --output (Join-Path $env:AF_ROOT 'metadata\method_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\method_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Physical comparison figures not verified' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_awesomefigures_atlas.py" --atlas "$p/generated/awesomefigures_atlas_manifest.json" --figures "$p/figures" --paper "$p/main.pdf" --supplement "$p/atlas_supplement.pdf" --report (Join-Path $env:AF_ROOT 'metadata\atlas_audit.json') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\atlas_audit.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Atlas scientific publication audit failed' }
+
+      - name: Render both PDFs page by page and preserve complete run root
+        run: |
+          $ErrorActionPreference='Continue'
+          $target=Join-Path $env:RUNNER_TEMP "paper-c-af-render-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          New-Item -ItemType Directory -Path $target | Out-Null
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check --no-input --no-deps --target $target pymupdf==1.26.5 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\preview_dependency.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot install isolated PDF renderer' }
+          $env:PYTHONPATH=$target
+          foreach($stem in @('main','atlas_supplement')) {
+            & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf "paper/ngsim-jerk-case-study/$stem.pdf" --output-dir (Join-Path $env:AF_ROOT "pages-$stem") --dpi 144 --columns 3 2>&1 |
+              Tee-Object -FilePath (Join-Path $env:AF_ROOT "logs\preview_$stem.log")
+            if ($LASTEXITCODE -ne 0) { throw "Could not render $stem page previews" }
+          }
+          Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+          foreach($name in @('main.pdf','atlas_supplement.pdf','main.tex','atlas_supplement.tex')) {
+            Copy-Item "paper/ngsim-jerk-case-study/$name" (Join-Path $env:AF_ROOT 'manuscript') -Force
+          }
+          Get-ChildItem paper/ngsim-jerk-case-study/figures -File |
+            Where-Object { $_.Name -like 'atlas_*' -or $_.Name -like 'exp00*' } |
+            Copy-Item -Destination (Join-Path $env:AF_ROOT 'figures') -Force
+          foreach($name in @('visual_suite_manifest.json','exp008_methods_figure_manifest.json','awesomefigures_atlas_manifest.json')) {
+            Copy-Item "paper/ngsim-jerk-case-study/generated/$name" (Join-Path $env:AF_ROOT 'metadata') -Force
+          }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $env:AF_ROOT --status success --output (Join-Path $env:AF_ROOT 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Complete audit inventory missing' }
+
+      - name: Upload figures and both compiled PDFs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: paper-c-awesomefigures-atlas
+          path: |
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/atlas_supplement.pdf
+            paper/ngsim-jerk-case-study/figures/atlas_*
+            paper/ngsim-jerk-case-study/generated/awesomefigures_atlas_manifest.json
+          if-no-files-found: warn
+
+      - name: Push verified outputs only to feature branch (never stale source)
+        if: success()
+        run: |
+          $ErrorActionPreference='Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin "refs/heads/feature/paper-c-awesomefigures-atlas:refs/remotes/origin/feature/paper-c-awesomefigures-atlas"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh feature branch' }
+          $remote=(git rev-parse refs/remotes/origin/feature/paper-c-awesomefigures-atlas).Trim()
+          if ($remote -ne $env:GITHUB_SHA) {
+            Write-Host 'Branch advanced; do not push a PDF compiled from stale source'
+          } else {
+            git add -f -- paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/atlas_supplement.pdf paper/ngsim-jerk-case-study/figures/atlas_* paper/ngsim-jerk-case-study/figures/exp006_reconstruction_forecasting.* paper/ngsim-jerk-case-study/figures/exp007_* paper/ngsim-jerk-case-study/figures/exp008_* paper/ngsim-jerk-case-study/generated/awesomefigures_atlas_manifest.json paper/ngsim-jerk-case-study/generated/visual_suite_manifest.json paper/ngsim-jerk-case-study/generated/exp008_methods_figure_manifest.json
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot stage source-derived paper graphics' }
+            git diff --cached --quiet
+            if ($LASTEXITCODE -eq 1) {
+              git commit -m "paper-c: publish AwesomeFigures 10-figure atlas, 8 restyled scientific figures and 2 PDFs"
+              if ($LASTEXITCODE -ne 0) { throw 'Cannot commit visual atlas outputs' }
+              git push origin "HEAD:refs/heads/feature/paper-c-awesomefigures-atlas"
+              if ($LASTEXITCODE -ne 0) { throw 'No force push authorized' }
+            } elseif ($LASTEXITCODE -ne 0) { throw 'Unable to compare staged files' }
+          }
+
+      - name: Push append-only complete VM result archive on unique Git branch
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:AF_ROOT
+          if (!$root -or !(Test-Path (Join-Path $root 'metadata\file_inventory.json'))) {
+            throw 'No complete run archive available'
+          }
+          $rel="paper/ngsim-jerk-case-study/visuals/runs/awesomefigures-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dst=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dst -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dst -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dst 'vm_run_root.txt') -Encoding utf8
+          $ref="results/paper-c-awesomefigures-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          $rebase=(git rev-parse --git-path rebase-merge).Trim()
+          if (Test-Path $rebase) {
+            git rebase --quit
+            if ($LASTEXITCODE -ne 0) { throw 'Interrupted Git rebase blocked archive' }
+          }
+          git switch -c $ref
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create unique archived result branch' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Could not stage provenance files' }
+          git commit -m "paper-c: archive full AwesomeFigures Windows build $env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit archived results' }
+          git push origin "HEAD:refs/heads/$ref"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not push immutable result archive' }

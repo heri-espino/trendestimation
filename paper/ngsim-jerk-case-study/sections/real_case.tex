@@ -129,6 +129,22 @@ appears in these errors.}
 \label{fig:real-svd}
 \end{figure*}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/atlas_ngsim_by_site.pdf}
+\caption{Site-stratified cumulative recorded-position forecast
+RMSE across the two NGSIM source sites (100 selected episodes
+from US-101 and 100 from I-80). All five historical smoothers
+use the same three-point continuation \emph{algorithm},
+with method-specific training-derived or zero reference means.
+The spline quadratic-Taylor end-to-end comparator is not shown
+at the site level because its reported archived benchmark is pooled.
+Repeated vehicle IDs and shared recording-time blocks prevent
+interpretation as independent driver-level population inference.
+Supplementary figures show paired episode variability.}
+\label{fig:atlas-ngsim-sites}
+\end{figure*}
+
 In the new matched-complexity comparison,
 PLS and hard-truncated SVD produce very
 similar pooled first-second recorded-position

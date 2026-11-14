@@ -43,13 +43,19 @@ import awesomefigures as af  # noqa: E402
 af.set_style("elegante", palette="okabe-ito", font="DejaVu Sans",
              use_tex=False, rasterize=False)
 
-INK="#19344c"
-BLUE="#27679a"
-CYAN="#3796ae"
-ORANGE="#c07532"
-VIOLET="#76669f"
-GRAY="#8593a1"
+PALETTE=tuple(af.color_palette("okabe-ito",as_hex=True))
+if len(PALETTE)!=8:
+    raise RuntimeError("Pinned AwesomeFigures Okabe-Ito palette must have eight colors")
+INK=PALETTE[7]
+BLUE=PALETTE[4]
+CYAN=PALETTE[1]
+ORANGE=PALETTE[0]
+VIOLET=PALETTE[6]
+GRAY=PALETTE[5]
 LIGHT="#e0e8ee"
+SERIES_STYLES=tuple(af.plot_scheme("okabe-ito",markers=("o","s","D","^","v","P","X","*")))
+if len(SERIES_STYLES)!=8:
+    raise RuntimeError("AwesomeFigures style schema unexpected")
 ORDER=("known_mu_reml","joint_reml","global_ols_plugin_mle","gcv_zero_mu")
 LABEL={
     "known_mu_reml":"Known reference (control)",
@@ -122,12 +128,11 @@ def panel(ax,text):
 
 
 def publish(fig,name,out):
-    fig.savefig(out/(name+".pdf"),format="pdf",
-                facecolor="white",bbox_inches="tight",pad_inches=.08)
-    fig.savefig(out/(name+".svg"),format="svg",
-                facecolor="white",bbox_inches="tight",pad_inches=.08)
-    fig.savefig(out/(name+".png"),dpi=240,format="png",
-                facecolor="white",bbox_inches="tight",pad_inches=.08)
+    for ext in ("pdf","svg","png"):
+        target=out/(name+"."+ext)
+        af.save_figure(fig,target,dpi=240 if ext=="png" else 160)
+        if not target.is_file() or target.stat().st_size<500:
+            raise RuntimeError("AwesomeFigures export missing or too small: "+str(target))
     plt.close(fig)
 
 
@@ -464,7 +469,7 @@ def main():
     manifest={
         "schema":1,"paper":"Paper C NGSIM CAS two-column",
         "status":"rendered_verified",
-        "renderer":"matplotlib with pinned AwesomeFigures elegant Okabe-Ito style",
+        "renderer":"awesomefigures.set_style / color_palette / plot_scheme / save_figure",
         "journal_asset_policy":"Vector PDF in LaTeX, editable SVG plus 240-dpi PNG previews",
         "scientific_source_sha256":source_hashes,
         "example":example,"tradeoff":tradeoff,
