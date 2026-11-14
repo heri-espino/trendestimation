@@ -1,3 +1,31 @@
+# AwesomeFigures Paper C atlas (November 2026)
+
+The canonical manuscript now includes three source-derived physical diagnostics; a separate [supplement](../atlas_supplement.tex) contains ten new panels. See the [figure gallery](../FIGURE_ATLAS.md) for all ten image previews. All results originate from the previously completed immutable Experiment006/007/008 branches. None of Experiments004--008 were rerun.
+
+| New figure | Result portrayed | Design limitation |
+| --- | --- | --- |
+| atlas_known_jerk_regimes | Historical discrete-jerk RMSE by six physical regimes | 1,296 synthetic trajectories; 216 per regime |
+| atlas_tsvd_rank_pathology | Conditional GCV TSVD rank counts and error concentration | 145 cases with rank 75/76; 78.9% of squared jerk error |
+| atlas_paired_jerk_losses | Paired PLS versus nominal-EDF-matched TSVD loss | 1,296 paired synthetic cases, not observed real jerk |
+| atlas_method_tradeoff | Jerk reconstruction versus clean 1-second window forecasting | Different physical outcomes and same local25 continuation |
+| atlas_ngsim_by_site | US-101 versus I-80 recorded-position windows | 100 selected episodes per site, not independent drivers |
+| atlas_ngsim_paired_delta | Paired site/episode forecast MSE differences | Reused vehicle/time blocks; descriptive only |
+| atlas_spectral_calibration_grid | Selected S versus covariance-theoretic noise fraction | Nine model-correct Gaussian cells, 24 parents per cell |
+| atlas_misspecification_matrix | Four tuning policies across nine error/jerk structures | Model misspecification and paired parent draws |
+| atlas_noise_jerk_interventions | Separate measured-noise and genuine jerk-volatility interventions | Archived parent-bootstrap uncertainty |
+| atlas_reference_policy | Third-difference mean and likelihood choices | Existing Experiment006 known-jerk summaries |
+
+The script [render_awesomefigures_atlas.py](render_awesomefigures_atlas.py) directly calls the pinned AwesomeFigures APIs set_style, color_palette, plot_scheme and save_figure to export vector PDF, editable SVG and PNG. The same APIs now style the existing six Experiment006/007 figures and two Experiment008 comparator figures. This does not claim exact LaTeX preamble-matched fonts; it produces genuine AwesomeFigures plots with documented provenance.
+
+## Exact reproduction and preservation
+
+Read root AGENTS.md, paper/SESSION_HANDOFF.md and [scientific editorial review](../notes/SCIENCE_EDITORIAL_REVIEW.md). Use the dedicated [PCAG103A-08 workflow](../../../.github/workflows/paper-c-awesomefigures-atlas-pc08.yml), which mounts the original three results-only branches as detached read-only worktrees. It verifies 1,296 synthetic paired fits, 200 real forecast episodes, all 72-parent calibration summaries and the known original jerk RMSEs. It never downloads NGSIM data or refits smoothing parameters.
+
+The generated/awesomefigures_atlas_manifest.json stores the SHA-256 of every input and all 30 new output assets. The companion [audit](audit_awesomefigures_atlas.py) verifies the source-derived outputs and the main/supplement compiled PDF content. The complete VM build, 26-plus page previews, compilation logs and environment snapshots are retained on a unique append-only results-only Git branch, never solely on the runner.
+
+Scientific interpretation constraints: S measures relative spectral observation noise only conditional on the covariance model. The Experiment007 1,944 factorial cells derive from only 72 independent parent draws. Real NGSIM has no independent clean jerk truth; its episodes share vehicles and recording-time blocks. The adverse 0.348 m spline-Taylor first-second position result remains in the canonical manuscript.
+
+---
 # Paper C reproducible visual suite
 
 This directory generates six additional publication-grade figures for the canonical Elsevier CAS v2.4 manuscript. Figures derive from independently archived, completed Experiment006/007 scientific results; they do not alter the experiments, create hypothetical data, or retrain models. The existing five paper figures are preserved.
