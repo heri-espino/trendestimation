@@ -6,7 +6,7 @@ Figure~\ref{fig:reliability} displays stacked status fractions by criterion and 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig01_reliability_stacked.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig01_reliability_stacked.pdf}
 \caption{Stacked status composition of complete-criterion evaluations by selection criterion. Solid colors identify the implementation, while patterned segments distinguish the recorded failure mechanisms. Rates are conditional on method-specific eligible observations and do not constitute matched failure probabilities.}
 \label{fig:reliability}
 \end{figure}
@@ -20,7 +20,7 @@ Table~\ref{tab:empirical-paired} summarizes the matched cold-time ratios for eig
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig02_runtime_distributions.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig02_runtime_distributions.pdf}
 \caption{Observed distributions of matched banded-Cholesky/SVD complete cold-time ratios over 100 smoothing candidates. The violin outlines are descriptive kernel-density estimates, the boxes give medians and interquartile ranges, and the dots represent independent-seed cluster summaries. The dashed line denotes equal time; numerical confidence intervals for geometric means are given in Table~\ref{tab:empirical-paired}.}
 \label{fig:paired}
 \end{figure}
@@ -36,8 +36,8 @@ For spectral CV with $n=256$, $d=3$, 100 candidates and three series, the geomet
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig03_mapping_distributions.pdf}
-\caption{Per-case-seed distributions of mapped-penalty/direct-smoothness cold-time ratios, grouped by criterion, method and candidate-grid size. Violin density and boxplots describe heterogeneous admissible cases under the common execution phase. Values below one favor mapping the penalty grid once; the pooled descriptive distributions are not universal algorithmic scaling laws.}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig03_mapping_distributions.pdf}
+\caption{Per-case-seed distributions of mapped-penalty/direct-smoothness cold-time ratios, grouped by criterion, method and grid size. The compact axis labels use B for banded Cholesky and S for spectral SVD. Violin density and boxplots describe heterogeneous admissible cases under the same execution phase; ratios below one favor mapping the penalty grid once.}
 \label{fig:mapping}
 \end{figure}
 
@@ -45,7 +45,7 @@ Figure~\ref{fig:workloads} illustrates how a fixed first-order GCV configuration
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig04_workload_stacked.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig04_workload_stacked.pdf}
 \caption{Stacked component-wise medians for initialization, smoothness-to-penalty mapping and criterion evaluation in a first-order GCV example ($n=64$, $M=100$). Colors identify the implementation; light, medium and dark sections identify stages. Workload labels denote number of smoothing candidates times number of series. Sums of component medians are not generally the medians of total cold time.}
 \label{fig:workloads}
 \end{figure}

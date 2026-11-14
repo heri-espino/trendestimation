@@ -19,7 +19,7 @@ factor an SPD matrix.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\KKTDir/kkt_rejection_distribution.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig09_kkt_rejections.pdf}
 \caption{Distribution of the scaled first-order optimality
 residual $\eta_{\mathrm{opt}}$ among \emph{rejected} banded
 complete-criterion computations. Histogram segments are
@@ -39,7 +39,7 @@ The nine configurations account for 6984 banded-rejection timing records; anothe
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig05_grid_completion.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig05_grid_completion.pdf}
 \caption{Full-grid numerical completion in nine parameter configurations, with method-specific coloring and patterned rejection fractions. All recorded single-candidate outcomes complete for both implementations, but the banded full-grid pipeline is rejected while the spectral pipeline completes. Each configuration has 97 independent seed clusters; within-seed repeats, mapping policies and multiple-series workloads are correlated.}
 \label{fig:cholgridfail}
 \end{figure}
@@ -55,7 +55,7 @@ This error concerns the transformation from the bounded coordinate $S$ to the pe
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig06_order4_failures.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig06_order4_failures.pdf}
 \caption{Stacked method-colored fractions of numerically complete evaluations and distinct rejection mechanisms for difference order four. The bands show implementation-specific complete, post-solve KKT-rejected and inaccurate smoothness-inversion outcomes. Denominators consist of available method-level records; both implementations exhibit inversion failures at higher sample lengths.}
 \label{fig:fourthfail}
 \end{figure}
@@ -65,7 +65,7 @@ The principal runtime trade-off becomes visible when paired, numerically admissi
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig07_crossover_distributions.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig07_crossover_distributions.pdf}
 \caption{Distributional comparison of matched banded-Cholesky/SVD cold-time ratios for one candidate and 100 candidates. Violin densities, boxplots and individual seed-level points show the pronounced reversal of computational preference. Values above one favor SVD. Corresponding independent-seed bootstrap intervals for geometric means are reported in the text rather than inferred from violin widths.}
 \label{fig:onegrid}
 \end{figure}
@@ -79,7 +79,7 @@ For example, the spectral admission allowance is 640~MiB at $n=4096$. At $n=8192
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{\VizDir/figures/fig08_memory_scaling.pdf}
+\includegraphics[width=\linewidth]{\AwesomeDir/figures/fig08_memory_scaling.pdf}
 \caption{Analytical source-code memory allowances as a function of series length for dense spectral SVD, an explicit inverse and two fourth-order banded working arrays. The shaded region denotes examined sample lengths and the dashed line the 2~GiB dense allocation policy. These curves are storage-policy calculations, not measured peak memory.}
 \label{fig:memorytradeoff}
 \end{figure}
