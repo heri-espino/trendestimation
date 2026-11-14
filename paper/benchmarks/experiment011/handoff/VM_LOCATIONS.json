@@ -1,0 +1,31 @@
+{
+  "experiment": "experiment011",
+  "recorded_on": "2026-11-09",
+  "evidence_level": "user_reported_local_checkpoint_not_independently_read",
+  "repository": "heri-espino/trendestimation",
+  "vm_checkout": "C:\\Users\\175199\\trendestimation-PC08_add97svd_20261105_025108",
+  "final_report_relative": "paper/benchmarks/experiment011/campaigns/PC08_resume12_20261108_200034/report.json",
+  "completed_jobs_reported": 2813,
+  "planned_jobs": 2813,
+  "remaining_jobs_reported": 0,
+  "final_report_sha256": null,
+  "backup_verified": false,
+  "raw_data_imported": false,
+  "numerical_review_complete": false,
+  "remote_results_branch": "results/experiment011-PC08_add97svd_20261105_025108",
+  "remote_results_commit_inspected": "9c7dded8",
+  "remote_completed_jobs_inspected": 2338,
+  "controller_branch": "research/experiment011-additional97",
+  "original_numerical_source_commit": "a8a9c4704eccfad8461a3c0e5f8502f18c2a6199",
+  "raw_paths": [
+    "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/measurements/raw_times.csv",
+    "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/experiment011_case.json",
+    "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/experiment011_qa.json",
+    "paper/benchmarks/experiment011/runs/<tag>_sNNN/<case>/blockNNN/measurements/environment.json"
+  ],
+  "policy": "Keep raw data locally for now; no automatic result publication, LFS migration, history rewrite, merge, benchmark rerun or submission.",
+  "agent_access": "GitHub Actions self-hosted PCAG103A-08; no interactive VM access",
+  "backup_path": "C:\\Users\\175199\\experiment011-backups\\experiment011_20261109_072910742",
+  "backup_console_success_reported": true,
+  "backup_independently_verified_by_agent": false
+}

@@ -1,5 +1,7 @@
 # Springer Computational Statistics — readiness and decision ledger
 
+**Experiment011 completion update (2026-11-09):** The author reports **2813/2813 case-seed jobs recorded, remaining 0**, on the Windows VM. Read the [completed-campaign handoff](benchmarks/experiment011/handoff/COMPLETION_HANDOFF.md) and [Springer analysis prompt](benchmarks/experiment011/handoff/SPRINGER_ANALYSIS_AGENT_PROMPT.md) before following older pending-run instructions. Final raw data acquisition, verified backup and numerical/timing analysis remain pending; GitHub still has only the inspected 2338-job checkpoint. Preserve local raw files and use the documented no-automatic-publication backup procedure. These observations include 24/1/12-worker phases and must not be pooled as isolated-latency measurements.
+
 **Editorial proposal (2026-11-04):** [Draft PR #112](https://github.com/heri-espino/trendestimation/pull/112) tightens the archived-timing claims in `paper/main.tex` and documents manuscript-level source and mathematical checks in [EDITORIAL_LITERATURE_AUDIT.md](EDITORIAL_LITERATURE_AUDIT.md). It adds **no new Windows Experiment011 measurements**, runtime rankings or publication authorization. The 29-case study and its evidence gates below are unchanged.
 
 **Integration status (2026-11-04):** the author authorized merging the open research PRs.
