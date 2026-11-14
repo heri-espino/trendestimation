@@ -1,0 +1,9 @@
+case_id,criterion,n,d,mu
+pilot_cv_n64_d1_m100,CV,64,1,0
+smoke_cv_n64_d3_m100,CV,64,3,0
+pilot_cv_n128_d3_m100,CV,128,3,0
+pilot_data_cv_n128_d3_m100,CV,128,3,data
+confirm_data_cv_n256_d3_m100,CV,256,3,data
+pilot_gcv_n64_d1_m100,GCV,64,1,0
+pilot_gcv_n128_d3_m100,GCV,128,3,0
+pilot_data_gcv_n128_d3_m100,GCV,128,3,data
