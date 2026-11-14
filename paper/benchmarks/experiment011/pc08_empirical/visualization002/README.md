@@ -124,3 +124,18 @@ remaining main figure with audit width mismatch or text under
 All 42 figure sets and the full manuscript must be regenerated
 and re-inspected after this correction, without rerunning
 any smoothing or numerical experiment.
+
+
+## Final figure legibility adjustments
+The source-backed 42 figure collection and 19-page paper passed
+the previous CI and numerical checks. Independent visual page
+review then identified crowding in a subset of the nine
+manuscript plots: especially six-category axis ticks, a
+nine-case figure title, fourth-order y-axis labels, and a
+single-versus-grid six-group axis. The publication exporter
+now shortens those titles, replaces long tick labels with
+explicitly captioned abbreviations, increases left and
+bottom figure margins, relocates the memory legend, and
+shifts percentage annotations safely inside the plot.
+A new full render and page inspection are required before
+declaring the typography complete or integrating the PR.
