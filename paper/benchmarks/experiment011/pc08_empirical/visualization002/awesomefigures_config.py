@@ -94,6 +94,27 @@ class Exporter:
                 PAPER, width="text", engine="pdflatex", font="auto",
                 height_ratio=.59, minimum_text_pt=6.7,
             ) as publication:
+                # The historical figures were created at screen widths of
+                # 7–9 inches. Rescale the *figure canvas* to the actual
+                # Springer text width BEFORE PGF export; do not rely on
+                # LaTeX shrinking a wide PDF and making text <7pt.
+                from matplotlib.text import Text
+                width_inches = publication.layout.textwidth_pt / 72.27
+                old_width, old_height = fig.get_size_inches()
+                fig.set_size_inches(
+                    width_inches,
+                    max(2.85, old_height * width_inches / old_width),
+                    forward=True,
+                )
+                for item in fig.findobj(match=Text):
+                    if item.get_text() and item.get_fontsize() < 7.2:
+                        item.set_fontsize(7.2)
+                preliminary=publication.audit(fig)
+                if abs(preliminary.output_width_pt-preliminary.expected_width_pt)>0.9:
+                    raise RuntimeError("Springer physical figure width mismatch")
+                if (preliminary.smallest_text_pt is not None and
+                    preliminary.smallest_text_pt < 6.7):
+                    raise RuntimeError("Springer figure contains unreadable text at print width")
                 import matplotlib as mpl
                 with mpl.rc_context({
                     "pgf.texsystem":"pdflatex",
