@@ -2,7 +2,7 @@ name: Paper C AwesomeFigures frozen-results atlas (PCAG103A-08)
 
 on:
   push:
-    branches: [feature/paper-c-awesomefigures-atlas]
+    branches: [feature/paper-c-awesomefigures-atlas, paper/paper-c-scientific-editorial-review]
     paths:
       - .github/workflows/paper-c-awesomefigures-atlas-pc08.yml
       - paper/ngsim-jerk-case-study/visuals/render_awesomefigures_atlas.py
@@ -46,7 +46,7 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows research runner' }
-          if ($env:GITHUB_REF_NAME -ne 'feature/paper-c-awesomefigures-atlas') { throw 'Wrong feature branch' }
+          if ($env:GITHUB_REF_NAME -notin @('feature/paper-c-awesomefigures-atlas','paper/paper-c-scientific-editorial-review')) { throw 'Unexpected paper branch' }
           $rebase=(git rev-parse --git-path rebase-merge).Trim()
           $apply=(git rev-parse --git-path rebase-apply).Trim()
           if ((Test-Path $rebase) -or (Test-Path $apply)) {
@@ -211,9 +211,11 @@ jobs:
           $ErrorActionPreference='Stop'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin "refs/heads/feature/paper-c-awesomefigures-atlas:refs/remotes/origin/feature/paper-c-awesomefigures-atlas"
+          $publicationBranch=$env:GITHUB_REF_NAME
+          if ($publicationBranch -notin @('feature/paper-c-awesomefigures-atlas','paper/paper-c-scientific-editorial-review')) { throw 'Disallowed publication branch' }
+          git fetch origin "refs/heads/${publicationBranch}:refs/remotes/origin/${publicationBranch}"
           if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh feature branch' }
-          $remote=(git rev-parse refs/remotes/origin/feature/paper-c-awesomefigures-atlas).Trim()
+          $remote=(git rev-parse "refs/remotes/origin/$publicationBranch").Trim()
           if ($remote -ne $env:GITHUB_SHA) {
             Write-Host 'Branch advanced; do not push a PDF compiled from stale source'
           } else {
@@ -223,7 +225,7 @@ jobs:
             if ($LASTEXITCODE -eq 1) {
               git commit -m "paper-c: publish AwesomeFigures 10-figure atlas, 8 restyled scientific figures and 2 PDFs"
               if ($LASTEXITCODE -ne 0) { throw 'Cannot commit visual atlas outputs' }
-              git push origin "HEAD:refs/heads/feature/paper-c-awesomefigures-atlas"
+              git push origin "HEAD:refs/heads/$publicationBranch"
               if ($LASTEXITCODE -ne 0) { throw 'No force push authorized' }
             } elseif ($LASTEXITCODE -ne 0) { throw 'Unable to compare staged files' }
           }
