@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "source_commit": "63fc1c42445655488febf7521da2a87c128435c7",
+  "started_utc": "2026-11-10T06:33:20.511491+00:00",
+  "finished_utc": "2026-11-10T06:33:24.511499+00:00",
+  "requested": "springer",
+  "runner": "PCAG103A-08",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "python": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\python.exe",
+  "conda_environment": "trendestimation",
+  "tools": {
+    "latexmk": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\latexmk.EXE",
+    "pdflatex": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+    "bibtex": "C:\\Users\\175199\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\bibtex.EXE"
+  },
+  "results": [
+    {
+      "id": "springer",
+      "title": "Springer Computational Statistics — implementation",
+      "entry": "paper/main.tex",
+      "repository_pdf": "paper/main.pdf",
+      "artifact_pdf": "paper/builds/pc08/springer-empirical-42769267860/springer.pdf",
+      "log": "paper/builds/pc08/springer-empirical-42769267860/springer.log",
+      "template": "springer",
+      "status": "ok",
+      "source_sha256": {
+        "paper/bibliografia.bib": "2714ff2ebb020dc525aae15b1b1fe54b2e2116dcb479fb38cd2a2aa429292473",
+        "paper/criteria_table.example.tex": "dab3602736f6ca271702aac6fabaaa67aae3287c97c72e8d07197664a2291177",
+        "paper/criteria_table.tex": "dab3602736f6ca271702aac6fabaaa67aae3287c97c72e8d07197664a2291177",
+        "paper/figures/cortes_toto_synthetic.pdf": "97486ff25f5e91c998077438e6437f435c24071be600265431f7a8d8d064482a",
+        "paper/figures/criteria_with_mle_lambda_paths.pdf": "051f04d5459c7b32fde014f9be947be2c544891a994bf52b275f6e35414529f0",
+        "paper/figures/criteria_with_mle_s_paths.pdf": "1f3bc5d1736a52dc97ff122704f57a244b39806ea738e1a4c355052a83d1cd7e",
+        "paper/figures/criteria_with_mle_search_time.pdf": "cb700ad4222a658ec5d7ad1676ac65acb3b411d3a5cc6e8cd61d54509cc14340",
+        "paper/figures/full_fit_at_M64.pdf": "4b58679f56161aa42cd8592b664997d43a258f78bd2873e08af82a4a5ee40474",
+        "paper/figures/full_s_continuous_coordinate_times.pdf": "044617170d7fe954c551c52898399f313828c4ae517273ac3403db76b22aba15",
+        "paper/figures/full_s_coordinate_selected_s.pdf": "f131c0c35f8df5939ea7916fd918fdc18ba8f20491772229cd1c7816598b2e21",
+        "paper/figures/full_s_grid_coordinate_times.pdf": "f38696ed8d12323035e783e33da578ecf12cc500a95e9f3a1f9aa390c7a1b108",
+        "paper/figures/full_s_lambda_tail.pdf": "d5b4f6840397c8bee0e55b4212edc23bb9a0a9fffffd46bb89512e5d87b18167",
+        "paper/figures/full_s_search_reuse_speedup.pdf": "e74801c63cd3068cf55c736265fb62e1191dac626beb70741cbbadac241d1000",
+        "paper/figures/full_s_selected_mu0.pdf": "a160144a6325cac296a2a80134043afeaefc6a82ecb80c1049b2467ff122a879",
+        "paper/figures/full_s_selected_mu015.pdf": "a7edce892d42602946c023b7cd7ea7231036ad41ebe3bc49ca9576c8996a0966",
+        "paper/figures/full_s_single_grid_repeated.pdf": "31b2e29017a19d6cd686569fa0a17c9d5561f00f2a9594305ed34d2faff64824",
+        "paper/figures/full_s_time_aicc.pdf": "247f7b491db46dec3f82517e191295ab602a12dcc87de942e3d73146e5232e88",
+        "paper/figures/full_s_time_bic.pdf": "4b833a641648705cf97ee665ad886bd0b4fab8657feed8a001f0e485e0ae332c",
+        "paper/figures/full_s_time_cv.pdf": "2e06c2afe5c4c0744447f2e4efd253048fe3a7e1f585bcc6d68e41695ab52e7e",
+        "paper/figures/full_s_time_gcv.pdf": "124c589e15776bdc4d63d45c12a420cfd117c90ad1d111f631c2736eb31f4704",
+        "paper/figures/full_s_time_mle.pdf": "fda83525a067a40184dc3b7dd0fbdb5e730fc473ebdb09f40c23ea5f88d5595a",
+        "paper/figures/full_s_validity_gcv.pdf": "761456e7ef406a51e9104119673f8dbcef8d98b4c9448075a0f4313a39e3bf5d",
+        "paper/figures/full_s_validity_mle.pdf": "e1692434019cb83319099d314bc90aa5a4e72c73aeec15a00cc3817aa2f399b6",
+        "paper/figures/gcv_repeated_search.pdf": "fc5fc4609843dd9ab42b3439c323e6a5162f829787d54935bf6c977bc0ec69c0",
+        "paper/figures/gcv_solver_by_order.pdf": "b9823825b2fd767b63614332693161ca9a2e8051762cc253cd4fd2e2c5ee871c",
+        "paper/figures/high_order_numerics.pdf": "de9d9a6f4c4ecfc2790cc2422cf36565875c691c2140d36ef0804c28729aef49",
+        "paper/figures/mauna_loa_1990_1999.pdf": "b51a40f87202998f46cc92c2827ace88b29cab915cd633a9a85b7cd0ddc2449e",
+        "paper/figures/mauna_loa_1990_2026_09.pdf": "114cde520977db8dc13499b3b58e568b5f9af18a8656de0c2f650006eb4c303f",
+        "paper/figures/trace_at_M32.pdf": "d53ae8bc651416a40e468d44c54545df009ec97204edbb83c6443cd800056d1c",
+        "paper/figures/windows_full_s_bounded.pdf": "99e779201a96c865b2842cded1d5f9ace035eca6deaf7fb194deaf137b67a44d",
+        "paper/figures/windows_full_s_grid_coordinates.pdf": "b3ec326efac480f4e87e1724efc26926f4d5d8584eab8e9fa19ebefeb6d4f8d0",
+        "paper/figures/windows_full_s_means.pdf": "76ae05b87c00d341dd47c07839b8961bccbee5c80ab23726c46b6163958fb7ae",
+        "paper/figures/windows_full_s_reuse_d.pdf": "e06bb080b9d3d2c7078e3630d5785a8904317bfda5fd596c114d9647c91bc899",
+        "paper/figures/windows_full_s_workloads.pdf": "624d1372009746396521646cfa42f11f67a394cf54ec97dc05e8ad49ef575b49",
+        "paper/legacy_smcca_main.tex": "b739d22ee71003bf185bc712c56340f24209ed796b37ce6f8404de97c5a797f2",
+        "paper/main.tex": "ecbcada1aafd0064378120a0d73e9aa670ac296fe3ce4a153af51a39fc86d6aa",
+        "paper/sections/experiment010_three_backend.tex": "227ef4559ea238169f9703febe3d73af3481a202858e608c78a83653709b3a29",
+        "paper/sections/experiment011_methods.tex": "98c879afe1bb727d289e28269e0b3b09db5cdbc57fb6105e4341d02df8887f23",
+        "paper/sections/experiment011_results.tex": "8d9cf22a41f357f1e1d6d930a83eec46922a769d99af2a59b0fdbb306200948d",
+        "paper/sections/experiment011_robustness.tex": "8feda48bfd33659db986bc69bdb9714338cbca9a0852e0db0ade0ed6c1e8bdd9",
+        "paper/sections/full_s_factorial.tex": "9b0dc6694fc1ea7eaf3b45f383b6fcf228e1d0ecee6137945848963b8fafc94a",
+        "paper/sections/gcv_grid_reuse.tex": "a840a0e19567ac715b350cab2e2c6f62ca25dff8e68e85cf44f530c1abcd0bff",
+        "paper/sections/high_order_numerics.tex": "0bd088bef139012012f8197b31749fc0bd03b340ab3077fdec586e23945cadc7",
+        "paper/sections/kernel_derivatives.tex": "1b5027da31fa0a597ec4ecbe931607748a0fa99fe663c7d6b60031914d25d935",
+        "paper/sections/likelihood_mu.tex": "cf2bf0b4e30f73be55ef944de49289c0c4715caf639865dfed06ec66f23e5b76",
+        "paper/sections/mauna_loa.tex": "c7d39ff163cc10ccfbce73f4fc8c29d32d03eb11a9a986012b8b8828f2c2ab95",
+        "paper/sections/selection_visuals.tex": "00fbe6e742149b7c87893425ed16ef38d101eddae2f96c794c5869fff66fe55f",
+        "paper/sections/smoothness_coordinate_search.tex": "ce800e470bf1e43d122de021452539412e79ef2910d823b0609247bf75326b0b",
+        "paper/sections/smoothness_speed.tex": "c18d6ba335b483996933760a10f3f30227038fb8b3c647c6846fb311a1b663d7",
+        "paper/sections/timing_experiments.tex": "958d4507166c2956946240f5b619d22f470480eae5bef8bd48bb20db8e08f12c",
+        "paper/sections/windows_full_s_generated.tex": "9bd3df2d65bd74cff65707214629fb1ac5ab177a293fa5ff22d089ad4e4be78c",
+        "paper/sections/windows_full_s_results.tex": "704235d56e82e2b3510b0042bce818527d04a7322c86e945ee9a017618a812d7"
+      },
+      "prepared_inputs": [
+        {
+          "path": "paper/criteria_table.tex",
+          "sha256": "dab3602736f6ca271702aac6fabaaa67aae3287c97c72e8d07197664a2291177"
+        },
+        {
+          "path": "paper/figures/mauna_loa_1990_2026_09.pdf",
+          "sha256": "114cde520977db8dc13499b3b58e568b5f9af18a8656de0c2f650006eb4c303f"
+        },
+        {
+          "path": "paper/figures/mauna_loa_1990_2026_09.dat",
+          "sha256": "e935c878422637dfb8ff9e12d30f829332a78d1f7e3d2c13fbea12f3d3d7fc1e"
+        }
+      ],
+      "exit_code": 0,
+      "pdf_sha256": "d8a8910de65119b7772732ffc4a55fcb011655b6b3db61b0481da962574b546a",
+      "pdf_bytes": 809285,
+      "elapsed_seconds": 3.98
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "source_sha256": {
+    "timing_tensor.csv.gz": "a25f674981b1c20df678638287df289c4d888ae62417a3f58ed8a6b2a08fce13",
+    "paired_backend_rows.csv.gz": "608db4da81a2d3481716838a2ee2db97dc1030cacb0a306333df9142ddb4de2b",
+    "paired_coordinate_rows.csv.gz": "4c3731f2c0cc437988d794eb0a879b567d8a8afc65acb4378da5113379dabdb8",
+    "paired_backend_seed_bootstrap.csv": "ae047b53ec638d2033cf49b47ea0e982eb64452763739e20c2cb71f578912b48"
+  },
+  "observations": 92679,
+  "complete": 76220,
+  "kkt": 9096,
+  "mapping": 6336,
+  "budget": 970,
+  "missing_jobs": 57,
+  "figures": [
+    {
+      "figure": "fig01_reliability_stacked",
+      "description": "Method-colored stacked statuses; 57 unassigned missing-job records are not allocated to methods"
+    },
+    {
+      "figure": "fig02_runtime_distributions",
+      "description": "Seed-level distribution: violin KDE, boxplot median/IQR and individual matched observations"
+    },
+    {
+      "figure": "fig03_mapping_distributions",
+      "description": "Exploratory per-case-seed distributions pooled over heterogeneous valid cases, not causal effects"
+    },
+    {
+      "figure": "fig04_workload_stacked",
+      "description": "Representative first-order GCV case; stacked component medians, not the median of the total"
+    },
+    {
+      "figure": "fig05_grid_completion",
+      "description": "Nine KKT-failure configurations: 100% single-candidate completion for both backends; 0%/100% grid completion"
+    },
+    {
+      "figure": "fig06_order4_failures",
+      "description": "Shared fourth-order inversion failures and banded-specific post-solve KKT rejections"
+    },
+    {
+      "figure": "fig07_crossover_distributions",
+      "description": "Violin+box+points from independent seed clusters on matched one/grid workloads"
+    },
+    {
+      "figure": "fig08_memory_scaling",
+      "description": "Policy formulae (not observed RSS); shaded domain is sampled range"
+    }
+  ],
+  "tables": [
+    "table01_runtime.tex",
+    "table02_reliability.tex",
+    "table03_grid_failures.tex"
+  ],
+  "analysis": "Frozen report-derived data only; no new experiments or runtime measurements",
+  "warning": "Violin kernels are descriptive; related rows are averaged within seeds before distribution plots."
+}

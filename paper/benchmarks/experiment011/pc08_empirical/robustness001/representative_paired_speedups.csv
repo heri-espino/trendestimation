@@ -1,0 +1,7 @@
+case_id,n,d,criterion,method,baseline,coordinate,workload,M,R,phase_workers,independent_seeds,replicate_rows,geometric_ratio,bootstrap95_low,bootstrap95_high,uncertainty_unit,precision
+confirm_data_cv_n256_d3_m100,256,3,cv,spectral_svd,banded_cholesky,direct_s,grid_one_series,100,1,24,97,194,4.84582198614114,4.5674392328886135,5.124915707339099,independent_seed_index_with_repeats_retained,float64_parity_only
+confirm_data_cv_n256_d3_m100,256,3,cv,spectral_svd,banded_cholesky,direct_s,one_s_one_series,1,1,24,97,194,0.69839357539181,0.6711387102160212,0.7235879146372923,independent_seed_index_with_repeats_retained,float64_parity_only
+pilot_cv_n128_d3_m100,128,3,cv,spectral_svd,banded_cholesky,direct_s,grid_one_series,100,1,24,97,194,5.4013156449021125,5.244117174137174,5.554502303399603,independent_seed_index_with_repeats_retained,float64_parity_only
+pilot_cv_n128_d3_m100,128,3,cv,spectral_svd,banded_cholesky,direct_s,one_s_one_series,1,1,24,97,194,1.0688059553866407,1.0518795351686276,1.086905452505622,independent_seed_index_with_repeats_retained,float64_parity_only
+pilot_gcv_n64_d1_m100,64,1,gcv,spectral_svd,banded_cholesky,direct_s,grid_one_series,100,1,24,96,192,2.3280078107484914,2.2824555793041923,2.373549858906564,independent_seed_index_with_repeats_retained,float64_parity_only
+pilot_gcv_n64_d1_m100,64,1,gcv,spectral_svd,banded_cholesky,direct_s,one_s_one_series,1,1,24,96,192,1.0010819620048756,0.982219044025269,1.0184119417595152,independent_seed_index_with_repeats_retained,float64_parity_only

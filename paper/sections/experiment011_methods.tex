@@ -1,0 +1,239 @@
+\section{Introduction}
+Penalized least-squares smoothing is a widely used approach to separating low-frequency variation from noise in an observed series. Finite-difference penalties have connected trend regularity and linear smoothing since early work on statistical graduation \citep{whittaker1923graduation}. Subsequent developments include structured implementations of Whittaker--Henderson smoothing \citep{weinert2007wh,weinert2012fast,biessy2026wh} and the interpretation of smoothing through a normalized percentage-of-smoothness parameter \citep{guerrero2007penalized,guerrero2008smoothness}. Selection of the penalty by cross-validation, information criteria or marginal likelihood is well established \citep{craven1979gcv,cortes2017smoothness}. Nevertheless, obtaining a fitted trend and evaluating the \emph{complete selection criterion} are computationally different tasks.
+
+A banded Cholesky factorization exploits the sparsity of finite-difference penalties and is economical for an individual smoothing parameter. In contrast, a spectral factorization requires an appreciable initial calculation but exposes all candidate penalties through diagonal transformations in a common basis. Consequently, the apparent superiority of a solver in a single fit need not persist across a grid of smoothing parameters. Moreover, numerical acceptance of the complete criterion depends not only on the matrix factorization but also on leverage calculations, endpoint treatment and the inversion between penalty and smoothness coordinates.
+
+We investigate the following practical question: \emph{When is a spectral implementation preferable for selecting a smoothing parameter by a complete statistical criterion?} We compare measured end-to-end costs of spectral singular-value decomposition (SVD), banded Cholesky and available reference implementations under paired computational workloads. Unlike a fit-only benchmark, the comparisons charge setup, coordinate conversion, criterion evaluation and diagnostics to the method that incurs them. Unsuccessful or incomplete searches remain observable outcomes rather than being treated as fast computations. This permits a recommendation based jointly on execution time, observed reliability and storage requirements.
+
+Our main conclusion is that spectral decomposition is an effective \emph{default choice for repeated, complete-criterion searches at feasible matrix sizes}. That recommendation is empirical and conditional: structured banded computation remains competitive for isolated candidate evaluations and retains important storage advantages for long series. We do not propose a new PLS estimator, nor do we interpret computation time as predictive accuracy.
+
+\section{Penalized least squares and spectral evaluation}
+\subsection{Estimator and smoothing coordinate}
+Let $y=(y_1,\ldots,y_n)^\top\in\mathbb{R}^n$ denote equally spaced observations and let $D_d\in\mathbb{R}^{(n-d)\times n}$ be the order-$d$ forward-difference matrix, with $1\leq d<n$. For a fixed reference level $\mu\in\mathbb{R}$, the trend estimate is
+\begin{equation}\label{eq:pls}
+\widehat{\tau}_{\lambda,\mu}=
+\underset{\tau\in\mathbb{R}^n}{\arg\min}
+\left\{\|y-\tau\|_2^2+
+\lambda\|D_d\tau-\mu\mathbf{1}\|_2^2\right\},
+\qquad\lambda\geq0.
+\end{equation}
+Writing $Q=D_d^\top D_d$ and choosing any $p_\mu$ satisfying $D_dp_\mu=\mu\mathbf1$, the normal equations yield
+\begin{equation}\label{eq:hat}
+\widehat{\tau}_{\lambda,\mu}
+=p_\mu+H_\lambda(y-p_\mu),\qquad
+H_\lambda=(I+\lambda Q)^{-1}.
+\end{equation}
+For finite $\lambda\geq0$, $I+\lambda Q$ is symmetric positive definite. Because $\operatorname{rank}(D_d)=n-d$, the penalty matrix has precisely $d$ zero eigenvalues. These correspond to discrete polynomials of degree at most $d-1$.
+
+Let $\delta_1,\ldots,\delta_{n-d}>0$ be the positive eigenvalues of $Q$. The normalized smoothness parameter
+\begin{equation}\label{eq:smoothness}
+S(\lambda)=\frac{n-\operatorname{tr}(H_\lambda)}{n-d}
+=\frac1{n-d}\sum_{j=1}^{n-d}
+\frac{\lambda\delta_j}{1+\lambda\delta_j}
+\end{equation}
+satisfies $S(0)=0$ and $S(\infty)=1$, and is strictly increasing for positive finite $\lambda$. Thus $S$ supplies a bounded coordinate for the original estimator, without changing the underlying objective function. The endpoint $S=1$ is handled as the constrained polynomial limit rather than by substituting an arbitrarily large finite penalty.
+
+\subsection{One decomposition, multiple smoothing parameters}
+Consider the singular-value decomposition $D_d=U\Sigma V_+^\top$, completed to an orthogonal basis $V=[V_+,V_0]$. Its nonzero squared singular values are the $\delta_j$. With
+$a=V_+^\top(y-p_\mu)$ and
+$w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$, the fitted trend and residual can be represented as
+\begin{align}
+\widehat{\tau}_{\lambda,\mu}
+&=y-V_+\operatorname{diag}\{w_j(\lambda)\}a,
+\label{eq:spectraltrend}\\
+r_\lambda=y-\widehat{\tau}_{\lambda,\mu}
+&=V_+\operatorname{diag}\{w_j(\lambda)\}a.
+\label{eq:spectralresidual}
+\end{align}
+After the basis and series-specific coordinates have been computed, each candidate modifies only the scalar attenuation factors. The effective degrees of freedom and residual sum of squares follow from
+\begin{align}
+\operatorname{edf}(\lambda)
+&=d+\sum_{j=1}^{n-d}\{1-w_j(\lambda)\},
+\label{eq:edf}\\
+\operatorname{RSS}(\lambda)
+&=\sum_{j=1}^{n-d}w_j(\lambda)^2a_j^2.
+\label{eq:rss}
+\end{align}
+In particular, a criterion requiring only $\operatorname{RSS}$ and $\operatorname{edf}$ can exploit the stored spectral coordinates without repeatedly factorizing a penalized normal matrix. This amortization is the central reason to consider SVD for a grid search.
+
+\subsection{Complete selection criteria}
+For a fixed numerical reference mean, ordinary leave-one-out cross-validation (CV) and generalized cross-validation (GCV) have the conventional forms
+\begin{align}
+\operatorname{CV}(\lambda)
+&=\frac1n\sum_{i=1}^n
+\left(\frac{r_{\lambda,i}}{1-h_{ii}(\lambda)}\right)^2,
+\label{eq:cv}\\
+\operatorname{GCV}(\lambda)
+&=\frac{\operatorname{RSS}(\lambda)/n}
+{\{1-\operatorname{edf}(\lambda)/n\}^2},
+\label{eq:gcv}
+\end{align}
+where $h_{ii}(\lambda)$ is a diagonal entry of $H_\lambda$. The spectral basis also gives the stable leverage-deficit representation
+\begin{equation}\label{eq:leverage}
+1-h_{ii}(\lambda)=
+\sum_{j=1}^{n-d}v_{ij}^2w_j(\lambda).
+\end{equation}
+Unlike GCV, ordinary CV requires observationwise residuals and leverages; consequently, the candidate-evaluation cost differs by criterion even after spectral setup. We additionally consider corrected Akaike information criterion (AICc), Bayesian information criterion (BIC), and profiled Gaussian marginal likelihood. These use the established definitions implemented consistently across the methods being compared, including their prescribed undefined points and endpoint limits. A criterion value of infinity is not interpreted as an executable failure when the criterion is mathematically undefined.
+
+A reference mean estimated once as $\mu=\overline{D_dy}$ is used in some computational settings. In those cases the selection criteria are \emph{conditional} on the full-sample plug-in value: the CV score does not re-estimate $\mu$ within each leave-one-out fold. This distinction is preserved throughout the analysis.
+
+\subsection{Banded computation and verification of numerical optimality}
+The banded implementation factorizes
+$A_\lambda=I+\lambda D_d^\top D_d$ for individual finite positive
+penalties. A selected-inverse recursion recovers the diagonal
+leverage values and effective degrees of freedom needed by the
+complete criteria, without assembling a dense inverse. At fixed low
+difference order, the banded factor and selected inverse require
+$O(nd)$ storage, compared with $O(n^2)$ for a dense spectral basis.
+A dense explicit-inverse reference and a sparse-factorization/structured
+diagnostics hybrid are included as additional computational comparisons;
+the latter does not constitute an entirely sparse criterion evaluator.
+
+\paragraph{Optimality equation.}
+For the strictly convex and unconstrained objective in
+Eq.~\eqref{eq:pls}, the first-order condition is both necessary and
+sufficient for global optimality \citep{boyd2004convex}:
+\begin{equation}\label{eq:kktderiv}
+\begin{split}
+\frac12\nabla J_\lambda(\tau)
+&=(\tau-y)+\lambda D_d^\top(D_d\tau-\mu\mathbf{1})\\
+&=A_\lambda\tau-b_\lambda=0,\\
+b_\lambda&=y+\lambda\mu D_d^\top\mathbf1.
+\end{split}
+\end{equation}
+In this setting, the expression often called the
+Karush--Kuhn--Tucker (KKT) condition reduces simply to
+\emph{stationarity}: there are no explicit feasibility,
+complementarity, or dual-multiplier conditions. The Hessian is
+$2A_\lambda\succ0$, and thus every finite $\lambda\geq0$
+possesses a unique minimizer $\tau_\lambda^*$.
+
+\paragraph{Post-solve optimality residual.}
+Given a computed solution $\widetilde\tau_\lambda$, define
+\begin{equation}\label{eq:residualdef}
+\begin{split}
+r_{\mathrm{opt}}
+&=b_\lambda-A_\lambda\widetilde\tau_\lambda\\
+&=(y-\widetilde\tau_\lambda)
+-\lambda D_d^\top(D_d\widetilde\tau_\lambda-\mu\mathbf1)\\
+&=-\tfrac12\nabla J_\lambda(\widetilde\tau_\lambda).
+\end{split}
+\end{equation}
+Assessing a computed solution through the residual of its
+optimality or linear-system equations is established numerical
+practice, as developed in classical treatments of linear-system
+residuals and backward errors \citep{higham2002accuracy,golub2013matrix}. Residual-based
+stopping or acceptance rules are also used in practical
+convex quadratic-programming solvers
+\citep{stellato2020osqp}. These references justify the
+\emph{type of diagnostic}, not the particular numerical
+tolerance selected for the present implementation.
+
+Specifically, after a successful
+\texttt{cholesky\_banded} factorization and
+\texttt{cho\_solve\_banded} solve, the evaluated banded
+procedure computes the following \emph{scaled first-order
+optimality residual}:
+\begin{equation}\label{eq:kkt}
+\boxed{\quad
+\eta_{\mathrm{opt}}=
+\frac{\|r_{\mathrm{opt}}\|_2}
+{\max\{1,\|y\|_2,\|b_\lambda\|_2\}}.
+\quad}
+\end{equation}
+A finite-penalty criterion evaluation is rejected if the
+computed trend or diagnostic is nonfinite, or if
+$\eta_{\mathrm{opt}}>10^{-7}$. The threshold is an
+\emph{implementation-specific acceptance rule}; it is
+not presented as a canonical KKT tolerance prescribed by
+the cited numerical-analysis literature. The zero-penalty
+and infinite-penalty endpoints are handled by separate
+analytic branches and do not pass through this finite-penalty
+residual check.
+
+\paragraph{Distinction from backward and forward errors.}
+Although the numerical code labels this diagnostic a
+\texttt{backward\_error}, its normalization is \emph{not}
+the conventional normwise linear-system backward error,
+which can instead be expressed, for the present norms, as
+shown in classical backward-error analysis \citep{higham2002accuracy}:
+\begin{equation}\label{eq:standardbackward}
+\eta_{\mathrm{lin}}=
+\frac{\|b_\lambda-A_\lambda\widetilde\tau_\lambda\|_2}
+{\|A_\lambda\|_2\|\widetilde\tau_\lambda\|_2+
+ \|b_\lambda\|_2}
+\end{equation}
+The distinction matters:
+the recorded threshold is a reproducible residual-based
+\emph{acceptance convention}, not a formal bound on
+relative forward error or a certified backward-stability
+statement.
+
+For this quadratic objective, however, the mathematical
+meaning of the \emph{unscaled} optimality residual is exact.
+With $e=\widetilde\tau_\lambda-\tau_\lambda^*$,
+Eq.~\eqref{eq:residualdef} gives
+$e=-A_\lambda^{-1}r_{\mathrm{opt}}$ and
+\begin{equation}\label{eq:optimalitygap}
+\begin{split}
+J_\lambda(\widetilde\tau_\lambda)-J_\lambda(\tau_\lambda^*)
+&=e^\top A_\lambda e\\
+&=r_{\mathrm{opt}}^\top A_\lambda^{-1}r_{\mathrm{opt}}
+\leq\|r_{\mathrm{opt}}\|_2^2.
+\end{split}
+\end{equation}
+The inequality follows from
+$\lambda_{\min}(A_\lambda)=1$; likewise
+$\|e\|_2\leq\|r_{\mathrm{opt}}\|_2$ in exact arithmetic.
+Neither inequality turns the implemented \emph{scaled}
+criterion into a relative-accuracy guarantee, and
+floating-point evaluation of the residual itself incurs
+rounding error.
+
+\paragraph{Validation of a complete criterion search.}
+For each requested finite penalty, the banded procedure
+(i)~factorizes $A_\lambda$ and solves for the trend,
+(ii)~checks the scaled optimality residual,
+(iii)~calculates selected-inverse entries, effective
+degrees of freedom and observationwise leverage quantities
+when required, and (iv)~evaluates the statistical selection
+criterion. Conversion from a requested smoothness $S$ to
+$\lambda$ is validated separately; inaccurate inversion
+does not count as a KKT rejection. Completion of a full
+search requires all prescribed candidate--series evaluations
+and a finite, admissible selected score. Failure at one
+required candidate cannot be replaced by the runtime of
+a shorter, successful subset. Numerical checks belong to
+the overall computational workload rather than being
+excluded from the measured elapsed time.
+
+Finally, the spectral implementation does not execute
+the \emph{identical} banded-specific optimality-residual
+acceptance test. The observed contrast in successful
+grid completion therefore measures practical pipeline
+admissibility, not a controlled proof that the SVD
+solutions have smaller forward error. Independent
+high-precision or identical-diagnostic comparisons
+would be needed to establish such an accuracy ranking.
+
+\section{Computational study}
+\subsection{Experimental factors and execution environment}
+The study evaluates 29 prespecified computational configurations and 97 independent random-seed realizations per configuration, giving 2813 scheduled case--seed jobs. Configurations vary series length $n$, difference order $d$, criterion, reference mean, signal amplitude, and grid density $M$. Four workload types are considered: one candidate for one series, $M$ candidates for one series, one candidate for $R$ series, and $M$ candidates for $R$ series. The tested grid is $S_j=j/M$ for $j=1,\ldots,M$, including its analytic endpoint. Selected configurations use $M=100$, $1000$, or $10000$; the examined sample lengths include $n=64$, 128, 256, 512, 1024, 2048, and 4096. Comparisons use identical simulated series and evaluation coordinates when both implementations are admissible.
+
+The computations were performed on a Windows x64 multicore workstation, with one BLAS thread per job. The execution schedule comprised phases allowing at most 24, 1, or 12 concurrent jobs, with 2231, 52, and 530 jobs, respectively. These limits do not measure instantaneous CPU occupancy. We therefore retain the execution phase as a matching variable and avoid interpreting multi-job wall-clock times as contention-free single-process latency. Within a case--seed, method ordering was rotated and repeated where prescribed.
+
+Two coordinate-evaluation policies were implemented: directly inverting $S$ for each requested candidate and converting the full $S$ grid to $\lambda$ once for reuse. Both policies target the \emph{same} smoothing values. The reported complete cold time includes method initialization, smoothness-to-penalty conversion and all candidate criterion evaluations; recorded warm accounting excludes the one-time initialization term but does not represent a separately launched process.
+
+\subsection{Complete-search validity and paired comparisons}
+Every scheduled job was reconciled with its saved numerical and timing outcomes. A timing row is admitted only when the process terminates successfully, the selected score and elapsed time are finite, the recorded status is successful, and all $MR$ prescribed evaluations are present. Missing files, rejected numerical checks, inaccurate smoothness inversions and resource-limit exclusions remain in the denominator of descriptive reliability summaries. Successful evaluation of only one grid point is never substituted for completion of the full grid.
+
+For paired comparisons, methods must additionally agree on selected smoothness within $10^{-10}$ and, for directly comparable non-likelihood scores, on the selected criterion value within relative tolerance $10^{-7}$. These criteria assess agreement between available double-precision implementations, not uniform high-precision accuracy throughout the parameter grid. The implementation and machine configuration, execution phase, realization, coordinate policy, workload and repeat are matched.
+
+Let $T_{\mathrm{B}}$ and $T_{\mathrm{S}}$ denote positive complete cold times for banded Cholesky and spectral SVD. Our primary contrast is
+\begin{equation}\label{eq:ratio}
+\rho=\frac{T_{\mathrm{B}}}{T_{\mathrm{S}}};
+\qquad
+\rho>1 \ \Longleftrightarrow\ 
+\text{SVD is faster for that paired workload}.
+\end{equation}
+Log ratios are averaged within each independent seed cluster before constructing the geometric mean. Two-sided percentile 95\% confidence intervals use 700 bootstrap resamples of the independent seeds, retaining the correlated within-seed repetitions together. Confidence intervals thus characterize run-to-run variation for the measured conditions, not performance uncertainty across hardware platforms. Conditioning on numerically successful pairs can introduce survivor bias, which is addressed by reporting reliability separately from speed.

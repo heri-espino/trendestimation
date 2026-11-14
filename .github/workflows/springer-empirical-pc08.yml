@@ -1,0 +1,595 @@
+name: Experiment011 Springer empirical PC08 audit and publication
+
+on:
+  push:
+    branches:
+      - paper/springer-empirical-tensor-pc08
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Read-only preflight'
+        required: true
+        type: choice
+        options:
+          - preflight
+        default: preflight
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: experiment011-springer-empirical-pc08
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[pc08-preflight]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      ORIGINAL: 'C:\Users\175199\trendestimation-PC08_add97svd_20261105_025108'
+      BACKUP: 'C:\Users\175199\experiment011-backups\experiment011_20261109_072910742'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Require intended PC08 runner
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "RUNNER_NAME=$env:RUNNER_NAME, USERNAME=$env:USERNAME"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner, expected PCAG103A-08" }
+          if (-not (Test-Path -LiteralPath $env:CONDA_EXE)) { throw "Conda inaccessible" }
+      - name: Inspect complete report and its local backup (no benchmark execution)
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-${{ github.run_id }}.json"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/preflight.py --root $env:ORIGINAL --backup $env:BACKUP --output $out
+          if ($LASTEXITCODE -ne 0) { throw "Read-only preflight failed; output retained where possible" }
+      - name: Upload compact diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-pc08-preflight-${{ github.run_id }}
+          path: paper/benchmarks/experiment011/pc08_empirical/outputs/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Preserve metadata on a separate permanent branch
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/outputs/preflight-${{ github.run_id }}.json"
+          if (-not (Test-Path -LiteralPath $out)) {
+            Write-Host "No diagnostic generated: do not publish an empty evidence claim."
+            exit 0
+          }
+          $branch = "results/experiment011-pc08-preflight-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw "Cannot create diagnostic archive branch" }
+          git add -f -- $out
+          git commit -m "experiment011: archive read-only PC08 preflight"
+          if ($LASTEXITCODE -ne 0) { throw "Diagnostic commit failed" }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw "Diagnostic publication failed" }
+
+
+  analyze:
+    if: contains(github.event.head_commit.message, '[pc08-analyze]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      ORIGINAL: 'C:\Users\175199\trendestimation-PC08_add97svd_20261105_025108'
+      BACKUP: 'C:\Users\175199\experiment011-backups\experiment011_20261109_072910742'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Restrict to PC08 and test Python parser without running benchmarks
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner" }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m py_compile paper/benchmarks/experiment011/pc08_empirical/analyze_campaign.py
+          if ($LASTEXITCODE -ne 0) { throw "Analyzer failed to compile" }
+      - name: Reconstruct source lineage and derive sparse measured tensor
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/analyze_campaign.py --original $env:ORIGINAL --backup $env:BACKUP --out $out
+          if ($LASTEXITCODE -ne 0) { throw "Analysis audit failed, inspect traceback; no benchmarks are permitted" }
+          $summary = Get-Content -LiteralPath (Join-Path $out 'analysis_summary.json') -Raw | ConvertFrom-Json
+          if ($summary.recorded_jobs -ne 2813) { throw "Unexpected campaign cardinality" }
+          Write-Host "Data-based complete timing rows: $($summary.valid_complete_rows)/$($summary.tensor_rows)"
+      - name: Upload all compact derived evidence as extra copy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-springer-analysis-${{ github.run_id }}
+          path: paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Preserve derived code/data/figures in source branch and immutable results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong runner" }
+          $out = "paper/benchmarks/experiment011/pc08_empirical/derived/${{ github.run_id }}"
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'analysis_summary.json'))) {
+            throw 'Refuse to publish nonexistent analysis.'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage derived files' }
+          git commit -m 'experiment011: archive lineage-audited timing tensor and figures'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit derived files' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish on scoped analysis branch' }
+          $result = "results/experiment011-springer-derived-${{ github.run_id }}"
+          git switch -c $result
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable result ref' }
+          git push origin "HEAD:refs/heads/$result"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable result ref' }
+
+
+  build:
+    if: contains(github.event.head_commit.message, '[pc08-build]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Verify expected runner, frozen figure inputs and ingestion unit tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
+          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          foreach ($file in @('analysis_summary.json','empirical_results.tex','claim_to_data_ledger.json',
+            'figures/fig01_reliability.pdf','figures/fig02_paired_cv_gcv.pdf',
+            'figures/fig03_mapping_cost.pdf','figures/fig04_workloads.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $data $file))) { throw "Missing frozen empirical input $file" }
+          }
+          $robust = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          foreach ($file in @('summary.json','claim_to_data_ledger.json',
+            'figures/fig05_complete_grid_failure.pdf',
+            'figures/fig06_fourth_order_failure_modes.pdf',
+            'figures/fig07_single_vs_grid_speedups.pdf',
+            'figures/fig08_memory_policy.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $robust $file))) {
+              throw "Missing validated robustness figure/input $file"
+            }
+          }
+          $pub = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          foreach ($file in @('publication_evidence.json','publication_table.tex','figures/paired_cv_gcv_publication.pdf')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $pub $file))) {
+              throw "Missing journal-facing table/figure $file"
+            }
+          }
+          $viz = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          foreach ($name in @('evidence.json',
+            'figures/fig01_reliability_stacked.pdf',
+            'figures/fig02_runtime_distributions.pdf',
+            'figures/fig03_mapping_distributions.pdf',
+            'figures/fig04_workload_stacked.pdf',
+            'figures/fig05_grid_completion.pdf',
+            'figures/fig06_order4_failures.pdf',
+            'figures/fig07_crossover_distributions.pdf',
+            'figures/fig08_memory_scaling.pdf',
+            'tables/table01_runtime.tex',
+            'tables/table02_reliability.tex',
+            'tables/table03_grid_failures.tex')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $viz $name))) {
+              throw "Missing peer-reviewed journal graphic/table $name"
+            }
+          }
+          $visualEvidence = Get-Content -LiteralPath (Join-Path $viz 'evidence.json') -Raw | ConvertFrom-Json
+          if ($visualEvidence.complete -ne 76220 -or $visualEvidence.kkt -ne 9096 -or
+              @($visualEvidence.figures).Count -ne 8) { throw 'Figure source integrity check failed' }
+          $kkt = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          foreach ($file in @('summary.json','kkt_rejection_distribution.pdf',
+            'criterion_residual_summary.csv')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $kkt $file))) {
+              throw "Missing numeric residual-diagnostic figure or source ledger: $file"
+            }
+          }
+          $kktStats = Get-Content -LiteralPath (Join-Path $kkt 'summary.json') -Raw | ConvertFrom-Json
+          if ($kktStats.rejected_timing_rows -ne 9096 -or
+              $kktStats.threshold -ne 1e-7 -or
+              $kktStats.median -le 1e-7) {
+            throw 'Scaled optimality residual evidence did not pass source audit'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p test_*.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Source-only tests failed' }
+      - name: Fresh Springer sn-jnl compile with existing reproducible builder
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/builds/pc08/springer-empirical-$env:GITHUB_RUN_ID"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper springer --output-dir $out --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'New Springer PDF compilation failed' }
+          $manifest = Get-Content -LiteralPath (Join-Path $out 'build_manifest.json') -Raw | ConvertFrom-Json
+          if (@($manifest.results).Count -ne 1 -or $manifest.results[0].status -ne 'ok') {
+            throw 'Build manifest does not contain a successful Springer PDF'
+          }
+          if ($manifest.source_commit -ne $env:GITHUB_SHA) { throw 'Build source SHA mismatch' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/inspect_pdf.py --pdf (Join-Path $out 'springer.pdf') --log paper/main.log --output (Join-Path $out 'proof')
+          if ($LASTEXITCODE -ne 0) { throw 'Fresh PDF inspection failed' }
+      - name: Upload newly compiled PDF and audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-empirical-pdf
+          path: paper/builds/pc08/springer-empirical-*/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve verified new PDF on source and immutable artifacts branches
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/builds/pc08/springer-empirical-$env:GITHUB_RUN_ID"
+          $manifestPath = Join-Path $out 'build_manifest.json'
+          $pdfPath = Join-Path $out 'springer.pdf'
+          $inspectPath = Join-Path $out 'proof/pdf_inspection.json'
+          if (-not ((Test-Path $manifestPath) -and (Test-Path $pdfPath) -and (Test-Path $inspectPath))) {
+            throw 'Cannot publish without fresh PDF, manifest and PDF inspection'
+          }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          if ($manifest.results[0].status -ne 'ok') { throw 'New compile not successful' }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out paper/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage PDF/provenance' }
+          git commit -m 'paper: archive new Springer empirical PDF, TeX logs and page proof'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit PDF' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push source branch with PDF' }
+          $branch = "artifacts/springer-empirical-pc08-$env:GITHUB_RUN_ID"
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create immutable PDF branch' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push immutable PDF branch' }
+          Write-Host "Published new PDF SHA256=$($manifest.results[0].pdf_sha256)"
+
+
+  publish_repaired_analysis:
+    if: contains(github.event.head_commit.message, '[pc08-publish]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Require intended runner
+        run: |
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong PC08 runner' }
+      - uses: actions/download-artifact@v4
+        with:
+          name: experiment011-springer-analysis-42636962129
+          run-id: 42636962129
+          github-token: ${{ github.token }}
+          path: paper/benchmarks/experiment011/pc08_empirical/derived/42636962129
+      - name: Verify and archive repaired derived evidence without rerunning any experiment
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $summary = Get-Content -LiteralPath (Join-Path $out 'analysis_summary.json') -Raw | ConvertFrom-Json
+          if ($summary.recorded_jobs -ne 2813 -or $summary.valid_complete_rows -ne 76220) {
+            throw 'Artifact summary does not match independent audit'
+          }
+          foreach ($file in @('figures/fig02_paired_cv_gcv.pdf',
+            'empirical_results.tex','paired_backend_seed_bootstrap.csv','claim_to_data_ledger.json')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $out $file))) {
+              throw "Missing required repaired artifact $file"
+            }
+          }
+          $table = Get-Content -LiteralPath (Join-Path $out 'empirical_results.tex') -Raw
+          if (-not $table.Contains('confirm-data')) { throw 'Repaired case-labeled table absent' }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage audited files' }
+          git commit -m 'experiment011: archive repaired evidence with case-specific forest plot'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit audited files' }
+          $results = 'results/experiment011-springer-derived-42636962129'
+          git push origin "HEAD:refs/heads/$results"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable repaired result' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot fast-forward source branch' }
+          Write-Host 'Published repaired 21-file analysis artifact and permanent results branch'
+
+
+  robustness:
+    if: contains(github.event.head_commit.message, '[pc08-robustness]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Validate frozen tensor and render four robustness/memory figures
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner identity' }
+          $frozen = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          if (-not (Test-Path -LiteralPath (Join-Path $frozen 'timing_tensor.csv.gz'))) {
+            throw 'Frozen canonical timing tensor missing: no raw-data substitute permitted'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/robustness001/render.py --frozen $frozen --output $out
+          if ($LASTEXITCODE -ne 0) { throw 'Frozen robustness postprocessing failed; no large experiment was run' }
+          $s = Get-Content -LiteralPath (Join-Path $out 'summary.json') -Raw | ConvertFrom-Json
+          if ($s.kkt_failure_rows -ne 9096 -or @($s.robust_cases).Count -ne 9) {
+            throw 'KKT count or nine-case reliability signature mismatch'
+          }
+          if (@($s.figures).Count -ne 4) { throw 'Expected four supplementary figures' }
+          Write-Host "Validated KKT failures: $($s.kkt_failure_rows); figures: $(@($s.figures).Count)"
+      - name: Upload reproducible figures, source, tables and claim ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-robustness001
+          path: paper/benchmarks/experiment011/pc08_empirical/robustness001/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Publish new supplementary outputs to permanent and PR branches
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/robustness001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'summary.json'))) {
+            throw 'Cannot publish without new verified source-to-claim ledger'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage source/figures/derived tables' }
+          git commit -m 'experiment011: archive robustness001 failure maps, speedups and memory policy'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit analysis evidence' }
+          $archive = "results/experiment011-robustness001-pc08-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable evidence branch' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Scoped manuscript source advanced concurrently; immutable result is preserved' }
+          Write-Host "Published immutable evidence branch: $archive"
+
+
+
+  publication_figures:
+    if: contains(github.event.head_commit.message, '[pc08-editorial]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Render journal-facing matched comparison and source-linked table
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows runner' }
+          $src = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/paired_backend_seed_bootstrap.csv'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          if (-not (Test-Path -LiteralPath $src)) { throw 'Missing frozen paired-runtime evidence' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --source $src --output $out
+          if ($LASTEXITCODE -ne 0) { throw 'Figure/table render failed' }
+          $manifest = Get-Content -LiteralPath (Join-Path $out 'publication_evidence.json') -Raw | ConvertFrom-Json
+          if (@($manifest.results).Count -ne 8 -or $manifest.parameter_grid_size -ne 100) {
+            throw 'Journal-facing table source checks failed'
+          }
+          Write-Host 'Eight mathematically identified comparisons with matched bootstrap intervals'
+      - name: Upload source-linked scientific figure/table for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-publication-edit-figure
+          path: paper/benchmarks/experiment011/pc08_empirical/publication001/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Archive publication graphics without modifying frozen raw results
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/publication001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'publication_evidence.json'))) {
+            throw 'Cannot publish missing publication evidence'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Stage failed' }
+          git commit -m 'paper: archive traceable journal-facing paired SVD figures and table'
+          if ($LASTEXITCODE -ne 0) { throw 'Commit failed' }
+          $archive = "results/experiment011-publication001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable result publication failed' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Manuscript branch advanced concurrently; permanent output is preserved' }
+
+
+
+  visualization:
+    if: contains(github.event.head_commit.message, '[pc08-visuals]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 50
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Check frozen inputs and generate revised journal figures and tables
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Incorrect self-hosted runner" }
+          $src = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          foreach ($file in @('timing_tensor.csv.gz','paired_backend_rows.csv.gz',
+            'paired_coordinate_rows.csv.gz','paired_backend_seed_bootstrap.csv','timing_cell_summary.csv')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $src $file))) {
+              throw "Missing immutable input $file"
+            }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m py_compile (Join-Path $out 'render.py')
+          if ($LASTEXITCODE -ne 0) { throw 'Renderer Python syntax failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --frozen $src --out $out
+          if ($LASTEXITCODE -ne 0) { throw 'Renderer failed, no experiment was run' }
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $out 'evidence.json') | ConvertFrom-Json
+          if (@($summary.figures).Count -ne 8 -or
+              $summary.complete -ne 76220 -or
+              $summary.kkt -ne 9096 -or
+              $summary.mapping -ne 6336 -or
+              $summary.budget -ne 970 -or
+              $summary.missing_jobs -ne 57) {
+            throw "Frozen source-to-figure numerical provenance mismatch"
+          }
+          foreach ($name in @('table01_runtime.tex','table02_reliability.tex','table03_grid_failures.tex')) {
+            if (-not (Test-Path -LiteralPath (Join-Path (Join-Path $out 'tables') $name))) {
+              throw "Missing LaTeX table $name"
+            }
+          }
+          Write-Host 'Generated eight reproducible PDF/PNG figures and three science tables.'
+      - name: Upload revised figures and tables for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-visualization001
+          path: paper/benchmarks/experiment011/pc08_empirical/visualization001/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit reproducible graphics and publish permanent results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/visualization001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'evidence.json'))) {
+            throw 'Cannot publish without passing provenance assertions'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage figures and tables' }
+          git commit -m 'paper: archive validated revised distribution and stacked graphics'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit output' }
+          $archive = "results/experiment011-visualization001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish immutable graphics archive' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Concurrent change to manuscript; archive preserved' }
+
+
+
+  kkt_diagnostic:
+    if: contains(github.event.head_commit.message, '[pc08-kkt]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Derive conditional KKT rejection residual figure from frozen timing log
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected self-hosted runner' }
+          $data = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/timing_tensor.csv.gz'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          if (-not (Test-Path -LiteralPath $data)) { throw 'Missing frozen, hashed timing tensor' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --tensor $data --out $out
+          if ($LASTEXITCODE -ne 0) { throw 'KKT residual visualization failed' }
+          $s = Get-Content -Raw -LiteralPath (Join-Path $out 'summary.json') | ConvertFrom-Json
+          if ($s.rejected_timing_rows -ne 9096 -or
+              $s.recorded_criterion_counts.cv -ne 3384 -or
+              $s.recorded_criterion_counts.gcv -ne 4160 -or
+              $s.recorded_criterion_counts.mle -ne 1552) {
+            throw 'Residual-count provenance verification failed'
+          }
+          Write-Host 'Exact 9,096 rejected residuals verified; zero benchmarks run.'
+      - name: Upload figure, source, and criterion-level summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment011-kkt-residual-audit
+          path: paper/benchmarks/experiment011/pc08_empirical/kkt001/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Publish reproducible postprocessing output on permanent results branch
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/kkt001'
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'summary.json'))) {
+            throw 'KKT numerical-evidence manifest missing'
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $out
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage derived figure and summary' }
+          git commit -m 'paper: preserve residual acceptance figure and verified KKT criteria'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot archive derived evidence' }
+          $archive = "results/experiment011-kkt001-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable results branch publication failed' }
+          git push origin HEAD:refs/heads/paper/springer-empirical-tensor-pc08
+          if ($LASTEXITCODE -ne 0) { throw 'Source PR changed concurrently; archive branch remains available' }

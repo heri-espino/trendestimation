@@ -1,0 +1,26 @@
+{
+  "scheduling_completion": {
+    "claim": "2813 distinct scheduled jobs",
+    "source": "analysis_summary.json:recorded_jobs; accepted_file_manifest.csv"
+  },
+  "numerical_reliability": {
+    "claim": "Complete-search status admissibility, not independent precision",
+    "source": "criterion_backend_reliability.csv"
+  },
+  "backend_comparison": {
+    "claim": "Only numerically matching, same-seed, same-phase method pairs",
+    "source": "paired_backend_seed_bootstrap.csv"
+  },
+  "coordinate_cost": {
+    "claim": "Only same-seed complete-grid same-method matched coordinate pairs",
+    "source": "paired_coordinate_seed_bootstrap.csv"
+  },
+  "workloads": {
+    "claim": "Observed median full criterion time by workload, no pooling worker phases",
+    "source": "timing_cell_summary.csv"
+  },
+  "lineage": {
+    "claim": "Accepted final-report records only; origin reconstructed from cumulative report chain",
+    "source": "accepted_file_manifest.csv; analysis_summary.json:lineage"
+  }
+}

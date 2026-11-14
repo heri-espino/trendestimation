@@ -1,0 +1,945 @@
+Spectral decomposition for efficient smoothingparameter selection in penalized least squares: an
+empirical study of complete-criterion computation
+Heriberto Espino-Montelongo1*
+1*
+
+Universidad de las Américas Puebla, San Andrés Cholula, Puebla,
+Mexico.
+
+Corresponding author(s). E-mail(s): heriberto.espinomo@udlap.mx;
+Abstract
+Selecting the smoothing parameter of a finite-difference penalized least-squares
+estimator requires evaluation of a statistical selection criterion, not merely
+solution of a penalized linear system. We examine the computational advantages and numerical limitations of reusing a singular-value decomposition (SVD)
+across candidate parameters, compared with a structured banded-Cholesky
+implementation. The study covers 29 prespecified configurations, 97 randomseed realizations per configuration, multiple selection criteria and one- versus
+multiple-candidate workloads. Valid execution times are matched by realization,
+workload and execution phase, with uncertainty estimated by seed-cluster bootstrap. For an order-three conditional cross-validation problem with n = 256, the
+banded/SVD complete cold-time ratio is 0.698 (95% interval 0.671–0.724) for a
+single candidate but 4.846 (4.567–5.125) for a 100-candidate grid. In nine configurations, the banded complete-grid implementation fails its post-solve optimality
+check for all recorded grid evaluations while the spectral pipeline completes them;
+both methods exhibit smoothness-inversion failures in larger fourth-order configurations. Dense spectral storage nevertheless scales quadratically with series
+length. The results support spectral decomposition as the preferred implementation for repeated complete-criterion searches when memory permits, while
+retaining banded methods for isolated evaluations and memory-constrained
+problems.
+Keywords: penalized least squares, smoothing-parameter selection, singular-value
+decomposition, Whittaker–Henderson smoothing, cross-validation, numerical
+reliability, computational performance
+
+1
+
+1 Introduction
+Penalized least-squares smoothing is a widely used approach to separating lowfrequency variation from noise in an observed series. Since the work of Whittaker
+Whittaker (1923), finite-difference penalties have offered a direct connection between
+trend regularity and linear smoothing. Subsequent developments include structured
+implementations of Whittaker–Henderson smoothing Weinert (2007, 2012); Biessy
+(2026) and the interpretation of smoothing through the percentage-of-smoothness
+parameter introduced by Guerrero Guerrero (2007, 2008). Selection of the penalty by
+cross-validation, information criteria or marginal likelihood is well established Craven
+and Wahba (1979); Cortés-Toto et al. (2017). Nevertheless, obtaining a fitted trend
+and evaluating the complete selection criterion are computationally different tasks.
+A banded Cholesky factorization exploits the sparsity of finite-difference penalties and is economical for an individual smoothing parameter. In contrast, a spectral
+factorization requires an appreciable initial calculation but exposes all candidate penalties through diagonal transformations in a common basis. Consequently, the apparent
+superiority of a solver in a single fit need not persist across a grid of smoothing parameters. Moreover, numerical acceptance of the complete criterion depends not only on
+the matrix factorization but also on leverage calculations, endpoint treatment and the
+inversion between penalty and smoothness coordinates.
+We investigate the following practical question: When is a spectral implementation preferable for selecting a smoothing parameter by a complete statistical criterion?
+We compare measured end-to-end costs of spectral singular-value decomposition
+(SVD), banded Cholesky and available reference implementations under paired computational workloads. Unlike a fit-only benchmark, the comparisons charge setup,
+coordinate conversion, criterion evaluation and diagnostics to the method that incurs
+them. Unsuccessful or incomplete searches remain observable outcomes rather than
+being treated as fast computations. This permits a recommendation based jointly on
+execution time, observed reliability and storage requirements.
+Our main conclusion is that spectral decomposition is an effective default choice for
+repeated, complete-criterion searches at feasible matrix sizes. That recommendation
+is empirical and conditional: structured banded computation remains competitive for
+isolated candidate evaluations and retains important storage advantages for long series.
+We do not propose a new PLS estimator, nor do we interpret computation time as
+predictive accuracy.
+
+2 Penalized least squares and spectral evaluation
+2.1 Estimator and smoothing coordinate
+Let y = (y1 , . . . , yn )⊤ ∈ Rn denote equally spaced observations and let Dd ∈ R(n−d)×n
+be the order-d forward-difference matrix, with 1 ≤ d < n. For a fixed reference level
+µ ∈ R, the trend estimate is
+
+
+τbλ,µ = arg min ∥y − τ ∥22 + λ∥Dd τ − µ1∥22 ,
+τ ∈Rn
+
+2
+
+λ ≥ 0.
+
+(1)
+
+Writing Q = Dd⊤ Dd and choosing any pµ satisfying Dd pµ = µ1, the normal equations
+yield
+τbλ,µ = pµ + Hλ (y − pµ ),
+Hλ = (I + λQ)−1 .
+(2)
+For finite λ ≥ 0, I + λQ is symmetric positive definite. Because rank(Dd ) = n − d,
+the penalty matrix has precisely d zero eigenvalues. These correspond to discrete
+polynomials of degree at most d − 1.
+Let δ1 , . . . , δn−d > 0 be the positive eigenvalues of Q. The normalized smoothness
+parameter
+n−d
+1 X λδj
+n − tr(Hλ )
+S (λ) =
+=
+(3)
+n−d
+n − d j=1 1 + λδj
+satisfies S (0) = 0 and S (∞) = 1, and is strictly increasing for positive finite λ.
+Thus S supplies a bounded coordinate for the original estimator, without changing
+the underlying objective function. The endpoint S = 1 is handled as the constrained
+polynomial limit rather than by substituting an arbitrarily large finite penalty.
+
+2.2 One decomposition, multiple smoothing parameters
+Consider the singular-value decomposition Dd = U ΣV+⊤ , completed to an orthogonal
+basis V = [V+ , V0 ]. Its nonzero squared singular values are the δj . With a = V+⊤ (y−pµ )
+and wj (λ) = λδj /(1 + λδj ), the fitted trend and residual can be represented as
+
+τbλ,µ = y − V+ diag{wj (λ)}a,
+rλ = y − τbλ,µ = V+ diag{wj (λ)}a.
+
+(4)
+(5)
+
+After the basis and series-specific coordinates have been computed, each candidate
+modifies only the scalar attenuation factors. The effective degrees of freedom and
+residual sum of squares follow from
+edf(λ) = d +
+
+n−d
+X
+
+{1 − wj (λ)},
+
+(6)
+
+j=1
+
+RSS(λ) =
+
+n−d
+X
+
+wj (λ)2 a2j .
+
+(7)
+
+j=1
+
+In particular, a criterion requiring only RSS and edf can exploit the stored spectral coordinates without repeatedly factorizing a penalized normal matrix. This
+amortization is the central reason to consider SVD for a grid search.
+
+2.3 Complete selection criteria
+For a fixed numerical reference mean, ordinary leave-one-out cross-validation (CV)
+and generalized cross-validation (GCV) have the conventional forms
+n
+
+CV(λ) =
+
+1X
+n i=1
+3
+
+
+
+rλ,i
+1 − hii (λ)
+
+2
+,
+
+(8)
+
+GCV(λ) =
+
+RSS(λ)/n
+,
+{1 − edf(λ)/n}2
+
+(9)
+
+where hii (λ) is a diagonal entry of Hλ . The spectral basis also gives the stable leveragedeficit representation
+1 − hii (λ) =
+
+n−d
+X
+
+2
+vij
+wj (λ).
+
+(10)
+
+j=1
+
+Unlike GCV, ordinary CV requires observationwise residuals and leverages; consequently, the candidate-evaluation cost differs by criterion even after spectral setup. We
+additionally consider corrected Akaike information criterion (AICc), Bayesian information criterion (BIC), and profiled Gaussian marginal likelihood. These use the
+established definitions implemented consistently across the methods being compared,
+including their prescribed undefined points and endpoint limits. A criterion value of
+infinity is not interpreted as an executable failure when the criterion is mathematically
+undefined.
+A reference mean estimated once as µ = Dd y is used in some computational
+settings. In those cases the selection criteria are conditional on the full-sample plugin value: the CV score does not re-estimate µ within each leave-one-out fold. This
+distinction is preserved throughout the analysis.
+
+2.4 Banded evaluation and numerical admissibility
+The banded method factorizes Aλ = I + λDd⊤ Dd for individual penalties. A selectedinverse recursion supplies the diagonal leverage values and effective degrees of freedom
+needed by the complete criteria, without forming a dense inverse. For fixed low difference order, the banded factor and selected inverse have storage proportional to
+nd, whereas the full spectral basis requires storage proportional to n2 . An explicit
+dense-inverse method and an available sparse-factorization/structured-diagnostics
+hybrid serve only as additional comparison procedures; the latter is not treated as a
+sparse-only score evaluator.
+A numerical completion requirement is especially important for the banded procedure. After factorization and solution of the normal equations, the implementation
+checks
+
+ηKKT =
+
+∥(y − τb) − λDd⊤ (Dd τb − µ1)∥2
+.
+max{1, ∥y∥2 , ∥y + λµDd⊤ 1∥2 }
+
+(11)
+
+Its finite-precision acceptance threshold is ηKKT ≤ 10−7 . Rejection occurs after the
+banded factorization and solve. A failed check therefore need not imply that Cholesky
+factorization itself was impossible. The spectral implementation does not apply precisely the same banded-specific acceptance gate; its observed completion rate must
+not be confused with an independent proof of greater forward accuracy.
+4
+
+3 Computational study
+3.1 Experimental factors and execution environment
+The study evaluates 29 prespecified computational configurations and 97 independent
+random-seed realizations per configuration, giving 2813 scheduled case–seed jobs. Configurations vary series length n, difference order d, criterion, reference mean, signal
+amplitude, and grid density M . Four workload types are considered: one candidate
+for one series, M candidates for one series, one candidate for R series, and M candidates for R series. The tested grid is Sj = j/M for j = 1, . . . , M , including its
+analytic endpoint. Selected configurations use M = 100, 1000, or 10000; the examined
+sample lengths include n = 64, 128, 256, 512, 1024, 2048, and 4096. Comparisons use
+identical simulated series and evaluation coordinates when both implementations are
+admissible.
+The computations were performed on a Windows x64 multicore workstation, with
+one BLAS thread per job. The execution schedule comprised phases allowing at most
+24, 1, or 12 concurrent jobs, with 2231, 52, and 530 jobs, respectively. These limits do
+not measure instantaneous CPU occupancy. We therefore retain the execution phase
+as a matching variable and avoid interpreting multi-job wall-clock times as contentionfree single-process latency. Within a case–seed, method ordering was rotated and
+repeated where prescribed.
+Two coordinate-evaluation policies were implemented: directly inverting S for each
+requested candidate and converting the full S grid to λ once for reuse. Both policies
+target the same smoothing values. The reported complete cold time includes method
+initialization, smoothness-to-penalty conversion and all candidate criterion evaluations; recorded warm accounting excludes the one-time initialization term but does
+not represent a separately launched process.
+
+3.2 Complete-search validity and paired comparisons
+Every scheduled job was reconciled with its saved numerical and timing outcomes. A
+timing row is admitted only when the process terminates successfully, the selected score
+and elapsed time are finite, the recorded status is successful, and all M R prescribed
+evaluations are present. Missing files, rejected numerical checks, inaccurate smoothness inversions and resource-limit exclusions remain in the denominator of descriptive
+reliability summaries. Successful evaluation of only one grid point is never substituted
+for completion of the full grid.
+For paired comparisons, methods must additionally agree on selected smoothness within 10−10 and, for directly comparable non-likelihood scores, on the selected
+criterion value within relative tolerance 10−7 . These criteria assess agreement
+between available double-precision implementations, not uniform high-precision accuracy throughout the parameter grid. The implementation and machine configuration,
+execution phase, realization, coordinate policy, workload and repeat are matched.
+5
+
+Let TB and TS denote positive complete cold times for banded Cholesky and
+spectral SVD. Our primary contrast is
+
+ρ=
+
+TB
+;
+TS
+
+ρ > 1 ⇐⇒ SVD is faster for that paired workload.
+
+(12)
+
+Log ratios are averaged within each independent seed cluster before constructing the
+geometric mean. Two-sided percentile 95% confidence intervals use 700 bootstrap
+resamples of the independent seeds, retaining the correlated within-seed repetitions
+together. Confidence intervals thus characterize run-to-run variation for the measured
+conditions, not performance uncertainty across hardware platforms. Conditioning
+on numerically successful pairs can introduce survivor bias, which is addressed by
+reporting reliability separately from speed.
+
+4 Empirical results
+4.1 Completion rates and admissible observations
+Of 2813 scheduled computational jobs, 57 terminated without a successful numerical record. The resulting dataset comprises 92,679 measured or explicitly classified
+method-level outcomes. A total of 76,220 (82.24%) satisfy the predefined completeness and status conditions. The remaining 16,459 comprise 11,208 numerical-rejection
+records, 4224 additional smoothness-inversion failure records, 970 computationalbudget exclusions, and 57 records representing unavailable job inputs. The classification retains unsuccessful searches; omitting them would bias subsequent comparisons
+toward implementations with a higher apparent completion rate.
+Figure 1 summarizes status-admissible proportions for the evaluated criteria and
+implementation families. Because the methods were not all attempted in the same
+parameter configurations, aggregate percentages should be interpreted descriptively
+rather than as probabilities from a randomized, identically distributed reliability trial.
+
+4.2 Complete-grid running time
+Table 1 and Fig. 2 compare complete 100-candidate CV and GCV searches for one
+series. Each contrast uses the same observations, numerical criterion, smoothing candidates and execution phase. The reported ratio ρ = TB /TS exceeds one for all eight
+representative parameter configurations, indicating an advantage for spectral SVD on
+these measured grids. The strongest among these representative ratios exceed five,
+whereas the smaller first-order GCV example is approximately 2.33. These findings
+concern complete selection, including setup and diagnostics, not repeated trend fitting
+alone.
+The effect of candidate count is particularly clear for conditional CV at n = 256
+and d = 3. The banded/SVD time ratio is 0.698 (95% interval 0.671–0.724) for one candidate and one series, but 4.846 (4.567–5.125) for 100 candidates. For 100 candidates
+evaluated on three series, the corresponding ratio is 3.655 (3.450–3.860). The reversal is consistent with a sizable spectral setup cost that is recovered through repeated
+criterion evaluation. It does not imply a universal crossover at M = 100; both the
+6
+
+AICC: banded cholesky
+AICC: spectral svd
+CV: banded cholesky
+CV: naive inverse
+CV: spectral svd
+GCV: banded cholesky
+GCV: naive inverse
+GCV: sparse cholesky banded trace
+GCV: spectral svd
+MLE: banded cholesky
+MLE: spectral svd
+
+0.0
+
+0.2
+0.4
+0.6
+0.8
+Fraction of complete, status-admissible timing rows
+
+1.0
+
+Fig. 1 Proportion of complete, status-admissible method-level observations by selection criterion and
+implementation. Each denominator includes recorded incomplete searches and explicit exclusions for
+the associated method. Differences in the evaluated configuration sets preclude interpreting aggregate
+percentages as matched failure probabilities.
+
+Table 1 Matched complete-criterion cold-time ratios for 100
+smoothing candidates and one series. The reference mean is fixed at zero
+(µ = 0) or computed once from the observed differences (µ = Dd y). All
+comparisons use the same execution phase and smoothing-coordinate
+policy. Intervals are 95% percentile bootstrap intervals over independent
+random-seed clusters. Ratios exceeding one favor spectral SVD.
+
+Criterion
+CV
+CV
+CV
+CV
+CV
+GCV
+GCV
+GCV
+
+n
+
+d
+
+Reference µ
+
+64
+64
+128
+128
+256
+64
+128
+128
+
+1
+3
+3
+3
+3
+1
+3
+3
+
+0
+0
+0
+Dd y
+Dd y
+0
+0
+Dd y
+
+Seeds
+
+ρ
+
+96
+97
+97
+97
+97
+96
+97
+97
+
+2.34
+4.03
+5.40
+5.56
+4.85
+2.33
+4.99
+5.12
+
+95% CI
+[2.29, 2.39]
+[3.95, 4.11]
+[5.24, 5.55]
+[5.46, 5.65]
+[4.57, 5.12]
+[2.28, 2.37]
+[4.87, 5.10]
+[5.01, 5.23]
+
+location and even the existence of a crossover depend on the criterion, series length,
+order and implementation.
+For fixed-mean first-order GCV at n = 64, the analogous ratio is 1.001 (0.982–
+1.018) for one candidate and 2.328 (2.282–2.374) for the 100-candidate grid. Thus
+a negligible single-candidate performance difference can coexist with a substantial
+grid-search advantage.
+7
+
+Complete-criterion grids: matched spectral speed advantage
+CV: n = 64, d = 1, μ = 0
+CV: n = 64, d = 3, μ = 0
+CV: n = 128, d = 3, μ = 0
+CV: n = 128, d = 3, μ = Ddy
+CV: n = 256, d = 3, μ = Ddy
+GCV: n = 64, d = 1, μ = 0
+GCV: n = 128, d = 3, μ = 0
+GCV: n = 128, d = 3, μ = Ddy
+
+CV
+
+1
+
+GCV
+
+2
+
+3
+4
+Complete cold-time ratio Tbanded/TSVD
+
+5
+
+6
+
+Fig. 2 Geometric-mean banded-Cholesky/SVD complete cold-time ratios for eight numerically
+admissible CV and GCV searches over 100 smoothness candidates. Horizontal intervals are 95%
+seed-cluster bootstrap confidence intervals. All plotted comparisons were matched within the same
+execution phase; selected contrasts have 96 or 97 independent seed realizations. The dashed vertical
+reference denotes equal execution time.
+
+4.3 Reuse across smoothing coordinates and series
+The candidate representation also influences total cost. Two computational policies
+were compared: repeated conversion of smoothness values S to the penalty λ, and
+a single conversion shared across the search. The candidate set is identical under
+both policies, so the contrast concerns computational reuse rather than a different
+optimization problem.
+For spectral CV with n = 256, d = 3, 100 candidates and three series, the geometric complete cold-time ratio of once-mapped penalties to repeated direct-S conversion
+is 0.580 (95% interval 0.570–0.590). In this setting, precomputing the candidate transformation reduces total execution time. Figure 3 displays corresponding descriptive
+comparisons across other numerically admissible multi-series grid configurations.
+Figure 4 illustrates how a fixed first-order GCV configuration responds to four
+combinations of candidate and series count. The comparisons show why initialization,
+single-candidate scoring, multiple-series reuse and full-grid selection must be distinguished when assessing an implementation. In particular, a procedure optimized only
+for one fitted trend need not minimize the cost of selecting a smoothing parameter.
+8
+
+Mapped-lambda / direct-S cold time
+
+1.0
+0.9
+0.8
+0.7
+0.6
+0.5
+spectral svd
+banded cholesky
+
+0.4
+102
+
+103
+
+104
+
+Candidate grid density M
+
+Fig. 3 Matched cost of once-mapped penalties relative to direct smoothness-coordinate conversion
+in multiple-series grid workloads. Plotted values summarize geometric time ratios within admissible
+configurations from the same execution phase. Values below one favor a shared penalty mapping; the
+aggregates are descriptive rather than universal mappings from grid size to execution time.
+
+4.4 Numerical reliability and its consequences
+The aggregate status proportions in the 24-worker execution phase are 10,848/13,176
+(82.3%) for banded CV and 13,176/13,176 (100%) for spectral CV. The corresponding GCV counts are 13,176/16,280 (80.9%) and 15,892/16,086 (98.8%), respectively.
+Their denominators differ because method eligibility and the evaluated configurations
+differ; they should not be used as an unconditional estimate of solver accuracy. The
+comparison nevertheless motivates a closer examination of the failure mechanisms,
+reported next.
+
+4.5 Post-solve optimality failures in banded computation
+The banded-Cholesky implementation reported 9096 method-level timing observations rejected by the relative optimality-residual check in Eq. (11). The recorded
+residuals range from approximately 1.00 × 10−7 to 1.06 × 10−6 , compared with the prescribed tolerance 10−7 . Since the check is performed after factorization and solution,
+these observations do not establish the breakdown of Cholesky factorization itself.
+They identify loss of admissibility in the complete banded criterion pipeline under its
+implemented numerical diagnostic.
+A particularly informative contrast occurs in nine parameter configurations. For
+each configuration, 97 independent realizations were considered. Both methods completed every recorded single-candidate evaluation, but the banded implementation
+rejected every complete-grid evaluation, whereas the spectral implementation completed the corresponding grids. The configurations comprise CV and GCV with
+(n, d, M ) = (128, 3, 1000), (256, 4, 100) and (256, 3, 1000); GCV with (64, 3, 10000);
+9
+
+Median complete-criterion cold time (s)
+
+spectral svd
+banded cholesky
+
+6 × 10−2
+4 × 10−2
+3 × 10−2
+2 × 10−2
+
+10−2
+6 × 10−3
+4 × 10−3
+3 × 10−3
+1S/
+
+1 s er
+
+ies
+
+grid /
+
+1 ser
+
+ies
+
+1S/
+
+3 ser
+
+ies
+
+grid /
+
+3 ser
+
+ies
+
+Fig. 4 Median complete-criterion cold time for the four workload types in a first-order GCV example
+(n = 64, 100-candidate grid). The reported time includes initialization, coordinate mapping and all
+evaluated criterion values. The within-seed workload observations are correlated.
+
+and profiled Gaussian marginal likelihood with (256, 3, 100) and (512, 3, 100). Figure 5
+displays these results.
+The nine configurations account for 6984 banded-rejection timing records; another
+2112 such records arise from larger fourth-order configurations. These are repeated
+method-level observations within 97 independent seed clusters per configuration,
+rather than thousands of independent experimental realizations. The saved status
+information does not identify the exact smoothing-grid point that first produced each
+rejection, and hence no candidate-specific instability boundary is inferred.
+The apparent spectral advantage must be interpreted as observed computational
+completion, not a controlled comparison of identical backward-error tests. The spectral
+scorer does not impose the same implementation-specific acceptance criterion as the
+banded scorer. Independent numerical reference calculations would be required to
+establish a strict relative-accuracy ranking at each penalty.
+
+4.6 Smoothness inversion remains a common numerical
+limitation
+An additional failure mechanism affects both implementations at larger difference
+order and series length. In the fourth-order CV/GCV configurations with n = 1024,
+2048 and 4096, the numerical inversion of the normalized smoothness mapping
+sometimes returned values outside its prescribed tolerance. Across the evaluated configurations, 6336 timing records explicitly describe inaccurate smoothness inversion:
+2112 associated with the banded method and 4224 with SVD. The distribution of
+observed outcomes in the fourth-order settings is given in Fig. 6.
+10
+
+Nine reproducible Cholesky complete-grid failure regimes
+CV
+
+n=256 d=3 M=1000
+
+100%
+
+100%
+
+0%
+
+100%
+
+CV
+
+n=128 d=3 M=1000
+
+100%
+
+100%
+
+0%
+
+100%
+
+CV
+
+n=256 d=4 M=100
+
+100%
+
+100%
+
+0%
+
+100%
+
+GCV n=256 d=3 M=1000
+
+100%
+
+100%
+
+0%
+
+100%
+
+GCV n=64 d=3 M=10000
+
+100%
+
+100%
+
+0%
+
+100%
+
+GCV n=128 d=3 M=1000
+
+100%
+
+100%
+
+0%
+
+100%
+
+GCV n=256 d=4 M=100
+
+100%
+
+100%
+
+0%
+
+100%
+
+MLE n=512 d=3 M=100
+
+100%
+
+100%
+
+0%
+
+100%
+
+MLE n=256 d=3 M=100
+
+100%
+
+100%
+
+0%
+
+100%
+
+Banded
+1 candidate
+
+SVD
+1 candidate
+
+Banded
+full grid
+
+SVD
+full grid
+
+97 independent seeds per case; repeated workload/coordinate rows are correlated
+
+Fig. 5 Observed completion fractions for nine parameter configurations contrasting a single candidate with a full smoothing grid. Each configuration contains 97 independent random-seed realizations.
+The banded grid fails the post-solve optimality check for all recorded grid observations, whereas the
+spectral pipeline completes the corresponding grids. Repeated measurements and candidate policies
+within each realization are not independent trials.
+
+This error concerns the transformation from the bounded coordinate S to the
+penalty λ, rather than evidence that a spectral decomposition failed. Crucially, a
+successfully completed one-candidate evaluation cannot be used as a substitute for an
+incomplete multi-candidate search. Accordingly, the large-order configurations with
+shared inversion difficulties do not supply an empirical winner for the full criterion
+grid.
+
+4.7 The single-candidate versus grid-search crossover
+The principal runtime trade-off becomes visible when paired, numerically admissible
+observations are compared across candidate counts. Figure 7 shows three examples
+evaluated under identical matching rules. In conditional CV with n = 256, d = 3, the
+geometric banded/SVD cold-time ratio changes from 0.698 (95% interval 0.671–0.724)
+for one candidate to 4.846 (4.567–5.125) for 100 candidates. In fixed-mean GCV with
+n = 64, d = 1, the corresponding ratios are 1.001 (0.982–1.018) and 2.328 (2.282–
+2.374). For fixed-mean CV with n = 128, d = 3, they are 1.069 (1.052–1.087) and
+5.401 (5.244–5.555).
+These results support the computational interpretation of Eqs. (4)–(7): spectral
+setup is paid once, while the attenuation coefficients and the statistics needed for
+11
+
+Fourth-order case: two distinct mechanisms
+n=256 banded
+n=256 SVD
+n=1,024 banded
+n=1,024 SVD
+n=2,048 banded
+n=2,048 SVD
+n=4,096 banded
+n=4,096 SVD
+
+0%
+
+20%
+
+40%
+
+60%
+
+80%
+
+100%
+
+Fraction of available method-level timing rows
+complete
+
+KKT gate
+
+S inversion
+
+Fig. 6 Status composition of the fourth-order computations at increasing series lengths. The displayed denominator is the number of available method-level records. Banded post-solve optimality
+failures and smoothness-coordinate inversion failures are distinguished; the latter affect both implementations. Excluded or unavailable jobs are retained separately in the overall accounting.
+
+subsequent criterion evaluations are reused. The crossover is observed in complete
+scoring workloads; it should not be conflated with the cost of fitting a trend for a
+prescribed penalty.
+
+4.8 Memory requirements and computational feasibility
+The principal disadvantage of the spectral approach is its dense storage requirement.
+For the evaluated implementation, the conservative memory admission allowance corresponds to five n × n double-precision arrays, or 40n2 bytes. An explicit dense-inverse
+reference is assigned seven such arrays, or 56n2 bytes. In contrast, a banded Cholesky
+factor and a banded selected-inverse buffer together require approximately 16n(d + 1)
+bytes, excluding ancillary data structures. Figure 8 illustrates these storage relations
+for d = 4.
+For example, the spectral admission allowance is 640 MiB at n = 4096. At n = 8192
+it rises to 2.5 GiB, exceeding the 2 GiB dense allocation limit imposed in the study.
+The latter sample length was not evaluated in the present comparison. The curves
+therefore represent implementation-specific memory allowances and illustrative buffer
+sizes, not measurements of peak resident memory or empirical allocation failures.
+There were 970 resource-budget exclusions in the recorded timing outcomes: 776
+for the explicit-inverse reference and 194 for SVD. These were induced by prescribed
+computational-work thresholds, not observed out-of-memory errors. Thus the memory analysis establishes a concrete feasibility trade-off without attributing numerical
+failures to unsupported memory measurements.
+12
+
+A single candidate can favor banded; the grid favors SVD
+One candidate
+
+GCV, n=64, d=1, fixed mean
+
+100-candidate grid
+
+CV, n=128, d=3, fixed mean
+
+CV, n=256, d=3, plug-in mean
+
+4 × 10−1
+
+6 × 10−1
+
+100
+
+2 × 100
+
+3 × 100 4 × 100
+
+6 × 100
+
+Banded Cholesky / SVD total cold time (log scale)
+
+Fig. 7 Matched banded-Cholesky/SVD complete cold-time ratios for one smoothing candidate and
+for 100 candidates. Horizontal bars represent 95% seed-cluster bootstrap intervals. Values above
+one favor spectral SVD. Only complete and numerically admissible method pairs contribute to the
+displayed estimates.
+
+5 Discussion
+The empirical evidence supports a clear implementation preference, subject to mathematical and computational feasibility: reuse of a spectral decomposition is the
+recommended default for finite-difference PLS smoothing-parameter selection over
+a moderate-to-large candidate grid. In contrast to a sequence of penalized normalequation factorizations, spectral preprocessing represents the complete search in one
+orthogonal basis. It amortizes setup, supplies degrees of freedom and residual sums of
+squares directly, and provides a common representation for multiple selection criteria. The advantage is pronounced in the matched CV/GCV grid comparisons and is
+compatible with the observed numerical-completion differences.
+The recommendation should not be extended beyond the observed evidence. First,
+the banded method is often preferable when evaluating only one penalty. Second, the
+spectral basis and its work arrays require quadratic memory, which can dominate the
+decision for long series even when SVD is attractive at moderate n. Third, numerical
+acceptance is not interchangeable with certified forward accuracy: the two implementations apply different diagnostic checks, and both encounter smoothness-inversion
+difficulties in the larger fourth-order cases. Fourth, the recorded multi-process execution phases limit the transportability of wall-clock ratios to idle workstations or
+different parallel workloads.
+These limitations suggest the following practical selection principle. If the task is
+a multi-candidate complete-criterion search and the dense spectral workspace satisfies a conservative memory budget, prepare the spectral decomposition once, reuse
+series-specific projections and precompute the candidate penalties when appropriate.
+13
+
+Storage scale or admission allowance (MiB; log axis)
+
+Why dense spectral reuse trades speed for quadratic memory
+105
+
+SVD policy: 5 full float64 matrices
+Naive inverse policy: 7 full matrices
+
+104
+
+Banded factor + selected inverse (d=4)
+Dense allocation limit (2 GiB)
+
+103
+102
+101
+100
+10−1
+10−2
+64
+
+8
+12
+
+6
+25
+
+2
+51
+
+4
+02
+1,
+
+8
+04
+2,
+
+6
+09
+4,
+
+2
+19
+8,
+
+84
+,3
+16
+
+68
+,7
+32
+
+Series length n (shaded: evaluated sample-size range)
+
+Fig. 8 Quadratic dense memory allowances for spectral SVD and an explicit-inverse reference compared with the storage of two order-four banded working arrays. The horizontal line denotes the
+computational study’s 2 GiB dense allocation limit. These are analytical, implementation-specific
+storage calculations rather than measured peak memory; only the shaded sample-size range was
+included in the study.
+
+If only one candidate is needed, or if dense allocation would be prohibitive, a structured banded method is a reasonable alternative subject to numerical residual checks.
+When a requested smoothness value cannot be inverted accurately, neither method
+should silently substitute an approximate grid winner: the affected comparison must
+be marked invalid or handled by a separately validated numerical strategy.
+A further limitation is the restriction to synthetic data and one computational
+environment. Seed-cluster intervals quantify variability under the observed experimental protocol, but not variability across operating systems, processors, library versions
+or CPU utilization. The validity masks can induce survivor bias in timing ratios
+conditional on completed searches. The study does not establish improvements in
+trend-estimation risk or forecasting accuracy, and it does not constitute an independent high-precision verification of every evaluated penalty. Future work should isolate
+the source of the large-order smoothness-inversion failures, independently certify residual and criterion accuracy, and compare implementations under controlled processor
+occupancy.
+
+6 Conclusions
+This study establishes that the preferred computational method for penalized leastsquares trend smoothing depends on the parameter-selection workload, not merely the
+cost of one linear solve. Across valid matched 100-candidate CV and GCV searches,
+14
+
+spectral SVD consistently outperformed banded Cholesky in the representative tested
+configurations. A measured conditional-CV setting changed from favoring banded
+Cholesky for one candidate to favoring spectral SVD by a factor of approximately 4.85
+for the complete grid. The numerical-status analysis further identified repeated banded
+post-solve failures on several complete grids, while retaining documented failure modes
+of the spectral pipeline.
+We therefore recommend spectral decomposition as the primary implementation for
+complete, repeated smoothing-parameter selection whenever its dense storage is affordable. Banded methods remain valuable for isolated evaluations and long series, and
+numerical diagnostics remain mandatory for either implementation. The contribution
+is a measured, criterion-aware recommendation for computational practice rather than
+a new trend estimator or an unconditional claim of spectral superiority.
+
+7 Code and data availability
+The source implementations, analysis programs, selection-status records, derived timing data and reproducible figures are available in the public project repository at https:
+//github.com/heri-espino/trendestimation. The underlying raw execution records are
+retained by the author but are not publicly deposited; their availability is subject to
+author approval. The publicly archived derived observations preserve incomplete and
+numerically inadmissible searches, and include the pairing and bootstrap metadata
+required to reproduce the tabulated comparisons.
+
+Declarations
+Funding. No specific grant support has been reported for this study.
+Competing interests. No competing interests have been reported.
+Ethics approval and consent. The study consists of synthetic numerical experiments and does not involve human participants, identifiable personal data or animal
+subjects.
+Data and code availability. Analysis code, derived benchmark results,
+numerical-status tables and figures are available at https://github.com/heri-espino/
+trendestimation. Underlying raw timing files remain preserved by the author but are
+not part of the public repository; access is subject to author approval.
+
+References
+Biessy, G.: Whittaker–henderson smoothing revisited: A modern statistical framework
+for practical use. ASTIN Bulletin: The Journal of the IAA 56(1), 1–31 (2026) https:
+//doi.org/10.1017/asb.2025.10061
+Cortés-Toto, D., Guerrero, V.M., Reyes, H.J.: Trend smoothness achieved by penalized
+least squares with the smoothing parameter chosen by optimality criteria. Communications in Statistics—Simulation and Computation 46(2), 1492–1507 (2017)
+https://doi.org/10.1080/03610918.2015.1005236
+15
+
+Craven, P., Wahba, G.: Smoothing noisy data with spline functions: Estimating
+the correct degree of smoothing by the method of generalized cross-validation.
+Numerische Mathematik 31, 377–403 (1979) https://doi.org/10.1007/BF01404567
+Guerrero, V.M.: Time series smoothing by penalized least squares. Statistics &
+Probability Letters 77(12), 1225–1234 (2007) https://doi.org/10.1016/j.spl.2007.03.
+006
+Guerrero, V.M.: Estimating trends with percentage of smoothness chosen by the user.
+International Statistical Review 76(2), 187–202 (2008) https://doi.org/10.1111/j.
+1751-5823.2008.00047.x
+Weinert, H.L.: Efficient computation for whittaker–henderson smoothing. Computational Statistics & Data Analysis 52(2), 959–974 (2007) https://doi.org/10.1016/j.
+csda.2006.11.038
+Weinert, H.L.: Fast Compact Algorithms and Software for Spline Smoothing. SpringerBriefs in Computer Science. Springer, New York (2012). https://doi.org/10.1007/
+978-1-4614-5496-0 . Electronic edition published October 2012; Springer copyright
+2013
+Whittaker, E.T.: On a new method of graduation. Proceedings of the Edinburgh Mathematical Society 41, 63–75 (1923) https://doi.org/10.1017/S0013091500077853
+
+16
+
+
