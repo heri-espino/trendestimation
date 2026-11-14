@@ -95,6 +95,35 @@ as a single aggregate score.}
 \label{fig:sim-svd}
 \end{figure*}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/atlas_known_jerk_regimes.pdf}
+\caption{Heterogeneity of \emph{known synthetic} jerk-reconstruction
+accuracy across six prespecified physical regimes. Each plotted RMSE
+aggregates the same 216 archived trajectories per regime
+(three observation-noise levels, three error structures,
+and 24 independent replicates). The horizontal axis is logarithmic;
+the apparent separation should not be interpreted as real jerk
+measurement accuracy. The ten-figure supplementary atlas contains
+the paired per-trajectory comparisons and reference-policy sensitivity.}
+\label{fig:atlas-known-regimes}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/atlas_tsvd_rank_pathology.pdf}
+\caption{An archived diagnostic of the exceptionally poor
+jerk reconstruction under \emph{conditional} position-GCV
+TSVD truncation. (A) Distribution of selected retained positive
+roughness modes. (B) Cumulative share of squared historical
+discrete-jerk error as the rank threshold increases.
+Of 1,296 trajectories, 145 selected rank 75 or 76 of 77,
+accounting for 78.9\% of total squared jerk error.
+This is a post-hoc visualization of the original frozen fits,
+not a retuned rank selector or a new Monte Carlo experiment.}
+\label{fig:atlas-tsvd-pathology}
+\end{figure*>
+
 The nominally matched-complexity comparison shows
 a lower pooled historical jerk error for soft PLS
 shrinkage than for the hard spectral cutoff in this
