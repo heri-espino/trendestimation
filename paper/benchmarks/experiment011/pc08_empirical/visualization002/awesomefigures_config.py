@@ -55,6 +55,69 @@ def sha(path):
             h.update(chunk)
     return h.hexdigest()
 
+def polish_primary(fig,name):
+    """Make archived 7-9in plots legible on the 372-pt Springer page."""
+    if name=="fig02_runtime_distributions":
+        ax=fig.axes[0]
+        ax.set_title("Paired complete-grid runtime distributions",fontsize=10)
+        fig.subplots_adjust(left=.35,right=.98,top=.86,bottom=.20)
+    elif name=="fig03_mapping_distributions":
+        if getattr(fig,"_suptitle",None) is not None:
+            fig._suptitle.set_text("Penalty mapping and reuse: observed distributions")
+            fig._suptitle.set_fontsize(10)
+        for ax in fig.axes:
+            old=[txt.get_text() for txt in ax.get_xticklabels()]
+            new=[]
+            for label in old:
+                compact=(label.replace("M=10,000","10k")
+                              .replace("M=1,000","1k")
+                              .replace("M=100","100")
+                              .replace("Banded","B")
+                              .replace("SVD","S"))
+                new.append(compact)
+            ax.set_xticks(ax.get_xticks(),new,fontsize=7.2)
+        fig.subplots_adjust(left=.12,right=.99,top=.81,bottom=.23,wspace=.17)
+    elif name=="fig04_workload_stacked":
+        if getattr(fig,"_suptitle",None) is not None:
+            fig._suptitle.set_text("Runtime components: candidates x series")
+            fig._suptitle.set_fontsize(10)
+        fig.subplots_adjust(left=.13,right=.99,top=.82,bottom=.25,wspace=.11)
+    elif name=="fig05_grid_completion":
+        ax=fig.axes[0]
+        ax.set_title("Complete-grid acceptance: Cholesky and SVD",fontsize=10)
+        for item in ax.texts:
+            if item.get_text() in ("0%","100%"):
+                item.set_x(.90)
+        fig.subplots_adjust(left=.38,right=.98,top=.85,bottom=.26)
+    elif name=="fig06_order4_failures":
+        ax=fig.axes[0]
+        ax.set_title("Fourth-order acceptance and rejection",fontsize=10)
+        fig.subplots_adjust(left=.38,right=.98,top=.85,bottom=.25)
+    elif name=="fig07_crossover_distributions":
+        ax=fig.axes[0]
+        ax.set_title("Single-candidate versus full-grid cost",fontsize=10)
+        ax.set_xticks(range(6),[
+            "CV\n256,3\n1","CV\n256,3\n100",
+            "CV\n128,3\n1","CV\n128,3\n100",
+            "GCV\n64,1\n1","GCV\n64,1\n100"
+        ],fontsize=7.2)
+        fig.subplots_adjust(left=.13,right=.98,top=.85,bottom=.28)
+    elif name=="fig08_memory_scaling":
+        ax=fig.axes[0]
+        ax.set_title("Dense versus banded memory allowance",fontsize=10)
+        handles,labels=ax.get_legend_handles_labels()
+        short=["SVD: 5 dense arrays","Inverse: 7 dense arrays",
+               "Banded: 2 arrays","Dense cap: 2 GiB"]
+        if len(handles)==4:
+            ax.legend(handles,short,loc="upper center",
+                      bbox_to_anchor=(.5,-.29),ncol=2,
+                      fontsize=7.2,frameon=False)
+        fig.subplots_adjust(left=.18,right=.98,top=.84,bottom=.33)
+    elif name=="fig09_kkt_rejections":
+        ax=fig.axes[0]
+        ax.set_title("Rejected scaled-optimality residuals",fontsize=10)
+        fig.subplots_adjust(left=.15,right=.98,top=.85,bottom=.20)
+
 class Exporter:
     def __init__(self,output,exact_tex=False):
         self.output=Path(output)
@@ -63,6 +126,8 @@ class Exporter:
         self.output.mkdir(parents=True,exist_ok=True)
 
     def export(self,fig,name,*,section,caption,primary=False):
+        if primary:
+            polish_primary(fig,name)
         target=self.output/"figures"/(name+".pdf")
         target.parent.mkdir(parents=True,exist_ok=True)
         if primary and self.exact_tex and hasattr(af,"paper"):
