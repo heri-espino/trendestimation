@@ -4,7 +4,7 @@ Fix a length $n$, difference order $d$, an interior smoothness grid $\mathcal S=
 T_{\mathcal A}=T_{\rm prep}+T_{\rm map}
  +T_{\rm factor}+T_{\rm series}+T_{\rm scores}+T_{\rm overhead},
 \end{equation}
-where $\mathcal A$ is a particular complete algorithm and its configuration. The component costs use classical dense and banded linear algebra \citep{golubvanloan2013,davis2006}, classical selected-inverse identities \citep{erisman1975}, and pre-existing structured Whittaker--Henderson/GCV algorithms \citep{weinert2007}. We derive the following \emph{combined workload-specific upper bounds}; these formulas are not directly quoted from those sources, nor do they imply asymptotic optimality among all possible algorithms.
+where $\mathcal A$ is a particular complete algorithm and its configuration. As documented in Table~\ref{tab:provenance}, the component costs use classical dense and banded linear algebra \citep{golubvanloan2013,davis2006}, classical selected-inverse identities \citep{erisman1975}, and pre-existing structured Whittaker--Henderson/GCV algorithms \citep{weinert2007}. We derive the following \emph{combined workload-specific upper bounds}; these formulas are not directly quoted from those sources, nor do they imply asymptotic optimality among all possible algorithms.
 
 \begin{theorem}[Work for a retained spectral pipeline]\label{thm:svdwork}
 Assume the full reduced SVD is retained; each interior smoothness inversion requires at most $I$ evaluations of the $r$-term spectral sum; each observed series is projected once; and projected scalar scores use $O(r)$ work. Put $\chi_{\rm CV}=1$ when ordinary conditional CV is requested and zero otherwise. An upper bound on arithmetic work is
