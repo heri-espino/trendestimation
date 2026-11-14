@@ -1,0 +1,64 @@
+\section{Amortized time and memory complexity}\label{sec:complexity}
+Fix a length $n$, difference order $d$, an interior smoothness grid $\mathcal S=\{s_1,\ldots,s_M\}\subset(0,1)$, $R$ independent observed series of the same length, and a criterion set $\mathcal C$ with $c=|\mathcal C|$. Let $I$ be an upper bound on the scalar function evaluations used to invert each $s_j$ to the requested tolerance. This is a \emph{workload}, not merely one linear-system solve. Its total execution time decomposes conceptually as
+\begin{equation}\label{eq:costpartition}
+T_{\mathcal A}=T_{\rm prep}+T_{\rm map}
+ +T_{\rm factor}+T_{\rm series}+T_{\rm scores}+T_{\rm overhead},
+\end{equation}
+where $\mathcal A$ is a particular complete algorithm and its configuration. The component costs use classical dense and banded linear algebra \citep{golubvanloan2013,davis2006}, classical selected-inverse identities \citep{erisman1975}, and pre-existing structured Whittaker--Henderson/GCV algorithms \citep{weinert2007}. We derive the following \emph{combined workload-specific upper bounds}; these formulas are not directly quoted from those sources, nor do they imply asymptotic optimality among all possible algorithms.
+
+\begin{theorem}[Work for a retained spectral pipeline]\label{thm:svdwork}
+Assume the full reduced SVD is retained; each interior smoothness inversion requires at most $I$ evaluations of the $r$-term spectral sum; each observed series is projected once; and projected scalar scores use $O(r)$ work. Put $\chi_{\rm CV}=1$ when ordinary conditional CV is requested and zero otherwise. An upper bound on arithmetic work is
+\begin{equation}\label{eq:svdwork}
+W_{\rm SVD}
+=O(nr^2+MIr+Rnr+MRcr+\chi_{\rm CV}MRnr).
+\end{equation}
+Working storage is $O(nr+M+Rn)$ if all $R$ input series are kept and only best-score summaries are retained.
+\end{theorem}
+\begin{proof}
+For a standard dense reduced SVD of an $r\times n$ matrix, $O(nr^2)$ arithmetic and $O(nr)$ retained storage follow from classical dense factorization bounds \citep{golubvanloan2013}. Each of the $MI$ smoothness evaluations sums $r$ positive-mode terms. One projection per observed series costs $O(nr)$. At each of $MR$ candidate-series pairs, each scalar score takes $O(r)$ work after projection. When CV is requested, the leverage diagonal and fitted residual vector can each be formed using $O(nr)$ matrix-vector work; multiplying by $MR$ bounds this additional cost. Caching leverages across series can improve constants but is not needed for the claimed bound. Candidate values and $R$ input series add $O(M+Rn)$ memory.
+\end{proof}
+
+\begin{theorem}[Work for a streamed banded pipeline]\label{thm:bandwork}
+Assume exact SPD banded Cholesky and selected inversion are used both for smoothness-to-penalty inversion and for complete score diagnostics, and the resulting penalty grid is shared across criteria and series. Then
+\begin{equation}\label{eq:bandwork}
+W_{\rm band}
+=O(nd^2+MInd^2+Mnd^2+MRnd+MRcn).
+\end{equation}
+A candidate-streamed implementation retaining all input series uses $O(nd+M+Rn)$ working storage. Keeping every candidate factorization instead requires $O(Mnd)$ extra factor storage.
+\end{theorem}
+\begin{proof}
+Assembling the banded penalty and precomputing the Gaussian constant determinant cost at most $O(nd^2)$. A banded factorization and selected inverse cost $O(nd^2)$ per trial value, using standard banded-direct and selected-inverse algorithms \citep{golubvanloan2013,erisman1975,weinert2007}. Up to $MI$ trials yield the second term; factorizing the $M$ accepted penalties yields the third. For each candidate and series, banded triangular solves and difference passes cost $O(nd)$, and forming each criterion's scalar contributions costs at most $O(n)$. One factor and selected band are sufficient while processing all $R$ series at the current candidate. The storage claims follow by retaining or discarding these structures.
+\end{proof}
+
+\paragraph{Bounds versus measured crossover.}
+The displayed $O(\cdot)$ expressions are upper bounds for specific computational families, not universal lower bounds on all possible implementations. They omit machine constants, cache contention and implementation-specific allocation; an optimistic operation count is not observed runtime. A solver can be admissible only after its accuracy and memory requirements are satisfied.
+
+\begin{proposition}[Conditional candidate-count crossover]\label{prop:crossover}
+Suppose two locally calibrated complete-pipeline times for fixed $(n,d,R,\mathcal C)$ admit
+\[
+T_s(M)=a_s+b_sM,\qquad T_b(M)=a_b+b_bM.
+\]
+If $a_s>a_b$ and $b_b>b_s$, equality occurs at the positive threshold
+\begin{equation}\label{eq:Mstar}
+M_\star=\frac{a_s-a_b}{b_b-b_s}.
+\end{equation}
+Banded is faster below this threshold and spectral above it under the stated local affine model. Without both sign conditions the claimed direction of crossover does not follow.
+\end{proposition}
+\begin{proof}
+Subtract the affine functions to obtain $(a_s-a_b)-M(b_b-b_s)$ and inspect its sign.
+\end{proof}
+
+This proposition does not infer a numerical $M_\star$ from the preceding big-$O$ statements. In particular the $O(nr)$ spectral CV term can reverse a scalar-GCV comparison; repeated series lower effective setup cost per series; and $S\mapsto\lambda$ inversion may dominate an otherwise inexpensive one-fit banded approach.
+
+\subsection{Special structure and hybrid mapping}
+For first differences the penalty is the finite path-graph Laplacian. Its positive eigenvalues have the known analytic expression
+\begin{equation}\label{eq:d1spectrum}
+\delta_j=2-2\cos\left(\frac{\pi j}{n}\right),
+\qquad j=1,\ldots,n-1.
+\end{equation}
+They can be generated using $O(n)$ arithmetic and storage without full SVD. The requested $M$ smoothness levels can consequently be mapped in $O(MIn)$ arithmetic using \eqref{eq:S}. This established discrete-cosine identity should not be generalized naively to arbitrary higher-order finite-interval differences: boundary effects change the spectrum.
+
+More generally the mapping engine need not equal the fitting engine. If the spectrum (or a suitably certified approximation) is available, one may map $\mathcal S$ spectrally and then fit the resulting penalties with banded Cholesky. Such \emph{hybrid mapping} can retain the linear-memory final solve, but its own spectral preparation, error and storage must be accounted for. A dense full SVD built only to obtain one banded fitted trend may be a poor trade-off.
+
+\paragraph{Memory frontier.}
+A single float64 dense $n\times n$ array requires $8n^2$ bytes before copying or factoring, while fixed-small-$d$ banded storage grows linearly. At $n=131072$, one dense array alone occupies $128$ GiB. Therefore an inadmissible dense method must be rejected by a memory guard rather than reported as a completed comparison. When multiple series or smoothing candidates are processed, intermediate dense matrices should not be retained without an explicit justification.
