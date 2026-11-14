@@ -87,8 +87,36 @@ class Exporter:
             target.with_suffix(".typography.json").write_text(
                 json.dumps(tex,indent=2)+"\n",encoding="utf-8"
             )
+        elif primary and self.exact_tex and hasattr(af,"latex_style"):
+            # AwesomeFigures 0.1.0 exposes latex_style rather than paper.
+            # This is the project's established exact Springer/PGF pathway.
+            with af.latex_style(
+                PAPER, width="text", engine="pdflatex", font="auto",
+                height_ratio=.59, minimum_text_pt=6.7,
+            ) as publication:
+                import matplotlib as mpl
+                with mpl.rc_context({
+                    "pgf.texsystem":"pdflatex",
+                    "pgf.rcfonts":False,
+                    "pgf.preamble":r"\usepackage{amsmath,amssymb}",
+                    "savefig.bbox":None,
+                    "savefig.pad_inches":0,
+                }):
+                    publication.savefig(fig,target,backend="pgf",audit=True)
+                    audit=publication.audit(fig)
+                tex={
+                    "typography_provenance":"awesomefigures-latex_style-pgf",
+                    "exact_tex_preamble":True,
+                    "textwidth_pt":publication.layout.textwidth_pt,
+                    "body_font_pt":publication.layout.fontsize_pt,
+                    "audit_warnings":list(audit.warnings),
+                    "pdf_sha256":sha(target),
+                }
+                target.with_suffix(".typography.json").write_text(
+                    json.dumps(tex,indent=2)+"\n",encoding="utf-8"
+                )
         else:
-            if primary and self.exact_tex and not hasattr(af,"paper"):
+            if primary and self.exact_tex and not hasattr(af,"paper") and not hasattr(af,"latex_style"):
                 # The runner's installed AwesomeFigures 0.1.0 predates
                 # af.paper. Still use the genuine AwesomeFigures vector
                 # export and disclose that no exact-TeX audit is available.
@@ -122,7 +150,7 @@ class Exporter:
           "canonical_manuscript":"paper/main.tex",
           "input_sha256":{p.name:sha(p) for p in inputs},
           "figure_count":len(self.items),"primary_count":sum(x["primary"] for x in self.items),
-          "exact_tex_available":hasattr(af,"paper"),
+          "exact_tex_available":(hasattr(af,"paper") or hasattr(af,"latex_style")),
           "figures":self.items,"configuration":config,
           "no_new_experiments":True,
           "numerical_limits":[
