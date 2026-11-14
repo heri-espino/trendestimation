@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "plots": {
+    "exp008_known_jerk_benchmarks": {
+      "pdf": {
+        "sha256": "aa83ad096e3954b74e27259207f7e71796f33ff5522fa463e64e47a180dead6a",
+        "bytes": 28238
+      },
+      "png": {
+        "sha256": "2b41da902a1f5924ceaad397416b365c23e62ff82313db4882c1e6b21f1cd044",
+        "bytes": 98408
+      },
+      "svg": {
+        "sha256": "a1d09dff694b9faf6abda07e486458eacd3a248e8e41a82d949e1f62feb95ee6",
+        "bytes": 28831
+      }
+    },
+    "exp008_real_forecast_benchmarks": {
+      "pdf": {
+        "sha256": "145aa7d4338ec32a9038edcb8daa462f690d4cbca40d4b124e835b1d93755a29",
+        "bytes": 28330
+      },
+      "png": {
+        "sha256": "f37fabdfab5621f59ac79d7e19d6326cf059d9d63f3f8f7876a3359c945468bb",
+        "bytes": 125364
+      },
+      "svg": {
+        "sha256": "886ec1bed7127fa6e229bec51bc4b52f81a8a5bc81ae02bb1bcc0b97207008bb",
+        "bytes": 19503
+      }
+    }
+  },
+  "sources": {
+    "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-af-EXP008-43629936473-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment008\\runs\\pc08-42717662044-a1\\synthetic\\summary.csv": "eddb1464abb2c3a1d286cd82fca47e6e07209e03ae3efbc7dd605a77e7385bba",
+    "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-af-EXP008-43629936473-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment008\\runs\\pc08-42717662044-a1\\real\\summary.csv": "501b894e8dbd4042caaaf54cadeec10def014f02176d4c405a7b1c714e4c3c9d",
+    "C:\\Users\\175199\\actions-runner\\_work\\_temp\\paper-c-af-EXP006-43629936473-a1\\paper\\ngsim-jerk-case-study\\experiments\\experiment006\\runs\\pc08-42639588117-a1\\real\\summary.csv": "3f0f7722bfedd652570fe8e4c23ee733d209c51525be3e581b256d22493ac31b"
+  }
+}

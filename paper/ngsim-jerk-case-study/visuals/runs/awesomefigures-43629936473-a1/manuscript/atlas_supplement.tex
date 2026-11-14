@@ -1,0 +1,159 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.97]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{graphicx,geometry,microtype,hyperref}
+\geometry{left=21mm,right=21mm,top=22mm,bottom=22mm}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+\newcommand{\atlasfigure}[4]{%
+  \clearpage
+  \section*{#1}
+  \begin{center}
+  \includegraphics[width=\linewidth,height=.68\textheight,keepaspectratio]{figures/#2.pdf}
+  \end{center}
+  \textbf{What the graphic shows.} #3
+
+  \textit{Scientific interpretation.} #4
+}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Supplementary AwesomeFigures atlas}\\[6pt]
+{\large Third-order penalized least-squares trend estimation for physical jerk}\\[8pt]
+Heriberto Espino-Montelongo and Daniela Cort\'es-Toto\\[4pt]
+\small Research draft --- not submitted
+\end{center}
+\section*{Scope and provenance}
+This visual appendix collects the \emph{completed}, frozen numerical outcomes
+from synthetic known-jerk Experiments005--008 and the real FHWA NGSIM
+comparison; no forecasting model, SVD rank, smoothing parameter, or
+stochastic trajectory has been recomputed. The full rendering code
+uses the pinned \texttt{AwesomeFigures} library
+(\texttt{set\_style}, \texttt{color\_palette},
+\texttt{plot\_scheme}, \texttt{save\_figure}) and
+publishes editable SVGs, PDF vectors, PNG previews,
+the exact immutable source-archive SHA-256 hashes, and output inventories.
+Each source and each figure is addressable in
+\texttt{generated/awesomefigures\_atlas\_manifest.json}.
+
+Synthetic reference jerk is the \emph{known discrete} third difference
+of clean position divided by $(0.1\ \mathrm s)^3$, and each forecast
+window's RMSE is cumulative over frames 1 through $H$ (not the
+terminal frame). The real NGSIM positions are camera-derived recordings:
+neither latent clean jerk nor sensor precision is directly observed.
+The 200 NGSIM episodes share vehicles and recording-time blocks,
+so site-level and episode-level analyses are descriptive.
+Experiment007's 1,944 factorial outcomes share only
+72 independently drawn parent innovation sequences.
+
+\atlasfigure{A1. Known-jerk regimes}
+{atlas_known_jerk_regimes}
+{Logarithmic historical discrete-jerk RMSE for five \emph{distinct}
+smoothers, by six prespecified synthetic jerk regimes.
+Each regime averages the same 216 independent trajectory cases,
+crossing three observation-noise levels, three error structures and
+24 replicates.}
+{A model's relative performance may change with genuine motion
+dynamics. These are not real jerk observations.}
+
+\atlasfigure{A2. Conditional-GCV rank instability}
+{atlas_tsvd_rank_pathology}
+{Distribution of the 1,296 chosen hard TSVD ranks and
+cumulative squared historical jerk error by rank. Ranks 75--76
+(out of 77 positive roughness modes) occur in 145 cases
+and contribute 78.9\% of TSVD-GCV's total squared jerk error.}
+{The archival position-oriented score is a conditional
+plug-in GCV criterion, not exact full data-dependent GCV.
+Near-interpolation is extremely costly for third derivatives.}
+
+\atlasfigure{A3. Paired synthetic losses}
+{atlas_paired_jerk_losses}
+{Each point is one frozen simulated trajectory.
+The axes show root historical discrete-jerk MSE for
+PLS and nominal fixed-reference EDF-matched hard TSVD;
+six panels separate different jerk regimes.}
+{The diagonal indicates equal episode-level performance.
+The 1,296 points are paired observations from the same
+synthetic design, not independent estimates of real driver jerk.}
+
+\atlasfigure{A4. Reconstruction and extrapolation are different targets}
+{atlas_method_tradeoff}
+{The same five historical smoothers plotted by
+known synthetic jerk RMSE versus cumulative first-second
+\emph{clean-position} forecast RMSE with the same
+last-25-point quadratic continuation.}
+{Low position prediction error does not imply low
+third-derivative error. The x-axis is not an endpoint-only error.}
+
+\atlasfigure{A5. NGSIM site heterogeneity}
+{atlas_ngsim_by_site}
+{The five historical smoother plus shared three-point continuation
+procedures, evaluated separately on 100 selected episodes
+from US-101 and 100 from I-80. Each curve is the
+cumulative observed-position forecast RMSE through
+0.5, 1, or 2 seconds.}
+{Site-specific evaluations are descriptive, not replicated
+population inference. The separate spline quadratic-Taylor rule
+is excluded because only its pooled archived benchmark
+is included in this frozen comparison.}
+
+\atlasfigure{A6. Paired NGSIM episode variability}
+{atlas_ngsim_paired_delta}
+{Paired difference in episode-level \emph{first-second window MSE}
+relative to PLS: nominally matched TSVD on the left, and
+GCV smoothing spline under the same three-point continuation
+on the right. Color distinguishes the two sites;
+the signed-log transformation retains the direction of each difference.}
+{Points from shared site/time blocks must not be treated as
+independent physical vehicles. A negative ordinate means that
+the comparator has lower recorded-position loss for that episode.}
+
+\atlasfigure{A7. Correct-model smoothness calibration}
+{atlas_spectral_calibration_grid}
+{Selected normalized smoothness $S$ versus the known covariance
+observation-noise fraction in nine independent-Gaussian
+factorial cells, each averaged over 24 parent draws.
+Four selectors appear separately, including the
+oracle known-reference control.}
+{The identity line has a conditional covariance-model
+interpretation; $S$ is not a physical sensor-resolution scale.}
+
+\atlasfigure{A8. Full calibration-misspecification matrix}
+{atlas_misspecification_matrix}
+{Mean absolute spectral-noise calibration error under
+three jerk-innovation structures and three observation-error
+structures, for all four archived smoothing selectors.}
+{Serial measurement-error correlation or structural
+changes in jerk invalidate the independent Gaussian
+variance-ratio calibration. Cells share parent draws.}
+
+\atlasfigure{A9. Two different noise interventions}
+{atlas_noise_jerk_interventions}
+{Joint unknown-mean REML's selected-$S$ changes under
+increased observation noise (left) and increased genuine
+jerk volatility (right), against known covariance effects.
+Error bars are archived parent-level 95\% bootstrap intervals.}
+{Parent-level dependence is respected. Raising genuine
+jerk innovation volatility can \emph{decrease} selected $S$.}
+
+\atlasfigure{A10. Reference-mean sensitivity}
+{atlas_reference_policy}
+{Historical known-discrete-jerk RMSE of five previously
+completed Experiment006 penalization/reference-mean strategies
+over the same 1,296 synthetic trajectories.}
+{A nonzero cubic-OLS reference combined with profile likelihood
+performed well in this tested mixture, but it is not an
+universal likelihood or physical optimality result.}
+
+\clearpage
+\section*{Related main manuscript}
+For the principal method-first study, see
+\texttt{main.tex}, \texttt{sections/methods.tex},
+\texttt{sections/synthetic\_case.tex},
+\texttt{sections/precision\_calibration.tex}
+and \texttt{sections/real\_case.tex}.
+These figures are extra descriptions of \emph{existing} data.
+They do not create new independently measured jerk or
+a new hypothesis-testing campaign.
+\end{document}
