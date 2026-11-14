@@ -199,9 +199,11 @@ def known_jerk_regimes(fitted, output):
     ax.set_xlim(.18, 1000)
     ax.set(xlabel="Historical discrete-jerk RMSE (m/s³) · log scale",
            title="Sensitivity to the six simulated jerk regimes")
-    ax.legend(loc="lower right", ncol=2, fontsize=7.0, frameon=False)
+    # Keep the legend below all six regime rows, not inside the braking-pulse data.
+    ax.legend(loc="upper center", bbox_to_anchor=(.5,-.18), ncol=3,
+              fontsize=6.6, frameon=False)
     axes_style(ax, x=True, y=False)
-    fig.subplots_adjust(left=.22, bottom=.14, right=.98, top=.89)
+    fig.subplots_adjust(left=.22, bottom=.31, right=.98, top=.88)
     finish(fig, STEMS[0], output)
 
 
