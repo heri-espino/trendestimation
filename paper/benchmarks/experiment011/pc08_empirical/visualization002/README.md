@@ -105,3 +105,22 @@ Springer export. This is actual AwesomeFigures, not an
 invented compatibility package. The no-fallback renderer
 requires the installed AwesomeFigures version and exact
 Springer pdflatex typography for the nine main figures.
+
+
+## Physical-width quality-control revision
+The first version of the 42-figure collection compiled, but the
+AwesomeFigures publication audit identified 9 legacy plots whose
+original screen widths (typically ~500-650 TeX points) were
+larger than the Springer manuscript width (372 TeX points).
+Inserting them scaled some labels to roughly 4-5 points.
+
+The revised export now measures the actual 372pt manuscript
+text width via AwesomeFigures.latex_style, resizes the plotted
+canvas to that physical width *before* PDF/PGF export, raises
+each nonempty text label to at least 7.2pt, and rejects any
+remaining main figure with audit width mismatch or text under
+6.7pt. Keep those audit sidecars with every figure.
+
+All 42 figure sets and the full manuscript must be regenerated
+and re-inspected after this correction, without rerunning
+any smoothing or numerical experiment.
