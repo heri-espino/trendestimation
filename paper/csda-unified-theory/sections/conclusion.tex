@@ -1,0 +1,18 @@
+\section{Discussion and conclusions}\label{sec:conclusion}
+A bounded trace-derived smoothness coordinate turns the classical PLS penalty into an interpretable input that can be prescribed across difference orders. The normalized interval $[0,1]$ has exact interpolation and constrained-polynomial endpoints, including nonzero constant $d$th-difference reference levels. The order-$d$ singular-vector representation supplies the penalty spectrum and a shift-free reconstruction that avoids explicit large polynomial reference vectors. These facts explain why diagonalization can serve as a shared computational engine for both smoothing and smoothness-parameter selection.
+
+The algorithmic choice is more subtle than selecting the fastest linear solver. A full SVD costs more to prepare and retain than a banded factorization, but enables inexpensive evaluation of many scalar criteria after preprojection. Banded Cholesky, when coupled with selected inversion, supplies complete conditional CV, GCV, information and likelihood quantities with structured storage and an $O(nd^2)$ per-candidate bound. The initial cost of obtaining $\lambda$ from an $S$ request and the number of observed series materially alter that comparison. Exact ordinary CV can require more spectral work than scalar GCV; no universal SVD--Cholesky winner follows from the asymptotic bounds.
+
+The same theory also identifies a risk frontier. Large penalties and higher difference orders can create ill-conditioned normal equations, even though the matrices remain SPD mathematically. A factorization that is computationally inexpensive but fails a numerical-validity requirement does not supply a usable statistical estimator. Numerical failures must be classified by their mechanism rather than interpreted as proof that Cholesky or spectral methods are universally unsuitable.
+
+Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, optimizing the degree $d$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here.
+
+Whittaker--Henderson smoothing, its spectral theory, numerical factorization methods, and classical GCV were established before this work. The contribution of the present article is the integrated, unit-interval, workload-dependent mathematical and software framework and its explicit numerical validity conditions. Empirical timings and physical forecasting performance are investigated in separate companion manuscripts, rather than being inferred from theoretical operation counts.
+
+\section*{Code and research-material availability}
+The Python implementation, independently preserved Paper A and Paper B sources, theoretical verification programs, and archived supporting evidence are available at \url{https://github.com/heri-espino/trendestimation}. The canonical source is available in
+\path{paper/csda-unified-theory/}; its revision
+should be frozen and cited before submission. No new benchmark measurements are claimed in this article.
+
+\section*{Declarations}
+Author ordering, affiliations, corresponding-author metadata, funding, conflicts of interest and individual contributions require explicit coauthor verification before journal submission. The present draft does not assert unverified declarations.

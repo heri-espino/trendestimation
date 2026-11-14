@@ -1,0 +1,26 @@
+[
+  {
+    "id": "fig01_reliability",
+    "pdf": "figures/fig01_reliability.pdf",
+    "png": "figures/fig01_reliability.png",
+    "description": "All report-selected attempts, grouped by criterion/backend; invalid and missing cells retained in denominators"
+  },
+  {
+    "id": "fig02_paired_cv_gcv",
+    "pdf": "figures/fig02_paired_cv_gcv.pdf",
+    "png": "figures/fig02_paired_cv_gcv.png",
+    "description": "Ratio >1 means spectral SVD was faster; actual paired cells only; 95% seed-cluster bootstrap; one BLAS thread"
+  },
+  {
+    "id": "fig03_mapping_cost",
+    "pdf": "figures/fig03_mapping_cost.pdf",
+    "png": "figures/fig03_mapping_cost.png",
+    "description": "Median of cell-level matched geometric ratios, 24-worker phase and grid/multiple-series workload; not a pooled isolated-latency claim"
+  },
+  {
+    "id": "fig04_workloads",
+    "pdf": "figures/fig04_workloads.pdf",
+    "png": "figures/fig04_workloads.png",
+    "description": "GCV n=64,d=1,M=100, 24-worker phase; cold end-to-end criterion evaluation includes setup and candidate search"
+  }
+]

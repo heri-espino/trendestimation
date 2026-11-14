@@ -1,0 +1,62 @@
+{
+  "experiment": "experiment011",
+  "supplement": "robustness001",
+  "original_tensor_sha256": "a25f674981b1c20df678638287df289c4d888ae62417a3f58ed8a6b2a08fce13",
+  "original_pairs_sha256": "ae047b53ec638d2033cf49b47ea0e982eb64452763739e20c2cb71f578912b48",
+  "original_report_sha256": "c5d4898c83c731ada23a10957f80adc43616200206dc76573f365d38ba37f723",
+  "recorded_jobs": 2813,
+  "rows": 92679,
+  "kkt_failure_rows": 9096,
+  "kkt_threshold": 1e-07,
+  "kkt_error_min": 1.0012664145824255e-07,
+  "kkt_error_median": 1.4078565654377355e-07,
+  "kkt_error_max": 1.0587340645745082e-06,
+  "inversion_error_rows_by_method": {
+    "banded_cholesky": 2112,
+    "spectral_svd": 4224
+  },
+  "resource_exclusion_rows_by_method": {
+    "naive_inverse": 776,
+    "spectral_svd": 194
+  },
+  "robust_cases": [
+    "confirm_cv_n256_d3_m1000",
+    "pilot_cv_n128_d3_m1000",
+    "pilot_cv_n256_d4_m100",
+    "confirm_gcv_n256_d3_m1000",
+    "confirm_gcv_n64_d3_m10000",
+    "pilot_gcv_n128_d3_m1000",
+    "pilot_gcv_n256_d4_m100",
+    "confirm_mle_n512_d3_m100",
+    "pilot_mle_n256_d3_m100"
+  ],
+  "figures": [
+    {
+      "id": "fig05_complete_grid_failure",
+      "pdf": "figures/fig05_complete_grid_failure.pdf",
+      "png": "figures/fig05_complete_grid_failure.png",
+      "description": "Nine case families: one candidate succeeds for both; full grid fails the banded KKT gate but passes SVD"
+    },
+    {
+      "id": "fig06_fourth_order_failure_modes",
+      "pdf": "figures/fig06_fourth_order_failure_modes.pdf",
+      "png": "figures/fig06_fourth_order_failure_modes.png",
+      "description": "Recorded n=256 to 4096, d=4 rows by solver and status; the two methods both encounter mapping failures at large n"
+    },
+    {
+      "id": "fig07_single_vs_grid_speedups",
+      "pdf": "figures/fig07_single_vs_grid_speedups.pdf",
+      "png": "figures/fig07_single_vs_grid_speedups.png",
+      "description": "Same valid paired cases within 24-worker phase: seed-cluster 95% CIs, banded/SVD ratio; one vs 100 candidates"
+    },
+    {
+      "id": "fig08_memory_policy",
+      "pdf": "figures/fig08_memory_policy.pdf",
+      "png": "figures/fig08_memory_policy.png",
+      "description": "Code-policy model (not measured peak RAM): spectral 40n\u00b2 bytes, naive 56n\u00b2, banded two arrays 16n(d+1) bytes, 2 GiB dense cap"
+    }
+  ],
+  "caveat": "SVD does not undergo identical banded implementation KKT gate; recorded status success is not independent high-precision evidence.",
+  "memory_note": "All plotted memory curves are code-policy scaling formulae, not measured allocations or peak RSS.",
+  "sampling_note": "Timing rows and repeated workloads are correlated within independent seeds."
+}

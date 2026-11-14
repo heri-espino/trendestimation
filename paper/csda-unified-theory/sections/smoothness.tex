@@ -1,0 +1,54 @@
+\section{A normalized and invertible smoothness coordinate}\label{sec:smoothness}
+For a fixed numeric $\mu$, define the conditional effective degrees of freedom $\nu_d(\lambda)=\tr H_\lambda$. The $d$ polynomial-nullspace eigenvalues of $H_\lambda$ equal one, and the other $r=n-d$ eigenvalues equal $(1+\lambda\delta_j)^{-1}$. Therefore
+\begin{equation}\label{eq:edf}
+\nu_d(\lambda)=d+\sum_{j=1}^r\frac{1}{1+\lambda\delta_j}.
+\end{equation}
+The classical trace reduction divided by $n$ is
+\begin{equation}\label{eq:classicalS}
+S^{\rm trace}_d(\lambda)=\frac{n-\nu_d(\lambda)}{n},
+\quad 0\le S^{\rm trace}_d\le1-\frac dn.
+\end{equation}
+The normalized coordinate used here divides by the number of \emph{penalized} directions:
+\begin{equation}\label{eq:S}
+\boxed{\;
+S_d(\lambda)=\frac{n-\nu_d(\lambda)}{n-d}
+=\frac{1}{r}\sum_{j=1}^r\frac{\lambda\delta_j}{1+\lambda\delta_j}.
+\;}
+\end{equation}
+Thus $S_d=(n/r)S_d^{\rm trace}$, an interpretable rescaling of a published index \citep{guerrero2008,cortes2017}, not a different family of fitted trends.
+
+\begin{theorem}[Smoothness bijection]\label{thm:bijection}
+For every integer $1\le d<n$, $S_d$ is continuous and strictly increasing on the nonnegative finite real line, with $S_d(0)=0$ and $\lim_{\lambda\to\infty}S_d(\lambda)=1$. It extends to a bijection between $[0,\infty]$ and $[0,1]$. Each $s\in(0,1)$ has a unique inverse $\lambda=\Lambda_{n,d}(s)$ independent of $y$ and any fixed numeric $\mu$.
+\end{theorem}
+\begin{proof}
+All $\delta_j$ are strictly positive by Lemma~\ref{lem:kernel}, so
+\begin{equation}\label{eq:Sprime}
+S_d'(\lambda)=\frac{1}{r}\sum_{j=1}^r
+\frac{\delta_j}{(1+\lambda\delta_j)^2}>0.
+\end{equation}
+Continuity and the stated endpoint values follow term by term. The inverse exists by the intermediate value theorem and strict monotonicity. Formula \eqref{eq:S} contains only $(n,d,\lambda)$ and the spectrum of $D_d$, so it is independent of the observed values and fixed reference mean.
+\end{proof}
+
+The same requested $s$ has a common interpretation across different orders, but generally corresponds to \emph{different} penalties $\Lambda_{n,d}(s)$. Direct optimization in raw $\lambda$ or $\log\lambda$ is possible. The point of $s$ is a bounded, physically interpretable search parameter, not a proof of optimization supremacy.
+
+\begin{proposition}[Change of selection coordinate]\label{prop:coordinate}
+Let $C(\lambda)$ be any fixed-$\mu$ criterion on an admissible finite interval and set $\widetilde C(s)=C(\Lambda_{n,d}(s))$. The two objectives attain the same global minimizers after the monotone change of coordinates, provided the domains and endpoint conventions match. For $s\in(0,1)$,
+\begin{equation}\label{eq:chain}
+\frac{d\widetilde C}{ds}
+=\frac{dC/d\log\lambda}{dS_d/d\log\lambda},
+\quad
+\frac{dS_d}{d\log\lambda}
+=\frac1r\sum_{j=1}^r\frac{\lambda\delta_j}
+{(1+\lambda\delta_j)^2}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The first statement follows from the bijection. The second is the chain rule and $d\lambda/d\log\lambda=\lambda$.
+\end{proof}
+The denominator in \eqref{eq:chain} tends to zero at both endpoints; hence boundedness alone does not resolve numerical conditioning or spurious local minima of the criterion. Global minimizer equivalence does not imply that bounded and logarithmic numerical optimizers follow identical paths.
+
+\paragraph{Exact endpoint conventions.}
+The point $s=0$ means $\lambda=0$ and the interpolation fit $y$; the point $s=1$ means the constrained fit \eqref{eq:inftyfit}, not a floating-point stand-in for an extremely large finite penalty. Some criteria are undefined at these endpoints even though the fitted trends exist. A robust implementation must treat such limits analytically rather than blindly calling a root finder at $s=0$ or $s=1$.
+
+\paragraph{Caching the inverse map.}
+For fixed $n,d$, the full set $\{\Lambda_{n,d}(s_j)\}_{j=1}^M$ can be mapped once and reused across multiple fixed-$\mu$ values, independent series, and criteria. In contrast, an independently constructed uniform grid in $\log\lambda$ generally selects different candidate trends and is not an identical-workload control.

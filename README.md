@@ -1,5 +1,8 @@
 # trendestimation
 
+**Latest compiled research papers:** [Springer empirical selection, unified CSDA theory and third-order PLS/NGSIM manuscripts](paper/LATEST_PAPERS.md) (source TeX, PDFs, AwesomeFigures galleries and reproducibility records).
+
+
 **Paper C research continuation (2026-11-05):**
 [nonzero-reference jerk extrapolation notes](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
 and [the proposed ablation](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_ABLATION_PLAN.md)

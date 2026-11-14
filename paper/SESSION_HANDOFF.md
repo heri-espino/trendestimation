@@ -1,145 +1,26 @@
-**Paper C AwesomeFigures atlas VERIFIED, 2026-11-14:** [Scoped visualization PR #136](https://github.com/heri-espino/trendestimation/pull/136) merged into **draft PR #133 review branch only**, not `main`. Windows [run #43630573121](https://github.com/heri-espino/trendestimation/actions/runs/43630573121) passed: 14-page Elsevier main PDF, 12-page figure supplement, ten new source-derived AwesomeFigures plot groups (30 SVG/PDF/PNG assets), eight restyled older comparison panels, all SHA-256 verified and archived at `results/paper-c-awesomefigures-pc08-43630573121-a1`. Read [complete provenance and caveats](ngsim-jerk-case-study/notes/SCIENCE_EDITORIAL_REVIEW.md) and [ten-figure gallery](ngsim-jerk-case-study/FIGURE_ATLAS.md); preserve original Experiments004–008, which were NOT rerun. No independent real NGSIM jerk truth. PR #131 and #133 remain unmerged; no journal submission.
+**Current three-paper mainline release, 2026-11-14:** [LATEST_PAPERS.md](LATEST_PAPERS.md) now indexes updated Springer, unified CSDA, and Paper C compiled manuscript PDFs. Latest source-backed Springer 19-page PDF and 33-page atlas from PC08 #43630631770; Paper C 14-page Elsevier draft and 12-page AwesomeFigures atlas from PC08 #43631207424. The Paper C experiments source/tests, workflow and scientific editorial notes were integrated without replacing newer Springer/CSDA handoffs. The divergent Paper C PR #132 remains an alternative, not a concurrently adopted final draft. No manuscript submitted.
 
-**Paper C verified 2026-11-10:** Draft [PR #133](https://github.com/heri-espino/trendestimation/pull/133) has a compiled 12-page method-first physical jerk manuscript, source-derived plots and a frozen-data paired audit. [PC08 run #42767882100](https://github.com/heri-espino/trendestimation/actions/runs/42767882100) passed (PDF SHA-256 `5b6c5305c928e42f4a8b0665f5b2eb0a3a31f9238f86cf427cc3b6defb9ace3f`). Read [full reproducibility handoff](ngsim-jerk-case-study/notes/SCIENCE_EDITORIAL_REVIEW.md) for conditional plug-in TSVD-GCV, nominal EDF (not exact full EDF), 145 high-rank failures, 54-cell paired RMSE bootstrap [0.3227, 0.7134] m/s³, and cumulative horizon RMSE definitions. Original Experiments004–008 not rerun; PRs unmerged; no submission.
+**2026-11-14 AwesomeFigures manuscript visual atlas (publication-ready plot scope):** User requested extensive plots, AwesomeFigures styling, and repository integration. Added isolated `paper/experiment011-awesomefigures-gallery` PR #135 on top of manuscript PR #126. The source-only `visualization002` renderer generated 42 evidence-linked PDF/SVG/PNG figure sets (nine canonical Springer plots plus 33 supplementary figures in a 33-page gallery) using pinned AwesomeFigures 0.1.0 `latex_style` and actual Springer 372pt TeX typography. All nine figure typography sidecars report no warnings. Successful PC08 run #43630631770 passed 10 numerical/source-only tests, rebuilt the 19-page paper, and archived a PDF SHA-256 `3c9b1e7a8359e0970678fd8d9f271da4e05729d5b7876f69ba3c21426a258471`. Complete QA: [visualization002/FINAL_VERIFICATION.md](benchmarks/experiment011/pc08_empirical/visualization002/FINAL_VERIFICATION.md). The raw campaign is untouched and no experiments rerun. Visual PR #135 is authorized for merging into its existing manuscript base; do not merge PR #126 or handoff PR #124 to main without separate authorization.
 
-**Paper C scientific-editorial continuation (2026-11-09):** Review branch `paper/paper-c-scientific-editorial-review` is derived from the unchanged open PR #131, not PR #132. Read [scientific editorial audit](ngsim-jerk-case-study/notes/SCIENCE_EDITORIAL_REVIEW.md) for method-dependent reference-jerk comparability, conditional plug-in TSVD-GCV/EDF caveats, the exact archival near-interpolation error decomposition, and improved known-jerk-before-calibration reading order. **No Experiment004--008 rerun, no merge and no submission.** Publication PDF/build status must be checked against this branch's latest Actions run; the earlier PR #131 11-page PDF remains a valid historical build, not evidence that these new edits have compiled.
+**LATEST Springer KKT numerical-methodology revision (2026-11-10; supersedes older PDF links below):** The canonical Springer `paper/main.tex` in draft [PR #126](https://github.com/heri-espino/trendestimation/pull/126) now rigorously derives the unconstrained first-order optimality equation from PLS, explains source-actual banded factorization -> solve -> residual check -> selected inverse/criterion pipeline, compares the implementation's scaled optimality residual to conventional normwise linear-system backward error, justifies residual-based acceptance with verified references (Boyd--Vandenberghe 2004; Higham 2002; Golub--Van Loan 2013; Stellato et al. 2020), and keeps the 1e-7 tolerance explicitly implementation-specific. A new vector figure, from the unchanged frozen tensor, shows exactly 9096 rejected banded method-level rows (CV 3384, GCV 4160, MLE 1552; median 1.4078566e-7) without inventing accepted-residual values. Algebraic regression suite **10/10 passed**. The **NEW 19-page Springer PDF** was freshly compiled on the correct PC08 Windows runner in successful [Actions 42769877846](https://github.com/heri-espino/trendestimation/actions/runs/42769877846), source SHA `15349249c1f5bcf518a5e4fd0eabbdc9c79cb28e`, PDF SHA-256 `69e5dc84936e1c7a6db4690373cc982baa1e26d5afc614f8006dfa2525751c29`, 808912 bytes, archived under [artifacts/springer-empirical-pc08-42769877846](https://github.com/heri-espino/trendestimation/tree/artifacts/springer-empirical-pc08-42769877846). No TeX errors, unresolved references or overfull boxes; all 19 pages extracted/rendered and visually inspected. Exact source-backed figures/QA: [kkt001/FINAL_VERIFICATION.md](benchmarks/experiment011/pc08_empirical/kkt001/FINAL_VERIFICATION.md). No benchmark rerun, source tolerance change, raw data modification, merge, or journal submission. Draft PR #126 remains unmerged, stacked on #124; author declarations still require confirmation.
+
+**CURRENT Springer manuscript (Nov 9, 2026; supersedes older PDF links):** The requested complete figure/table redesign has been integrated in canonical `paper/main.tex`: eight revised vector figures (stacked method-color reliability and cost allocations; matched violin/box/seed distributions; paired full-grid numerical completion; high-order failure mechanisms; single-versus-grid crossover; memory-policy scaling) and three new scientific tables (geometric means and independent-seed CIs plus median/IQR; comment-classified KKT/inversion failures; nine-grid completion counts). All derive from the frozen, hashed Experiment011 tensor; **no new benchmark**. [Successful visual generation #42719614790](https://github.com/heri-espino/trendestimation/actions/runs/42719614790) published archive branch `results/experiment011-visualization001-42719614790`. [Successful final PDF build #42720035896](https://github.com/heri-espino/trendestimation/actions/runs/42720035896) is archived at `artifacts/springer-empirical-pc08-42720035896/paper/builds/pc08/springer-empirical-42720035896/springer.pdf`, source SHA `632a32300435348c3af1c351273d760f8da66f7a`, PDF SHA-256 `d2a91de05c4399560efab435804ade3373900d2f39c18be18374452054b84044`, 702329 bytes, 16 pages. 7 numerical ingestion tests passed, no LaTeX errors/undefined refs/overfull boxes, and all 16 pages rendered and inspected. Details: [visualization001/FINAL_VERIFICATION.md](benchmarks/experiment011/pc08_empirical/visualization001/FINAL_VERIFICATION.md). The journal's conditional recommendation of spectral SVD for repeated, memory-feasible complete-criterion searches is unchanged; retained KKT and mapping caveats. Unverified authorship declarations require confirmation. Draft PR #126 remains **open/unmerged** and stacked on unmerged handoff PR #124. Do not merge or submit without authorization.
+
+**LATEST Springer journal-language revision (2026-11-09; supersedes all earlier PDF pointers):** The manuscript in [draft PR #126](https://github.com/heri-espino/trendestimation/pull/126) has been academically rewritten to recommend spectral SVD as the **conditional preferred default for repeated, complete-criterion PLS smoothing-parameter selection**, subject to numerical validation and dense memory feasibility. The title/abstract/introduction/theory/computational design/results/reliability/discussion/conclusions and all captions are formalized; public-facing figure 2 and Table 1 use mathematical configurations rather than internal case names; the memory figure's internal study labels are removed. Original data and original detailed failure masks remain unchanged. Source-linked journal-facing figure/table: [publication001](benchmarks/experiment011/pc08_empirical/publication001/README.md) and [journal editorial verification](benchmarks/experiment011/pc08_empirical/publication001/EDITORIAL_VERIFICATION.md). Successful publication figure PC08 run [42654092416](https://github.com/heri-espino/trendestimation/actions/runs/42654092416); successful corrected robustness plot PC08 run [42654215335](https://github.com/heri-espino/trendestimation/actions/runs/42654215335). **NEW journal revision compiled on PC08 run [42654369909](https://github.com/heri-espino/trendestimation/actions/runs/42654369909)**, exact source commit \`0579c831df81b821f1920358092c9b522511fbe1\`, 16 pages, 514672 bytes, SHA-256 \`462a4cfb82e4bb290d85e38034f1485ce0983460645d3f8729d2008cbae48745\`. The rebuilt PDF and build proof are permanently archived at [artifacts/springer-empirical-pc08-42654369909](https://github.com/heri-espino/trendestimation/tree/artifacts/springer-empirical-pc08-42654369909), path \`paper/builds/pc08/springer-empirical-42654369909/springer.pdf\`. Existing seven unit tests pass, final LaTeX pass has no undefined citations/references, errors or overfull boxes, and all 16 pages were downloaded, extracted, rendered and visually checked; text has no "pilot", "smoke", Experiment011 or GitHub Actions mentions. This version removed an **unverified proposed coauthor attribution** pending actual author agreement; no claim about coauthor exclusion is made. Verify actual author roster, corresponding email, funding/conflicts and original raw-data access before submitting. The draft PR remains unmerged and no numerical experiment was rerun.
+
+**LATEST Springer empirical robustness/PDF certification (2026-11-09; supersedes older 11-page PDF records below):** In draft [PR #126](https://github.com/heri-espino/trendestimation/pull/126), the canonical Springer \`paper/main.tex\` now contains the explicitly requested Cholesky KKT/grid reliability, matched single-vs-grid speedups and memory-policy discussion, illustrated by four additional vector figures (Figs. 5–8). The frozen Experiment011 source shows 9096 banded post-solve KKT rejection rows; nine 97-seed families succeeded for single-candidate both methods and on full grid for SVD, but banded full grid failed; 6336 inversion-error rows involve both methods. All counts are correlated timing/status rows, not independent failure events or high-precision certificates. The source-code 2 GiB cap with 40n² SVD allowance versus 16n(d+1) for two band buffers is explicitly *not observed RAM*. Figures/CSV/JSON generator and outputs are archived on [results/experiment011-robustness001-pc08-42642807292](https://github.com/heri-espino/trendestimation/tree/results/experiment011-robustness001-pc08-42642807292), with successful [PC08 run 42642807292](https://github.com/heri-espino/trendestimation/actions/runs/42642807292). The **NEW 15-page compiled PDF** is on [artifacts/springer-empirical-pc08-42643291205](https://github.com/heri-espino/trendestimation/tree/artifacts/springer-empirical-pc08-42643291205), [successful PC08 build 42643291205](https://github.com/heri-espino/trendestimation/actions/runs/42643291205), SHA-256 aad05992ae19f4d5db9c7c2ec1e1a4fcc67bb086c3465a645b472b70a4a859a8, 529793 bytes. Seven tests passed, final TeX pass was free of undefined references/citations and overfull boxes, and all 15 pages and new figures were downloaded/rendered/visually reviewed. Read [robustness001/RESULTS.md](benchmarks/experiment011/pc08_empirical/robustness001/RESULTS.md) and [robustness001/FINAL_VERIFICATION.md](benchmarks/experiment011/pc08_empirical/robustness001/FINAL_VERIFICATION.md). Raw files untouched; no new campaign, merge, journal submission or author-approval claim.
+
+**Experiment011 robustness001 augmentation (2026-11-09; latest):** User requested explicit Cholesky failure locations and diagrams. Read [robustness results](benchmarks/experiment011/pc08_empirical/robustness001/RESULTS.md) and source [render.py](benchmarks/experiment011/pc08_empirical/robustness001/render.py). Frozen, unchanged Experiment011 tensor shows **9096 banded post-solve KKT rejection timing rows** (the implementation threshold is 1e-7), **2112 banded and 4224 spectral inversion-error rows** and 970 work-budget skip rows (776 naive/194 spectral; *not* recorded OOM). Nine case families, each with 97 seed indices, have 100% single-candidate status completion for both backends, but 0% full-grid Cholesky completion versus 100% SVD full-grid completion. Large n=1024/2048/4096,d=4 shared smoothness-inversion failures preclude any universal SVD-success claim. The spectral evaluator does **not** apply the identical banded KKT test: acceptance success is not a comparable high-precision accuracy certificate. SVD 5×float64-dense-matrix memory allowance 40n² bytes versus approximately 16n(d+1) for two banded arrays, under the explicit 2GiB dense-memory policy; this figure is a *code-policy model*, not observed RAM. New Figs. 5–8 and derived CSV/JSON ledgers generated and archived on [results/experiment011-robustness001-pc08-42642807292](https://github.com/heri-espino/trendestimation/tree/results/experiment011-robustness001-pc08-42642807292) with [PC08 Action #42642807292](https://github.com/heri-espino/trendestimation/actions/runs/42642807292). The same draft manuscript PR [#126](https://github.com/heri-espino/trendestimation/pull/126) is open and unmerged, stacked on PR #124. Figures and prose are included in the canonical sn-jnl manuscript; a **new PDF compile is requested**, and the older PDF from #42638070663 remains historical. Do not merge, alter tolerances, or rerun large experiments.
+
+**Open draft manuscript PR #126 (do not merge):** https://github.com/heri-espino/trendestimation/pull/126 . It is stacked on the still-open PR #124 handoff branch; retarget after integration/review, do not merge or submit without approval. The newly built PDF source revision and verified artifact remain unchanged by these documentation-only updates.
+
+**Final Springer build certification (2026-11-09):** The rewritten empirical paper compiled successfully on PCAG103A-08 in [Actions #42638070663](https://github.com/heri-espino/trendestimation/actions/runs/42638070663), using source revision 41e876224db79b79684df7bd9bbcf3a9fa6acb8c. The **new 11-page PDF** (409,890 bytes, SHA-256 7027b90867aad9bbeb431e9a4c6cb23ec79c26092686c4ea89e3dce9f27fee44) and final TeX logs/proofs are permanently on [artifacts/springer-empirical-pc08-42638070663](https://github.com/heri-espino/trendestimation/tree/artifacts/springer-empirical-pc08-42638070663). Seven regression tests passed. The PDF was downloaded, SHA-256 verified, rendered as all 11 pages and visually inspected (including table, all figures, references). Final TeX pass has no unresolved refs/citations or overfull boxes. See [FINAL_VERIFICATION.md](benchmarks/experiment011/pc08_empirical/FINAL_VERIFICATION.md) and [repaired derived evidence](https://github.com/heri-espino/trendestimation/tree/results/experiment011-springer-derived-42636962129). The manuscript remains **unmerged and unsubmitted** pending author/coauthor approval.
+
+**New canonical Springer empirical handoff (2026-11-09; supersedes the old pending Windows status below):** Do not run Experiment011 again. The 2813-case-seed cumulative report is complete as a schedule but includes 57 failed jobs. A six-stage, SHA-256-verified audit on PC08 produced 92,679 measured/missing records and 76,220 complete, numerically admissible criterion timing rows. A corrected four-figure and data-table package is on [results/experiment011-springer-derived-42636962129](https://github.com/heri-espino/trendestimation/tree/results/experiment011-springer-derived-42636962129); see [pc08_empirical/README.md](benchmarks/experiment011/pc08_empirical/README.md) and [preflight run](https://github.com/heri-espino/trendestimation/actions/runs/42633415411), [analysis run](https://github.com/heri-espino/trendestimation/actions/runs/42636962129), [publication recovery](https://github.com/heri-espino/trendestimation/actions/runs/42637443986). The first produced comparison Fig. 2 was blank and is superseded by the repaired forest plot. All original raw files remain in the author Windows checkout and same-disk backup; no raw results were copied into GitHub. The new canonical paper/main.tex and two empirical sections are scoped to paper/springer-empirical-tensor-pc08; seven QA tests passed. A freshly compiled, visually inspected PDF and manuscript PR remain the next steps; do not merge, submit or change any separate CSDA/NGSIM paper.
 
 # Start here — publication split and the next Experiment011 Windows run
-## Newest paper request: third-order PLS physical methodology, simulations + real data (Nov 9, 2026)
 
-[Full editorial and results handoff](ngsim-jerk-case-study/notes/METHOD_FIRST_EDITORIAL_HANDOFF.md). User declined a computational (backend/timing) focus for Paper C; it now explains Guerrero PLS, normalized smoothness index S, Gaussian noise interpretation, and actual physical jerk/vehicle reconstruction, with independent synthetic and recorded real cases. A NEW Experiment008 [run #42717662044](https://github.com/heri-espino/trendestimation/actions/runs/42717662044) compared soft PLS spectral regularization with hard TSVD truncation of D3, spline GCV and SG, matching the archived Experiment005 1296 known-jerk synthetic trials and Experiment004 200 real NGSIM episodes. Historic PLS profile-ML lambda/mu are reused unchanged from Experiment006. Known jerk RMSE PLS 2.441 vs EDF-matched TSVD 2.942 m/s³; real 1s three-point PLS .514 vs TSVD .512 m; separately spline quadratic Taylor .348 m. Experiment007 1944 controlled noise-factorial cases/72 independent parent draws remain intact and their S calibration figures included. Successful official Elsevier CAS PDF [run #42719535746](https://github.com/heri-espino/trendestimation/actions/runs/42719535746) passes both audits (11 pages). Compiled PDF on [open PR #131](https://github.com/heri-espino/trendestimation/pull/131); full VM path C:\Users\175199\Documents\TrendEstimation-PaperC\manuscript-methods\run-42719535746-a1; immutable full archive results/paper-c-methods-pdf-pc08-42719535746-a1. Original five figure files, criterion heatmaps and backend comparisons are preserved in Git but solver comparisons excluded from main paper. No merge, other projects remain isolated.
-
-## Newest Paper C Experiment007 — smoothness/noise calibration COMPLETE (2026-11-09)
-
-[Full verified run ledger](ngsim-jerk-case-study/experiments/experiment007/RUN_LEDGER.md). The author requested targeted validation of relative spectral observation-noise attribution by the normalized S index with **separate controlled changes in true jerk variability**. [Successful PC08 #42660204414](https://github.com/heri-espino/trendestimation/actions/runs/42660204414) and cloud #42660028292 executed complete 162-case pilot and 1,944-case confirm, four selectors and 7,776 valid selections. All factorial outcomes are **paired**: 72 independent generated parents underlie 1,944 conditions, so bootstrap uses parents. Under iid Gaussian assumptions joint REML calibration Spearman .9654, MAE .01148; increasing noise raises selected S ~+.1498, increasing actual jerk SD reduces S ~−.1387; same-ratio scaling leaves S fixed despite 16x observation variance. Serially correlated error caused MAE ~.0712 (iid jerk) and .1111 (AR1 jerk), a serious limitation. Windows complete root C:\Users\175199\Documents\TrendEstimation-PaperC\experiment007\run-42660204414-a1; 39 exact file paths and SHA hashes, all clean/noisy generated arrays, experimental configs, risk/parameter rows and five plots in unique Git results branch results/paper-c-exp007-pc08-42660204414-a1. New manuscript position: S is a **model-dependent relative spectral noise fraction**, not physical sensor precision or universally clean data. Existing Experiment004 real-data spline superiority and Experiment006 joint REML negative result both remain intact. No paper PDF or unrelated research altered. Read latest ledger before any further work.
-
-## Most recent Paper C verified Experiment006 (Nov 9, 2026)
-
-The author authorized joint optimization of the reference mean mu and penalty lambda, plus a forecast-directed training-only shrinkage comparison. [Completed experiment006 run ledger](ngsim-jerk-case-study/experiments/experiment006/RUN_LEDGER.md), [PC08 success #42639588117](https://github.com/heri-espino/trendestimation/actions/runs/42639588117), [PR #127](https://github.com/heri-espino/trendestimation/pull/127). Reused (not recreated) Experiment005 simulated 96 pilot/1296 confirmation trajectories and Experiment004 real 200 NGSIM episodes. New persistent VM root: C:\Users\175199\Documents\TrendEstimation-PaperC\experiment006\run-42639588117-a1; all 47 files, 18.5MB and SHA-256 paths mirrored to isolated Git results branch. The unknown-mean REML corrects the nuisance mean by GLS and removes one additional likelihood dimension; it is *not* the previous conditional sample plug-in. Under synthetic known truth global OLS mean with fixed-mu profile ML achieves jerk RMSE 2.441 m/s³, compared with 3.295 for joint REML; zero fixed mu is 2.587. Joint REML 1-second synthetic local25 clean-position RMSE 0.498m vs 0.405m for fixed-zero ML. In real camera positions, joint REML selected lambda=0 in 161/200 episodes; its 1-second local25 RMSE was 0.578m versus spline 0.348m. **Early grid analysis incorrectly included zero; corrected strictly predeclared 15-point grid results are used here.** Scientific result is negative/mixed, not a new globally superior estimator. No manuscript revision or merge performed. Older status notes below are dated history.
-
-
-## Newest Paper C results: Experiment005 simulation complete (2026-11-08)
-
-[Run ledger](ngsim-jerk-case-study/experiments/experiment005/RUN_LEDGER.md), [successful hosted run #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064), [complete Git archive](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). Confirm: 1,296 independent analytic known-jerk trials plus 96-trial pilot; 12,960 PLS selections, 89,424 complete forecast rows, 15,552 historical jerk error rows, 62,208 fixed-S reference ablation rows and no invalid outcomes. All first-party generated true/noisy trajectories, full data, plots, configuration, environment and file hashes are committed. PLS with profile ML and global cubic OLS mean historical jerk RMSE **2.918 m/s³**, zero mean **3.021**, GCV spline **60.913** under the simulated conditions; nonzero reference helps sustained jerk but may worsen reversals, and sample mean is endpoint-sensitive. **Do not claim this proves real camera jerk accuracy:** real FHWA Experiment004 preferred the spline in future recorded-position forecasts. PCAG103A-08 run #42547250403 remains queued as a *separate* Windows computation, not VM-confirmed. Import cloud data using the checksum-verifying PowerShell sync script, which must label the copy as an import. No simulation manuscript rewrite or merge has occurred. Older notes below are dated and superseded by this verification.
-
-
-## Latest Paper C update: known-jerk Experiment005 (2026-11-08)
-
-The author has just authorized **simulations** following
-completed observational Experiment004. Read
-[experiment005 README](ngsim-jerk-case-study/experiments/experiment005/README.md)
-and its fixed [config.json](ngsim-jerk-case-study/experiments/experiment005/config.json).
-A dedicated PCAG103A-08 workflow runs a small pilot of
-96 independently seeded analytic jerk trajectories and,
-only on success, a 1,296-trial confirmation with separate
-seeds. It compares d=3 PLS GCV vs Gaussian profile ML,
-zero/sample/global-OLS/tail-OLS/synthetic-oracle `mu`,
-both existing continuation rules and GCV spline/SG
-baselines. Outputs directly measure **known historical
-discrete jerk** and clean-position forecasts, unlike
-earlier NGSIM only recorded-position error.
-A fixed-S crossed reference-mean ablation separates
-smoother and extrapolation effects. All datasets,
-noisy/clean trajectories, losses, figures, failure
-rows and reproducibility metadata reside in a unique
-non-overwriting PC08 persistent directory, and are
-pushed in full to an independent Git results branch.
-**Do not infer numerical success from workflow creation.**
-This branch is separate from the active PR #122 based
-on earlier Paper C PR #121. No manuscript has yet been
-rewritten with these *not-yet-validated* simulation results.
-
-
-## Completed expanded real-only Paper C experiment004 (2026-11-08)
-
-[Completed run ledger](ngsim-jerk-case-study/experiments/experiment004/RUN_LEDGER.md);
-[PCAG103A-08 workflow #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206);
-[stacked code PR #122](https://github.com/heri-espino/trendestimation/pull/122)
-against still-open Paper C PR #121.
-FHWA real data: **200 episodes** (100 each US-101/I-80),
-400,000 downloaded source observations, 6,600 completed forecasts,
-800 PLS GCV/profiled marginal ML selections and a successful
-paper compilation. 38 VM-generated files/8 data/result/log/build
-directories are listed with SHA-256 values in the full
-`file_inventory.json` on the VM and Git results branch.
-All raw original API pages and results reside at
-`%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`.
-The Git results-only branch is
-`results/paper-c-exp004-pc08-42538556206-a1`, including all
-compact numeric records and provenance metadata.
-
-**Scientific finding:** The tuned GCV cubic spline with quadratic
-continuation has pooled RMSE of **0.135, 0.348, 0.879 m** at
-0.5/1/2 seconds, compared to **0.143, 0.512, 1.869 m** for
-PLS d=3, mu=0, profiled Gaussian ML, last3 recurrence.
-Thus the expanded evaluation does **not** confirm a general
-PLS forecast advantage. The study has just five coarse recording
-session proxies; episode-level bootstrap inference is exploratory
-and true physical jerk is unobserved. Do not claim universal
-PLS or nonzero-mu superiority based on the five-track pilot.
-No simulations were requested or conducted. The earlier
-“workflow running” statements below are dated history.
-The source manuscript has **not been rewritten** with the new
-expanded results; this is the next editorial task.
-
-
-## Paper C real NGSIM expansion — new user decision (2026-11-08)
-
-The author chose **not to run synthetic known-jerk experiments** for
-the present manuscript. Instead, expand the official US-101 and I-80
-raw-position dataset, compare PLS with `criterion="gcv"` versus the
-repo's `criterion="mle"` (profiled Gaussian marginal likelihood),
-and include GCV smoothing splines and Savitzky--Golay. The new
-[experiment004 README](ngsim-jerk-case-study/experiments/experiment004/README.md)
-describes input pagination, session-aware episode IDs, fixed training
-window/origin/horizons, bootstrap, file tree and VM-only raw storage.
-Source/data/results must be recorded separately in
-`%USERPROFILE%\Documents\TrendEstimation-PaperC\experiment004\run-<id>-a<attempt>`.
-The self-hosted workflow runs on PCAG103A-08 from a new branch stacked
-on Paper C PR #121 and produces an immutable results-only Git branch
-for complete scored rows, file hashes and references. **Never infer
-success before reading the actual run; do not claim true physical jerk
-accuracy, or unique real drivers from reused numeric Vehicle_IDs.**
-Retain prior simulation ideas as optional future work, not an
-authorized immediate experiment.
-
-
-## Paper C empirical follow-up and publication draft (2026-11-08)
-
-**Active research PR:** [#121](https://github.com/heri-espino/trendestimation/pull/121).
-The new Paper C subdirectory `ngsim-jerk-case-study/experiments/`
-contains **three sequential experiments**, with permanent output records:
-[experiment001](ngsim-jerk-case-study/experiments/experiment001/README.md)
-(Guerrero-inspired third-order recurrence; 900 rows),
-[experiment002](ngsim-jerk-case-study/experiments/experiment002/README.md)
-(spline/SG/local-polynomial rules; 315 rows), and
-[experiment003](ngsim-jerk-case-study/experiments/experiment003/README.md)
-(training-only GCV spline; 180 rows). The latter two completed on the
-self-hosted PCAG103A-08 runner
-([run 42521326853](https://github.com/heri-espino/trendestimation/actions/runs/42521326853),
-[run 42521725044](https://github.com/heri-espino/trendestimation/actions/runs/42521725044)).
-An updated NGSIM manuscript including the matching table compiled
-successfully on PC08
-([run 42522124213](https://github.com/heri-espino/trendestimation/actions/runs/42522124213));
-its PDF/logs are preserved on a separate results-only branch.
-
-**Findings:** PLS with (d=3,mu=0) and the last-3 recurrence:
-RMSE 0.0745, 0.2958 and 1.2998,m at 0.5/1/2,s. A GCV spline with
-quadratic Taylor continuation gives 0.1233, 0.2951 and 0.8085,m:
-PLS is favorable at 0.5,s, tied at 1,s, worse at 2,s. Nonzero-(mu)
-benefit reverses by continuation. The five track segments represent
-**only two distinct original vehicle IDs**, 15 overlapping origins,
-and no independent jerk truth. These are historical exploratory results,
-not proof of first use, physical jerk fidelity, or population efficacy.
-Old statements below saying no Paper C experiment has run are dated
-historical notes and superseded by this section.
-
-Future research: independent vehicle-ID validation, known-jerk
-synthetic experiment (next free identifier `experiment004`), then
-fit-versus-continuation (mu) ablation, without mixing them into
-the independent Springer Experiment011 timing workstream.
-Do not merge open PRs without explicit user authorization.
-
+**Experiment011 completion update (2026-11-09):** The author reports **2813/2813 case-seed jobs recorded, remaining 0**, on the Windows VM. Read the [completed-campaign handoff](benchmarks/experiment011/handoff/COMPLETION_HANDOFF.md) and [Springer analysis prompt](benchmarks/experiment011/handoff/SPRINGER_ANALYSIS_AGENT_PROMPT.md) before following older pending-run instructions. Final raw data acquisition, verified backup and numerical/timing analysis remain pending; GitHub still has only the inspected 2338-job checkpoint. Preserve local raw files and use the documented no-automatic-publication backup procedure. These observations include 24/1/12-worker phases and must not be pooled as isolated-latency measurements.
 
 ## Paper C new research question (2026-11-05)
 

@@ -1,0 +1,103 @@
+{
+  "study": "Complete-criterion candidate-grid benchmark",
+  "source_file": "paper/benchmarks/experiment011/pc08_empirical/derived/42636962129/paired_backend_seed_bootstrap.csv",
+  "source_sha256": "ae047b53ec638d2033cf49b47ea0e982eb64452763739e20c2cb71f578912b48",
+  "parameter_grid_size": 100,
+  "comparison": "banded Cholesky / spectral SVD",
+  "selection": "Eight distinct criterion/length/order/reference-mean configurations with valid matched grid comparisons",
+  "worker_phase": 24,
+  "coordinate": "direct_s",
+  "figure": "figures/paired_cv_gcv_publication.pdf",
+  "table": "publication_table.tex",
+  "interval": "Frozen independent-seed cluster bootstrap, 700 resamples",
+  "results": [
+    {
+      "case": "pilot_cv_n64_d1_m100",
+      "criterion": "CV",
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "seeds": 96,
+      "ratio": 2.343074529971507,
+      "low": 2.2940021031290674,
+      "high": 2.3948251322587106
+    },
+    {
+      "case": "smoke_cv_n64_d3_m100",
+      "criterion": "CV",
+      "n": 64,
+      "d": 3,
+      "mu": "0",
+      "seeds": 97,
+      "ratio": 4.031929332627291,
+      "low": 3.9504767763328514,
+      "high": 4.106278346404399
+    },
+    {
+      "case": "pilot_cv_n128_d3_m100",
+      "criterion": "CV",
+      "n": 128,
+      "d": 3,
+      "mu": "0",
+      "seeds": 97,
+      "ratio": 5.4013156449021125,
+      "low": 5.244117174137174,
+      "high": 5.554502303399603
+    },
+    {
+      "case": "pilot_data_cv_n128_d3_m100",
+      "criterion": "CV",
+      "n": 128,
+      "d": 3,
+      "mu": "data",
+      "seeds": 97,
+      "ratio": 5.556173559958309,
+      "low": 5.4572344519771585,
+      "high": 5.648671633108622
+    },
+    {
+      "case": "confirm_data_cv_n256_d3_m100",
+      "criterion": "CV",
+      "n": 256,
+      "d": 3,
+      "mu": "data",
+      "seeds": 97,
+      "ratio": 4.84582198614114,
+      "low": 4.5674392328886135,
+      "high": 5.124915707339099
+    },
+    {
+      "case": "pilot_gcv_n64_d1_m100",
+      "criterion": "GCV",
+      "n": 64,
+      "d": 1,
+      "mu": "0",
+      "seeds": 96,
+      "ratio": 2.3280078107484914,
+      "low": 2.2824555793041923,
+      "high": 2.3735498589065642
+    },
+    {
+      "case": "pilot_gcv_n128_d3_m100",
+      "criterion": "GCV",
+      "n": 128,
+      "d": 3,
+      "mu": "0",
+      "seeds": 97,
+      "ratio": 4.990423437251358,
+      "low": 4.869190872702201,
+      "high": 5.103093866306481
+    },
+    {
+      "case": "pilot_data_gcv_n128_d3_m100",
+      "criterion": "GCV",
+      "n": 128,
+      "d": 3,
+      "mu": "data",
+      "seeds": 97,
+      "ratio": 5.11929917191833,
+      "low": 5.0101571465031585,
+      "high": 5.226214734288397
+    }
+  ]
+}

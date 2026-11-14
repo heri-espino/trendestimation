@@ -1,0 +1,20 @@
+{
+  "source": "frozen complete-criterion timing tensor",
+  "tensor_sha256": "a25f674981b1c20df678638287df289c4d888ae62417a3f58ed8a6b2a08fce13",
+  "rows": 92679,
+  "rejected_timing_rows": 9096,
+  "independent_case_seed_clusters": 1401,
+  "recorded_criterion_counts": {
+    "gcv": 4160,
+    "cv": 3384,
+    "mle": 1552
+  },
+  "threshold": 1e-07,
+  "min": 1.0012664145824255e-07,
+  "median": 1.4078565654377355e-07,
+  "max": 1.0587340645745082e-06,
+  "mean": 2.6905142714382114e-07,
+  "plot": "kkt_rejection_distribution.pdf",
+  "interpretation": "Conditional distribution of rejected method-level timing records; not an independent sample of error probabilities or a sample of accepted residuals.",
+  "accuracy_warning": "Residual normalization differs from the standard normwise linear-system backward error."
+}

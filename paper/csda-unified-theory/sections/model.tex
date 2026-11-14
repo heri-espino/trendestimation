@@ -1,0 +1,62 @@
+\section{Finite-difference PLS and a spectral solution}\label{sec:model}
+For equally spaced data $y\in\R^n$, let $1\le d<n$ and $r=n-d$. Define $D_d\in\R^{r\times n}$ by
+\begin{equation}\label{eq:difference}
+(D_dx)_i=\sum_{k=0}^d(-1)^{d-k}{d\choose k}x_{i+k}.
+\end{equation}
+At a fixed reference level $\mu\in\R$ of the $d$th differences, estimate
+\begin{equation}\label{eq:pls}
+\widehat\tau_{\lambda,\mu}=
+\arg\min_{\tau\in\R^n}\{
+\|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf1_r\|_2^2\}.
+\end{equation}
+Set $Q_d=D_d^\top D_d$, $A_\lambda=I+\lambda Q_d$ and $H_\lambda=A_\lambda^{-1}$. The first-order equations give
+\begin{equation}\label{eq:rhs}
+A_\lambda\widehat\tau=y+\lambda\mu D_d^\top\mathbf1_r.
+\end{equation}
+$A_\lambda$ is symmetric positive definite for finite $\lambda\ge0$.
+
+\begin{lemma}[Finite-difference nullspace]\label{lem:kernel}
+$D_d$ has rank $r$ and nullspace dimension $d$.
+Its nullspace consists of sampled polynomials of degree at most $d-1$; thus $Q_d$ has $d$ zero eigenvalues and $r$ strictly positive eigenvalues.
+\end{lemma}
+\begin{proof}
+Repeated differences of a polynomial of degree below $d$ vanish. Conversely, if $D_dx=0$, induction on the difference order implies that $x_t$ is a polynomial in $t-1$ of degree at most $d-1$. The $d$ sequences $\binom{t-1}{k}$, $k=0,\ldots,d-1$, are independent. Rank--nullity and $x^\top Q_dx=\|D_dx\|^2$ complete the proof.
+\end{proof}
+
+The particular polynomial $p_{\mu,t}=\mu\binom{t-1}{d}$ satisfies $D_dp_\mu=\mu\mathbf1_r$. Hence
+\begin{equation}\label{eq:affine}
+\widehat\tau_{\lambda,\mu}=p_\mu+H_\lambda(y-p_\mu).
+\end{equation}
+For large $n,d$, explicitly forming and subtracting $p_\mu$ can cause severe cancellation. We therefore use the reduced SVD $D_d=U\Sigma V^\top$, where $\Sigma=\diag(\sigma_1,\ldots,\sigma_r)$, $\sigma_j>0$, $U$ is $r$-square orthogonal and $V$ has $r$ orthonormal columns. Define $\delta_j=\sigma_j^2$ and $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
+
+\begin{proposition}[Shift-free nonzero-reference reconstruction]\label{prop:shiftfree}
+For every finite $\lambda\ge0$ and specified real $\mu$,
+\begin{equation}\label{eq:shiftfree}
+\begin{aligned}
+\widehat\tau_{\lambda,\mu}
+&=y-V\bigl[w\odot(V^\top y)\\
+&\qquad-\mu(w\oslash\sigma)\odot(U^\top\mathbf1_r)\bigr].
+\end{aligned}
+\end{equation}
+Componentwise multiplication and division are denoted by $\odot$ and $\oslash$. This identity avoids building $p_\mu$ or inverting a dense matrix explicitly.
+\end{proposition}
+\begin{proof}
+Since $H_\lambda=I-V\diag(w)V^\top$ and $D_dp_\mu=\mu\mathbf1_r$, we have $V^\top p_\mu=\mu\Sigma^{-1}U^\top\mathbf1_r$. Substitute into \eqref{eq:affine}.
+\end{proof}
+
+\begin{corollary}[Exact limiting fits]\label{cor:endfits}
+At $\lambda=0$, $\widehat\tau=y$. As $\lambda\to\infty$,
+\begin{equation}\label{eq:inftyfit}
+\begin{aligned}
+\widehat\tau_{\infty,\mu}
+&=y-V\bigl[V^\top y-\mu\Sigma^{-1}U^\top\mathbf1_r\bigr]\\
+&=\arg\min_{\tau:\,D_d\tau=\mu\mathbf1_r}\|y-\tau\|_2^2.
+\end{aligned}
+\end{equation}
+The limiting fit has degree at most $d-1$ for $\mu=0$, and may have degree $d$ for fixed $\mu\ne0$.
+\end{corollary}
+\begin{proof}
+The weights tend to zero and one at the respective limits. The second expression satisfies the affine constraint and removes only the component in the row space of $D_d$, so it is the orthogonal constrained projection.
+\end{proof}
+
+Fixed nonzero $\mu$ is already part of Guerrero's model \citep{guerrero2007}; it is not an invention of this paper. A data-derived plug-in such as $\widehat\mu=\mathbf1_r^\top D_dy/r$ changes the observation-to-fit derivative and requires different treatment of exact leave-one-out refitting. Unless stated otherwise our results are conditional on a fixed numeric $\mu$.

@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{Full-grid completion in nine configurations showing a post-solve banded KKT rejection. Each method has 776 correlated method-level grid observations (97 independent seeds, two repeats, two coordinate policies and two series workloads). Both methods completed all single-candidate observations.}
+\label{tab:grid-reliability}
+\centering\scriptsize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrcc}
+\toprule
+Criterion & $n$ & $d$ & $M$ & Banded complete & SVD complete\\
+\midrule
+CV & 128 & 3 & 1,000 & 0/776 & 776/776\\
+CV & 256 & 3 & 1,000 & 0/776 & 776/776\\
+CV & 256 & 4 & 100 & 0/776 & 776/776\\
+GCV & 64 & 3 & 10,000 & 0/776 & 776/776\\
+GCV & 128 & 3 & 1,000 & 0/776 & 776/776\\
+GCV & 256 & 3 & 1,000 & 0/776 & 776/776\\
+GCV & 256 & 4 & 100 & 0/776 & 776/776\\
+MLE & 256 & 3 & 100 & 0/776 & 776/776\\
+MLE & 512 & 3 & 100 & 0/776 & 776/776\\
+\bottomrule
+\end{tabular}
+\end{table}
