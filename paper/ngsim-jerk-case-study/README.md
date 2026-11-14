@@ -1,4 +1,153 @@
 # NGSIM real-vehicle jerk and trend forecasting case study
+## NEW METHOD-FIRST PAPER C (2026-11-09): simulations + real NGSIM, not backend timing
+
+The author's current directive is to present physical/statistical third-order PLS trend estimation and the interpretable normalized S index, then compare genuine alternative jerk smoothers on **known-truth simulation** and **actual recorded NGSIM**. The official Elsevier manuscript [main.tex](main.tex) and [compiled 11-page PDF](main.pdf) were rewritten and successfully audited on [PC08 run #42719535746](https://github.com/heri-espino/trendestimation/actions/runs/42719535746). [Full method-first study and artifact ledger](notes/METHOD_FIRST_EDITORIAL_HANDOFF.md), [open PR #131](https://github.com/heri-espino/trendestimation/pull/131). Original five paper figures and all older numerical timing/criterion files remain in Git; only solver-timing content was removed from the manuscript. New [Experiment008](experiments/experiment008/README.md) reuses the frozen 1296 synthetic known-jerk and 200 real NGSIM cases, comparing PLS **soft** singular-filtering with a truly different **hard truncated-SVD estimator**, GCV spline, Savitzky–Golay, identical historical reference choices and fair forecast continuations. Known-jerk RMSE PLS 2.441 vs matched-EDF TSVD 2.942 m/s³. Real recorded future one-second PLS .514 vs matched TSVD .512 m with common 3-point continuation; separate spline Taylor .348 m. Experiment007 noise calibration with 72 independent parent trials and 1944 factorial cases remains in manuscript with model-dependent relative-noise interpretation; neither real sensor precision nor real jerk truth are known. Complete PDF plus two new vector-PDF/SVG/PNG comparison figure sets archived at results/paper-c-methods-pdf-pc08-42719535746-a1 and Windows persistent run, exact SHA-256 inventories; journal submission requires author/coauthor review.
+
+## Experiment007 completed — interpreting S as relative precision (Nov 9, 2026)
+
+[Verified Experiment007 results, plots and precise VM/Git file inventory](experiments/experiment007/RUN_LEDGER.md), [fixed design](experiments/experiment007/config.json), [reproduction and theory](experiments/experiment007/README.md). The author requested a focused controlled calibration experiment separating observation noise and physical jerk variability, rather than another optimizer competition. The experiment passed on [PCAG103A-08 #42660204414](https://github.com/heri-espino/trendestimation/actions/runs/42660204414) and Linux cloud #42660028292: 1,944 factorial known-truth cases, 72 independent parent draws, four PLS selection policies and 7,776 valid estimates. In the correctly specified iid Gaussian setting, selected S from joint REML correlated .965 with known spectral observation-noise attribution and had MAE .0115; increasing noise and jerk volatility shifted S in opposite expected directions. Absolute observation precision remains **unidentified** by S: two cases with 16x different sensor-noise variance had the same theoretical and estimated S after proportionally scaling jerk variability. Serially correlated observation errors degraded calibration to MAE .071–.111, a substantial caveat. Complete new synthetic truth, noise values, selected smoothing parameters, condition-level calibration, cluster bootstrap, figures, hashes and runtime metadata are retained on the persistent VM and immutable results branch. These findings do not establish measurement accuracy or physical jerk truth for real NGSIM. Existing Paper C manuscript, historical data and other research workstreams are unchanged, pending deliberate manuscript revision.
+
+## Experiment006 completed: Gaussian joint mu–lambda REML (Nov 9, 2026)
+
+[Complete methods, results, and exact file inventory](experiments/experiment006/RUN_LEDGER.md); [protocol/reproduction](experiments/experiment006/README.md); [successful PCAG103A-08 run #42639588117](https://github.com/heri-espino/trendestimation/actions/runs/42639588117); [research PR #127](https://github.com/heri-espino/trendestimation/pull/127). Reanalyzed the exact old 96/1296 known-jerk synthetic and 200 NGSIM real episodes, with joint mean-adjusted REML, fixed mean or training plug-in Gaussian profile likelihood, and nested training-only forecast alpha shrinkage. For historical known jerk the best of five tested estimator-level choices was global cubic OLS mean + profile ML (2.441m/s³); joint REML had 3.295m/s³. At 1-second synthetic clean-position forecast local25 fixed-zero profile ML 0.405m versus joint REML 0.498m, shrinkage 0.462m. On real recorded positions GCV spline remains best (0.348m at 1s vs joint REML local25 0.578m). **Joint continuous REML selected the zero-penalty limit in 161/200 real NGSIM episodes**; this is a model-boundary warning, not evidence of optimal jerk. The corrected exact 15-S grid does not include zero and is distinct from continuous boundary-aware optimization. Every generated file, SHA-256 and external VM source path is retained in the results-only branch. All older experimental outputs and original LaTeX paper remain unchanged; author review is required before inserting results into the article or merging.
+
+
+## Gaussian REML clarification (2026-11-09)
+
+The author specified the fixed-reference-mean restricted Gaussian likelihood
+on the differences (Dy-mumathbf 1), with covariance
+(sigma_u^2(I+lambda DD^	op)), as the intended *MLE* criterion.
+[The exact spectral/dense likelihood equivalence proof](notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md)
+shows that **the existing library criterion="mle" already computes
+precisely this objective up to the additive constant (-log|DD^	op|)**,
+for each **fixed** (mu). Therefore Experiment004/005 ML-selected
+results should **not** be relabelled as a different estimator or rerun
+simply to replace an equivalent likelihood representation.
+Both studies used a *finite normalized smoothness grid*, not a continuous
+minimization of the profile objective. When (mu) is estimated from data,
+their likelihood treats that estimate as fixed; the correct
+**mean-adjusted unknown-(mu) REML** additionally eliminates one
+degree of freedom and includes a GLS mean-information determinant.
+This distinction, and Guerrero's non-Gaussian second-moment origin,
+must be retained in the final paper.
+
+
+## Completed simulation study: known-jerk Experiment005 (2026-11-08)
+
+[Verified RUN_LEDGER.md](experiments/experiment005/RUN_LEDGER.md) and [successful scientific workflow #42547883064](https://github.com/heri-espino/trendestimation/actions/runs/42547883064) document 96 pilot plus 1,296 disjoint confirmation trials, with complete analytic true/noisy trajectories, 89,424 confirm forecast-error rows, 15,552 known-jerk fit records, 62,208 fixed-S crossed ablation records and zero invalid numerical cases. All generated first-party datasets, analyses, figures and immutable SHA inventory are [archived in GitHub](https://github.com/heri-espino/trendestimation/tree/results/paper-c-exp005-cloud-42547883064-a1). The VM runner is separately queued; the cloud archive has not yet been copied onto PC08.
+
+**Most important scientific result:** profile-ML-selected PLS using a zero or global cubic OLS reference mean can recover known discrete jerk far more accurately than GCV-selected PLS and the benchmark spline/SG under these *specific analytic noise conditions*. A global nonzero reference helps constant nonzero jerk but can worsen a jerk reversal. The earlier 200-episode *real* NGSIM study still favors a GCV cubic spline for **recorded** future-position prediction. Do not present simulation superiority as real-world validation; examine the discrepancy in the eventual Paper C manuscript.
+
+## Next study: controlled known-jerk simulation (Experiment005)
+
+The author authorized a separate
+[known-jerk simulation](experiments/experiment005/README.md)
+after the successful, strictly observational Experiment004.
+The [frozen design](experiments/experiment005/config.json)
+tests six analytic jerk regimes, GCV/profile ML with five
+`mu` references, two forecast continuations and
+spline/SG baselines under three noise structures and
+three error levels. There are 96 pilot and 1,296
+disjoint-seed confirmation trajectories on the designated
+PCAG103A-08 runner, with full clean/noisy series and
+run outputs saved on the VM and immutable Git branch.
+The synthetic-only oracle reference is a diagnostic
+upper bound, not a valid FHWA forecasting procedure.
+Compare *true discrete jerk error* and clean-future-position
+forecast error. **The next manuscript claims must be
+based on actual successful runs, not this planned grid.**
+Existing real NGSIM data and conclusions remain separate.
+
+
+## Completed expanded real NGSIM Experiment004 (2026-11-08)
+
+**Result and exact VM file record:** [Experiment004 run ledger](experiments/experiment004/RUN_LEDGER.md).
+The [PCAG103A-08 workflow #42538556206](https://github.com/heri-espino/trendestimation/actions/runs/42538556206)
+successfully downloaded 400,000 real FHWA source position rows in
+20 auditable API pages, selected **200 contiguous episodes** (100 per
+site), and computed **6,600 valid forecast errors and 800 PLS
+GCV/profile-ML selections**. All **38 generated VM files** (about
+34.2 MB) are recorded in SHA-256 inventory under the persistent
+VM folder `Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1`;
+the result branch contains complete scored rows and metadata while
+the raw page bytes remain on the VM. The NGSIM paper compiled too.
+
+The real-data study shows **GCV cubic smoothing splines, with
+quadratic Taylor continuation, have lower pooled RMSE at 0.5,
+1 and 2 seconds** than the tested PLS last3/local25 policies on
+this expanded convenience sample. The profiled Gaussian ML selector
+is available and shows modest changes versus GCV; a nonzero mu is
+not uniformly favorable. These outcomes challenge the pilot's
+apparent general PLS advantage, and validate the need to report
+negative or horizon-dependent findings. Only **five coarse recording
+session proxies** appear across the 200 episodes; nominal bootstrap
+inference assuming independent episodes is exploratory, not a
+population-level significance result. True physical jerk is not
+independently observed. The original manuscript's earlier pilot
+results remain intact, not silently replaced.
+
+
+## New decision: expanded **real-only** GCV versus ML study
+
+[Experiment004](experiments/experiment004/README.md) implements
+an expanded, auditable FHWA US-101/I-80 download and selection of
+recorded trajectories, then compares the established d=3 PLS
+smoother using **GCV or the library's Gaussian profiled marginal
+likelihood (`mle`)**, for zero/training-mean mu and last3/local25
+continuations. Baselines are GCV natural cubic splines,
+Savitzky--Golay and local quadratic extrapolation. The author
+explicitly prioritized **real positions over simulations**. Results
+use paired episode-level, site-stratified bootstrap intervals
+against recorded future position, not independently known physical
+jerk.
+
+**External raw/complete results** are kept on PCAG103A-08 outside
+the checkout: see experiment004 for the complete permanent VM
+directory tree, hashes, file inventory, Git results branch and
+PowerShell reproduction commands. The workflow must succeed before
+new sample sizes, method rankings or numerical claims are reported.
+Existing pilot and manuscripts are untouched by the source-code-only
+experiment004 implementation.
+
+
+## New recurrence and spline benchmark evidence (2026-11-08)
+
+The first three **sequential, source-controlled Paper C experiments** now
+compare the (d=3) PLS three-point continuation, the original 25-point
+continuation, smoothing splines, Savitzky--Golay and local polynomial
+forecasts on identical chronological recorded-position holdouts:
+
+- [Experiment001: Guerrero-inspired d=3 recurrence](experiments/experiment001/README.md):
+  900 matched forecast records; preserves original Paper C data and results.
+- [Experiment002: conventional spline/SG/polynomial comparators](experiments/experiment002/README.md):
+  315 raw rows, 21 summaries; [PC08 success #42521326853](https://github.com/heri-espino/trendestimation/actions/runs/42521326853).
+- [Experiment003: GCV-selected natural cubic spline](experiments/experiment003/README.md):
+  180 rows, 12 summaries; [PC08 success #42521725044](https://github.com/heri-espino/trendestimation/actions/runs/42521725044).
+  Primary comparison table: [RESULTS.md](experiments/experiment003/results/RESULTS.md).
+- [Recompiled experimental manuscript](https://github.com/heri-espino/trendestimation/actions/runs/42522124213)
+  using PCAG103A-08; the PDF and build manifest are preserved in the
+  separate branch `results/paper-c-pdf-pc08-42522124213-a1`.
+- [Research PR #121](https://github.com/heri-espino/trendestimation/pull/121)
+  contains all code, reports, raw results and revised TeX. Remains subject to
+  author/coauthor review before a merge or submission.
+
+**New scientific finding:** GCV-selected PLS with (d=3,mu=0) and the
+three-point recurrence performs best at 0.5,s (RMSE 0.074519,m), is
+nearly tied with a GCV-selected cubic smoothing spline at 1,s
+(0.295769 vs 0.295081,m), and is outperformed by the spline at 2,s
+(1.299841 vs 0.808529,m). The effect of nonzero (mu) depends strongly
+on the chosen extrapolator. These are **descriptive errors against future
+camera positions, not measured true jerk**.
+
+**Crucial sampling qualification:** The five saved track segments belong
+to **only two distinct vehicle IDs**, and the 15 forecasting origins are
+correlated. They do not support independent vehicle-level inference.
+A new known-jerk simulation and substantially more independent vehicles
+are needed before a publishable claim of physical jerk accuracy or
+general forecasting superiority. No global first-use assertion is verified.
+The source code represents a new documented use of this repository's own
+Python library; it does not establish the first use of (d=3) PLS itself.
+
 
 ## Extrapolation and reference-jerk research handoff (2026-11-05)
 

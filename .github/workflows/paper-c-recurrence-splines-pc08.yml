@@ -1,0 +1,107 @@
+name: Paper C recurrence and spline pilot (PCAG103A-08)
+
+on:
+  push:
+    branches: [research/paper-c-experiment001-d3-recurrence]
+    paths:
+      - .github/workflows/paper-c-recurrence-splines-pc08.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment001/**
+      - paper/ngsim-jerk-case-study/experiments/experiment002/run.py
+      - paper/ngsim-jerk-case-study/run_case.py
+      - tests/test_paper_c_experiment001.py
+      - tests/test_paper_c_experiment002.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-recurrence-splines-pc08
+  cancel-in-progress: false
+
+jobs:
+  paired-trajectory-pilot:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - name: Check out isolated, trusted Paper C experiment branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Require PCAG103A-08 and existing environment without installations
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "Runner: $env:RUNNER_NAME"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') {
+            throw 'This experiment is only authorized on PCAG103A-08.'
+          }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Existing Conda executable unavailable' }
+          if (!(Test-Path -LiteralPath (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) {
+            throw 'Existing trendestimation Conda environment unavailable'
+          }
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import numpy, scipy, pytest, trendestimation; print('Verified existing Python scientific environment',numpy.__version__,scipy.__version__)"
+          if ($LASTEXITCODE -ne 0) { throw 'Conda scientific environment preflight failed' }
+
+      - name: Reproduce archived recurrence results and run deterministic tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment001/run.py --verify
+          if ($LASTEXITCODE -ne 0) { throw 'Archived recurrence parity failed' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_experiment001.py tests/test_paper_c_experiment002.py
+          if ($LASTEXITCODE -ne 0) { throw 'Deterministic tests failed' }
+
+      - name: Compute predeclared spline and SG future-position comparisons
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          $dir = "paper/ngsim-jerk-case-study/experiments/experiment002/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment002/run.py --output-dir $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Spline and SG benchmark failed' }
+          if (!(Test-Path (Join-Path $dir 'forecast_rows.json'))) { throw 'Benchmark output is missing' }
+          git rev-parse HEAD | Out-File -FilePath (Join-Path $dir 'source_commit.txt') -Encoding utf8
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze | Out-File -FilePath (Join-Path $dir 'requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Could not capture reproducible package versions' }
+          Get-Content (Join-Path $dir 'RESULTS.md')
+
+      - name: Upload full outputs even if an earlier scientific check fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-exp002-pc08-spline-pilot
+          path: paper/ngsim-jerk-case-study/experiments/experiment002/runs/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Preserve successful measurements on an immutable results-only branch
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/ngsim-jerk-case-study/experiments/experiment002/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (!(Test-Path (Join-Path $dir 'run_manifest.json'))) { throw 'Refusing to archive missing benchmark metadata' }
+          $archive = "results/paper-c-exp002-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create isolated results branch' }
+          git add -f -- $dir
+          if ($LASTEXITCODE -ne 0) { throw 'Could not stage benchmark results' }
+          git commit -m "experiment002: permanently archive PC08 spline comparator $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Results-only commit failed' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Results-only push failed' }
+          Write-Host "Preserved results in branch $archive"

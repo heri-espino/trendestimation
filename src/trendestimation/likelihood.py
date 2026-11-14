@@ -6,6 +6,25 @@ is treated as an unpenalized nuisance trend. The observation variance
 is unknown and profiled out. This extends the Gaussian marginal-
 likelihood framework discussed by Biessy (2026, Section 5.3), which
 treats the observation variance as known.
+
+For a FIXED difference reference mean mu, the code's positive-eigenvalue
+objective is algebraically identical, up to -logdet(D @ D.T), to the
+Gaussian restricted-likelihood objective on z=D @ y - mu * 1:
+
+    logdet(I + lambda * D @ D.T)
+    + (n-d) * log(z.T @ inv(I + lambda * D @ D.T) @ z / (n-d)).
+
+The code profiles the observation variance, while this equivalent expression
+profiles the latent-difference innovation variance. Both imply
+lambda = sigma_observation**2 / sigma_difference**2 and have identical
+lambda minimizers. Guerrero (2007) established the PLS variance-ratio
+interpretation under second moments; the Gaussian REML derivation is an
+additional distributional assumption, NOT a likelihood theorem in that paper.
+
+If mu is estimated, the present score remains a CONDITIONAL PLUG-IN
+likelihood, not the mean-adjusted REML that also removes a mean direction
+and uses n-d-1 residual dimensions. The mathematical proof and audit are in
+paper/ngsim-jerk-case-study/notes/GUERRERO_GAUSSIAN_REML_EQUIVALENCE.md.
 """
 
 from __future__ import annotations

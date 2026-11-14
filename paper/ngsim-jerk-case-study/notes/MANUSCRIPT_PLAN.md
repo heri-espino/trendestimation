@@ -1,5 +1,23 @@
 # Paper C — manuscript annotations and next experiments
 
+**Empirical update (2026-11-08; supersedes proposed numbering below):**
+Experiments **001, 002, and 003** now exist and were executed/reproduced
+in [Paper C's experiment index](../README.md). Experiment001 compares
+the algebraic (d=3) Guerrero-inspired recurrence with local25, using
+the same fitted PLS trends; Experiment002 benchmarks cubic splines,
+Savitzky--Golay and local polynomials; Experiment003 compares
+**training-only GCV-selected cubic smoothing splines**.
+[The new results table](../experiments/experiment003/results/RESULTS.md)
+and compiled revised [manuscript](../main.tex) report that
+(d=3,mu=0) recurrence is best at 0.5,s but is surpassed by
+the GCV spline at 2,s. All five segments contain only **two distinct
+original vehicle IDs**. The old proposed labels “experiment001
+known-jerk” and “experiment003 adaptive” below were **planning labels**;
+the remaining unexecuted known-jerk and dynamic-reference work must use
+the next free sequential identifier, **experiment004** and later. No
+independent jerk truth or broad priority has been established.
+
+
 **Purpose:** Working notes and an action-oriented outline for the **existing** NGSIM paper; **not** a rewrite of the current LaTeX, an experiment report, or a submission decision.
 
 **Extrapolation-focused continuation (2026-11-05):** See the [central research handoff](EXTRAPOLATION_RESEARCH_HANDOFF.md), [the exact two-effect decomposition](EXTRAPOLATION_DECOMPOSITION.md), [the $\mu$ policy catalogue](MU_POLICY_CATALOG.md), and [the planned factorial ablation](EXTRAPOLATION_ABLATION_PLAN.md). **Biessy (2025 online; 2026 journal volume) has already developed WH/PLS extrapolation**; any novelty claim should target the nonzero *reference-jerk* policy, its attribution and validated vehicle application, not PLS extrapolation generically. The experiment001–003 sections below remain plans, not completed results.

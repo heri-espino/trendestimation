@@ -1,3 +1,5 @@
+**Integrated paper drafts, 2026-11-14:** See [LATEST_PAPERS.md](LATEST_PAPERS.md) for direct PDF/LaTeX links to Springer, unified CSDA, and Paper C. Paper C review branch was integrated preserving root docs and the other two manuscripts. Its AwesomeFigures figures, `src/trendestimation/likelihood.py` Gaussian-REML clarification, and 12 experiment tests are retained. Do not mistake manuscript merge for journal submission or reproducibility re-run. Preserve raw data and archived original reports.
+
 # Paper work — mandatory manuscript/experiment routing
 
 **Paper C extrapolation handoff (2026-11-05):** In addition to the

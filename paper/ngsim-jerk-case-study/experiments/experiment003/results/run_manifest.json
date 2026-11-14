@@ -1,0 +1,30 @@
+{
+  "experiment_id": "experiment003",
+  "status": "gcv_spline_retrospective_archived_ngsim_pilot",
+  "source_doi": "10.21949/1504477",
+  "data_subset_sha256": "61a41fd70a4b89cf7e32d4bc2aaf40083ce3ea86bc9b7d1175108bd674d2733e",
+  "n_tracks": 5,
+  "distinct_vehicle_ids": 2,
+  "n_origins": 15,
+  "n_rows": 180,
+  "n_summary_rows": 12,
+  "n_train": 80,
+  "dt_seconds": 0.1,
+  "horizon_frames": [
+    5,
+    10,
+    20
+  ],
+  "selector": "scipy.interpolate.make_smoothing_spline(lam=None): GCV on training only",
+  "methods": [
+    "spline_gcv_taylor2",
+    "spline_gcv_taylor3",
+    "spline_gcv_local25",
+    "spline_gcv_native"
+  ],
+  "scipy_version": "1.17.1",
+  "numpy_version": "2.4.6",
+  "runner_name": "PCAG103A-08",
+  "run_id": "42521725044",
+  "limitations": "two vehicle IDs and overlapping origins; jerk truth unavailable"
+}

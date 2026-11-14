@@ -1,3 +1,5 @@
+**Current compiled manuscript index (14 November 2026):** [LATEST_PAPERS.md](LATEST_PAPERS.md) — Springer, unified CSDA and Paper C with direct PDFs, TeX sources and supplementary figure galleries.
+
 ## Archived Windows full preset: 80,640 search records
 
 The author's original 80,640-cell Windows benchmark (n=24,48,

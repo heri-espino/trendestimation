@@ -1,0 +1,177 @@
+name: Paper C Experiment006 joint REML on PCAG103A-08
+
+on:
+  push:
+    branches: [research/paper-c-experiment006-joint-reml]
+    paths:
+      - .github/workflows/paper-c-joint-reml-pc08.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment006/*.py
+      - paper/ngsim-jerk-case-study/experiments/experiment006/config.json
+      - tests/test_paper_c_experiment006*.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp006-windows
+  cancel-in-progress: false
+
+jobs:
+  simulation-and-real:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+
+    steps:
+      - name: Checkout isolated experiment006 branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Require PCAG103A-08 and immutable previous archives
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Must use PCAG103A-08' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda not found' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing Conda Python not found' }
+          $root = Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment006\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $root) { throw "Refusing to overwrite results: $root" }
+          New-Item -Path $root -ItemType Directory -Force | Out-Null
+          foreach ($sub in @('metadata','logs')) {
+            New-Item -Path (Join-Path $root $sub) -ItemType Directory -Force | Out-Null
+          }
+          "EXP006_VM_ROOT=$root" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          "$env:RUNNER_NAME" | Out-File (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+
+          $sim = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment005\run-42547250403-a1'
+          $real = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1'
+          foreach ($path in @(
+            (Join-Path $sim 'pilot\trajectories.jsonl.gz'),
+            (Join-Path $sim 'pilot\forecast_rows.csv'),
+            (Join-Path $sim 'confirm\trajectories.jsonl.gz'),
+            (Join-Path $sim 'confirm\forecast_rows.csv'),
+            (Join-Path $real 'data\selected_positions.csv'),
+            (Join-Path $real 'data\episode_catalog.json'),
+            (Join-Path $real 'data\download_manifest.json'),
+            (Join-Path $real 'results\forecast_rows.csv')
+          )) {
+            if (!(Test-Path -LiteralPath $path)) {
+              throw "Missing previous immutable source file: $path"
+            }
+          }
+          "EXP006_SIM_ROOT=$sim" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "EXP006_REAL_ROOT=$real" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "$sim" | Out-File (Join-Path $root 'metadata\experiment005_source_path.txt') -Encoding utf8
+          "$real" | Out-File (Join-Path $root 'metadata\experiment004_source_path.txt') -Encoding utf8
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot save Conda dependency lock' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_experiment006.py tests/test_paper_c_experiment006_run.py 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\preflight.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Joint REML numerical/no-leakage tests failed' }
+          Write-Host "Experiment006 new files will be persisted in $root"
+
+      - name: Run immutable pilot on independent Windows VM
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment006/run.py --mode synthetic --stage pilot --source (Join-Path $env:EXP006_SIM_ROOT 'pilot\trajectories.jsonl.gz') --archived-forecasts (Join-Path $env:EXP006_SIM_ROOT 'pilot\forecast_rows.csv') --output-dir (Join-Path $env:EXP006_VM_ROOT 'pilot') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:EXP006_VM_ROOT 'logs\pilot.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment006 pilot failed' }
+          $m = Get-Content (Join-Path $env:EXP006_VM_ROOT 'pilot\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.n_samples -ne 96 -or $m.forecast_count -ne 3456) { throw 'Incorrect pilot coverage' }
+
+      - name: Run 1296 archived synthetic confirmations with adjusted mean REML
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment006/run.py --mode synthetic --stage confirm --source (Join-Path $env:EXP006_SIM_ROOT 'confirm\trajectories.jsonl.gz') --archived-forecasts (Join-Path $env:EXP006_SIM_ROOT 'confirm\forecast_rows.csv') --output-dir (Join-Path $env:EXP006_VM_ROOT 'confirm') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:EXP006_VM_ROOT 'logs\confirm.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment006 confirm failed' }
+          $m = Get-Content (Join-Path $env:EXP006_VM_ROOT 'confirm\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.n_samples -ne 1296 -or $m.forecast_count -ne 46656) { throw 'Incorrect confirm coverage' }
+
+      - name: Run real 200-episode NGSIM historical-source comparison
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment006/run.py --mode real --stage real --source (Join-Path $env:EXP006_REAL_ROOT 'data') --archived-forecasts (Join-Path $env:EXP006_REAL_ROOT 'results\forecast_rows.csv') --output-dir (Join-Path $env:EXP006_VM_ROOT 'real') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:EXP006_VM_ROOT 'logs\real.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment006 real NGSIM comparison failed' }
+          $m = Get-Content (Join-Path $env:EXP006_VM_ROOT 'real\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.n_samples -ne 200 -or $m.forecast_count -ne 7200) { throw 'Incorrect real episode coverage' }
+
+      - name: Always inventory every generated VM result, dependency and directory
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = $env:EXP006_VM_ROOT
+          if (!$root) {
+            $root = Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment006\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          if (!(Test-Path $root)) { New-Item -ItemType Directory -Path $root -Force | Out-Null }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'pilot\run_manifest.json')) { $status='pilot_complete' }
+          if (Test-Path (Join-Path $root 'confirm\run_manifest.json')) { $status='confirm_complete' }
+          if (Test-Path (Join-Path $root 'real\run_manifest.json')) { $status='synthetic_and_real_complete' }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to inventory all Windows outputs' }
+          Write-Host "Full persisted data/run inventory at $root"
+
+      - name: Mirror all new results into a separate Git archive branch
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root=$env:EXP006_VM_ROOT
+          if (!$root) {
+            $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment006\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          $rel="paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+
+      - name: Publish full results as GitHub Actions archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-exp006-pc08-joint-reml
+          path: paper/ngsim-jerk-case-study/experiments/experiment006/runs/
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Preserve all new first-party analysis and directories permanently
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $rel="paper/ngsim-jerk-case-study/experiments/experiment006/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (!(Test-Path (Join-Path $rel 'vm_run_root.txt'))) { throw 'Missing VM provenance' }
+          $branch="results/paper-c-exp006-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to create archival branch' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to stage all experiment006 results' }
+          git commit -m "experiment006: archive joint-REML synthetic plus real data comparisons $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to commit audit archive' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to push audit archive' }
+          Write-Host "Results-only Git branch $branch"

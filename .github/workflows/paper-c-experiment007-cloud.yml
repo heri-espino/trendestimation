@@ -1,0 +1,132 @@
+name: Paper C Experiment007 - paired smoothness/noise calibration (cloud)
+
+on:
+  push:
+    branches: [research/paper-c-experiment007-smoothness-precision-calibration]
+    paths:
+      - .github/workflows/paper-c-experiment007-cloud.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment007/*.py
+      - paper/ngsim-jerk-case-study/experiments/experiment007/config.json
+      - tests/test_paper_c_experiment007.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp007-cloud
+  cancel-in-progress: false
+
+jobs:
+  simulate-calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - name: Checkout isolated experiment007 research branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Configure Python and scientific environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install library plus tests and plotting
+        run: python -m pip install -e '.[dev,plot]'
+
+      - name: Verify covariance theory, independence, noise intervention, and source tests
+        run: |
+          python -m compileall -q paper/ngsim-jerk-case-study/experiments/experiment007
+          python -m pytest -q tests/test_paper_c_experiment007.py
+
+      - name: Create unique immutable results folder and preserve environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment007/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          if [[ -e "$ROOT" ]]; then echo "Existing run would be overwritten"; exit 1; fi
+          mkdir -p "$ROOT"/{metadata,logs}
+          echo "EXP007_ROOT=$ROOT" >> "$GITHUB_ENV"
+          echo "$GITHUB_SHA" > "$ROOT/metadata/source_commit.txt"
+          python -m pip freeze > "$ROOT/metadata/requirements-resolved.txt"
+          echo "Data are generated specifically for Experiment007; older experiments were not rerun" > "$ROOT/metadata/data_provenance.txt"
+
+      - name: Run 162-trial paired factorial pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment007/run.py \
+            --stage pilot --output-dir "$EXP007_ROOT/pilot" \
+            2>&1 | tee "$EXP007_ROOT/logs/pilot.log"
+          python - <<'PY'
+          import json,os,pathlib
+          manifest=json.loads((pathlib.Path(os.environ['EXP007_ROOT'])/'pilot/run_manifest.json').read_text())
+          assert manifest['n_trials']==162
+          assert manifest['n_selection_rows']==648
+          assert manifest['status']=='complete',manifest
+          print('Pilot fully validated, no missing selections')
+          PY
+
+      - name: Run 1944-trial independent confirmation, preserve complete truth and noise
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment007/run.py \
+            --stage confirm --output-dir "$EXP007_ROOT/confirm" \
+            2>&1 | tee "$EXP007_ROOT/logs/confirm.log"
+          python - <<'PY'
+          import json,os,pathlib
+          manifest=json.loads((pathlib.Path(os.environ['EXP007_ROOT'])/'confirm/run_manifest.json').read_text())
+          assert manifest['n_trials']==1944
+          assert manifest['n_selection_rows']==7776
+          assert manifest['n_independent_replicate_parent_draws']==72
+          assert manifest['status']=='complete',manifest
+          print('Confirmation fully validated with clustered inferential unit preserved')
+          PY
+
+      - name: Always record complete directory paths, SHA-256 and partial failures
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment007/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          mkdir -p "$ROOT/metadata"
+          STATUS=partial_or_failed
+          if [[ -f "$ROOT/pilot/run_manifest.json" ]]; then STATUS=pilot_complete; fi
+          if [[ -f "$ROOT/confirm/run_manifest.json" ]]; then STATUS=pilot_and_confirm_complete; fi
+          python paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py \
+            --run-root "$ROOT" --status "$STATUS" \
+            --output "$ROOT/metadata/file_inventory.json"
+
+      - name: Upload every first-party generated simulation and plot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-experiment007-smoothness-calibration
+          path: paper/ngsim-jerk-case-study/experiments/experiment007/runs/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Permanently commit full data and analyses in an isolated results-only branch
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="paper/ngsim-jerk-case-study/experiments/experiment007/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          BRANCH="results/paper-c-exp007-cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          test -f "$ROOT/metadata/file_inventory.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
+          git add -f -- "$ROOT"
+          git commit -m "experiment007: archive full known-noise and known-jerk factorial results $GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$BRANCH"
+          echo "Complete immutable first-party output and file hashes: $BRANCH"

@@ -1,0 +1,28 @@
+{
+  "experiment_id": "experiment001",
+  "status": "computed_archived_trajectory_pilot",
+  "data_doi": "10.21949/1504477",
+  "source_subset_sha256": "61a41fd70a4b89cf7e32d4bc2aaf40083ce3ea86bc9b7d1175108bd674d2733e",
+  "n_tracks": 5,
+  "distinct_vehicle_ids": 2,
+  "n_origins": 15,
+  "n_fitted_selected_trends": 150,
+  "n_forecast_rows": 900,
+  "n_summary_rows": 60,
+  "difference_order": 3,
+  "sample_seconds": 0.1,
+  "training_points": 80,
+  "horizon_frames": [
+    5,
+    10,
+    20
+  ],
+  "selection_policy": "reuse_archived_selected_lambdas_and_mu",
+  "forecast_rules": [
+    "local25",
+    "guerrero_last3"
+  ],
+  "max_existing_local25_mse_discrepancy": 4.368061468085216e-12,
+  "status_note": "Historical descriptive comparison; five track segments, not five independent vehicle identities; no jerk truth.",
+  "reproduction_command": "python paper/ngsim-jerk-case-study/experiments/experiment001/run.py --verify"
+}

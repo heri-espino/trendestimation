@@ -1,0 +1,181 @@
+name: Paper C expanded real NGSIM GCV and ML (PCAG103A-08)
+
+on:
+  push:
+    branches: [research/paper-c-experiment004-real-ngsim-gcv-mle]
+    paths:
+      - .github/workflows/paper-c-real-ngsim-gcv-mle-pc08.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment004/*.py
+      - tests/test_paper_c_experiment004.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-expanded-real-ngsim-pc08
+  cancel-in-progress: false
+
+jobs:
+  real-trajectory-comparison:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+      TRENDESTIMATION_REAL_NGSIM: '1'
+    steps:
+      - name: Checkout isolated research branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Verify VM, create unique persistent run directory and log versions
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Unauthorized runner: $env:RUNNER_NAME" }
+          if (!(Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Existing Conda missing' }
+          if (!(Test-Path -LiteralPath (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) {
+            throw 'Existing trendestimation Conda environment missing'
+          }
+          $base = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment004'
+          $name = "run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $root = Join-Path $base $name
+          if (Test-Path -LiteralPath $root) { throw "Run directory already exists, refusing overwrite: $root" }
+          New-Item -Path $root -ItemType Directory -Force | Out-Null
+          foreach ($directory in @('metadata','logs','data','build')) {
+            New-Item -Path (Join-Path $root $directory) -ItemType Directory -Force | Out-Null
+          }
+          "PAPER_C_VM_RUN_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "$env:GITHUB_SHA" | Out-File -FilePath (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+          "$env:RUNNER_NAME" | Out-File -FilePath (Join-Path $root 'metadata\runner_name.txt') -Encoding ascii
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File -FilePath (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Could not archive existing Python dependency versions' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m compileall -q paper/ngsim-jerk-case-study/experiments/experiment004
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment Python code does not compile' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_experiment004.py
+          if ($LASTEXITCODE -ne 0) { throw 'Experiment unit tests failed' }
+          Write-Host "Persistent, non-overwriting source-data and result directory: $root"
+
+      - name: Download real FHWA source pages to persistent VM storage
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment004/fetch_real_ngsim.py --data-dir (Join-Path $env:PAPER_C_VM_RUN_ROOT 'data') --page-size 20000 --max-pages 10 --max-vehicle-id 500 --max-episodes-per-site 100 --min-frames 140 --origin 100 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_C_VM_RUN_ROOT 'logs\download.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Real NGSIM source download failed; no simulation substituted' }
+
+      - name: Fit real-data PLS with GCV/profile ML and spline / Savitzky-Golay
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment004/evaluate.py --data-dir (Join-Path $env:PAPER_C_VM_RUN_ROOT 'data') --output-dir (Join-Path $env:PAPER_C_VM_RUN_ROOT 'results') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_C_VM_RUN_ROOT 'logs\evaluate.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Real observational evaluation failed' }
+          if (!(Test-Path -LiteralPath (Join-Path $env:PAPER_C_VM_RUN_ROOT 'results\run_manifest.json'))) {
+            throw 'Complete result manifest was not created'
+          }
+
+      - name: Compile revised Paper C LaTeX without rerunning old experiments
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir (Join-Path $env:PAPER_C_VM_RUN_ROOT 'build') --require-runner 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:PAPER_C_VM_RUN_ROOT 'logs\compile.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Revised manuscript compilation failed' }
+
+      - name: Always record every generated file and directory on the VM
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (!$env:PAPER_C_VM_RUN_ROOT) {
+            $base = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment004'
+            $env:PAPER_C_VM_RUN_ROOT = Join-Path $base "run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          $root = $env:PAPER_C_VM_RUN_ROOT
+          if (!(Test-Path -LiteralPath $root)) {
+            New-Item -Path $root -ItemType Directory -Force | Out-Null
+          }
+          $status = 'partial_or_failed'
+          if (Test-Path (Join-Path $root 'results\run_manifest.json')) { $status = 'evaluation_complete' }
+          if (Test-Path (Join-Path $root 'build\build_manifest.json')) { $status = 'evaluation_and_compilation_complete' }
+          $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+          if (Test-Path -LiteralPath $python) {
+            & $python paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to record VM file inventory' }
+          } else {
+            Write-Warning 'Python unavailable; manual VM inventory required'
+          }
+          Write-Host "Inspect complete persistent output at $root"
+
+      - name: Mirror compact full-method records and provenance into GitHub checkout
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = $env:PAPER_C_VM_RUN_ROOT
+          if (!$source) {
+            $base = Join-Path $env:USERPROFILE 'Documents\TrendEstimation-PaperC\experiment004'
+            $source = Join-Path $base "run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          $relative = "paper/ngsim-jerk-case-study/experiments/experiment004/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest = Join-Path $env:GITHUB_WORKSPACE $relative
+          New-Item -Path $dest -ItemType Directory -Force | Out-Null
+          $files = @(
+            'results\forecast_rows.csv','results\selection_rows.csv','results\summary.csv',
+            'results\paired_bootstrap.csv','results\RESULTS.md','results\run_manifest.json',
+            'data\episode_catalog.json','data\download_manifest.json',
+            'metadata\file_inventory.json','metadata\source_commit.txt',
+            'metadata\runner_name.txt','metadata\requirements-resolved.txt',
+            'logs\download.log','logs\evaluate.log','logs\compile.log',
+            'build\build_manifest.json'
+          )
+          foreach ($relativeFile in $files) {
+            $src = Join-Path $source $relativeFile
+            if (Test-Path -LiteralPath $src) {
+              $dst = Join-Path $dest $relativeFile
+              New-Item -Path (Split-Path $dst -Parent) -ItemType Directory -Force | Out-Null
+              Copy-Item -LiteralPath $src -Destination $dst
+            }
+          }
+          "$source" | Out-File -FilePath (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+          Write-Host "Staged compact records. Raw downloaded source CSV pages remain only on VM: $source"
+
+      - name: Upload compact provenance/results archive, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-exp004-pc08-real-ngsim
+          path: paper/ngsim-jerk-case-study/experiments/experiment004/runs/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Push unique GitHub results branch without altering research branches
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $relative = "paper/ngsim-jerk-case-study/experiments/experiment004/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (!(Test-Path (Join-Path $relative 'vm_run_root.txt'))) {
+            throw 'Cannot preserve results without directory pointer'
+          }
+          $archive = "results/paper-c-exp004-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create unique results branch' }
+          git add -f -- $relative
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage compact provenance branch' }
+          git commit -m "experiment004: archive full trajectory errors and VM data inventory $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit research metadata' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot push research record branch' }
+          Write-Host "Permanent indexed results and VM paths: $archive"

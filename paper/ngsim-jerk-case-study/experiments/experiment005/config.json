@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "experiment": "experiment005",
+  "purpose": "known-truth physical jerk and forecast comparison; separate from observed NGSIM experiment004",
+  "sampling_interval_s": 0.1,
+  "train_frames": 80,
+  "forecast_horizons_frames": [
+    5,
+    10,
+    20
+  ],
+  "true_movement": {
+    "baseline_initial_position_m": 0,
+    "baseline_initial_speed_m_s": 18,
+    "baseline_initial_acceleration_m_s2": 0,
+    "regimes": [
+      "constant_zero",
+      "constant_positive",
+      "constant_negative",
+      "sinusoidal",
+      "sign_reversal",
+      "braking_pulse"
+    ],
+    "jerk_units": "m/s^3",
+    "jerk_amplitudes": {
+      "constant_positive": 0.25,
+      "constant_negative": -0.25,
+      "sinusoidal_amplitude": 0.4,
+      "sinusoidal_period_s": 4,
+      "sign_reversal_before": 0.35,
+      "sign_reversal_after": -0.45,
+      "sign_reversal_time_s": 6.5,
+      "braking_start_s": 4.5,
+      "braking_end_s": 6,
+      "braking_pulse": -0.65
+    }
+  },
+  "noise": {
+    "sigma_m": [
+      0.03,
+      0.12,
+      0.3
+    ],
+    "types": [
+      "iid_gaussian",
+      "ar1_rho065",
+      "last_train_outlier"
+    ],
+    "ar1_rho": 0.65,
+    "outlier_train_index": 79,
+    "outlier_multiples_of_sigma": 4,
+    "outlier_sign_rule": "alternating trial-index parity"
+  },
+  "policies": {
+    "lambda_selection": [
+      "gcv",
+      "mle"
+    ],
+    "mu_reference": [
+      "zero",
+      "sample",
+      "ols_global",
+      "ols_tail25",
+      "oracle"
+    ],
+    "mu_oracle_only_in_synthetic": true,
+    "smoothness_grid": [
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      0.95,
+      0.975,
+      0.99,
+      0.995,
+      1
+    ],
+    "forecast_rules": [
+      "guerrero_last3",
+      "local25"
+    ],
+    "competitors": [
+      "spline_gcv_taylor2",
+      "savgol21_taylor2",
+      "raw_local_quad25"
+    ],
+    "fixed_S_ablation": 0.6,
+    "ablation_mu_sources": [
+      "sample",
+      "oracle"
+    ],
+    "ablation_reference_cases": [
+      "0_fit_0_forecast",
+      "mu_fit_0_forecast",
+      "0_fit_mu_forecast",
+      "mu_fit_mu_forecast"
+    ]
+  },
+  "experiments": {
+    "pilot": {
+      "regimes": "all",
+      "sigma_m": [
+        0.03,
+        0.3
+      ],
+      "noise_types": [
+        "iid_gaussian",
+        "last_train_outlier"
+      ],
+      "reps_per_cell": 4,
+      "seed_namespace": "pilot",
+      "expected_trials": 96
+    },
+    "confirm": {
+      "regimes": "all",
+      "sigma_m": [
+        0.03,
+        0.12,
+        0.3
+      ],
+      "noise_types": [
+        "iid_gaussian",
+        "ar1_rho065",
+        "last_train_outlier"
+      ],
+      "reps_per_cell": 24,
+      "seed_namespace": "confirm",
+      "expected_trials": 1296
+    }
+  },
+  "statistics": {
+    "unit": "independent simulated trial seeded per scenario",
+    "primary_jerk": "finite third difference of fitted historical positions versus exact finite third difference of known clean positions, divided by dt^3",
+    "primary_forecast": "future clean position MSE and RMSE at each horizon, units m^2 and m",
+    "secondary": "historical clean position MSE, tail-25 discrete jerk MSE, mu estimation bias",
+    "bootstrap_repetitions": 1000,
+    "bootstrap_seed": 20261108,
+    "comparisons": "paired at identical scenarios and seeds; conditional on simulated generating distributions",
+    "multiple_testing": "exploratory unadjusted; no universal superiority inference"
+  },
+  "storage": {
+    "persistent_vm_folder": "%USERPROFILE%/Documents/TrendEstimation-PaperC/experiment005/run-<GITHUB_RUN_ID>-a<attempt>",
+    "store_all_generated_trajectories": true,
+    "store_invalid_rows": true,
+    "git_results_branch_prefix": "results/paper-c-exp005-pc08"
+  }
+}

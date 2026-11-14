@@ -1,0 +1,125 @@
+name: Paper C Experiment005 known-jerk cloud execution fallback
+
+on:
+  push:
+    branches: [research/paper-c-experiment005-known-jerk-simulations]
+    paths:
+      - .github/workflows/paper-c-known-jerk-cloud-fallback.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp005-cloud-fallback
+  cancel-in-progress: false
+
+jobs:
+  execute-known-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - name: Checkout research branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Install compatible scientific Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install project, tests and plotting
+        run: python -m pip install -e '.[dev,plot]'
+
+      - name: Validate source, analytic jerk and fixed-S identities
+        run: |
+          python -m compileall -q paper/ngsim-jerk-case-study/experiments/experiment005
+          python -m pytest -q tests/test_paper_c_experiment005.py
+
+      - name: Initialize immutable cloud source/data/results directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          REL="paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          if [[ -e "$REL" ]]; then echo 'Refusing to overwrite an existing run'; exit 1; fi
+          mkdir -p "$REL"/{metadata,logs}
+          echo "EXP005_CLOUD_ROOT=$REL" >> "$GITHUB_ENV"
+          printf '%s\n' "$GITHUB_SHA" > "$REL/metadata/source_commit.txt"
+          python -m pip freeze > "$REL/metadata/requirements-resolved.txt"
+          printf 'runner=ubuntu-latest; python=3.11; VM=PCAG103A-08 queued separately\n' > "$REL/metadata/runner_note.txt"
+
+      - name: Run and validate 96-trial pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment005/run.py --stage pilot --output-dir "$EXP005_CLOUD_ROOT/pilot" 2>&1 | tee "$EXP005_CLOUD_ROOT/logs/pilot.log"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ["EXP005_CLOUD_ROOT"])/"pilot"/"run_manifest.json").read_text())
+          assert m["synthetic_trial_count"]==96 and m["counts"]["trials"]==96, m
+          assert all(not m["counts"].get(k,0) for k in ("forecasts_invalid","fits_invalid","selections_invalid","ablation_invalid")), m["counts"]
+          print("Passed full 96-trial pilot without missing or invalid results")
+          PY
+
+      - name: Run and validate 1296-trial disjoint-seed confirmation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python paper/ngsim-jerk-case-study/experiments/experiment005/run.py --stage confirm --output-dir "$EXP005_CLOUD_ROOT/confirm" 2>&1 | tee "$EXP005_CLOUD_ROOT/logs/confirm.log"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ["EXP005_CLOUD_ROOT"])/"confirm"/"run_manifest.json").read_text())
+          assert m["synthetic_trial_count"]==1296 and m["counts"]["trials"]==1296, m
+          assert all(not m["counts"].get(k,0) for k in ("forecasts_invalid","fits_invalid","selections_invalid","ablation_invalid")), m["counts"]
+          print("Passed 1296 confirm trials; scenarios and seeds were independent from pilot")
+          PY
+
+      - name: Always inventory generated data and logs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REL="paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          mkdir -p "$REL/metadata"
+          STATUS=partial_or_failed
+          if [[ -f "$REL/pilot/run_manifest.json" ]]; then STATUS=pilot_complete; fi
+          if [[ -f "$REL/confirm/run_manifest.json" ]]; then STATUS=pilot_and_confirm_complete; fi
+          python paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py \
+            --run-root "$REL" --status "$STATUS" --output "$REL/metadata/file_inventory.json"
+          echo "Full first-party synthetic data retained in archived Git branch, pending Windows VM synchronization" > "$REL/metadata/vm_sync_status.txt"
+
+      - name: Upload complete trajectories, all forecast/jerk results and manifests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-exp005-cloud-full-simulation
+          path: paper/ngsim-jerk-case-study/experiments/experiment005/runs/
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Preserve all first-party generated data on immutable results branch
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REL="paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          ARCHIVE="results/paper-c-exp005-cloud-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$ARCHIVE"
+          git add -f -- "$REL"
+          git commit -m "experiment005: archive complete seeded known-jerk cloud simulation $GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$ARCHIVE"
+          echo "Full synthetic simulation, manifest and outputs: $ARCHIVE"
