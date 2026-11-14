@@ -29,7 +29,7 @@
       "caption": "Method-colored stacked statuses; 57 unassigned missing-job records are not allocated to methods",
       "primary": true,
       "pdf": "figures/fig01_reliability_stacked.pdf",
-      "sha256": "7effea06238dbb7d863751132d878fb574a1801c885106f5433dec4cf61f28a8"
+      "sha256": "b142cadb68c8bc64b22ab740eec71a412359626e0d2ba4ffc751e0008a12cd58"
     },
     {
       "id": "fig02_runtime_distributions",
@@ -37,7 +37,7 @@
       "caption": "Seed-level distribution: violin KDE, boxplot median/IQR and individual matched observations",
       "primary": true,
       "pdf": "figures/fig02_runtime_distributions.pdf",
-      "sha256": "b20e85a72ac7171eb07760d65e6ba5379c849bf1d0fd5ed952211a96d985018b"
+      "sha256": "f50087ab8cfeb65a01bc3ce752284279068e20682b313b2fccb27eba590aa3ec"
     },
     {
       "id": "fig03_mapping_distributions",
@@ -45,7 +45,7 @@
       "caption": "Exploratory per-case-seed distributions pooled over heterogeneous valid cases, not causal effects",
       "primary": true,
       "pdf": "figures/fig03_mapping_distributions.pdf",
-      "sha256": "eeb1f768b3bfedaa62b5cfa5d55e66122877037d4ab9a83012f59d46a8f4a0bd"
+      "sha256": "f675c4e0ee525564ea3a85c50ef9d9390abd710b70f55b5234a2d38b42fad005"
     },
     {
       "id": "fig04_workload_stacked",
@@ -53,7 +53,7 @@
       "caption": "Representative first-order GCV case; stacked component medians, not the median of the total",
       "primary": true,
       "pdf": "figures/fig04_workload_stacked.pdf",
-      "sha256": "21318ba712657f081977c86eecb8e74b45df56fee8d6a305e4b27e076c39c6cd"
+      "sha256": "e1b1e5bc824703b0989e5c431663894d124d12954233e1ecc2adc68e69748627"
     },
     {
       "id": "fig05_grid_completion",
@@ -61,7 +61,7 @@
       "caption": "Nine KKT-failure configurations: 100% single-candidate completion for both backends; 0%/100% grid completion",
       "primary": true,
       "pdf": "figures/fig05_grid_completion.pdf",
-      "sha256": "f5b2669c9be935ded714a261859fbc98591ffa86e89e8bd565db1468c52d1836"
+      "sha256": "7d591816320b2a29389d95ea7892d47b45e0f77e87d62a1b40d32bc07704f639"
     },
     {
       "id": "fig06_order4_failures",
@@ -69,7 +69,7 @@
       "caption": "Shared fourth-order inversion failures and banded-specific post-solve KKT rejections",
       "primary": true,
       "pdf": "figures/fig06_order4_failures.pdf",
-      "sha256": "327673f1a3a7b70806de8d1a850112621e61ed55c4bbdc0ed9aa1a155e99f225"
+      "sha256": "5013db94c2b843d30ef81ad3242496e841dd00549565373adbbe555bfc1ff328"
     },
     {
       "id": "fig07_crossover_distributions",
@@ -77,7 +77,7 @@
       "caption": "Violin+box+points from independent seed clusters on matched one/grid workloads",
       "primary": true,
       "pdf": "figures/fig07_crossover_distributions.pdf",
-      "sha256": "6241efd3869f999d49226f3f3775f2a6ddd4edbd189ad640176387f41e3980bd"
+      "sha256": "cdd3b92868ce4d6a820a3ddf7f35572a60fe6f9de0b58f14ffa8cf415058ce6c"
     },
     {
       "id": "fig08_memory_scaling",
@@ -85,7 +85,7 @@
       "caption": "Policy formulae (not observed RSS); shaded domain is sampled range",
       "primary": true,
       "pdf": "figures/fig08_memory_scaling.pdf",
-      "sha256": "684d9a88a53fdc7551828a1f71a881337734e5f95a27a89e485b10762988658e"
+      "sha256": "04ab88b1f4aeec8c9e2550707326abdd54e27333167a4c0a09fe75d9ebf4eed1"
     },
     {
       "id": "supp_status_cv",
@@ -93,7 +93,7 @@
       "caption": "Method-colored complete rows and patterned failure mechanisms; denominators differ by method",
       "primary": false,
       "pdf": "figures/supp_status_cv.pdf",
-      "sha256": "8e52caa367307cb3c1292ef9f332513d94e5e38fd740bdf91f3d249a76855581"
+      "sha256": "7e668d669baa0d345eade27b7e39a422c6fde013d17fea4d7f996f6923731f60"
     },
     {
       "id": "supp_status_gcv",
@@ -101,7 +101,7 @@
       "caption": "Method-colored complete rows and patterned failure mechanisms; denominators differ by method",
       "primary": false,
       "pdf": "figures/supp_status_gcv.pdf",
-      "sha256": "522f07fd604d239aa729227aed034521cd3a8b8ef8d53a52a69d089250a78a8c"
+      "sha256": "9ef303a602b7967cfb20fe233f39f780d06418dc40042e650076ac837f9a746c"
     },
     {
       "id": "supp_status_aicc",
@@ -109,7 +109,7 @@
       "caption": "Method-colored complete rows and patterned failure mechanisms; denominators differ by method",
       "primary": false,
       "pdf": "figures/supp_status_aicc.pdf",
-      "sha256": "b0694ee12f2ac3fa6c2239403bd57d613c33d432eb097368e723d4e6242950d3"
+      "sha256": "dc56d5311fa324307ec566f483a29ef719ad3d8c82a9009618b52169f5296d6a"
     },
     {
       "id": "supp_status_mle",
@@ -117,7 +117,7 @@
       "caption": "Method-colored complete rows and patterned failure mechanisms; denominators differ by method",
       "primary": false,
       "pdf": "figures/supp_status_mle.pdf",
-      "sha256": "e8ecfd24cf22825fdbdf9bee717ca91ea17747be5de8d7871c5979638a388b73"
+      "sha256": "2d4f33abf58fa993b71ee1335d14660f2bb135d4a4981e091e7b54c852faeca4"
     },
     {
       "id": "supp_speed_violin_cv",
@@ -125,7 +125,7 @@
       "caption": "Valid full-grid per-seed ratios; cases are not pooled into a fictitious sample",
       "primary": false,
       "pdf": "figures/supp_speed_violin_cv.pdf",
-      "sha256": "37b0288a135185ccfbc3aec78ce6d076ef7d165d5c6813fb8d1e83de015f5b84"
+      "sha256": "327264c7de64edb37457008c2e8d1c323ca2d1bd50d0d12bccdb91a534479add"
     },
     {
       "id": "supp_speed_violin_gcv",
@@ -133,7 +133,7 @@
       "caption": "Valid full-grid per-seed ratios; cases are not pooled into a fictitious sample",
       "primary": false,
       "pdf": "figures/supp_speed_violin_gcv.pdf",
-      "sha256": "d8de9f912efafdffd356d32b6b423cdf47f75745bf2974a5ca597c5128455074"
+      "sha256": "a573621a709f64415e73ddd7306298e3da85db2a74a0f5a36e1a12bf45945970"
     },
     {
       "id": "supp_speed_violin_aicc",
@@ -141,7 +141,7 @@
       "caption": "Valid full-grid per-seed ratios; cases are not pooled into a fictitious sample",
       "primary": false,
       "pdf": "figures/supp_speed_violin_aicc.pdf",
-      "sha256": "3dbc4dca1fcdb5855730e4b8cb4360dda5c94eca2902dc231e02bceb96d7e912"
+      "sha256": "079c6f51352ec5ec080c8a40ddf168eb86421a5bb96e9d610d738c00a2bbd147"
     },
     {
       "id": "supp_speed_forest_cv",
@@ -149,7 +149,7 @@
       "caption": "Seed-cluster bootstrap 95% intervals; only valid matched complete grids",
       "primary": false,
       "pdf": "figures/supp_speed_forest_cv.pdf",
-      "sha256": "710ae180668b61963b54c71b3b8c6996c596a631fb19a5b9ee72ae8194ba7bb5"
+      "sha256": "640fef912a5deb1f932936a9e556e90f48f914185b1cc0a5dcbdbd1a213da4dc"
     },
     {
       "id": "supp_speed_forest_gcv",
@@ -157,7 +157,7 @@
       "caption": "Seed-cluster bootstrap 95% intervals; only valid matched complete grids",
       "primary": false,
       "pdf": "figures/supp_speed_forest_gcv.pdf",
-      "sha256": "faefba7a32ad6e698087562f10e89975243662d5c6eeba8fbe36bc0de195e0e8"
+      "sha256": "876b6053b45bc8beb056dc44f4345b18839740d8e7cb89ed790c1154bc217e6f"
     },
     {
       "id": "supp_speed_forest_aicc",
@@ -165,7 +165,7 @@
       "caption": "Seed-cluster bootstrap 95% intervals; only valid matched complete grids",
       "primary": false,
       "pdf": "figures/supp_speed_forest_aicc.pdf",
-      "sha256": "1bb81ad8e3de245a9168e9143f9bbea3c87758497e21352f4128fe4e7fa2c9d1"
+      "sha256": "5c28c1473dfad25c1513f31a27b36f0163b2d05ddda7f0d5c68e2c6a3eedcd69"
     },
     {
       "id": "supp_completion_heatmap_cv",
@@ -173,7 +173,7 @@
       "caption": "Completion fractions in observed n-d cells; absent cells are masked, not zero",
       "primary": false,
       "pdf": "figures/supp_completion_heatmap_cv.pdf",
-      "sha256": "064e42e960efce568bd03591dbfa7b4ef16891aa051dd7a1647d319a507da238"
+      "sha256": "3db23de0b78d51f8b67a75b54adf161971adf44b5e9cb137472b2637ead3bba6"
     },
     {
       "id": "supp_completion_heatmap_gcv",
@@ -181,7 +181,7 @@
       "caption": "Completion fractions in observed n-d cells; absent cells are masked, not zero",
       "primary": false,
       "pdf": "figures/supp_completion_heatmap_gcv.pdf",
-      "sha256": "adef1d528f05b2dd4cd1d37ae8b2b875e904c1427491c49511b9f49893d52fd9"
+      "sha256": "9970e6d1019fae500cce79b19e1c3aee720e7f6125408521da2e45ecef1c2e60"
     },
     {
       "id": "supp_completion_heatmap_aicc",
@@ -189,7 +189,7 @@
       "caption": "Completion fractions in observed n-d cells; absent cells are masked, not zero",
       "primary": false,
       "pdf": "figures/supp_completion_heatmap_aicc.pdf",
-      "sha256": "b261386766e4b11b2842529e9af6255e997cd70442e3eb6a0bd80a5fbf35e4c7"
+      "sha256": "ddc448d8349793b0657e8b4537afa0124b1bba335f4b0a496c51fcd937966876"
     },
     {
       "id": "supp_completion_heatmap_mle",
@@ -197,7 +197,7 @@
       "caption": "Completion fractions in observed n-d cells; absent cells are masked, not zero",
       "primary": false,
       "pdf": "figures/supp_completion_heatmap_mle.pdf",
-      "sha256": "eed8aa2df231870c52151129cc51c3a3f2a7dd7d1a3c614748cddc32e20cccb1"
+      "sha256": "44264d1e9f4a4f67a243c9acdf1275547afc2b0c9a3dc6fd380c82530e2aa2d5"
     },
     {
       "id": "supp_mapping_banded_cholesky",
@@ -205,7 +205,7 @@
       "caption": "Descriptive case-seed mapping ratio distributions across observed workloads",
       "primary": false,
       "pdf": "figures/supp_mapping_banded_cholesky.pdf",
-      "sha256": "eda07d48d306df82d6bfae7d7d1d3c17110fdc52b977233985d824724ed571f8"
+      "sha256": "6e2512400a3dd11c15cd879a1bc70bbabacaa1088ee178e10942f06ada8afac1"
     },
     {
       "id": "supp_mapping_spectral_svd",
@@ -213,7 +213,7 @@
       "caption": "Descriptive case-seed mapping ratio distributions across observed workloads",
       "primary": false,
       "pdf": "figures/supp_mapping_spectral_svd.pdf",
-      "sha256": "3b45da6bb871362545afa72ba23625f2e584b857a2ab5d7a500afc7f6119872a"
+      "sha256": "3b82d1e4131c9c19010ca2a5be03e3e61e0700b02bcea0eb7833e93412664f3e"
     },
     {
       "id": "supp_mapping_naive_inverse",
@@ -221,7 +221,7 @@
       "caption": "Descriptive case-seed mapping ratio distributions across observed workloads",
       "primary": false,
       "pdf": "figures/supp_mapping_naive_inverse.pdf",
-      "sha256": "03bb1072be312d07bdd7e4bc0f3dca5492b3d01b6a053d158d627a8d51245d7c"
+      "sha256": "738b946a8823e131c12799f8aa968de8ef10abaebe4109d99bd016faca6e47a9"
     },
     {
       "id": "supp_mapping_sparse_cholesky_banded_trace",
@@ -229,7 +229,7 @@
       "caption": "Descriptive case-seed mapping ratio distributions across observed workloads",
       "primary": false,
       "pdf": "figures/supp_mapping_sparse_cholesky_banded_trace.pdf",
-      "sha256": "920159fef4d754e3825d71340c56a0138f6326746d6c3ae4dbaaa63594294c6f"
+      "sha256": "396ca3ed35c9d408353105649fc7898748a6884b5f975ee4263fb13c3d21df77"
     },
     {
       "id": "supp_paired_scatter_confirm_data_cv_n256_d3_m100",
@@ -237,7 +237,7 @@
       "caption": "Each point is an independent seed cluster's paired median",
       "primary": false,
       "pdf": "figures/supp_paired_scatter_confirm_data_cv_n256_d3_m100.pdf",
-      "sha256": "9f4b1ea7fe293f43aea871265fc387bb342eb6b62288fdc1b0085a36bb9c4b9c"
+      "sha256": "0d18fa83105a5208e2d939ff070ce53c1cd270744a49be3a9fcada9c8cab7ffb"
     },
     {
       "id": "supp_paired_scatter_pilot_gcv_n64_d1_m100",
@@ -245,7 +245,7 @@
       "caption": "Each point is an independent seed cluster's paired median",
       "primary": false,
       "pdf": "figures/supp_paired_scatter_pilot_gcv_n64_d1_m100.pdf",
-      "sha256": "a88477b489b4715d999918fa29542ce687e915fcfca9075136a9027f97e9dd15"
+      "sha256": "994c4a96c8ea0b2253900054da7d86e6cb73092a60efed4052fc6ae4857e9b47"
     },
     {
       "id": "supp_workload_pilot_gcv_n64_d1_m100",
@@ -253,7 +253,7 @@
       "caption": "Recorded cold-time distribution, conditional on complete admissible method rows",
       "primary": false,
       "pdf": "figures/supp_workload_pilot_gcv_n64_d1_m100.pdf",
-      "sha256": "3ff22a354981882048889ac2ce64c67413fc73d526c2e73142aed1eef5b6c042"
+      "sha256": "06e1cebf17672df58a33722b3a8cacb9ffceeeb33fcfa22900dd5b07092c0bde"
     },
     {
       "id": "supp_workload_confirm_data_cv_n256_d3_m100",
@@ -261,7 +261,7 @@
       "caption": "Recorded cold-time distribution, conditional on complete admissible method rows",
       "primary": false,
       "pdf": "figures/supp_workload_confirm_data_cv_n256_d3_m100.pdf",
-      "sha256": "07db8e2bfc1d90cbb21ad017641044213b5f5709b6f2b32c9d947f43830006ae"
+      "sha256": "3720fdfcb0ba95cb30f61fcd6f853ea179e2281162c7ae208b39daa1939fa97b"
     },
     {
       "id": "supp_failure_by_candidate_count",
@@ -269,7 +269,7 @@
       "caption": "Recorded method-level status fractions, not matched failure probabilities",
       "primary": false,
       "pdf": "figures/supp_failure_by_candidate_count.pdf",
-      "sha256": "8d677c242f3ae68c90facc28abfefa7008910687b921ecbc7272ecdc2af6d297"
+      "sha256": "63b6965418bd7a40e3d3b2f2b6fe5b1504aed8706f2ff8393f9cfe63d0cad5b9"
     },
     {
       "id": "supp_case_seed_cv",
@@ -277,7 +277,7 @@
       "caption": "Case-seed completion heatmap; white denotes absent data",
       "primary": false,
       "pdf": "figures/supp_case_seed_cv.pdf",
-      "sha256": "7e46e64379d15bb27860fdd18f3fd37aa50ae35d5546c84dfabafe9ccafc2095"
+      "sha256": "8dc36f4adf186c0f955c171a948824bc67aee3a26a99ad0960ea46c6f6ec7cc2"
     },
     {
       "id": "supp_case_seed_gcv",
@@ -285,7 +285,7 @@
       "caption": "Case-seed completion heatmap; white denotes absent data",
       "primary": false,
       "pdf": "figures/supp_case_seed_gcv.pdf",
-      "sha256": "5e04cd9153f13314b924eb66dea5a6d4fdaeef207673aee9c09341dba560f7bf"
+      "sha256": "85f4b585146a4c6f89813dd61b40b77b77fcaeb697cb41bf8c9849ca382e8a1a"
     },
     {
       "id": "supp_case_seed_mle",
@@ -293,7 +293,7 @@
       "caption": "Case-seed completion heatmap; white denotes absent data",
       "primary": false,
       "pdf": "figures/supp_case_seed_mle.pdf",
-      "sha256": "057c482e2ac8995cf4b3f274710adebc8a75f8c77eea1c5f87dbba3c64ab312f"
+      "sha256": "c4e5fdf1cd7d621ce26326996db0c90056bb251a4f7327633407499999188315"
     },
     {
       "id": "supp_failure_size_banded_cholesky",
@@ -301,7 +301,7 @@
       "caption": "Observed conditional noncompletion by n,d; no unmeasured cell is filled",
       "primary": false,
       "pdf": "figures/supp_failure_size_banded_cholesky.pdf",
-      "sha256": "00477f5e9f6893b5d0113376bcf9137cdd86712498fe96c1112d64fca16adf12"
+      "sha256": "fa86cb5caf1021fa5fba8c9dab61745dbfc256903d0935678b0c02abd4111fdd"
     },
     {
       "id": "supp_failure_size_spectral_svd",
@@ -309,7 +309,7 @@
       "caption": "Observed conditional noncompletion by n,d; no unmeasured cell is filled",
       "primary": false,
       "pdf": "figures/supp_failure_size_spectral_svd.pdf",
-      "sha256": "a195f479df4ebc13cd2c26ec29eb27deb48812edac2fa9840171e40a9795a75d"
+      "sha256": "1d658e88963d71d1f58e321df0ff926908e8e05ac7489fb85dad2585bdbc0a00"
     },
     {
       "id": "supp_worker_phase_coverage",
@@ -317,7 +317,7 @@
       "caption": "Counts of scheduled jobs by phase, not measured processor occupancy",
       "primary": false,
       "pdf": "figures/supp_worker_phase_coverage.pdf",
-      "sha256": "f5949ed6019ad905248f7df4912c30b79dcf05d4b2b46a6836e594973f2e01d0"
+      "sha256": "e91ef62b9b1ee72a5e4512a32bc21d04e21cf0b864d3d9a61b1295fe40cc887a"
     },
     {
       "id": "supp_cold_warm_amortization",
@@ -325,7 +325,7 @@
       "caption": "Valid n=64 GCV M=100 rows; accounting ratio, not separate process runs",
       "primary": false,
       "pdf": "figures/supp_cold_warm_amortization.pdf",
-      "sha256": "8fa6c649751d03faabe4624508f775d39873bfbd05424fcfb33c152f6fdf73ea"
+      "sha256": "6863d7c841363050c4e90aea494f9bc35256495ca77bf287ae906ba0eca53110"
     },
     {
       "id": "supp_valid_paired_support",
@@ -333,7 +333,7 @@
       "caption": "Cellwise independent-seed support summed across heterogeneous paired configurations",
       "primary": false,
       "pdf": "figures/supp_valid_paired_support.pdf",
-      "sha256": "f19ea716f35720c798b450f27752dc58a7f013c9b6cf2fff5a084b7fc7415632"
+      "sha256": "9082379671d6b1ab231134e023ed402edbeeaa055e3ea571bb0c48de50f0abe8"
     },
     {
       "id": "supp_ratio_by_M",
@@ -341,7 +341,7 @@
       "caption": "Descriptive medians across distinct measured cases, not a controlled M-sweep",
       "primary": false,
       "pdf": "figures/supp_ratio_by_M.pdf",
-      "sha256": "7086ab62dd7e262ae0a8663201ae12f2d976090b414ad7ae22d55d591f5e4d57"
+      "sha256": "29b045bdc1ad2abb4ab2caf54bd13ed0e3d5dcc62e1b8c4e07ee25188459f8b1"
     },
     {
       "id": "fig09_kkt_rejections",
@@ -349,7 +349,7 @@
       "caption": "KKT residual distribution conditional on failure; accepted residual magnitudes unobserved",
       "primary": true,
       "pdf": "figures/fig09_kkt_rejections.pdf",
-      "sha256": "d81a9375a2e8995a9cb0d30a82d3f924ed1e7d6c9b1c33a383c4dde81f0c5533"
+      "sha256": "1d6f67100e0758a446ad055673822a9fc7338a41c04beca779d15dd8a2cf6af4"
     },
     {
       "id": "supp_kkt_ecdf",
@@ -357,7 +357,7 @@
       "caption": "Empirical CDF conditional on rejection; cannot estimate all-solve error distribution",
       "primary": false,
       "pdf": "figures/supp_kkt_ecdf.pdf",
-      "sha256": "8be5e14188476a4f6e118450b44a3fe893512ae4b27ef32aa4b1331474798c6e"
+      "sha256": "9d547e041902b90b1724317fb58670a052a8353f4382364df2a466f882d3e505"
     }
   ],
   "configuration": {
