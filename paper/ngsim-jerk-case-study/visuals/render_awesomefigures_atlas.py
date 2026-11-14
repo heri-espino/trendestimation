@@ -270,7 +270,7 @@ def paired_jerk_losses(fitted, output):
 def method_tradeoff(fitted, synthetic, output):
     m=fitted.groupby("method").historical_jerk_mse_m2_s6.mean().pow(.5)
     mask=(synthetic.target=="future_clean_position") & (
-        synthetic.continuation=="local25") & (synthetic.horizon_frames.astype(str)=="10")
+        synthetic.continuation=="local25") & (pd.to_numeric(synthetic.horizon_frames, errors="coerce")==10)
     f=synthetic.loc[mask].set_index("method").rmse
     if set(f.index)!=set(METHODS):
         raise ValueError("Missing 1-s matched continuation outcomes")
