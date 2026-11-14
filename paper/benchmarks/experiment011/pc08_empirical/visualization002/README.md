@@ -92,3 +92,16 @@ figures should each answer a distinct scientific question.
 The publisher declarations, author approvals and raw-data
 distribution permissions still require explicit verification
 before journal submission.
+
+
+## AwesomeFigures API compatibility on the verified Windows runner
+The installed library reports version 0.1.0 and provides
+awesomefigures.latex_style as its publication interface;
+awesomefigures.paper is not exposed by this installation.
+The renderer uses the library's established latex_style
+context with PDF/PGF output and an audit sidecar, consistent
+with the existing paper/figures/render_awesomefigures.py
+Springer export. This is actual AwesomeFigures, not an
+invented compatibility package. The no-fallback renderer
+requires the installed AwesomeFigures version and exact
+Springer pdflatex typography for the nine main figures.
