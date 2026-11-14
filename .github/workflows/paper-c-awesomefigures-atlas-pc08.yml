@@ -139,9 +139,14 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Elsevier main PDF compilation failed' }
           Push-Location paper/ngsim-jerk-case-study
           try {
-            & latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error atlas_supplement.tex 2>&1 |
-              Tee-Object -FilePath (Join-Path $env:AF_ROOT 'logs\supplement_compile.log')
-            if ($LASTEXITCODE -ne 0) { throw 'Ten-figure supplementary PDF did not compile' }
+            # Windows MiKTeX on PCAG103A-08 has pdfLaTeX but not the Perl
+            # interpreter required by latexmk.exe. No BibTeX is needed here:
+            # compile the standalone figure-only document twice directly.
+            foreach ($pass in @(1,2)) {
+              & pdflatex -interaction=nonstopmode -halt-on-error -file-line-error atlas_supplement.tex 2>&1 |
+                Tee-Object -FilePath (Join-Path $env:AF_ROOT "logs\supplement_pdflatex_$pass.log")
+              if ($LASTEXITCODE -ne 0) { throw "Ten-figure supplement pdfLaTeX pass $pass failed" }
+            }
           } finally { Pop-Location }
           if (!(Test-Path paper/ngsim-jerk-case-study/atlas_supplement.pdf)) {
             throw 'Scientific PDF supplement missing'
