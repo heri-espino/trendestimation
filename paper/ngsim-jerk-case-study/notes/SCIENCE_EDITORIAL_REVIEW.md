@@ -1,3 +1,13 @@
+## Latest integrated AwesomeFigures runner verification — November 14, 2026
+
+**Final integrated build:** The newly merged `.github/workflows/paper-c-awesomefigures-atlas-pc08.yml` now accepts the current Paper C review branch as well as the original feature branch, rather than being locked to a closed PR. Its self-hosted Windows build [#43631207424](https://github.com/heri-espino/trendestimation/actions/runs/43631207424) **passed every step** after merge. The workflow publishes only on an unchanged source SHA and preserves a unique append-only full results archive. The canonical review-branch PDF Git blobs have been checked to match the archived manuscript blobs.
+
+- **Main scientific paper:** `paper/ngsim-jerk-case-study/main.pdf`, 14 pages, SHA-256 `a61b70f081c48f3b98711e6d18fbd64f9f97a20772732093a08ec7c5ff56f22d`.
+- **Supplemental AwesomeFigures atlas:** `paper/ngsim-jerk-case-study/atlas_supplement.pdf`, 12 pages, SHA-256 `1f11e85758ea82130359e76f1c463a944d27765d5fb6a9e8f45bb12e38a9345b`.
+- **Immutable integrated build:** [results/paper-c-awesomefigures-pc08-43631207424-a1](https://github.com/heri-espino/trendestimation/tree/results/paper-c-awesomefigures-pc08-43631207424-a1/paper/ngsim-jerk-case-study/visuals/runs/awesomefigures-43631207424-a1) contains the source hashes, exact 30 new figure assets plus the re-rendered eight existing figure groups, both compiled PDFs, all rasterized page previews, dependency snapshot, immutable audit reports and VM logs. Atlas audit passed with no missing figures, and the rendered legend no longer obscures any jerk-regime data.
+- **Independent-agent reproducibility:** The canonical figure renderer and new `FIGURE_ATLAS.md` live on the **review branch** after the authorized [visualization PR #136](https://github.com/heri-espino/trendestimation/pull/136) was merged. Re-run the atlas workflow from this branch, not by recreating a separate research experiment or modifying old results. The source and source-mode restrictions remain enforced. The other Paper C study PRs, including #133 and #131, remain unmerged; there has been no journal submission.
+
+---
 ## November 14, 2026 — merged AwesomeFigures physical-results atlas
 
 **Integration:** Author explicitly requested more publication visualizations, native AwesomeFigures and a merge. [PR #136](https://github.com/heri-espino/trendestimation/pull/136) was merged by a scoped merge commit `ba066a703ca7ae5963dada68628e50676c300e25` into the existing **unmerged** Paper C review branch `paper/paper-c-scientific-editorial-review` ([PR #133](https://github.com/heri-espino/trendestimation/pull/133)). This did **not** merge PR #133, PR #131, the upstream Paper C experiment branch stack, or any unrelated work into `main`.
