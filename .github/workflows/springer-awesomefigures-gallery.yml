@@ -68,7 +68,7 @@ jobs:
           if (-not (Test-Path (Join-Path $out 'supplementary_figure_gallery.pdf'))) {
             throw "Supplementary figure gallery PDF not generated"
           }
-          Write-Host "Verified $($m.figure_count) AwesomeFigures PDFs, nine exact-TeX manuscript figures, and gallery."
+          Write-Host "Verified $($m.figure_count) AwesomeFigures PDFs, nine manuscript figures, and gallery. Exact-TeX support=$($m.exact_tex_available)"
 
       - name: Run all experiment audit and KKT mathematical tests
         run: |
