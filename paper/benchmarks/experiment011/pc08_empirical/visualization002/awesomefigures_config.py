@@ -65,7 +65,7 @@ class Exporter:
     def export(self,fig,name,*,section,caption,primary=False):
         target=self.output/"figures"/(name+".pdf")
         target.parent.mkdir(parents=True,exist_ok=True)
-        if primary and self.exact_tex:
+        if primary and self.exact_tex and hasattr(af,"paper"):
             with af.paper(
                 PAPER,style=STYLE,palette=PALETTE,
                 width=r"\columnwidth",engine="pdflatex",
@@ -88,6 +88,16 @@ class Exporter:
                 json.dumps(tex,indent=2)+"\n",encoding="utf-8"
             )
         else:
+            if primary and self.exact_tex and not hasattr(af,"paper"):
+                # The runner's installed AwesomeFigures 0.1.0 predates
+                # af.paper. Still use the genuine AwesomeFigures vector
+                # export and disclose that no exact-TeX audit is available.
+                print("[AwesomeFigures] af.paper unavailable; vector PDF via af.save_figure, not exact TeX",flush=True)
+                target.with_suffix(".typography.json").write_text(
+                    json.dumps({"typography_provenance":"awesomefigures-vector-pdf",
+                       "exact_tex_preamble":False,"awesomefigures_version":af.__version__,
+                       "reason":"Installed AwesomeFigures lacks af.paper API"},
+                       indent=2)+"\n",encoding="utf-8")
             af.save_figure(fig,target,dpi=210)
         # Supplementary images retain editable vector SVG and raster previews.
         af.save_figure(fig,target.with_suffix(".svg"),dpi=210)
@@ -112,6 +122,7 @@ class Exporter:
           "canonical_manuscript":"paper/main.tex",
           "input_sha256":{p.name:sha(p) for p in inputs},
           "figure_count":len(self.items),"primary_count":sum(x["primary"] for x in self.items),
+          "exact_tex_available":hasattr(af,"paper"),
           "figures":self.items,"configuration":config,
           "no_new_experiments":True,
           "numerical_limits":[
