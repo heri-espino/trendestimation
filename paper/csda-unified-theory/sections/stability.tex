@@ -14,7 +14,25 @@ where $\delta_{\max}$ is the largest positive eigenvalue of $D_d^\top D_d$.
 By Lemma~\ref{lem:kernel}, $A_\lambda$ has $d$ eigenvalues equal to one and remaining eigenvalues $1+\lambda\delta_j$. The ratio of its largest and smallest eigenvalues is $1+\lambda\delta_{\max}$. Each forward-difference stencil has absolute coefficient sum $2^d$, so $\|D_d\|_\infty\le2^d$ and $\|D_d\|_1\le2^d$. Consequently $\|D_d\|_2\le\sqrt{\|D_d\|_1\|D_d\|_\infty}\le2^d$, yielding $\delta_{\max}=\|D_d\|_2^2\le4^d$.
 \end{proof}
 
-The condition bound becomes demanding near $S=1$, for which $\lambda$ diverges. Forming the normal matrix explicitly also squares the nonzero singular-value condition number relative to working directly with $D_d$. These facts motivate comparing several numerical formulations: shifted SVD, shift-free SVD, banded primal factorization, dual banded systems, and suitably scaled least-squares or QR formulations. The theoretical asymptotic cost alone cannot certify their accuracy.
+The condition bound becomes demanding near $S=1$, for which $\lambda$ diverges. Proposition~\ref{prop:svd-vs-gram} distinguishes the exact equivalence of SVD and eigendecomposition from the conditioning cost of forming the Gram matrix explicitly. This motivates comparing shifted SVD, shift-free SVD, Gram-matrix eigendecomposition, banded primal factorization, dual banded systems, and suitably scaled least-squares or QR formulations. The theoretical asymptotic cost alone cannot certify their accuracy.
+
+The positive eigenvalues also enter the inverse smoothness map.
+For a target $s\in(0,1)$, implicit differentiation of
+$S_d(\lambda)=s$ in \eqref{eq:S}, holding the other $\delta_k$
+fixed, gives
+\begin{equation}\label{eq:sensitivity-svd-eigh}
+\frac{\partial\lambda}{\partial\delta_j}\bigg|_{s}
+=-\frac{\lambda(1+\lambda\delta_j)^{-2}}
+{\displaystyle\sum_{k=1}^{r}\delta_k(1+\lambda\delta_k)^{-2}}.
+\end{equation}
+The denominator is strictly positive. This identity identifies a
+mechanism by which eigenvalue error can affect the selected penalty;
+it does not imply uniform or unbounded error amplification for every
+$s$, $d$ or numerical algorithm. In particular, a backward-stable
+eigensolver applied to an explicitly rounded $Q_d$ need not recover
+the small positive eigenvalues of the original $D_d$ with high
+\emph{relative} accuracy, even though both factorizations are
+algebraically equivalent.
 
 \paragraph{Three distinct notions of failure.}
 A factorization failure means an algorithm could not produce the required numerical factors. A \emph{post-solve} failure means factors and a candidate fit existed but its residual, objective or KKT check did not satisfy the prescribed tolerance. A \emph{parameter-mapping} failure means the inversion of $S_d(\lambda)=s$ did not attain its tolerance; it is not the same as a failed trend solve. Memory exclusion, a missing optional dependency and an undefined statistical criterion are further distinct statuses. Comparing only successful runtime rows while silently dropping failures can produce misleading algorithm rankings.
