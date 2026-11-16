@@ -21,9 +21,12 @@ For a target $s\in(0,1)$, implicit differentiation of
 $S_d(\lambda)=s$ in \eqref{eq:S}, holding the other $\delta_k$
 fixed, gives
 \begin{equation}\label{eq:sensitivity-svd-eigh}
-\frac{\partial\lambda}{\partial\delta_j}\bigg|_{s}
-=-\frac{\lambda(1+\lambda\delta_j)^{-2}}
-{\displaystyle\sum_{k=1}^{r}\delta_k(1+\lambda\delta_k)^{-2}}.
+\begin{aligned}
+\frac{\partial\lambda}{\partial\delta_j}\bigg|_s
+&=-\frac{\lambda}{G(1+\lambda\delta_j)^2},\\
+G&=\sum_{k=1}^{r}
+\frac{\delta_k}{(1+\lambda\delta_k)^2}>0.
+\end{aligned}
 \end{equation}
 The denominator is strictly positive. This identity identifies a
 mechanism by which eigenvalue error can affect the selected penalty;
