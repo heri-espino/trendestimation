@@ -22,23 +22,25 @@ eigenvalues. With $\kappa_+(B)$ denoting the ratio of the largest
 to smallest \emph{positive} singular values (or, for a
 positive-semidefinite matrix, positive eigenvalues),
 \begin{equation}\label{eq:gram-conditioning}
+\begin{aligned}
 \kappa_+(Q_d)
-=\frac{\delta_1}{\delta_r}
-=\left(\frac{\sigma_1}{\sigma_r}\right)^2
+&=\frac{\delta_1}{\delta_r}\\
+&=\left(\frac{\sigma_1}{\sigma_r}\right)^2
 =\kappa_+(D_d)^2.
+\end{aligned}
 \end{equation}
 Moreover, the SVD and symmetric eigendecomposition give the identical
 exact smoothing operator
 \begin{equation}\label{eq:svd-eigh-smoother}
-H_\lambda
-=V\,\operatorname{diag}\!\left(
-\frac1{1+\lambda\delta_1},\ldots,
-\frac1{1+\lambda\delta_r},
-\underbrace{1,\ldots,1}_{d}
-\right)V^\top,
-\qquad \lambda\geq0,
+\begin{aligned}
+H_\lambda &=V B_\lambda V^\top,\\
+B_\lambda&=\operatorname{diag}(h_1,\ldots,h_r,1,\ldots,1),\\
+h_j&=(1+\lambda\delta_j)^{-1},
+\quad \lambda\geq0.
+\end{aligned}
 \end{equation}
-where $V=[V_+,V_0]$ is an orthogonal completion of the right singular
+Here the final $d$ diagonal entries of $B_\lambda$ equal one, and
+$V=[V_+,V_0]$ is an orthogonal completion of the right singular
 vectors.
 \end{proposition}
 \begin{proof}
