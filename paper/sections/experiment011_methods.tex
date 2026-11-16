@@ -34,6 +34,25 @@ S(\lambda)=\frac{n-\operatorname{tr}(H_\lambda)}{n-d}
 satisfies $S(0)=0$ and $S(\infty)=1$, and is strictly increasing for positive finite $\lambda$. Thus $S$ supplies a bounded coordinate for the original estimator, without changing the underlying objective function. The endpoint $S=1$ is handled as the constrained polynomial limit rather than by substituting an arbitrarily large finite penalty.
 
 \subsection{One decomposition, multiple smoothing parameters}
+\paragraph{SVD versus eigendecomposition of the penalty matrix.}
+An eigendecomposition of the symmetric positive-semidefinite matrix
+$Q=D_d^\top D_d$ yields the same exact spectral smoothing formula as
+an SVD of $D_d$: if $D_d=U\Sigma V_+^\top$, then
+$Q=V_+\Sigma^2V_+^\top$, completed by the $d$-dimensional nullspace.
+Both constructions permit reuse of their spectral basis across a grid
+of smoothing parameters; amortization is not exclusive to SVD.
+We use the SVD of $D_d$ as the reference spectral construction because
+explicitly forming the Gram matrix $Q$ squares the positive-spectrum
+condition number,
+$\kappa_+(Q)=\kappa_+(D_d)^2$, and can compromise the relative accuracy
+of small positive eigenvalues in floating-point arithmetic
+\citep{golub2013matrix}. This is a numerical motivation, not a claim
+that SVD is inherently faster or always more accurate than symmetric
+eigenanalysis. The present matched experiments compare SVD with banded
+Cholesky and specified reference pipelines; they do not constitute a
+controlled SVD-versus-eigendecomposition accuracy or timing study.
+Specialized symmetric banded eigensolvers remain possible alternatives.
+
 Consider the singular-value decomposition $D_d=U\Sigma V_+^\top$, completed to an orthogonal basis $V=[V_+,V_0]$. Its nonzero squared singular values are the $\delta_j$. With
 $a=V_+^\top(y-p_\mu)$ and
 $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$, the fitted trend and residual can be represented as

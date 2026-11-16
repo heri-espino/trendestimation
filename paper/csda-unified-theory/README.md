@@ -1,5 +1,17 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## SVD versus Gram eigendecomposition clarification (2026-11-16)
+
+The canonical `sections/algorithms.tex` now states and proves exact spectral equivalence and the positive-spectrum identity `kappa_+(D_d^T D_d) = kappa_+(D_d)^2`. The `sections/stability.tex` discussion derives the partial sensitivity of the inverse smoothness-to-penalty map to a positive penalty eigenvalue. These are established algebraic/numerical-analysis observations, **not** claimed novel decomposition algorithms or measured SVD-versus-eigen runtime/accuracy results. They explain why the Python library uses SVD of `D_d` as an accuracy-oriented reference while symmetric eigendecomposition of `Q_d` is also mathematically valid. Banded solvers remain appropriate at larger n.
+
+Reproducible, deterministic checks (no benchmarks or source data changed):
+
+```bash
+python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_svd_gram_equivalence.py' -v
+```
+
+The committed `main.pdf` is an earlier compiled build until the LaTeX source is rebuilt with the standard PC08 paper-only workflow. Do not claim this editorial change generated new empirical observations.
+
 **Canonical source:** main.tex (Elsevier CAS v2.4 double-column).
 **Status:** theoretical working draft, not submitted; coauthor approval required.
 **Research branch:** paper/csda-unified-theory. Do not merge without author authorization.
