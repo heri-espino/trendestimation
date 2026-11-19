@@ -41,7 +41,11 @@ The truncated-SVD methods use this same
 training-only cubic reference mean:
 one truncation rank is selected from training data
 using GCV, and the other is matched to the PLS
-effective degrees of freedom. The matched-rank
+effective degrees of freedom. This is a controlled comparison
+of established soft and hard spectral regularization families
+\citep{hansen1990tsvd}, while the underlying spline and
+Savitzky--Golay procedures predate the application
+\citep{reinsch1967,savitzky1964}. The matched-rank
 method is an \emph{ablation} of soft versus hard
 spectral shrinkage, not a separate statistically
 optimal rank estimate.
@@ -147,7 +151,10 @@ although its first-second clean-position window
 RMSE ($0.489$\,m) is not comparably disastrous.
 This distinction is evidence that accurate
 position reconstruction and accurate \emph{higher-order
-differentiation} are different objectives. The archived
+differentiation} are different objectives, consistent
+with the general numerical instability of derivative recovery
+from noisy data \citep{ahnert2007,chartrand2011}.
+The archived
 per-trajectory rows identify a concentrated failure:
 TSVD-GCV selected rank 75 or 76 of the 77
 positive singular directions in 145 of 1,296
