@@ -63,7 +63,10 @@ def test_manuscript_website_notes_and_renderer_register_actual_images():
     docs=(ROOT/"docs/mle_coordinate_figures.rst").read_text(encoding="utf-8")
     renderer=(ROOT/"paper/figures/render_mle_benchmarks.py").read_text(
         encoding="utf-8")
-    assert r"\input{sections/selection_visuals}" in paper
+    # Preserve this earlier MLE/S-coordinate figure study as reproducible
+    # supplemental evidence; current paper/main.tex is the Experiment011 article.
+    assert r"\input{sections/experiment011_methods}" in paper
+    assert r"\input{sections/experiment011_results}" in paper
     for name in ("gcv_solver_by_order","gcv_repeated_search",
                  "criteria_with_mle_s_paths","criteria_with_mle_lambda_paths",
                  "criteria_with_mle_search_time"):
