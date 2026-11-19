@@ -122,3 +122,17 @@ A future fair comparator must use the same positions, training-only tuning and t
 ## Practical verification and authoring rules
 
 These are *citations and literature-positioning changes*, not authorization for re-running Experiments004–008. No source PDF is committed to GitHub (copyright/license safeguards). Before merging: compile with existing Elsevier CAS class via the designated PC08 Windows runner, visually inspect all paper pages, check all citations/BibTeX keys, pass immutable AwesomeFigures input audit, refresh the guarded **16-file** SHA-256 ledger using committed Git bytes (note Windows working-tree line endings), and verify Python 3.10/3.12/documentation CI. Preserve the 12-page atlas, prior compiled PDF immutable build archives, numerical results, source plots and agent handoff. The author has **not** authorized journal submission.
+
+
+## Source-matched Windows publication validation (2026-11-19)
+
+Successful run: [GitHub Actions #44485951302](https://github.com/heri-espino/trendestimation/actions/runs/44485951302), from scientific-source commit 4717cf8a68a207a77b5dd688dd89dacb3304c400. All compiled sources match this build. Immutable [15-page manuscript and logs archive](https://github.com/heri-espino/trendestimation/tree/results/paper-c-pdf-pc08-44485951302-a1/paper/builds/pc08-paper-c-44485951302-a1) includes exact input/build SHA-256 manifest, all fifteen PNG page previews, and frozen AwesomeFigures audit.
+
+- Manuscript **15 pages**, **884154 bytes**, SHA-256 **b0a6ed86acbfda78f3ed9dfa7e56384140ec65526cabfa42d1bfd30f60a4922d**.
+- Atlas unchanged, 12 pages, SHA-256 1f11e85758ea82130359e76f1c463a944d27765d5fb6a9e8f45bb12e38a9345b.
+- All 30 frozen AwesomeFigures assets verified and all original manuscript scientific text gates passed. No new experiments or figures.
+- Last of four LaTeX passes: **0 unresolved citations and references**. Nonfatal layout warnings: 11 overfull and 24 underfull boxes.
+- Every page of the compiled manuscript (1–15) visually inspected, including Introduction/related work, equations, tables, figures and bibliography. No obscured content seen.
+- Published PDF bytes installed directly from verified immutable Git blob; canonical publication SHA-256 ledger updated from **Git LF/UTF-8 source content** and independently verified binary PDF digest.
+- Temporary one-shot feature-branch build workflow deleted before PR integration. Mainline PC08 build workflows remain **manual-only**.
+- The spline/Taylor adverse result, 72 independent synthetic calibration parents, 200 non-independent NGSIM episodes and all Experiments004–008 unchanged. No journal submission.
