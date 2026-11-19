@@ -1,0 +1,73 @@
+\subsection{Why the difference order matters: slope, acceleration and jerk}
+\label{sec:order-interpretation}
+For equally spaced samples $x(t_i)$ with spacing $h>0$,
+the operator $D_d$ approximates an order-$d$ temporal derivative:
+\[
+\frac{\Delta^d x(t)}{h^d}\approx x^{(d)}(t+dh/2).
+\]
+The approximation is centered at the middle of the $d$-step
+stencil and has second-order accuracy for sufficiently
+smooth underlying functions at an interior location.
+Thus $d=1$ regularizes changes in level (discrete slope),
+$d=2$ regularizes changes in slope (discrete acceleration
+for position data), and $d=3$ regularizes
+changes in acceleration, or \emph{jerk}.
+For example,
+\begin{equation}\label{eq:discrete-jerk}
+j\!\left(t+\tfrac32h\right)
+\approx
+\frac{x(t+3h)-3x(t+2h)+3x(t+h)-x(t)}{h^3}.
+\end{equation}
+If position $x(t)$ is cubic with constant physical jerk $j$,
+then $\Delta^3 x=jh^3$ \emph{exactly}. Consequently
+$\mu=0$ in the third-difference penalty favors a
+quadratic (constant-acceleration) limiting trend, whereas
+a prescribed nonzero $\mu=jh^3$ favors a cubic
+(constant-jerk) limiting trend. This distinction follows
+from the affine constraint $D_3\tau=\mu\mathbf1$,
+not from a new physical forecasting mechanism.
+
+The differential interpretation requires correct sampling
+units. If $y$ is recorded position, $\Delta^3 y$ is in
+position units, and only $\Delta^3 y/h^3$ has jerk units.
+Taking finite differences of noisy positions can strongly
+amplify measurement noise; the jerk of a fitted trend is an
+\emph{estimated} derivative rather than an independent
+physical observation \citep{vanbreugel2020}.
+The third-order example is therefore illustrative of the
+general method, not evidence that $d=3$ is universally
+optimal or yields reliable forecasts.
+
+\paragraph{When $d$ is unknown.}
+The difference order can itself be treated as a discrete
+model-selection hyperparameter, alongside the normalized
+smoothness target $S$ and, if appropriate, a prespecified
+reference-mean policy. For a finite candidate set
+$\mathcal D\subset\{1,\ldots,n-1\}$, a transparent
+selection rule is
+\begin{equation}\label{eq:joint-order-selection}
+(\widehat d,\widehat s)
+\in\arg\min_{\substack{d\in\mathcal D\\s\in\mathcal S_d}}
+\widehat R_{\rm valid}(d,s),
+\end{equation}
+where $\widehat R_{\rm valid}$ is a validation loss
+computed on data withheld from fitting and tuning.
+For future-time prediction, forward-chaining or
+rolling-origin validation preserves chronology and
+should be distinguished from retrospective in-sample
+GCV/LOOCV \citep{tashman2000,bergmeir2018}.
+Nested validation or an untouched test period is required
+to assess the performance of an adaptively selected
+$(d,s)$ without reusing the same validation outcomes
+for the final performance claim.
+
+Although $S_d\in[0,1]$ has the same normalized
+\emph{trace interpretation} for each $d$,
+different orders penalize different derivatives, have
+different nullspaces, and generally imply different
+selected $\lambda$ and fitted trends. The smallest
+validated loss, not the numerical value of $S$
+alone, should determine whether a change of order
+is justified. This is an extension of the fixed-$d$
+analysis in the present theoretical results; no new
+multi-order predictive experiment is asserted.
