@@ -55,6 +55,9 @@ The larger sample contains multiple shared
 recording-time blocks, not 200 demonstrably
 independent physical drivers. True jerk and
 latent clean position are not measured in NGSIM.
+Earlier NGSIM error-assessment and reconstruction studies
+reinforce this interpretation
+\citep{punzo2011,coifman2017,montanino2015}.
 Consequently forecast accuracy against camera
 positions is not evidence of physical jerk accuracy.
 
@@ -78,6 +81,10 @@ characterization of third-order PLS and its
 interpretable smoothness index. We do not
 claim to have invented PLS, third-order penalties,
 the smoothness index, or SVD truncation.
+More physically constrained or nonsmooth approaches have been
+studied for vehicle trajectories \citep{fan2024,zhu2024};
+our unconstrained quadratic model does not automatically enforce
+their kinematic restrictions or event-preserving objectives.
 Future work should use additional independent
 recording scenes, credible external jerk/position
 ground truth, experimentally characterized
