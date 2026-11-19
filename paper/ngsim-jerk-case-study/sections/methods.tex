@@ -32,6 +32,14 @@ Whittaker--Henderson family of discrete roughness regularizers
 \citep{whittaker1923,weinert2007,biessy2026}. Our nonzero
 third-difference reference specializes the prior PLS construction
 of \citet{guerrero2007} rather than defining a new smoother.
+At $\mu=0$ this is zero-centered squared discrete-jerk
+regularization, whereas $\mu\ne0$ shrinks toward
+\emph{sustained nonzero discrete jerk}; neither choice
+imposes a hard jerk bound. This differs from
+the two-stage physically constrained vehicle
+reconstruction of \citet{fan2024} and from online
+driver-intention jerk filtering with different sensors
+\citep{bisoffi2017jerk}.
 
 The $d=3$ polynomial nullspace has dimension three: unpenalized
 quadratic position, linear velocity and constant acceleration.
@@ -84,9 +92,13 @@ the second-moment PLS construction of \citet{guerrero2007}.
 When $\mu$ is estimated rather than fixed, the
 mean-adjusted restricted likelihood must also eliminate
 its nuisance mean direction. Restricted maximum likelihood is an
-established variance-component method \citep{patterson1971};
-its unknown-reference implementation and formula are specific to
-the covariance structure described here.
+established variance-component method
+\citep{patterson1971,harville1977}; the fixed-effect
+adjustment discussed by \citet{harville1977} motivates
+removing the estimated reference direction.
+Our particular unknown-reference REML objective is still
+derived for the stated third-difference covariance model,
+not copied from a classical mixed-effects formula.
 
 We retain the library's GCV and Gaussian profile-ML choices
 and explicitly separate \emph{fixed-$\mu$ profile likelihood}
@@ -192,6 +204,10 @@ degrees of freedom. Both reference
 estimates are based on historical data only.
 Hard spectral cutoff and continuous Tikhonov-type attenuation
 are classical regularization alternatives \citep{hansen1990tsvd}.
+The analysis of ill-posed inverse problems explains why
+retaining poorly determined singular modes can amplify errors;
+it does not supply a universal accuracy ranking between
+the present TSVD and PLS jerk estimators.
 The use of the \emph{roughness} operator's right singular vectors
 here is our specified estimator comparison, not a claim that this
 particular position-fitting rank rule was validated by Hansen.
@@ -207,6 +223,11 @@ polynomial smoothing (window 21, degree three),
 or constant-acceleration extrapolations, and
 (iv) raw third differences as an intentionally noisy
 derivative reference \citep{reinsch1967,wahba1990,craven1979,savitzky1964,ahnert2007,cao2021}.
+A modern comparative treatment emphasizes that derivative
+estimator parameters should be selected with respect to noisy
+differentiation objectives \citep{vanbreugel2020}; its
+methods were \emph{not} additional implemented baselines
+in the frozen Experiment008.
 A classical cubic spline penalizes the \emph{second}
 derivative, whereas Eq.~\eqref{eq:pls} penalizes
 \emph{deviations of the third difference from $\mu$};
