@@ -5,7 +5,7 @@ Run from any directory:
     python paper/ngsim-jerk-case-study/check_publication_hashes.py --write
 
 This inventory tracks the committed manuscript PDFs, editable LaTeX sources,
-publication-related generated tables/manifests and vector-PDF figures. Frozen
+publication-related figure provenance manifests. Frozen
 experiment data and the old pilot-era publication inventory are not modified.
 """
 
@@ -26,26 +26,25 @@ REQUIRED = (
     "atlas_supplement.tex",
     "references.bib",
     "render_paper.py",
-)
-PATTERNS = (
-    "sections/*.tex",
-    "generated/*.tex",
-    "generated/*.json",
-    "figures/*.pdf",
+    "awesomefigures_latex_manifest.json",
+    "sections/introduction.tex",
+    "sections/methods.tex",
+    "sections/synthetic_case.tex",
+    "sections/precision_calibration.tex",
+    "sections/real_case.tex",
+    "sections/discussion.tex",
+    "generated/awesomefigures_atlas_manifest.json",
+    "generated/exp008_methods_figure_manifest.json",
+    "generated/visual_suite_manifest.json",
 )
 
 
 def publication_files() -> list[Path]:
-    """Enumerate the committed publication snapshot in deterministic order."""
-    files = {ROOT / relative for relative in REQUIRED}
-    for pattern in PATTERNS:
-        files.update(ROOT.glob(pattern))
-    missing = sorted(str(path.relative_to(ROOT)) for path in files if not path.is_file())
+    """Enumerate the canonical PDFs, source and figure manifests."""
+    files = [ROOT / relative for relative in REQUIRED]
+    missing = [relative for relative, path in zip(REQUIRED, files) if not path.is_file()]
     if missing:
         raise FileNotFoundError("Missing publication assets: " + ", ".join(missing))
-    if not any(path.name.startswith("atlas_") and path.suffix == ".pdf"
-               for path in files):
-        raise FileNotFoundError("No AwesomeFigures atlas vector-PDF assets found")
     return sorted(files, key=lambda path: path.relative_to(ROOT).as_posix())
 
 
