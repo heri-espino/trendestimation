@@ -76,3 +76,14 @@ These properties were known in the wider PLS/regularization literature or follow
 ## Manuscript integration and reproducibility
 
 Relevant edits: main.tex and sections/introduction.tex, sections/methods.tex, sections/discussion.tex. The 51-entry source-matched bibliography is unchanged. The exact original mathematical normalization difference is now explicit. Build only the manuscript through an approved Windows PC08 build; no Experiments004–008, plots, observations or supplement should be regenerated. Check bibliography/LaTeX, inspect all pages, update the active 16-file SHA-256 publication ledger using Git LF bytes and archive the compiled PDF. The earlier verified 15-page SOA PDF archive must be preserved. No journal submission or unauthorized changes to other manuscripts.
+
+## Audited, compiled source-matched publication (2026-11-19)
+
+The designated Windows runner PCAG103A-08 successfully compiled the new 17-page Elsevier CAS manuscript in [Actions #44490200179](https://github.com/heri-espino/trendestimation/actions/runs/44490200179) from source commit ebb8d5ff168cd47585ebfa37fe34c74e60b6e59d. The job first ran the 3 new NumPy/pytest algebraic tests successfully, then compiled without rerunning experiments. [Immutable full PDF/source-manifest/log/audit/all-page-preview archive](https://github.com/heri-espino/trendestimation/tree/results/paper-c-pdf-pc08-44490200179-a1/paper/builds/pc08-paper-c-44490200179-a1).
+
+- Manuscript: **17 pages**, **907362 bytes**, SHA-256 **409096cb0a9d75195c60da263070a27ec109db779b8f3d007a84ae77ca0357c3**. Same binary installed in feature branch from original archived Git blob.
+- The original **12-page supplement** is unchanged, SHA-256 **1f11e85758ea82130359e76f1c463a944d27765d5fb6a9e8f45bb12e38a9345b**.
+- Exact 30 AwesomeFigures asset checks passed; every prior scientific-text invariance gate passed. No experiments, synthetic data, NGSIM records, numerical choices or figures were changed.
+- Fourth/final LaTeX pass: zero unresolved citations or references; 12 overfull and 21 underfull nonfatal box warnings. All 17 PDF page previews were individually visually inspected, including the new index formulas, methodological advantages and preserved reference list; no obscured content or figure overlaps identified. Final page contains only the last few bibliography entries.
+- Temporary, feature-scoped automatic workflow was removed following successful verification. The canonical workflows remain **manual-only**. The 16-file publication SHA-256 ledger has been updated from **Git LF source bytes** and the verified PDF digest; the earlier 15-page paper and 12-page atlas remain available in their historical archival results branches.
+- Coauthor approval and journal submission remain separate, unperformed actions.
