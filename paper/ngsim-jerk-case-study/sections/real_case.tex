@@ -5,6 +5,11 @@
 The Federal Highway Administration's NGSIM US-101 and
 I-80 trajectories supply camera-derived longitudinal position,
 not independent noise-free physical position or jerk.
+Previous NGSIM accuracy and reconstruction studies document
+position errors and trajectory-processing challenges
+\citep{punzo2011,coifman2017,montanino2015}.
+Consequently our held-out recorded positions are observational
+forecast targets, not a validated latent physical trajectory.
 For an initial visualization we retain the five
 prespecified US-101 track segments from the original
 case study, comprising 15 overlapping training/forecast
@@ -21,6 +26,10 @@ of an integer identifier need not be the same
 physical driver. Our pooled error summaries are
 descriptive and do not justify treating 200
 episodes as independent population draws.
+Chronological forecast-origin evaluation avoids using future
+values to select a model \citep{tashman2000,cerqueira2020},
+but it does not remove dependence among episodes from the
+same scene or repeated identifiers.
 
 \begin{figure*}[t]
 \centering
@@ -73,6 +82,10 @@ Thus the boundary rule is shared, not every
 model assumption or third-difference
 reference. The comparison is not a
 benchmark of Cholesky versus SVD run time.
+The TSVD cutoff is a classical type of spectral
+regularization \citep{hansen1990tsvd}, while the
+GCV cubic-spline comparator belongs to an established
+separate smoothing family \citep{reinsch1967,craven1979}.
 
 \begin{table*}[t]
 \centering
