@@ -1,3 +1,5 @@
+**Methods citation audit (2026-11-18):** [Verified source-to-claim references](notes/METHODS_CITATION_AUDIT.md) augment the existing Paper C bibliography and add citations throughout the manuscript's methods, simulation, calibration and real-trajectory sections. This is literature-context work only; no new simulated/recorded data, re-selection, numerical reruns or changes to previous results. A source-matched PDF is required before calling the revised manuscript compiled. The 14-page manuscript and 12-page atlas from Windows #43631207424 remain the frozen pre-audit visual baseline.
+
 **November 18, 2026 — continuation handoff:** Start with [the verified master Paper C handoff](notes/NEXT_AGENT_COMPREHENSIVE_HANDOFF_2026-11-18.md). PR #133 is now merged into `main` (despite older sections below saying otherwise); the latest 14-page article, 12-page AwesomeFigures supplement, frozen Experiment004–008 results, numerical qualifications, and Windows build provenance are indexed there. Continue from current `main`, not the old #131/#133 branch history.
 
 # NGSIM real-vehicle jerk and trend forecasting case study
