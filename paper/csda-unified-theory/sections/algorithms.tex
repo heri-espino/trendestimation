@@ -106,6 +106,40 @@ at a known $\lambda$.
 \subsection{Banded Cholesky and selected inversion}
 $A_\lambda$ is SPD and has half-bandwidth $d$. Factor $A_\lambda=L_\lambda L_\lambda^\top$ with lower triangular banded $L_\lambda$, in $O(nd^2)$ arithmetic and $O(nd)$ storage; solve \eqref{eq:rhs} using two triangular solves, $O(nd)$ per right-hand side. Cholesky's method was published posthumously in \citet{benoit1924}; the banded-direct bounds are standard \citep{golubvanloan2013,anderson1999}; efficient PLS-specific structured and GCV algorithms precede this work \citep{weinert2007}. The direct right-hand side avoids forming the high-degree polynomial $p_\mu$. For just one fit, this is asymptotically preferable to preparing a dense SVD when $d$ is fixed and $n$ grows.
 
+\paragraph{Comparison with Weinert's algorithm.}
+\citet[Sec.~1, pp.~959--961]{weinert2007} defines a
+rectangular difference matrix $M$ (our $D_p$) and the
+Whittaker--Henderson criterion
+$\alpha\|y-x\|^2+\|Mx\|^2$.
+His fitted trend solves
+\begin{equation}\label{eq:weinert-primal}
+(\alpha I+M^\top M)\widehat x=\alpha y,
+\quad \alpha>0.
+\end{equation}
+For the common zero-reference model, dividing through by
+$\alpha$ gives \eqref{eq:rhs} with
+$\lambda=1/\alpha$ and $\mu=0$.
+Crucially, \emph{Weinert does not compute an SVD of $M$}
+in his principal algorithm. In Section~2,
+pp.~962--963, he factorizes the banded \emph{primal}
+matrix $\alpha I+M^\top M$ as $LDL^\top$,
+uses short recurrences for the fitted trend,
+and recovers the inverse diagonals needed for
+GCV without forming a dense inverse
+\citep[Eqs.~(2.1)--(2.14)]{weinert2007}.
+His Section~3 also develops a state-space formulation.
+His explicit efficient implementations concentrate on
+$p=2$. Their per-penalty work and trace diagnostics
+are $O(n)$ for that fixed order; repeated
+$\alpha$ values cost $O(Mn)$ at $M$ independent
+candidates rather than exponentially increasing work.
+Thus Weinert's method is \emph{not} a spectral-SVD
+predecessor that decomposes $D_d$, and it remains
+a strong alternative to our cached spectral scoring
+when $n$ is large or the candidate count is moderate.
+Neither the two approaches nor the sign of a runtime
+crossover can be ranked from setup costs alone.
+
 However, exact CV requires diagonal entries of $Z=A_\lambda^{-1}$. Let $L=L_\lambda$ and denote the selected band of $Z$ by $Z_{ij}$ for $|i-j|\le d$. For $j>i$, backward selected-inverse recurrences are
 \begin{equation}\label{eq:seloff}
 Z_{ij}=-\frac1{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
