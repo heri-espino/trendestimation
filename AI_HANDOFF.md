@@ -1,3 +1,18 @@
+**Paper C primary-source forecasting correction (2026-11-07):** The original
+Guerrero (2007) PLS paper has now been checked visually (printed
+pp. 1228, 1233). It **already gives nonzero-$\mu$ trend-forecasting
+formulas for $d=1,2$ and applies estimated $\mu$ to GDP forecasts**.
+Do not claim the first PLS-based trend forecast or first forecast with
+estimated nonzero $\mu$. A 2020 pollutant-forecasting application
+uses $d=2,\mu=0$, and Python `pybaselines` already implements
+Whittaker smoothing (though not established to implement all our
+features). The specific $d=3$ vehicle reference-jerk application,
+last-25-point local continuation and held-out comparison remain a
+hypothesis of distinctive applied contribution. Detailed page-level
+findings, equations, software comparison and links are in
+[the primary-source note](paper/ngsim-jerk-case-study/notes/papers/guerrero_2007_forecasting_primary_source.md).
+No NGSIM code, outcomes or figures were changed by this finding.
+
 **LATEST three-manuscript mainline integration (2026-11-14):** [paper/LATEST_PAPERS.md](paper/LATEST_PAPERS.md) links the current compiled Springer Computational Statistics (19pp, AwesomeFigures 9+33 atlas), unified CSDA theoretical manuscript, and Paper C (14pp, AwesomeFigures 12-page atlas). Springer #124/#126, CSDA #129/#134 and the Paper C scientific-review/atlas branch are integrated without changing numeric studies or dropping existing mainline paper materials. Source PDF evidence: PC08 Springer #43630631770, Paper C #43631207424. Preserve historical alternate Paper C #132 independently; manuscript is a research draft, not submitted.
 
 **LATEST Springer KKT numerical-methodology revision (2026-11-10; supersedes older PDF links below):** The canonical Springer `paper/main.tex` in draft [PR #126](https://github.com/heri-espino/trendestimation/pull/126) now rigorously derives the unconstrained first-order optimality equation from PLS, explains source-actual banded factorization -> solve -> residual check -> selected inverse/criterion pipeline, compares the implementation's scaled optimality residual to conventional normwise linear-system backward error, justifies residual-based acceptance with verified references (Boyd--Vandenberghe 2004; Higham 2002; Golub--Van Loan 2013; Stellato et al. 2020), and keeps the 1e-7 tolerance explicitly implementation-specific. A new vector figure, from the unchanged frozen tensor, shows exactly 9096 rejected banded method-level rows (CV 3384, GCV 4160, MLE 1552; median 1.4078566e-7) without inventing accepted-residual values. Algebraic regression suite **10/10 passed**. The **NEW 19-page Springer PDF** was freshly compiled on the correct PC08 Windows runner in successful [Actions 42769877846](https://github.com/heri-espino/trendestimation/actions/runs/42769877846), source SHA `15349249c1f5bcf518a5e4fd0eabbdc9c79cb28e`, PDF SHA-256 `69e5dc84936e1c7a6db4690373cc982baa1e26d5afc614f8006dfa2525751c29`, 808912 bytes, archived under [artifacts/springer-empirical-pc08-42769877846](https://github.com/heri-espino/trendestimation/tree/artifacts/springer-empirical-pc08-42769877846). No TeX errors, unresolved references or overfull boxes; all 19 pages extracted/rendered and visually inspected. Exact source-backed figures/QA: [kkt001/FINAL_VERIFICATION.md](paper/benchmarks/experiment011/pc08_empirical/kkt001/FINAL_VERIFICATION.md). No benchmark rerun, source tolerance change, raw data modification, merge, or journal submission. Draft PR #126 remains unmerged, stacked on #124; author declarations still require confirmation.

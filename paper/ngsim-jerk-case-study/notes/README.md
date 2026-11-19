@@ -2,6 +2,8 @@
 
 **Status:** Research notes for the NGSIM/jerk case study, not a submitted paper or a claim of historical priority. Updated 2026-11-05.
 
+**Original-source correction (2026-11-07):** [Guerrero (2007) explicitly derived PLS trend forecasts with nonzero estimated $\mu$](papers/guerrero_2007_forecasting_primary_source.md) for $d=1,2$ and evaluated GDP forecasts (pp. 1228, 1233). [`pybaselines`](https://pybaselines.readthedocs.io/en/stable/generated/api/pybaselines.utils.whittaker_smooth.html) also implements Whittaker smoothing in Python. Our **specific d=3 reference-jerk formulation and 25-point forecast continuation** remain different and merit evidence-based study, but neither PLS forecasting nor all Python PLS smoothing is new.
+
 **New extrapolation research handoff (2026-11-05):** Read [the nonzero-reference forecast research question](EXTRAPOLATION_RESEARCH_HANDOFF.md), [the exact fit-versus-extrapolation decomposition](EXTRAPOLATION_DECOMPOSITION.md), [alternative training-only reference means](MU_POLICY_CATALOG.md), and [the predeclared ablation plan](EXTRAPOLATION_ABLATION_PLAN.md). The broad claim “first PLS extrapolation” is not defensible: see [Biessy's 2025/2026 WH extrapolation method](papers/biessy_2026_extrapolation.md). **These are notes and hypotheses, not measured new results.**
 
 Start with [the evidence-based review](LITERATURE_REVIEW.md), then the individual annotations below. The [earlier targeted novelty audit](../NOVELTY_AUDIT.md) is preserved for provenance; the notes here add the user's primary PDF manuscripts and Tang et al.'s LaTeX source. The [mathematical annotations](MATHEMATICAL_NOTES.md) and [manuscript checklist](MANUSCRIPT_PLAN.md) describe what to do with the literature rather than altering the existing results.
