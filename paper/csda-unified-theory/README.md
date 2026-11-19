@@ -1,5 +1,37 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 19, 2026: explained Gaussian REML and mathematical reading guide
+
+The former short "Gaussian reduced-coordinate likelihood" subsection has
+been replaced by a **full theorem with proof** identifying the exact
+Gaussian mixed-effects assumptions, nuisance polynomial coefficients,
+orthogonal error contrasts, covariance diagonalization, and
+closed-form profiling of the observation noise variance. We now call
+the resulting criterion **profiled Gaussian marginal / restricted
+likelihood in penalized spectral coordinates**, not a new
+likelihood method. Original sources Patterson--Thompson (1971),
+Wahba (1985), Wood (2011), and especially Biessy (2026),
+Section 5.3, are cited directly beside the theorem and its formula.
+
+New mathematical explanations include a notation/roadmap section,
+the derivation of the PLS normal equations by differentiating,
+positive definiteness and inverse-free solutions,
+the interpretation of each SVD component and pointwise multiplication,
+effective degrees of freedom and normalized smoothness, individual
+CV leverages versus average GCV leverages, and the likelihood/Cholesky
+determinant equivalence.
+
+Small deterministic tests in tests/test_reml_contrast.py independently
+check the spectral and direct differenced-data Gaussian quadratic
+forms, determinant identity, unpenalized beta invariance, nonzero mu,
+profile noise variance, and original penalized objective equality.
+No new data, numerical benchmark or statistical novelty is implied.
+
+Primary-source audit and proof details:
+[notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md](notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md).
+
+
+
 ## November 18, 2026: Weinert and the third-difference example
 
 The revised article compares Weinert (2007), whose principal solver uses banded LDL^T of alpha I + M^T M, to our reusable SVD of D_d. It documents lambda=1/alpha for mu=0 and explains why neither method is universally faster. Weinert's fixed-p=2 GCV computation is linear in n per penalty, not exponential in the number of trial penalties.
