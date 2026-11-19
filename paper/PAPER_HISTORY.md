@@ -16,13 +16,47 @@ in main, with original sources and historical releases retained.
 See that live index for the newest checked-in PDF, LaTeX source,
 and source-specific visualization galleries.
 
-The **November 9 section below is intentionally immutable
-historical provenance**. Its latest or current descriptions
-refer to that historical compilation date. The present
-November 18 CSDA landscape-table and D-versus-H explanation
-revision is a subsequent source change and should be appended
-here with its own exact source commit, PDF hash and build record
-after its standalone journal compilation succeeds.
+The **November 9 section below preserves the historic versions**.
+Any references to latest or current within that section refer
+to the earlier compilation date.
+
+### November 18, 2026 — CSDA landscape-table and SVD rationale revision
+
+**Title:** Spectral and structured algorithms for
+smoothness-indexed penalized least-squares trend estimation.
+
+**Change:** Two formerly cramped tables have been rebuilt as
+full-page, native landscape-orientation PDF pages (5 and 8).
+The model now explicitly decomposes the rectangular difference
+matrix D_d, not the smoothing matrix H_lambda. The algorithm
+discussion compares SVD(D_d), eigenanalysis(D_d^T D_d), and
+eigenanalysis(H_lambda), including their exact shared basis,
+Gram-matrix conditioning and dense-factorization trade-offs.
+The complexity section separates a one-time decomposition
+from evaluating 11 distinct smoothness levels, including
+S-to-lambda mapping, projected scalar scoring and optional
+full-fit or exact CV work.
+
+**Source:** [research commit 88b00739](https://github.com/heri-espino/trendestimation/commit/88b0073910a8822e8c63292a28168de632f85108),
+[merged editorial PR #138](https://github.com/heri-espino/trendestimation/pull/138),
+and [source/compiled PDF in main](csda-unified-theory/).
+Source-only [Actions build #44448096253](https://github.com/heri-espino/trendestimation/actions/runs/44448096253)
+passed deterministic algebra checks and generated a **14-page**
+Elsevier CAS PDF. The preserved manuscript PDF SHA-256 is
+**fa7b6fd4f663e3b3f71507693e15624afbc021758cf2252f2e040a3873892d7d**.
+
+**Layout verification:** Both table PDF pages are marked
+native rotation 90 degrees; page text and citations remain
+selectable, and the rotated PNGs were inspected. The exact
+rotation protocol is [rotate_landscape_tables.py](csda-unified-theory/rotate_landscape_tables.py).
+Existing CAS front-matter and minor paragraph overfull-box
+warnings remain for subsequent copy-editing.
+
+**Boundaries:** This is a mathematical clarification and
+publication-layout revision; it did not repeat any empirical
+timing experiment, change solver behavior or submit the
+manuscript to a journal.
+
 
 ## November 9, 2026 compilation archive (historical, preserved)
 
