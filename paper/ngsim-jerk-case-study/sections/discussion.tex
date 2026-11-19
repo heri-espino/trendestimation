@@ -5,7 +5,20 @@ not how quickly competing matrix factorizations solve
 the \emph{same} penalized least-squares equations.
 The established PLS estimator provides a direct penalty
 on deviations of discrete jerk from a reference mean and
-an intuitive normalized smoothing coordinate $S$.
+an intuitive normalized smoothing coordinate $S\in[0,1]$.
+The distinction is substantive: $\lambda\ge0$ is the
+unbounded penalty, while $S$ is its one-to-one bounded
+representation for fixed $n,d$, normalized over the
+$n-3$ positive-penalty directions. Guerrero's
+original trace-based smoothness measure has
+upper limit $(n-3)/n$; the rank-normalized
+version used here reaches one in the strong
+regularization limit \citep{guerrero2007,cortes2017}.
+In the underlying second-moment formulation,
+the index is a normalized \emph{relative-precision
+contribution} from the smoothness model,
+not precision of a camera or an absolute
+measurement-error percentage.
 
 Under the independent Gaussian variance-ratio model,
 $S$ equals the mean spectral fraction of observed
@@ -83,12 +96,26 @@ calibration, jerk recovery and future-position
 forecasting should be assessed as
 \emph{separate} estimands.
 
-Our contribution is therefore a reproducible
-physical application and conditional
-characterization of third-order PLS and its
-interpretable smoothness index. We do not
-claim to have invented PLS, third-order penalties,
-the smoothness index, or SVD truncation.
+The methodological appeal of this established
+PLS family lies in a unique convex fit,
+physically motivated third differences, a
+trainable nonzero reference for signed jerk,
+soft rather than hard spectral attenuation,
+a bounded controllable smoothness/relative-
+precision coordinate with conditional
+effective degrees of freedom, and a sparse
+banded difference penalty
+\citep{guerrero2007,guerrero2008,cortes2017,
+weinert2007,biessy2026}. These advantages
+motivate our reproducible physical application,
+not a claim of six empirically validated
+superiority results. Our actual contribution
+is the conditional characterization of this
+combination against synthetic known jerk and
+chronological recorded positions. We do not
+claim to have invented PLS, third-order
+penalties, the smoothness index or SVD
+truncation.
 More physically constrained or nonsmooth approaches have been
 studied for vehicle trajectories \citep{fan2024,zhu2024};
 our unconstrained quadratic model does not automatically enforce

@@ -9,7 +9,18 @@ Related reconstruction work has assessed traffic-level consistency
 rather than treating raw camera trajectories as error-free
 \citep{montanino2015}.
 
-We study the PLS model of \citet{guerrero2007}, its trace-based smoothness index \citep{guerrero2008} and classical tuning criteria \citep{cortes2017}. The present manuscript distinguishes three questions: whether normalized smoothness quantifies relative spectral observation noise under a stated covariance model, whether a third-order fit recovers known physical jerk, and whether a separate continuation rule predicts future camera-recorded positions. Companion papers examine numerical accuracy and computational complexity. We therefore combine rigorously controlled analytic-jerk/noise simulations with chronological comparisons on archived observed vehicle trajectories.
+We study the PLS model of \citet{guerrero2007}, its original
+trace-based relative-precision smoothness measure
+\citep{guerrero2007,guerrero2008,cortes2017}, and classical
+tuning criteria \citep{cortes2017}. A conventional penalty
+$\lambda\ge0$ has no upper bound, whereas our
+\emph{rank-normalized} smoothness index $S(\lambda)\in[0,1]$
+provides a readable zero-to-one regularization coordinate.
+It is proportional to, but distinct in normalization from,
+Guerrero's $n$-normalized index; its conditional interpretation
+is the fraction of \emph{precision contributed by the
+smoothness model over penalized directions}, not the absolute
+precision of the position sensor. The present manuscript distinguishes three questions: whether normalized smoothness quantifies relative spectral observation noise under a stated covariance model, whether a third-order fit recovers known physical jerk, and whether a separate continuation rule predicts future camera-recorded positions. Companion papers examine numerical accuracy and computational complexity. We therefore combine rigorously controlled analytic-jerk/noise simulations with chronological comparisons on archived observed vehicle trajectories.
 
 We also compare two boundary continuation rules for the same fitted $d=3$ PLS trend and benchmark them against natural cubic smoothing splines with GCV-selected penalties, Savitzky--Golay differentiation and local polynomial fits. These are standard local/global families for estimating derivatives from noisy experimental data \citep{ahnert2007}, rather than independent numerical matrix-factorization methods. The resulting analysis tests an implementation and application of an established PLS model, not an assertion of historically first use of $d=3$ differences.
 
@@ -59,10 +70,19 @@ nonzero-reference PLS and controlled smoothness
 \citep{guerrero2007,guerrero2008}.
 Our contribution is therefore \emph{not} the invention of
 jerk regularization, NGSIM reconstruction, or a new forecasting
-model, but a controlled position-only study of reference-jerk
-shrinkage, conditional relative-noise calibration, and the
-difference between synthetic known-jerk reconstruction and
-real recorded-position prediction.
+model. The attractive combination is a uniquely solvable,
+position-only, sparse quadratic fit; a signed nonzero-jerk
+reference; continuous attenuation of high-roughness modes;
+and a bounded tuning coordinate that links smoothing
+strength to conditional effective complexity and
+relative precision. These established advantages make
+the model useful to investigate, while the new evidence
+is a controlled study of reference-jerk shrinkage,
+conditional relative-noise calibration, known-jerk
+reconstruction and real recorded-position prediction.
+Sections~\ref{sec:precision-index} and
+\ref{sec:pls-advantages} make the mathematical
+benefits and their limitations explicit.
 
 The real NGSIM dataset supplies camera-derived position, but not independently measured latent truth or jerk. We do not contaminate the real positions to create artificial validation labels. Separately, in a fully documented synthetic factorial experiment, we prescribe clean positions and known jerk before adding controlled measurement errors; only those simulated trajectories support direct calibration and true-jerk reconstruction assessments.
 
