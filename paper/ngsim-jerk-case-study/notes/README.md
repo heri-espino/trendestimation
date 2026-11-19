@@ -1,3 +1,5 @@
+**2026-11-18 source review:** [METHODS_CITATION_AUDIT.md](METHODS_CITATION_AUDIT.md) gives the bibliography expansion, DOI references, section-level citation rationale, verified Windows PDF provenance, and reconciliation with the integrated mainline publication-maintenance controls. No science reruns or journal submissions.
+
 # Paper C — literature review and annotated reading notes
 
 **Status:** Research notes for the NGSIM/jerk case study, not a submitted paper or a claim of historical priority. Updated 2026-11-05.

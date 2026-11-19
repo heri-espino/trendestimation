@@ -27,6 +27,12 @@ solution is
 (y+\lambda\mu D_3^\top\mathbf1).
 \end{equation}
 
+The quadratic penalty in Eq.~\eqref{eq:pls} belongs to the established
+Whittaker--Henderson family of discrete roughness regularizers
+\citep{whittaker1923,weinert2007,biessy2026}. Our nonzero
+third-difference reference specializes the prior PLS construction
+of \citet{guerrero2007} rather than defining a new smoother.
+
 The $d=3$ polynomial nullspace has dimension three: unpenalized
 quadratic position, linear velocity and constant acceleration.
 At strong regularization, $\mu=0$ imposes a quadratic limit,
@@ -52,6 +58,10 @@ let $H_\lambda=(I+\lambda Q)^{-1}$; then
 \operatorname{df}(\lambda)=\operatorname{tr}(H_\lambda)
 =n-mS(\lambda).
 \end{equation}
+For a fixed linear smoothing map, trace-based complexity is standard
+in the statistical treatment of prediction error
+\citep{efron2004,ye1998}. The equality above is derived here from
+the $D_3$ spectrum, not asserted as a formula from those papers.
 This \emph{conditional} degrees-of-freedom formula must not
 be applied unchanged when $\mu$ is estimated from the same
 observations. Under the independent Gaussian variance-ratio
@@ -73,12 +83,18 @@ interpretation adds distributional assumptions beyond
 the second-moment PLS construction of \citet{guerrero2007}.
 When $\mu$ is estimated rather than fixed, the
 mean-adjusted restricted likelihood must also eliminate
-its nuisance mean direction.
+its nuisance mean direction. Restricted maximum likelihood is an
+established variance-component method \citep{patterson1971};
+its unknown-reference implementation and formula are specific to
+the covariance structure described here.
 
 We retain the library's GCV and Gaussian profile-ML choices
 and explicitly separate \emph{fixed-$\mu$ profile likelihood}
 from \emph{joint unknown-$\mu$ REML}; they need not minimize
-the same physical loss. The original historical case
+the same physical loss. Ordinary and generalized cross-validation for smoothing parameter
+selection have a substantial classical literature
+\citep{craven1979,weinert2007}; the corrected Akaike criterion is
+associated with \citet{hurvich1998}. The original historical case
 also screened LOOCV, AICc and restricted residual BIC,
 as shown in its archived selection comparison. Here
 they are background sensitivity analyses, not a paper
@@ -162,6 +178,10 @@ linear fits have effective degrees of freedom
 \operatorname{df}_{\rm TSVD}^{\rm plug}
  &=3+r+a^\top(I-P_r)q_1 .
 \end{align}
+These expressions follow from the linear maps at fixed tuning;
+they do not include the extra adaptivity caused by selecting a
+penalty or cutoff from the observations
+\citep{ye1998,efron2004}.
 A fixed-rank GCV denominator for the complete
 plug-in linear map would instead be
 $n-\operatorname{df}_{\rm TSVD}^{\rm plug}$.
@@ -170,10 +190,13 @@ only the fixed-reference trace components;
 it does not equate these full plug-in
 degrees of freedom. Both reference
 estimates are based on historical data only.
-Classical truncated singular-value regularization has
-a broader inverse-problem literature; we do not claim
-the hard-cutoff construction is new
-\citep{renaut2019tsvd}.
+Hard spectral cutoff and continuous Tikhonov-type attenuation
+are classical regularization alternatives \citep{hansen1990tsvd}.
+The use of the \emph{roughness} operator's right singular vectors
+here is our specified estimator comparison, not a claim that this
+particular position-fitting rank rule was validated by Hansen.
+Additional inverse-problem regularization treatments include
+\citet{renaut2019tsvd}.
 
 \subsection{Other physical jerk and trajectory baselines}
 The baseline families are (i) natural cubic smoothing
@@ -183,7 +206,7 @@ polynomial smoothing (window 21, degree three),
 (iii) ordinary local polynomial and constant-velocity
 or constant-acceleration extrapolations, and
 (iv) raw third differences as an intentionally noisy
-derivative reference \citep{savitzky1964,ahnert2007,cao2021}.
+derivative reference \citep{reinsch1967,wahba1990,craven1979,savitzky1964,ahnert2007,cao2021}.
 A classical cubic spline penalizes the \emph{second}
 derivative, whereas Eq.~\eqref{eq:pls} penalizes
 \emph{deviations of the third difference from $\mu$};
@@ -214,6 +237,10 @@ fitted positions after subtracting the polynomial
 particular solution $q$, then adds the future $q$.
 Both schemes use only historical data; neither can
 anticipate future changes in driver behavior.
+The chronological separation between model fitting and future
+evaluation follows the general logic of out-of-sample forecast
+assessment \citep{tashman2000,cerqueira2020}; it is not equivalent
+to randomized pointwise cross-validation of a dependent trajectory.
 A separate spline baseline uses a quadratic Taylor
 continuation from spline endpoint derivatives.
 The pooled forecast error at horizon $H\in\{5,10,20\}$
