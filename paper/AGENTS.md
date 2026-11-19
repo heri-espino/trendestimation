@@ -1,4 +1,4 @@
-> **November 9, 2026 paper-version history:** Before creating or compiling a new paper revision, read [PAPER_HISTORY.md](PAPER_HISTORY.md). It records the A+B consolidated theoretical draft and separate Springer/NGSIM compilations, exact source commits, PDF SHA-256 values, build logs, and retained predecessors. Source and archive branches are deliberately separate; do not overwrite prior results or merge unreviewed research PRs. Historical A/B separation below predates the later author consolidation decision.
+**Integrated paper drafts, 2026-11-14:** See [LATEST_PAPERS.md](LATEST_PAPERS.md) for direct PDF/LaTeX links to Springer, unified CSDA, and Paper C. Paper C review branch was integrated preserving root docs and the other two manuscripts. Its AwesomeFigures figures, `src/trendestimation/likelihood.py` Gaussian-REML clarification, and 12 experiment tests are retained. Do not mistake manuscript merge for journal submission or reproducibility re-run. Preserve raw data and archived original reports.
 
 # Paper work — mandatory manuscript/experiment routing
 
