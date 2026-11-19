@@ -50,6 +50,15 @@ try {
   if ($Archive -and -not $Execute) {
     throw 'Use -Execute -Archive to measure and archive; plain invocation is dry-run.'
   }
+  if ($Archive) {
+    $authorName = git config user.name
+    Assert-GitSuccess 'checking Git author identity'
+    $authorEmail = git config user.email
+    Assert-GitSuccess 'checking Git author email'
+    if ([string]::IsNullOrWhiteSpace($authorName) -or [string]::IsNullOrWhiteSpace($authorEmail)) {
+      throw 'Configure Git user.name and user.email before starting a multi-hour run.'
+    }
+  }
   $env:OPENBLAS_NUM_THREADS='1'
   $env:MKL_NUM_THREADS='1'
   $env:OMP_NUM_THREADS='1'
