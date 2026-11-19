@@ -57,7 +57,8 @@ Early actuarial trace antecedent:
 \citet{spoerl1943}; general sparse
 recurrences: \citet{takahashi1973,erisman1975}. &
 Selected-inverse recurrences and their computational
-dependencies: \citet{erisman1975}.
+dependencies: \citet{erisman1975}; practical
+supernodal implementation: \citet{lin2011}.
 The stated banded $O(nd^2)$ is counted here.\\
 \addlinespace
 General sparse direct factorization &
@@ -80,7 +81,8 @@ Early graduation: \citet{bohlmann1899};
 \citet{brooks1988}. &
 Earlier efficient WH/GCV algorithms:
 \citet{weinert2007}; classical spectral
-GCV: \citet{golub1979}.\\
+GCV in splines and ridge regression:
+\citet{craven1979,golub1979}.\\
 \bottomrule
 \end{tabularx}
 
@@ -94,6 +96,30 @@ Section~\ref{sec:complexity}.
 \end{minipage}
 \end{sidewaystable*}
 
+
+
+
+\paragraph{Sources that extend rather than replace the exact methods.}
+The exact finite-sample $d=2$ Hodrick--Prescott
+weights studied by \citet{corneamadeira2017}
+and the continuous derivative-penalty spline
+construction of \citet{reinsch1967}
+are separate antecedents with different
+problem formulations or computational routes.
+Likewise, modern selected-inverse software
+\citep{lin2011} implements a general sparse
+factorization-and-recursion strategy rather
+than originating the historical
+\citet{erisman1975} recurrences. The
+random-probe trace estimator of
+\citet{hutchinson1990} and the
+stochastic Lanczos matrix-function method of
+\citet{ubaru2017} produce approximate
+diagnostics; their error probabilities and
+inner iteration costs should not be silently
+identified with the exact traces,
+determinants and leverage vectors
+costed in this article.
 
 \paragraph{Historical priority within trend smoothing.}
 The review by \citet{weinert2007} traces penalized-difference

@@ -1,5 +1,60 @@
 # Agent instructions: unified CSDA theoretical manuscript
 
+## November 19, 2026 original-reference source audit
+
+Before altering the algorithm provenance or BibTeX, read
+notes/PRIMARY_REFERENCE_AUDIT_20261119.md. The author
+supplied 11 primary PDFs and their metadata/claim relevance
+were verified. Do not duplicate the six existing citations;
+the five new keys reside in algorithmic_references.bib.
+Hutchinson's printed journal paper is **1990**, not 1989,
+and its DOI is 10.1080/03610919008812866. Lin's SelInv
+article is **February 2011**, not the 2010 ACM sample
+citation template. The Cornea-Madeira published year is
+**2017**, not its 2016 manuscript draft.
+
+Reinsch (1967) treats a continuous spline derivative
+penalty, distinct from our discrete D; Cornea-Madeira
+(2017) treats finite-sample HP d=2; Lin (2011) is a
+general sparse selected-inverse implementation, not
+the original inverse recursion. Hutchinson (1990) and
+Ubaru et al. (2017) provide **approximate**, not exact,
+trace/logdet methods; exclude them from the exact
+cost theorem and use explicit stochastic error caveats.
+Golub--Reinsch (1970) p.404 directly documents numerical
+loss from forming the Gram matrix, but not blanket
+SVD runtime superiority.
+
+Do not commit copyrighted source scans. Re-run
+tests/test_reference_provenance.py and deterministic
+algebra tests and archive the fully compiled PDF.
+
+## November 19, 2026 likelihood and pedagogy contract
+
+Before editing the Gaussian subsection read
+notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md. The source of the
+Gaussian restricted/error-contrast likelihood is *established* REML/GML
+(Patterson--Thompson 1971, Wahba 1985, Wood 2011);
+Biessy 2026 Section 5.3 provides directly relevant Gaussian WH
+marginal-likelihood prior art. The manuscript proves an algebraic
+specialization, NOT the invention of likelihood or REML.
+
+Keep mu a fixed prespecified numeric difference reference,
+unpenalized polynomial W beta as fixed effects, theta and epsilon as
+independent Gaussian terms, lambda as the variance ratio, and exactly
+r=n-d independent error-contrast coordinates. z=0 causes a
+zero-variance profile degeneracy; jointly estimated or plug-in mu is
+NOT handled by this theorem.
+
+Preserve the full explanatory proof (projection, variance, profiling,
+determinant, connection to banded calculation). Do not alter
+SVD/Gram or D3 matrix examples, source provenance, existing
+landscape table orientation, or unrelated research branches.
+Run tests/test_reml_contrast.py alongside existing suites
+before compiling the journal PDF. No novel performance claims.
+
+
+
 Read repository README.md, AGENTS.md, AI_HANDOFF.md, paper/AGENTS.md, paper/PUBLICATION_MAP.md and paper/SESSION_HANDOFF.md before modifying this manuscript. Also read this directory's README, all its sections and deterministic checks, both source CSDA papers, and the editorial literature audit.
 
 ## Weinert/third-difference editorial contract (November 18, 2026)
