@@ -1,0 +1,31 @@
+name: Springer Experiment013 PowerShell syntax QA
+
+on:
+  pull_request:
+    paths:
+      - paper/benchmarks/experiment013/Run-Grid.ps1
+      - .github/workflows/springer-experiment013-powershell-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parse-powershell:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse the VM orchestration script without executing experiments
+        shell: pwsh
+        run: |
+          $script = (Resolve-Path 'paper/benchmarks/experiment013/Run-Grid.ps1').Path
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $script, [ref]$tokens, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count -ne 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.ToString() }
+            throw "Experiment013 PowerShell failed static syntax validation"
+          }
+          Write-Host "PowerShell syntax valid. No numerical experiments executed."
