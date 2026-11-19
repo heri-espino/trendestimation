@@ -1,3 +1,5 @@
+**Current methods/NGSIM literature extension:** [METHODS_CITATION_AUDIT.md](METHODS_CITATION_AUDIT.md) catalogs the 2026-11-18 primary-reference verification, exact citation rationale and non-changes. This supersedes only the older observation that Methods and results sections lack suitable outside literature; it does not supersede numerical or manuscript handoff facts.
+
 # Paper C — literature review and annotated reading notes
 
 **Status:** Research notes for the NGSIM/jerk case study, not a submitted paper or a claim of historical priority. Updated 2026-11-05.
