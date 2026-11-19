@@ -3,6 +3,19 @@ For a fixed numeric $\mu$, define the conditional effective degrees of freedom $
 \begin{equation}\label{eq:edf}
 \nu_d(\lambda)=d+\sum_{j=1}^r\frac{1}{1+\lambda\delta_j}.
 \end{equation}
+For a linear smoother, the trace $\nu=\tr H_\lambda$
+is the \emph{effective degrees of freedom}: a
+quantitative measure of how much flexibility
+remains after imposing the roughness penalty.
+At $\lambda=0$, $H_0=I$ and
+$\nu_d(0)=n$ because every observed value is fitted.
+As $\lambda\to\infty$, all $r$ penalized directions
+are suppressed, leaving only the $d$ polynomial
+nullspace directions, so $\nu_d\to d$.
+The individual terms $(1+\lambda\delta_j)^{-1}$
+in \eqref{eq:edf} quantify the flexibility retained
+in each penalized singular-vector direction.
+
 The classical trace reduction divided by $n$ is
 \begin{equation}\label{eq:classicalS}
 S^{\rm trace}_d(\lambda)=\frac{n-\nu_d(\lambda)}{n},
@@ -15,6 +28,19 @@ S_d(\lambda)=\frac{n-\nu_d(\lambda)}{n-d}
 =\frac{1}{r}\sum_{j=1}^r\frac{\lambda\delta_j}{1+\lambda\delta_j}.
 \;}
 \end{equation}
+The numerator $n-\nu_d$ counts the
+\emph{effective reduction} in degrees of freedom.
+Dividing by $n-d$, rather than $n$, makes the
+largest possible reduction exactly one; this
+normalizes a complexity measure, not the
+observed data or the fitted trend.
+For instance, the same numerical value
+$s=0.8$ indicates removal of 80\% of the
+potentially penalized degrees of freedom,
+but different orders $d$ have different
+nullspaces and correspond to different
+penalty strengths and fitted curves.
+
 Thus $S_d=(n/r)S_d^{\rm trace}$, an interpretable rescaling of a published index \citep{guerrero2008,cortes2017}, not a different family of fitted trends.
 
 \begin{theorem}[Smoothness bijection]\label{thm:bijection}
