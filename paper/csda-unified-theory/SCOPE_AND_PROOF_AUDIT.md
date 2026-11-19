@@ -1,5 +1,30 @@
 # Scientific scope and proof audit — unified theoretical CSDA paper
 
+## November 19, 2026 Gaussian likelihood proof and clarity audit
+
+- Proper model: tau=p_mu+W beta+V theta, with beta unknown fixed and
+  theta~N(0,sigma_u^2 Sigma^-2); epsilon~N(0,sigma_e^2 I), independent.
+- V^T W=0 removes polynomial nuisance directions, yielding
+  z_j~N(0,sigma_e^2[1+1/(lambda delta_j)]) with lambda=sigma_e^2/sigma_u^2.
+- Profile sigma_e^2 = (sum_j z_j^2/c_j)/r for z != 0. The resulting
+  -2 log likelihood is r log(J/r)+sum log c plus an irrelevant constant.
+- Equivalent banded statistics: J=min PLS objective and
+  logdet correction=logdet A-r loglambda-logdet B. Both follow
+  from explicit scalar and spectral proofs.
+- Statistical novelty: none asserted for REML/GML, smoothing marginal
+  likelihood, or error contrasts. Cite Patterson--Thompson 1971,
+  Wahba 1985, Wood 2011, and specifically Biessy 2026 Section 5.3.
+- Additional explanations: reading guide, first-order gradient and SPD,
+  nullspace/SVD coordinate operations, EDF normalization and
+  CV versus GCV leverage correction.
+- Deterministic proof checks: tests/test_reml_contrast.py plus
+  original tests; no experiment, forecast evaluation or performance
+  claim. Notes in notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md.
+- Fixed mu only. Unknown reference mean and correlated observation noise
+  need independent derivation. Coauthor/statistical review still pending.
+
+
+
 Date: November 9, 2026. Status: theory-first draft, not submitted.
 
 ## November 18, 2026 reading and layout revision
