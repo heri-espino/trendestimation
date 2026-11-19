@@ -10,6 +10,15 @@ Date: November 9, 2026. Status: theory-first draft, not submitted.
 - Tables 1 and 2 are now full-page sideways floats with separately attributed algorithm origins and shared/per-penalty costs, followed by reproducible PDF /Rotate=90 metadata tagging.
 - Build QA: BOTH deterministic verification scripts; source-only Elsevier CAS compile; exactly two recognized landscape table pages; extractable PDF text; SHA-256 and Git source provenance; visual inspection at landscape orientation. No timing rerun.
 
+## Primary-source and d=3 revision audit (November 18, 2026)
+
+- Weinert (2007) pp. 959-963 Eqs. (1.1)-(1.8), (2.1)-(2.14) inspected directly: principal LDL^T factorization is of alpha I+M^T M, not an SVD of M.
+- The fixed-order p=2 GCV algorithm is O(n) per penalty, hence O(Mn) for M distinct known penalties. Dense retained SVD(D) is O(n(n-d)^2) setup; O(n(n-d)) basis storage. Speed comparison is conditional on workload and diagnostics.
+- Exact n=6,d=3 matrices D3 and Q3 are provided; rank(Q3)=3, H_1[1,6]=11/195 and Q3[1,6]=0, with SPD A_lambda despite singular Q3.
+- For uniform spacing h, Delta^3 x /h^3 estimates jerk, and cubic constant jerk j has Delta^3 x=j*h^3. This is an estimated derivative, not an independently measured physical variable.
+- Order d may be validated as a hyperparameter with chronology-preserving out-of-sample assessment; no new predictive performance claims.
+- Small deterministic checks are in tests/test_d3_weinert_comparison.py. Full page-level source review in notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md.
+
 ## Author's five priorities
 
 1. Spectral diagonalization to compute PLS trends **using the normalized smoothness index**.
