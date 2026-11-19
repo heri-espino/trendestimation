@@ -1,5 +1,15 @@
 # Scientific scope and proof audit — unified theoretical CSDA paper
 
+## November 19, 2026 uploaded original sources and citation claims
+
+- Eleven author-provided original PDFs inspected, including scanned 1990 Hutchinson, 2011 Lin and 1979 ridge-GCV originals.
+- Five verified new local keys: reinsch1967, corneamadeira2017, lin2011, hutchinson1990, ubaru2017. Six others already had accurate BibTeX keys.
+- Original Golub--Reinsch 1970 p. 404 warns about Gram formation; Lin's supernodal implementation builds on Takahashi/Erisman, rather than inventing their recurrences.
+- Reinsch continuous spline regularizer, d=2 HP finite-sample result and Gaussian/REML formulations are separate literature antecedents; no source misrepresented as our new exact full-grid algorithm.
+- Stochastic approximate trace (Hutchinson) and stochastic Lanczos logdet (Ubaru) are clearly separated from exact banded selected inversion, leverage and determinant.
+- Exact source/equation/document citation mapping and metadata exceptions in notes/PRIMARY_REFERENCE_AUDIT_20261119.md; no licensed PDFs committed.
+- Citation integrity test checks required 11 original-paper keys, use-site references, absence of duplicate BibTeX keys and unresolved cite-key typos.
+
 ## November 19, 2026 Gaussian likelihood proof and clarity audit
 
 - Proper model: tau=p_mu+W beta+V theta, with beta unknown fixed and
