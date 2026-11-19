@@ -2,7 +2,7 @@ name: Paper C revised manuscript smoke on PCAG103A-08
 
 on:
   push:
-    branches: [research/paper-c-experiment001-d3-recurrence]
+    branches: [research/paper-c-experiment001-d3-recurrence, paper/paper-c-methods-literature-audit]
     paths:
       - .github/workflows/paper-c-manuscript-pc08.yml
       - paper/ngsim-jerk-case-study/main.tex
@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: paper-c-manuscript-pc08
+  group: paper-c-manuscript-pc08-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -55,6 +55,44 @@ jobs:
           if (!(Test-Path (Join-Path $dir 'build_manifest.json'))) { throw 'Missing build manifest' }
           Get-Content (Join-Path $dir 'build_manifest.json')
       
+      - name: Audit compiled manuscript against frozen AwesomeFigures records
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $p = 'paper/ngsim-jerk-case-study'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_awesomefigures_atlas.py" --atlas "$p/generated/awesomefigures_atlas_manifest.json" --figures "$p/figures" --paper "$p/main.pdf" --supplement "$p/atlas_supplement.pdf" --report (Join-Path $dir 'atlas_audit.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Paper C frozen-asset/manuscript audit failed' }
+
+      - name: Rasterize revised paper pages for complete visual review
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf paper/ngsim-jerk-case-study/main.pdf --output-dir (Join-Path $dir 'page-previews') --dpi 144 --columns 3
+          if ($LASTEXITCODE -ne 0) { throw 'Paper C PDF page rendering failed' }
+
+      - name: Publish source-matched PDF exclusively to the scoped literature branch
+        if: success() && github.ref_name == 'paper/paper-c-methods-literature-audit'
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Never overwrite a branch changed by a concurrent agent.
+          git fetch origin "refs/heads/$env:GITHUB_REF_NAME"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot check remote publication branch' }
+          $remote = (git rev-parse FETCH_HEAD).Trim()
+          if ($remote -ne $env:GITHUB_SHA) { throw "Source SHA changed; refusing PDF publication ($remote)" }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- paper/ngsim-jerk-case-study/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage paper PDF' }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 1) {
+            git commit -m "paper-c: compile DOI-verified methods citation revision on PC08"
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot commit compiled paper' }
+            git push origin "HEAD:refs/heads/$env:GITHUB_REF_NAME"
+            if ($LASTEXITCODE -ne 0) { throw 'Could not publish source-matched paper PDF' }
+          } elseif ($LASTEXITCODE -ne 0) {
+            throw 'Cannot check staged publication difference'
+          }
+
       - name: Publish build manifest, PDF and logs
         if: always()
         uses: actions/upload-artifact@v4
