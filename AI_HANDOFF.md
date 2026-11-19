@@ -1,3 +1,5 @@
+**Springer 100-seed continuation:** The existing 97-seed Experiment011 results remain frozen. Read `paper/benchmarks/experiment012/README.md` and `paper/benchmarks/experiment011/complete_100_seeds.py` for the independently seeded naive/Cholesky/SVD amortization design and three additional original-case seed indices. Measurements require an explicit PC08 Windows workflow dispatch; do not claim a 100-seed result until those records are verified.
+
 **Paper C primary-source forecasting correction (2026-11-07):** The original
 Guerrero (2007) PLS paper has now been checked visually (printed
 pp. 1228, 1233). It **already gives nonzero-$\mu$ trend-forecasting

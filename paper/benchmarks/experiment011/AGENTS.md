@@ -1,3 +1,5 @@
+**2026-11-19 extension protocol:** The historical 97 seed indices s003–s099 and all 2,813 recorded jobs remain untouched. Run `complete_100_seeds.py` only with explicit opt-in to collect new indices s100–s102, then validate all new raw records and rebuild a 100-seed analysis before revising the Springer paper. Experiment012 is a separate homogeneous complete-criterion amortization study; see `../experiment012/README.md`.
+
 # Experiment011 — controlled Springer complete-criterion runtime study
 
 **Experiment011 completion update (2026-11-09):** The author reports **2813/2813 case-seed jobs recorded, remaining 0**, on the Windows VM. Read the [completed-campaign handoff](handoff/COMPLETION_HANDOFF.md) and [Springer analysis prompt](handoff/SPRINGER_ANALYSIS_AGENT_PROMPT.md) before following older pending-run instructions. Final raw data acquisition, verified backup and numerical/timing analysis remain pending; GitHub still has only the inspected 2338-job checkpoint. Preserve local raw files and use the documented no-automatic-publication backup procedure. These observations include 24/1/12-worker phases and must not be pooled as isolated-latency measurements.
