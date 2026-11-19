@@ -7,6 +7,15 @@ The cost of \emph{selecting} a smoothing level is not the cost of one fit. For f
 \GCV(\lambda)&=\frac{\RSS_\lambda/n}{(1-\nu/n)^2}.
 \end{aligned}
 \end{equation}
+The smoothing-spline formulation of GCV is
+given by \citet[Eq.~(1.9)]{craven1979},
+and its ridge-regression/SVD formulation by
+\citet[Secs.~1--2]{golub1979}.
+Those foundational papers motivate the
+criterion but do not themselves prove the
+fixed-nonzero-$\mu$ formulas for our
+finite-difference operator.
+
 Here $e_{\lambda,i}$ is the residual at observation $i$;
 $h_i$ is its \emph{leverage}, measuring the sensitivity of
 the fitted value to a small change in its own observation:
