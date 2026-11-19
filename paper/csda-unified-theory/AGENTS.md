@@ -2,6 +2,25 @@
 
 Read repository README.md, AGENTS.md, AI_HANDOFF.md, paper/AGENTS.md, paper/PUBLICATION_MAP.md and paper/SESSION_HANDOFF.md before modifying this manuscript. Also read this directory's README, all its sections and deterministic checks, both source CSDA papers, and the editorial literature audit.
 
+## November 18, 2026 editorial contract
+Keep the two algorithm tables as full-width sideways LaTeX floats,
+not compressed two-column small-font tables. For distribution,
+the reproducible rotate_landscape_tables.py script sets the corresponding
+PDF pages to native 90-degree landscape orientation; the source must
+still compile under Elsevier CAS. If table numbering or wording changes,
+update the script's extraction markers and verification together.
+
+State that the reusable SVD is of D_d (shape (n-d) by n);
+H_lambda is derived from it rather than diagonalized anew. Exact
+Gram/SVD spectral equivalence, the square-positive-conditioning
+identity, and the distinct role of H_lambda eigendecomposition must
+all be explained without claiming universal SVD runtime superiority.
+When reporting 11 smoothing candidates, distinguish one-time
+factorization, 11 different smoothness-to-penalty maps,
+11 scores, LOOCV/full trend extra work, and caching for
+repeated IDENTICAL candidates. A successful proof check is not
+an empirical benchmark.
+
 ## Ownership and concurrency
 Work only in an independent feature branch and an appropriate PR. This folder is the new theoretical canonical source; preserve all material under paper/csda-spectral-smoothness, paper/csda-computational-costs, paper/benchmarks, paper/main.tex and paper/ngsim-jerk-case-study. Separate agents own the Springer timing tensor and the applied vehicle paper. Do not rerun Experiment011 or any large prior benchmark. Do not merge without explicit author approval.
 

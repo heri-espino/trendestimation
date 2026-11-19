@@ -1,5 +1,39 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 18, 2026: readable landscape tables and clear SVD-cost explanation
+
+The canonical Elsevier CAS paper now places the algorithm-provenance and
+per-penalty-computational-cost tables on dedicated sideways pages.
+The source uses the rotating package and a post-compilation
+PDF metadata correction (rotate_landscape_tables.py, pypdf 5.9.0)
+to give the two float pages native landscape orientation in PDF viewers.
+No table text is rasterized or clipped.
+
+The model section states explicitly that the single reusable
+reduced SVD is computed on D_d, of shape (n-d) by n, not on
+H_lambda. The algorithms section distinguishes the equivalent
+Gram eigendecomposition of D_d^T D_d from decomposing the
+penalty-dependent dense smoother H_lambda, with exact
+equivalence and conditioning caveats. The complexity section
+explains a workload of 11 DISTINCT smoothness levels: one
+spectral decomposition followed by 11 mappings/scorings,
+not 11 matrix inversions and not 11 repeats of the same
+penalty.
+
+Reproducible local build from paper/csda-unified-theory,
+after copying the official CAS templates:
+
+    python -m pip install pypdf==5.9.0
+    latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+    python rotate_landscape_tables.py main.pdf
+    python rotate_landscape_tables.py main.pdf --check
+
+The GitHub Actions workflow carries out the same source-only
+mathematical checks, CAS build, native page rotation,
+page-presence verification, artifact preservation,
+and SHA-256 logging automatically. No Experiment011 run,
+new optimization sweep, or Paper C dataset is touched.
+
 ## SVD versus Gram eigendecomposition clarification (2026-11-16)
 
 The canonical `sections/algorithms.tex` now states and proves exact spectral equivalence and the positive-spectrum identity `kappa_+(D_d^T D_d) = kappa_+(D_d)^2`. The `sections/stability.tex` discussion derives the partial sensitivity of the inverse smoothness-to-penalty map to a positive penalty eigenvalue. These are established algebraic/numerical-analysis observations, **not** claimed novel decomposition algorithms or measured SVD-versus-eigen runtime/accuracy results. They explain why the Python library uses SVD of `D_d` as an accuracy-oriented reference while symmetric eigendecomposition of `Q_d` is also mathematically valid. Banded solvers remain appropriate at larger n.
@@ -10,7 +44,7 @@ Reproducible, deterministic checks (no benchmarks or source data changed):
 python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_svd_gram_equivalence.py' -v
 ```
 
-The committed `main.pdf` is an earlier compiled build until the LaTeX source is rebuilt with the standard PC08 paper-only workflow. Do not claim this editorial change generated new empirical observations.
+That November 16 note referred to the earlier paper state. The November 18 source-only GitHub-hosted workflow recompiles and archives the revised PDF without running empirical benchmarks.
 
 **Canonical source:** main.tex (Elsevier CAS v2.4 double-column).
 **Status:** theoretical working draft, not submitted; coauthor approval required.

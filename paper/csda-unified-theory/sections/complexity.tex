@@ -6,6 +6,42 @@ T_{\mathcal A}=T_{\rm prep}+T_{\rm map}
 \end{equation}
 where $\mathcal A$ is a particular complete algorithm and its configuration. As documented in Table~\ref{tab:provenance}, the component costs use classical dense and banded linear algebra \citep{golubvanloan2013,davis2006}, classical selected-inverse identities \citep{erisman1975}, and pre-existing structured Whittaker--Henderson/GCV algorithms \citep{weinert2007}. We derive the following \emph{combined workload-specific upper bounds}; these formulas are not directly quoted from those sources, nor do they imply asymptotic optimality among all possible algorithms.
 
+\paragraph{One preparation versus the next ten evaluations.}
+Consider $M=11$ \emph{distinct} requested smoothness levels,
+one observed series ($R=1$), and $c$ scalar selection
+criteria. The spectral approach pays once to decompose
+$D_d$ in $O(nr^2)$ arithmetic and once to project the series
+in $O(nr)$; it then maps 11 levels with at most
+$11I$ evaluations of an $r$-term smoothness sum and
+scores the 11 candidates in $O(11cr)$ arithmetic
+for criteria admitting projected scalar evaluation.
+Thus, excluding optional full curves or LOOCV,
+\begin{equation}\label{eq:eleven-svd}
+W_{\mathrm{SVD},11}
+=O(nr^2+nr+11Ir+11cr).
+\end{equation}
+Full trend reconstruction or exact conditional LOOCV
+adds up to $O(11nr)$ for this one series.
+The comparable streamed banded method does not pay
+for a dense spectral decomposition, but for
+11 distinct penalties generally performs 11 distinct
+$O(nd^2)$ factorizations, \emph{in addition to}
+the cost of converting $S$ to $\lambda$.
+If the conversion itself uses exact banded selected
+inversion, that mapping contributes up to
+$O(11I nd^2)$; one complete-score banded
+factorization/selected-inverse per accepted penalty
+adds $O(11nd^2)$.
+These descriptions do not refer to computing
+$H_\lambda^{-1}$ 11 times: an inverse is never
+required explicitly in the spectral pipeline.
+Nor do they describe 11 repeats of the
+\emph{same} $\lambda$: in that case either backend
+may cache the existing result. The initial shared
+setup is not free, and a cheaper $O(r)$ scalar
+score does not imply an $O(r)$ exact CV or
+full-curve computation.
+
 \begin{theorem}[Work for a retained spectral pipeline]\label{thm:svdwork}
 Assume the full reduced SVD is retained; each interior smoothness inversion requires at most $I$ evaluations of the $r$-term spectral sum; each observed series is projected once; and projected scalar scores use $O(r)$ work. Put $\chi_{\rm CV}=1$ when ordinary conditional CV is requested and zero otherwise. An upper bound on arithmetic work is
 \begin{equation}\label{eq:svdwork}

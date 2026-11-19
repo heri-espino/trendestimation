@@ -67,6 +67,42 @@ spectrum, and the computational workload may change the comparison.
 The numerical reliability of competing eigensolvers would require
 a separately matched error-and-timing study.
 
+\paragraph{Why not diagonalize $H_\lambda$ directly?}
+At a fixed penalty, one \emph{could} diagonalize the symmetric
+smoothing matrix $H_\lambda$. However, $H_\lambda$ is generally
+dense and is defined through the inverse of
+$I+\lambda D_d^\top D_d$. Computing it explicitly and then applying
+a dense eigensolver would first pay for the inverse/solve and the
+$n\times n$ storage we aim to avoid. Furthermore, its eigenvalues
+are $\{1\}$ with multiplicity $d$, together with
+$\{(1+\lambda\sigma_j^2)^{-1}\}_{j=1}^r$.
+They change with $\lambda$, while the underlying right
+singular vectors of $D_d$ do not. In exact arithmetic a
+\emph{single} eigendecomposition of $H_{\lambda_0}$ for
+$\lambda_0>0$ could also recover a common eigenbasis;
+it is therefore false that the eigenvectors of $H_\lambda$
+intrinsically change with $\lambda$. Such a route is nevertheless
+unattractive for our reusable spectral engine:
+it starts from a dense, penalty-specific matrix, and recovering
+$\delta_j=(h_j^{-1}-1)/\lambda_0$ from $h_j\approx1$ can lose
+relative accuracy through subtraction. The direct SVD of $D_d$
+delivers $\sigma_j$ before that penalty-dependent transformation.
+
+\paragraph{Why SVD rather than eigendecomposition of $Q_d$?}
+The two formulations are \emph{exactly equivalent} in exact
+arithmetic (Proposition~\ref{prop:svd-vs-gram}).
+Our reference implementation prefers the SVD of the
+original rectangular $D_d$ because it avoids explicitly
+forming its Gram matrix $Q_d=D_d^\top D_d$, whose
+positive-spectrum condition number is
+$\kappa_+(D_d)^2$. This is a finite-precision conditioning
+argument, not a claim that standard symmetric eigenanalysis
+is mathematically incorrect or universally slower.
+Specialized banded spectral methods and banded Cholesky
+may be preferable when setup amortization is insufficient,
+$n$ is very large, or the intended workload is one fit
+at a known $\lambda$.
+
 \subsection{Banded Cholesky and selected inversion}
 $A_\lambda$ is SPD and has half-bandwidth $d$. Factor $A_\lambda=L_\lambda L_\lambda^\top$ with lower triangular banded $L_\lambda$, in $O(nd^2)$ arithmetic and $O(nd)$ storage; solve \eqref{eq:rhs} using two triangular solves, $O(nd)$ per right-hand side. Cholesky's method was published posthumously in \citet{benoit1924}; the banded-direct bounds are standard \citep{golubvanloan2013,anderson1999}; efficient PLS-specific structured and GCV algorithms precede this work \citep{weinert2007}. The direct right-hand side avoids forming the high-degree polynomial $p_\mu$. For just one fit, this is asymptotically preferable to preparing a dense SVD when $d$ is fixed and $n$ grows.
 
@@ -91,20 +127,75 @@ General banded LU can solve the finite-penalty system at structured cost but is 
 
 Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through local differences at $O(nd)$ work per iteration, producing a nominal $O(qnd)$ fit for $q$ iterations, plus preconditioner setup and application. The underlying conjugate-gradient algorithm was introduced by \citet{hestenesstiefel1952}; its preconditioned convergence theory is reviewed by \citet{saad2003}. The $O(nd)$ matrix-vector application is counted directly from the two order-$d$ difference passes; the iteration count $q$ depends on convergence and the preconditioned spectrum. FFT or sine-transform preconditioners can introduce $O(qn\log n)$ work. Approximate boundary transforms should not be described as an exact finite-interval eigendecomposition. Neither a universally bounded iteration count nor exact leverage access follows from PCG alone; convergence and added diagnostics are separate requirements.
 
-\begin{table*}[t]
-\caption{Representative leading computational costs at one known finite $\lambda$. Original algorithm and complexity references are separated in Table~\ref{tab:provenance}. Standard factorization counts follow \citet{golubvanloan2013,davis2006}; selected-inverse and PLS-specialized counts follow \citet{erisman1975,weinert2007}; iterative costs follow \citet{saad2003}. For full spectral methods the decomposition is reusable. The full conditional CV score includes leverage and residual computation. These are arithmetic bounds, not measured seconds.}
-\label{tab:algorithms}\centering\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}p{.25\textwidth}p{.22\textwidth}p{.23\textwidth}p{.16\textwidth}@{}}
+\begin{sidewaystable*}[p]
+\centering
+\caption{Costs of numerical algorithms at one \emph{known} finite
+penalty $\lambda$. Setup that is reusable over distinct penalties
+is separated from the work required at each new penalty. These
+costs exclude the conversion from smoothness $S$ to $\lambda$.}
+\label{tab:algorithms}
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.36}
+\normalsize
+\begin{tabularx}{0.95\textheight}{@{}p{0.195\textheight}p{0.155\textheight}p{0.19\textheight}X p{0.13\textheight}@{}}
 \toprule
-Pipeline & Preparation / factorization & Candidate fit or complete score & Working memory\\
+\textbf{Pipeline} &
+\textbf{Reusable setup} &
+\textbf{At a new $\lambda$} &
+\textbf{Score or fitted trend} &
+\textbf{Working memory}\\
 \midrule
-Dense inverse/solve & $O(n^3)$ per new $\lambda$ & $O(n^3)$ complete & $O(n^2)$\\
-Full SVD of $D_d$ & $O(nr^2)$ once & $O(r)$ scalar score; $O(nr)$ full fit/CV & $O(nr)$\\
-Dense Gram eigenvectors & $O(n^3)$ once & $O(n)$ scalar score; $O(n^2)$ full fit/CV & $O(n^2)$\\
-Banded Cholesky & $O(nd^2)$ per $\lambda$ & $O(nd)$ one fit; diagnostics extra & $O(nd)$\\
-Banded Cholesky with selected inverse & $O(nd^2)$ per $\lambda$ & $O(nd)$ solve; $O(nd^2)$ complete CV & $O(nd)$\\
-PCG, $q$ iterations & preconditioner-dependent & $O(qnd)$ fit; exact criteria extra & method-dependent\\
+Dense direct solve / explicit inverse &
+None required &
+$O(n^3)$ dense factorization or inversion &
+Complete score up to $O(n^3)$ if the full inverse is explicitly formed &
+$O(n^2)$\\
+\addlinespace
+Full reduced SVD of $D_d$ &
+$O(nr^2)$ once; project each data series in $O(nr)$ &
+$O(r)$ spectral weights &
+$O(r)$ projected scalar GCV/IC/likelihood score;
+$O(nr)$ full fit or exact LOOCV &
+$O(nr)$\\
+\addlinespace
+Dense Gram eigendecomposition of $Q_d$ &
+$O(n^3)$ once &
+$O(n)$ spectral weights &
+$O(n)$ projected scalar score;
+$O(n^2)$ full fit or LOOCV &
+$O(n^2)$\\
+\addlinespace
+Banded Cholesky alone &
+Banded penalty assembled once &
+$O(nd^2)$ factorization &
+$O(nd)$ triangular solve for one fit;
+exact leverages require extra work &
+$O(nd)$\\
+\addlinespace
+Banded Cholesky and selected inverse &
+Banded penalty assembled once &
+$O(nd^2)$ factorization and selected inverse &
+$O(nd)$ solve plus $O(n)$ scalar criteria;
+exact CV leverages are available &
+$O(nd)$\\
+\addlinespace
+PCG, $q$ iterations &
+Preconditioner-dependent &
+$O(qnd)$ local matrix-vector work &
+One approximate fit; exact leverage and
+determinant criteria are not supplied by PCG alone &
+Method-dependent\\
 \bottomrule
-\end{tabular}
-\end{table*}
+\end{tabularx}
+
+\vspace{8pt}
+\begin{minipage}{0.95\textheight}
+\small\emph{Reading guide.} $r=n-d$ and $q$ is an observed
+iteration count, not a constant. These are upper bounds for
+the stated algorithmic implementations, not machine runtimes.
+The original methods and cost sources are attributed in
+Table~\ref{tab:provenance}. The complete-grid expressions
+(including inverse smoothness mapping) appear in
+Section~\ref{sec:complexity}.
+\end{minipage}
+\end{sidewaystable*}
