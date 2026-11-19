@@ -16,6 +16,12 @@ $u\sim N(0,\sigma_u^2I)$, implies
 S(\lambda)=\frac{1}{m}\sum_{j=1}^m
 \frac{\lambda\delta_j}{1+\lambda\delta_j},\quad m=n-3.
 \end{equation}
+The covariance interpretation follows from the stated independent
+noise and innovation assumptions combined with an established
+penalized smoother, in the spirit of variance-ratio smoothing
+\citep{guerrero2007,weinert2007,biessy2026}.
+It is a conditional calculation, not an unconditional statement
+about recorded camera errors.
 On the spectral coordinates of $Dy$, the $j$th summand is the
 \emph{fraction of variance due to differenced observation error},
 not the fraction of observations that are erroneous. Figure
@@ -70,7 +76,10 @@ and terminal-contaminated measurement errors, and with independent,
 AR(1), and abrupt-reversal jerk processes. The terminal outlier
 has randomized sign, so its mixture covariance is known, but
 the observations are not Gaussian. The reversal violates the
-constant jerk-reference assumption.
+constant jerk-reference assumption. The potential for unstable
+numerical differentiation and the value of regularization when
+the underlying motion is nonsmooth are well established
+\citep{ahnert2007,chartrand2011}.
 
 The frozen confirmatory design has $1{,}944$ factorial cases
 and four smoothing selectors per case. \emph{Only 72 independent
@@ -80,7 +89,8 @@ all 27 treatments within each parent. The $162$-case pilot uses
 a separate seed namespace. All $7{,}776$ confirmatory fits were
 valid. The four selectors are Gaussian profile likelihood with
 the known generative $\mu$ (a simulation-only control), unknown-mean
-Gaussian REML, conditional profile likelihood with noisy global
+Gaussian REML (restricted-likelihood variance-component estimation;
+\citealp{patterson1971}), conditional profile likelihood with noisy global
 cubic OLS $\widehat\mu$, and zero-mean GCV on the original 15-point
 smoothness grid.
 
