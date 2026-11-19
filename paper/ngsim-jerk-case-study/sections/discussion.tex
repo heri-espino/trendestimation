@@ -15,7 +15,10 @@ supports this interpretation quantitatively when the
 covariance assumptions hold. Its stress tests also
 identify a clear failure: serially correlated measurement
 noise can bias $S$ substantially even when its rank
-association with relative noise persists. No value
+association with relative noise persists. Established
+correlation-aware smoothing-spline models jointly estimate
+error correlation and smoothness parameters \citep{wang1998correlated};
+that extension has not been fitted to the NGSIM positions here. No value
 of $S$ alone can identify absolute observation-noise
 precision, since scaling both genuine jerk volatility
 and measurement error by the same amount preserves
@@ -57,7 +60,12 @@ independent physical drivers. True jerk and
 latent clean position are not measured in NGSIM.
 Earlier NGSIM error-assessment and reconstruction studies
 reinforce this interpretation
-\citep{punzo2011,coifman2017,montanino2015}.
+\citep{punzo2011,montanino2013,coifman2017,
+montanino2015,zhang2024ngsim}.
+The five shared recording blocks further constrain
+uncertainty generalization under dependence
+\citep{cameronmiller2015}; they do not form
+200 independent driving experiments.
 Consequently forecast accuracy against camera
 positions is not evidence of physical jerk accuracy.
 
@@ -85,6 +93,14 @@ More physically constrained or nonsmooth approaches have been
 studied for vehicle trajectories \citep{fan2024,zhu2024};
 our unconstrained quadratic model does not automatically enforce
 their kinematic restrictions or event-preserving objectives.
+Online Kalman estimation of driver-intended jerk
+\citep{bisoffi2017jerk} also assumes on-vehicle signals
+unavailable in these position-only NGSIM episodes.
+Recent interpolation--filtering and physics-informed
+trajectory reconstruction \citep{ding2026,xie2026}
+illustrate an evolving state of the art, but evaluate
+different observation channels or missing-data
+problems rather than a known true jerk target.
 Future work should use additional independent
 recording scenes, credible external jerk/position
 ground truth, experimentally characterized
