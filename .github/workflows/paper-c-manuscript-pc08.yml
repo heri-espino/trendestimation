@@ -67,8 +67,16 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          # Reuse the proven, isolated PyMuPDF renderer setup from the archived
+          # AwesomeFigures workflow. Do not mutate the shared Conda environment.
+          $target = Join-Path $env:RUNNER_TEMP "paper-c-literature-render-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          New-Item -ItemType Directory -Path $target -ErrorAction Stop | Out-Null
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check --no-input --no-deps --target $target pymupdf==1.26.5
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot initialize isolated PDF renderer' }
+          $env:PYTHONPATH = $target
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf paper/ngsim-jerk-case-study/main.pdf --output-dir (Join-Path $dir 'page-previews') --dpi 144 --columns 3
           if ($LASTEXITCODE -ne 0) { throw 'Paper C PDF page rendering failed' }
+          Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
 
       - name: Publish source-matched PDF exclusively to the scoped literature branch
         if: success() && github.ref_name == 'paper/paper-c-methods-literature-audit'
