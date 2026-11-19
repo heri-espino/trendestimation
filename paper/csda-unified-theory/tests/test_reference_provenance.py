@@ -92,7 +92,7 @@ class TestBibliographyIntegrity(unittest.TestCase):
         self.assertIn(r"\citet{hutchinson1990}", alg)
         self.assertIn(r"\citet{ubaru2017}", alg)
         self.assertIn(r"\citet[Secs.~2--4]{lin2011}", alg)
-        self.assertIn(r"\citet[p.~404]{golubreinsch1970}", alg)
+        self.assertIn(r"\citep[p.~404]{golubreinsch1970}", alg)
 
 
 if __name__ == "__main__":
