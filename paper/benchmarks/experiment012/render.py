@@ -71,6 +71,9 @@ def main() -> int:
     if args.out.exists():
         raise FileExistsError("Figures are immutable per run: use a new --out directory")
     meta, rows = load_complete(args.input)
+    audit = json.loads((args.input / "numerical_audit.json").read_text(encoding="utf8"))
+    if audit["mismatches"]:
+        raise ValueError("Numerical parity alerts need scientific review before plotting")
     summary = summarize(rows, meta["checkpoints"])
     if any(r["paired_seeds"] < 20 for r in summary):
         raise RuntimeError("Fewer than 20 fully matched seeds at one or more checkpoints")

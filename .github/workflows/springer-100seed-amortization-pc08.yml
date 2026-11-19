@@ -74,7 +74,9 @@ jobs:
         if: inputs.study == 'amortization'
         run: |
           $ErrorActionPreference = 'Stop'
-          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment012/run.py --n '${{ inputs.n }}' --d '${{ inputs.d }}' --criterion '${{ inputs.criterion }}' --seeds 100 --checkpoints 1,10,100,1000 --out $env:SPRINGER_DIR --execute
+          $n = [int]'${{ inputs.n }}'
+          $checkpoints = if ($n -le 64) { '1,10,100,1000' } elseif ($n -le 128) { '1,10,100' } else { '1,10' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment012/run.py --n $n --d '${{ inputs.d }}' --criterion '${{ inputs.criterion }}' --seeds 100 --checkpoints $checkpoints --out $env:SPRINGER_DIR --execute
           if ($LASTEXITCODE -ne 0) { throw 'Measurement failed; all existing raw rows must still be archived' }
 
       - name: Render measured AwesomeFigures comparison

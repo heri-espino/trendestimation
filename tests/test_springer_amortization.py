@@ -60,6 +60,8 @@ def test_incremental_plan_is_bounded_and_homogeneous() -> None:
     with pytest.raises(ValueError):
         amort.plan(1024, 3, "gcv", 100, (1, 10))
     with pytest.raises(ValueError):
+        amort.plan(128, 3, "gcv", 100, (1, 10, 100, 1000))
+    with pytest.raises(ValueError):
         amort.plan(64, 3, "gcv", 100, (10, 100))
 
 
@@ -120,6 +122,7 @@ def test_renderer_never_accepts_incomplete_or_unverified_100_seed_data(tmp_path)
         "timings_sha256": hashlib.sha256((inp / "timings.csv").read_bytes()).hexdigest(),
     }
     (inp / "metadata.json").write_text(json.dumps(meta), encoding="utf8")
+    (inp / "numerical_audit.json").write_text(json.dumps({"mismatches": []}), encoding="utf8")
     _, loaded = figures.load_complete(inp)
     assert len(loaded) == 300
     assert len(figures.summarize(loaded, [1])) == 3

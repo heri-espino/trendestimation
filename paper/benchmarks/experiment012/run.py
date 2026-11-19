@@ -60,6 +60,12 @@ def plan(n: int, d: int, criterion: str, seeds: int, checkpoints) -> dict:
     values = tuple(sorted(set(int(x) for x in checkpoints)))
     if not values or values[0] != 1 or values[-1] > 1000 or any(x < 1 for x in values):
         raise ValueError("Checkpoints must begin at one and not exceed 1000")
+    # Conservative work guard: explicit inversions scale cubically per lambda.
+    # 100 seeds x 1000 dense inversions at n>=128 are not an acceptable default.
+    if n > 128 and values[-1] > 10:
+        raise ValueError("For n>128 limit to 1,10; use a separate reviewed budget")
+    if n > 64 and values[-1] > 100:
+        raise ValueError("For n>64 limit to 1,10,100; use a separate reviewed budget")
     return {
         "experiment": "experiment012",
         "kind": "controlled_incremental_complete_criterion_timing",

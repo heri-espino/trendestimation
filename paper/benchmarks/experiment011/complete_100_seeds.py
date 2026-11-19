@@ -135,7 +135,10 @@ def main() -> int:
                 save()
                 print(f"Recorded s{row['seed_index']:03d}, {row['case']}, "
                       f"exit={row['returncode']}", flush=True)
-    report["status"] = "complete_pending_independent_audit"
+    report["status"] = ("complete_pending_independent_audit"
+                         if len(report["results"]) == len(work) and
+                         all(r["returncode"] == 0 for r in report["results"])
+                         else "partial_or_failed_pending_audit")
     report["counts"] = dict(Counter(row["returncode"] for row in report["results"]))
     save()
     (archive / "file_inventory.json").write_text(
