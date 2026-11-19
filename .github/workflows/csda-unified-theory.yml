@@ -6,6 +6,7 @@ on:
       - paper/csda-unified-theory
       - paper/csda-algorithm-provenance
       - paper/csda-landscape-tables-svd-20261118
+      - paper/csda-weinert-d3-svd-comparison
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
@@ -14,6 +15,7 @@ on:
       - "paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md"
       - "paper/csda-unified-theory/sections/**"
       - "paper/csda-unified-theory/verify_theory.py"
+      - "paper/csda-unified-theory/tests/**"
       - "paper/csda-unified-theory/README.md"
       - "paper/csda-unified-theory/AGENTS.md"
       - "paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md"
@@ -47,6 +49,7 @@ jobs:
           python -m pip install numpy scipy
           OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-unified-theory/verify_theory.py
           OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python paper/csda-computational-costs/verify_theory.py
+          OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
           test -s paper/csda-computational-costs/references.bib
           test -s paper/csda-unified-theory/algorithmic_references.bib
       - name: Install exact Elsevier CAS compatible TeX toolchain
@@ -81,7 +84,7 @@ jobs:
             echo "LaTeX error in manuscript"
             exit 1
           fi
-          sha256sum main.tex algorithmic_references.bib sections/*.tex verify_theory.py rotate_landscape_tables.py README.md \
+          sha256sum main.tex algorithmic_references.bib sections/*.tex tests/test_*.py verify_theory.py rotate_landscape_tables.py README.md \
             AGENTS.md SCOPE_AND_PROOF_AUDIT.md COMPLEXITY_REFERENCE_LEDGER.md \
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
@@ -104,6 +107,7 @@ jobs:
             paper/csda-unified-theory/AGENTS.md
             paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md
             paper/csda-unified-theory/verify_theory.py
+            paper/csda-unified-theory/tests/
             paper/csda-unified-theory/main.pdf
             paper/csda-unified-theory/main.log
             paper/csda-unified-theory/unified_source_sha256.txt
@@ -111,7 +115,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 60
       - name: Commit verified PDF and provenance to isolated paper branch
-        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118')
+        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118' || github.ref == 'refs/heads/paper/csda-weinert-d3-svd-comparison')
         shell: bash
         run: |
           set -euo pipefail
