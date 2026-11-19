@@ -157,7 +157,10 @@ def test_renderer_never_accepts_incomplete_or_unverified_100_seed_data(tmp_path)
     (inp / "numerical_audit.json").write_text(json.dumps({"mismatches": []}), encoding="utf8")
     _, loaded = figures.load_complete(inp)
     assert len(loaded) == 300
-    assert len(figures.summarize(loaded, [1])) == 3
+    absolute, ratios = figures.summarize(loaded, [1])
+    assert len(absolute) == len(ratios) == 3
+    assert all(r["paired_seeds"] == 100 for r in absolute)
+    assert all(r["geometric_time_ratio"] == pytest.approx(1.0) for r in ratios)
     (inp / "timings.csv").write_bytes((inp / "timings.csv").read_bytes() + b"corrupted")
     with pytest.raises(ValueError, match="SHA-256"):
         figures.load_complete(inp)
