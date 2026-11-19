@@ -9,6 +9,7 @@ on:
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
+      - "paper/csda-unified-theory/rotate_landscape_tables.py"
       - "paper/csda-unified-theory/algorithmic_references.bib"
       - "paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md"
       - "paper/csda-unified-theory/sections/**"
@@ -66,6 +67,9 @@ jobs:
           set -euo pipefail
           cd paper/csda-unified-theory
           latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          python -m pip install --disable-pip-version-check pypdf==5.9.0
+          python rotate_landscape_tables.py main.pdf
+          python rotate_landscape_tables.py main.pdf --check
           test -s main.pdf
           test -s main.log
           pdfinfo main.pdf | head -20
@@ -77,7 +81,7 @@ jobs:
             echo "LaTeX error in manuscript"
             exit 1
           fi
-          sha256sum main.tex algorithmic_references.bib sections/*.tex verify_theory.py README.md \
+          sha256sum main.tex algorithmic_references.bib sections/*.tex verify_theory.py rotate_landscape_tables.py README.md \
             AGENTS.md SCOPE_AND_PROOF_AUDIT.md COMPLEXITY_REFERENCE_LEDGER.md \
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
@@ -92,6 +96,7 @@ jobs:
           name: csda-unified-theory-build
           path: |
             paper/csda-unified-theory/main.tex
+            paper/csda-unified-theory/rotate_landscape_tables.py
             paper/csda-unified-theory/algorithmic_references.bib
             paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md
             paper/csda-unified-theory/sections/
