@@ -13,9 +13,56 @@ We study the PLS model of \citet{guerrero2007}, its trace-based smoothness index
 
 We also compare two boundary continuation rules for the same fitted $d=3$ PLS trend and benchmark them against natural cubic smoothing splines with GCV-selected penalties, Savitzky--Golay differentiation and local polynomial fits. These are standard local/global families for estimating derivatives from noisy experimental data \citep{ahnert2007}, rather than independent numerical matrix-factorization methods. The resulting analysis tests an implementation and application of an established PLS model, not an assertion of historically first use of $d=3$ differences.
 
-This application sits within a substantial prior literature. Whittaker--Henderson penalization predates the present study \citep{whittaker1923}, and extrapolation from penalized smoothers has been developed in modern statistical treatments \citep{biessy2026}. For measured vehicle motion, \citet{marczak2012} examined NGSIM trajectory filters and jerk-related diagnostics, while \citet{cao2021} proposed trajectory splines using position and velocity data. Physically constrained quadratic-programming and nonsmooth
-trajectory-processing methods \citep{fan2024,zhu2024}, and
-continuous-time jerk-driven stochastic motion priors \citep{tang2019} address related but distinct problems. Our unconstrained, position-only third-difference PLS is neither a substitute for kinematic feasibility constraints nor a new general forecasting model. The contribution here is a transparent comparison of its reference-jerk and smoothing choices, conditional calibration, and reconstruction versus prediction targets.
+\subsection{Prior work and state of the art}
+Classical noisy-trajectory reconstruction combines filtering,
+interpolation and derivative diagnostics. \citet{punzo2011} assessed
+NGSIM accuracy using consistency and jerk-related analyses;
+\citet{marczak2012} compared NGSIM I-splines with conventional
+filters, including jerk-magnitude and sign-reversal diagnostics.
+\citet{montanino2013} explicitly separated removal of unphysical
+outliers from suppression of residual high- and medium-frequency
+disturbances in a multistage NGSIM reconstruction. Such diagnostics
+can flag recording artifacts but cannot by themselves establish
+latent physical jerk. Modern video-trajectory approaches include
+spatial--temporal embedding and manual-reference validation of
+NGSIM trajectories \citep{zhang2024ngsim}, and interpolation
+followed by Kalman denoising in separate video-recorded
+intersection data \citep{ding2026}; neither supplies an
+independent jerk sensor for the NGSIM episodes studied here.
+
+A second family directly incorporates vehicle dynamics or
+physical feasibility. The particularly close NGSIM predecessor
+of \citet{fan2024} uses \emph{two sequential constrained quadratic
+programs}, incorporating position-error envelopes and hard bounds
+on speed and higher derivatives, including a third-order
+jerk-related choice. These guarantees differ from the
+\emph{single unconstrained quadratic penalty} used here.
+Other alternatives preserve abrupt motion events through
+nonsmooth trend filtering \citep{zhu2024}, exploit separately
+measured positions and velocities in adaptive trajectory splines
+\citep{cao2021}, or adopt continuous-time stochastic
+white-noise-on-jerk priors \citep{tang2019}. More recently,
+physics-informed neural reconstruction has addressed sparse
+NGSIM cut-in trajectories \citep{xie2026}; its data and objective
+are different from position-only jerk recovery.
+
+Finally, \citet{bisoffi2017jerk} estimated \emph{driver-intended}
+longitudinal jerk online with an enhanced Kalman observer using
+on-vehicle acceleration and pedal-related signals, rather than
+offline third differences of camera-recorded position.
+The numerical-differentiation literature studies the tradeoff
+between noise rejection and derivative fidelity directly
+\citep{ahnert2007,chartrand2011,vanbreugel2020}.
+Whittaker--Henderson penalization and its extrapolation are
+established \citep{whittaker1923,biessy2026}, as are
+nonzero-reference PLS and controlled smoothness
+\citep{guerrero2007,guerrero2008}.
+Our contribution is therefore \emph{not} the invention of
+jerk regularization, NGSIM reconstruction, or a new forecasting
+model, but a controlled position-only study of reference-jerk
+shrinkage, conditional relative-noise calibration, and the
+difference between synthetic known-jerk reconstruction and
+real recorded-position prediction.
 
 The real NGSIM dataset supplies camera-derived position, but not independently measured latent truth or jerk. We do not contaminate the real positions to create artificial validation labels. Separately, in a fully documented synthetic factorial experiment, we prescribe clean positions and known jerk before adding controlled measurement errors; only those simulated trajectories support direct calibration and true-jerk reconstruction assessments.
 
@@ -26,4 +73,8 @@ If measurement noise $\varepsilon_t$ has independent variance $\sigma_\varepsilo
 \frac{D_3\varepsilon_t}{(\Delta t)^3}\right)
 =\frac{20\sigma_\varepsilon^2}{(\Delta t)^6}.
 \end{equation}
-With $\Delta t=0.1$\,s, direct third differences can be extremely unstable. Equation~\eqref{eq:noise} is a conditional mathematical illustration, not an empirical noise-variance estimate: camera-tracking errors may be temporally correlated. Regularization suppresses variation but can bias sudden real changes in jerk. Thus plotted derivatives remain \emph{estimates}, not ground truth.
+With $\Delta t=0.1$\,s, direct third differences can be extremely unstable. Equation~\eqref{eq:noise} is a conditional mathematical illustration, not an empirical noise-variance estimate: camera-tracking errors may be temporally correlated. Regularization suppresses variation but can bias sudden real changes in jerk.
+This sensitivity to noise and genuine motion events is documented
+in derivative-estimation and trajectory-reconstruction research
+\citep{vanbreugel2020,montanino2013,fan2024}.
+Thus plotted derivatives remain \emph{estimates}, not ground truth.
