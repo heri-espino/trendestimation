@@ -20,6 +20,18 @@ The **November 9 section below preserves the historic versions**.
 Any references to latest or current within that section refer
 to the earlier compilation date.
 
+### November 18, 2026 — Weinert original-source audit and third-difference revision
+
+**Current CSDA theory draft: 15 pages.** The user requested a closer comparison with Weinert's original algorithm, exact illustrative order-three matrices, interpretation of third differences, and honest computational-crossover statements.
+
+**Original-source finding:** Weinert (2007, published pp. 959--963, Eqs. 1.1--1.8 and 2.1--2.14) defines a rectangular difference matrix $M$ but **factorizes $\alpha I+M^\top M$ into banded $LDL^\top$**, not an SVD of $M$. His main order-two fit/GCV method is $O(n)$ for a known parameter; $M$ distinct candidate penalties cost $O(Mn)$, not exponentially increasing time. In the common zero-reference formulation, our $\lambda=1/\alpha$. His state-space alternative is also acknowledged. New article passages distinguish this prior method from the retained SVD of $D_d$ and explain when SVD preparation can or cannot be amortized.
+
+**Worked example and interpretation:** A fully specified $n=6,d=3$ matrix figure presents the exact $D_3$ and $Q_3=D_3^\top D_3$, establishes that $Q_3$ is singular while $A_\lambda=I+\lambda Q_3$ is SPD and banded, and verifies $(H_1)_{1,6}=11/195$. For equally spaced position data, third differences divided by $h^3$ approximate jerk; $\mu=jh^3$ corresponds to a constant-jerk cubic limit, while $\mu=0$ favors a quadratic limit. Selecting $(d,S)$ via held-out validation is discussed as a prospective methodology, not an experimentally verified forecasting result.
+
+**Reproducible source:** [merged PR #143](https://github.com/heri-espino/trendestimation/pull/143), [authored source SHA 306a775b](https://github.com/heri-espino/trendestimation/commit/306a775b7c563bb9771b37a17f5e8a362e7ec4bc), [successful journal build and deterministic checks #44457005132](https://github.com/heri-espino/trendestimation/actions/runs/44457005132), and [PDF in main](csda-unified-theory/main.pdf). The final **15-page PDF SHA-256** is **6f567dffe2d6cab0b5ec5a1df2a7fa4725210c61a48e931d43947e2985517b84**. The exact research source/equation audit is [WEINERT_PRIMARY_SOURCE_D3_REVIEW.md](csda-unified-theory/notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md); the test suite includes [test_d3_weinert_comparison.py](csda-unified-theory/tests/test_d3_weinert_comparison.py).
+
+**Verified presentation:** d=3 mathematical matrices are legible on page 3; both existing algorithm tables remain native landscape on pages 7 and 10. Mathematical checks and LaTeX compilation passed, with no undefined citations or LaTeX errors. Six existing/minor overfull-box warnings remain for final typography review. No experiments or statistical results rerun, no other paper changed and no journal submission.
+
 ### November 18, 2026 — CSDA landscape-table and SVD rationale revision
 
 **Title:** Spectral and structured algorithms for
