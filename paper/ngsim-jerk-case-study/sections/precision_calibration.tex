@@ -47,7 +47,12 @@ absolute sensor-noise standard deviation.}
 
 If observation noise and genuine jerk innovations are correlated
 in time, the scalar variance-ratio formula no longer gives the
-correct covariance allocation. Nevertheless, the known generative
+correct covariance allocation. Correlation-aware spline smoothing
+already treats covariance parameters and smoothing parameters
+jointly \citep{wang1998correlated}; our covariance-based
+fraction below is instead an explicit diagnostic derived
+for the simulated third-difference model, not a formula
+attributed to that spline paper. Nevertheless, the known generative
 covariance matrices define a target for validation:
 \begin{equation}
 \label{eq:noise-cov-fraction}
@@ -90,7 +95,7 @@ a separate seed namespace. All $7{,}776$ confirmatory fits were
 valid. The four selectors are Gaussian profile likelihood with
 the known generative $\mu$ (a simulation-only control), unknown-mean
 Gaussian REML (restricted-likelihood variance-component estimation;
-\citealp{patterson1971}), conditional profile likelihood with noisy global
+\citealp{patterson1971,harville1977}), conditional profile likelihood with noisy global
 cubic OLS $\widehat\mu$, and zero-mean GCV on the original 15-point
 smoothness grid.
 
