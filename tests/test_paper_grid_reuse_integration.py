@@ -68,7 +68,11 @@ def test_paper_reuse_table_from_real_measurements():
 def test_paper_and_website_register_benchmarks():
     source = (ROOT / "paper/main.tex").read_text(encoding="utf-8")
     index = (ROOT / "docs/index.rst").read_text(encoding="utf-8")
-    assert r"\input{sections/gcv_grid_reuse}" in source
+    # The old grid-reuse study remains archived; the canonical Springer paper
+    # now reports the independently completed Experiment011 campaign instead.
+    assert r"\input{sections/experiment011_methods}" in source
+    assert r"\input{sections/experiment011_results}" in source
+    assert (ROOT / "paper/sections/gcv_grid_reuse.tex").is_file()
     assert "grid_reuse_selection" in index
     assert (ROOT / "docs/grid_reuse_selection.rst").is_file()
 
