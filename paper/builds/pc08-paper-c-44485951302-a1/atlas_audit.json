@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "awesomefigures_version": "0.1.0",
+  "atlas_figures": 10,
+  "assets_sha256_verified": 30,
+  "manuscript_pages": 15,
+  "supplement_pages": 12,
+  "manuscript_sha256": "b0a6ed86acbfda78f3ed9dfa7e56384140ec65526cabfa42d1bfd30f60a4922d",
+  "supplement_sha256": "1f11e85758ea82130359e76f1c463a944d27765d5fb6a9e8f45bb12e38a9345b",
+  "original_sources_sha256": {
+    "exp006_jerk": "cfd096f7358fafe8fdd22718523297695a482becae57f4eb5069aa5e08e1dba3",
+    "exp007_calibration": "c8d70910546d0c65364c4324cd1ababd73ea0ce1fdc574852df6a526b4b33fc4",
+    "exp007_cells": "a91e2eaf3b8dcfbdff867b62bcb27836b88e3841c5322e12255ac60b7a6c6b66",
+    "exp007_effects": "24b4526552400ddd0dd7089dc97ebd1d0b2f7f11fcf1e949356a7e7d7738de31",
+    "exp008_real_forecasts": "aef33b3467b4e6cbbf5dc9abeff98e0b0bcb6f802e2d2e57618a05809a4d5307",
+    "exp008_synthetic_fitted": "4e2443cbd3d005bfeab4c513ab22f04d6ff5c79231bade55e94dd437cffc74ae",
+    "exp008_synthetic_summary": "eddb1464abb2c3a1d286cd82fca47e6e07209e03ae3efbc7dd605a77e7385bba"
+  },
+  "scientific_text_checks": {
+    "physical_synthetic_jerk": true,
+    "nominal_edf": true,
+    "tvsd_pathology": true,
+    "real_ngsim": true,
+    "unfavorable_spline": true,
+    "supplement_A1": true,
+    "supplement_A10": true,
+    "supplement_no_fabrication": true
+  },
+  "manual_page_visual_inspection_required": true
+}
