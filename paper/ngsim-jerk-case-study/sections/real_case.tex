@@ -7,7 +7,14 @@ I-80 trajectories supply camera-derived longitudinal position,
 not independent noise-free physical position or jerk.
 Previous NGSIM accuracy and reconstruction studies document
 position errors and trajectory-processing challenges
-\citep{punzo2011,coifman2017,montanino2015}.
+\citep{punzo2011,montanino2013,montanino2015,coifman2017}.
+In particular, \citet{montanino2013} distinguish anomalous
+position corrections from residual filtering, while
+\citet{zhang2024ngsim} use spatial--temporal maps to compare
+reconstructed camera trajectories against manually
+processed positions and jerk-based quality diagnostics.
+Their manually processed \emph{position} reference is
+not an independently measured physical jerk signal.
 Consequently our held-out recorded positions are observational
 forecast targets, not a validated latent physical trajectory.
 For an initial visualization we retain the five
@@ -29,7 +36,12 @@ episodes as independent population draws.
 Chronological forecast-origin evaluation avoids using future
 values to select a model \citep{tashman2000,cerqueira2020},
 but it does not remove dependence among episodes from the
-same scene or repeated identifiers.
+same scene or repeated identifiers. Within-recording clustering
+also limits population-level inferential precision
+\citep{cameronmiller2015}; with only five coarse recording
+blocks, we do not assert an asymptotically valid
+cluster-robust confidence interval or treat the 200
+episode losses as independent observations.
 
 \begin{figure*}[t]
 \centering
