@@ -11,7 +11,7 @@ and all five selection criteria: CV, GCV, MLE, AICc, BIC.
 **Implementation stage, not a set of measured results.** The archived
 97-seed Experiment011 evidence is immutable. Do not edit its historical
 confidence intervals or present this experiment as a source-matched
-extension of the 2011 protocol.
+extension of the Experiment011 protocol.
 
 ## Complete fixed-primary design
 

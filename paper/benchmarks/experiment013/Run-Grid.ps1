@@ -140,10 +140,13 @@ try {
     Copy-Item -LiteralPath $runFolder -Destination $destination -Recurse -Force
     Push-Location $archiveDir
     try {
-      git config user.name 'github-actions[bot]'
-      Assert-GitSuccess 'setting archive committer'
-      git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      Assert-GitSuccess 'setting archive committer email'
+      $identityName=(git config user.name).Trim()
+      Assert-GitSuccess 'checking Git author name'
+      $identityEmail=(git config user.email).Trim()
+      Assert-GitSuccess 'checking Git author email'
+      if (!$identityName -or !$identityEmail) {
+        throw 'Configure Git user.name and user.email in this VM checkout before archiving.'
+      }
       git add -f -- $relative
       Assert-GitSuccess 'staging only new results'
       git diff --cached --quiet
