@@ -1,0 +1,141 @@
+name: Springer 100-seed completion and amortization (PCAG103A-08)
+
+# Explicit opt-in only; no heavy numerical experiment on push.
+on:
+  workflow_dispatch:
+    inputs:
+      study:
+        required: true
+        type: choice
+        description: Newly authorized measurement, never rerun the old 97 seeds
+        options: [amortization, extend-existing-97]
+        default: amortization
+      criterion:
+        required: true
+        type: choice
+        options: [gcv, cv]
+        default: gcv
+      n:
+        required: true
+        type: choice
+        options: ['64', '128', '256']
+        default: '64'
+      d:
+        required: true
+        type: choice
+        options: ['1', '2', '3', '4']
+        default: '3'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: springer-100seed-pc08
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 300
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Require approved manual source and Windows runner
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:GITHUB_EVENT_NAME -ne 'workflow_dispatch' -or $env:GITHUB_REF_NAME -ne 'main') { throw 'Manual main branch dispatch only' }
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong research runner' }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Original Conda environment not found' }
+          $tag = "pc08_$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          "SPRINGER_TAG=$tag" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          if ('${{ inputs.study }}' -eq 'amortization') {
+            $dir = "paper/benchmarks/experiment012/runs/$tag"
+          } elseif ('${{ inputs.study }}' -eq 'extend-existing-97') {
+            $dir = "paper/benchmarks/experiment011/campaigns/$tag"
+          } else { throw 'Unknown measurement' }
+          if (Test-Path $dir) { throw 'Never overwrite an archived run' }
+          "SPRINGER_DIR=$dir" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Measure 100 independent seeds at 1/10/100/1000 candidates
+        if: inputs.study == 'amortization'
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment012/run.py --n '${{ inputs.n }}' --d '${{ inputs.d }}' --criterion '${{ inputs.criterion }}' --seeds 100 --checkpoints 1,10,100,1000 --out $env:SPRINGER_DIR --execute
+          if ($LASTEXITCODE -ne 0) { throw 'Measurement failed; all existing raw rows must still be archived' }
+
+      - name: Render measured AwesomeFigures comparison
+        if: inputs.study == 'amortization'
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/benchmarks/experiment012/figures/$env:SPRINGER_TAG"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment012/render.py --input $env:SPRINGER_DIR --out $out
+          if ($LASTEXITCODE -ne 0) { throw 'Insufficient paired evidence for publication plot' }
+
+      - name: Measure only three newly added seeds per original case
+        if: inputs.study == 'extend-existing-97'
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/complete_100_seeds.py --run-tag $env:SPRINGER_TAG --execute --large-svd --workers 1
+          if ($LASTEXITCODE -ne 0) { throw 'Extension incomplete; archive all partial results before retry' }
+
+      - name: Upload raw status and figure evidence even after a partial run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-100seed-${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            paper/benchmarks/experiment012/runs/pc08_${{ github.run_id }}-a${{ github.run_attempt }}/
+            paper/benchmarks/experiment012/figures/pc08_${{ github.run_id }}-a${{ github.run_attempt }}/
+            paper/benchmarks/experiment011/campaigns/pc08_${{ github.run_id }}-a${{ github.run_attempt }}/
+            paper/benchmarks/experiment011/runs/pc08_${{ github.run_id }}-a${{ github.run_attempt }}_s100/
+            paper/benchmarks/experiment011/runs/pc08_${{ github.run_id }}-a${{ github.run_attempt }}_s101/
+            paper/benchmarks/experiment011/runs/pc08_${{ github.run_id }}-a${{ github.run_attempt }}_s102/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Publish only a unique immutable results branch
+        if: always()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:SPRINGER_TAG
+          if (!$tag) { throw 'No run tag: no safe archive' }
+          if ('${{ inputs.study }}' -eq 'amortization') {
+            $paths = @("paper/benchmarks/experiment012/runs/$tag",
+                       "paper/benchmarks/experiment012/figures/$tag")
+          } else {
+            $paths = @("paper/benchmarks/experiment011/campaigns/$tag",
+                       "paper/benchmarks/experiment011/runs/$($tag)_s100",
+                       "paper/benchmarks/experiment011/runs/$($tag)_s101",
+                       "paper/benchmarks/experiment011/runs/$($tag)_s102")
+          }
+          $present = @($paths | Where-Object { Test-Path $_ })
+          if ($present.Count -eq 0) { throw 'No new data to archive' }
+          $ref = "results/springer-100seed-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $ref
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to create new archive branch' }
+          foreach ($p in $present) {
+            git add -f -- $p
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to stage evidence' }
+          }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { throw 'No new files staged' }
+          git commit -m "springer: archive opt-in 100-seed PC08 run $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Archive commit failed' }
+          git push origin "HEAD:refs/heads/$ref"
+          if ($LASTEXITCODE -ne 0) { throw 'Archive push failed' }
