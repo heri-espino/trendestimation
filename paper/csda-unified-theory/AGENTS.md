@@ -1,5 +1,34 @@
 # Agent instructions: unified CSDA theoretical manuscript
 
+## November 19, 2026 original-reference source audit
+
+Before altering the algorithm provenance or BibTeX, read
+notes/PRIMARY_REFERENCE_AUDIT_20261119.md. The author
+supplied 11 primary PDFs and their metadata/claim relevance
+were verified. Do not duplicate the six existing citations;
+the five new keys reside in algorithmic_references.bib.
+Hutchinson's printed journal paper is **1990**, not 1989,
+and its DOI is 10.1080/03610919008812866. Lin's SelInv
+article is **February 2011**, not the 2010 ACM sample
+citation template. The Cornea-Madeira published year is
+**2017**, not its 2016 manuscript draft.
+
+Reinsch (1967) treats a continuous spline derivative
+penalty, distinct from our discrete D; Cornea-Madeira
+(2017) treats finite-sample HP d=2; Lin (2011) is a
+general sparse selected-inverse implementation, not
+the original inverse recursion. Hutchinson (1990) and
+Ubaru et al. (2017) provide **approximate**, not exact,
+trace/logdet methods; exclude them from the exact
+cost theorem and use explicit stochastic error caveats.
+Golub--Reinsch (1970) p.404 directly documents numerical
+loss from forming the Gram matrix, but not blanket
+SVD runtime superiority.
+
+Do not commit copyrighted source scans. Re-run
+tests/test_reference_provenance.py and deterministic
+algebra tests and archive the fully compiled PDF.
+
 ## November 19, 2026 likelihood and pedagogy contract
 
 Before editing the Gaussian subsection read
