@@ -1,6 +1,7 @@
-> **Current manuscript versions (November 9, 2026):** The [paper-version history](paper/PAPER_HISTORY.md) lists freshly compiled CSDA consolidated theory, Springer empirical, and NGSIM PDFs, with exact source SHA, reproducible build logs and archival links. Original A/B and historical manuscripts remain preserved. The new journal manuscripts are drafts, not accepted or submitted papers.
-
 # trendestimation
+
+**Latest compiled research papers:** [Springer empirical selection, unified CSDA theory and third-order PLS/NGSIM manuscripts](paper/LATEST_PAPERS.md) (source TeX, PDFs, AwesomeFigures galleries and reproducibility records).
+
 
 **Paper C research continuation (2026-11-05):**
 [nonzero-reference jerk extrapolation notes](paper/ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md)
