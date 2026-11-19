@@ -2,11 +2,31 @@
 
 This record tracks research-paper **versions**, not only journal publications. It retains source lineage, archived PDFs, compilation jobs, and the difference between a completed LaTeX build and a reviewed manuscript.
 
-Last updated: **November 9, 2026**. Compilation only: no benchmark reruns, synthetic experiments, FHWA downloads, journal submissions, or research PR merges.
+Original archive compiled **November 9, 2026**; historical note reconciled **November 18, 2026**. These are historical snapshots, not a claim that November 9 PDFs are the newest current manuscripts. No historical benchmarks, raw experiments or journal submissions were rerun or rewritten by the original compilation.
 
-## Current compilation record
+## Current integrated manuscripts (updated November 18, 2026)
 
-### 1a. Latest citation-audited CSDA theory build
+The live current-manuscript index is
+[LATEST_PAPERS.md](LATEST_PAPERS.md), not the historical
+November 9 PDFs below. By November 14 the unified CSDA
+theoretical manuscript (including algorithm provenance),
+the 19-page Springer empirical manuscript with AwesomeFigures,
+and the 14-page Paper C applied manuscript were integrated
+in main, with original sources and historical releases retained.
+See that live index for the newest checked-in PDF, LaTeX source,
+and source-specific visualization galleries.
+
+The **November 9 section below is intentionally immutable
+historical provenance**. Its latest or current descriptions
+refer to that historical compilation date. The present
+November 18 CSDA landscape-table and D-versus-H explanation
+revision is a subsequent source change and should be appended
+here with its own exact source commit, PDF hash and build record
+after its standalone journal compilation succeeds.
+
+## November 9, 2026 compilation archive (historical, preserved)
+
+### 1a. Citation-audited CSDA theory build as of November 9
 
 **Revision (November 9, 2026):** After the original A+B theoretical compilation, the author requested explicit published references supporting the individual algorithms' time and memory complexities. The manuscript now cites Golub--Van Loan (2013), Davis (2006), Saad (2003), and the existing Erisman--Tinney (1975) and Weinert (2007) sources. The new [complexity source-to-claim ledger](https://github.com/heri-espino/trendestimation/blob/paper/csda-unified-theory/paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md) separates established factorization/selected-inverse bounds from the authors' composite smoothness-grid workload theorems. All original Paper A/B materials remain preserved.
 
@@ -65,7 +85,7 @@ These historical PDFs already existed in the repository. Their presence is **not
 - The unified CSDA paper is a proposed theoretical consolidation, not the automatic deletion or merging of original Paper A/B histories. Its emphasis is the fixed, possibly nonzero reference mean, bounded normalized smoothing index, spectral and structured algorithms, and complete mathematical complexity.
 - The Springer paper reports a separate empirical question. This compilation **did not** recompute experimental timing or publish new raw timing data.
 - Paper C has a stacked history of research branches and experiments. Manuscript text remains a separately versioned object; the latest branch snapshot does not prove those later findings are in the PDF.
-- All three newer PDFs are on their respective branch histories with reproducibility metadata; **none was merged into main by these compilation workflows**.
+- All three November 9 PDFs were preserved on their respective branch histories with reproducibility metadata; **none was merged into main by the original compilation workflows**. The later integrations into main on November 14 are listed separately above.
 - Successful LaTeX builds do not certify statistical claims, typography, novelty, authorship, or journal submission readiness.
 
 ## Reproducible continuation
