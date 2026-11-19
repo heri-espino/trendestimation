@@ -1,3 +1,5 @@
+**Paper C workflows / hashes (2026-11-18):** Manual PC08 dispatch supports `main` (atlas results-archive only) and scoped Paper C feature/fix/paper branches (source-SHA-guarded publication). The current publication SHA-256 manifest is verified by `python paper/ngsim-jerk-case-study/check_publication_hashes.py --check`; old hashes are retained separately. See [maintenance note](ngsim-jerk-case-study/notes/PUBLICATION_MAINTENANCE_2026-11-18.md). Current author authorization permits a routine merge only after validation; never submit papers without new explicit permission.
+
 **Integrated paper drafts, 2026-11-14:** See [LATEST_PAPERS.md](LATEST_PAPERS.md) for direct PDF/LaTeX links to Springer, unified CSDA, and Paper C. Paper C review branch was integrated preserving root docs and the other two manuscripts. Its AwesomeFigures figures, `src/trendestimation/likelihood.py` Gaussian-REML clarification, and 12 experiment tests are retained. Do not mistake manuscript merge for journal submission or reproducibility re-run. Preserve raw data and archived original reports.
 
 # Paper work — mandatory manuscript/experiment routing

@@ -1,13 +1,7 @@
 name: Paper C revised manuscript smoke on PCAG103A-08
 
+# Compile only when explicitly requested; no automatic Windows build on main.
 on:
-  push:
-    branches: [research/paper-c-experiment001-d3-recurrence]
-    paths:
-      - .github/workflows/paper-c-manuscript-pc08.yml
-      - paper/ngsim-jerk-case-study/main.tex
-      - paper/ngsim-jerk-case-study/sections/**
-      - paper/ngsim-jerk-case-study/references.bib
   workflow_dispatch:
 
 permissions:
@@ -41,6 +35,12 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected runner' }
+          if ($env:GITHUB_EVENT_NAME -ne 'workflow_dispatch' -or $env:GITHUB_REF_TYPE -ne 'branch') { throw 'Only manual branch dispatch is allowed' }
+          $paperCBranch=$env:GITHUB_REF_NAME
+          if ($paperCBranch -ne 'main' -and $paperCBranch -notmatch '^(feature|fix|paper)/paper-c-[a-zA-Z0-9][a-zA-Z0-9._/-]*$') {
+            throw "Unexpected Paper C source branch: $paperCBranch"
+          }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source commit mismatch' }
           if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda installation missing' }
           if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing Python environment missing' }
           & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list

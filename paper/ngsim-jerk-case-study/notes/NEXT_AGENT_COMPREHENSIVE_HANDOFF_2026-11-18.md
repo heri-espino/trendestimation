@@ -1,5 +1,8 @@
 # MASTER CONTINUATION HANDOFF — TrendEstimation Paper C (verified 2026-11-18)
 
+**Maintenance addendum (2026-11-18):** The stale workflow branch restrictions and pre-atlas publication SHA-256 inventory have been corrected in a scoped maintenance PR. Both PC08 workflows are **manual only** and accept `main` or scoped Paper C branches; the atlas never publishes generated PDFs/figures directly onto `main`. The verified final 14-page and 12-page PDF hashes are recorded in the active 16-file `publication_sha256.txt`, while the former pilot manifest is preserved under `publication_sha256_legacy_pre_atlas.txt`. The check procedure is `python paper/ngsim-jerk-case-study/check_publication_hashes.py --check`. Full record: [PUBLICATION_MAINTENANCE_2026-11-18.md](PUBLICATION_MAINTENANCE_2026-11-18.md). Experiments004–008 remain untouched. The author's latest explicit standing authorization permits merging scoped, validated maintenance PRs, overriding older no-merge restrictions; journal submission remains prohibited without separate approval.
+
+
 > **For the next AI research agent:** Read this document in full, then inspect the **live repository and all named files** before editing. This is a continuity record, not permission to rerun studies, merge old PRs, change scientific results, or submit to a journal. The original agent's context became long; the work itself is preserved in Git.
 
 ## 0. Immediate instructions / immutable decisions

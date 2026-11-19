@@ -1,17 +1,9 @@
 name: Paper C AwesomeFigures frozen-results atlas (PCAG103A-08)
 
+# Manual only: do not re-render or publish figures automatically on a paper edit.
+# Dispatch on main for an archive-only verification, or a scoped Paper C branch
+# for source-SHA-guarded publication and unique immutable results archiving.
 on:
-  push:
-    branches: [feature/paper-c-awesomefigures-atlas, paper/paper-c-scientific-editorial-review]
-    paths:
-      - .github/workflows/paper-c-awesomefigures-atlas-pc08.yml
-      - paper/ngsim-jerk-case-study/visuals/render_awesomefigures_atlas.py
-      - paper/ngsim-jerk-case-study/visuals/audit_awesomefigures_atlas.py
-      - paper/ngsim-jerk-case-study/visuals/render_visual_suite.py
-      - paper/ngsim-jerk-case-study/visuals/render_method_comparison.py
-      - paper/ngsim-jerk-case-study/sections/synthetic_case.tex
-      - paper/ngsim-jerk-case-study/sections/real_case.tex
-      - paper/ngsim-jerk-case-study/atlas_supplement.tex
   workflow_dispatch:
 
 permissions:
@@ -46,7 +38,11 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong Windows research runner' }
-          if ($env:GITHUB_REF_NAME -notin @('feature/paper-c-awesomefigures-atlas','paper/paper-c-scientific-editorial-review')) { throw 'Unexpected paper branch' }
+          if ($env:GITHUB_EVENT_NAME -ne 'workflow_dispatch' -or $env:GITHUB_REF_TYPE -ne 'branch') { throw 'Only manual branch dispatch is allowed' }
+          $paperCBranch=$env:GITHUB_REF_NAME
+          if ($paperCBranch -ne 'main' -and $paperCBranch -notmatch '^(feature|fix|paper)/paper-c-[a-zA-Z0-9][a-zA-Z0-9._/-]*$') {
+            throw "Unexpected Paper C source branch: $paperCBranch"
+          }
           $rebase=(git rev-parse --git-path rebase-merge).Trim()
           $apply=(git rev-parse --git-path rebase-apply).Trim()
           if ((Test-Path $rebase) -or (Test-Path $apply)) {
@@ -205,14 +201,14 @@ jobs:
             paper/ngsim-jerk-case-study/generated/awesomefigures_atlas_manifest.json
           if-no-files-found: warn
 
-      - name: Push verified outputs only to feature branch (never stale source)
-        if: success()
+      - name: Push verified outputs only to scoped Paper C source branch (never main)
+        if: success() && github.ref_name != 'main'
         run: |
           $ErrorActionPreference='Stop'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           $publicationBranch=$env:GITHUB_REF_NAME
-          if ($publicationBranch -notin @('feature/paper-c-awesomefigures-atlas','paper/paper-c-scientific-editorial-review')) { throw 'Disallowed publication branch' }
+          if ($env:GITHUB_REF_TYPE -ne 'branch' -or $publicationBranch -notmatch '^(feature|fix|paper)/paper-c-[a-zA-Z0-9][a-zA-Z0-9._/-]*$') { throw 'Disallowed publication branch (main is archive-only)' }
           git fetch origin "refs/heads/${publicationBranch}:refs/remotes/origin/${publicationBranch}"
           if ($LASTEXITCODE -ne 0) { throw 'Cannot refresh feature branch' }
           $remote=(git rev-parse "refs/remotes/origin/$publicationBranch").Trim()
