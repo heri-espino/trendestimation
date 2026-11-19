@@ -1,0 +1,113 @@
+name: Paper C one-shot normalized smoothness precision PDF (scoped)
+
+# Ephemeral workflow, restricted to the authorized literature branch.
+# Canonical Paper C workflows remain manual-only and are not modified.
+# Delete this temporary workflow from the PR branch before merging.
+on:
+  push:
+    branches:
+      - paper/paper-c-normalized-smoothness-precision
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-one-shot-smoothness-pc08
+  cancel-in-progress: false
+
+jobs:
+  compile-and-archive:
+    if: github.repository == 'heri-espino/trendestimation' && github.ref == 'refs/heads/paper/paper-c-normalized-smoothness-precision'
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Require approved runner, branch, source and existing environment
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Unexpected Windows runner' }
+          if ($env:GITHUB_EVENT_NAME -ne 'push' -or $env:GITHUB_REF_NAME -ne 'paper/paper-c-normalized-smoothness-precision') { throw 'Not the one-shot source branch' }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Expected Conda installation unavailable' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing trendestimation environment unavailable' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list
+          if ($LASTEXITCODE -ne 0) { throw 'Preflight failed' }
+
+      - name: Verify normalized smoothness and two precision trace identities
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest paper/ngsim-jerk-case-study/tests/test_smoothness_relative_precision.py -q
+          if ($LASTEXITCODE -ne 0) { throw 'Rank-normalized smoothness regression failed' }
+
+      - name: Compile source-matched manuscript without rerunning any experiments
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $dir --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'LaTeX compile failed' }
+          if (!(Test-Path (Join-Path $dir 'build_manifest.json'))) { throw 'Missing source/build manifest' }
+          Get-Content (Join-Path $dir 'build_manifest.json')
+
+      - name: Verify unchanged AwesomeFigures source assets and scientific text
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $p = 'paper/ngsim-jerk-case-study'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python "$p/visuals/audit_awesomefigures_atlas.py" --atlas "$p/generated/awesomefigures_atlas_manifest.json" --figures "$p/figures" --paper "$p/main.pdf" --supplement "$p/atlas_supplement.pdf" --report (Join-Path $dir 'atlas_audit.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Frozen original scientific asset audit failed' }
+
+      - name: Render all updated PDF pages for editorial inspection
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $target = Join-Path $env:RUNNER_TEMP "paper-c-smoothness-render-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          New-Item -ItemType Directory -Path $target -ErrorAction Stop | Out-Null
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip install --disable-pip-version-check --no-input --no-deps --target $target pymupdf==1.26.5
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create temporary PDF renderer' }
+          $env:PYTHONPATH = $target
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/visuals/render_pdf_pages.py --pdf paper/ngsim-jerk-case-study/main.pdf --output-dir (Join-Path $dir 'page-previews') --dpi 144 --columns 3
+          if ($LASTEXITCODE -ne 0) { throw 'PDF preview render failed' }
+          Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+
+      - name: Upload complete manuscript build artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-normalized-precision-pdf-pc08
+          path: |
+            paper/builds/pc08-paper-c-*/
+            paper/ngsim-jerk-case-study/main.pdf
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Archive source-matched PDF and all logs in unique results branch
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/pc08-paper-c-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $archive = "results/paper-c-pdf-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create unique archive branch' }
+          git add -f -- $dir 'paper/ngsim-jerk-case-study/main.pdf'
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot stage archive' }
+          git commit -m "paper-c: archive verified smoothness-precision PDF PC08 $env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw 'Archive commit failed' }
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Archive publication failed' }
+          Write-Host "Unique immutable results branch: $archive"
