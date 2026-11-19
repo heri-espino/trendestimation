@@ -1,0 +1,335 @@
+\subsection{Profiled Gaussian marginal likelihood in penalized spectral coordinates}
+\label{sec:gaussian-likelihood}
+
+\paragraph{Why introduce a probability model?}
+The quadratic PLS objective \eqref{eq:pls} defines a fitted
+trend for any prescribed $\lambda$ without assuming a
+probability distribution. A \emph{likelihood}, by contrast,
+requires explicit stochastic assumptions about measurement
+errors and departures from the reference difference $\mu$.
+The following model gives one such interpretation; it is
+not a distribution-free consequence of minimizing PLS.
+The construction belongs to the established literature
+on restricted maximum likelihood (REML) and
+generalized maximum likelihood (GML) for smoothers
+\citep{patterson1971,wahba1985,wood2011}.
+A directly related Gaussian marginal likelihood for
+Whittaker--Henderson smoothing is derived by
+\citet[Sec.~5.3]{biessy2026}.
+
+Let $D_d=U\Sigma V^\top$ be the reduced SVD from
+\eqref{eq:svd-target}, with $r=n-d$,
+$\delta_j=\sigma_j^2>0$, and let
+$W\in\R^{n\times d}$ have orthonormal columns
+spanning $\ker(D_d)$. Thus $W^\top V=0$,
+$V^\top V=I_r$, and the columns of $[W,V]$
+form an orthonormal basis of $\R^n$. Let
+$p_\mu$ be \emph{any} deterministic vector
+satisfying $D_dp_\mu=\mu\mathbf1_r$.
+Every possible latent trend can then be expressed
+as
+\begin{equation}\label{eq:likelihood-decomposition}
+\tau=p_\mu+W\beta+V\theta,\qquad
+\beta\in\R^d,\ \theta\in\R^r .
+\end{equation}
+Here $\beta$ represents the unpenalized polynomial
+degrees of freedom; $D_dW=0$, so the penalty does
+not determine $\beta$. The vector $\theta$ comprises
+the $r$ penalized coordinates. We treat $\beta$
+as an unknown \emph{fixed effect}, not as a
+zero-mean Gaussian random variable.
+
+\begin{theorem}[Gaussian contrast likelihood, REML and profiling]
+\label{thm:reml}
+Fix an integer $1\le d<n$ and a specified numeric
+$\mu$. Suppose that conditional on the unknown fixed
+vector $\beta$ the model is
+\begin{equation}\label{eq:gaussian}
+\begin{aligned}
+y&=p_\mu+W\beta+V\theta+\varepsilon,\\
+\varepsilon&\sim N_n(0,\sigma_\varepsilon^2I_n),\\
+\theta&\sim N_r(0,\sigma_u^2\Sigma^{-2}),\\
+\theta&\perp\!\!\!\perp\varepsilon,\qquad
+\lambda=\frac{\sigma_\varepsilon^2}{\sigma_u^2}>0.
+\end{aligned}
+\end{equation}
+Both variances are strictly positive.
+The assumption on $\theta$ is equivalent to
+$D_d\tau-\mu\mathbf1_r\sim
+N_r(0,\sigma_u^2I_r)$.
+The \emph{error contrasts}
+\begin{equation}\label{eq:contrast-z}
+z=V^\top(y-p_\mu)
+\end{equation}
+eliminate $\beta$ and have independent coordinates
+\begin{equation}\label{eq:contrast-variance}
+z_j\sim N\left(0,\sigma_\varepsilon^2
+c_j(\lambda)\right),\qquad
+c_j(\lambda)=1+\frac{1}{\lambda\delta_j}.
+\end{equation}
+For any observed $z\ne0$, profiling out
+$\sigma_\varepsilon^2$ yields
+\begin{equation}\label{eq:ml}
+\boxed{\;
+\mathcal L(\lambda)=
+r\log\left(\frac1r\sum_{j=1}^r
+\frac{z_j^2}{c_j(\lambda)}\right)
++\sum_{j=1}^r\log c_j(\lambda).
+\;}
+\end{equation}
+Minimizing $\mathcal L$ over $\lambda>0$
+is equivalent to maximizing the Gaussian
+restricted (contrast) likelihood for this model.
+The displayed criterion is profiled negative
+twice log likelihood, up to a constant independent
+of $\lambda$.
+\end{theorem}
+
+\begin{proof}
+First use $D_dW=0$, $D_dp_\mu=\mu\mathbf1_r$,
+$D_dV=U\Sigma$, and \eqref{eq:likelihood-decomposition}:
+\[
+D_d\tau-\mu\mathbf1_r=U\Sigma\theta.
+\]
+Because $U$ is orthogonal and
+$\operatorname{Var}(\theta)=
+\sigma_u^2\Sigma^{-2}$, the covariance of
+$U\Sigma\theta$ is $\sigma_u^2I_r$.
+This establishes the difference-innovation interpretation.
+
+Next multiply the observation equation by $V^\top$.
+Since $V^\top W=0$ and $V^\top V=I_r$,
+\[
+z=\theta+V^\top\varepsilon.
+\]
+Orthogonal projection of isotropic Gaussian
+noise gives $V^\top\varepsilon\sim
+N_r(0,\sigma_\varepsilon^2I_r)$.
+The two summands are independent, so
+\[
+\operatorname{Var}(z)=
+\sigma_u^2\Sigma^{-2}
++\sigma_\varepsilon^2I_r
+=\sigma_\varepsilon^2
+\operatorname{diag}(c_1,\ldots,c_r).
+\]
+Consequently the $z_j$ are independent
+Gaussian contrasts. The normalized negative
+twice log likelihood is
+\begin{equation}\label{eq:reml-logdensity}
+\begin{aligned}
+-2\ell_R={}&
+r\log(2\pi\sigma_\varepsilon^2)
++\sum_{j=1}^r\log c_j\\
+&+\frac1{\sigma_\varepsilon^2}
+\sum_{j=1}^r\frac{z_j^2}{c_j}.
+\end{aligned}
+\end{equation}
+Let $J_\lambda=\sum_jz_j^2/c_j$.
+For fixed $\lambda$, differentiating
+$r\log\sigma_\varepsilon^2+
+J_\lambda/\sigma_\varepsilon^2$
+with respect to $\sigma_\varepsilon^2$
+gives $r/\sigma_\varepsilon^2
+-J_\lambda/(\sigma_\varepsilon^2)^2=0$.
+Since $z\ne0$, $J_\lambda>0$, and the
+minimizer is
+\[
+\widehat{\sigma}_\varepsilon^2(\lambda)
+=\frac{J_\lambda}{r}.
+\]
+Substitution into \eqref{eq:reml-logdensity}
+gives \eqref{eq:ml} plus
+$r[1+\log(2\pi)]$, which does not depend on
+$\lambda$.
+
+Finally, $z$ is a full-rank orthonormal set
+of contrasts orthogonal to the fixed-effect
+design matrix $W$. The remaining coordinates
+$W^\top(y-p_\mu)$ contain $\beta$ and are
+discarded by restricted likelihood. Equivalently,
+integrating the joint Gaussian density over
+the unknown $\beta$ with respect to Lebesgue
+measure removes those $d$ coordinates.
+The resulting density is proportional to the
+density of $z$, with a factor independent
+of $\lambda$. This is the REML construction
+for the stated model.
+\end{proof}
+
+\paragraph{What the likelihood does and does not estimate.}
+The quantity $z_j$ is not the observation $y_j$:
+it is a projection of all $n$ observations onto
+a right singular vector of $D_d$. The term
+$\sigma_\varepsilon^2$ measures the assumed
+observation-noise variance; $\sigma_u^2$ measures
+random departures of order-$d$ differences from
+the \emph{fixed} reference $\mu$; and
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$
+is their variance ratio. The scalar $c_j$
+is a \emph{variance multiplier}, not a
+variance ratio by itself. Larger $\lambda$
+means stronger smoothing because the difference
+innovation variance is smaller relative to
+the observation noise variance. The $d$
+polynomial directions disappear from $z$
+because their coefficients are treated as
+unpenalized nuisance fixed effects, which
+is why the profile variance divisor is
+$r=n-d$, not $n$.
+
+Neither maximizing this likelihood nor
+minimizing PLS automatically gives the same
+$\lambda$ as CV or GCV; they solve distinct
+statistical selection problems. The case $z=0$
+has a zero-variance boundary degeneracy
+under profiling and is excluded from the
+interior formula in Theorem~\ref{thm:reml}.
+At $\lambda=0$ the covariance parametrization
+in \eqref{eq:contrast-variance} is only a
+limit, since it would require unbounded
+$\sigma_u^2$ for fixed positive
+$\sigma_\varepsilon^2$.
+
+\begin{proposition}[Penalized quadratic and determinant identities]
+\label{prop:det}
+For $\lambda>0$ let
+$B_d=D_dD_d^\top$ and let
+$\widehat\tau$ solve \eqref{eq:rhs}. Define
+\begin{equation}\label{eq:likelihood-J}
+J_\lambda=
+\|y-\widehat\tau\|_2^2+
+\lambda\|D_d\widehat\tau-\mu\mathbf1_r\|_2^2.
+\end{equation}
+Then
+\begin{equation}\label{eq:quadraticidentity}
+J_\lambda=\sum_{j=1}^r
+\frac{z_j^2}{c_j(\lambda)}
+\end{equation}
+and
+\begin{equation}\label{eq:detidentity}
+\sum_{j=1}^r\log c_j(\lambda)
+=\log\det A_\lambda-r\log\lambda
+-\log\det B_d.
+\end{equation}
+Thus the \emph{same} profiled likelihood
+can be computed using structured Cholesky
+factorizations, without forming a dense
+inverse or using an SVD at every candidate.
+\end{proposition}
+\begin{proof}
+Write $\tau=p_\mu+Wb+Vt$ with
+$t\in\R^r$. Orthogonality separates
+the PLS objective into
+\[
+\|W^\top(y-p_\mu)-b\|^2+
+\sum_{j=1}^r\left[
+(z_j-t_j)^2+\lambda\delta_jt_j^2\right].
+\]
+The first term is minimized by
+$b=W^\top(y-p_\mu)$ and contributes
+zero. For the $j$th remaining term,
+differentiation gives
+\[
+-2(z_j-t_j)+2\lambda\delta_jt_j=0,
+\quad
+\widehat t_j=\frac{z_j}{1+\lambda\delta_j}.
+\]
+The corresponding \emph{minimized}
+quadratic is
+\[
+(z_j-\widehat t_j)^2+
+\lambda\delta_j\widehat t_j^2
+=\frac{\lambda\delta_j}{1+\lambda\delta_j}
+z_j^2=\frac{z_j^2}{c_j}.
+\]
+Summing proves \eqref{eq:quadraticidentity}.
+Furthermore, $B_d=U\Sigma^2U^\top$
+has $r$ positive eigenvalues $\delta_j$,
+whereas $A_\lambda$ has those
+$r$ eigenvalues transformed into
+$1+\lambda\delta_j$ plus $d$ unit
+eigenvalues. Hence
+\[
+\begin{aligned}
+&\log\det A_\lambda-r\log\lambda-\log\det B_d\\
+&=\sum_{j=1}^r\log\!\left(
+\frac{1+\lambda\delta_j}{\lambda\delta_j}
+\right)
+=\sum_{j=1}^r\log c_j,
+\end{aligned}
+\]
+proving \eqref{eq:detidentity}.
+Both $A_\lambda$ and $B_d$ are SPD
+and banded, so their log determinants
+follow from the log diagonals of
+their banded Cholesky factors.
+\end{proof}
+
+\paragraph{Precisely what is prior art?}
+The contrast/restricted-likelihood principle
+is classical \citep{patterson1971}; generalized
+maximum likelihood for smoothing-parameter
+selection predates this article
+\citep{wahba1985}, as do stable REML and
+marginal-likelihood algorithms for penalized
+smoothers \citep{wood2011}. In the
+Gaussian original Whittaker--Henderson
+model, \citet[Sec.~5.3, Eq.~(5.3)]{biessy2026}
+gives a marginal likelihood with a minimized
+penalized quadratic and a
+log-determinant correction. On specialization
+to the unweighted model with $\mu=0$,
+its quadratic and determinant are
+\eqref{eq:quadraticidentity} and
+\eqref{eq:detidentity}, up to
+the overall likelihood sign convention
+and constants independent of $\lambda$.
+Our expression in \eqref{eq:ml}
+is an \emph{algebraic representation of
+existing Gaussian marginal/REML methodology
+in the coordinates of $D_d$}, not a
+newly invented likelihood. The mathematical
+contribution claimed here is the explicit
+integration with fixed-$\mu$ reconstruction,
+the normalized smoothness coordinate,
+and complete algorithmic workload accounting;
+its novelty relative to existing computational
+treatments still requires independent review.
+
+\paragraph{Fixed versus estimated reference mean.}
+Everything above conditions on a
+\emph{prespecified numeric} $\mu$.
+Substituting
+$\widehat\mu=\mathbf1_r^\top D_dy/r$
+changes the observation-to-fit map
+and the statistical estimation problem.
+The displayed $r$-dimensional contrast
+likelihood cannot then be called
+joint unknown-$\mu$ REML without
+deriving the altered fixed-effect
+space, degrees of freedom, and covariance.
+If $\mu$ is freely estimated as a
+new regression coefficient, an additional
+nuisance direction must be accounted for.
+Likewise, fixed-$\mu$ conditional
+LOOCV is not automatic foldwise refitting
+of an estimated reference mean.
+
+\paragraph{Computing contrasts without a high-degree shift.}
+Although $z=V^\top(y-p_\mu)$ is an
+unambiguous \emph{mathematical} definition,
+forming $p_\mu$ explicitly may be numerically
+unwise for high $d$ or large $n$.
+The SVD yields the equivalent identity
+\begin{equation}\label{eq:contrast-shiftfree}
+z=V^\top y-\mu\Sigma^{-1}
+U^\top\mathbf1_r.
+\end{equation}
+This avoids explicitly constructing
+and subtracting the degree-$d$
+polynomial $p_\mu$, but division by
+a very small $\sigma_j$ can still
+amplify numerical errors. Finite-precision
+residual checks remain necessary
+(Section~\ref{sec:stability}).
