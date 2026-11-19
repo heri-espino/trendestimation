@@ -45,23 +45,55 @@ def load_complete(input_dir: Path, require_n: int = 100):
     return meta, rows
 
 
-def summarize(rows, checkpoints):
-    """Use matched valid seeds for fair three-way timing medians and ratios."""
+def summarize(rows, checkpoints, *, bootstrap=1000, seed=30149):
+    """Paired seed-cluster bootstrap, conditional on all three valid backends."""
+    import numpy as np
     lookup = {(int(r["seed_index"]), int(r["checkpoint"]), r["method"]): r
               for r in rows}
     indices = sorted({int(r["seed_index"]) for r in rows})
-    result = []
+    rng = np.random.default_rng(seed)
+    times, ratios = [], []
+    pairs = (
+        ("naive_inverse", "banded_cholesky"),
+        ("naive_inverse", "spectral_svd"),
+        ("banded_cholesky", "spectral_svd"),
+    )
     for cp in checkpoints:
         matched = [i for i in indices if all(
             lookup[(i, cp, method)]["status"] == "ok" for method in METHODS)]
+        observed = {method: np.array([
+            float(lookup[(i, cp, method)]["total_cold_s"]) for i in matched
+        ]) for method in METHODS}
+        n = len(matched)
+        samples = rng.integers(0, n, size=(bootstrap, n)) if n else None
         for method in METHODS:
-            observed = [float(lookup[(i, cp, method)]["total_cold_s"])
-                        for i in matched]
-            result.append({"checkpoint": cp, "method": method,
-                           "paired_seeds": len(matched),
-                           "median_cold_s": median(observed) if observed else None})
-    return result
-
+            values = observed[method]
+            boot = np.median(values[samples], axis=1) if n else None
+            times.append({
+                "checkpoint": cp, "method": method, "paired_seeds": n,
+                "median_cold_s": float(np.median(values)) if n else None,
+                "ci_low_s": float(np.quantile(boot, .025)) if n else None,
+                "ci_high_s": float(np.quantile(boot, .975)) if n else None,
+            })
+        for numerator, denominator in pairs:
+            if n:
+                logdiff = np.log(observed[numerator] / observed[denominator])
+                boots = np.mean(logdiff[samples], axis=1)
+                ratio, lo, hi = np.exp([
+                    np.mean(logdiff),
+                    np.quantile(boots, .025),
+                    np.quantile(boots, .975),
+                ])
+            else:
+                ratio = lo = hi = None
+            ratios.append({
+                "checkpoint": cp, "numerator": numerator,
+                "denominator": denominator, "paired_seeds": n,
+                "geometric_time_ratio": float(ratio) if n else None,
+                "ci_low": float(lo) if n else None,
+                "ci_high": float(hi) if n else None,
+            })
+    return times, ratios
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -74,7 +106,7 @@ def main() -> int:
     audit = json.loads((args.input / "numerical_audit.json").read_text(encoding="utf8"))
     if audit["mismatches"]:
         raise ValueError("Numerical parity alerts need scientific review before plotting")
-    summary = summarize(rows, meta["checkpoints"])
+    summary, speedups = summarize(rows, meta["checkpoints"])
     if any(r["paired_seeds"] < 20 for r in summary):
         raise RuntimeError("Fewer than 20 fully matched seeds at one or more checkpoints")
     # Do not call the renderer until real timings have passed source validation.
@@ -92,9 +124,12 @@ def main() -> int:
     fig, ax = plt.subplots(figsize=(6.4, 3.55))
     for method, label in zip(METHODS, NAMES):
         data = [r for r in summary if r["method"] == method]
-        ax.plot([r["checkpoint"] for r in data],
-                [r["median_cold_s"] for r in data],
+        xs = [r["checkpoint"] for r in data]
+        ax.plot(xs, [r["median_cold_s"] for r in data],
                 marker="o", linewidth=1.7, label=label, color=palette[method])
+        ax.fill_between(xs, [r["ci_low_s"] for r in data],
+                        [r["ci_high_s"] for r in data],
+                        color=palette[method], alpha=.13)
     ax.set(xscale="log", yscale="log",
            xlabel="Distinct penalty candidates evaluated",
            ylabel="Median complete cold time (seconds)")
@@ -111,11 +146,42 @@ def main() -> int:
         af.save_figure(fig, target, dpi=210)
         hashes[ext] = hashlib.sha256(target.read_bytes()).hexdigest()
     plt.close(fig)
+    # Matched ratios show naive overhead and the banded-to-spectral crossover.
+    fig, ax = plt.subplots(figsize=(6.4, 3.55))
+    pair_spec = [
+        ("naive_inverse", "banded_cholesky", "Naive / banded", palette["naive_inverse"]),
+        ("naive_inverse", "spectral_svd", "Naive / SVD", palette["spectral_svd"]),
+        ("banded_cholesky", "spectral_svd", "Banded / SVD", palette["banded_cholesky"]),
+    ]
+    for numerator, denominator, label, color in pair_spec:
+        data = [r for r in speedups if r["numerator"] == numerator
+                and r["denominator"] == denominator]
+        xs = [r["checkpoint"] for r in data]
+        ax.plot(xs, [r["geometric_time_ratio"] for r in data],
+                marker="o", linewidth=1.7, color=color, label=label)
+        ax.fill_between(xs, [r["ci_low"] for r in data],
+                        [r["ci_high"] for r in data], color=color, alpha=.13)
+    ax.axhline(1.0, linewidth=1, linestyle="--", color="#555555")
+    ax.set(xscale="log", yscale="log", xlabel="Distinct penalty candidates evaluated",
+           ylabel="Paired geometric complete-time ratio")
+    ax.set_xticks(meta["checkpoints"], [str(x) for x in meta["checkpoints"]])
+    ax.legend(frameon=False, fontsize=7.6)
+    ax.grid(True, alpha=.18)
+    fig.tight_layout()
+    ratio_hashes = {}
+    for ext in ("pdf", "svg", "png"):
+        target = figdir / f"amortization_paired_speedups.{ext}"
+        af.save_figure(fig, target, dpi=210)
+        ratio_hashes[ext] = hashlib.sha256(target.read_bytes()).hexdigest()
+    plt.close(fig)
     (out / "summary.json").write_text(json.dumps({
         "status": "observed_100_seed_three_method_comparison",
         "input_sha256": meta["timings_sha256"],
-        "figures_sha256": hashes,
-        "rows": summary,
+        "figures_sha256": {"absolute_times": hashes, "paired_ratios": ratio_hashes},
+        "absolute_rows": summary,
+        "paired_speedup_rows": speedups,
+        "bootstrap": {"resamples": 1000, "seed": 30149,
+                      "unit": "independent seed with three matched backends"},
         "method_scope": "Complete CV/GCV scores at distinct direct-lambda candidates",
         "timing_definition": "Cold = method initialization + all evaluations; "
                              "warm accounting omits initialization, not a new run",
