@@ -42,6 +42,44 @@ setup is not free, and a cheaper $O(r)$ scalar
 score does not imply an $O(r)$ exact CV or
 full-curve computation.
 
+\paragraph{When can a reusable SVD actually be faster?}
+A large number of penalty values does \emph{not} by
+itself make banded Cholesky impractical.
+For a \emph{given} list of $M$ distinct penalties
+(and ignoring statistical diagnostics, smoothness mapping,
+and hardware constants), conventional dense reduced SVD
+requires $O(nr^2)$ preparation and $O(Mr)$ projected
+scalar evaluations, whereas fresh banded factorizations
+require $O(Mnd^2)$.
+When $d$ is fixed and $n\to\infty$, $r=n-d\sim n$:
+the dense SVD setup is $O(n^3)$ and a fixed-order
+banded factorization is $O(n)$ per penalty,
+so a moderate fixed $M$ favors banded algebra
+asymptotically. A crude comparison of these
+two leading work terms would require candidate
+counts on the scale of $r^2/d^2$ before the dense
+setup is even amortized; this is \emph{not} a
+runtime crossover prediction because it omits
+leading constants, criterion-specific diagnostics,
+mapping costs, reuse across $R$ series,
+and finite-precision admissibility.
+Weinert's $p=2$ banded $LDL^\top$ and exact
+GCV/inverse-trace algorithms are established
+$O(n)$-per-candidate alternatives
+\citep[Secs.~1--2]{weinert2007}.
+In a prescribed-$S$ workflow, computing
+$\lambda=\Lambda_{n,d}(S)$ adds a separate
+cost to \emph{both} algorithms. Our retained SVD
+offers a different tradeoff: once the
+basis and data projections fit in memory,
+several projected scalar criteria can be
+evaluated in $O(r)$ per candidate, whereas
+a reconstructed trend or exact LOOCV requires
+additional $O(nr)$ work. Thus the claim
+that SVD is faster is conditional on the
+complete requested workload, not a property of
+decomposing $D_d$ in isolation.
+
 \begin{theorem}[Work for a retained spectral pipeline]\label{thm:svdwork}
 Assume the full reduced SVD is retained; each interior smoothness inversion requires at most $I$ evaluations of the $r$-term spectral sum; each observed series is projected once; and projected scalar scores use $O(r)$ work. Put $\chi_{\rm CV}=1$ when ordinary conditional CV is requested and zero otherwise. An upper bound on arithmetic work is
 \begin{equation}\label{eq:svdwork}
