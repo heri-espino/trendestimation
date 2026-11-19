@@ -7,11 +7,40 @@ The cost of \emph{selecting} a smoothing level is not the cost of one fit. For f
 \GCV(\lambda)&=\frac{\RSS_\lambda/n}{(1-\nu/n)^2}.
 \end{aligned}
 \end{equation}
-These are retrospective smooth-trend criteria, not chronological forecasting-validation scores. The fixed-$\mu$ leverage diagonal is available spectrally as
+Here $e_{\lambda,i}$ is the residual at observation $i$;
+$h_i$ is its \emph{leverage}, measuring the sensitivity of
+the fitted value to a small change in its own observation:
+$\partial\widehat\tau_i/\partial y_i=(H_\lambda)_{ii}$,
+when $\mu$ is fixed. Because the fitted trend is affine in $y$,
+the ordinary leave-one-out residual for a fixed penalty
+is $e_{\lambda,i}/(1-h_i)$: high-leverage observations
+receive a larger correction than low-leverage ones.
+GCV replaces the individual leverage factors by their
+mean $\nu/n=\tr(H_\lambda)/n$, making its denominator
+a global complexity adjustment. It is less expensive
+to evaluate from a retained spectrum than ordinary CV,
+but it is \emph{not} the same statistic.
+Both formulas are retrospective smooth-trend criteria,
+not chronological forecasting-validation scores.
+
+The fixed-$\mu$ leverage diagonal is available spectrally as
 \begin{equation}\label{eq:leverage}
 h_i=1-\sum_{j=1}^r V_{ij}^2 w_j(\lambda).
 \end{equation}
-The unpenalized polynomial projection is implicitly included by the leading one in \eqref{eq:leverage}. Omitting it would give incorrect CV denominators.
+This identity follows from
+$H_\lambda=I-V\diag(w_j)V^\top$
+in \eqref{eq:svd-generated-smoother}:
+the diagonal of $V\diag(w_j)V^\top$ is
+$\sum_jV_{ij}^2w_j$.
+The unpenalized polynomial projection is
+implicitly included by the leading one in
+\eqref{eq:leverage}. Omitting it would give
+incorrect CV denominators. In particular,
+when $\lambda\downarrow0$ we obtain
+$H_\lambda\to I$, so $e_{\lambda,i}\to0$
+and $1-h_i\to0$ simultaneously; the
+literal ratio $0/0$ at interpolation
+cannot be evaluated without a limit.
 
 For comparability with the conventions in \citet{cortes2017}, we also consider the residual-based expressions
 \begin{equation}\label{eq:ic}
@@ -36,43 +65,4 @@ Thus $\RSS_\lambda=\lambda^2\|Q_d(y-p_\mu)\|^2+O(\lambda^3)$, while $\nu\to n$. 
 \end{proof}
 A strictly positive imposed grid minimum may be a disclosed sensitivity restriction, but is not a repaired global optimum for this expression. Likewise, CV/GCV near exact interpolation require careful limiting conventions rather than evaluating an indeterminate ratio at $s=0$.
 
-\subsection{Gaussian reduced-coordinate likelihood}
-To distinguish statistical selection from penalized training residuals, suppose in addition that
-\begin{equation}\label{eq:gaussian}
-\begin{aligned}
-y&=\tau+\varepsilon,\qquad
-\varepsilon\sim N(0,\sigma_\varepsilon^2I_n),\\
-D_d\tau-\mu\mathbf1_r&\sim N(0,\sigma_u^2I_r),\\
-\lambda&=\sigma_\varepsilon^2/\sigma_u^2.
-\end{aligned}
-\end{equation}
-with independent components and a fixed numeric $\mu$. The $r$ penalized SVD coordinates $z=V^\top(y-p_\mu)$ have marginal variances $\sigma_\varepsilon^2c_j(\lambda)$, where $c_j=1+1/(\lambda\delta_j)$. Profiling $\sigma_\varepsilon^2$ gives the criterion
-\begin{equation}\label{eq:ml}
-\mathcal L(\lambda)=
-r\log\left(\frac{1}{r}\sum_{j=1}^r
-\frac{z_j^2}{c_j(\lambda)}\right)
-+\sum_{j=1}^r\log c_j(\lambda),
-\end{equation}
-up to a constant independent of $\lambda$. It is a reduced-coordinate variance-component likelihood, not the result of minimizing the PLS training objective with respect to $\lambda$.
-
-\begin{proposition}[Banded likelihood sufficiency]\label{prop:det}
-Let $\lambda>0$, $B_d=D_dD_d^\top$, and let $\widehat\tau$ solve \eqref{eq:rhs}. Set
-$J_\lambda=\|y-\widehat\tau\|^2+
-\lambda\|D_d\widehat\tau-\mu\mathbf1_r\|^2$.
-Then
-\begin{equation}\label{eq:quadraticidentity}
-J_\lambda=\sum_{j=1}^r\frac{z_j^2}{c_j(\lambda)},
-\end{equation}
-and
-\begin{equation}\label{eq:detidentity}
-\sum_{j=1}^r\log c_j(\lambda)
-=\log\det A_\lambda-r\log\lambda-\log\det B_d.
-\end{equation}
-Consequently a banded factorization of $A_\lambda$ and a precomputed banded factorization of $B_d$ suffice to evaluate \eqref{eq:ml} without a dense inverse.
-\end{proposition}
-\begin{proof}
-In the positive spectral directions the minimal value of the quadratic PLS objective is $\sum_j w_j z_j^2$. Since $w_j=c_j^{-1}$ this proves \eqref{eq:quadraticidentity}; the nullspace part of the objective vanishes at the optimum. The positive eigenvalues of $Q_d$ and $B_d$ coincide. Thus
-$\log\det A_\lambda=\sum_j\log(1+\lambda\delta_j)$ and $\log\det B_d=\sum_j\log\delta_j$. Subtracting $r\log\lambda$ proves \eqref{eq:detidentity}. Both determinants admit banded Cholesky log-diagonal evaluations.
-\end{proof}
-
-The same likelihood formula must not be called joint unknown-$\mu$ maximum likelihood after merely substituting $\widehat\mu=\operatorname{mean}(D_dy)$. Such a plug-in policy changes the statistical estimation problem. The direct PLS fit, likelihood fit, and genuinely foldwise-refitted leave-one-out selector are distinct objects.
+\input{sections/gaussian_likelihood}
