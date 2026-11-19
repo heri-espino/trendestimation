@@ -23,6 +23,8 @@ Its nullspace consists of sampled polynomials of degree at most $d-1$; thus $Q_d
 Repeated differences of a polynomial of degree below $d$ vanish. Conversely, if $D_dx=0$, induction on the difference order implies that $x_t$ is a polynomial in $t-1$ of degree at most $d-1$. The $d$ sequences $\binom{t-1}{k}$, $k=0,\ldots,d-1$, are independent. Rank--nullity and $x^\top Q_dx=\|D_dx\|^2$ complete the proof.
 \end{proof}
 
+\input{sections/third_difference_example}
+
 The particular polynomial $p_{\mu,t}=\mu\binom{t-1}{d}$ satisfies $D_dp_\mu=\mu\mathbf1_r$. Hence
 \begin{equation}\label{eq:affine}
 \widehat\tau_{\lambda,\mu}=p_\mu+H_\lambda(y-p_\mu).
@@ -89,3 +91,5 @@ The weights tend to zero and one at the respective limits. The second expression
 \end{proof}
 
 Fixed nonzero $\mu$ is already part of Guerrero's model \citep{guerrero2007}; it is not an invention of this paper. A data-derived plug-in such as $\widehat\mu=\mathbf1_r^\top D_dy/r$ changes the observation-to-fit derivative and requires different treatment of exact leave-one-out refitting. Unless stated otherwise our results are conditional on a fixed numeric $\mu$.
+
+\input{sections/order_interpretation}

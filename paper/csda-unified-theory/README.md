@@ -1,5 +1,15 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 18, 2026: Weinert and the third-difference example
+
+The revised article compares Weinert (2007), whose principal solver uses banded LDL^T of alpha I + M^T M, to our reusable SVD of D_d. It documents lambda=1/alpha for mu=0 and explains why neither method is universally faster. Weinert's fixed-p=2 GCV computation is linear in n per penalty, not exponential in the number of trial penalties.
+
+New sections give an exact d=3, n=6 D3/Q3 example and H_1[1,6]=11/195, link third differences to discrete jerk with correct sampling units and nonzero mu, and discuss validated selection of (d,S) as model hyperparameters without claiming any new empirical result.
+
+Read notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md for the page- and equation-specific source audit. Run all source-only deterministic tests:
+
+    python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
+
 ## November 18, 2026: readable landscape tables and clear SVD-cost explanation
 
 The canonical Elsevier CAS paper now places the algorithm-provenance and

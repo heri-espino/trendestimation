@@ -2,6 +2,12 @@
 
 Read repository README.md, AGENTS.md, AI_HANDOFF.md, paper/AGENTS.md, paper/PUBLICATION_MAP.md and paper/SESSION_HANDOFF.md before modifying this manuscript. Also read this directory's README, all its sections and deterministic checks, both source CSDA papers, and the editorial literature audit.
 
+## Weinert/third-difference editorial contract (November 18, 2026)
+
+Read notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md. Weinert (2007, pp. 959-963) defines M as a difference matrix but factorizes alpha I + M^T M by banded LDL^T, not SVD(M). His p=2 fit/GCV is O(n) per trial. Never imply that many lambdas make banded work exponential or that retained dense SVD of D is always faster. For mu=0 lambda=1/alpha.
+
+Keep the exact d=3, n=6 D3/Q3 illustration, sparse Q versus dense H at lambda=1, the physical units of sampled jerk, the difference between mu=0 and mu=j*h^3, and honest chronological validation when treating d as a hyperparameter. Tests live under tests/test_d3_weinert_comparison.py. Preserve Springer benchmarks, Paper C work, prior papers and source histories.
+
 ## November 18, 2026 editorial contract
 Keep the two algorithm tables as full-width sideways LaTeX floats,
 not compressed two-column small-font tables. For distribution,
