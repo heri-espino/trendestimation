@@ -15,7 +15,7 @@ import math
 from pathlib import Path
 from statistics import median
 
-from run import CRITERIA, METHODS
+METHODS = ("naive_inverse", "banded_cholesky", "spectral_svd")
 
 
 def digest(path):
