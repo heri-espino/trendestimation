@@ -1,3 +1,5 @@
+**November 18, 2026 — continuation handoff:** Start with [the verified master Paper C handoff](notes/NEXT_AGENT_COMPREHENSIVE_HANDOFF_2026-11-18.md). PR #133 is now merged into `main` (despite older sections below saying otherwise); the latest 14-page article, 12-page AwesomeFigures supplement, frozen Experiment004–008 results, numerical qualifications, and Windows build provenance are indexed there. Continue from current `main`, not the old #131/#133 branch history.
+
 # NGSIM real-vehicle jerk and trend forecasting case study
 ## NEW METHOD-FIRST PAPER C (2026-11-09): simulations + real NGSIM, not backend timing
 

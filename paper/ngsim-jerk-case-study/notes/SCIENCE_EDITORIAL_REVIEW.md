@@ -1,3 +1,5 @@
+**CURRENT as of 2026-11-18:** Read [NEXT_AGENT_COMPREHENSIVE_HANDOFF_2026-11-18.md](NEXT_AGENT_COMPREHENSIVE_HANDOFF_2026-11-18.md) first. The Nov 14 text below describes earlier moments *before* PR #133 merged into `main`; it is historical rather than current PR status. The reviewed 14-page manuscript and 12-page AwesomeFigures atlas are on `main`; do not restart Experiments004–008.
+
 ## Latest integrated AwesomeFigures runner verification — November 14, 2026
 
 **Final integrated build:** The newly merged `.github/workflows/paper-c-awesomefigures-atlas-pc08.yml` now accepts the current Paper C review branch as well as the original feature branch, rather than being locked to a closed PR. Its self-hosted Windows build [#43631207424](https://github.com/heri-espino/trendestimation/actions/runs/43631207424) **passed every step** after merge. The workflow publishes only on an unchanged source SHA and preserves a unique append-only full results archive. The canonical review-branch PDF Git blobs have been checked to match the archived manuscript blobs.
