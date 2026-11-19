@@ -1,3 +1,5 @@
+**Second targeted literature selection (2026-11-19):** [Dependence, REML and small-cluster citation candidates](DEPENDENCE_AND_INFERENCE_REFERENCE_SELECTION.md) ranks five DOI-verified sources, with precise claim limits and manuscript placement. The highest-priority candidates are Wang (1998), Harville (1977) and Cameron--Miller (2015). This is a source/annotation-only review; canonical LaTeX, bibliography, PDFs and publication hashes remain unchanged until a manually dispatched, source-matched build is available.
+
 **2026-11-18 source review:** [METHODS_CITATION_AUDIT.md](METHODS_CITATION_AUDIT.md) gives the bibliography expansion, DOI references, section-level citation rationale, verified Windows PDF provenance, and reconciliation with the integrated mainline publication-maintenance controls. No science reruns or journal submissions.
 
 # Paper C — literature review and annotated reading notes
