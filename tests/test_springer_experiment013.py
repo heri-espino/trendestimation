@@ -6,6 +6,7 @@ import csv
 import hashlib
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -72,8 +73,9 @@ def test_cumulative_candidate_grid_and_resource_masks():
 
 def test_real_evaluators_include_second_differences():
     # Very small accuracy smoke; no timings claimed for the paper.
-    engine=load(ROOT/"paper/benchmarks/experiment006/run.py",
-                "experiment006_real_backend")
+    source=ROOT/"paper/benchmarks/experiment006/run.py"
+    sys.path.insert(0,str(source.parent))
+    engine=load(source,"experiment006_real_backend")
     y=engine.sample(32,12345,"high")
     results=[]
     for method in runner.METHODS:
