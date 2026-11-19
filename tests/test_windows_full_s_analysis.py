@@ -35,8 +35,11 @@ def test_two_seeds_per_cell_and_identical_matched_s_lambda_grid():
 
 
 def test_springer_and_sphinx_sources_include_windows_full_evidence():
-    assert r"\input{sections/windows_full_s_results}" in (
-        PROJECT / "paper/main.tex").read_text(encoding="utf-8")
+    # The 80,640-cell Windows archive and Sphinx page still exist, but the
+    # canonical Springer article now cites the completed Experiment011 results.
+    current = (PROJECT / "paper/main.tex").read_text(encoding="utf-8")
+    assert r"\input{sections/experiment011_methods}" in current
+    assert r"\input{sections/experiment011_results}" in current
     assert "windows_full_s_results" in (
         PROJECT / "docs/index.rst").read_text(encoding="utf-8")
     assert (PROJECT / "paper/sections/windows_full_s_results.tex").exists()
