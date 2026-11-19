@@ -1,5 +1,29 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 19, 2026: primary-paper citation verification
+
+All **eleven original PDFs supplied by the author** have now been
+checked for actual titles, publication years, DOI/volume/pages,
+and relevance to particular algorithmic claims. The audit
+`notes/PRIMARY_REFERENCE_AUDIT_20261119.md` maps each
+publication to the manuscript's exact citation purpose.
+
+Five genuinely missing works were added to the local BibTeX
+(Reinsch 1967, Cornea-Madeira 2017, Lin et al. 2011,
+Hutchinson **1990**, Ubaru et al. 2017). Six original
+algorithm/GCV papers were already in the bibliography and
+received stronger contextual or page-specific attribution
+rather than redundant entries. The 1990 Hutchinson print
+year and DOI correct an earlier informal 1989 suggestion.
+
+A new subsection distinguishes stochastic approximate
+trace/log-determinant methods from our exact leverage/trace
+calculations. No external paper is represented as the
+source of our composite time bound or a proof of universal
+SVD superiority. Primary licensed PDFs are **not** copied
+into Git. The source-only CI now validates all citation
+keys and preserves the audit alongside PDF provenance.
+
 ## November 19, 2026: explained Gaussian REML and mathematical reading guide
 
 The former short "Gaussian reduced-coordinate likelihood" subsection has
