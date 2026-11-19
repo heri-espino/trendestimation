@@ -2,6 +2,14 @@
 
 Date: November 9, 2026. Status: theory-first draft, not submitted.
 
+## November 18, 2026 reading and layout revision
+
+- The canonical SVD target is D_d, not H_lambda. The model section now writes the rectangular dimensions and derives H_lambda algebraically from one SVD.
+- The algorithms section contrasts direct SVD(D_d), symmetric eigenanalysis(Q_d), and diagonalization(H_lambda). Q_d and H_lambda can share an eigenbasis across lambda in exact arithmetic. Q_d's positive-spectrum condition number is squared; directly constructing H_lambda costs a penalty-dependent dense solve and may harm recovery of small delta when h is close to 1.
+- The complexity section distinguishes one shared SVD from 11 DIFFERENT requested smoothness levels, including 11 inverse smoothness maps and projected scalar criteria. This does NOT mean 11 explicitly formed dense inverses.
+- Tables 1 and 2 are now full-page sideways floats with separately attributed algorithm origins and shared/per-penalty costs, followed by reproducible PDF /Rotate=90 metadata tagging.
+- Build QA: BOTH deterministic verification scripts; source-only Elsevier CAS compile; exactly two recognized landscape table pages; extractable PDF text; SHA-256 and Git source provenance; visual inspection at landscape orientation. No timing rerun.
+
 ## Author's five priorities
 
 1. Spectral diagonalization to compute PLS trends **using the normalized smoothness index**.
