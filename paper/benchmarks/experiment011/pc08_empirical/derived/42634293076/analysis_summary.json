@@ -1,0 +1,82 @@
+{
+  "experiment": "experiment011",
+  "evidence": "empirical_complete_criterion_sparse_not_full_factorial",
+  "recorded_jobs": 2813,
+  "tensor_rows": 92679,
+  "valid_complete_rows": 76220,
+  "nonvalid_or_missing_rows": 16459,
+  "nonzero_process_jobs": 57,
+  "worker_phase_jobs": {
+    "24": 2231,
+    "1": 52,
+    "12": 530
+  },
+  "selected_file_manifest": 2813,
+  "input_integrity_problems": 60,
+  "paired_baseline_rows": 48700,
+  "valid_paired_baseline_rows": 48700,
+  "valid_coordinate_pairs": 38110,
+  "report_sha256": "c5d4898c83c731ada23a10957f80adc43616200206dc76573f365d38ba37f723",
+  "design_sha256": "67694c0f3dda785b598658a660bf853de30cd8ab6d9d83aa92befba212c6c88d",
+  "status_categories": {
+    "complete_float64_status_only": 76220,
+    "status_numerical_failed": 11208,
+    "status_mapping_failed_ArithmeticError": 4224,
+    "status_budget_exceeded": 970,
+    "missing_or_changed_input": 57
+  },
+  "qa_categories": {
+    "partial_success_with_skips_or_failures": 1692,
+    "float64_parity_only_not_precision_certified": 1064
+  },
+  "lineage": [
+    {
+      "tag": "PC08_add97svd_20261105_025108",
+      "report_sha256": "ea0af4ad0e40538935aa1dccd8ac9cfd2926f39a83525c362b44b4dda329425b",
+      "inherited": 0,
+      "appended": 2272,
+      "cumulative": 2272
+    },
+    {
+      "tag": "PC08_resume97_20261105_151552",
+      "report_sha256": "44d1a4e16de2fde061d1fe3a5a44ab5cdd44ac789876fe9d4ffafc283efd0d84",
+      "inherited": 2272,
+      "appended": 11,
+      "cumulative": 2283
+    },
+    {
+      "tag": "PC08_resume12_20261105_163243",
+      "report_sha256": "d1713a17ca336f5ee904bdad356b3c87faf159f1e2f3511c6d2ecc4cc46066f7",
+      "inherited": 2283,
+      "appended": 55,
+      "cumulative": 2338
+    },
+    {
+      "tag": "PC08_resume12_20261108_143933",
+      "report_sha256": "fceed266240f46df2ff6e3b8c2cad684818376475fe190b96273f11edf509498",
+      "inherited": 2338,
+      "appended": 0,
+      "cumulative": 2338
+    },
+    {
+      "tag": "PC08_resume12_20261108_193737",
+      "report_sha256": "3e665736f8c3c1517e00c5913b08812d63d9a38f286af88d318712bab3c1a1a7",
+      "inherited": 2338,
+      "appended": 0,
+      "cumulative": 2338
+    },
+    {
+      "tag": "PC08_resume12_20261108_200034",
+      "report_sha256": "c5d4898c83c731ada23a10957f80adc43616200206dc76573f365d38ba37f723",
+      "inherited": 2338,
+      "appended": 475,
+      "cumulative": 2813
+    }
+  ],
+  "warnings": [
+    "Timing is under varying concurrent process loads, not isolated latency.",
+    "Float64 selected-score parity is not a high-precision forward-error certificate.",
+    "Survivor bias: invalid/failed/infeasible complete searches cannot win timings.",
+    "Missing or ambiguous candidate rows are explicitly masked, not zero seconds."
+  ]
+}

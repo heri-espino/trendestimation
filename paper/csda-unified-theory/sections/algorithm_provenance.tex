@@ -1,0 +1,113 @@
+\subsection{Historical origin and computational-cost provenance}
+\label{sec:provenance}
+The publication introducing a numerical method and the publication
+establishing a particular operation count are not necessarily the
+same. Table~\ref{tab:provenance} separates the algorithmic
+antecedent, published numerical-analysis cost results, and the
+model-specific arithmetic counted in this article. In particular,
+the historical SVD and conjugate-gradient papers do not prove
+our composite smoothness-indexed grid-search theorems.
+
+\begin{sidewaystable*}[p]
+\centering
+\caption{Algorithm provenance and sources of computational complexity.
+Original methods are distinguished from later analyses of their costs;
+our order-$d$ PLS specialization is identified explicitly.}
+\label{tab:provenance}
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.30}
+\normalsize
+\begin{tabularx}{0.94\textheight}{@{}p{0.18\textheight}p{0.31\textheight}X@{}}
+\toprule
+\textbf{Algorithm family} & \textbf{Original method / historical antecedent}
+& \textbf{Complexity source and PLS interpretation}\\
+\midrule
+Dense linear solves &
+Classical elimination; sparsity-aware elimination:
+\citet{markowitz1957}. &
+Dense $O(n^3)$ arithmetic and $O(n^2)$ storage:
+\citet{golubvanloan2013}. General sparse costs depend
+on fill and ordering \citep{davis2006}.\\
+\addlinespace
+Reduced full SVD &
+Bidiagonal singular-value algorithm:
+\citet{golubkahan1965};
+practical SVD: \citet{golubreinsch1970}. &
+Dense $r\times n$ SVD: $O(nr^2)$ work and
+$O(nr)$ retained basis \citep{golubvanloan2013}.
+The per-candidate PLS score counts are derived here.\\
+\addlinespace
+Dense symmetric eigenanalysis &
+QR-family eigensolver: \citet{francis1961}. &
+Standard dense $O(n^3)$ work and
+$O(n^2)$ full eigenvector storage
+\citep{golubvanloan2013}.\\
+\addlinespace
+Banded Cholesky &
+Cholesky's method as documented by
+\citet{benoit1924}; earlier structured
+WH computation: \citet{henderson1925}. &
+For half-bandwidth $d$, $O(nd^2)$
+factorization and $O(nd)$ storage
+\citep{golubvanloan2013,anderson1999};
+WH-specific work: \citet{weinert2007}.\\
+\addlinespace
+Selected inverse subset &
+Early actuarial trace antecedent:
+\citet{spoerl1943}; general sparse
+recurrences: \citet{takahashi1973,erisman1975}. &
+Selected-inverse recurrences and their computational
+dependencies: \citet{erisman1975}.
+The stated banded $O(nd^2)$ is counted here.\\
+\addlinespace
+General sparse direct factorization &
+Sparsity-aware elimination:
+\citet{markowitz1957}. &
+Orderings, fill and algorithm-specific storage:
+\citet{davis2006}; generic sparsity does
+not imply fixed bandwidth.\\
+\addlinespace
+Conjugate gradients &
+Original CG: \citet{hestenesstiefel1952}. &
+Preconditioned convergence: \citet{saad2003}.
+The $O(qnd)$ cost of $q$ local-difference
+iterations (excluding preconditioner costs)
+is derived here.\\
+\addlinespace
+WH smoothing and GCV &
+Early graduation: \citet{bohlmann1899};
+\citet{whittaker1923}; WH cross-validation:
+\citet{brooks1988}. &
+Earlier efficient WH/GCV algorithms:
+\citet{weinert2007}; classical spectral
+GCV: \citet{golub1979}.\\
+\bottomrule
+\end{tabularx}
+
+\vspace{8pt}
+\begin{minipage}{0.94\textheight}
+\small\emph{Interpretation.} Original method and complexity
+source are separate claims. Bounds shown for a generic matrix
+do not establish an optimal bound for the special difference
+operator; our complete-grid workload bounds follow in
+Section~\ref{sec:complexity}.
+\end{minipage}
+\end{sidewaystable*}
+
+
+\paragraph{Historical priority within trend smoothing.}
+The review by \citet{weinert2007} traces penalized-difference
+graduation to \citet{bohlmann1899}, predating
+\citet{whittaker1923}; documents the early WH factorization
+of \citet{henderson1925}; and identifies \citet{spoerl1943}
+as an earlier user of an inverse-trace computation later
+associated with \citet{takahashi1973}. That review also identifies \citet{brooks1988}
+as an early published WH cross-validation application.
+Importantly, \citet[Sec.~1, p.~961]{weinert2007} explicitly
+reports $O(n)$ arithmetic for a fixed-order hat-matrix trace
+and develops especially efficient WH factorization/GCV
+algorithms principally for difference order two. Thus
+linear-time fixed-order WH diagnostics are pre-existing
+results, not a novelty claim here. We cite these findings as reported
+by Weinert, without claiming independent verification
+of all nineteenth-century and actuarial archival sources.

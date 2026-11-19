@@ -1,0 +1,21 @@
+# Current research manuscripts — updated 18 November 2026
+
+This page links to the latest compiled research drafts stored in the repository's **main** branch. A compiled manuscript is not a journal submission, peer review decision or acceptance. Author order, affiliations, financial declarations and scientific interpretation remain subject to final author/coauthor approval.
+
+| Research article | Compiled manuscript | Editable LaTeX | Associated visualizations |
+|---|---|---|---|
+| **Springer Computational Statistics — empirical PLS smoothing selection** | [paper/main.pdf](main.pdf) (19 pages; Windows compilation [#43630631770](https://github.com/heri-espino/trendestimation/actions/runs/43630631770)) | [paper/main.tex](main.tex) | [42 AwesomeFigures plots](benchmarks/experiment011/pc08_empirical/visualization002/), including [33-page supplementary atlas](benchmarks/experiment011/pc08_empirical/visualization002/supplementary_figure_gallery.pdf) |
+| **Unified CSDA theory — spectral and structured algorithms for PLS** | [csda-unified-theory/main.pdf](csda-unified-theory/main.pdf) (**14 pages**, full landscape tables on pp. 5 and 8; [verified build #44448096253](https://github.com/heri-espino/trendestimation/actions/runs/44448096253)) | [csda-unified-theory/main.tex](csda-unified-theory/main.tex) | [Algorithm provenance and D-versus-H rationale](csda-unified-theory/); [compilation/rotation instructions](csda-unified-theory/README.md) |
+| **Paper C — third-order PLS, known-jerk simulations and real NGSIM vehicle trajectories** | [ngsim-jerk-case-study/main.pdf](ngsim-jerk-case-study/main.pdf) (14 pages; Windows compilation [#43631207424](https://github.com/heri-espino/trendestimation/actions/runs/43631207424)) | [ngsim-jerk-case-study/main.tex](ngsim-jerk-case-study/main.tex) | [12-page AwesomeFigures atlas](ngsim-jerk-case-study/atlas_supplement.pdf), [annotated gallery](ngsim-jerk-case-study/FIGURE_ATLAS.md) |
+
+## Scientific boundaries
+The Springer work investigates **complete numerical selection-criterion computation** using frozen 29-case Experiment011 results. Its conditional spectral-SVD recommendation applies to repeated grids within feasible dense-memory limits, not to every series length or numerical precision problem.
+
+The unified CSDA article focuses on the **mathematical spectral reconstruction, normalized smoothness coordinate, numerical-accuracy limitations, and time/memory complexity bounds**. Its original-algorithm provenance table distinguishes historical numerical methods from the manuscript's derived grid workload bounds. Its November 18 update explicitly decomposes the fixed difference operator D_d, compares Gram and smoother eigenanalysis with suitable conditioning cautions, distinguishes one setup from 11 new smoothness evaluations, and places both computational tables on readable native-landscape PDF pages. The PDF is a compiled draft, not a statistical validation or a journal submission.
+
+Paper C studies **established third-difference penalized least squares** for physically interpretable discrete jerk and recorded future-position trajectories; the article explicitly reports spline-related advantages in some real-data forecasting comparisons and does not claim that PLS inherently forecasts or that independently observed real jerk is available. The Gaussian-model interpretation of S does not establish absolute sensor precision.
+
+## Reproduction and versions
+Each paper retains original TeX, bibliography, vector figures, scientific source data references, tests and source-specific notes. The compiled PDFs are checked into this branch and additionally backed by immutable GitHub Actions results refs. The source branch histories and original research experiment archives are preserved: no costly benchmark, new simulation, raw-data download, numerical-tolerance change or journal submission was performed to integrate the papers.
+
+The historical SN Computer Science draft in [computational-statistics-submission/](computational-statistics-submission/) is a separate manuscript and has **not** been substituted for the canonical Springer paper above. Older paper versions remain in Git history and historical artifact branches.

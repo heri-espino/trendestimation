@@ -1,0 +1,125 @@
+name: Springer AwesomeFigures empirical atlas (PC08)
+
+on:
+  push:
+    branches:
+      - paper/experiment011-awesomefigures-gallery
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: springer-awesomefigures-atlas-pc08
+  cancel-in-progress: false
+
+jobs:
+  figure_atlas_and_pdf:
+    if: contains(github.event.head_commit.message, '[awesomefigures-render]')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Enforce the correct Windows host and pinned publication dependencies
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Wrong self-hosted runner" }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -c "import awesomefigures as af; import pypdf; import pandas; print('AwesomeFigures version:',af.__version__); print('Okabe-Ito:',af.color_palette('okabe-ito',as_hex=True))"
+          if ($LASTEXITCODE -ne 0) { throw "Pinned AwesomeFigures not installed. Do not silently use matplotlib-only plotting." }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m py_compile paper/benchmarks/experiment011/pc08_empirical/visualization002/render.py paper/benchmarks/experiment011/pc08_empirical/visualization002/awesomefigures_config.py
+          if ($LASTEXITCODE -ne 0) { throw "AwesomeFigures source syntax failure" }
+          if (-not (Get-Command pdflatex -ErrorAction SilentlyContinue)) { throw "pdflatex required for real manuscript typography" }
+
+      - name: Generate journal figures and extensive visual supplement from frozen results
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $frozen = 'paper/benchmarks/experiment011/pc08_empirical/derived/42636962129'
+          $out = 'paper/benchmarks/experiment011/pc08_empirical/visualization002'
+          foreach ($input in @('analysis_summary.json','timing_tensor.csv.gz',
+            'paired_backend_rows.csv.gz','paired_coordinate_rows.csv.gz',
+            'paired_backend_seed_bootstrap.csv','paired_coordinate_seed_bootstrap.csv',
+            'timing_cell_summary.csv')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $frozen $input))) {
+              throw "Frozen study input missing: $input"
+            }
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python (Join-Path $out 'render.py') --frozen $frozen --out $out --tex-core
+          if ($LASTEXITCODE -ne 0) { throw "AwesomeFigures empirical atlas generation failed" }
+          $m = Get-Content -LiteralPath (Join-Path $out 'figure_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.renderer -ne 'awesomefigures' -or $m.figure_count -lt 30 -or
+              $m.primary_count -ne 9 -or $m.no_new_experiments -ne $true) {
+            throw "Missing complete source-backed figure collection"
+          }
+          $pdfs = @(Get-ChildItem -LiteralPath (Join-Path $out 'figures') -Filter *.pdf -File)
+          if ($pdfs.Count -ne $m.figure_count) { throw "PDF figure count mismatch" }
+          if (-not (Test-Path (Join-Path $out 'supplementary_figure_gallery.pdf'))) {
+            throw "Supplementary figure gallery PDF not generated"
+          }
+          Write-Host "Verified $($m.figure_count) AwesomeFigures PDFs, nine manuscript figures, and gallery. Exact-TeX support=$($m.exact_tex_available)"
+
+      - name: Run all experiment audit and KKT mathematical tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/benchmarks/experiment011/pc08_empirical -p 'test_*.py' -v
+          if ($LASTEXITCODE -ne 0) { throw 'Source-only numerical and reproducibility tests failed' }
+
+      - name: Fresh compile official Springer manuscript and inspect PDF
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = "paper/builds/pc08/springer-awesomefigures-$env:GITHUB_RUN_ID"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper springer --output-dir $out --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'Springer LaTeX build failed' }
+          $manifest = Get-Content -LiteralPath (Join-Path $out 'build_manifest.json') -Raw | ConvertFrom-Json
+          if (@($manifest.results).Count -ne 1 -or $manifest.results[0].status -ne 'ok') {
+            throw 'Springer build manifest not successful'
+          }
+          if ($manifest.source_commit -ne $env:GITHUB_SHA) { throw 'Exact source commit mismatch' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/benchmarks/experiment011/pc08_empirical/inspect_pdf.py --pdf (Join-Path $out 'springer.pdf') --log paper/main.log --output (Join-Path $out 'proof')
+          if ($LASTEXITCODE -ne 0) { throw 'PDF integrity or citation inspection failed' }
+          Write-Host "New manuscript SHA-256=$($manifest.results[0].pdf_sha256)"
+
+      - name: Upload PDF and all figures for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: springer-awesomefigures-atlas
+          path: |
+            paper/benchmarks/experiment011/pc08_empirical/visualization002/
+            paper/builds/pc08/springer-awesomefigures-*/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit reproducible outputs to the dedicated feature branch and archive
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $atlas = 'paper/benchmarks/experiment011/pc08_empirical/visualization002'
+          $out = "paper/builds/pc08/springer-awesomefigures-$env:GITHUB_RUN_ID"
+          if (-not (Test-Path -LiteralPath (Join-Path $atlas 'figure_manifest.json')) -or
+              -not (Test-Path -LiteralPath (Join-Path $out 'proof/pdf_inspection.json'))) {
+            throw "Cannot publish unverified figure or PDF results"
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $atlas $out paper/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw "Staging figures and compiled PDF failed" }
+          git commit -m "paper: archive AwesomeFigures empirical atlas, supplementary PDF, and verified Springer manuscript"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit publication outputs' }
+          git push origin HEAD:refs/heads/paper/experiment011-awesomefigures-gallery
+          if ($LASTEXITCODE -ne 0) { throw "Feature branch changed concurrently; do not force push" }
+          $archive = "artifacts/springer-awesomefigures-$env:GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw "Could not publish permanent audited artifact branch" }
+          Write-Host "Archived source, vector/raster figures, supplementary gallery and new Springer PDF: $archive"

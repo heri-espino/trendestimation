@@ -1,3 +1,5 @@
+**Mainline manuscript update, 2026-11-14:** Latest compiled research drafts and their scientific boundaries are indexed at [LATEST_PAPERS.md](LATEST_PAPERS.md). Active manuscript entries: `paper/main.tex` (Springer empirical selection with 42 AwesomeFigures plots), `paper/csda-unified-theory/main.tex` (unified CSDA spectral/structured theory), and `paper/ngsim-jerk-case-study/main.tex` (third-order PLS known-jerk simulations and actual recorded-position NGSIM, plus 12-page visual atlas). Historical CSDA A/B TeX and prior NGSIM drafts are preserved; no journal submission or new empirical study is implied by the merges.
+
 # Publication map — source of truth for all TrendEstimation agents
 
 **Paper C focus update (2026-11-05):** The proposed scientific

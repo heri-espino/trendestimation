@@ -1,0 +1,37 @@
+case_id,n,d,criterion,candidate_grid_M,method,workload_scope,valid_rows,recorded_method_rows,independent_seed_clusters,failure_type
+confirm_cv_n256_d3_m1000,256,3,cv,1000,banded_cholesky,one,776,776,97,none
+confirm_cv_n256_d3_m1000,256,3,cv,1000,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+confirm_cv_n256_d3_m1000,256,3,cv,1000,spectral_svd,one,776,776,97,none
+confirm_cv_n256_d3_m1000,256,3,cv,1000,spectral_svd,grid,776,776,97,none
+pilot_cv_n128_d3_m1000,128,3,cv,1000,banded_cholesky,one,776,776,97,none
+pilot_cv_n128_d3_m1000,128,3,cv,1000,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+pilot_cv_n128_d3_m1000,128,3,cv,1000,spectral_svd,one,776,776,97,none
+pilot_cv_n128_d3_m1000,128,3,cv,1000,spectral_svd,grid,776,776,97,none
+pilot_cv_n256_d4_m100,256,4,cv,100,banded_cholesky,one,776,776,97,none
+pilot_cv_n256_d4_m100,256,4,cv,100,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+pilot_cv_n256_d4_m100,256,4,cv,100,spectral_svd,one,776,776,97,none
+pilot_cv_n256_d4_m100,256,4,cv,100,spectral_svd,grid,776,776,97,none
+confirm_gcv_n256_d3_m1000,256,3,gcv,1000,banded_cholesky,one,776,776,97,none
+confirm_gcv_n256_d3_m1000,256,3,gcv,1000,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+confirm_gcv_n256_d3_m1000,256,3,gcv,1000,spectral_svd,one,776,776,97,none
+confirm_gcv_n256_d3_m1000,256,3,gcv,1000,spectral_svd,grid,776,776,97,none
+confirm_gcv_n64_d3_m10000,64,3,gcv,10000,banded_cholesky,one,776,776,97,none
+confirm_gcv_n64_d3_m10000,64,3,gcv,10000,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+confirm_gcv_n64_d3_m10000,64,3,gcv,10000,spectral_svd,one,776,776,97,none
+confirm_gcv_n64_d3_m10000,64,3,gcv,10000,spectral_svd,grid,776,776,97,none
+pilot_gcv_n128_d3_m1000,128,3,gcv,1000,banded_cholesky,one,776,776,97,none
+pilot_gcv_n128_d3_m1000,128,3,gcv,1000,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+pilot_gcv_n128_d3_m1000,128,3,gcv,1000,spectral_svd,one,776,776,97,none
+pilot_gcv_n128_d3_m1000,128,3,gcv,1000,spectral_svd,grid,776,776,97,none
+pilot_gcv_n256_d4_m100,256,4,gcv,100,banded_cholesky,one,776,776,97,none
+pilot_gcv_n256_d4_m100,256,4,gcv,100,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+pilot_gcv_n256_d4_m100,256,4,gcv,100,spectral_svd,one,776,776,97,none
+pilot_gcv_n256_d4_m100,256,4,gcv,100,spectral_svd,grid,776,776,97,none
+confirm_mle_n512_d3_m100,512,3,mle,100,banded_cholesky,one,776,776,97,none
+confirm_mle_n512_d3_m100,512,3,mle,100,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+confirm_mle_n512_d3_m100,512,3,mle,100,spectral_svd,one,776,776,97,none
+confirm_mle_n512_d3_m100,512,3,mle,100,spectral_svd,grid,776,776,97,none
+pilot_mle_n256_d3_m100,256,3,mle,100,banded_cholesky,one,776,776,97,none
+pilot_mle_n256_d3_m100,256,3,mle,100,banded_cholesky,grid,0,776,97,PLS KKT backward-error
+pilot_mle_n256_d3_m100,256,3,mle,100,spectral_svd,one,776,776,97,none
+pilot_mle_n256_d3_m100,256,3,mle,100,spectral_svd,grid,776,776,97,none

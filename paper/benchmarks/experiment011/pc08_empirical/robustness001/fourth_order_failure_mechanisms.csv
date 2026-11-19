@@ -1,0 +1,9 @@
+n,method,KKT gate,S inversion,complete,available_rows
+256.0,banded_cholesky,1552,0,1552,3104
+256.0,spectral_svd,0,0,3104,3104
+1024.0,banded_cholesky,696,696,1392,2784
+1024.0,spectral_svd,0,1392,1392,2784
+2048.0,banded_cholesky,704,704,1408,2816
+2048.0,spectral_svd,0,1408,1408,2816
+4096.0,banded_cholesky,712,712,1424,2848
+4096.0,spectral_svd,0,1424,1424,2848

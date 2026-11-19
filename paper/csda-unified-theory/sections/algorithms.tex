@@ -1,0 +1,201 @@
+\section{Numerical algorithm families}\label{sec:algorithms}
+The principal distinction is between a fitted trend at a \emph{known} penalty and a \emph{complete criterion evaluation} at that penalty. We include every required residual, trace, leverage, determinant and smoothness-mapping computation in the latter.
+
+\input{sections/algorithm_provenance}
+
+\subsection{Spectral preparation and candidate scoring}
+A full retained reduced SVD of $D_d$ requires $O(nr^2)$ arithmetic and $O(nr)$ memory for $r=n-d$ (near-square: cubic time and quadratic storage) under a standard dense bidiagonalization-based SVD computation \citep{golubkahan1965,golubreinsch1970,golubvanloan2013}. The stated count is for a general dense rectangular factorization, not a lower bound on all algorithms exploiting the special banded structure of $D_d$. Preparation produces both the positive singular spectrum and the right singular vectors. For one observed series, projections $V^\top y$ and $U^\top\mathbf1_r$ permit scalar evaluations of $S$, $\nu$, $\RSS$, GCV, residual AICc/BIC and the Gaussian criterion using $O(r)$ arithmetic per candidate after an $O(nr)$ projection. A full curve reconstructs via \eqref{eq:shiftfree} in $O(nr)$. Ordinary CV additionally computes the leverage vector \eqref{eq:leverage} and reconstructed residuals, each up to $O(nr)$ per new penalty. Leverages can be shared across series having the same $(n,d,\lambda)$.
+
+The spectral representation could instead be constructed from a symmetric
+eigendecomposition of $Q_d=D_d^\top D_d$; in exact arithmetic it gives
+the same trend, smoothness coordinate, and candidate-score formulas.
+In particular, both decompositions support the same reuse of the
+spectral basis across candidate penalties.
+
+\begin{proposition}[Spectral equivalence and Gram conditioning]
+\label{prop:svd-vs-gram}
+Let $D_d\in\mathbb R^{r\times n}$ have full row rank $r=n-d\geq1$,
+and let its positive singular values be
+$\sigma_1\geq\cdots\geq\sigma_r>0$. Then $Q_d=D_d^\top D_d$
+has positive eigenvalues $\delta_j=\sigma_j^2$ and $d$ zero
+eigenvalues. With $\kappa_+(B)$ denoting the ratio of the largest
+to smallest \emph{positive} singular values (or, for a
+positive-semidefinite matrix, positive eigenvalues),
+\begin{equation}\label{eq:gram-conditioning}
+\begin{aligned}
+\kappa_+(Q_d)
+&=\frac{\delta_1}{\delta_r}\\
+&=\left(\frac{\sigma_1}{\sigma_r}\right)^2
+=\kappa_+(D_d)^2.
+\end{aligned}
+\end{equation}
+Moreover, the SVD and symmetric eigendecomposition give the identical
+exact smoothing operator
+\begin{equation}\label{eq:svd-eigh-smoother}
+\begin{aligned}
+H_\lambda &=V B_\lambda V^\top,\\
+B_\lambda&=\operatorname{diag}(h_1,\ldots,h_r,1,\ldots,1),\\
+h_j&=(1+\lambda\delta_j)^{-1},
+\quad \lambda\geq0.
+\end{aligned}
+\end{equation}
+Here the final $d$ diagonal entries of $B_\lambda$ equal one, and
+$V=[V_+,V_0]$ is an orthogonal completion of the right singular
+vectors.
+\end{proposition}
+\begin{proof}
+From $D_d=U\Sigma V_+^\top$,
+$Q_d=V_+\Sigma^\top\Sigma V_+^\top$, so the positive eigenvalues
+are the squared singular values and the orthogonal complement
+$\ker D_d$ contributes $d$ zeros. Taking the ratio of the extremal
+positive eigenvalues gives \eqref{eq:gram-conditioning}.
+Adding the identity and inverting this orthogonal diagonalization
+gives \eqref{eq:svd-eigh-smoother}.
+\end{proof}
+
+The identity in \eqref{eq:gram-conditioning} concerns the nonzero
+spectrum of the exact matrices: $Q_d$ itself is singular, so its
+ordinary full-space condition number is infinite. When $Q_d$ is
+\emph{formed explicitly} in floating-point arithmetic, perturbations
+on the scale of machine precision times $\|Q_d\|_2$ may obscure small
+positive eigenvalues. Directly applying SVD to $D_d$ avoids this
+Gram-matrix formation and is the accuracy-oriented reference
+implementation \citep{golubkahan1965,golubvanloan2013}.
+This does not prove that every symmetric eigensolver is less accurate
+or slower: exploiting the banded structure of $Q_d$, the requested
+spectrum, and the computational workload may change the comparison.
+The numerical reliability of competing eigensolvers would require
+a separately matched error-and-timing study.
+
+\paragraph{Why not diagonalize $H_\lambda$ directly?}
+At a fixed penalty, one \emph{could} diagonalize the symmetric
+smoothing matrix $H_\lambda$. However, $H_\lambda$ is generally
+dense and is defined through the inverse of
+$I+\lambda D_d^\top D_d$. Computing it explicitly and then applying
+a dense eigensolver would first pay for the inverse/solve and the
+$n\times n$ storage we aim to avoid. Furthermore, its eigenvalues
+are $\{1\}$ with multiplicity $d$, together with
+$\{(1+\lambda\sigma_j^2)^{-1}\}_{j=1}^r$.
+They change with $\lambda$, while the underlying right
+singular vectors of $D_d$ do not. In exact arithmetic a
+\emph{single} eigendecomposition of $H_{\lambda_0}$ for
+$\lambda_0>0$ could also recover a common eigenbasis;
+it is therefore false that the eigenvectors of $H_\lambda$
+intrinsically change with $\lambda$. Such a route is nevertheless
+unattractive for our reusable spectral engine:
+it starts from a dense, penalty-specific matrix, and recovering
+$\delta_j=(h_j^{-1}-1)/\lambda_0$ from $h_j\approx1$ can lose
+relative accuracy through subtraction. The direct SVD of $D_d$
+delivers $\sigma_j$ before that penalty-dependent transformation.
+
+\paragraph{Why SVD rather than eigendecomposition of $Q_d$?}
+The two formulations are \emph{exactly equivalent} in exact
+arithmetic (Proposition~\ref{prop:svd-vs-gram}).
+Our reference implementation prefers the SVD of the
+original rectangular $D_d$ because it avoids explicitly
+forming its Gram matrix $Q_d=D_d^\top D_d$, whose
+positive-spectrum condition number is
+$\kappa_+(D_d)^2$. This is a finite-precision conditioning
+argument, not a claim that standard symmetric eigenanalysis
+is mathematically incorrect or universally slower.
+Specialized banded spectral methods and banded Cholesky
+may be preferable when setup amortization is insufficient,
+$n$ is very large, or the intended workload is one fit
+at a known $\lambda$.
+
+\subsection{Banded Cholesky and selected inversion}
+$A_\lambda$ is SPD and has half-bandwidth $d$. Factor $A_\lambda=L_\lambda L_\lambda^\top$ with lower triangular banded $L_\lambda$, in $O(nd^2)$ arithmetic and $O(nd)$ storage; solve \eqref{eq:rhs} using two triangular solves, $O(nd)$ per right-hand side. Cholesky's method was published posthumously in \citet{benoit1924}; the banded-direct bounds are standard \citep{golubvanloan2013,anderson1999}; efficient PLS-specific structured and GCV algorithms precede this work \citep{weinert2007}. The direct right-hand side avoids forming the high-degree polynomial $p_\mu$. For just one fit, this is asymptotically preferable to preparing a dense SVD when $d$ is fixed and $n$ grows.
+
+However, exact CV requires diagonal entries of $Z=A_\lambda^{-1}$. Let $L=L_\lambda$ and denote the selected band of $Z$ by $Z_{ij}$ for $|i-j|\le d$. For $j>i$, backward selected-inverse recurrences are
+\begin{equation}\label{eq:seloff}
+Z_{ij}=-\frac1{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
+ L_{ki}Z_{kj},
+\qquad i<j\le\min(n,i+d),
+\end{equation}
+and
+\begin{equation}\label{eq:seldiag}
+Z_{ii}=\frac{1}{L_{ii}^2}
+-\frac{1}{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
+L_{ki}Z_{ki}.
+\end{equation}
+By symmetry $Z_{kj}=Z_{jk}$. The off-diagonal recursion follows by expanding $(L^\top Z)_{ij}=0$ for $i<j$, and the diagonal relation from $(L^\top Z)_{ii}=1/L_{ii}$. These are classical selected-inverse identities originating in the sparse-inverse literature \citep{takahashi1973,erisman1975}, not a new inverse algorithm. The $O(nd^2)$ bound below follows by counting $O(d)$ updates for each of $O(nd)$ selected entries; for fixed $d$, it reduces to $O(n)$, consistent with the specialized Whittaker--Henderson algorithms in \citet{weinert2007}.
+
+The selected entries are computable in reverse order in $O(nd^2)$ work and $O(nd)$ storage. Their diagonal supplies $h_i=Z_{ii}$ and $\nu=\sum_i h_i$. Consequently exact conditional CV, GCV and information criteria do \emph{not} require solving for all $n$ columns of the inverse or forming the dense $H_\lambda$. The determinant identity in Proposition~\ref{prop:det} completes the same banded pipeline for the Gaussian likelihood.
+
+\subsection{Other exact and iterative approaches}
+General banded LU can solve the finite-penalty system at structured cost but is not SPD Cholesky. Sparse direct solvers can exploit the same graph structure; sparsity-conscious elimination has antecedents in \citet{markowitz1957}, while pivoting, fill-in, ordering and modern cost considerations are treated by \citet{davis2006}. A hybrid in which sparse LU or CHOLMOD supplies a trend but a \emph{separate} banded factorization supplies leverage or likelihood diagnostics must charge both steps.
+
+Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through local differences at $O(nd)$ work per iteration, producing a nominal $O(qnd)$ fit for $q$ iterations, plus preconditioner setup and application. The underlying conjugate-gradient algorithm was introduced by \citet{hestenesstiefel1952}; its preconditioned convergence theory is reviewed by \citet{saad2003}. The $O(nd)$ matrix-vector application is counted directly from the two order-$d$ difference passes; the iteration count $q$ depends on convergence and the preconditioned spectrum. FFT or sine-transform preconditioners can introduce $O(qn\log n)$ work. Approximate boundary transforms should not be described as an exact finite-interval eigendecomposition. Neither a universally bounded iteration count nor exact leverage access follows from PCG alone; convergence and added diagnostics are separate requirements.
+
+\begin{sidewaystable*}[p]
+\centering
+\caption{Costs of numerical algorithms at one \emph{known} finite
+penalty $\lambda$. Setup that is reusable over distinct penalties
+is separated from the work required at each new penalty. These
+costs exclude the conversion from smoothness $S$ to $\lambda$.}
+\label{tab:algorithms}
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.36}
+\normalsize
+\begin{tabularx}{0.95\textheight}{@{}p{0.195\textheight}p{0.155\textheight}p{0.19\textheight}X p{0.13\textheight}@{}}
+\toprule
+\textbf{Pipeline} &
+\textbf{Reusable setup} &
+\textbf{At a new $\lambda$} &
+\textbf{Score or fitted trend} &
+\textbf{Working memory}\\
+\midrule
+Dense direct solve / explicit inverse &
+None required &
+$O(n^3)$ dense factorization or inversion &
+Complete score up to $O(n^3)$ if the full inverse is explicitly formed &
+$O(n^2)$\\
+\addlinespace
+Full reduced SVD of $D_d$ &
+$O(nr^2)$ once; project each data series in $O(nr)$ &
+$O(r)$ spectral weights &
+$O(r)$ projected scalar GCV/IC/likelihood score;
+$O(nr)$ full fit or exact LOOCV &
+$O(nr)$\\
+\addlinespace
+Dense Gram eigendecomposition of $Q_d$ &
+$O(n^3)$ once &
+$O(n)$ spectral weights &
+$O(n)$ projected scalar score;
+$O(n^2)$ full fit or LOOCV &
+$O(n^2)$\\
+\addlinespace
+Banded Cholesky alone &
+Banded penalty assembled once &
+$O(nd^2)$ factorization &
+$O(nd)$ triangular solve for one fit;
+exact leverages require extra work &
+$O(nd)$\\
+\addlinespace
+Banded Cholesky and selected inverse &
+Banded penalty assembled once &
+$O(nd^2)$ factorization and selected inverse &
+$O(nd)$ solve plus $O(n)$ scalar criteria;
+exact CV leverages are available &
+$O(nd)$\\
+\addlinespace
+PCG, $q$ iterations &
+Preconditioner-dependent &
+$O(qnd)$ local matrix-vector work &
+One approximate fit; exact leverage and
+determinant criteria are not supplied by PCG alone &
+Method-dependent\\
+\bottomrule
+\end{tabularx}
+
+\vspace{8pt}
+\begin{minipage}{0.95\textheight}
+\small\emph{Reading guide.} $r=n-d$ and $q$ is an observed
+iteration count, not a constant. These are upper bounds for
+the stated algorithmic implementations, not machine runtimes.
+The original methods and cost sources are attributed in
+Table~\ref{tab:provenance}. The complete-grid expressions
+(including inverse smoothness mapping) appear in
+Section~\ref{sec:complexity}.
+\end{minipage}
+\end{sidewaystable*}

@@ -1,0 +1,162 @@
+name: Paper C Experiment008 physical TSVD baseline (PCAG103A-08)
+
+on:
+  push:
+    branches: [paper/paper-c-methods-simulation-real-svd]
+    paths:
+      - .github/workflows/paper-c-experiment008-pc08.yml
+      - paper/ngsim-jerk-case-study/experiments/experiment008/*.py
+      - tests/test_paper_c_experiment008.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-c-exp008-physical-baseline
+  cancel-in-progress: false
+
+jobs:
+  synthetic-and-real:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      PYTHONHASHSEED: '0'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - name: Checkout isolated paper methods branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Validate source VM, preserve exact archive pointers and test TSVD
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw "Not PC08: $env:RUNNER_NAME" }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda unavailable' }
+          if (!(Test-Path (Join-Path $env:CONDA_ENV_DIR 'python.exe'))) { throw 'Existing trendestimation Conda environment unavailable' }
+
+          $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment008\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path $root) { throw "Cannot overwrite existing scientific result: $root" }
+          New-Item -ItemType Directory -Path $root | Out-Null
+          foreach($part in @('metadata','logs')) {
+            New-Item -ItemType Directory -Path (Join-Path $root $part) | Out-Null
+          }
+          "EXP008_ROOT=$root" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          "$env:GITHUB_SHA" | Out-File (Join-Path $root 'metadata\source_commit.txt') -Encoding ascii
+
+          $sim=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment005\run-42547250403-a1\confirm"
+          $previous=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment006\run-42639588117-a1"
+          $real=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment004\run-42538556206-a1\data"
+          foreach($path in @(
+            "$sim\trajectories.jsonl.gz",
+            "$previous\confirm\selections_rows.csv",
+            "$previous\real\selections_rows.csv",
+            "$real\selected_positions.csv",
+            "$real\download_manifest.json",
+            "$real\episode_catalog.json"
+          )) {
+            if (!(Test-Path -LiteralPath $path)) { throw "Missing immutable source: $path" }
+            "$path" | Out-File (Join-Path $root 'metadata\source_directories.txt') -Append -Encoding utf8
+          }
+          "EXP008_SIM=$sim" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          "EXP008_PREV=$previous" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          "EXP008_REAL=$real" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pip freeze |
+            Out-File (Join-Path $root 'metadata\requirements-resolved.txt') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot preserve scientific environment' }
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q tests/test_paper_c_experiment008.py 2>&1 |
+            Tee-Object -FilePath (Join-Path $root 'logs\preflight.log')
+          if ($LASTEXITCODE -ne 0) { throw 'TSVD mathematics/tests failed' }
+
+      - name: Compare PLS/TSVD/spline/SG against exact synthetic true jerk
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment008/run.py --mode synthetic --source (Join-Path $env:EXP008_SIM 'trajectories.jsonl.gz') --selections (Join-Path $env:EXP008_PREV 'confirm\selections_rows.csv') --output-dir (Join-Path $env:EXP008_ROOT 'synthetic') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:EXP008_ROOT 'logs\synthetic.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Synthetic method-baseline comparison failed' }
+          $m=Get-Content (Join-Path $env:EXP008_ROOT 'synthetic\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.status -ne 'complete' -or $m.n_samples -ne 1296 -or $m.n_fitted_rows -ne 6480 -or $m.n_forecast_rows -ne 38880) {
+            throw 'Synthetic audit source/count discrepancy'
+          }
+
+      - name: Compare same method policies on all 200 recorded NGSIM episodes
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:PYTHONPATH = Join-Path $env:GITHUB_WORKSPACE 'src'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/experiments/experiment008/run.py --mode real --source $env:EXP008_REAL --selections (Join-Path $env:EXP008_PREV 'real\selections_rows.csv') --output-dir (Join-Path $env:EXP008_ROOT 'real') 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:EXP008_ROOT 'logs\real.log')
+          if ($LASTEXITCODE -ne 0) { throw 'NGSIM method-baseline comparison failed' }
+          $m=Get-Content (Join-Path $env:EXP008_ROOT 'real\run_manifest.json') -Raw | ConvertFrom-Json
+          if ($m.status -ne 'complete' -or $m.n_samples -ne 200 -or $m.n_fitted_rows -ne 1000 -or $m.n_forecast_rows -ne 6000) {
+            throw 'Real NGSIM source/count discrepancy'
+          }
+
+      - name: Always inventory complete new data, figures, errors and VM file locations
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:EXP008_ROOT
+          if (!$root) {
+            $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment008\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          if (!(Test-Path $root)) { New-Item -ItemType Directory -Path $root -Force | Out-Null }
+          $status='partial_or_failed'
+          if (Test-Path (Join-Path $root 'synthetic\run_manifest.json')) { $status='synthetic_complete' }
+          if (Test-Path (Join-Path $root 'real\run_manifest.json')) { $status='synthetic_and_real_complete' }
+          & (Join-Path $env:CONDA_ENV_DIR 'python.exe') paper/ngsim-jerk-case-study/experiments/experiment004/inventory.py --run-root $root --status $status --output (Join-Path $root 'metadata\file_inventory.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot record full file integrity manifest' }
+          Write-Host "Full scientific result directory $root"
+
+      - name: Mirror entire VM derived results in checkout
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=$env:EXP008_ROOT
+          if (!$root) {
+            $root=Join-Path $env:USERPROFILE "Documents\TrendEstimation-PaperC\experiment008\run-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          }
+          $rel="paper/ngsim-jerk-case-study/experiments/experiment008/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $dest=Join-Path $env:GITHUB_WORKSPACE $rel
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          Get-ChildItem -LiteralPath $root -Force | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force
+          }
+          "$root" | Out-File (Join-Path $dest 'vm_run_root.txt') -Encoding utf8
+
+      - name: Upload results before archival commit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-experiment008-tsvd-physical-baselines
+          path: paper/ngsim-jerk-case-study/experiments/experiment008/runs/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit entire derivation to immutable separate results branch
+        if: always()
+        run: |
+          $ErrorActionPreference='Stop'
+          $rel="paper/ngsim-jerk-case-study/experiments/experiment008/runs/pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          if (!(Test-Path (Join-Path $rel 'metadata\file_inventory.json'))) { throw 'Inventory missing' }
+          $branch="results/paper-c-exp008-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create isolated results branch' }
+          git add -f -- $rel
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot add generated results' }
+          git commit -m "experiment008: archive TSVD, spline, SG and PLS matched physical comparisons"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot commit complete output' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot publish permanent result branch' }

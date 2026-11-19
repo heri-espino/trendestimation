@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "experiment": "experiment006",
+  "purpose": "Optimize both lambda and unknown mean mu using Gaussian mean-adjusted REML; compare to fixed-mu profile likelihood and training-only forecast-shrinkage",
+  "provenance": {
+    "stacked_base": "research/paper-c-guerrero-reml-identity",
+    "synthetic_pilot_branch": "results/paper-c-exp005-cloud-42547883064-a1",
+    "synthetic_confirm_branch": "results/paper-c-exp005-cloud-42547883064-a1",
+    "synthetic_archive_root": "paper/ngsim-jerk-case-study/experiments/experiment005/runs/cloud-42547883064-a1",
+    "real_vm_root": "%USERPROFILE%/Documents/TrendEstimation-PaperC/experiment004/run-42538556206-a1",
+    "real_results_branch": "results/paper-c-exp004-pc08-42538556206-a1",
+    "source_data_immutable": true
+  },
+  "independent_samples": {
+    "pilot": 96,
+    "confirm": 1296,
+    "real_episodes": 200
+  },
+  "training_points": 80,
+  "dt_seconds": 0.1,
+  "order": 3,
+  "horizons_frames": [
+    5,
+    10,
+    20
+  ],
+  "methods": {
+    "joint_reml_continuous": "GLS reference mean reestimated at each lambda, Gaussian REML removes mean direction, bounded log penalty search",
+    "joint_reml_grid": "same corrected unknown-mean REML but predeclared 15 normalized smoothness values",
+    "fixed_zero_continuous": "Gaussian fixed-mu profile likelihood at mu=0, same scalar optimizer",
+    "plugin_sample_continuous": "Gaussian fixed-mu profile likelihood with raw mean third difference estimated from training",
+    "plugin_global_ols_continuous": "Gaussian fixed-mu profile likelihood with global cubic OLS training reference",
+    "shrink_tscv": "penalty from full-history joint REML, alpha in [0,0.5,1] selected via inner rolling-origin forecast validation (lambda and mu reestimated per inner fold)"
+  },
+  "smoothness_grid": [
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    0.975,
+    0.99,
+    0.995,
+    1
+  ],
+  "continuous_search": {
+    "normalized_s_min": 0.0001,
+    "normalized_s_max": 0.9999,
+    "log_lambda_nodes": 61,
+    "refine_all_detected_local_minima": true,
+    "check_exact_zero_and_infinity_limits": true,
+    "certified_global_optimum": false
+  },
+  "alpha_grid": [
+    0,
+    0.5,
+    1
+  ],
+  "rolling_folds_by_horizon": {
+    "5": [
+      45,
+      55,
+      65
+    ],
+    "10": [
+      45,
+      55,
+      65
+    ],
+    "20": [
+      40,
+      50,
+      60
+    ]
+  },
+  "forecasts": [
+    "guerrero_last3",
+    "local25"
+  ],
+  "source_reuse": "Read archived Experiment005 clean/noisy trials for synthetic and Experiment004 official FHWA selected positions for real; never regenerate original data",
+  "validation": {
+    "synthetic": "known finite third difference jerk of clean historical position and known clean future position",
+    "real": "future camera-observed position only; no ground truth for physical jerk",
+    "leakage_protection": "all inner-fold REML estimates re-fit on prefix only; outer test future observations inaccessible during parameter estimation",
+    "original_comparators": [
+      "archived:spline_gcv_taylor2",
+      "archived:pls_mle_zero_local25",
+      "archived:pls_mle_ols_global_local25"
+    ],
+    "bootstrap_repetitions": 500,
+    "inferential_scope": "synthetic scenario-stratified independent-trial bootstrap; real resampling of five coarse recording blocks is exploratory only"
+  },
+  "paths": {
+    "windows_run_root": "%USERPROFILE%/Documents/TrendEstimation-PaperC/experiment006/run-<GITHUB_RUN_ID>-a<ATTEMPT>",
+    "output": [
+      "pilot/",
+      "confirm/",
+      "real/",
+      "metadata/file_inventory.json",
+      "metadata/requirements-resolved.txt",
+      "logs/"
+    ],
+    "append_only_and_no_overwrite": true,
+    "archive_all_first_party_analysis": true,
+    "preexisting_synthetic_and_FHWA_source_preserved_as_hashed_external_refs": true
+  }
+}

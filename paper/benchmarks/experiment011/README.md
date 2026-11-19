@@ -1,5 +1,7 @@
 # Experiment011 — measured complete-criterion runtime frontiers
 
+**Experiment011 completion update (2026-11-09):** The author reports **2813/2813 case-seed jobs recorded, remaining 0**, on the Windows VM. Read the [completed-campaign handoff](handoff/COMPLETION_HANDOFF.md) and [Springer analysis prompt](handoff/SPRINGER_ANALYSIS_AGENT_PROMPT.md) before following older pending-run instructions. Final raw data acquisition, verified backup and numerical/timing analysis remain pending; GitHub still has only the inspected 2338-job checkpoint. Preserve local raw files and use the documented no-automatic-publication backup procedure. These observations include 24/1/12-worker phases and must not be pooled as isolated-latency measurements.
+
 **Session continuation (2026-11-04): read [SESSION_HANDOFF.md](../../SESSION_HANDOFF.md) first.** It records the four-paper split, approved 29-case scope, current PRs, Windows missing-file diagnosis, exact results-worktree commands, and pending measurements. The next author action is the small 16-series/16-worker GCV pilot; the Windows campaign is not yet measured.
 
 ## Current author decision — focused Experiment011 (November 4, 2026)

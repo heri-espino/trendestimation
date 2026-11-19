@@ -80,6 +80,40 @@ def continuation(trend, order, mu, horizon):
     return np.asarray(p(predx)+future_ref,dtype=float)
 
 
+
+def continuation_guerrero_d3(trend, mu, horizon):
+    """Third-difference-constant extrapolation from three fitted trend points.
+
+    Derived d=3 extension of the d<=2 recurrences in Guerrero (2007),
+    Remark (v). This is an explicit *forecast rule*, not a PLS fit.
+
+    For h >= 1, with backward differences at the final training point:
+       tau_N(h) = tau_N + h*Delta1_N
+                    + C(h+1,2)*Delta2_N + C(h+2,3)*mu.
+
+    'mu' is the discrete difference mean (position units per third
+    difference), *not* physical jerk in meters/s^3. The rule is valid for
+    any length-n fitted trend, but uses exactly its final three values.
+    No future observation, noise model, or refitting is involved.
+    """
+    values=np.asarray(trend,dtype=float)
+    if values.ndim!=1 or len(values)<3 or not np.all(np.isfinite(values)):
+        raise ValueError("trend must have at least three finite fitted points")
+    if not np.isfinite(mu):
+        raise ValueError("mu must be finite")
+    if isinstance(horizon, bool) or not isinstance(horizon,(int,np.integer)) or horizon<1:
+        raise ValueError("horizon must be a positive integer")
+    a,b,c=(float(values[-3]),float(values[-2]),float(values[-1]))
+    delta1=c-b
+    delta2=c-2*b+a
+    h=np.arange(1,int(horizon)+1,dtype=float)
+    return np.asarray(
+        c+h*delta1+(h*(h+1)/2)*delta2
+         +(h*(h+1)*(h+2)/6)*float(mu),
+        dtype=float
+    )
+
+
 def polynomial_baseline(y, horizon, degree, window):
     k=min(window,len(y))
     x=np.arange(-k+1,1,dtype=float)*DT

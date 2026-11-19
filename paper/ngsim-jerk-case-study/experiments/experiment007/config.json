@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "experiment": "experiment007",
+  "question": "Does selected normalized third-difference PLS smoothness S act as a calibrated indicator of relative spectral observation-noise attribution, independently varying observation noise and latent jerk volatility?",
+  "origins": {
+    "model": "Guerrero variance-ratio PLS; normalized S and joint REML from existing repository",
+    "preserve_experiments": [
+      "experiment004",
+      "experiment005",
+      "experiment006"
+    ]
+  },
+  "model": {
+    "n": 80,
+    "difference_order": 3,
+    "dt_s": 0.1,
+    "baseline_position_m": 0,
+    "baseline_speed_m_s": 18,
+    "baseline_acceleration_m_s2": 0,
+    "mean_jerk_m_s3": 0.25
+  },
+  "factors": {
+    "position_noise_sd_m": [
+      0.01,
+      0.05,
+      0.2
+    ],
+    "latent_jerk_innovation_sd_m_s3": [
+      0.5,
+      2,
+      8
+    ],
+    "jerk_structures": [
+      "iid",
+      "ar1",
+      "sign_reversal"
+    ],
+    "jerk_ar1_rho": 0.7,
+    "reversal_time_s": 4,
+    "reversal_jerk_step_m_s3": -0.8,
+    "observation_noise_models": [
+      "iid",
+      "ar1",
+      "last_point_outlier"
+    ],
+    "observation_ar1_rho": 0.65,
+    "last_point_outlier_sd_multiplier": 4
+  },
+  "stages": {
+    "pilot_replicates_per_structure": 2,
+    "confirm_replicates_per_structure": 24,
+    "pilot_cases": 162,
+    "confirm_cases": 1944
+  },
+  "selection": {
+    "known_mu_reml": "fixed true generative mean reference (oracle control only), continuous lambda search",
+    "joint_reml": "unknown constant mu, adjusted Gaussian REML, continuous lambda search",
+    "global_ols_plugin_mle": "global noisy training cubic OLS reference then conditional Gaussian profile likelihood, continuous lambda search",
+    "gcv_zero_mu": "fixed zero reference; same 15 normalized S candidates as earlier Paper C, observational alternative",
+    "gcv_s_grid": [
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      0.95,
+      0.975,
+      0.99,
+      0.995,
+      1
+    ]
+  },
+  "precision_interpretation": {
+    "primary_theory": "trace((Cov(u)+Cov(D eps))^{-1} Cov(D eps))/(n-3) with true covariance matrices; model-correct only for iid jerk and iid noise (including constant mean)",
+    "nominal_iid": "mean_j[lambda_true * delta_j/(1+lambda_true*delta_j)]",
+    "lambda_true": "sigma_epsilon^2/(dt^6 * sigma_jerk^2)",
+    "misspecification": "AR1 observations, AR1 jerk and randomized terminal contamination break iid Gaussian assumptions; sign reversal breaks constant jerk mean",
+    "true_observation_precision": "1 / sigma_epsilon^2 (Gaussian core); for terminal outlier the unconditional marginal endpoint variance is 17 * core variance",
+    "null_oracle": "oracle S from known noise and jerk variance does not use observed data or fit any model"
+  },
+  "analysis": {
+    "paired_noise_intervention": "same jerk realization, same standardized observation noise, fixed jerk SD/structure/noise type/repetition; compare largest minus smallest position sigma",
+    "paired_jerk_intervention": "same standardized jerk innovations and position noise, fixed observation SD/dynamics/noise type/repetition; compare largest minus smallest jerk SD",
+    "ratio_invariance": "compare sigma_e=0.05,sigma_j=2 vs sigma_e=0.2,sigma_j=8 at same replicate/noise/dynamics, equal true variance ratio but different absolute noise precision",
+    "target_monotonic_noise": "mean high-low S positive under model correct",
+    "target_monotonic_jerk": "mean high-low S negative under model correct",
+    "cluster_unit": "replicate parent draw (independent across stage, dynamic structure and repetition); all factorial cells within a parent treated as dependent",
+    "bootstrap_reps": 1500,
+    "bootstrap_seed": 20261109,
+    "outputs": [
+      "selections.csv",
+      "trials.jsonl.gz",
+      "theory_cells.csv",
+      "per_cell.csv",
+      "interventions.csv",
+      "diagnostics.json",
+      "summary.md",
+      "figures/"
+    ],
+    "no_oracle_as_practical_method": true
+  },
+  "storage": {
+    "vm": "%USERPROFILE%/Documents/TrendEstimation-PaperC/experiment007/run-<GITHUB_RUN_ID>-a<GITHUB_RUN_ATTEMPT>",
+    "immutable_results_branch_prefix": "results/paper-c-exp007",
+    "preserve_all_synthetic_truth_observations": true,
+    "inventory_sha256": true,
+    "no_old_experiment_reruns": true
+  }
+}

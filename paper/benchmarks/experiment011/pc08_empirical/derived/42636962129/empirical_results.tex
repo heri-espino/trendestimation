@@ -1,0 +1,25 @@
+\newcommand{\EmpiricalJobs}{2813}
+\newcommand{\EmpiricalRows}{92679}
+\newcommand{\EmpiricalValidRows}{76220}
+\newcommand{\EmpiricalFailedJobs}{57}
+\begin{table}[t]
+\caption{Valid matched complete-search banded/SVD ratios for a 100-candidate, one-series grid in the 24-worker phase. Data denotes the conditional observed-difference mean, versus the default fixed zero mean. Hybrid labels refer to the broader comparison design, not the SVD/banded pairing itself. Confidence limits resample independent seed clusters; numerical agreement is float64 selected-score parity only.}
+\label{tab:empirical-paired}
+\centering\small
+\begin{tabular}{llrrrrr}
+\toprule
+Criterion & Case design & $n$ & $d$ & seeds & ratio & 95\% CI\\
+\midrule
+CV & pilot & 64 & 1 & 96 & 2.34 & [2.29, 2.39]\\
+CV & smoke & 64 & 3 & 97 & 4.03 & [3.95, 4.11]\\
+CV & pilot & 128 & 3 & 97 & 5.40 & [5.24, 5.55]\\
+CV & pilot-data & 128 & 3 & 97 & 5.56 & [5.46, 5.65]\\
+CV & confirm-data & 256 & 3 & 97 & 4.85 & [4.57, 5.12]\\
+GCV & pilot & 64 & 1 & 96 & 2.33 & [2.28, 2.37]\\
+GCV & pilot-hybrid & 64 & 1 & 97 & 2.37 & [2.31, 2.44]\\
+GCV & smoke & 64 & 1 & 97 & 2.40 & [2.34, 2.46]\\
+GCV & pilot-data & 128 & 3 & 97 & 5.12 & [5.01, 5.23]\\
+GCV & pilot & 128 & 3 & 97 & 4.99 & [4.87, 5.10]\\
+\bottomrule
+\end{tabular}
+\end{table}

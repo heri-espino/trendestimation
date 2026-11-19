@@ -1,0 +1,19 @@
+\begin{table}[t]
+\caption{Valid, matched 100-candidate one-series complete cold-time ratios $T_{\mathrm{B}}/T_{\mathrm{S}}$ at 24-worker phase. Medians and interquartile ranges describe the distribution of per-seed ratios; 95\% intervals are seed-cluster bootstrap intervals for the geometric means.}
+\label{tab:empirical-paired}
+\centering\scriptsize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lclrrl}
+\toprule
+Criterion & $(n,d)$ & $\mu$ & Seeds & Median [IQR] & Geom.\ mean [95\% CI]\\
+\midrule
+CV & 64, 1 & $0$ & 96 & 2.37 [2.25, 2.46] & 2.34 [2.29, 2.39]\\
+CV & 64, 3 & $0$ & 97 & 4.07 [3.95, 4.27] & 4.03 [3.95, 4.11]\\
+CV & 128, 3 & $0$ & 97 & 5.56 [5.12, 5.81] & 5.40 [5.24, 5.55]\\
+CV & 128, 3 & $\overline{D_dy}$ & 97 & 5.59 [5.40, 5.74] & 5.56 [5.46, 5.65]\\
+CV & 256, 3 & $\overline{D_dy}$ & 97 & 5.52 [3.82, 5.92] & 4.85 [4.57, 5.12]\\
+GCV & 64, 1 & $0$ & 96 & 2.36 [2.26, 2.45] & 2.33 [2.28, 2.37]\\
+GCV & 128, 3 & $0$ & 97 & 5.12 [4.74, 5.34] & 4.99 [4.87, 5.10]\\
+GCV & 128, 3 & $\overline{D_dy}$ & 97 & 5.15 [5.01, 5.32] & 5.12 [5.01, 5.23]\\
+\bottomrule
+\end{tabular}
+\end{table}
