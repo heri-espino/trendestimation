@@ -65,6 +65,38 @@ def test_incremental_plan_is_bounded_and_homogeneous() -> None:
         amort.plan(64, 3, "gcv", 100, (10, 100))
 
 
+def test_nested_penalty_prefixes_span_the_search_range() -> None:
+    import numpy as np
+
+    full = amort.lambda_grid(1000)
+    assert np.array_equal(full[:10], amort.lambda_grid(10))
+    assert np.array_equal(full[:100], amort.lambda_grid(100))
+    assert full[0] == pytest.approx(1.0)
+    assert len(set(full.tolist())) == 1000
+    assert float(np.min(full[:10])) < 0.1
+    assert float(np.max(full[:10])) > 10.0
+    assert np.isfinite(full).all()
+
+
+def test_three_actual_criterion_evaluators_agree_at_one_lambda() -> None:
+    # This is deterministic numerical API smoke, NOT an empirical timing result.
+    source = ROOT / "paper/benchmarks/experiment006/run.py"
+    sys.path.insert(0, str(source.parent))
+    engine = load_module(source, "actual_experiment006_criterion_engine")
+    y = engine.sample(64, 271828, "high")
+    scores = {}
+    for method in amort.METHODS:
+        evaluator = engine.Evaluator(64, 2, method)
+        coords = evaluator.prepare_series(y, 0.0)
+        score = evaluator.evaluate(y, 0.0, 0.1, "gcv",
+                                   coordinates=coords, reuse_factor=False)
+        scores[method] = float(score)
+    assert scores["banded_cholesky"] == pytest.approx(
+        scores["naive_inverse"], rel=1e-5, abs=1e-6)
+    assert scores["spectral_svd"] == pytest.approx(
+        scores["naive_inverse"], rel=1e-5, abs=1e-6)
+
+
 def test_cumulative_timing_and_complete_criterion_parity_with_mock_evaluator() -> None:
     class FakeEvaluator:
         def __init__(self, n, d, method):
