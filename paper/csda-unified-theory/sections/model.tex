@@ -27,7 +27,36 @@ The particular polynomial $p_{\mu,t}=\mu\binom{t-1}{d}$ satisfies $D_dp_\mu=\mu\
 \begin{equation}\label{eq:affine}
 \widehat\tau_{\lambda,\mu}=p_\mu+H_\lambda(y-p_\mu).
 \end{equation}
-For large $n,d$, explicitly forming and subtracting $p_\mu$ can cause severe cancellation. We therefore use the reduced SVD $D_d=U\Sigma V^\top$, where $\Sigma=\diag(\sigma_1,\ldots,\sigma_r)$, $\sigma_j>0$, $U$ is $r$-square orthogonal and $V$ has $r$ orthonormal columns. Define $\delta_j=\sigma_j^2$ and $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
+For large $n,d$, explicitly forming and subtracting $p_\mu$ can
+cause severe cancellation. \emph{Our reusable spectral factorization is
+applied to the difference matrix $D_d$, not to the smoothing matrix
+$H_\lambda$.} Specifically, we compute the reduced SVD
+\begin{equation}\label{eq:svd-target}
+\underbrace{D_d}_{r\times n}
+=\underbrace{U}_{r\times r}
+\underbrace{\Sigma}_{r\times r}
+\underbrace{V^\top}_{r\times n},
+\qquad r=n-d,
+\end{equation}
+where $\Sigma=\diag(\sigma_1,\ldots,\sigma_r)$ has
+$\sigma_j>0$, $U$ is orthogonal and $V$ contains $r$
+orthonormal right singular vectors. The decomposition is
+independent of the smoothing parameter $\lambda$,
+the data $y$, and any fixed reference $\mu$.
+Define $\delta_j=\sigma_j^2$ and
+$w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
+The inverse smoother follows \emph{algebraically} from this
+single factorization:
+\begin{equation}\label{eq:svd-generated-smoother}
+H_\lambda=(I+\lambda D_d^\top D_d)^{-1}
+=I-V\diag(w_1(\lambda),\ldots,w_r(\lambda))V^\top.
+\end{equation}
+Therefore changing $\lambda$ changes only the scalar weights,
+not the singular-vector matrices; no new SVD or explicit
+$n\times n$ inverse is needed. The same decomposition supplies
+the penalty spectrum used to convert a user-selected normalized
+smoothness value $S$ into its corresponding $\lambda$
+(Section~\ref{sec:smoothness}).
 
 \begin{proposition}[Shift-free nonzero-reference reconstruction]\label{prop:shiftfree}
 For every finite $\lambda\ge0$ and specified real $\mu$,
