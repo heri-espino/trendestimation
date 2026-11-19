@@ -43,11 +43,27 @@ def seed_for(index: int, n: int, d: int) -> int:
 
 
 def lambda_grid(count: int):
-    """Fixed, common log-spaced lambda candidates; no S-to-lambda timing."""
+    """Nested log-uniform low-discrepancy penalties, shared by all methods.
+
+    The first candidate is lambda=1. Subsequent prefixes spread over the
+    entire range, unlike sorted geomspace whose first 100 of 1000 values
+    occupy only its extreme lower tail. Every prefix is identical across
+    runs having different final checkpoint counts.
+    """
     import numpy as np
     if count < 1:
         raise ValueError("Candidate count must be positive")
-    return np.geomspace(1e-3, 1e3, count)
+
+    def radical_inverse(k: int) -> float:
+        value, factor = 0.0, 0.5
+        while k:
+            value += factor * (k & 1)
+            k >>= 1
+            factor *= 0.5
+        return value
+
+    positions = np.array([radical_inverse(i) for i in range(1, count + 1)])
+    return np.exp(np.log(1e-3) + positions * np.log(1e6))
 
 
 def plan(n: int, d: int, criterion: str, seeds: int, checkpoints) -> dict:

@@ -22,8 +22,11 @@ All three methods use the SAME `Evaluator` in
 synthetic data, same criterion (CV or GCV), same ordered penalty grid,
 one process, one BLAS thread, and a rotated method execution order.
 
-The predeclared distinct penalty grid is geometrically spaced from
-1e-3 to 1e3, with prefixes of **1, 10, 100, 1,000** at n=64. The predeclared maximum is 100 at n=128 and 10 at n=256 to bound the cost of repeated dense inverses. This is *not* the
+The predeclared distinct penalty grid is a nested van-der-Corput sequence
+uniformly distributed in log(lambda) over (1e-3, 1e3). The first penalty is
+lambda=1, and successive prefixes cover the entire range rather than an
+arbitrary lower tail. Each method and seed receives exactly the same sequence,
+with prefixes of **1, 10, 100, 1,000** at n=64. The predeclared maximum is 100 at n=128 and 10 at n=256 to bound the cost of repeated dense inverses. This is *not* the
 Experiment011 normalized-S grid; it intentionally avoids timing the
 shared S-to-lambda mapper and isolates full criterion evaluation,
 method initialization and reuse. Do not present its timings as the
