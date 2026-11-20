@@ -1,0 +1,80 @@
+{
+  "experiment": "experiment013",
+  "design": "100seed_core_direct_lambda",
+  "n": [
+    32,
+    64
+  ],
+  "d": [
+    1,
+    2,
+    3
+  ],
+  "criteria": [
+    "cv",
+    "gcv",
+    "mle",
+    "aicc",
+    "bic"
+  ],
+  "methods": [
+    "naive_inverse",
+    "banded_cholesky",
+    "spectral_svd"
+  ],
+  "checkpoints": [
+    1,
+    10,
+    100,
+    1000,
+    10000
+  ],
+  "seeds": 100,
+  "seed_stream": "Experiment012 seed_for",
+  "mu_policy": "fixed_zero",
+  "amplitude": "low",
+  "R": 1,
+  "coordinate": "direct_lambda",
+  "phase": "small",
+  "max_work": 50000000,
+  "dense_limit_n": 512,
+  "max_dense_bytes": 2147483648,
+  "blas_threads": 1,
+  "primary_question": "complete criterion setup and candidate-count amortization",
+  "limitations": [
+    "Operations are a prespecified eligibility proxy, not measured seconds",
+    "CV spectral candidate work is quadratic; scalar criteria differ",
+    "Naive full large-n grids are intentionally resource-ineligible",
+    "Only fixed mu=0 and one low-amplitude series in core design",
+    "Candidate prefixes are direct lambda, not normalized smoothness S"
+  ],
+  "run_id": "experiment013_small_20261120_152655_6460",
+  "source_commit": "2bca40b8b95998c41a25fc4ec44878e148acd461",
+  "engine_sha256": "dc7ff10ed51bcf746726e143512c61573c38f69f177d5fcbab6648830f55a9e5",
+  "experiment012_grid_sha256": "2d68c24016bc9f837bd50983cbcef16d3935207e7b53c601e2d4d2bbba2120ff",
+  "runner_sha256": "bc77de6a440aa728a7bae9a39445f38588727b75640edba428bcd6ca12dea315",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "host": "PCAG103A-08",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "blas_info": [
+    {
+      "user_api": "blas",
+      "internal_api": "mkl",
+      "num_threads": 1,
+      "prefix": "mkl_rt",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\Library\\bin\\mkl_rt.3.dll",
+      "version": "2026.1-Product",
+      "threading_layer": "intel"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 1,
+      "prefix": "vcomp",
+      "filepath": "C:\\Users\\175199\\AppData\\Local\\miniconda3\\envs\\trendestimation\\vcomp140.dll",
+      "version": null
+    }
+  ]
+}
