@@ -1,5 +1,8 @@
 # MASTER CONTINUATION HANDOFF — TrendEstimation Paper C (verified 2026-11-18)
 
+> **Live reconciliation (2026-11-20):** Read [CONTINUATION_STATUS_2026-11-20.md](CONTINUATION_STATUS_2026-11-20.md) immediately after this historical handoff. Current `main` has the newer 15-page Paper C draft, compiled on Windows #44485951302 with 51 references; the 12-page AwesomeFigures atlas is unchanged. A separately compiled 17-page revision exists only in open PR #152, which GitHub reported as conflicted at the November 20 inspection. This addendum preserves all November 18 experiment/build history without silently replacing past scientific results or claiming the PR is merged.
+
+
 **Maintenance addendum (2026-11-18):** The stale workflow branch restrictions and pre-atlas publication SHA-256 inventory have been corrected in a scoped maintenance PR. Both PC08 workflows are **manual only** and accept `main` or scoped Paper C branches; the atlas never publishes generated PDFs/figures directly onto `main`. The verified final 14-page and 12-page PDF hashes are recorded in the active 16-file `publication_sha256.txt`, while the former pilot manifest is preserved under `publication_sha256_legacy_pre_atlas.txt`. The check procedure is `python paper/ngsim-jerk-case-study/check_publication_hashes.py --check`. Full record: [PUBLICATION_MAINTENANCE_2026-11-18.md](PUBLICATION_MAINTENANCE_2026-11-18.md). Experiments004–008 remain untouched. The author's latest explicit standing authorization permits merging scoped, validated maintenance PRs, overriding older no-merge restrictions; journal submission remains prohibited without separate approval.
 
 
