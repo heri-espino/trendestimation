@@ -5,10 +5,12 @@
 #   .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase medium -Execute -Archive
 #   .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase large -Execute -Archive
 #   .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase small -ResumeTag TAG -Execute -Archive
+#   .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase small -Criteria aicc -Execute -Archive
 [CmdletBinding()]
 param(
   [ValidateSet('small','medium','large','all')][string]$Phase = 'small',
   [ValidateRange(1,100)][int]$Seeds = 100,
+  [ValidateSet('all','cv','gcv','mle','aicc','bic')][string]$Criteria = 'all',
   [ValidateSet(1,10,100,1000,10000)][int]$MaxCandidates = 10000,
   [ValidateRange(1,1000000000)][int]$MaxWork = 50000000,
   [ValidateSet(32,64,128,256,512,1024,2048)][int]$DenseLimitN = 512,
@@ -93,6 +95,9 @@ try {
               $py,'--phase',$Phase,'--seeds',"$Seeds",
               '--max-candidates',"$MaxCandidates",'--max-work',"$MaxWork",
               '--dense-limit-n',"$DenseLimitN")
+  if ($Criteria -ne 'all') {
+    $argsList += @('--criteria',$Criteria)
+  }
   if ($Execute) {
     $argsList += @('--execute','--out',$relative)
   }
@@ -100,7 +105,7 @@ try {
     $argsList += '--resume'
   }
   Write-Host "Source commit $localSha"
-  Write-Host "Phase $Phase; seeds $Seeds; maximum candidates $MaxCandidates; difference orders 1,2,3"
+  Write-Host "Phase $Phase; seeds $Seeds; criterion selection $Criteria; maximum candidates $MaxCandidates; difference orders 1,2,3"
   if (!$Execute) {
     Write-Host 'PLAN ONLY. No numerical work; -Execute is required.'
     & $CondaExe @argsList

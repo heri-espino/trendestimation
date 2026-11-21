@@ -1,3 +1,42 @@
+## AICc-undefined candidate correction (following the Nov 20 small run)
+
+The immutable 100-seed small archive
+`results/experiment013-experiment013_small_20261120_152655_6460`
+has 45,000 status rows: 34,500 `ok`, 4,500 budget skips and
+6,000 `numerical_failed`. **Every numerical-failure row belongs to AICc.**
+Source audit found that the existing scorer legitimately returns `+inf`
+for inadmissible candidates, including
+`n - tr(H_lambda) - 2 <= 0`; the historical Experiment013 runner
+wrongly treated the first such sentinel as a fatal numerical exception,
+abandoning later penalty candidates.
+
+The corrected runner does **not change the statistical score, solver
+implementation, or grid**. It times and counts each `+inf` evaluation
+as `undefined_scores`, continues searching later candidates and
+excludes inadmissible values from the selected optimum. It labels
+an all-inadmissible prefix `criterion_undefined` with no selected
+penalty, and treats NaN/negative infinity or actual method exceptions
+as numerical failures. It also records `finite_scores`. This is a
+new source revision: never overwrite or edit the original archived run.
+The analysis code checks the new counts and retains compatibility
+with the old source-specific CSV.
+
+After this fix passes PR and mainline CI, on the Win11 VM:
+
+```powershell
+git switch main
+git pull --ff-only origin main
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase small -Criteria aicc -Seeds 2 -MaxCandidates 10 -Execute -Archive
+# Only after verifying the small AICc repair pilot:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\paper\benchmarks\experiment013\Run-Grid.ps1 -Phase small -Criteria aicc -Seeds 100 -Execute -Archive
+```
+
+The 100-seed AICc addendum remains a separately versioned/hashed run;
+do not pretend it has the same runner source SHA as the original
+CV/GCV/MLE/BIC evidence. Combine coverage by predeclared exact
+`(n,d,criterion,method,M,seed)` keys and retain all provenance.
+For medium and large new phases use the corrected source directly.
+
 # Experiment013 — homogeneous complete-criterion timing grid
 
 ## Scientific purpose

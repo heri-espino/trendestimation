@@ -41,7 +41,7 @@ FIELDS = (
     "experiment", "run_id", "source_commit", "n", "d", "criterion",
     "mu_policy", "amplitude", "R", "coordinate", "seed_index", "seed",
     "method", "M", "status", "requested", "completed",
-    "method_setup_s", "first_evaluation_s", "cumulative_evaluation_s",
+    "finite_scores", "undefined_scores", "method_setup_s", "first_evaluation_s", "cumulative_evaluation_s",
     "total_cold_s", "selected_lambda", "selected_score", "error",
 )
 PLAN_FIELDS = ("n", "d", "criterion", "method", "M", "eligibility", "work_units",
@@ -179,7 +179,8 @@ def missing_record(config, n, d, criterion, method, idx, m, status, error=""):
             "mu_policy": config["mu_policy"], "amplitude": config["amplitude"],
             "R": 1, "coordinate": config["coordinate"], "seed_index": idx,
             "seed": seed_for(idx, n, d), "method": method, "M": m,
-            "status": status, "requested": m, "completed": 0, "error": error}
+            "status": status, "requested": m, "completed": 0,
+            "finite_scores": 0, "undefined_scores": 0, "error": error}
 
 
 def run_method(engine, config: dict, n: int, d: int, criterion: str,
@@ -214,6 +215,8 @@ def run_method(engine, config: dict, n: int, d: int, criterion: str,
     elapsed = 0.
     first = None
     completed = 0
+    finite_scores = 0
+    undefined_scores = 0
     best = (float("inf"), None)
     failure = ""
     last_permitted = max(permitted)
@@ -224,8 +227,12 @@ def run_method(engine, config: dict, n: int, d: int, criterion: str,
                 value = float(evaluator.evaluate(
                     y, 0.0, float(lam), criterion,
                     coordinates=coord, reuse_factor=False))
-                if not math.isfinite(value):
-                    raise ArithmeticError("Non-finite criterion score")
+                # The core scoring API returns +inf for criterion-undefined
+                # candidates (notably AICc where n - edf - 2 <= 0).
+                # This is a documented rejection of this candidate, NOT
+                # a failed factorization. Time the call and keep searching.
+                if math.isnan(value) or value == -math.inf:
+                    raise ArithmeticError("NaN or -infinity criterion score")
             except Exception as exc:
                 elapsed += perf_counter()-t0
                 failure=f"{type(exc).__name__}: {str(exc)[:160]}"
@@ -235,13 +242,24 @@ def run_method(engine, config: dict, n: int, d: int, criterion: str,
                 completed += 1
                 if first is None:
                     first = delta
-                if value < best[0]:
-                    best=(value,float(lam))
+                if value == math.inf:
+                    undefined_scores += 1
+                else:
+                    finite_scores += 1
+                    if value < best[0]:
+                        best=(value,float(lam))
         if i in permitted:
-            status = "ok" if completed==i and not failure else "numerical_failed"
+            if failure or completed != i:
+                status = "numerical_failed"
+            elif finite_scores == 0:
+                status = "criterion_undefined"
+            else:
+                status = "ok"
             row = missing_record(config,n,d,criterion,method,idx,i,status,failure)
             row.update({
                 "completed":completed,
+                "finite_scores":finite_scores,
+                "undefined_scores":undefined_scores,
                 "method_setup_s":setup,
                 "first_evaluation_s":first if first is not None else "",
                 "cumulative_evaluation_s":elapsed,

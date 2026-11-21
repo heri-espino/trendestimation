@@ -125,7 +125,8 @@ def test_parser_aggregates_real_status_rows_and_rejects_tampering(tmp_path):
             for method in runner.METHODS:
                 for m in c["checkpoints"]:
                     row=runner.missing_record(c,32,2,"gcv",method,idx,m,"ok")
-                    row.update(completed=m,method_setup_s=1.,
+                    row.update(completed=m,finite_scores=m,undefined_scores=0,
+                               method_setup_s=1.,
                                first_evaluation_s=.1,cumulative_evaluation_s=float(m),
                                total_cold_s=1.+m,selected_lambda=1.,
                                selected_score=0.05,error="")
@@ -153,3 +154,75 @@ def test_power_shell_launcher_stages_and_pushes_without_overwriting_source():
     assert "--resume" in text
     assert "git diff --quiet" in text
     assert "Get-FileHash" in text
+    assert "[string]$Criteria = 'all'" in text
+    assert "'--criteria',$Criteria" in text
+
+
+def test_aicc_positive_infinity_is_a_timed_rejected_candidate():
+    class MockEngine:
+        @staticmethod
+        def sample(n,seed,amplitude):
+            return [0.0]*n
+
+        class Evaluator:
+            def __init__(self,n,d,method):
+                pass
+
+            def prepare_series(self,y,mu):
+                return None
+
+            def evaluate(self,y,mu,lam,criterion,coordinates,reuse_factor):
+                return float("inf") if lam < 0.1 else (lam-1.0)**2
+
+    c=runner.configuration(args(n="32",d="2",criteria="aicc",seeds=1,
+                                max_candidates=10))
+    c.update(run_id="aicc-test",source_commit="demo")
+    grid=runner.candidates(10)
+    assert grid[0]==pytest.approx(1.0)
+    assert grid[1]<0.1
+    for method in runner.METHODS:
+        rows=runner.run_method(MockEngine,c,32,2,"aicc",0,method,grid)
+        assert [r["M"] for r in rows]==[1,10]
+        assert rows[0]["finite_scores"]==1
+        assert rows[0]["undefined_scores"]==0
+        assert rows[1]["status"]=="ok"
+        assert rows[1]["completed"]==10
+        assert rows[1]["undefined_scores"]>0
+        assert rows[1]["finite_scores"]+rows[1]["undefined_scores"]==10
+        assert rows[1]["selected_lambda"]==pytest.approx(1.0)
+
+
+def test_all_infinite_criterion_and_nan_are_not_successful_searches():
+    class MockEngine:
+        @staticmethod
+        def sample(n,seed,amplitude):
+            return [0.0]*n
+
+        class Evaluator:
+            def __init__(self,n,d,method):
+                pass
+
+            def prepare_series(self,y,mu):
+                return None
+
+            def evaluate(self,y,mu,lam,criterion,coordinates,reuse_factor):
+                if criterion=="aicc":
+                    return float("inf")
+                return float("nan") if lam < 0.1 else 1.0
+
+    c=runner.configuration(args(n="32",d="2",criteria="aicc",seeds=1,
+                                max_candidates=10))
+    c.update(run_id="aicc-test",source_commit="demo")
+    aicc=runner.run_method(MockEngine,c,32,2,"aicc",0,"spectral_svd",
+                           runner.candidates(10))
+    assert [r["status"] for r in aicc]==["criterion_undefined"]*2
+    assert aicc[1]["undefined_scores"]==10
+    assert aicc[1]["completed"]==10
+    assert aicc[1]["selected_lambda"]==""
+    nan=runner.run_method(MockEngine,c,32,2,"gcv",0,"spectral_svd",
+                          runner.candidates(10))
+    assert nan[0]["status"]=="ok"
+    assert nan[1]["status"]=="numerical_failed"
+    assert nan[1]["completed"]==1
+    assert nan[1]["finite_scores"]==1
+    assert "NaN" in nan[1]["error"]
