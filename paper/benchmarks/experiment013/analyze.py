@@ -39,6 +39,23 @@ def parse_data(output: Path):
         keys.add(key)
         if row["source_commit"]!=config["source_commit"]:
             raise ValueError("Source SHA mismatch")
+        # New, versioned AICc handling distinguishes an evaluated +inf
+        # score (criterion undefined) from a failed numerical method.
+        # Historical Experiment013 exports lacked these two columns;
+        # preserve their source-specific interpretation.
+        if "finite_scores" in row and "undefined_scores" in row:
+            finite=int(row["finite_scores"] or 0)
+            undefined=int(row["undefined_scores"] or 0)
+            completed=int(row["completed"] or 0)
+            if min(finite, undefined, completed) < 0 or finite+undefined!=completed:
+                raise ValueError("Inconsistent evaluated/finite/undefined score counts")
+            if row["status"]=="ok" and finite == 0:
+                raise ValueError("Successful search has no finite criterion score")
+            if row["status"]=="criterion_undefined" and (
+                finite != 0 or completed != int(row["M"]) or
+                row["selected_lambda"] or row["selected_score"]
+            ):
+                raise ValueError("Invalid all-inadmissible search accounting")
         if row["status"]=="ok":
             if int(row["completed"]) != int(row["M"]):
                 raise ValueError("False full-coverage claim")

@@ -1,3 +1,5 @@
+**AICc scorer-domain correction (2026-11-20):** The original small-phase 100-seed immutable result branch has 6,000 `numerical_failed` status rows, all AICc. The numerical scorer legitimately returns `+inf` for inadmissible AICc candidate penalties; the old Experiment013 runner aborted after such a result. The corrected source records finite versus undefined candidates, continues the search, distinguishes `criterion_undefined` and actual numerical errors, and adds `Run-Grid.ps1 -Criteria aicc` to measure only the source-versioned AICc addendum. Never mutate or relabel the historical branch. Audit the new AICc run before integrating result sets, and report implementation-source differences explicitly.
+
 # Experiment013 — independent agent handoff
 
 ## Mission and source of truth
