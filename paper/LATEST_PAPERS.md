@@ -1,5 +1,9 @@
 # Current research manuscripts — updated 20 November 2026
 
+
+**Editorial source update (22 November 2026; PDF rebuild pending):** A scoped three-manuscript TeX change adds the original Guerrero/Cortés-Toto PLS **precision-matrix** and rank-normalized relative-precision interpretations, with a complete CSDA proposition and proof, a computational Springer interpretation, and a conditional third-difference jerk-covariance identity in Paper C. See [cross-manuscript provenance and reproduction note](PRECISION_MATRIX_CROSS_MANUSCRIPT_2026-11-22.md). Until these revised sources are compiled and source-hash checked, the linked PDFs below remain the **previous verified binary editions**, not proof of the new LaTeX changes. No experiments or journal submissions are implied.
+
+
 This page links to the latest compiled research drafts stored in the repository's **main** branch. A compiled manuscript is not a journal submission, peer review decision or acceptance. Author order, affiliations, financial declarations and scientific interpretation remain subject to final author/coauthor approval.
 
 | Research article | Compiled manuscript | Editable LaTeX | Associated visualizations |
