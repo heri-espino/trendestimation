@@ -1,0 +1,149 @@
+name: Three-manuscript precision revision -- source-matched PDF build
+
+# One-shot editorial verification for this isolated source branch.
+# This workflow never downloads datasets, executes research campaigns,
+# regenerates figures, or modifies unrelated scientific results.
+on:
+  push:
+    branches:
+      - paper/three-manuscripts-precision-interpretation
+    paths:
+      - .github/workflows/three-manuscripts-precision-build.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manuscript-compile-pc08
+  cancel-in-progress: false
+
+jobs:
+  springer-and-ngsim:
+    name: TeX-only Springer and Paper C builds (PC08)
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Require unchanged editorial source and PC08 environment
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong research runner' }
+          if ($env:GITHUB_REF_NAME -ne 'paper/three-manuscripts-precision-interpretation') {
+            throw 'Unexpected branch'
+          }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda environment unavailable' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list
+          if ($LASTEXITCODE -ne 0) { throw 'TeX source preflight failed' }
+      - name: Build two canonical manuscripts without new experiments
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = "paper/builds/precision-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          foreach ($id in @('springer','ngsim')) {
+            $out = "$root/$id"
+            & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper $id --output-dir $out --require-runner
+            if ($LASTEXITCODE -ne 0) { throw "$id PDF build failed" }
+            $m = Get-Content -LiteralPath "$out/build_manifest.json" -Raw | ConvertFrom-Json
+            if (@($m.results).Count -ne 1 -or $m.results[0].status -ne 'ok') {
+              throw "$id build manifest is not successful"
+            }
+          }
+      - name: Upload exact compiled PDFs, logs and input-fingerprint manifests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: precision-springer-ngsim-pc08
+          path: |
+            paper/builds/precision-*/
+            paper/main.pdf
+            paper/ngsim-jerk-case-study/main.pdf
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Archive source-matched PDFs to separate immutable results ref
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = "paper/builds/precision-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $branch = "results/precision-springer-ngsim-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Results branch creation failed' }
+          git add -f -- $root paper/main.pdf paper/ngsim-jerk-case-study/main.pdf
+          if ($LASTEXITCODE -ne 0) { throw 'Results staging failed' }
+          git commit -m "paper: archive source-matched Springer and jerk precision PDF builds"
+          if ($LASTEXITCODE -ne 0) { throw 'Results commit failed' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Results branch push failed' }
+
+  csda:
+    name: TeX-only unified CSDA Elsevier CAS build (Ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Mathematical regression tests
+        run: |
+          python -m pip install --disable-pip-version-check numpy scipy pypdf==5.9.0
+          python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
+          python paper/csda-unified-theory/verify_theory.py
+      - name: Provision original Elsevier class and journal toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+          for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
+            test -s "paper/els-cas-templates/$f"
+            cp "paper/els-cas-templates/$f" "paper/csda-unified-theory/$f"
+          done
+      - name: Recompile and inspect references
+        run: |
+          set -euo pipefail
+          cd paper/csda-unified-theory
+          latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+          python rotate_landscape_tables.py main.pdf
+          python rotate_landscape_tables.py main.pdf --check
+          test -s main.pdf
+          if grep -Eq "Citation .* undefined|There were undefined references|LaTeX Error|Fatal error occurred" main.log; then
+            echo "Unresolved references, citations or LaTeX errors"; exit 1
+          fi
+          pdfinfo main.pdf | head -20
+          sha256sum main.tex sections/*.tex ../csda-computational-costs/references.bib algorithmic_references.bib main.pdf main.log > precision_source_sha256.txt
+          git rev-parse HEAD > precision_source_commit.txt
+      - name: Upload source-matched PDF and provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: precision-csda-unified
+          path: |
+            paper/csda-unified-theory/main.pdf
+            paper/csda-unified-theory/main.log
+            paper/csda-unified-theory/precision_source_sha256.txt
+            paper/csda-unified-theory/precision_source_commit.txt
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Archive unified CSDA PDF to distinct immutable results ref
+        if: success()
+        run: |
+          set -euo pipefail
+          branch="results/precision-csda-$(date +%Y%m%d)-$GITHUB_RUN_ID-a$GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -f -- paper/csda-unified-theory/main.pdf paper/csda-unified-theory/main.log paper/csda-unified-theory/precision_source_sha256.txt paper/csda-unified-theory/precision_source_commit.txt
+          git commit -m "paper: archive source-matched unified CSDA precision PDF build"
+          git push origin "HEAD:refs/heads/$branch"
