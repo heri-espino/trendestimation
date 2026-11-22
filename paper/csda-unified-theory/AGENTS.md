@@ -1,3 +1,20 @@
+## November 22, 2026 precision-matrix extension
+
+The smoothness subsection now derives the intrinsic-Gaussian fixed-reference
+precision matrix `J = sigma_e^(-2)I + sigma_u^(-2)Q`, the posterior
+conditional covariance `J^(-1)`, and the rank-normalized
+relative-precision trace `tr(P J^(-1))/(n-d)`.
+The original Guerrero index divides by `n`, not `n-d`.
+This is established mathematics, cited to Guerrero (2007) and
+Cortés-Toto et al. (2017), not a new algorithm. Preserve the
+separate Gaussian restricted-likelihood theorem and its handling
+of the `d` fixed-effect/nullspace directions.
+New test: `tests/test_precision_matrix.py`.
+See [the cross-manuscript audit](../PRECISION_MATRIX_CROSS_MANUSCRIPT_2026-11-22.md).
+Existing PDF must be rebuilt/verified; no numerical experiments or
+journal submission.
+
+
 # Agent instructions: unified CSDA theoretical manuscript
 
 ## November 19, 2026 original-reference source audit
