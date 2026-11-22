@@ -1,0 +1,19 @@
+{
+  "experiment": "experiment013",
+  "source_commit": "07739501bc08f859260f3f4f4d5150db723abc16",
+  "seed_count_scheduled_per_case": 100,
+  "raw_rows": 9000,
+  "status_counts": {
+    "ok": 8100,
+    "skipped_work_budget": 900
+  },
+  "paired_contrasts": 72,
+  "selected_parameter_disagreements": 0,
+  "source_timings_sha256": "18b72f86c13a90966f26520c3df5b1112fa69379c1c39a2a82d6ec4ec9025efd",
+  "bootstrap": {
+    "resamples": 400,
+    "unit": "independent seed",
+    "seed": 13013
+  },
+  "interpretation": "Only full, status-ok and numerically paired method times enter speedups. Noncompletion and resource masks retain their denominators."
+}
