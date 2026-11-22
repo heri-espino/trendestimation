@@ -77,6 +77,60 @@ model, the smoothness index also admits the relative-noise
 interpretation tested in Section~\ref{sec:precision};
 it is not the absolute measurement precision of a sensor.
 
+
+\paragraph{Precision matrix and physical jerk uncertainty.}
+The variance-ratio model gives a further interpretation
+of the same estimator, established for PLS by
+\citet{guerrero2007,cortes2017}. For a fixed
+reference $\mu$, independent observation noise
+with variance $\sigma_\varepsilon^2>0$, and independent
+third-difference innovations with variance
+$\sigma_u^2>0$, put $D=D_3$ and
+$P=\sigma_u^{-2}D^\top D$. Its conditional
+Gaussian precision matrix and covariance are
+\begin{equation}\label{eq:jerk-precision-matrix}
+\begin{aligned}
+J&=\sigma_\varepsilon^{-2}I_n+P
+  =\sigma_\varepsilon^{-2}(I_n+\lambda Q),\\
+\operatorname{Cov}(\tau\mid y)
+ &=J^{-1}=\sigma_\varepsilon^2H_\lambda,
+\qquad \lambda=\frac{\sigma_\varepsilon^2}{\sigma_u^2}.
+\end{aligned}
+\end{equation}
+The third-difference penalty has a three-dimensional
+unpenalized quadratic nullspace, so its stand-alone
+intrinsic Gaussian prior is improper; the observation
+precision makes $J$ positive definite.
+The corresponding \emph{relative} contribution of
+roughness precision is
+\begin{equation}\label{eq:jerk-precision-trace}
+\frac{\operatorname{tr}(PJ^{-1})}{n-3}
+ =\frac{\operatorname{tr}(I_n-H_\lambda)}{n-3}
+ =S(\lambda).
+\end{equation}
+Guerrero's original trace index divides by $n$;
+our normalization counts only the $n-3$
+penalized directions. Neither definition
+measures absolute camera-position precision.
+
+At sampling interval $\Delta t$, the conditional
+Gaussian model also yields a covariance for the
+latent discrete jerk $j=D\tau/(\Delta t)^3$:
+\begin{equation}\label{eq:jerk-conditional-covariance}
+\operatorname{Cov}(j\mid y,\lambda,\mu,
+ \sigma_\varepsilon^2,\sigma_u^2)
+ =\frac{DJ^{-1}D^\top}{(\Delta t)^6}.
+\end{equation}
+This is a \emph{model-based uncertainty identity},
+not an evaluated interval-coverage result:
+our frozen experiments do not assess posterior
+uncertainty calibration, and real NGSIM episodes
+have no independent true-jerk labels. Estimating
+$\mu$, selecting $\lambda$ or misspecifying
+serial error covariance requires additional
+uncertainty analysis beyond this conditional formula.
+
+
 \subsection{Smoothing, reference jerk and choice of regularization}
 We compare the existing PLS policies: a fixed reference
 $\mu=0$; the sample mean of the noisy third differences;
