@@ -4,7 +4,7 @@ This record tracks research-paper **versions**, not only journal publications. I
 
 Original archive compiled **November 9, 2026**; historical note reconciled **November 18, 2026**. These are historical snapshots, not a claim that November 9 PDFs are the newest current manuscripts. No historical benchmarks, raw experiments or journal submissions were rerun or rewritten by the original compilation.
 
-## Current integrated manuscripts (updated November 19, 2026)
+## Current integrated manuscripts (updated November 23, 2026)
 
 The live current-manuscript index is
 [LATEST_PAPERS.md](LATEST_PAPERS.md), not the historical
@@ -19,6 +19,48 @@ and source-specific visualization galleries.
 The **November 9 section below preserves the historic versions**.
 Any references to latest or current within that section refer
 to the earlier compilation date.
+
+### November 23, 2026 — explicit normalization and variance-ratio contributions
+
+**Current unified CSDA manuscript: 21 pages.** The authors requested that
+the paper's actual contribution set be identified more precisely, rather
+than described only as a unified computational framework. The revised
+abstract, Introduction (six numbered contributions) and conclusion
+emphasize the $S=(n-\operatorname{tr}H)/(n-d)$ **rank-normalized** unit
+interval with its exact endpoints, invertible penalty mapping and
+conditional relative-precision interpretation. Guerrero (2007) used
+the original $n$-normalization; Cortés-Toto et al. (2017) explicitly
+recognized its $1-d/n$ finite-n ceiling. The rescaling is an
+operational contribution, **not** invention of the trace index or PLS.
+
+The statistical contribution is stated accurately as **using** the
+established profiled Gaussian restricted/marginal likelihood to choose
+the *previously known* variance ratio
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$ and corresponding
+$S(\lambda)$, under fixed numeric $\mu$ and Gaussian assumptions.
+The theorem's variance profiles, fixed-effect contrasts, deterministic
+endpoints, finite-grid limitations and original REML citations are
+preserved. Other named contributions: shift-free nonzero-$\mu$ SVD($D$)
+reconstruction, full CV/GCV/IC/likelihood diagnostic costs, memory and
+numerical admissibility, and reproducible AwesomeFigures code/figure.
+
+**Verification:** [Merged figure PR #157](https://github.com/heri-espino/trendestimation/pull/157)
+and [merged contribution PR #158](https://github.com/heri-espino/trendestimation/pull/158).
+Verified source pre-archive SHA
+\`91893454dd53cdc67cbaf32582b32ac61d5ba0c1\`;
+merged contribution commit
+\`43e97807f9c49c457aa60e4c288358e91f54567f\`.
+Successful [Actions #45242845352](https://github.com/heri-espino/trendestimation/actions/runs/45242845352)
+ran all deterministic math/citation checks, regenerated the existing
+AwesomeFigures plot, compiled Elsevier CAS, and archived source+PDF.
+**PDF SHA-256**:
+\`538cf94310e21582912295f5c509ae8acb1a3337ac3ace76cd76b25b790e5772\`.
+The 21-page searchable PDF's contribution list is legible on p. 2,
+variance-ratio derivation on p. 8, and conclusion on p. 19; the two
+native-landscape algorithm tables are on pp. 11 and 14. The direct
+original-paper priority assessment is
+[CONTRIBUTION_PRIORITY_AUDIT_20261123.md](csda-unified-theory/notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md).
+No fresh benchmarking, changed estimator, or journal submission.
 
 ### November 19, 2026 — profiled Gaussian REML theorem and original-paper citation audit
 
