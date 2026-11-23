@@ -1,26 +1,64 @@
 \section{Reproducible software interface}\label{sec:software}
-The \texttt{trendestimation} Python package provides an explicit user-facing interface to the smoothing problem, exposing the difference order, prescribed reference mean and normalized smoothness coordinate. The library's present accuracy-oriented default uses a retained SVD. The analytical computational policy in Section~\ref{sec:policy} should not be mistaken for an already deployed universal automatic backend selector.
+The \texttt{trendestimation} Python package exposes the difference
+order, a prescribed difference reference mean, and the normalized
+smoothness coordinate. A fitted trend can be selected using the
+profiled Gaussian contrast likelihood derived in
+Theorem~\ref{thm:reml}. For a previously loaded observation
+vector \texttt{y} and a fixed numeric reference \texttt{mu}:
 
-A minimal example with a prescribed nonzero third-difference reference is:
 \begin{verbatim}
-from trendestimation import TrendSmoother
-from trendestimation import select_lambda
+import numpy as np
+from trendestimation import TrendSmoother, select_lambda
 
 solver = TrendSmoother(len(y), order=3)
-fit = solver.fit_smoothness(
-    y, smoothness=0.8, mu=0.15
-)
-trend = fit.trend
+s_grid = np.linspace(0.02, 0.98, 91)
 choice = select_lambda(
-    solver, y, criterion="gcv", mu=0.15
+    solver, y, criterion="mle", mu=mu,
+    search_space="smoothness", grid=s_grid
 )
-selected = solver.fit(
-    y, lambda_=choice.lambda_, mu=0.15
-)
+trend = solver.fit(
+    y, lambda_=choice.lambda_, mu=mu
+).trend
 \end{verbatim}
-The value $\mu=0.15$ is merely a demonstration of API syntax, \emph{not} a scientifically justified physical reference value. In a real study its units, source and inferential role must be defined. An alternative \texttt{mu="data"} computes an observed-difference plug-in from the supplied sample; it must not be described as fixed, genuinely foldwise-refitted CV, or joint unknown-mean likelihood.
 
-The interface distinguishes (i) specifying a penalty, (ii) specifying normalized smoothness and internally inverting it, and (iii) selecting a candidate by a named criterion. The separate functions make the mathematical transformations inspectable and permit independent numerical QA. The library is a research implementation of established PLS smoothing methods; this paper makes no claim that no related smoothing software existed previously.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/gaussian_jerk_demo.pdf}
+\caption{A single illustrative third-order PLS fit selected by the
+profiled Gaussian contrast likelihood. \emph{Top:} a simulated
+position series with independent Gaussian observation noise,
+its known cubic-plus-sinusoidal true trend, and the estimated trend.
+The cubic baseline corresponds to constant jerk
+$1.8\,\mathrm{m\,s^{-3}}$; the added sinusoid produces modest
+time-varying jerk. The reference $\mu=1.8h^3$ is fixed from
+the known baseline at sampling interval $h$, not estimated
+from the observations. \emph{Bottom:} the Gaussian contrast
+relative to its smallest evaluated value, plotted against the
+normalized smoothness index; the marked $\widehat S$ is the
+minimum over 91 predeclared candidates in $[0.02,0.98]$.
+This is an in-sample synthetic demonstration, not a
+forecasting or comparative-performance experiment.}
+\label{fig:gaussian-jerk-demo}
+\end{figure}
+
+Figure~\ref{fig:gaussian-jerk-demo} shows what the code returns:
+one fitted series and the corresponding selection criterion.
+The published example is reproduced with
+\texttt{figures/render\_gaussian\_jerk.py}, using the
+pinned AwesomeFigures library and a fixed random seed.
+The position observations are simulated; no external data
+are required, and the same $S$ grid and conditional
+fixed-$\mu$ criterion are used in the code and plot.
+
+The interface distinguishes specifying a penalty, requesting a
+normalized smoothness level and selecting a candidate by a
+statistical criterion. Selection on a finite $S$ grid is
+not a certified global continuous optimum. A data-derived
+reference \texttt{mu="data"} is a conditional plug-in
+and is not the joint unknown-mean REML model proved here.
 
 \paragraph{Reproducibility of the theory.}
-The companion repository retains the source of both predecessor manuscripts, proof derivations, deterministic matrix-identity checks, and the archived numerical and computational studies. The present manuscript neither overwrites nor reruns the expensive experiments. Its independent small deterministic verification reproduces the SVD fit identity, the smoothness map, a banded Cholesky solve and selected inverse, and the determinant identity under nonzero reference means. All mathematical claims and any subsequent measured results must remain associated with exact source revisions, numerical tolerances and software dependencies.
+The repository retains the deterministic matrix-identity
+checks, source data for this example, figure renderer
+and numerical validation scripts. No previously recorded
+benchmarks are rerun by this demonstration.
