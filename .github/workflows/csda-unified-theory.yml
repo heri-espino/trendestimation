@@ -10,6 +10,7 @@ on:
       - paper/csda-reml-theorem-explanations-20261119
       - paper/csda-awesomefigures-gaussian-jerk-demo
       - paper/csda-contributions-precision-likelihood-20261123
+      - editorial/csda-state-of-art-positioning-20261123
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
@@ -104,7 +105,7 @@ jobs:
             echo "LaTeX error in manuscript"
             exit 1
           fi
-          sha256sum main.tex algorithmic_references.bib sections/*.tex figures/render_gaussian_jerk.py figures/README.md figures/gaussian_jerk_demo.pdf figures/gaussian_jerk_demo.png figures/gaussian_jerk_demo.svg figures/gaussian_jerk_demo.json figures/gaussian_jerk_series.csv figures/gaussian_jerk_profile.csv tests/test_*.py notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md notes/PRIMARY_REFERENCE_AUDIT_20261119.md notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md verify_theory.py rotate_landscape_tables.py README.md \
+          sha256sum main.tex algorithmic_references.bib sections/*.tex figures/render_gaussian_jerk.py figures/README.md figures/gaussian_jerk_demo.pdf figures/gaussian_jerk_demo.png figures/gaussian_jerk_demo.svg figures/gaussian_jerk_demo.json figures/gaussian_jerk_series.csv figures/gaussian_jerk_profile.csv tests/test_*.py notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md notes/PRIMARY_REFERENCE_AUDIT_20261119.md notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md notes/STATE_OF_ART_POSITIONING_20261123.md verify_theory.py rotate_landscape_tables.py README.md \
             AGENTS.md SCOPE_AND_PROOF_AUDIT.md COMPLEXITY_REFERENCE_LEDGER.md \
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
@@ -126,6 +127,7 @@ jobs:
             paper/csda-unified-theory/figures/
             paper/csda-unified-theory/README.md
             paper/csda-unified-theory/AGENTS.md
+            paper/csda-unified-theory/notes/STATE_OF_ART_POSITIONING_20261123.md
             paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md
             paper/csda-unified-theory/verify_theory.py
             paper/csda-unified-theory/tests/
