@@ -17,6 +17,38 @@ journal submission.
 
 # Agent instructions: unified CSDA theoretical manuscript
 
+## November 23, 2026 contribution-positioning contract
+
+Read notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md before
+editing introduction/conclusion novelty claims. Six concrete
+contributions (rank-normalized S, shift-free fixed-mu spectral
+formula, prior-art Gaussian REML variance-ratio selection,
+complete criteria, workload/accuracy trade-offs, reproducible
+code/figure) must be distinguished from previously known
+PLS, Guerrero variance ratio, Theil relative precision,
+Gaussian marginal likelihood, REML and SVD.
+
+Do not call elementary n/(n-d) trace rescaling a new
+statistical estimator or a demonstrated global priority.
+Original Guerrero (2007) printed p.1229 Eq.(23) uses n
+denominator; Cortés-Toto et al. (2017) Sec.2.1
+explicitly note upper bound 1-d/n. The present paper
+uses denominator r=n-d to reach exactly 1 at infinite
+penalty for any d. It gives normalized relative precision
+tr(P J^-1)/r conditional on fixed variance parameters.
+
+A finite positive Gaussian REML optimum estimates
+lambda=sigma_obs²/sigma_difference², and S(lambda).
+The REML construction is established prior art
+(Patterson--Thompson, Wahba, Wood, Biessy).
+A finite S grid only yields a grid optimum; unknown
+mu changes the inferential problem. Preserve the
+single AwesomeFigures demonstration and the
+two native landscape tables. Do not modify
+independent sources or rerun historical benchmarks.
+
+
+
 ## November 22, 2026 single AwesomeFigures illustration
 
 The software section includes **one** d=3 synthetic position/jerk
