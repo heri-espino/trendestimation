@@ -1,0 +1,32 @@
+{
+  "figure": "gaussian_jerk_demo",
+  "kind": "deterministic_synthetic_illustration",
+  "n": 72,
+  "difference_order": 3,
+  "seed": 20261122,
+  "noise_sd_m": 0.08,
+  "sampling_interval_s": 0.014084507042253521,
+  "baseline_jerk_m_per_s3": 1.8,
+  "fixed_mu_m": 5.029183232703102e-06,
+  "s_grid_points": 91,
+  "criterion": "mle",
+  "criterion_interpretation": "profiled Gaussian contrast; fixed mu; in-sample",
+  "selected_smoothness": 0.9479999999999998,
+  "selected_lambda": 11105.912513000043,
+  "selected_score": -332.9927198646476,
+  "truth_rmse_m": 0.017478000505580786,
+  "observed_rmse_m": 0.08147404643202098,
+  "awesomefigures_version": "0.1.0",
+  "awesomefigures_apis": [
+    "set_style",
+    "color_palette",
+    "save_figure"
+  ],
+  "file_sha256": {
+    "gaussian_jerk_demo.pdf": "1d22fedc5fd4743e1ee7bd8151052cc62fe04e7f873b41ae722798cff40cca20",
+    "gaussian_jerk_demo.png": "fd065a0cdb6fda6ce405e1017841855d63aaa36ed320470adb2cda5219801ce2",
+    "gaussian_jerk_demo.svg": "e107524ff601863a4afa69667518ab7d5fcc9382766cde87ded2e407ed8bf174",
+    "gaussian_jerk_series.csv": "87c93d1bad61931fce82593e48923fb5ef26eb85e2e26e18e41db01a54320ed9",
+    "gaussian_jerk_profile.csv": "38ee9b9eac9cd231f0e2b2b3bf41126847b1fe3ca2d5ad4e74dc7ead17f7147d"
+  }
+}

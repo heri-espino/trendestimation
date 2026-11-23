@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex 2026.11.22)  22 NOV 2026 08:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex 2026.11.23)  23 NOV 2026 00:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -592,20 +592,28 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@count@id=\count359
 \enitdp@description=\count360
 )
+(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count361
+\float@exts=\toks41
+\float@box=\box68
+\@float@everytoks=\toks42
+\@floatcapt=\box69
+)
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/rotating.sty
 Package: rotating 2025/01/14 v2.16e rotated objects in LaTeX
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
-\c@r@tfl@t=\count361
+\c@r@tfl@t=\count362
 \rotFPtop=\skip81
 \rotFPbot=\skip82
-\rot@float@box=\box68
-\rot@mess@toks=\toks41
+\rot@float@box=\box70
+\rot@mess@toks=\toks43
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 10.
-\c@theorem=\count362
+\c@theorem=\count363
  (./main.aux)
 \openout1 = `main.aux'.
 
@@ -630,17 +638,17 @@ LaTeX Font Info:    ... okay on input line 25.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count363
+\scratchcounter=\count364
 \scratchdimen=\dimen288
-\scratchbox=\box69
-\nofMPsegments=\count364
-\nofMParguments=\count365
-\everyMPshowfont=\toks42
-\MPscratchCnt=\count366
+\scratchbox=\box71
+\nofMPsegments=\count365
+\nofMParguments=\count366
+\everyMPshowfont=\toks44
+\MPscratchCnt=\count367
 \MPscratchDim=\dimen289
-\MPnumerator=\count367
-\makeMPintoPDFobject=\count368
-\everyMPtoPDFconversion=\toks43
+\MPnumerator=\count368
+\makeMPintoPDFobject=\count369
+\everyMPtoPDFconversion=\toks45
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -759,7 +767,14 @@ LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <5.5> not available
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <5.5> not available
 (Font)              size <5> substituted on input line 42.
 
-)) (./sections/smoothness.tex [4]
+)) (./sections/smoothness.tex [4
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1 \section
+            {A normalized and invertible smoothness coordinate}\label{sec:sm...
+]
 Overfull \hbox (5.78908pt too wide) in paragraph at lines 108--121
  []\T1/cmr/m/it/10.95 Spectral and nu-mer-i-cal con-se-quences.[] \T1/cmr/m/n/1
 0 In the singular-
@@ -805,7 +820,13 @@ Overfull \hbox (0.27065pt too wide) in paragraph at lines 103--123
 Overfull \vbox (0.00002pt too high) has occurred while \output is active []
 
 
-[10]
+[10
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.41 \end{equation}
+                   ]
 Overfull \hbox (9.49979pt too wide) in paragraph at lines 110--115
  []\T1/cmr/m/it/10.95 Comparison with Wein-ert's al-go-rithm.[] [][]\T1/cmr/m/n
 /10 Wein-ert[][] ([][]2007[][],
@@ -871,7 +892,13 @@ Underfull \hbox (badness 5939) in paragraph at lines 262--262
 Overfull \vbox (0.00002pt too high) has occurred while \output is active []
 
 
-[13]
+[13
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.8 
+    ]
 Underfull \hbox (badness 1888) in paragraph at lines 22--44
 \T1/cmr/m/n/10 score banded factorization/selected-inverse per ac-
  []
@@ -908,13 +935,53 @@ Underfull \hbox (badness 7362) in paragraph at lines 25--25
 e-
  []
 
-[16]) (./sections/software.tex [17]) (./sections/conclusion.tex) (./main.bbl
-[18]
+[16]) (./sections/software.tex
+Overfull \hbox (55.67378pt too wide) in paragraph at lines 11--11
+[]\T1/cmtt/m/n/10 from trendestimation import TrendSmoother, select_lambda[] 
+ []
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `') on input line 24.
+
+<figures/gaussian_jerk_demo.pdf, id=659, 251.07785pt x 308.96175pt>
+File: figures/gaussian_jerk_demo.pdf Graphic file (type pdf)
+<use figures/gaussian_jerk_demo.pdf>
+Package pdftex.def Info: figures/gaussian_jerk_demo.pdf  used on input line 26.
+
+(pdftex.def)             Requested size: 233.48833pt x 287.33145pt.
+
+Overfull \hbox (74.03041pt too wide) in paragraph at lines 44--52
+\T1/cmr/m/n/10 lished ex-am-ple is re-pro-duced with \T1/cmtt/m/n/10 figures/re
+nder_gaussian_jerk.py\T1/cmr/m/n/10 ,
+ []
+
+) (./sections/conclusion.tex [17
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1 \section
+            {Discussion and conclusions}\label{sec:conclusion}]
+Underfull \hbox (badness 1286) in paragraph at lines 13--16
+\T1/cmtt/m/n/10 com / heri-[]espino / trendestimation$[][]\T1/cmr/m/n/10 . The 
+canon-i-cal
+ []
+
+) (./main.bbl
 Underfull \hbox (badness 2726) in paragraph at lines 46--53
 \T1/cmr/m/n/8 von der Gesellschaft der Wis-senschaften zu Göt-tin-gen,
  []
 
-) [19] (./main.aux)
+[18]) [19] [20
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.61 \end{document}
+                   
+
+ <./figures/gaussian_jerk_demo.pdf>] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -928,57 +995,58 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15578 strings out of 469514
- 242571 string characters out of 5470071
- 708789 words of memory out of 5000000
- 43743 multiletter control sequences out of 15000+600000
- 656749 words of font info for 118 fonts, out of 8000000 for 9000
+ 15658 strings out of 469514
+ 243990 string characters out of 5470071
+ 710990 words of memory out of 5000000
+ 43816 multiletter control sequences out of 15000+600000
+ 657573 words of font info for 119 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,14n,98p,1905b,648s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.60
-0pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.
-600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm090
-0.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1
-095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecs
-x0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec
-/ecbx1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecti0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappe
-n/ec/ecss0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknap
-pen/ec/eccc0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jkn
-appen/ec/ecti1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/j
-knappen/ec/ecbx1200.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecrm0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/lj
-four/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/
-ljfour/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/p
-k/ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2025/texmf-var/fonts
-/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-mextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-sy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on main.pdf (19 pages, 549951 bytes).
+ </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsi0900.60
+0pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.
+600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt100
+0.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0
+900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ect
+i1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/e
+csx0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec
+/ecbx1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/
+ec/ecbx1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappe
+n/ec/ecti0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknap
+pen/ec/ecss0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jkn
+appen/ec/eccc0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/j
+knappen/ec/ecti1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour
+/jknappen/ec/ecbx1200.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/lj
+four/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/
+ljfour/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2025/texmf-var/fonts/p
+k/ljfour/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2025/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2025/texmf-var/fon
+ts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (20 pages, 589089 bytes).
 PDF statistics:
- 1621 PDF objects out of 1728 (max. 8388607)
- 728 compressed objects within 8 object streams
- 175 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1683 PDF objects out of 1728 (max. 8388607)
+ 758 compressed objects within 8 object streams
+ 177 named destinations out of 1000 (max. 500000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
