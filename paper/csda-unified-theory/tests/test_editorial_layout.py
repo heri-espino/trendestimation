@@ -16,7 +16,8 @@ class JournalLayoutChecks(unittest.TestCase):
         tex = (ROOT / "main.tex").read_text()
         listing = (ROOT / "sections" / "software.tex").read_text()
         for piece in (
-            r"\usepackage{xcolor,listings,microtype}",
+            r"\usepackage{xcolor,listings}",
+            r"\usepackage[expansion=false]{microtype}",
             r"\lstdefinestyle{vscodeLightPython}",
             r"linewidth=\linewidth",
             r"breaklines=true",
