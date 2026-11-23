@@ -147,7 +147,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 60
       - name: Commit verified PDF and provenance to isolated paper branch
-        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118' || github.ref == 'refs/heads/paper/csda-weinert-d3-svd-comparison' || github.ref == 'refs/heads/paper/csda-reml-theorem-explanations-20261119' || github.ref == 'refs/heads/paper/csda-awesomefigures-gaussian-jerk-demo' || github.ref == 'refs/heads/paper/csda-contributions-precision-likelihood-20261123')
+        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118' || github.ref == 'refs/heads/paper/csda-weinert-d3-svd-comparison' || github.ref == 'refs/heads/paper/csda-reml-theorem-explanations-20261119' || github.ref == 'refs/heads/paper/csda-awesomefigures-gaussian-jerk-demo' || github.ref == 'refs/heads/paper/csda-contributions-precision-likelihood-20261123' || github.ref == 'refs/heads/editorial/csda-state-of-art-positioning-20261123')
         shell: bash
         run: |
           set -euo pipefail
