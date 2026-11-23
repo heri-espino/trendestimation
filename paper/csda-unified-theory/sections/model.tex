@@ -64,12 +64,18 @@ $H_\lambda$.} Specifically, we compute the reduced SVD
 \qquad r=n-d,
 \end{equation}
 This is a full, non-truncated factorization of the original
-rectangular difference operator. It gives the same positive
-spectral directions as the classical Demmler--Reinsch
-penalty-basis construction \citep{demmler1975} and the
-Whittaker--Henderson Gram eigendecomposition in
-\citet[Sec.~6.4]{biessy2026}, while avoiding explicit
-formation of $D_d^\top D_d$. The distinct numerical
+rectangular difference operator. The use of orthogonal
+penalty coordinates is \emph{analogous} to the
+Demmler--Reinsch construction for smoothing splines
+\citep{demmler1975}; spline penalty bases are not, in
+general, identical to those of the present discrete
+difference operator. For the \emph{same} discrete $D_d$,
+our right singular vectors span exactly the positive
+eigenspaces of $D_d^\top D_d$ used in the
+Whittaker--Henderson Gram eigendecomposition of
+\citet[Sec.~6.4]{biessy2026}, up to choices of bases
+within repeated-eigenvalue subspaces. Our route avoids
+explicit formation of $D_d^\top D_d$. The distinct numerical
 conditioning properties of these algebraically equivalent
 routes are examined in Section~\ref{sec:algorithms}.
 
