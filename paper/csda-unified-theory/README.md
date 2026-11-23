@@ -1,5 +1,23 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 23, 2026: VS Code Light+ code, hard margins and author disclosures
+
+The canonical CSDA source now uses a syntax-colored, bounded Python listing
+(with a white VS Code Light+ palette) and microtypography plus an
+`emergencystretch` safeguard for strict two-column text layout.
+The dedicated CSDA workflow fails if compiled body paragraphs overrun
+their columns by more than 0.5 pt; the two sideways tables retain the
+existing rotation checks. Publication disclosures are isolated in
+`sections/declarations.tex` and precede the references: data/code,
+funding, CRediT, competing interests, ethics, and AI use. **Author-specific
+funding, CRediT and competing interests remain unconfirmed**, rather than
+invented. Do not submit the paper until the authors confirm these fields.
+Source provenance, Elsevier policy links and the final-build gate are
+documented in
+[notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md](notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md).
+No numerical, scientific, experiment or figure data were changed.
+
+
 ## November 23, 2026: state-of-the-art and editorial positioning
 
 The abstract, Introduction, direct-SVD discussion, algorithm provenance table and conclusion now explain the **integrated** contribution more assertively while preserving every mathematical claim, equation, experiment and figure. Added historical Demmler--Reinsch (1975) and contemporary Biessy (2026, Section 6.4) **use-site** comparisons: the paper factors the original rectangular difference matrix using a retained full SVD, versus a Gram-penalty eigenbasis and possible low-rank approximation. Also added Eilers (2003) for cross-disciplinary use, Tibshirani (2014) for the distinct L1 alternative and Hamilton (2018) for HP-filter interpretation cautions. The audit and reproduction gate are in [notes/STATE_OF_ART_POSITIONING_20261123.md](notes/STATE_OF_ART_POSITIONING_20261123.md). The new citations have not yet passed a source-matched PDF build, and no benchmark, journal submission, or merge occurred.
