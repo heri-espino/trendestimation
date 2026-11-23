@@ -1,3 +1,6 @@
+**Later 2026-11-22 cross-manuscript editorial addendum:** The source of all three active manuscripts has been updated on `paper/three-manuscripts-precision-interpretation` to explain the Gaussian fixed-reference precision matrix, its rank-normalized relative-precision trace, and Paper C's *theoretical* conditional jerk covariance. Read [the dated cross-manuscript audit](../../PRECISION_MATRIX_CROSS_MANUSCRIPT_2026-11-22.md). No Experiment004--008 rerun, interval coverage claim, compiled PDF update or journal submission is implied. Retain the independently compiled 17-page PR #152 and reconcile its existing precision prose before any further Paper C editorial release. This later note does **not** alter the November 20 historical branch/CI snapshot below.
+
+
 # Paper C live continuation reconciliation — 2026-11-20
 
 **Purpose:** A dated, docs-only continuation of [the comprehensive 2026-11-18 handoff](NEXT_AGENT_COMPREHENSIVE_HANDOFF_2026-11-18.md). This records newer *verified live GitHub state* without modifying, replacing, or rerunning any scientific experiment. For experimental methods and original archive provenance, read the comprehensive handoff first.

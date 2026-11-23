@@ -43,6 +43,97 @@ penalty strengths and fitted curves.
 
 Thus $S_d=(n/r)S_d^{\rm trace}$, an interpretable rescaling of a published index \citep{guerrero2008,cortes2017}, not a different family of fitted trends.
 
+
+\subsection{Precision-matrix interpretation of the trace coordinate}
+The trace reduction also has an established statistical
+interpretation \citep{guerrero2007,cortes2017}.
+The PLS minimizer itself requires no stochastic assumptions;
+the following identity acquires the meaning of \emph{precision}
+only when a variance-component model is specified.
+
+\begin{proposition}[Gaussian precision decomposition and normalized relative precision]
+\label{prop:precision-decomposition}
+Fix $\mu\in\R$, $\sigma_\varepsilon^2>0$, and
+$\sigma_u^2>0$. Consider
+$y=\tau+\varepsilon$ and
+$D_d\tau=\mu\mathbf1_r+u$, with independent
+$\varepsilon\sim N_n(0,\sigma_\varepsilon^2I_n)$ and
+$u\sim N_r(0,\sigma_u^2I_r)$.
+Treat the polynomial nullspace as unpenalized
+(an intrinsic, improper Gaussian prior).
+For $\lambda=\sigma_\varepsilon^2/\sigma_u^2$, put
+\begin{equation}\label{eq:precision-J}
+\begin{aligned}
+J&=\sigma_\varepsilon^{-2}I_n+
+  \sigma_u^{-2}Q_d
+ =\sigma_\varepsilon^{-2}A_\lambda,\\
+P&=\sigma_u^{-2}Q_d,\qquad
+\operatorname{Cov}(\tau\mid y)=J^{-1}
+ =\sigma_\varepsilon^2H_\lambda .
+\end{aligned}
+\end{equation}
+Then $J$ is positive definite, $P$ is
+positive semidefinite of rank $r$, and
+\begin{equation}\label{eq:precision-trace}
+\begin{aligned}
+\frac1r\tr(PJ^{-1})
+&=\frac1r\tr(\lambda Q_dH_\lambda)
+ =\frac1r\sum_{j=1}^r
+   \frac{\lambda\delta_j}{1+\lambda\delta_j}
+ =S_d(\lambda),\\
+\tr(\sigma_\varepsilon^{-2}J^{-1})
+ &+\tr(PJ^{-1})=n.
+\end{aligned}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Up to terms constant in $\tau$, the conditional negative
+log density is
+$\tfrac12\sigma_\varepsilon^{-2}\|y-\tau\|^2+
+ \tfrac12\sigma_u^{-2}\|D_d\tau-\mu\mathbf1_r\|^2$.
+Completing its square shows that the Gaussian
+conditional precision is $J$ and its covariance
+is $J^{-1}$; the observation term makes $J$
+invertible despite the $d$ unpenalized directions.
+By $\lambda=\sigma_\varepsilon^2/\sigma_u^2$,
+$PJ^{-1}=\lambda Q_d(I+\lambda Q_d)^{-1}$.
+Use Lemma~\ref{lem:kernel} and the nonzero spectrum
+$\delta_j$ to take its trace. Finally,
+$\sigma_\varepsilon^{-2}I_n+P=J$ implies
+$\tr(\sigma_\varepsilon^{-2}J^{-1})
++\tr(PJ^{-1})=\tr(I_n)=n$.
+\end{proof}
+
+\paragraph{Spectral and numerical consequences.}
+In the singular-vector basis of $D_d$, $J$ has the
+$d$ unpenalized eigenvalues $\sigma_\varepsilon^{-2}$
+and the $r$ penalized eigenvalues
+$\sigma_\varepsilon^{-2}(1+\lambda\delta_j)$.
+Accordingly, its spectral condition number is
+$1+\lambda\max_j\delta_j$ for $\lambda\ge0$.
+The same orthogonal basis diagonalizes $H_\lambda$
+and $J^{-1}$, whereas a banded Cholesky solve
+can exploit $J\propto A_\lambda$ without
+forming the generally dense covariance $J^{-1}$.
+This relates statistical precision to the
+two numerical pipelines rather than supplying
+a new algorithm.
+
+\paragraph{Interpretation and scope.}
+The historical Theil--Guerrero relative-precision
+index divides $\tr(PJ^{-1})$ by $n$;
+Eq.~\eqref{eq:precision-trace} divides by its
+$r=n-d$ \emph{penalized} directions and is therefore
+the rank-normalized coordinate already used in
+Eq.~\eqref{eq:S}. Because both $P$ and $J$
+depend on the dynamical variance component,
+$S_d$ is not absolute measurement precision.
+The covariance $J^{-1}$ is conditional on fixed
+variance parameters and reference $\mu$,
+not an uncertainty statement incorporating
+the selection of $\lambda$ or estimation of $\mu$.
+
+
 \begin{theorem}[Smoothness bijection]\label{thm:bijection}
 For every integer $1\le d<n$, $S_d$ is continuous and strictly increasing on the nonnegative finite real line, with $S_d(0)=0$ and $\lim_{\lambda\to\infty}S_d(\lambda)=1$. It extends to a bijection between $[0,\infty]$ and $[0,1]$. Each $s\in(0,1)$ has a unique inverse $\lambda=\Lambda_{n,d}(s)$ independent of $y$ and any fixed numeric $\mu$.
 \end{theorem}
