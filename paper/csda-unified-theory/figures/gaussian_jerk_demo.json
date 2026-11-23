@@ -11,10 +11,10 @@
   "s_grid_points": 91,
   "criterion": "mle",
   "criterion_interpretation": "profiled Gaussian contrast; fixed mu; in-sample",
-  "selected_smoothness": 0.9479999999999997,
-  "selected_lambda": 11105.91251300026,
-  "selected_score": -332.9927198646443,
-  "truth_rmse_m": 0.01747800050559043,
+  "selected_smoothness": 0.9479999999999998,
+  "selected_lambda": 11105.912513000043,
+  "selected_score": -332.9927198646476,
+  "truth_rmse_m": 0.017478000505580786,
   "observed_rmse_m": 0.08147404643202098,
   "awesomefigures_version": "0.1.0",
   "awesomefigures_apis": [
@@ -23,10 +23,10 @@
     "save_figure"
   ],
   "file_sha256": {
-    "gaussian_jerk_demo.pdf": "b70ef9c6c09ae55e04c6d71862982949c5ad04f8ca1738486c6fa26075245d2a",
+    "gaussian_jerk_demo.pdf": "afa43dd56b3184e0721d9f5575196895c8d9973f55a5cf889b656cc649f0c2f2",
     "gaussian_jerk_demo.png": "a99aa1548700e324b5c0a85bf7dbc38ac27713ebc26e9faa07d1d2c6c857a663",
-    "gaussian_jerk_demo.svg": "04cb9043ac252e679782835c1909845b6cf66ab2553b3a58d50b450ab59ead83",
-    "gaussian_jerk_series.csv": "4757f666fb4ba8f76c66ba708e0d9bfd237b11e8b84502853a341007b183c1bc",
-    "gaussian_jerk_profile.csv": "cf77600f03861250f693efe179ae67a37425aa3271c81501d28f4b67153ace35"
+    "gaussian_jerk_demo.svg": "ba128b7b3b014ce0310247a4c246453e4a01f22e77d66dffefe15b9d507460d9",
+    "gaussian_jerk_series.csv": "87c93d1bad61931fce82593e48923fb5ef26eb85e2e26e18e41db01a54320ed9",
+    "gaussian_jerk_profile.csv": "38ee9b9eac9cd231f0e2b2b3bf41126847b1fe3ca2d5ad4e74dc7ead17f7147d"
   }
 }
