@@ -97,19 +97,49 @@ entirely new smoothing method.
 \paragraph{Meaning of precision.}
 Under the independent second-moment model
 $y=\tau+\varepsilon$,
-$D_3\tau=\mu\mathbf1+u$,
+$D_3\tau=\mu\mathbf1+u$, with
 $\operatorname{Cov}(\varepsilon)=
-\sigma_\varepsilon^2 I$, and
+\sigma_\varepsilon^2 I$,
 $\operatorname{Cov}(u)=\sigma_u^2 I$,
-we have
+$\operatorname{Cov}(u,\varepsilon)=0$,
+and positive variances, we have
 $\lambda=\sigma_\varepsilon^2/\sigma_u^2$.
-The error \emph{precision matrix} of the
-linear fixed-reference trend estimator is
-$J=\sigma_\varepsilon^{-2}I+
-\sigma_u^{-2}Q$; its smoothness contribution
-is $P=\sigma_u^{-2}Q$
-\citep{guerrero2007,cortes2017}.
-Consequently,
+The observational and roughness contributions
+to the associated information matrix are
+\begin{equation}\label{eq:jerk-precision-matrix}
+\begin{aligned}
+J&=\sigma_\varepsilon^{-2}I+
+   \sigma_u^{-2}Q
+   =\sigma_\varepsilon^{-2}(I+\lambda Q),\\
+P&=\sigma_u^{-2}Q .
+\end{aligned}
+\end{equation}
+This construction follows the relative-precision
+treatment of \citet{guerrero2007,cortes2017}.
+The roughness component $P$ has rank $n-3$:
+its three unpenalized quadratic-position
+directions make the intrinsic prior improper,
+but the observation term makes $J$
+strictly positive definite.
+
+Under the additional independent \emph{Gaussian}
+innovation model, with diffuse unpenalized
+polynomial coefficients, $J$ is the
+\emph{conditional latent-trend precision}
+and the conditional covariance is
+\begin{equation}\label{eq:jerk-posterior-covariance}
+\operatorname{Cov}(\tau\mid y)
+=J^{-1}=\sigma_\varepsilon^2H_\lambda,
+\end{equation}
+where $\mu$ and both variance components
+are treated as fixed. This model-based
+posterior covariance should not be confused
+with the repeated-sampling covariance of a
+fitted smoother for an unknown fixed trend.
+
+Consequently, the historical Theil-inspired
+relative-precision trace, here normalized
+over the $n-3$ penalized directions, is
 \begin{equation}\label{eq:relative-precision}
 \frac{\operatorname{tr}(PJ^{-1})}{n-3}
 =\frac{\operatorname{tr}(I-H_\lambda)}{n-3}
@@ -117,16 +147,37 @@ Consequently,
 \end{equation}
 This is \emph{relative precision attributable
 to the smoothness component, averaged over
-penalized directions}, not absolute sensor
-precision. Equivalently, at the true variance
-ratio, $S$ is the average spectral fraction
-of observed third-difference covariance
-caused by differenced measurement error;
-Section~\ref{sec:precision} checks that
-conditional implication experimentally.
-Gaussianity is required for the subsequent
-likelihood-based selection, not for this
-covariance identity.
+penalized directions}, not absolute
+camera-position sensor precision. Equivalently,
+at the true variance ratio, $S$ is the
+average spectral fraction of observed
+third-difference covariance caused by
+differenced measurement error; Section~
+\ref{sec:precision} tests that conditional
+implication experimentally. The trace
+algebra itself requires only second moments:
+Gaussianity is needed for the posterior
+covariance interpretation and the subsequent
+likelihood-based selection.
+
+\paragraph{Conditional uncertainty for discrete jerk.}
+At sampling interval $\Delta t$, put
+$j_d=D_3\tau/(\Delta t)^3$ in m/s$^3$.
+The same Gaussian model implies
+\begin{equation}\label{eq:jerk-conditional-covariance}
+\operatorname{Cov}(j_d\mid y)
+=\frac{D_3J^{-1}D_3^\top}{(\Delta t)^6},
+\end{equation}
+conditional on fixed $\mu$ and both
+variance components. This is a theoretical
+uncertainty identity, not an empirically
+calibrated confidence interval: the
+frozen experiments do not test posterior
+interval coverage, and real NGSIM episodes
+provide no independently observed true jerk.
+Data-selected $\lambda$, estimated $\mu$,
+correlated camera noise, and model
+misspecification require further analysis.
 
 \paragraph{Effective complexity and limits.}
 For fixed $\mu$ and fixed $\lambda$,

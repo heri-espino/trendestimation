@@ -16,6 +16,35 @@ Created November 9, 2026. Accompanies the consolidated CSDA theoretical manuscri
 | Banded complete-grid workload theorem | Authors' Complexity section, built from cited standard components | Original composite *upper bound* assuming selected-inverse diagnostics for each map trial/candidate and reuse across criteria and series |
 | Conditional affine crossover M_star | Authors' direct algebra | Requires measured or calibrated affine constants and favorable slope/intercept signs; Big-O cannot predict a machine crossover |
 
+## 2026-11-19 original-PDF citation update
+
+Eleven author-supplied original papers were read. A full
+published-page-by-page audit, metadata, exceptions and
+exact-versus-approximate methodological distinctions
+are recorded in
+[notes/PRIMARY_REFERENCE_AUDIT_20261119.md](notes/PRIMARY_REFERENCE_AUDIT_20261119.md).
+The original scans are *not* committed.
+
+| Methodological claim | Original paper | Correct attribution and limitation |
+| --- | --- | --- |
+| Direct SVD without forming a Gram matrix | Golub and Kahan (1965); Golub and Reinsch (1970), specifically **p. 404** | Original bidiagonal/SVD algorithms; 1970 paper explicitly warns that forming A^T A can lose small-singular-value information. It does not prove a universally faster SVD. |
+| Original GCV / ridge GCV | Craven and Wahba (1979), **p. 380 Eq. (1.9)**; Golub, Heath and Wahba (1979), **p. 216 Eq. (1.4)** | Both already in shared BibTeX; no duplicate entries. Their spline/ridge problems differ from arbitrary-order nonzero-mu discrete PLS. |
+| Selected inverse and modern supernodal implementation | Erisman and Tinney (1975), **pp. 177–178**; Lin et al. (**2011**), SelInv, ACM TOMS 37(4), article 40 | Historical recurrence and later general sparse LDL^T implementation; O(nd²) banded count is our specialization. |
+| Continuous derivative-penalty spline algorithm | Reinsch (1967), pp. 177–180 | Smoothness by integrated squared derivative and banded spline equations, not our discrete Q=D^T D. |
+| Exact finite Hodrick–Prescott weights | Cornea-Madeira (**2017**), Review of Economics and Statistics 99(2):314–318 | HP is d=2, mu=0 here; publication year 2017 despite interior 2016 preprint date. |
+| Conjugate-gradient origins | Hestenes and Stiefel (1952), **Sec. 3** | Original CG; no uniform convergence count established for our preconditioner. |
+| Stochastic influence-matrix trace | Hutchinson (**1990**), Comm. Stat. Simulation Computation 19(2):433–450, DOI 10.1080/03610919008812866 | **Approximation** to trace; cannot supply exact diagonal leverage vector. Earlier informal 1989 attribution was incorrect for uploaded print publication. |
+| Stochastic Lanczos matrix-function trace/logdet | Ubaru, Chen and Saad (2017), SIAM J. Matrix Anal. Appl. 38(4):1075–1099 | Stochastic approximation with probe and inner Lanczos errors, not an exact logdet or CV algorithm. |
+
+Five missing records were added **only** to
+`algorithmic_references.bib`: reinsch1967,
+corneamadeira2017, lin2011, hutchinson1990, ubaru2017.
+Six historical keys remain in their original bibliography
+files. The automated
+`tests/test_reference_provenance.py` verifies their
+presence, citation coverage, years and unique
+bibliography keys. No benchmark result changed.
+
 ## Publication metadata references
 
 - Golub, G. H. and Van Loan, C. F. (2013). Matrix Computations, 4th ed. https://www.press.jhu.edu/books/title/10678/matrix-computations

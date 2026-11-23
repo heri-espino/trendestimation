@@ -4,7 +4,7 @@ This record tracks research-paper **versions**, not only journal publications. I
 
 Original archive compiled **November 9, 2026**; historical note reconciled **November 18, 2026**. These are historical snapshots, not a claim that November 9 PDFs are the newest current manuscripts. No historical benchmarks, raw experiments or journal submissions were rerun or rewritten by the original compilation.
 
-## Current integrated manuscripts (updated November 18, 2026)
+## Current integrated manuscripts (updated November 19, 2026)
 
 The live current-manuscript index is
 [LATEST_PAPERS.md](LATEST_PAPERS.md), not the historical
@@ -19,6 +19,16 @@ and source-specific visualization galleries.
 The **November 9 section below preserves the historic versions**.
 Any references to latest or current within that section refer
 to the earlier compilation date.
+
+### November 19, 2026 — profiled Gaussian REML theorem and original-paper citation audit
+
+**Current unified CSDA theory manuscript: 19 pages.** The Gaussian reduced-coordinate likelihood is now rigorously described as **profiled Gaussian marginal/restricted likelihood (REML) in penalized spectral coordinates**, and shown to be established methodology rather than a newly invented likelihood. A complete theorem derives the orthogonal error contrasts, fixed-effect polynomial nullspace, independent Gaussian spectral variances, the profiled observation-noise variance, and the banded determinant identity. The manuscript also explains PLS normal equations, positive definiteness, the shift-free SVD reconstruction, normalized smoothness and LOOCV-versus-GCV leverages.
+
+**Original references:** Eleven user-supplied PDF originals audited for actual claims, years, publication metadata and exact-versus-approximate algorithm status. Five new local BibTeX entries are Reinsch 1967, Cornea-Madeira 2017, Lin et al. 2011, Hutchinson **1990** (corrected from previously suggested 1989), and Ubaru et al. 2017. Six already-present originals received precise in-text attribution. The shared Golub--Heath--Wahba (1979) reference now has its original **Technometrics 21(2), 215–223** volume, issue and pagination. Stochastic trace/logdet approximations are not confused with exact CV leverages or exact banded selected-inverse computations. Original copyrighted PDFs are not stored in the repository. See [complete eleven-source audit](csda-unified-theory/notes/PRIMARY_REFERENCE_AUDIT_20261119.md), [Gaussian original-source audit](csda-unified-theory/notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md), and [citation integrity test](csda-unified-theory/tests/test_reference_provenance.py).
+
+**Reproducibility:** [Merged manuscript PR #147](https://github.com/heri-espino/trendestimation/pull/147), merged commit [da87f3b1](https://github.com/heri-espino/trendestimation/commit/da87f3b10d243f2ca07e3c1a4a741a4123a83c9f); authored source `1d354e1c9e30c18d30bb90f947b19689ca38541f`; successful source-only [Elsevier CAS build #44490243522](https://github.com/heri-espino/trendestimation/actions/runs/44490243522); [current PDF on main](csda-unified-theory/main.pdf). Repository PDF **SHA-256: 845f7ed58d2f805dca81ddcfc0b677040b00419ced7db3b391331e785d783898**. All manuscript algebra and bibliography tests passed; PDF has 19 pages, with native landscape tables on pages 9 and 13 and no unresolved citations or LaTeX errors. Existing overfull-box warnings remain for later typography review.
+
+**Boundaries:** No numerical benchmarks, data, algorithm implementations, paper submissions or independent scientific manuscripts changed as part of this citation/proof revision (apart from a bibliographic metadata correction in the inherited Paper B references file). The article remains an author-reviewed draft, not a submitted journal paper.
 
 ### November 18, 2026 — Weinert original-source audit and third-difference revision
 

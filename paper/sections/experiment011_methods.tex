@@ -33,6 +33,46 @@ S(\lambda)=\frac{n-\operatorname{tr}(H_\lambda)}{n-d}
 \end{equation}
 satisfies $S(0)=0$ and $S(\infty)=1$, and is strictly increasing for positive finite $\lambda$. Thus $S$ supplies a bounded coordinate for the original estimator, without changing the underlying objective function. The endpoint $S=1$ is handled as the constrained polynomial limit rather than by substituting an arbitrarily large finite penalty.
 
+
+\paragraph{Statistical precision and the matrices actually factorized.}
+The matrix $A_\lambda$ also admits a variance-component interpretation,
+without changing any numerical workload studied here. Under the
+conditional model $y=\tau+\varepsilon$,
+$D_d\tau=\mu\mathbf1+u$, with independent
+$\operatorname{Cov}(\varepsilon)=\sigma_\varepsilon^2I_n$ and
+$\operatorname{Cov}(u)=\sigma_u^2I_{n-d}$, both variances positive,
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$ and the
+fixed-reference Gaussian information (precision) matrix is
+\begin{equation}\label{eq:empirical-precision}
+J=\sigma_\varepsilon^{-2}I_n+
+  \sigma_u^{-2}Q
+ =\sigma_\varepsilon^{-2}A_\lambda,\qquad
+\operatorname{Cov}(\tau\mid y)=J^{-1}
+ =\sigma_\varepsilon^2H_\lambda.
+\end{equation}
+The conditional covariance uses the intrinsic Gaussian
+roughness model, with an unpenalized polynomial nullspace;
+it is not a general sampling-covariance formula after
+data-driven selection of $\mu$ or $\lambda$.
+If $P=\sigma_u^{-2}Q$ is the roughness contribution,
+the Theil-inspired relative-precision trace of
+\citet{guerrero2007penalized,cortes2017smoothness} satisfies
+\begin{equation}\label{eq:empirical-relative-precision}
+\frac{\operatorname{tr}(PJ^{-1})}{n-d}
+ =\frac{\operatorname{tr}(I_n-H_\lambda)}{n-d}
+ =S(\lambda).
+\end{equation}
+The original literature uses normalization by $n$; dividing
+by the $n-d$ penalized directions instead gives our exact
+unit-limiting index. This is relative roughness-model
+precision, not absolute observation or sensor precision.
+Computationally, the banded factorization of $A_\lambda$
+is a scaled factorization of $J$, while the retained
+$D_d$ singular vectors diagonalize both $A_\lambda$ and $J$.
+Thus the probabilistic terminology introduces no extra
+inverse computation or performance claim.
+
+
 \subsection{One decomposition, multiple smoothing parameters}
 \paragraph{SVD versus eigendecomposition of the penalty matrix.}
 An eigendecomposition of the symmetric positive-semidefinite matrix

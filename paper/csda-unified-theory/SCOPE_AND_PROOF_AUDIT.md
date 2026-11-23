@@ -1,5 +1,40 @@
 # Scientific scope and proof audit — unified theoretical CSDA paper
 
+## November 19, 2026 uploaded original sources and citation claims
+
+- Eleven author-provided original PDFs inspected, including scanned 1990 Hutchinson, 2011 Lin and 1979 ridge-GCV originals.
+- Five verified new local keys: reinsch1967, corneamadeira2017, lin2011, hutchinson1990, ubaru2017. Six others already had accurate BibTeX keys.
+- Original Golub--Reinsch 1970 p. 404 warns about Gram formation; Lin's supernodal implementation builds on Takahashi/Erisman, rather than inventing their recurrences.
+- Reinsch continuous spline regularizer, d=2 HP finite-sample result and Gaussian/REML formulations are separate literature antecedents; no source misrepresented as our new exact full-grid algorithm.
+- Stochastic approximate trace (Hutchinson) and stochastic Lanczos logdet (Ubaru) are clearly separated from exact banded selected inversion, leverage and determinant.
+- Exact source/equation/document citation mapping and metadata exceptions in notes/PRIMARY_REFERENCE_AUDIT_20261119.md; no licensed PDFs committed.
+- Citation integrity test checks required 11 original-paper keys, use-site references, absence of duplicate BibTeX keys and unresolved cite-key typos.
+
+## November 19, 2026 Gaussian likelihood proof and clarity audit
+
+- Proper model: tau=p_mu+W beta+V theta, with beta unknown fixed and
+  theta~N(0,sigma_u^2 Sigma^-2); epsilon~N(0,sigma_e^2 I), independent.
+- V^T W=0 removes polynomial nuisance directions, yielding
+  z_j~N(0,sigma_e^2[1+1/(lambda delta_j)]) with lambda=sigma_e^2/sigma_u^2.
+- Profile sigma_e^2 = (sum_j z_j^2/c_j)/r for z != 0. The resulting
+  -2 log likelihood is r log(J/r)+sum log c plus an irrelevant constant.
+- Equivalent banded statistics: J=min PLS objective and
+  logdet correction=logdet A-r loglambda-logdet B. Both follow
+  from explicit scalar and spectral proofs.
+- Statistical novelty: none asserted for REML/GML, smoothing marginal
+  likelihood, or error contrasts. Cite Patterson--Thompson 1971,
+  Wahba 1985, Wood 2011, and specifically Biessy 2026 Section 5.3.
+- Additional explanations: reading guide, first-order gradient and SPD,
+  nullspace/SVD coordinate operations, EDF normalization and
+  CV versus GCV leverage correction.
+- Deterministic proof checks: tests/test_reml_contrast.py plus
+  original tests; no experiment, forecast evaluation or performance
+  claim. Notes in notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md.
+- Fixed mu only. Unknown reference mean and correlated observation noise
+  need independent derivation. Coauthor/statistical review still pending.
+
+
+
 Date: November 9, 2026. Status: theory-first draft, not submitted.
 
 ## November 18, 2026 reading and layout revision

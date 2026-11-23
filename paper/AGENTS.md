@@ -4,6 +4,9 @@
 
 # Paper work — mandatory manuscript/experiment routing
 
+**2026-11-22 three-manuscript precision-matrix editorial update:** A new source-verified derivation connects the Gaussian fixed-reference PLS information matrix `J = sigma_e^(-2)I + sigma_u^(-2) D^T D` to the normalized trace `S = tr(P J^(-1))/(n-d)`. Preserve distinct journal treatments (Springer numerical pipeline, CSDA proof, Paper C conditional jerk covariance), immutable experiments, and the 2007/2017 historical source distinction; details, tests, and PDF rebuild status in [PRECISION_MATRIX_CROSS_MANUSCRIPT_2026-11-22.md](PRECISION_MATRIX_CROSS_MANUSCRIPT_2026-11-22.md). The prior compiled PDFs are **not** automatically refreshed by a TeX update. Keep the conflicted standalone Paper C PR #152 for explicit reconciliation; no submission.
+
+
 **Paper C extrapolation handoff (2026-11-05):** In addition to the
 literature index below, read
 [EXTRAPOLATION_RESEARCH_HANDOFF](ngsim-jerk-case-study/notes/EXTRAPOLATION_RESEARCH_HANDOFF.md),

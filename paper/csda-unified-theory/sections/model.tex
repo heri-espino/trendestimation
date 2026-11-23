@@ -9,11 +9,34 @@ At a fixed reference level $\mu\in\R$ of the $d$th differences, estimate
 \arg\min_{\tau\in\R^n}\{
 \|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf1_r\|_2^2\}.
 \end{equation}
-Set $Q_d=D_d^\top D_d$, $A_\lambda=I+\lambda Q_d$ and $H_\lambda=A_\lambda^{-1}$. The first-order equations give
+Set $Q_d=D_d^\top D_d$,
+$A_\lambda=I+\lambda Q_d$, and
+$H_\lambda=A_\lambda^{-1}$.
+The normal equations are obtained by differentiating
+the two squared norms in \eqref{eq:pls}:
+\[
+\begin{aligned}
+\nabla_\tau\|y-\tau\|^2&=2(\tau-y),\\
+\nabla_\tau\|D_d\tau-\mu\mathbf1_r\|^2
+&=2D_d^\top(D_d\tau-\mu\mathbf1_r).
+\end{aligned}
+\]
+Setting the sum of the first gradient and
+$\lambda$ times the second gradient to zero,
+then collecting the terms containing $\tau$,
+gives the linear system
 \begin{equation}\label{eq:rhs}
-A_\lambda\widehat\tau=y+\lambda\mu D_d^\top\mathbf1_r.
+A_\lambda\widehat\tau
+=y+\lambda\mu D_d^\top\mathbf1_r.
 \end{equation}
-$A_\lambda$ is symmetric positive definite for finite $\lambda\ge0$.
+For every nonzero $v\in\R^n$ and $\lambda\ge0$,
+$v^\top A_\lambda v
+=\|v\|^2+\lambda\|D_dv\|^2>0$.
+Consequently $A_\lambda$ is symmetric
+positive definite, the minimizer is unique,
+and a banded solver can compute
+$\widehat\tau$ without forming the
+generally dense inverse $H_\lambda$.
 
 \begin{lemma}[Finite-difference nullspace]\label{lem:kernel}
 $D_d$ has rank $r$ and nullspace dimension $d$.
@@ -69,7 +92,19 @@ For every finite $\lambda\ge0$ and specified real $\mu$,
 &\qquad-\mu(w\oslash\sigma)\odot(U^\top\mathbf1_r)\bigr].
 \end{aligned}
 \end{equation}
-Componentwise multiplication and division are denoted by $\odot$ and $\oslash$. This identity avoids building $p_\mu$ or inverting a dense matrix explicitly.
+Componentwise multiplication and division are denoted
+by $\odot$ and $\oslash$.
+In particular, $(w\oslash\sigma)_j=w_j/\sigma_j$:
+these are $r$ scalar operations, not an
+additional matrix factorization.
+The first term inside the brackets removes
+the penalty-direction contribution of the
+observed vector; the second restores the
+component required by the prescribed
+nonzero difference reference. This avoids
+explicitly constructing the potentially
+large reference polynomial $p_\mu$ or
+forming the dense inverse $H_\lambda$.
 \end{proposition}
 \begin{proof}
 Since $H_\lambda=I-V\diag(w)V^\top$ and $D_dp_\mu=\mu\mathbf1_r$, we have $V^\top p_\mu=\mu\Sigma^{-1}U^\top\mathbf1_r$. Substitute into \eqref{eq:affine}.

@@ -60,7 +60,7 @@ ordinary full-space condition number is infinite. When $Q_d$ is
 on the scale of machine precision times $\|Q_d\|_2$ may obscure small
 positive eigenvalues. Directly applying SVD to $D_d$ avoids this
 Gram-matrix formation and is the accuracy-oriented reference
-implementation \citep{golubkahan1965,golubvanloan2013}.
+implementation \citep[p.~404]{golubreinsch1970}. The original paper explicitly illustrates the loss of numerical information from forming $A^\top A$, so this is a conditioning motivation rather than an invented theorem or a proof of faster SVD computation.
 This does not prove that every symmetric eigensolver is less accurate
 or slower: exploiting the banded structure of $Q_d$, the requested
 spectrum, and the computational workload may change the comparison.
@@ -152,14 +152,53 @@ Z_{ii}=\frac{1}{L_{ii}^2}
 -\frac{1}{L_{ii}}\sum_{k=i+1}^{\min(n,i+d)}
 L_{ki}Z_{ki}.
 \end{equation}
-By symmetry $Z_{kj}=Z_{jk}$. The off-diagonal recursion follows by expanding $(L^\top Z)_{ij}=0$ for $i<j$, and the diagonal relation from $(L^\top Z)_{ii}=1/L_{ii}$. These are classical selected-inverse identities originating in the sparse-inverse literature \citep{takahashi1973,erisman1975}, not a new inverse algorithm. The $O(nd^2)$ bound below follows by counting $O(d)$ updates for each of $O(nd)$ selected entries; for fixed $d$, it reduces to $O(n)$, consistent with the specialized Whittaker--Henderson algorithms in \citet{weinert2007}.
+By symmetry $Z_{kj}=Z_{jk}$. The off-diagonal recursion follows by expanding $(L^\top Z)_{ij}=0$ for $i<j$, and the diagonal relation from $(L^\top Z)_{ii}=1/L_{ii}$. These are classical selected-inverse identities originating in the sparse-inverse literature \citep{takahashi1973,erisman1975}, not a new inverse algorithm. \citet[Secs.~2--4]{lin2011} subsequently describes a practical supernodal $LDL^\top$-based implementation for general sparse symmetric matrices. Its general sparse implementation is related prior art, not a direct source for our specialized fixed-bandwidth $O(nd^2)$ bound. The $O(nd^2)$ bound below follows by counting $O(d)$ updates for each of $O(nd)$ selected entries; for fixed $d$, it reduces to $O(n)$, consistent with the specialized Whittaker--Henderson algorithms in \citet{weinert2007}.
 
 The selected entries are computable in reverse order in $O(nd^2)$ work and $O(nd)$ storage. Their diagonal supplies $h_i=Z_{ii}$ and $\nu=\sum_i h_i$. Consequently exact conditional CV, GCV and information criteria do \emph{not} require solving for all $n$ columns of the inverse or forming the dense $H_\lambda$. The determinant identity in Proposition~\ref{prop:det} completes the same banded pipeline for the Gaussian likelihood.
 
 \subsection{Other exact and iterative approaches}
 General banded LU can solve the finite-penalty system at structured cost but is not SPD Cholesky. Sparse direct solvers can exploit the same graph structure; sparsity-conscious elimination has antecedents in \citet{markowitz1957}, while pivoting, fill-in, ordering and modern cost considerations are treated by \citet{davis2006}. A hybrid in which sparse LU or CHOLMOD supplies a trend but a \emph{separate} banded factorization supplies leverage or likelihood diagnostics must charge both steps.
 
-Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through local differences at $O(nd)$ work per iteration, producing a nominal $O(qnd)$ fit for $q$ iterations, plus preconditioner setup and application. The underlying conjugate-gradient algorithm was introduced by \citet{hestenesstiefel1952}; its preconditioned convergence theory is reviewed by \citet{saad2003}. The $O(nd)$ matrix-vector application is counted directly from the two order-$d$ difference passes; the iteration count $q$ depends on convergence and the preconditioned spectrum. FFT or sine-transform preconditioners can introduce $O(qn\log n)$ work. Approximate boundary transforms should not be described as an exact finite-interval eigendecomposition. Neither a universally bounded iteration count nor exact leverage access follows from PCG alone; convergence and added diagnostics are separate requirements.
+Matrix-free preconditioned conjugate gradients (PCG) applies $A_\lambda$ through local differences at $O(nd)$ work per iteration, producing a nominal $O(qnd)$ fit for $q$ iterations, plus preconditioner setup and application. The underlying conjugate-gradient algorithm was introduced by \citet[Sec.~3]{hestenesstiefel1952}; its preconditioned convergence theory is reviewed by \citet{saad2003}. The $O(nd)$ matrix-vector application is counted directly from the two order-$d$ difference passes; the iteration count $q$ depends on convergence and the preconditioned spectrum. FFT or sine-transform preconditioners can introduce $O(qn\log n)$ work. Approximate boundary transforms should not be described as an exact finite-interval eigendecomposition. Neither a universally bounded iteration count nor exact leverage access follows from PCG alone; convergence and added diagnostics are separate requirements.
+
+\subsection{Approximate trace and log-determinant alternatives}
+\label{sec:approximate-diagnostics}
+The algorithmic costs reported above concern \emph{exact}
+fixed-$\lambda$ statistical diagnostics (up to floating-point
+rounding). Large problems also admit \emph{approximate}
+matrix-function diagnostics. In smoothing splines,
+\citet{hutchinson1990} proposes unbiased random-probe
+estimation of the trace of the influence matrix,
+whereas \citet{ubaru2017} combines random-probe
+trace estimation, Lanczos iteration and Gaussian
+quadrature for traces of matrix functions,
+including log determinants of positive-definite matrices.
+For independent Rademacher probes
+$\xi_k\in\{-1,+1\}^n$ with
+$\mathbb E(\xi_k\xi_k^\top)=I_n$,
+\begin{equation}\label{eq:stochastic-trace}
+\widehat T_q(F)=\frac1q\sum_{k=1}^q
+\xi_k^\top F(A_\lambda)\xi_k,
+\qquad
+\mathbb E[\widehat T_q(F)]=
+\operatorname{tr}F(A_\lambda),
+\end{equation}
+provided each bilinear form is evaluated exactly.
+For example, $F(A_\lambda)=A_\lambda^{-1}$
+targets $\nu=\operatorname{tr}H_\lambda$,
+and $F(A_\lambda)=\log A_\lambda$
+targets $\log\det A_\lambda$.
+With truncated Krylov or Lanczos bilinear forms,
+there are \emph{two distinct approximation errors}:
+random-probe sampling error and inner numerical
+quadrature/solver error. Neither paper proves that
+these estimates reproduce our \emph{exact}
+LOOCV leverage vector; a trace estimate supplies
+only a scalar, not all entries of $\diag H_\lambda$.
+These scalable alternatives therefore belong to
+a different accuracy--cost regime and are
+\emph{not} included as exact competitors or as
+measured algorithms in the workload theorems.
 
 \begin{sidewaystable*}[p]
 \centering
