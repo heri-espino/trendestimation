@@ -115,7 +115,7 @@ def render():
     bottom.set_xlim(0.0, 1.0)
     bottom.set_ylim(bottom=-2.0)
     bottom.set_xlabel(r"Normalized smoothness $S$")
-    bottom.set_ylabel(r"Gaussian contrast $-\min$")
+    bottom.set_ylabel("Contrast above minimum")
     bottom.grid(alpha=0.13, lw=0.4)
 
     HERE.mkdir(parents=True, exist_ok=True)
