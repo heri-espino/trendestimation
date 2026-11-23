@@ -1,5 +1,30 @@
 # Scientific scope and proof audit — unified theoretical CSDA paper
 
+## November 22, 2026 simple synthetic Gaussian-contrast figure
+
+- One deterministic series, `n=72,d=3,seed=20261122`,
+  with a true cubic-plus-sinusoidal position trajectory and
+  Gaussian measurement noise (0.08 m SD).
+- Reference `mu=1.8(1/71)^3` in position units comes from
+  the known cubic baseline and is fixed for likelihood and fit.
+  The additional sinusoidal term means true jerk varies in time;
+  it is not a full draw from the assumed Gaussian innovation model.
+- The existing `select_lambda(...criterion="mle",
+  search_space="smoothness")` chooses the minimum from the
+  91-point `S` grid 0.02..0.98; no continuous global optimality
+  claimed. Code snippet and actual plot use identical settings.
+- Figure panels: observed/truth/fitted series; profiled contrast
+  minus its observed minimum versus `S`. No alternatives,
+  forecasting comparisons, or raw dataset downloads.
+- Real AwesomeFigures styling and vector export are required.
+  Reproducible source/outputs and exact hashes are documented in
+  `figures/README.md` and generated manifest.
+- The Actions source-only compilation and existing mathematical
+  and citation tests remain unchanged except for this small
+  deterministic illustration.
+
+
+
 ## November 19, 2026 uploaded original sources and citation claims
 
 - Eleven author-provided original PDFs inspected, including scanned 1990 Hutchinson, 2011 Lin and 1979 ridge-GCV originals.
