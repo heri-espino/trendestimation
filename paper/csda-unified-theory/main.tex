@@ -6,6 +6,48 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{graphicx,booktabs,tabularx,enumitem,url,capt-of}
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
+\usepackage{xcolor,listings,microtype}
+% VS Code Light+ inspired Python syntax: publication-safe, no shell-escape.
+\definecolor{codeBlue}{HTML}{0000FF}
+\definecolor{codeRed}{HTML}{A31515}
+\definecolor{codeGreen}{HTML}{008000}
+\definecolor{codePurple}{HTML}{795E26}
+\definecolor{codeInk}{HTML}{24292F}
+\definecolor{codeEdge}{HTML}{D0D7DE}
+\lstdefinestyle{vscodeLightPython}{%
+ language=Python,
+ basicstyle=\ttfamily\fontsize{8.2}{10.1}\selectfont\color{codeInk},
+ keywordstyle=\color{codeBlue}\bfseries,
+ stringstyle=\color{codeRed},
+ commentstyle=\color{codeGreen}\itshape,
+ emph={TrendSmoother,select_lambda,linspace,len,fit},
+ emphstyle=\color{codePurple},
+ backgroundcolor=\color{white},
+ frame=single,
+ rulecolor=\color{codeEdge},
+ framerule=0.35pt,
+ framesep=4pt,
+ xleftmargin=0pt,
+ xrightmargin=0pt,
+ linewidth=\linewidth,
+ breaklines=true,
+ breakatwhitespace=false,
+ breakautoindent=true,
+ prebreak=\mbox{\textcolor{codeInk}{\tiny$\hookleftarrow$}},
+ postbreak=\mbox{},
+ columns=fullflexible,
+ keepspaces=true,
+ showstringspaces=false,
+ upquote=true,
+ tabsize=4,
+ aboveskip=8pt,
+ belowskip=8pt
+}
+% Emergency interword flexibility keeps body copy inside the two CAS columns.
+% Math and special unbreakable tokens still receive targeted local fixes.
+\setlength{\emergencystretch}{2.5em}
+\tolerance=2800
+\pretolerance=150
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
 \newcommand{\R}{\mathbb R}
@@ -83,6 +125,7 @@ Penalized least squares \sep smoothness index \sep spectral decomposition
 \input{sections/policy}
 \input{sections/software}
 \input{sections/conclusion}
+\input{sections/declarations}
 \bibliographystyle{cas-model2-names}
 % References are reused without duplicating/diverging the existing BibTeX source.
 \bibliography{../csda-computational-costs/references,algorithmic_references}
