@@ -36,6 +36,18 @@ their relationship to normalized
 smoothness and making the computational
 route explicit and reproducible.
 
+The value of this formulation is most apparent when the
+scientific question is posed in terms of a desired fraction
+of removable trend complexity rather than a raw penalty
+whose magnitude depends on the series length and
+difference order. In that setting, spectral preparation,
+smoothness inversion, criterion selection and numerical
+validation become one reproducible decision process.
+The result is not merely a collection of independent
+closed-form expressions: it makes the setup-versus-reuse
+trade-off and the information required by each
+statistical criterion explicit.
+
 The remaining contributions are an
 arbitrary-order, shift-free SVD formula
 for prescribed nonzero difference means,
@@ -52,6 +64,23 @@ new forecasting evidence.
 The algorithmic choice is more subtle than selecting the fastest linear solver. A full retained dense SVD costs more to prepare and retain than a banded factorization, but enables inexpensive evaluation of many scalar criteria after preprojection. Weinert's original $LDL^\top$ Whittaker--Henderson algorithm is a structured fixed-order, linear-time GCV alternative, not an SVD of $D_d$; there is no universal spectral speed advantage merely because several penalty values are requested. Banded Cholesky, when coupled with selected inversion, supplies complete conditional CV, GCV, information and profiled Gaussian REML/marginal-likelihood quantities with structured storage and an $O(nd^2)$ per-candidate bound. The initial cost of obtaining $\lambda$ from an $S$ request and the number of observed series materially alter that comparison. Exact ordinary CV can require more spectral work than scalar GCV; no universal SVD--Cholesky winner follows from the asymptotic bounds.
 
 The same theory also identifies a risk frontier. Large penalties and higher difference orders can create ill-conditioned normal equations, even though the matrices remain SPD mathematically. A factorization that is computationally inexpensive but fails a numerical-validity requirement does not supply a usable statistical estimator. Numerical failures must be classified by their mechanism rather than interpreted as proof that Cholesky or spectral methods are universally unsuitable.
+
+This framework complements rather than replaces other
+approaches to trend estimation. Continuous smoothing
+splines and penalized B-splines use related quadratic
+regularization in different function spaces
+\citep{reinsch1967,eilersmarx1996}; locally adaptive
+$\ell_1$ trend filters instead favor knots and
+piecewise-polynomial structure
+\citep{kim2009,tibshirani2014}. In macroeconomic
+applications, the well-known interpretational cautions
+about extracting cycles with the Hodrick--Prescott
+filter \citep{hamilton2018} are not resolved by
+reparameterizing its quadratic objective. Our
+contribution concerns exact computation and
+smoothing-parameter selection under specified
+assumptions, not a universal claim about the
+truth of an extracted economic trend.
 
 Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, jointly selecting the difference order $d$ and smoothness $S$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here. For forecasting, such selection must respect temporal order and distinguish third-difference estimated jerk from independently observed physical jerk.
 
