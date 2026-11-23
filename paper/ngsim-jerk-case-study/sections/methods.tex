@@ -49,87 +49,208 @@ with constant discrete third difference. These \emph{limits}
 are not assumptions that real vehicles have constant jerk
 throughout the observed interval.
 
-\subsection{An interpretable, normalized smoothness index}
-Let $\delta_1,\ldots,\delta_m>0$ be the positive eigenvalues
-of $Q$, with $m=n-3$. The smoothness index used throughout the
-\texttt{trendestimation} library is
+\subsection{A bounded smoothness coordinate and its relative-precision meaning}
+\label{sec:precision-index}
+The conventional \emph{smoothing parameter} $\lambda\ge0$
+is unbounded: the bounded quantity is the
+\emph{normalized smoothness index} $S(\lambda)$.
+Let $\delta_1,\ldots,\delta_m>0$ denote the positive
+eigenvalues of $Q=D_3^\top D_3$, with $m=n-3$.
+The index used in \texttt{trendestimation} is
 \begin{equation}\label{eq:S}
 S(\lambda)=\frac1m\sum_{j=1}^{m}
 \frac{\lambda\delta_j}{1+\lambda\delta_j}
 \in[0,1].
 \end{equation}
-It is monotone in $\lambda$ and therefore provides an
-interpretable, comparable normalized regularization coordinate.
-For a fixed reference $\mu$ and a fixed penalty $\lambda$,
-let $H_\lambda=(I+\lambda Q)^{-1}$; then
-\begin{equation}\label{eq:edf}
-\operatorname{df}(\lambda)=\operatorname{tr}(H_\lambda)
-=n-mS(\lambda).
+For finite $\lambda>0$ we have $0<S<1$, while
+$S(0)=0$ and $\lim_{\lambda\to\infty}S(\lambda)=1$.
+Moreover,
+$S'(\lambda)=m^{-1}\sum_j\delta_j
+(1+\lambda\delta_j)^{-2}>0$.
+A target $s\in(0,1)$ thus specifies a unique
+penalty for fixed $n,d$. This is a convenient
+dimensionless control scale, but equal numerical
+indices need not yield identical trajectories
+across different operators or sampling grids.
+
+\paragraph{Historical versus rank-normalized smoothness.}
+\citet{guerrero2007} proposed a trace-based
+relative-precision index, invoking Theil's
+measure, and \citet{cortes2017} clarified
+its finite-sample limit. For $d=3$ the original
+$n$-normalized index and our $m$-normalized
+version satisfy the exact identity
+\begin{equation}\label{eq:guerrero-normalization}
+S_G(\lambda)=1-\frac{\operatorname{tr}(H_\lambda)}n
+=\frac{n-3}{n}S(\lambda),\quad
+H_\lambda=(I+\lambda Q)^{-1}.
 \end{equation}
-For a fixed linear smoothing map, trace-based complexity is standard
-in the statistical treatment of prediction error
-\citep{efron2004,ye1998}. The equality above is derived here from
-the $D_3$ spectrum, not asserted as a formula from those papers.
-This \emph{conditional} degrees-of-freedom formula must not
-be applied unchanged when $\mu$ is estimated from the same
-observations. Under the independent Gaussian variance-ratio
-model, the smoothness index also admits the relative-noise
-interpretation tested in Section~\ref{sec:precision};
-it is not the absolute measurement precision of a sensor.
+Three quadratic-nullspace modes remain
+unpenalized, so $S_G\to(n-3)/n$, not $1$.
+Our definition divides by the $n-3$ positive
+penalty directions, giving an exact $[0,1]$
+limiting range. Neither this change of
+normalization nor the historical underlying
+relative-precision idea is a claim of an
+entirely new smoothing method.
 
-
-\paragraph{Precision matrix and physical jerk uncertainty.}
-The variance-ratio model gives a further interpretation
-of the same estimator, established for PLS by
-\citet{guerrero2007,cortes2017}. For a fixed
-reference $\mu$, independent observation noise
-with variance $\sigma_\varepsilon^2>0$, and independent
-third-difference innovations with variance
-$\sigma_u^2>0$, put $D=D_3$ and
-$P=\sigma_u^{-2}D^\top D$. Its conditional
-Gaussian precision matrix and covariance are
+\paragraph{Meaning of precision.}
+Under the independent second-moment model
+$y=\tau+\varepsilon$,
+$D_3\tau=\mu\mathbf1+u$, with
+$\operatorname{Cov}(\varepsilon)=
+\sigma_\varepsilon^2 I$,
+$\operatorname{Cov}(u)=\sigma_u^2 I$,
+$\operatorname{Cov}(u,\varepsilon)=0$,
+and positive variances, we have
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$.
+The observational and roughness contributions
+to the associated information matrix are
 \begin{equation}\label{eq:jerk-precision-matrix}
 \begin{aligned}
-J&=\sigma_\varepsilon^{-2}I_n+P
-  =\sigma_\varepsilon^{-2}(I_n+\lambda Q),\\
-\operatorname{Cov}(\tau\mid y)
- &=J^{-1}=\sigma_\varepsilon^2H_\lambda,
-\qquad \lambda=\frac{\sigma_\varepsilon^2}{\sigma_u^2}.
+J&=\sigma_\varepsilon^{-2}I+
+   \sigma_u^{-2}Q
+   =\sigma_\varepsilon^{-2}(I+\lambda Q),\\
+P&=\sigma_u^{-2}Q .
 \end{aligned}
 \end{equation}
-The third-difference penalty has a three-dimensional
-unpenalized quadratic nullspace, so its stand-alone
-intrinsic Gaussian prior is improper; the observation
-precision makes $J$ positive definite.
-The corresponding \emph{relative} contribution of
-roughness precision is
-\begin{equation}\label{eq:jerk-precision-trace}
+This construction follows the relative-precision
+treatment of \citet{guerrero2007,cortes2017}.
+The roughness component $P$ has rank $n-3$:
+its three unpenalized quadratic-position
+directions make the intrinsic prior improper,
+but the observation term makes $J$
+strictly positive definite.
+
+Under the additional independent \emph{Gaussian}
+innovation model, with diffuse unpenalized
+polynomial coefficients, $J$ is the
+\emph{conditional latent-trend precision}
+and the conditional covariance is
+\begin{equation}\label{eq:jerk-posterior-covariance}
+\operatorname{Cov}(\tau\mid y)
+=J^{-1}=\sigma_\varepsilon^2H_\lambda,
+\end{equation}
+where $\mu$ and both variance components
+are treated as fixed. This model-based
+posterior covariance should not be confused
+with the repeated-sampling covariance of a
+fitted smoother for an unknown fixed trend.
+
+Consequently, the historical Theil-inspired
+relative-precision trace, here normalized
+over the $n-3$ penalized directions, is
+\begin{equation}\label{eq:relative-precision}
 \frac{\operatorname{tr}(PJ^{-1})}{n-3}
- =\frac{\operatorname{tr}(I_n-H_\lambda)}{n-3}
- =S(\lambda).
+=\frac{\operatorname{tr}(I-H_\lambda)}{n-3}
+=S(\lambda).
 \end{equation}
-Guerrero's original trace index divides by $n$;
-our normalization counts only the $n-3$
-penalized directions. Neither definition
-measures absolute camera-position precision.
+This is \emph{relative precision attributable
+to the smoothness component, averaged over
+penalized directions}, not absolute
+camera-position sensor precision. Equivalently,
+at the true variance ratio, $S$ is the
+average spectral fraction of observed
+third-difference covariance caused by
+differenced measurement error; Section~
+\ref{sec:precision} tests that conditional
+implication experimentally. The trace
+algebra itself requires only second moments:
+Gaussianity is needed for the posterior
+covariance interpretation and the subsequent
+likelihood-based selection.
 
-At sampling interval $\Delta t$, the conditional
-Gaussian model also yields a covariance for the
-latent discrete jerk $j=D\tau/(\Delta t)^3$:
+\paragraph{Conditional uncertainty for discrete jerk.}
+At sampling interval $\Delta t$, put
+$j_d=D_3\tau/(\Delta t)^3$ in m/s$^3$.
+The same Gaussian model implies
 \begin{equation}\label{eq:jerk-conditional-covariance}
-\operatorname{Cov}(j\mid y,\lambda,\mu,
- \sigma_\varepsilon^2,\sigma_u^2)
- =\frac{DJ^{-1}D^\top}{(\Delta t)^6}.
+\operatorname{Cov}(j_d\mid y)
+=\frac{D_3J^{-1}D_3^\top}{(\Delta t)^6},
 \end{equation}
-This is a \emph{model-based uncertainty identity},
-not an evaluated interval-coverage result:
-our frozen experiments do not assess posterior
-uncertainty calibration, and real NGSIM episodes
-have no independent true-jerk labels. Estimating
-$\mu$, selecting $\lambda$ or misspecifying
-serial error covariance requires additional
-uncertainty analysis beyond this conditional formula.
+conditional on fixed $\mu$ and both
+variance components. This is a theoretical
+uncertainty identity, not an empirically
+calibrated confidence interval: the
+frozen experiments do not test posterior
+interval coverage, and real NGSIM episodes
+provide no independently observed true jerk.
+Data-selected $\lambda$, estimated $\mu$,
+correlated camera noise, and model
+misspecification require further analysis.
 
+\paragraph{Effective complexity and limits.}
+For fixed $\mu$ and fixed $\lambda$,
+\begin{equation}\label{eq:edf}
+\operatorname{df}(\lambda)
+=\operatorname{tr}(H_\lambda)
+=n-(n-3)S(\lambda).
+\end{equation}
+Trace-based model complexity is classical
+\citep{efron2004,ye1998}. As $S$ goes
+from 0 to 1, the conditional effective
+degrees of freedom decrease from $n$ to
+three. Additional adaptivity from estimating
+$\mu$ or choosing $\lambda$ is excluded.
+Nor does $S$ determine absolute noise
+variance: multiplying both observation
+noise and genuine jerk-innovation standard
+deviations by the same constant leaves
+their ratio (and theoretical $S$) unchanged.
+
+\subsection{Advantages and boundaries of reference-mean third-order PLS}
+\label{sec:pls-advantages}
+The established PLS framework offers six
+useful \emph{design properties} in this
+position-only vehicle application.
+\emph{First}, its fixed-parameter objective
+is a strictly convex quadratic: since
+$I+\lambda D_3^\top D_3$ is positive
+definite, the trend fit is unique for
+every finite $\lambda\ge0$.
+\emph{Second}, the chosen difference
+order directly regularizes a physically
+scaled discrete-jerk proxy, rather than
+assuming that a low position-fitting
+error ensures accurate derivatives.
+\emph{Third}, a nonzero reference $\mu$
+permits sustained signed jerk instead of
+silently forcing the constant-acceleration
+polynomial limit implied by $\mu=0$
+\citep{guerrero2007}.
+\emph{Fourth}, the filter applies
+continuous spectral shrinkage rather
+than the discontinuous hard truncation
+of Eq.~\eqref{eq:tsvd-filter}.
+\emph{Fifth}, its bounded, monotone
+$S$ index gives transparent smoothing
+control, an explicit conditional
+degrees-of-freedom identity and a
+testable model-dependent relative-precision
+interpretation \citep{guerrero2007,guerrero2008,cortes2017}.
+\emph{Sixth}, the fixed-order difference
+penalty is sparse and banded, allowing
+structured linear algebra without
+forming a dense inverse
+\citep{weinert2007,biessy2026}.
+
+These properties do \emph{not}
+imply universal accuracy or robustness.
+In particular, this unconstrained
+quadratic smoother supplies no hard
+speed/acceleration/jerk feasibility
+bounds \citep{fan2024}, does not
+guarantee preservation of abrupt motion,
+and does not forecast without a
+separate continuation rule.
+The distinctive contribution of
+the present work is the \emph{combined
+physical application and conditional
+empirical assessment} of reference
+jerk, $[0,1]$ precision-related
+smoothness, known-jerk reconstruction
+and recorded-future position prediction,
+not invention of these components.
 
 \subsection{Smoothing, reference jerk and choice of regularization}
 We compare the existing PLS policies: a fixed reference

@@ -1,5 +1,7 @@
 # Precision-matrix interpretation across the three active PLS papers
 
+**Integrated Paper C source-matched release (2026-11-22):** [Actions #45088143254](https://github.com/heri-espino/trendestimation/actions/runs/45088143254) compiled the combined manuscript on PCAG103A-08 as **17 pages, 908993 bytes**, PDF SHA-256 `9a41b321d80a79621ee54dac5fa82bb88c82c76982dd6147ae10d7517348f8a5`; all scoped numerical identity tests passed. [Immutable complete build log/PDF/source fingerprints](https://github.com/heri-espino/trendestimation/tree/results/paper-c-integrated-precision-45088143254-a1/paper/builds/paper-c-integrated-precision-45088143254-a1). Its canonical 16-file checksum ledger has been regenerated using Git LF source bytes and passed to repository CI for final confirmation. Original 17-page PR #152 and 16-page PR #156 PDFs, Figure Atlas and all experiments are retained. No new simulation, independent true NGSIM jerk, validated interval coverage, journal submission or new page-by-page visual review is claimed.
+
 **Date:** 2026-11-22. **Scope:** Source-based mathematical/editorial update only. The three canonical active articles are the Springer empirical complete-criterion paper (`paper/sections/experiment011_methods.tex`), unified CSDA theory (`paper/csda-unified-theory/sections/smoothness.tex`), and the third-order vehicle-jerk/NGSIM Paper C (`paper/ngsim-jerk-case-study/sections/methods.tex`). The independent historical CSDA A/B, SNCS draft and the direct-weights paper were **not** revised.
 
 ## Literature and original source checks

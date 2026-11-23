@@ -1,0 +1,104 @@
+name: Paper C integration -- source-matched precision manuscript PDF
+
+# One-time source-matched editorial verification. No scientific experiments,
+# figure regeneration, benchmark timing, dataset access, or downloads.
+on:
+  push:
+    branches:
+      - paper/paper-c-normalized-smoothness-precision
+    paths:
+      - .github/workflows/paper-c-integrated-precision-build-pc08.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manuscript-compile-pc08
+  cancel-in-progress: false
+
+jobs:
+  integrated-paper-c:
+    name: Compile merged Paper C and preserve integrated publication
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 100
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Check exact branch, source SHA and designated Windows runner
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Wrong runner' }
+          if ($env:GITHUB_REF_NAME -ne 'paper/paper-c-normalized-smoothness-precision') {
+            throw 'Refusing unexpected research branch'
+          }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Unexpected source commit' }
+          if (!(Test-Path $env:CONDA_EXE)) { throw 'Existing Conda installation missing' }
+          if (!(Test-Path 'paper/ngsim-jerk-case-study/notes/INTEGRATED_PRECISION_RECONCILIATION_2026-11-22.md')) {
+            throw 'Missing approved reconciliation ledger'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --list
+          if ($LASTEXITCODE -ne 0) { throw 'Missing original TeX toolchain or inputs' }
+      - name: Run deterministic precision algebra tests (no statistical experiment)
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m pytest -q paper/ngsim-jerk-case-study/tests/test_smoothness_relative_precision.py paper/csda-unified-theory/tests/test_precision_matrix.py
+          if ($LASTEXITCODE -ne 0) { throw 'Historical or combined precision algebra test failed' }
+      - name: Rebuild integrated manuscript from current source and frozen figures
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = "paper/builds/paper-c-integrated-precision-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python scripts/build_papers_pc08.py --paper ngsim --output-dir $dir --require-runner
+          if ($LASTEXITCODE -ne 0) { throw 'Integrated Paper C compilation failed' }
+          $manifest = Get-Content -LiteralPath "$dir/build_manifest.json" -Raw | ConvertFrom-Json
+          if ($manifest.source_commit -ne $env:GITHUB_SHA -or @($manifest.results).Count -ne 1 -or $manifest.results[0].status -ne 'ok') {
+            throw 'Compiled source revision or PDF manifest mismatch'
+          }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/ngsim-jerk-case-study/write_publication_hashes_from_git.py
+          if ($LASTEXITCODE -ne 0) { throw 'Canonical Git-blob publication hash refresh failed' }
+          Get-Content -LiteralPath 'paper/ngsim-jerk-case-study/publication_sha256.txt'
+      - name: Upload complete source-matched PDF, checksums and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-c-integrated-precision-pc08
+          path: |
+            paper/builds/paper-c-integrated-precision-*/
+            paper/ngsim-jerk-case-study/main.pdf
+            paper/ngsim-jerk-case-study/main.log
+            paper/ngsim-jerk-case-study/publication_sha256.txt
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Append generated PDF and hash evidence without rewriting research history
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = $env:GITHUB_SHA
+          $dir = "paper/builds/paper-c-integrated-precision-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $dir paper/ngsim-jerk-case-study/main.pdf paper/ngsim-jerk-case-study/publication_sha256.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to stage exact publication outputs' }
+          git commit -m "paper-c: archive merged precision manuscript and canonical SHA-256 inventory"
+          if ($LASTEXITCODE -ne 0) { throw 'No source-matched PDF commit generated' }
+          $archive = "results/paper-c-integrated-precision-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git push origin "HEAD:refs/heads/$archive"
+          if ($LASTEXITCODE -ne 0) { throw 'Immutable PDF archive push failed' }
+          git fetch origin paper/paper-c-normalized-smoothness-precision
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to verify concurrent agent state' }
+          if ((git rev-parse origin/paper/paper-c-normalized-smoothness-precision).Trim() -ne $source) {
+            throw 'Concurrent source edits detected: refuse main manuscript branch overwrite'
+          }
+          git push origin HEAD:refs/heads/paper/paper-c-normalized-smoothness-precision
+          if ($LASTEXITCODE -ne 0) { throw 'Fast-forward publication branch push failed' }
+          Write-Host "Archived source/PDF and updated PR branch at $archive"
