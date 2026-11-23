@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex 2026.11.23)  23 NOV 2026 18:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex 2026.11.23)  23 NOV 2026 23:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -607,43 +607,105 @@ Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 \rot@float@box=\box68
 \rot@mess@toks=\toks41
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 10.
-\c@theorem=\count362
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count362
+\lst@gtempboxa=\box69
+\lst@token=\toks42
+\lst@length=\count363
+\lst@currlwidth=\dimen288
+\lst@column=\count364
+\lst@pos=\count365
+\lst@lostspace=\dimen289
+\lst@width=\dimen290
+\lst@newlines=\count366
+\lst@lineno=\count367
+\lst@maxwidth=\dimen291
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstpatch.sty
+File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
+\c@lstnumber=\count368
+\lst@skipnumbers=\count369
+\lst@framebox=\box70
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2025/11/14 1.11b listings configuration
+))
+Package: listings 2025/11/14 1.11b (Carsten Heinz)
+
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2025/07/09 v3.2b Micro-typographical refinements (RS)
+\MT@toks=\toks43
+\MT@tempbox=\box71
+\MT@count=\count370
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1087.
+LaTeX Info: Redefining \leftprotrusion on input line 1088.
+\MT@prot@toks=\toks44
+LaTeX Info: Redefining \rightprotrusion on input line 1107.
+LaTeX Info: Redefining \textls on input line 1449.
+\MT@outer@kern=\dimen292
+LaTeX Info: Redefining \microtypecontext on input line 2053.
+LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
+\MT@listname@count=\count371
+
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype-pdftex.def
+File: microtype-pdftex.def 2025/07/09 v3.2b Definitions specific to pdftex (RS)
+
+LaTeX Info: Redefining \lsstyle on input line 944.
+LaTeX Info: Redefining \lslig on input line 944.
+\MT@outer@space=\skip83
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2025/07/09 v3.2b microtype main configuration file (RS)
+)
+LaTeX Info: Redefining \microtypesetup on input line 3065.
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 53.
+\c@theorem=\count372
  (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count363
-\scratchdimen=\dimen288
-\scratchbox=\box69
-\nofMPsegments=\count364
-\nofMParguments=\count365
-\everyMPshowfont=\toks42
-\MPscratchCnt=\count366
-\MPscratchDim=\dimen289
-\MPnumerator=\count367
-\makeMPintoPDFobject=\count368
-\everyMPtoPDFconversion=\toks43
+\scratchcounter=\count373
+\scratchdimen=\dimen293
+\scratchbox=\box72
+\nofMPsegments=\count374
+\nofMParguments=\count375
+\everyMPshowfont=\toks45
+\MPscratchCnt=\count376
+\MPscratchDim=\dimen294
+\MPnumerator=\count377
+\makeMPintoPDFobject=\count378
+\everyMPtoPDFconversion=\toks46
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -653,7 +715,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 25.
+Package hyperref Info: Link coloring ON on input line 68.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -694,50 +756,112 @@ Package hyperref Info: Link coloring ON on input line 25.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+\c@lstlisting=\count379
+LaTeX Info: Redefining \microtypecontext on input line 68.
+Package microtype Info: Applying patch `item' on input line 68.
+Package microtype Info: Applying patch `toc' on input line 68.
+Package microtype Info: Applying patch `eqnum' on input line 68.
+Package microtype Info: Applying patch `footnote' on input line 68.
+Package microtype Info: Applying patch `verbatim' on input line 68.
+LaTeX Info: Redefining \microtypesetup on input line 68.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: No font expansion.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+)
 \verbatim@out=\write4
 \openout4 = `main.abs'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 116
+.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
-
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 116
+.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (123.62721pt too wide) detected at line 71
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+)
+Overfull \hbox (123.62721pt too wide) detected at line 116
 []
  []
 
 (./main.abs)
 
-Package hyperref Warning: Ignoring empty anchor on input line 71.
+Package hyperref Warning: Ignoring empty anchor on input line 116.
 
-(./sections/introduction.tex [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.m
-ap}
+(./sections/introduction.tex
+Underfull \hbox (badness 1082) in paragraph at lines 19--35
+\T1/cmr/m/n/10 de-vel-oped the spec-tral ba-sis for spline smooth-ing;
+ []
+
+
+Underfull \hbox (badness 2512) in paragraph at lines 19--35
+\T1/cmr/m/n/10 Reinsch per-spec-tive to eigen-de-com-pose $\OML/cmm/m/it/10 D[]
+D[]$ \T1/cmr/m/n/10 in
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 36--49
+\T1/cmr/m/n/10 claim that adap-tiv-ity; for a fixed ref-er-ence it in-
+ []
+
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmss' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-Overfull \hbox (5.15956pt too wide) in paragraph at lines 65--86
-\T1/cmr/m/n/10 REML/marginal like-li-hood ([][]Pat-ter-son and Thomp-
+Underfull \hbox (badness 3965) in paragraph at lines 106--127
+\T1/cmr/m/n/10 innovation vari-ance ([][]Guer-rero[][], [][]2007[][]; [][]Corté
+s-
  []
 
 
-Underfull \hbox (badness 1348) in paragraph at lines 113--121
+Underfull \hbox (badness 10000) in paragraph at lines 106--127
+\T1/cmr/m/n/10 REML/marginal like-li-hood ([][]Pat-ter-son and
+ []
+
+
+Underfull \hbox (badness 1960) in paragraph at lines 106--127
+\T1/cmr/m/n/10 Thomp-son[][], [][]1971[][]; [][]Wahba[][], [][]1985[][]; [][]Wo
+od[][], [][]2011[][];
+ []
+
+
+Underfull \hbox (badness 1688) in paragraph at lines 106--127
+\T1/cmr/m/n/10 profile and de-ter-mi-nant iden-ti-ties needed for
+ []
+
+[2]
+Underfull \hbox (badness 1348) in paragraph at lines 154--162
 \T1/cmr/bx/n/10 tra-tion. \T1/cmr/m/n/10 The Python in-ter-face ex-poses these
  []
 
-) (./sections/reading_guide.tex [2]) (./sections/model.tex
+) (./sections/reading_guide.tex) (./sections/model.tex
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
 (amsmath)                 on input line 4.
 
-(./sections/third_difference_example.tex [3])
-Overfull \hbox (6.71326pt too wide) detected at line 78
+[3] (./sections/third_difference_example.tex)
+Overfull \hbox (6.71326pt too wide) detected at line 94
  $\OML/cmm/m/it/10 H[] \OT1/cmr/m/n/10 = (\OML/cmm/m/it/10 I \OT1/cmr/m/n/10 + 
 \OML/cmm/m/it/10 ^^UD[]D[]\OT1/cmr/m/n/10 )[] = \OML/cmm/m/it/10 I \OMS/cmsy/m/
 n/10 ^^@ \OML/cmm/m/it/10 V []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 w[]\OT1/cmr/m/n
@@ -745,14 +869,16 @@ n/10 ^^@ \OML/cmm/m/it/10 V []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 w[]\OT1/cmr/m/n
 /n/10 (\OML/cmm/m/it/10 ^^U\OT1/cmr/m/n/10 ))\OML/cmm/m/it/10 V[]:$  
  []
 
-(./sections/order_interpretation.tex [4]
+[4] (./sections/order_interpretation.tex
 Overfull \hbox (1.1291pt too wide) detected at line 20
  $\OML/cmm/m/it/10 j  [] \OMS/cmsy/m/n/10 ^^Y []\OML/cmm/m/it/10 :$  
  []
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 20--29
-\T1/cmr/m/n/10 acceleration) lim-it-ing trend, whereas a pre-scribed
+Underfull \hbox (badness 1394) in paragraph at lines 20--29
+\OML/cmm/m/it/10 j$\T1/cmr/m/n/10 , then $\OT1/cmr/m/n/10 ^^A[]\OML/cmm/m/it/10
+ x \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 jh[]$ \T1/cmr/m/it/10 ex-actly\T1/cmr/m/n
+/10 . Con-se-quently $\OML/cmm/m/it/10 ^^V \OT1/cmr/m/n/10 =
  []
 
 LaTeX Font Info:    Calculating math sizes for size <11> on input line 42.
@@ -772,143 +898,260 @@ LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <5.5> not available
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <5.5> not available
 (Font)              size <5> substituted on input line 42.
 
+
+Underfull \hbox (badness 1194) in paragraph at lines 52--63
+\T1/cmr/m/n/10 with-held from fit-ting and tun-ing. For future-time
+ []
+
 )) (./sections/smoothness.tex [5]
-Overfull \hbox (5.78908pt too wide) in paragraph at lines 127--140
+Underfull \hbox (badness 10000) in paragraph at lines 127--140
  []\T1/cmr/m/it/10.95 Spectral and nu-mer-i-cal con-se-quences.[] \T1/cmr/m/n/1
-0 In the singular-
+0 In the
  []
 
 
-Overfull \hbox (12.64297pt too wide) in paragraph at lines 142--154
+Underfull \hbox (badness 2460) in paragraph at lines 127--140
+\T1/cmr/m/n/10 eigen-val-ues $\OML/cmm/m/it/10 ^^[[]$ \T1/cmr/m/n/10 and the $\
+OML/cmm/m/it/10 r$ \T1/cmr/m/n/10 pe-nal-ized eigen-val-ues
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 142--154
  []\T1/cmr/m/it/10.95 Interpretation and scope.[] \T1/cmr/m/n/10 The his-tor-i-
-cal Theil--Guerrero
- []
-
-) (./sections/criteria.tex [6] (./sections/gaussian_likelihood.tex [7]
-Overfull \hbox (0.66139pt too wide) in paragraph at lines 130--140
-\T1/cmr/m/n/10 Let $\OML/cmm/m/it/10 J[] \OT1/cmr/m/n/10 = [][] \OML/cmm/m/it/1
-0 z[]=c[]$\T1/cmr/m/n/10 . For fixed $\OML/cmm/m/it/10 ^^U$\T1/cmr/m/n/10 , dif
--fer-en-ti-at-ing $\OML/cmm/m/it/10 r [] ^^[[] \OT1/cmr/m/n/10 +
- []
-
-[8]
-Overfull \hbox (13.51964pt too wide) in paragraph at lines 318--347
-\T1/cmr/m/n/10 son[][], [][]1971[][]); gen-er-al-ized max-i-mum like-li-hood fo
-r smoothing-
+cal Theil--
  []
 
 
-Overfull \hbox (0.57613pt too wide) in paragraph at lines 318--347
-\T1/cmr/m/n/10 parameter se-lec-tion pre-dates this ar-ti-cle ([][]Wahba[][], [
-][]1985[][]),
+Underfull \hbox (badness 4429) in paragraph at lines 142--154
+\T1/cmr/m/n/10 and is there-fore the rank-normalized co-or-di-nate
  []
 
-)) (./sections/algorithms.tex (./sections/algorithm_provenance.tex [9]
-Underfull \hbox (badness 2538) in paragraph at lines 87--87
+[6]) (./sections/criteria.tex [7] (./sections/gaussian_likelihood.tex
+Underfull \hbox (badness 1622) in paragraph at lines 5--19
+\T1/cmr/m/n/10 Henderson smooth-ing is de-rived by [][]Biessy[][] ([][]2026[][]
+,
+ []
+
+[8] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 318--347
+\T1/cmr/m/n/10 likelihood prin-ci-ple is clas-si-cal ([][]Pat-ter-son and
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 318--347
+\T1/cmr/m/n/10 model, [][]Biessy[][] ([][]2026[][], Sec. 5.3) gives a marginal
+ []
+
+
+Underfull \hbox (badness 1460) in paragraph at lines 318--347
+\T1/cmr/m/n/10 a log-determinant cor-rec-tion. On spe-cial-iza-tion to
+ []
+
+
+Underfull \hbox (badness 4454) in paragraph at lines 318--347
+\T1/cmr/m/n/10 nor-mal-ized smooth-ness co-or-di-nate, and com-plete
+ []
+
+
+Underfull \hbox (badness 1152) in paragraph at lines 318--347
+\T1/cmr/m/n/10 to ex-ist-ing com-pu-ta-tional treat-ments still re-quires
+ []
+
+)) (./sections/algorithms.tex (./sections/algorithm_provenance.tex
+Underfull \hbox (badness 3189) in paragraph at lines 88--88
 \T1/cmr/m/n/10 gen-eral sparse re-cur-rences: [][]Taka-hashi et al.[][]
  []
 
-
-Overfull \hbox (0.27065pt too wide) in paragraph at lines 103--123
-\T1/cmr/m/n/10 dif-fer-ent prob-lem for-mu-la-tions or com-pu-ta-tional routes.
-
+)
+Underfull \hbox (badness 1527) in paragraph at lines 126--5
+\T1/cmr/m/n/10 validation ap-pli-ca-tion. Im-por-tantly, [][]Wein-ert[][] ([][]
+2007[][],
  []
 
-) [10]
+[10]
 Overfull \vbox (0.00002pt too high) has occurred while \output is active []
 
 
 [11]
-Overfull \hbox (9.49979pt too wide) in paragraph at lines 110--115
- []\T1/cmr/m/it/10.95 Comparison with Wein-ert's al-go-rithm.[] [][]\T1/cmr/m/n
-/10 Wein-ert[][] ([][]2007[][],
+Underfull \hbox (badness 6876) in paragraph at lines 9--28
+[]\T1/cmr/m/n/10 The spec-tral view-point fol-lows the clas-si-cal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--28
+\T1/cmr/m/n/10 Demmler--Reinsch ba-sis ([][]Demm-ler and Rein-sch[][],
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--28
+[][]\T1/cmr/m/n/10 1975[][]). In par-tic-u-lar, [][]Biessy[][] ([][]2026[][], S
+ec. 6.4)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--28
+\T1/cmr/m/n/10 ex-plic-itly de-com-poses $\OML/cmm/m/it/10 D[]D[]$ \T1/cmr/m/n/
+10 and uses the
+ []
+
+
+Underfull \hbox (badness 1253) in paragraph at lines 9--28
+\OML/cmm/m/it/10 D[]$\T1/cmr/m/n/10 , pre-serv-ing the ex-act un-weighted finit
+e-sample
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 9--28
+\T1/cmr/m/n/10 dis-tinc-tion is sub-stan-tive: low-rank trun-ca-tion can
+ []
+
+
+Underfull \hbox (badness 1454) in paragraph at lines 9--28
+\T1/cmr/m/n/10 re-duce com-pu-ta-tional cost when ap-prox-i-ma-tion is
  []
 
 [12]
-Overfull \hbox (10.67455pt too wide) in paragraph at lines 162--163
-[]\T1/cmr/m/n/10 Matrix-free pre-con-di-tioned con-ju-gate gra-di-ents (PCG)
+Underfull \hbox (badness 3482) in paragraph at lines 130--135
+ []\T1/cmr/m/it/10.95 Comparison with Wein-ert's al-go-rithm.[] [][]\T1/cmr/m/n
+/10 Wein-ert[][]
  []
 
 
-Underfull \hbox (badness 1117) in paragraph at lines 166--179
-\T1/cmr/m/n/10 fixed-$\OML/cmm/m/it/10 ^^U$ \T1/cmr/m/n/10 sta-tis-ti-cal di-ag
--nos-tics (up to floating-point
+Underfull \hbox (badness 1365) in paragraph at lines 130--135
+\T1/cmr/m/n/10 ([][]2007[][], Sec. 1, pp. 959--961) de-fines a rect-an-gu-lar
  []
 
 
-Overfull \hbox (16.44112pt too wide) in paragraph at lines 166--179
-\T1/cmr/m/n/10 matrix-function di-ag-nos-tics. In smooth-ing splines, [][]Hutch
-in-
+Underfull \hbox (badness 4556) in paragraph at lines 182--183
+[]\T1/cmr/m/n/10 Matrix-free pre-con-di-tioned con-ju-gate gra-di-ents
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 2460) in paragraph at lines 182--183
+\T1/cmr/m/n/10 work per it-er-a-tion, pro-duc-ing a nom-i-nal $\OML/cmm/m/it/10
+ O\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 qnd\OT1/cmr/m/n/10 )$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--183
+\T1/cmr/m/n/10 ap-pli-ca-tion. The un-der-ly-ing conjugate-gradient
+ []
+
+
+Underfull \hbox (badness 1019) in paragraph at lines 182--183
+\T1/cmr/m/n/10 al-go-rithm was in-tro-duced by [][]Hestenes and Stiefel[][]
+ []
+
+
+Underfull \hbox (badness 3209) in paragraph at lines 182--183
+\T1/cmr/m/n/10 dif-fer-ence passes; the it-er-a-tion count $\OML/cmm/m/it/10 q$
+ \T1/cmr/m/n/10 de-pends
+ []
+
+
+Underfull \hbox (badness 2221) in paragraph at lines 182--183
+\T1/cmr/m/n/10 on con-ver-gence and the pre-con-di-tioned spec-trum.
+ []
+
+
+Underfull \hbox (badness 1215) in paragraph at lines 182--183
+\T1/cmr/m/n/10 eigen-de-com-po-si-tion. Nei-ther a uni-ver-sally bounded
+ []
+
+[13]
+Underfull \hbox (badness 1867) in paragraph at lines 186--199
+\T1/cmr/m/it/10 act \T1/cmr/m/n/10 fixed-$\OML/cmm/m/it/10 ^^U$ \T1/cmr/m/n/10 
+sta-tis-ti-cal di-ag-nos-tics (up to floating-
+ []
+
+
+Underfull \hbox (badness 1205) in paragraph at lines 282--282
+[]|\T1/cmr/m/n/10 Complete score up to $\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML
+/cmm/m/it/10 n[]\OT1/cmr/m/n/10 )$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|$\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 nr[]\OT1/cmr/m/n/10 )$ 
 \T1/cmr/m/n/10 once; project
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|$\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 r\OT1/cmr/m/n/10 )$ \T1
 /cmr/m/n/10 pro-jected scalar
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 10000) in paragraph at lines 282--282
 \T1/cmr/m/n/10 GCV/IC/likelihood score;
  []
 
 
-Underfull \hbox (badness 2635) in paragraph at lines 262--262
+Underfull \hbox (badness 1117) in paragraph at lines 282--282
+[]|\T1/cmr/m/n/10 Dense Gram eigen-de-com-po-si-
+ []
+
+
+Underfull \hbox (badness 3449) in paragraph at lines 282--282
 []|$\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 n\OT1/cmr/m/n/10 )$ \T1
 /cmr/m/n/10 pro-jected scalar score;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|\T1/cmr/m/n/10 Preconditioner-
  []
 
 
-Underfull \hbox (badness 6110) in paragraph at lines 262--262
+Underfull \hbox (badness 6396) in paragraph at lines 282--282
 []|$\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 qnd\OT1/cmr/m/n/10 )$ \
 T1/cmr/m/n/10 lo-cal matrix-vector
  []
 
 
-Underfull \hbox (badness 5939) in paragraph at lines 262--262
+Underfull \hbox (badness 6188) in paragraph at lines 282--282
 []|\T1/cmr/m/n/10 One ap-prox-i-mate fit; ex-act
  []
 
 ) (./sections/complexity.tex
-Underfull \hbox (badness 1888) in paragraph at lines 22--44
+Underfull \hbox (badness 2469) in paragraph at lines 22--44
 \T1/cmr/m/n/10 score banded factorization/selected-inverse per ac-
  []
 
-[13]
+[14]
 Overfull \vbox (0.00002pt too high) has occurred while \output is active []
 
 
-[14]
-Overfull \hbox (12.2205pt too wide) in paragraph at lines 111--112
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 111--112
 [][]\T1/cmr/bx/n/10 Proposition 13 \T1/cmr/m/n/10 (Con-di-tional can-di-date--c
-ount crossover)\T1/cmr/bx/n/10 .
+ount
  []
 
-[15]) (./sections/stability.tex
+[16]) (./sections/stability.tex
 Underfull \hbox (badness 1009) in paragraph at lines 19--23
 []\T1/cmr/m/n/10 The pos-i-tive eigen-val-ues also en-ter the in-verse
  []
 
-[16]
+[17]
 Underfull \hbox (badness 1796) in paragraph at lines 54--55
 \T1/cmr/m/n/10 high-precision com-pan-ion anal-y-sis re-ported pri-mal
+ []
+
+
+Underfull \hbox (badness 1082) in paragraph at lines 54--55
+\T1/cmr/m/n/10 banded-Cholesky fail-ures in dif-fi-cult con-fig-u-ra-tions,
  []
 
 LaTeX Font Info:    Trying to load font information for U+euf on input line 58.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
+)
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-euf.cfg
+File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
+
 ))
 (./sections/policy.tex
 Underfull \hbox (badness 1484) in paragraph at lines 25--25
@@ -916,25 +1159,48 @@ Underfull \hbox (badness 1484) in paragraph at lines 25--25
  []
 
 
-Underfull \hbox (badness 7362) in paragraph at lines 25--25
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
 []|\T1/cmss/m/n/9 Large $\OML/cmm/m/it/9 ^^U$ \T1/cmss/m/n/9 can am-plify finit
 e-
  []
 
-) (./sections/software.tex [17]
-<figures/gaussian_jerk_demo.pdf, id=722, 251.07785pt x 308.96175pt>
+) (./sections/software.tex
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <8.2> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 10.
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <5> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 10.
+ [18]
+<figures/gaussian_jerk_demo.pdf, id=760, 251.07785pt x 308.96175pt>
 File: figures/gaussian_jerk_demo.pdf Graphic file (type pdf)
 <use figures/gaussian_jerk_demo.pdf>
-Package pdftex.def Info: figures/gaussian_jerk_demo.pdf  used on input line 27.
+Package pdftex.def Info: figures/gaussian_jerk_demo.pdf  used on input line 29.
 
 (pdftex.def)             Requested size: 233.48833pt x 287.33145pt.
- [18 <./figures/gaussian_jerk_demo.pdf>])
-(./sections/conclusion.tex
-Overfull \hbox (3.69156pt too wide) in paragraph at lines 2--16
-\T1/cmr/m/it/10 normalized \T1/cmr/m/n/10 smooth-ness co-or-di-nate $\OML/cmm/m
-/it/10 S[] \OT1/cmr/m/n/10 = (\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10 ^^@ [] \OML/c
-mm/m/it/10 H[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (\OML/cmm/m/it
-/10 n \OMS/cmsy/m/n/10 ^^@
+ [19 <./figures/gaussian_jerk_demo.pdf>]) (./sections/conclusion.tex
+Underfull \hbox (badness 10000) in paragraph at lines 2--16
+[]\T1/cmr/m/n/10 The prin-ci-pal con-cep-tual con-tri-bu-tion is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2--16
+\T1/cmr/m/n/10 the \T1/cmr/m/it/10 rank-normalized \T1/cmr/m/n/10 smooth-ness c
+o-or-di-nate
+ []
+
+
+Underfull \hbox (badness 1168) in paragraph at lines 2--16
+\OML/cmm/m/it/10 S[] \OT1/cmr/m/n/10 = (\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10 ^^@
+ [] \OML/cmm/m/it/10 H[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (\OM
+L/cmm/m/it/10 n \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 d\OT1/cmr/m/n/10 )$\T1/cm
+r/m/n/10 . Un-like the his-tor-i-cal
  []
 
 
@@ -943,19 +1209,81 @@ Underfull \hbox (badness 2582) in paragraph at lines 17--38
  []
 
 
-Underfull \hbox (badness 1286) in paragraph at lines 74--77
-\T1/cmtt/m/n/10 com / heri-[]espino / trendestimation$[][]\T1/cmr/m/n/10 . The 
-canon-i-cal
+Underfull \hbox (badness 1490) in paragraph at lines 68--84
+\T1/cmr/m/n/10 other ap-proaches to trend es-ti-ma-tion. Con-tin-u-ous
  []
 
-[19]) (./main.bbl
-Underfull \hbox (badness 2726) in paragraph at lines 46--53
+
+Underfull \hbox (badness 1237) in paragraph at lines 68--84
+\T1/cmr/m/n/10 Our con-tri-bu-tion con-cerns ex-act com-pu-ta-tion and
+ []
+
+[20]) (./sections/declarations.tex
+Underfull \hbox (badness 2617) in paragraph at lines 4--15
+[]\T1/cmr/m/n/10 No ex-ter-nal ob-ser-va-tional dataset is an-a-lyzed
+ []
+
+
+Underfull \hbox (badness 2772) in paragraph at lines 4--15
+\T1/cmr/m/n/10 in this the-o-ret-i-cal ar-ti-cle. The il-lus-tra-tive third-
+ []
+
+
+Underfull \hbox (badness 5475) in paragraph at lines 4--15
+\T1/cmr/m/n/10 order tra-jec-tory is gen-er-ated syn-thet-i-cally with
+ []
+
+
+Underfull \hbox (badness 1048) in paragraph at lines 4--15
+\T1/cmr/m/n/10 spec-i-fied ran-dom seed; its data vec-tors, eval-u-ated
+ []
+
+
+Underfull \hbox (badness 1655) in paragraph at lines 4--15
+\T1/cmr/m/n/10 are pre-served in the pub-lic repos-i-tory at [][]$\T1/cmtt/m/n/
+10 https :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--15
+\T1/cmtt/m/n/10 / / github . com / heri-[]espino / trendestimation$[][]\T1/cmr/
+m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--15
+\T1/cmr/m/n/10 un-der $\T1/cmtt/m/n/10 paper / csda-[]unified-[]theory/$\T1/cmr
+/m/n/10 . The same
+ []
+
+
+Underfull \hbox (badness 2846) in paragraph at lines 4--15
+\T1/cmr/m/n/10 repos-i-tory con-tains the \T1/cmtt/m/n/10 trendestimation \T1/c
+mr/m/n/10 Python
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 4--15
+\T1/cmr/m/n/10 im-ple-men-ta-tion and sep-a-rate archived nu-mer-i-cal
+ []
+
+) (./main.bbl
+Underfull \hbox (badness 3199) in paragraph at lines 46--53
 \T1/cmr/m/n/8 von der Gesellschaft der Wis-senschaften zu Göt-tin-gen,
  []
 
-[20]) [21
+[21]
+Underfull \hbox (badness 1005) in paragraph at lines 122--129
+\T1/cmr/m/n/8 spline smooth-ing.  Nu-merische Math-e-matik 24, 375--382.
+ []
 
-] (./main.aux)
+
+Underfull \hbox (badness 1043) in paragraph at lines 338--345
+[]\T1/cmr/m/n/8 Weinert, H.L., 2007.  Ef-fi-cient com-pu-ta-tion for whittaker-
+-
+ []
+
+) [22] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -969,60 +1297,60 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15625 strings out of 469514
- 243680 string characters out of 5470071
- 712405 words of memory out of 5000000
- 43772 multiletter control sequences out of 15000+600000
- 656749 words of font info for 118 fonts, out of 8000000 for 9000
+ 19500 strings out of 469514
+ 305196 string characters out of 5470071
+ 1057313 words of memory out of 5000000
+ 47580 multiletter control sequences out of 15000+600000
+ 657830 words of font info for 120 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,14n,98p,1509b,662s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.60
-0pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.
-600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm090
-0.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1
-095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecs
-x0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec
-/ecbx1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecti0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappe
-n/ec/ecss0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknap
-pen/ec/eccc0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jkn
-appen/ec/ecti1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/j
-knappen/ec/ecbx1200.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecrm0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/lj
-four/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/
-ljfour/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/p
-k/ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2025/texmf-var/fonts
-/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-mextra/cmex7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cme
-xtra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on main.pdf (21 pages, 618584 bytes).
+ 90i,14n,98p,1514b,2257s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0700.60
+0pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0800.
+600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt100
+0.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0
+900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ect
+i1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/e
+csx0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec
+/ecbx1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/
+ec/ecbx1095.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknappe
+n/ec/ecti0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jknap
+pen/ec/ecss0900.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/jkn
+appen/ec/eccc0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour/j
+knappen/ec/ecti1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfour
+/jknappen/ec/ecbx1200.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm0800.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/lj
+four/jknappen/ec/ecrm1000.600pk> </home/runner/.texlive2025/texmf-var/fonts/pk/
+ljfour/jknappen/ec/ecti0600.600pk> </home/runner/.texlive2025/texmf-var/fonts/p
+k/ljfour/jknappen/ec/ecti0800.600pk> </home/runner/.texlive2025/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/runner/.texlive2025/texmf-var/fon
+ts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cmextra/cmex7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+mextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (22 pages, 621756 bytes).
 PDF statistics:
- 1752 PDF objects out of 2073 (max. 8388607)
- 829 compressed objects within 9 object streams
- 189 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1836 PDF objects out of 2073 (max. 8388607)
+ 907 compressed objects within 10 object streams
+ 216 named destinations out of 1000 (max. 500000)
+ 19462 words of extra memory for PDF output out of 20736 (max. 10000000)
 
