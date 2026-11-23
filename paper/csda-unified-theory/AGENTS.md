@@ -1,3 +1,17 @@
+**2026-11-23 CSDA layout/disclosure contract:** Read
+[notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md](notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md)
+before modifying the paper's formatting or author declarations.
+The VS Code Light+ `listings` theme is intentionally bounded by
+`\\linewidth`; `microtype` and the paragraph emergency stretch
+guard against two-column bleed. The CSDA workflow must pass
+`python verify_layout.py main.log` with no body paragraph overflow
+above 0.5 pt, retain both native landscape tables, resolve citations,
+and archive the compiled source-matched PDF. The funding, conflict and
+individual CRediT statements are *unconfirmed*: never replace them with
+fabricated claims. AI use is disclosed before references; all journal
+declarations need authors' sign-off before any submission. Mathematical
+models, figures and experiments remain unchanged.
+
 **2026-11-23 CSDA state-of-the-art editorial handoff:** Read [notes/STATE_OF_ART_POSITIONING_20261123.md](notes/STATE_OF_ART_POSITIONING_20261123.md) before rewriting the abstract, Introduction, SVD model, algorithm provenance or conclusion. The retained full direct SVD of the rectangular `D_d` is framed against **Demmler--Reinsch (1975)** and **Biessy (2026) Section 6.4** Gram-eigenbasis/rank-reduced WH, preserving `W=I` and fixed numeric `mu`. Eilers 2003, Tibshirani 2014 and Hamilton 2018 provide applications, alternative penalties and interpretational cautions. No theorem, benchmark, figure, code or publication track was changed by that edit. Existing deterministic checks plus a source-matched Elsevier CAS PDF/citation build remain required before merge; no journal submission.
 
 ## November 22, 2026 precision-matrix extension
