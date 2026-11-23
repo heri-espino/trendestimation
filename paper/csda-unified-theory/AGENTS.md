@@ -17,6 +17,28 @@ journal submission.
 
 # Agent instructions: unified CSDA theoretical manuscript
 
+## November 22, 2026 single AwesomeFigures illustration
+
+The software section includes **one** d=3 synthetic position/jerk
+illustration directly after the profile Gaussian MLE example code.
+Its renderer is `figures/render_gaussian_jerk.py`, with exact fixed
+seed/parameters/selection grid documented in
+`figures/README.md`. Use genuine AwesomeFigures, pinned in
+`paper/requirements.txt`, to regenerate PDF/PNG/SVG, and retain
+the CSV samples, criterion profile and JSON/hash manifest in the
+research branch. This is an illustrative in-sample fit, not
+physical jerk observations, a forecast, model comparison or
+Gaussian-model calibration study.
+
+Keep `mu` a known fixed numeric third-difference reference,
+derived from the cubic baseline. Do NOT select `mu="data"`
+while describing the existing fixed-mean likelihood theorem.
+Do not mention other manuscripts within the CSDA paper.
+Keep the two native-landscape provenance/cost tables intact.
+Do not rerun any existing experiments.
+
+
+
 ## November 19, 2026 original-reference source audit
 
 Before altering the algorithm provenance or BibTeX, read

@@ -7,10 +7,10 @@ The same theory also identifies a risk frontier. Large penalties and higher diff
 
 Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, jointly selecting the difference order $d$ and smoothness $S$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here. For forecasting, such selection must respect temporal order and distinguish third-difference estimated jerk from independently observed physical jerk.
 
-Whittaker--Henderson smoothing, its spectral theory, numerical factorization methods, and classical GCV were established before this work. The contribution of the present article is the integrated, unit-interval, workload-dependent mathematical and software framework and its explicit numerical validity conditions. Empirical timings and physical forecasting performance are investigated in separate companion manuscripts, rather than being inferred from theoretical operation counts.
+Whittaker--Henderson smoothing, its spectral theory, numerical factorization methods, and classical GCV were established before this work. The contribution of the present article is the integrated, unit-interval, workload-dependent mathematical and software framework and its explicit numerical validity conditions. This theoretical analysis makes no claim of measured runtime superiority or validated physical forecasting performance.
 
 \section*{Code and research-material availability}
-The Python implementation, independently preserved Paper A and Paper B sources, theoretical verification programs, and archived supporting evidence are available at \url{https://github.com/heri-espino/trendestimation}. The canonical source is available in
+The Python implementation, reproducible illustration, theoretical verification programs, and archived supporting evidence are available at \url{https://github.com/heri-espino/trendestimation}. The canonical source is available in
 \path{paper/csda-unified-theory/}; its revision
 should be frozen and cited before submission. No new benchmark measurements are claimed in this article.
 

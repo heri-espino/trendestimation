@@ -1,5 +1,27 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 22, 2026: one simple AwesomeFigures figure after the code
+
+The paper's software section now demonstrates
+`select_lambda(..., criterion="mle", search_space="smoothness")`
+with a **fixed numeric reference `mu`** and shows one two-panel
+illustration immediately after the code: noisy synthetic positions
+and the true/fitted trend, followed by the profiled Gaussian
+contrast across normalized smoothness `S`.
+The synthetic trajectory has a cubic nonzero-jerk baseline plus a
+small sinusoidal perturbation. Nothing is estimated from real
+trajectory data; no forecasting or method-comparison claim is made.
+
+Reproduction, fixed seed and full parameters:
+[figures/README.md](figures/README.md).
+Figure generation uses the **existing pinned** AwesomeFigures revision
+from `paper/requirements.txt`. The paper-only GitHub Actions workflow
+renders the vector PDF and PNG/SVG previews, preserves numerical
+CSV/JSON sources with hashes, and compiles the canonical CAS PDF
+using its existing landscape-table checks.
+
+
+
 ## November 19, 2026: primary-paper citation verification
 
 All **eleven original PDFs supplied by the author** have now been
