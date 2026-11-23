@@ -21,10 +21,10 @@ trend = solver.fit(
 ).trend
 \end{verbatim}
 
-\begin{figure}[H]
+\noindent\begin{minipage}{\columnwidth}
 \centering
-\includegraphics[width=0.98\columnwidth]{figures/gaussian_jerk_demo.pdf}
-\caption{A single illustrative third-order PLS fit selected by the
+\includegraphics[width=0.98\linewidth]{figures/gaussian_jerk_demo.pdf}
+\captionof{figure}{A single illustrative third-order PLS fit selected by the
 profiled Gaussian contrast likelihood. \emph{Top:} a simulated
 position series with independent Gaussian observation noise,
 its known cubic-plus-sinusoidal true trend, and the estimated trend.
@@ -39,7 +39,7 @@ minimum over 91 predeclared candidates in $[0.02,0.98]$.
 This is an in-sample synthetic demonstration, not a
 forecasting or comparative-performance experiment.}
 \label{fig:gaussian-jerk-demo}
-\end{figure}
+\end{minipage}
 
 Figure~\ref{fig:gaussian-jerk-demo} shows what the code returns:
 one fitted series and the corresponding selection criterion.
