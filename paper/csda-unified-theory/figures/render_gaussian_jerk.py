@@ -91,9 +91,9 @@ def render():
                 color="#A3A9B3", edgecolors="none",
                 alpha=0.80, label="Noisy observations", zorder=1)
     top.plot(t, truth, color="#202B38", lw=1.45, ls=(0, (4, 2)),
-             label="True trend", zorder=2)
+             label="True trend", marker="", zorder=2)
     top.plot(t, trend, color=colors[1], lw=1.8,
-             label="PLS fit (Gaussian contrast)", zorder=3)
+             label="PLS fit (Gaussian contrast)", marker="", zorder=3)
     top.set_ylabel("Position (m)")
     top.set_xlabel("Time (s)")
     top.legend(frameon=False, loc="upper left",
@@ -101,7 +101,7 @@ def render():
     top.grid(alpha=0.13, lw=0.4)
 
     relative = np.asarray(choice.scores, dtype=float) - float(choice.score)
-    bottom.plot(SMOOTHNESS_GRID, relative, color=colors[1], lw=1.8)
+    bottom.plot(SMOOTHNESS_GRID, relative, color=colors[1], lw=1.8, marker="")
     bottom.axvline(choice.smoothness, color="#202B38", lw=0.9,
                    linestyle=(0, (3, 2)), alpha=0.75)
     bottom.scatter([choice.smoothness], [0.0],
