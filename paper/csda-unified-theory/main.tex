@@ -35,7 +35,33 @@
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Finite-difference penalized least squares admits efficient structured solvers, yet choosing a smoothing level by cross-validation or an information criterion is a substantially different computational task from fitting one trend. We develop a unified computational treatment of this distinction using a normalized, trace-based smoothness coordinate on the closed unit interval. A singular-value representation of the arbitrary-order difference operator yields a strictly monotone smoothness-to-penalty map, its exact interpolation and constrained-polynomial limits, and a shift-free formula for a prescribed nonzero reference mean of differences. We identify the quantities required by conditional leave-one-out cross-validation, generalized cross-validation, information criteria and a profiled Gaussian REML criterion in penalized spectral coordinates. We then derive and compare complete spectral and banded-Cholesky/selected-inverse pipelines, including their preprocessing, inverse smoothness mapping, criterion-specific scoring, memory requirements and reuse across candidate grids and observed series. A structured determinant identity avoids dense likelihood matrices. Exact arithmetic identities, conditional complexity bounds and a numerical-admissibility framework explain why the cost-minimizing algorithm depends on the entire workload: banded methods are natural for isolated fits and long series with small difference order, whereas a retained spectrum can amortize scalar scoring over many smoothness levels, subject to dense memory and conditioning constraints. An open-source Python interface exposes the formulation and the normalized coordinate. The contribution is an integrated theoretical and software-oriented framework; neither the classical difference penalty, trace index, spectral decomposition nor selected inversion is claimed as new.
+Finite-difference penalized least squares (PLS) is established, but
+the smoothing coordinate, its statistical selection and the cost of
+evaluating complete candidate grids merit a unified treatment.
+Our first contribution is a rank-normalized version of the classical
+trace smoothness index: dividing the loss of effective degrees of
+freedom by the $n-d$ penalized directions, rather than by $n$,
+gives exactly $S\in[0,1]$ for every difference order $1\le d<n$.
+We prove its strictly monotone penalty map and exact interpolation
+and constrained-polynomial endpoints. Second, a reusable SVD of the
+rectangular difference operator yields a shift-free fitted-trend
+formula for prescribed nonzero reference differences and exposes
+numerical-conditioning constraints. Third, under an explicit Gaussian
+difference-innovation model, we derive the penalized-coordinate
+form of \emph{existing} restricted/marginal likelihood, profile
+observation-noise variance and use the resulting criterion to select
+the variance ratio $\lambda=\sigma_\varepsilon^2/\sigma_u^2$,
+equivalently its normalized smoothness $S$. This is a computational
+integration of established likelihood theory, not a new likelihood.
+Fourth, we identify the complete quantities needed for conditional
+leave-one-out CV, GCV, information criteria and Gaussian likelihood
+and derive exact banded determinant and selected-inverse identities.
+Finally, we compare full spectral and structured pipelines over
+candidate grids and repeated series, including preprocessing,
+smoothness inversion, criterion-specific work, memory and numerical
+admissibility. A reproducible third-order synthetic example illustrates
+the software interface. The operation bounds are conditional
+mathematical results, not measured runtime superiority.
 \end{abstract}
 \begin{keywords}
 Penalized least squares \sep smoothness index \sep spectral decomposition
