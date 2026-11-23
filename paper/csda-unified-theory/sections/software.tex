@@ -8,7 +8,8 @@ vector \texttt{y} and a fixed numeric reference \texttt{mu}:
 
 \begin{verbatim}
 import numpy as np
-from trendestimation import TrendSmoother, select_lambda
+from trendestimation import TrendSmoother
+from trendestimation import select_lambda
 
 solver = TrendSmoother(len(y), order=3)
 s_grid = np.linspace(0.02, 0.98, 91)
@@ -24,28 +25,25 @@ trend = solver.fit(
 \noindent\begin{minipage}{\columnwidth}
 \centering
 \includegraphics[width=0.98\linewidth]{figures/gaussian_jerk_demo.pdf}
-\captionof{figure}{A single illustrative third-order PLS fit selected by the
-profiled Gaussian contrast likelihood. \emph{Top:} a simulated
-position series with independent Gaussian observation noise,
-its known cubic-plus-sinusoidal true trend, and the estimated trend.
-The cubic baseline corresponds to constant jerk
-$1.8\,\mathrm{m\,s^{-3}}$; the added sinusoid produces modest
-time-varying jerk. The reference $\mu=1.8h^3$ is fixed from
-the known baseline at sampling interval $h$, not estimated
-from the observations. \emph{Bottom:} the Gaussian contrast
-relative to its smallest evaluated value, plotted against the
-normalized smoothness index; the marked $\widehat S$ is the
-minimum over 91 predeclared candidates in $[0.02,0.98]$.
-This is an in-sample synthetic demonstration, not a
-forecasting or comparative-performance experiment.}
+\captionof{figure}{Illustrative third-order PLS trend selected by
+profiled Gaussian contrast. \emph{Top:} Gaussian-noisy positions,
+known cubic-plus-sinusoidal true trend, and selected fit.
+The cubic baseline has jerk $1.8\,\mathrm{m\,s^{-3}}$;
+the sinusoid adds mild variation. Its difference reference
+$\mu=1.8h^3$ is fixed from the known baseline, not estimated.
+\emph{Bottom:} contrast above its smallest evaluated value
+versus normalized smoothness $S$. The marker identifies the
+minimum on the 91-point grid $S\in[0.02,0.98]$.
+This is a synthetic in-sample illustration, not a forecast.}
 \label{fig:gaussian-jerk-demo}
 \end{minipage}
 
 Figure~\ref{fig:gaussian-jerk-demo} shows what the code returns:
 one fitted series and the corresponding selection criterion.
-The published example is reproduced with
-\texttt{figures/render\_gaussian\_jerk.py}, using the
-pinned AwesomeFigures library and a fixed random seed.
+The example is reproduced by the
+\texttt{render\_gaussian\_jerk.py} script in
+\texttt{figures/}, using the pinned AwesomeFigures
+library and a fixed random seed.
 The position observations are simulated; no external data
 are required, and the same $S$ grid and conditional
 fixed-$\mu$ criterion are used in the code and plot.
