@@ -160,6 +160,51 @@ of $\lambda$. This is the REML construction
 for the stated model.
 \end{proof}
 
+\paragraph{Selecting the historical variance ratio.}
+The PLS weight has the variance-component meaning
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$
+already present in the original stochastic
+formulation \citep{guerrero2007,cortes2017}.
+The operational contribution here is to select
+that ratio using the \emph{established}
+Gaussian restricted/marginal likelihood
+in the same bounded coordinate used for the
+trend fit. For a finite, interior optimum,
+\begin{equation}\label{eq:variance-ratio-selection}
+\widehat\lambda\in\arg\min_{\lambda>0}
+\mathcal L(\lambda),\qquad
+\widehat S=S_d(\widehat\lambda).
+\end{equation}
+Since $S_d$ is a bijection on the interior,
+one can equivalently minimize
+$\mathcal L(\Lambda_{n,d}(s))$ over
+$s\in(0,1)$. For a finite evaluated set
+$\mathcal S\subset(0,1)$, however, the
+software returns only the smallest score
+\emph{on that grid}; a global optimum is
+not thereby certified. Once a finite positive
+$\widehat\lambda$ is selected, the
+conditional component estimates are
+\begin{equation}\label{eq:variance-component-profiles}
+\begin{aligned}
+\widehat{\sigma}_\varepsilon^2
+&=\frac{J_{\widehat\lambda}}{n-d},\\
+\widehat{\sigma}_u^2
+&=\widehat{\sigma}_\varepsilon^2/
+\widehat\lambda.
+\end{aligned}
+\end{equation}
+These estimates depend on the Gaussian
+assumptions and on a \emph{prescribed} $\mu$.
+At a boundary optimum, a vanishing variance
+component or other limit must be handled
+separately; \eqref{eq:variance-component-profiles}
+is an interior result. We therefore
+contribute an explicit, reproducible
+variance-ratio selection route within the
+normalized PLS framework, \emph{not} a
+new likelihood principle.
+
 \paragraph{What the likelihood does and does not estimate.}
 The quantity $z_j$ is not the observation $y_j$:
 it is a projection of all $n$ observations onto
