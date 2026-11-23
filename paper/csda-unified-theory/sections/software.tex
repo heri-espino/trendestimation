@@ -6,7 +6,7 @@ profiled Gaussian contrast likelihood derived in
 Theorem~\ref{thm:reml}. For a previously loaded observation
 vector \texttt{y} and a fixed numeric reference \texttt{mu}:
 
-\begin{verbatim}
+\begin{lstlisting}[style=vscodeLightPython]
 import numpy as np
 from trendestimation import TrendSmoother
 from trendestimation import select_lambda
@@ -14,13 +14,15 @@ from trendestimation import select_lambda
 solver = TrendSmoother(len(y), order=3)
 s_grid = np.linspace(0.02, 0.98, 91)
 choice = select_lambda(
-    solver, y, criterion="mle", mu=mu,
-    search_space="smoothness", grid=s_grid
+    solver, y,
+    criterion="mle", mu=mu,
+    search_space="smoothness",
+    grid=s_grid,
 )
 trend = solver.fit(
     y, lambda_=choice.lambda_, mu=mu
 ).trend
-\end{verbatim}
+\end{lstlisting}
 
 \noindent\begin{minipage}{\columnwidth}
 \centering
