@@ -1,5 +1,34 @@
 # Scientific scope and proof audit — unified theoretical CSDA paper
 
+## November 23, 2026 concrete contributions/source check
+
+- Explicit six-item contribution list introduced in Introduction;
+  abstract and conclusion use the same boundaries.
+- Rank normalized S=(n-tr H)/(n-d), ν=n-(n-d)S.
+  This reaches [0,1] for all 1≤d<n. Earlier n-normalized
+  index has maximum 1-d/n, as explicitly documented
+  by Cortés-Toto et al. (2017) Sec.2.1. The arithmetic
+  rescaling does not change the smoother.
+- Classical variance ratio λ=σ_epsilon²/σ_u² from
+  Guerrero and Cortés-Toto is selected using
+  established Gaussian REML/marginal likelihood
+  under fixed numeric μ: λhat minimizes profiled
+  criterion on its stated domain, Shat=S(λhat);
+  profile variances at a finite positive optimum
+  are J(λhat)/(n-d) and this quantity divided
+  by λhat. Do not claim the likelihood is newly
+  invented, globally unique, or forecast-optimal.
+- Other contributions: fixed-mu shift-free arbitrary-order
+  SVD(D), full criterion-specific costs, cached S
+  inversion, numerical admissibility, and exact
+  reproducible code and simple synthetic figure.
+- Direct original-paper audit and claim boundaries:
+  notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md.
+- No new numerical experiment, benchmarking, source
+  solver change or journal submission.
+
+
+
 ## November 22, 2026 simple synthetic Gaussian-contrast figure
 
 - One deterministic series, `n=72,d=3,seed=20261122`,

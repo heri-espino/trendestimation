@@ -22,8 +22,102 @@ The organizing variable in this paper is the user-facing normalized smoothness i
 
 The reference level $\mu$ is central to the formulation. The convenient assumption $\mu=0$ changes the limiting polynomial family and excludes prescribed nonzero $d$th-difference levels. While arbitrary fixed $\mu$ has already been treated by \citet{guerrero2007}, it is useful to have one numerically stable computational API handling both cases. In particular, explicitly forming a large degree-$d$ reference polynomial can lead to severe cancellation. Our shift-free singular-vector reconstruction avoids that intermediate.
 
-The numerical and statistical foundations of efficient smoothing are extensive. Crucially, \citet[Secs.~1--2]{weinert2007} factors the banded primal matrix $\alpha I+M^\top M$ by $LDL^\top$ and computes GCV through structured inverse-diagonal recurrences; it does \emph{not} use a reusable SVD of the difference matrix. His linear-time fixed-second-order method prevents any general claim that the dense SVD of $D_d$ is inherently faster. Rather, we compare the distinct reuse, accuracy, memory and criterion-completion properties of spectral and banded approaches. The choice of difference order can encode a scientific interpretation: for equally spaced position observations, third differences approximate jerk (changes in acceleration), while other orders describe other derivative structures. An unknown order can be validated as a model hyperparameter, but the fixed-$d$ theorems do not themselves prove any multi-order forecasting advantage. \citet{weinert2007} exploits Whittaker--Henderson structure for efficient GCV, \citet{craven1979,golub1979} established classical GCV for splines and ridge regression (including spectral methods), and \citet{biessy2026} supplies a modern Whittaker--Henderson statistical and computational treatment. We do not claim invention of diagonalization, the penalty, trace smoothness, cross-validation, Cholesky, or selected inversion. The contribution is a unified, reproducible \emph{workload-aware} treatment with explicit computational and numerical trade-offs, using the normalized smoothness coordinate throughout.
+The numerical and statistical foundations of efficient smoothing are extensive. Crucially, \citet[Secs.~1--2]{weinert2007} factors the banded primal matrix $\alpha I+M^\top M$ by $LDL^\top$ and computes GCV through structured inverse-diagonal recurrences; it does \emph{not} use a reusable SVD of the difference matrix. His linear-time fixed-second-order method prevents any general claim that the dense SVD of $D_d$ is inherently faster. Rather, we compare the distinct reuse, accuracy, memory and criterion-completion properties of spectral and banded approaches. The choice of difference order can encode a scientific interpretation: for equally spaced position observations, third differences approximate jerk (changes in acceleration), while other orders describe other derivative structures. An unknown order can be validated as a model hyperparameter, but the fixed-$d$ theorems do not themselves prove any multi-order forecasting advantage. \citet{weinert2007} exploits Whittaker--Henderson structure for efficient GCV, \citet{craven1979,golub1979} established classical GCV for splines and ridge regression (including spectral methods), and \citet{biessy2026} supplies a modern Whittaker--Henderson statistical and computational treatment. We do not claim invention of diagonalization, the penalty, trace smoothness, cross-validation, Cholesky, or selected inversion. These historical distinctions motivate the specific contributions below.
 
-Specifically, the article develops (i) an arbitrary-order spectral formula supporting prescribed nonzero means without unstable polynomial shifts; (ii) the normalized index, its bijection and endpoints; (iii) the exact quantities required by conditional CV, GCV, information criteria and profiled Gaussian restricted likelihood; (iv) time and storage bounds for complete spectral and banded pipelines across $M$ candidates, $R$ series and multiple criteria; and (v) a numerical-admissibility policy and open-source Python interface.
+\subsection{Contributions and relation to established methods}
+\label{sec:contributions}
+The contributions are specific mathematical parameterizations,
+identities, implementations and workload analyses, rather than
+claims to have invented PLS or its numerical building blocks:
+
+\begin{enumerate}[leftmargin=*,label=\textbf{C\arabic*.},itemsep=2pt]
+\item \textbf{A genuinely unit-interval smoothness coordinate.}
+Guerrero's original $n$-normalized trace index
+\citep{guerrero2007,guerrero2008} has upper limit
+$1-d/n$ for $d\geq1$, as noted by
+\citet[Sec.~2.1]{cortes2017}. We instead divide
+by the rank $r=n-d$ of $D_d$, so
+$S_d=(n-\tr H_\lambda)/r$ spans \emph{exactly}
+$[0,1]$ independently of $d$. We make the
+normalization, its interpretation as a fraction
+of penalizable degrees of freedom and its
+unique $S\leftrightarrow\lambda$ mapping
+explicit, including both analytical endpoints
+(Section~\ref{sec:smoothness}). This is a
+simple but operationally consequential
+rescaling, not a new smoother or a claim
+that the trace measure itself is new.
+
+\item \textbf{Arbitrary-order fixed-reference spectral reconstruction.}
+We derive a reusable SVD representation of
+the $(n-d)\times n$ difference matrix $D_d$,
+a shift-free fitted-trend formula for a
+prescribed nonzero difference reference
+$\mu$, and the associated numerical
+conditioning and endpoint checks
+(Sections~\ref{sec:model} and
+\ref{sec:stability}). The historical
+nonzero-$\mu$ PLS estimator itself is due
+to \citet{guerrero2007}; our focus is its
+reusable computational representation.
+
+\item \textbf{Likelihood selection of the variance ratio in
+the normalized coordinate.}
+The original PLS stochastic formulation
+identifies $\lambda$ with the observation
+variance divided by the difference-innovation
+variance \citep{guerrero2007,cortes2017}.
+We show, under an \emph{explicit} Gaussian
+model with fixed $\mu$, how the established
+REML/marginal likelihood
+\citep{patterson1971,wahba1985,wood2011,biessy2026}
+can be profiled and evaluated in the SVD
+coordinates of $D_d$ to select this ratio,
+or equivalently its $S_d$ value. We provide
+the variance-profile and determinant
+identities needed for spectral \emph{or}
+banded evaluation
+(Section~\ref{sec:gaussian-likelihood}).
+The Gaussian likelihood and REML principle
+are prior art; the contribution is their
+explicit connection to this rank-normalized
+fixed-reference PLS pipeline, not an
+assertion of statistical novelty.
+
+\item \textbf{Complete criteria rather than fit-only costs.}
+We spell out residuals, observation-specific
+leverages, effective degrees of freedom,
+quadratic forms and log determinants required
+by conditional CV, GCV, information criteria
+and Gaussian likelihood, including precisely
+which quantities can be shared across series
+and candidate smoothness levels
+(Sections~\ref{sec:criteria} and
+\ref{sec:algorithms}). Standard criteria
+and selected-inverse recurrences themselves
+are not introduced here.
+
+\item \textbf{An end-to-end computational and numerical
+decision framework.}
+For $M$ smoothing candidates and $R$ observed
+series, we derive full pipeline operation
+and memory counts for the retained-spectrum
+and banded-factorization alternatives,
+accounting separately for smoothness inversion,
+criterion evaluation and numerical admissibility
+(Sections~\ref{sec:complexity},
+\ref{sec:stability} and \ref{sec:policy}).
+These are analytical workload bounds, not
+claims of a universal algorithmic winner.
+
+\item \textbf{A reproducible implementation and illustration.}
+The Python interface exposes these choices,
+and one third-difference synthetic example
+shows Gaussian-contrast selection on an
+explicit normalized-$S$ grid
+(Section~\ref{sec:software}). It demonstrates
+the computation, not forecast accuracy or
+a comparison of smoothing methods.
+\end{enumerate}
 
 All principal theorems assume equally spaced observations, unweighted quadratic fidelity, integer $1\le d<n$, a fixed numeric $\mu$, and exact arithmetic. Data-derived reference means, time-series forecasting and fully measured hardware crossovers require additional statistical or empirical arguments, which are not silently incorporated into these claims.

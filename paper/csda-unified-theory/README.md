@@ -1,5 +1,34 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 23, 2026: explicit paper contributions and novelty boundaries
+
+The abstract, Introduction and conclusion now foreground **six concrete
+contributions**: (1) the rank-normalized $S\in[0,1]$ index with
+$d$-independent endpoints and invertible mapping, (2) arbitrary-order
+shift-free spectral reconstruction for specified nonzero $\mu$,
+(3) **selection of the established variance ratio**
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$ using **existing profiled
+Gaussian restricted/marginal likelihood** in the normalized
+$S$ coordinate, (4) complete statistical-criterion diagnostics,
+(5) amortized spectral versus banded pipeline costs and numerical
+admissibility, and (6) the reproducible software/figure illustration.
+
+This work does not claim that either the historical n-normalized
+Theil--Guerrero precision index, the original PLS variance ratio,
+Gaussian marginal likelihood, REML or SVD was invented here.
+The rank denominator $n-d$ rather than $n$ gives exact
+$S=1$ at the polynomial limit for every order; the original
+finite-n bound $1-d/n$ is explicitly stated in Cortés-Toto
+et al. (2017). The Gaussian profile likelihood selects a
+variance ratio **under fixed numeric $\mu$ and Gaussian
+assumptions**, not a guaranteed globally best forecast.
+
+Source-based priority, equations, boundaries and reproduction:
+[notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md](notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md).
+No new numerical experiment or independent paper changed.
+
+
+
 ## November 22, 2026: one simple AwesomeFigures figure after the code
 
 The paper's software section now demonstrates

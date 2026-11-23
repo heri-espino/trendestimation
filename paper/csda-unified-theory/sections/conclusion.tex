@@ -1,5 +1,53 @@
 \section{Discussion and conclusions}\label{sec:conclusion}
-A bounded trace-derived smoothness coordinate turns the classical PLS penalty into an interpretable input that can be prescribed across difference orders. The normalized interval $[0,1]$ has exact interpolation and constrained-polynomial endpoints, including nonzero constant $d$th-difference reference levels. The order-$d$ singular-vector representation of the \emph{rectangular difference operator} $D_d$ supplies the penalty spectrum and a shift-free reconstruction that avoids explicit large polynomial reference vectors. A worked $d=3$ example shows the banded Gram matrix, the generally dense smoother, and the interpretation of third differences as discrete jerk; the order $d$ itself may be chosen by separate, properly designed validation. These facts explain why diagonalization can serve as a shared computational engine for both smoothing and smoothness-parameter selection.
+The principal conceptual contribution is the
+\emph{rank-normalized} smoothness coordinate
+$S_d=(n-\tr H_\lambda)/(n-d)$.
+Unlike the historical $n$-normalized trace
+index, whose exact finite-sample upper bound
+is $1-d/n$, this parameter reaches the
+same defined endpoints $S=0$ (interpolation)
+and $S=1$ (constrained polynomial fitting)
+for every $d$. Its invertible connection
+to $\lambda$ provides a bounded control
+coordinate with a clear
+degrees-of-freedom and relative-precision
+interpretation; it does not create a new
+family of smoothers.
+
+A second statistical-computational contribution
+is the explicit \emph{use of established
+profiled Gaussian REML/marginal likelihood}
+to select the historically defined
+variance ratio
+$\lambda=\sigma_\varepsilon^2/\sigma_u^2$
+and hence $S_d(\lambda)$.
+Our theorem derives its fixed-$\mu$
+penalized-coordinate representation,
+profiles the observation-noise variance,
+and connects the same criterion to a
+banded log-determinant calculation.
+The underlying Gaussian likelihood,
+variance-component interpretation,
+and REML principle were developed
+previously
+\citep{guerrero2007,patterson1971,wahba1985,wood2011,biessy2026};
+the specific value here is in stating
+their relationship to normalized
+smoothness and making the computational
+route explicit and reproducible.
+
+The remaining contributions are an
+arbitrary-order, shift-free SVD formula
+for prescribed nonzero difference means,
+a full accounting of the quantities
+required for each statistical criterion,
+and analytical workload and numerical
+admissibility rules for complete
+spectral and banded pipelines. The
+worked third-difference matrices and
+synthetic Gaussian-contrast figure
+illustrate these ideas without claiming
+new forecasting evidence.
 
 The algorithmic choice is more subtle than selecting the fastest linear solver. A full retained dense SVD costs more to prepare and retain than a banded factorization, but enables inexpensive evaluation of many scalar criteria after preprojection. Weinert's original $LDL^\top$ Whittaker--Henderson algorithm is a structured fixed-order, linear-time GCV alternative, not an SVD of $D_d$; there is no universal spectral speed advantage merely because several penalty values are requested. Banded Cholesky, when coupled with selected inversion, supplies complete conditional CV, GCV, information and profiled Gaussian REML/marginal-likelihood quantities with structured storage and an $O(nd^2)$ per-candidate bound. The initial cost of obtaining $\lambda$ from an $S$ request and the number of observed series materially alter that comparison. Exact ordinary CV can require more spectral work than scalar GCV; no universal SVD--Cholesky winner follows from the asymptotic bounds.
 
@@ -7,7 +55,20 @@ The same theory also identifies a risk frontier. Large penalties and higher diff
 
 Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, jointly selecting the difference order $d$ and smoothness $S$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here. For forecasting, such selection must respect temporal order and distinguish third-difference estimated jerk from independently observed physical jerk.
 
-Whittaker--Henderson smoothing, its spectral theory, numerical factorization methods, and classical GCV were established before this work. The contribution of the present article is the integrated, unit-interval, workload-dependent mathematical and software framework and its explicit numerical validity conditions. This theoretical analysis makes no claim of measured runtime superiority or validated physical forecasting performance.
+This paper's claimed contributions are the
+specific \emph{normalization, explicit
+fixed-reference likelihood selection,
+spectral formulas, complete-criterion
+cost derivations, numerical checks and
+reproducible implementation} detailed in
+Section~\ref{sec:contributions}. Historical
+PLS, variance-ratio modeling, REML,
+SVD, Cholesky and selected inversion
+remain credited to their sources.
+The theoretical operation counts do
+not establish measured runtime superiority,
+and the illustrative fit does not
+establish physical forecasting accuracy.
 
 \section*{Code and research-material availability}
 The Python implementation, reproducible illustration, theoretical verification programs, and archived supporting evidence are available at \url{https://github.com/heri-espino/trendestimation}. The canonical source is available in
