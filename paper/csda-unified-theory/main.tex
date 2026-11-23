@@ -6,6 +6,49 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{graphicx,booktabs,tabularx,enumitem,url,capt-of}
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
+\usepackage{xcolor,listings}
+\usepackage[expansion=false]{microtype}
+% VS Code Light+ inspired Python syntax: publication-safe, no shell-escape.
+\definecolor{codeBlue}{HTML}{0000FF}
+\definecolor{codeRed}{HTML}{A31515}
+\definecolor{codeGreen}{HTML}{008000}
+\definecolor{codePurple}{HTML}{795E26}
+\definecolor{codeInk}{HTML}{24292F}
+\definecolor{codeEdge}{HTML}{D0D7DE}
+\lstdefinestyle{vscodeLightPython}{%
+ language=Python,
+ basicstyle=\ttfamily\fontsize{8.2}{10.1}\selectfont\color{codeInk},
+ keywordstyle=\color{codeBlue}\bfseries,
+ stringstyle=\color{codeRed},
+ commentstyle=\color{codeGreen}\itshape,
+ emph={TrendSmoother,select_lambda,linspace,len,fit},
+ emphstyle=\color{codePurple},
+ backgroundcolor=\color{white},
+ frame=single,
+ rulecolor=\color{codeEdge},
+ framerule=0.35pt,
+ framesep=4pt,
+ xleftmargin=0pt,
+ xrightmargin=0pt,
+ linewidth=\linewidth,
+ breaklines=true,
+ breakatwhitespace=false,
+ breakautoindent=true,
+ prebreak=\mbox{\textcolor{codeInk}{\tiny$\hookleftarrow$}},
+ postbreak=\mbox{},
+ columns=fullflexible,
+ keepspaces=true,
+ showstringspaces=false,
+ upquote=true,
+ tabsize=4,
+ aboveskip=8pt,
+ belowskip=8pt
+}
+% Emergency interword flexibility keeps body copy inside the two CAS columns.
+% Math and special unbreakable tokens still receive targeted local fixes.
+\setlength{\emergencystretch}{2.5em}
+\tolerance=2800
+\pretolerance=150
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
 \newcommand{\R}{\mathbb R}
@@ -35,33 +78,35 @@
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
  city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
 \begin{abstract}
-Finite-difference penalized least squares (PLS) is established, but
-the smoothing coordinate, its statistical selection and the cost of
-evaluating complete candidate grids merit a unified treatment.
-Our first contribution is a rank-normalized version of the classical
-trace smoothness index: dividing the loss of effective degrees of
-freedom by the $n-d$ penalized directions, rather than by $n$,
-gives exactly $S\in[0,1]$ for every difference order $1\le d<n$.
-We prove its strictly monotone penalty map and exact interpolation
-and constrained-polynomial endpoints. Second, a reusable SVD of the
-rectangular difference operator yields a shift-free fitted-trend
-formula for prescribed nonzero reference differences and exposes
-numerical-conditioning constraints. Third, under an explicit Gaussian
-difference-innovation model, we derive the penalized-coordinate
-form of \emph{existing} restricted/marginal likelihood, profile
-observation-noise variance and use the resulting criterion to select
-the variance ratio $\lambda=\sigma_\varepsilon^2/\sigma_u^2$,
-equivalently its normalized smoothness $S$. This is a computational
-integration of established likelihood theory, not a new likelihood.
-Fourth, we identify the complete quantities needed for conditional
-leave-one-out CV, GCV, information criteria and Gaussian likelihood
-and derive exact banded determinant and selected-inverse identities.
-Finally, we compare full spectral and structured pipelines over
-candidate grids and repeated series, including preprocessing,
-smoothness inversion, criterion-specific work, memory and numerical
-admissibility. A reproducible third-order synthetic example illustrates
-the software interface. The operation bounds are conditional
-mathematical results, not measured runtime superiority.
+Finite-difference penalized least squares (PLS) offers a transparent
+trade-off between data fidelity and trend regularity, but practical
+selection of smoothness demands more than solving the fitted-trend
+linear system. We develop an integrated, smoothness-indexed
+statistical and computational framework for arbitrary difference
+orders and prescribed, potentially nonzero, reference differences.
+First, rank-normalizing the classical trace reduction by the
+$n-d$ penalized directions gives a dimensionless coordinate
+$S\in[0,1]$ with common, exact interpolation and
+constrained-polynomial endpoints across orders; we establish its
+strictly monotone penalty map. Second, a reusable SVD of the
+original rectangular difference matrix provides an explicit,
+shift-free reconstruction for nonzero references and exposes the
+conditioning implications of forming the Gram matrix. Third, an
+orthogonal Gaussian error-contrast formulation evaluates existing
+profiled restricted/marginal likelihood in these coordinates,
+enabling variance-ratio and smoothness selection under stated
+fixed-reference assumptions. Fourth, we formulate complete
+criterion-specific workloads---including leave-one-out leverages,
+GCV traces, information criteria, determinant corrections, and
+smoothness inversion---and derive end-to-end arithmetic and
+memory bounds for spectral and banded pipelines across candidate
+grids and repeated series. These results explain when spectral
+reuse may repay its setup cost and when structured direct methods
+remain preferable, with numerical admissibility included in the
+decision. A reproducible third-order example demonstrates the
+public Python workflow. The contribution is an integrated
+parameterization, set of identities, and decision framework,
+rather than a new regularizer or an unconditional speed claim.
 \end{abstract}
 \begin{keywords}
 Penalized least squares \sep smoothness index \sep spectral decomposition
@@ -81,6 +126,7 @@ Penalized least squares \sep smoothness index \sep spectral decomposition
 \input{sections/policy}
 \input{sections/software}
 \input{sections/conclusion}
+\input{sections/declarations}
 \bibliographystyle{cas-model2-names}
 % References are reused without duplicating/diverging the existing BibTeX source.
 \bibliography{../csda-computational-costs/references,algorithmic_references}

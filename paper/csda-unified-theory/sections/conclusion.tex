@@ -36,6 +36,18 @@ their relationship to normalized
 smoothness and making the computational
 route explicit and reproducible.
 
+The value of this formulation is most apparent when the
+scientific question is posed in terms of a desired fraction
+of removable trend complexity rather than a raw penalty
+whose magnitude depends on the series length and
+difference order. In that setting, spectral preparation,
+smoothness inversion, criterion selection and numerical
+validation become one reproducible decision process.
+The result is not merely a collection of independent
+closed-form expressions: it makes the setup-versus-reuse
+trade-off and the information required by each
+statistical criterion explicit.
+
 The remaining contributions are an
 arbitrary-order, shift-free SVD formula
 for prescribed nonzero difference means,
@@ -53,6 +65,23 @@ The algorithmic choice is more subtle than selecting the fastest linear solver. 
 
 The same theory also identifies a risk frontier. Large penalties and higher difference orders can create ill-conditioned normal equations, even though the matrices remain SPD mathematically. A factorization that is computationally inexpensive but fails a numerical-validity requirement does not supply a usable statistical estimator. Numerical failures must be classified by their mechanism rather than interpreted as proof that Cholesky or spectral methods are universally unsuitable.
 
+This framework complements rather than replaces other
+approaches to trend estimation. Continuous smoothing
+splines and penalized B-splines use related quadratic
+regularization in different function spaces
+\citep{reinsch1967,eilersmarx1996}; locally adaptive
+$\ell_1$ trend filters instead favor knots and
+piecewise-polynomial structure
+\citep{kim2009,tibshirani2014}. In macroeconomic
+applications, the well-known interpretational cautions
+about extracting cycles with the Hodrick--Prescott
+filter \citep{hamilton2018} are not resolved by
+reparameterizing its quadratic objective. Our
+contribution concerns exact computation and
+smoothing-parameter selection under specified
+assumptions, not a universal claim about the
+truth of an extracted economic trend.
+
 Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, jointly selecting the difference order $d$ and smoothness $S$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here. For forecasting, such selection must respect temporal order and distinguish third-difference estimated jerk from independently observed physical jerk.
 
 This paper's claimed contributions are the
@@ -69,11 +98,3 @@ The theoretical operation counts do
 not establish measured runtime superiority,
 and the illustrative fit does not
 establish physical forecasting accuracy.
-
-\section*{Code and research-material availability}
-The Python implementation, reproducible illustration, theoretical verification programs, and archived supporting evidence are available at \url{https://github.com/heri-espino/trendestimation}. The canonical source is available in
-\path{paper/csda-unified-theory/}; its revision
-should be frozen and cited before submission. No new benchmark measurements are claimed in this article.
-
-\section*{Declarations}
-Author ordering, affiliations, corresponding-author metadata, funding, conflicts of interest and individual contributions require explicit coauthor verification before journal submission. The present draft does not assert unverified declarations.

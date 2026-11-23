@@ -16,7 +16,46 @@ exact finite-sample filter weights and a
 structured computation, not the reusable
 SVD of $D_d$ studied below.
 
+Orthogonal penalty coordinates have an equally important historical
+lineage. \citet{demmler1975} developed the spectral basis for spline
+smoothing; \citet[Sec.~6.4]{biessy2026} explicitly invokes this
+Demmler--Reinsch perspective to eigendecompose
+$D_q^\top D_q$ in Whittaker--Henderson smoothing and to motivate
+rank reduction. Spectral diagonalization is therefore established
+prior art. Our route differs in its \emph{computational object and
+purpose}: we retain the complete positive spectrum by factoring
+the original rectangular difference operator $D_d$ with SVD,
+rather than first forming its Gram matrix or truncating the
+basis. This supports exact finite-sample statistics in the
+unweighted quadratic model, a prescribed nonzero reference
+without constructing an explicit reference polynomial, and
+reuse across smoothness targets. The nonzero reference is
+historical \citep{guerrero2007}; the full-spectrum, shift-free,
+smoothness-indexed combination is the object analyzed here.
+
+The method also has a broader methodological context.
+Penalized differences are useful outside actuarial graduation
+and macroeconomic detrending, including analytical chemistry
+\citep{eilers2003}; penalized B-spline coefficients provide a
+related but distinct regression formulation
+\citep{eilersmarx1996}. By contrast, $\ell_1$ trend filtering
+\citep{kim2009,tibshirani2014} promotes locally adaptive
+piecewise-polynomial behavior. Our quadratic penalty does not
+claim that adaptivity; for a fixed reference it instead provides
+a linear/affine smoother with explicitly tractable leverage,
+degrees of freedom, and Gaussian likelihood diagnostics.
+These properties make selection and numerical accounting
+particularly transparent.
+
 There are two different computational problems. First, at a given penalty $\lambda$, solve a structured positive-definite linear system to fit the trend. Second, when selecting a smoothing level, evaluate one or several criteria over many penalties. Cross-validation requires residuals and diagonal leverages, generalized cross-validation requires effective degrees of freedom, and a Gaussian REML/marginal likelihood needs a probabilistic model, quadratic forms and log determinants. Solving one banded system quickly does not establish the cost of evaluating an entire candidate grid. Conversely, paying for a dense spectral decomposition may be worthwhile when the result is reused.
+
+The gap addressed here is the \emph{joint} treatment of those
+operations: selecting an interpretable amount of smoothness
+while accounting for the complete statistical score, repeated
+penalties or data series, and finite-precision reliability.
+An isolated fast fit is not a complete selection algorithm,
+and a cached factorization is not necessarily an economical
+choice for every requested diagnostic.
 
 The organizing variable in this paper is the user-facing normalized smoothness index $S\in[0,1]$. This reparameterization of the classical trace reduction is dimensionless and interpretable across orders: $S=0$ means interpolation; $S=1$ is the exactly constrained polynomial limit. A single SVD of the finite-difference operator supplies a monotone map between $S$ and the underlying penalty, fitted trends, and several candidate-scoring terms. The compact interval does not by itself guarantee globally optimal or faster numerical searches; its inversion has a cost, particularly near the endpoints.
 
@@ -26,9 +65,11 @@ The numerical and statistical foundations of efficient smoothing are extensive. 
 
 \subsection{Contributions and relation to established methods}
 \label{sec:contributions}
-The contributions are specific mathematical parameterizations,
-identities, implementations and workload analyses, rather than
-claims to have invented PLS or its numerical building blocks:
+We make six connected contributions that turn established PLS
+and spectral machinery into an explicit smoothness-indexed
+selection and computation pipeline. Their value lies in
+their combination, exact identities, and operational
+consequences, with the classical ingredients credited above:
 
 \begin{enumerate}[leftmargin=*,label=\textbf{C\arabic*.},itemsep=2pt]
 \item \textbf{A genuinely unit-interval smoothness coordinate.}

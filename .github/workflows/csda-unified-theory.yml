@@ -10,6 +10,7 @@ on:
       - paper/csda-reml-theorem-explanations-20261119
       - paper/csda-awesomefigures-gaussian-jerk-demo
       - paper/csda-contributions-precision-likelihood-20261123
+      - editorial/csda-state-of-art-positioning-20261123
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
@@ -21,11 +22,13 @@ on:
       - "paper/csda-unified-theory/figures/README.md"
       - "paper/requirements.txt"
       - "paper/csda-unified-theory/verify_theory.py"
+      - "paper/csda-unified-theory/verify_layout.py"
       - "paper/csda-unified-theory/tests/**"
       - "paper/csda-unified-theory/notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md"
       - "paper/csda-unified-theory/notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md"
       - "paper/csda-unified-theory/notes/PRIMARY_REFERENCE_AUDIT_20261119.md"
       - "paper/csda-unified-theory/notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md"
+      - "paper/csda-unified-theory/notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md"
       - "paper/csda-unified-theory/README.md"
       - "paper/csda-unified-theory/AGENTS.md"
       - "paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md"
@@ -93,6 +96,7 @@ jobs:
           python -m pip install --disable-pip-version-check pypdf==5.9.0
           python rotate_landscape_tables.py main.pdf
           python rotate_landscape_tables.py main.pdf --check
+          python verify_layout.py main.log
           test -s main.pdf
           test -s main.log
           pdfinfo main.pdf | head -20
@@ -104,7 +108,7 @@ jobs:
             echo "LaTeX error in manuscript"
             exit 1
           fi
-          sha256sum main.tex algorithmic_references.bib sections/*.tex figures/render_gaussian_jerk.py figures/README.md figures/gaussian_jerk_demo.pdf figures/gaussian_jerk_demo.png figures/gaussian_jerk_demo.svg figures/gaussian_jerk_demo.json figures/gaussian_jerk_series.csv figures/gaussian_jerk_profile.csv tests/test_*.py notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md notes/PRIMARY_REFERENCE_AUDIT_20261119.md notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md verify_theory.py rotate_landscape_tables.py README.md \
+          sha256sum main.tex algorithmic_references.bib sections/*.tex figures/render_gaussian_jerk.py figures/README.md figures/gaussian_jerk_demo.pdf figures/gaussian_jerk_demo.png figures/gaussian_jerk_demo.svg figures/gaussian_jerk_demo.json figures/gaussian_jerk_series.csv figures/gaussian_jerk_profile.csv tests/test_*.py notes/WEINERT_PRIMARY_SOURCE_D3_REVIEW.md notes/GAUSSIAN_LIKELIHOOD_PROVENANCE.md notes/PRIMARY_REFERENCE_AUDIT_20261119.md notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md notes/STATE_OF_ART_POSITIONING_20261123.md notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md verify_theory.py verify_layout.py rotate_landscape_tables.py README.md \
             AGENTS.md SCOPE_AND_PROOF_AUDIT.md COMPLEXITY_REFERENCE_LEDGER.md \
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
@@ -120,12 +124,15 @@ jobs:
           path: |
             paper/csda-unified-theory/main.tex
             paper/csda-unified-theory/rotate_landscape_tables.py
+            paper/csda-unified-theory/verify_layout.py
             paper/csda-unified-theory/algorithmic_references.bib
             paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md
             paper/csda-unified-theory/sections/
             paper/csda-unified-theory/figures/
             paper/csda-unified-theory/README.md
             paper/csda-unified-theory/AGENTS.md
+            paper/csda-unified-theory/notes/STATE_OF_ART_POSITIONING_20261123.md
+            paper/csda-unified-theory/notes/SUBMISSION_LAYOUT_AND_DECLARATIONS_20261123.md
             paper/csda-unified-theory/SCOPE_AND_PROOF_AUDIT.md
             paper/csda-unified-theory/verify_theory.py
             paper/csda-unified-theory/tests/
@@ -140,7 +147,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 60
       - name: Commit verified PDF and provenance to isolated paper branch
-        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118' || github.ref == 'refs/heads/paper/csda-weinert-d3-svd-comparison' || github.ref == 'refs/heads/paper/csda-reml-theorem-explanations-20261119' || github.ref == 'refs/heads/paper/csda-awesomefigures-gaussian-jerk-demo' || github.ref == 'refs/heads/paper/csda-contributions-precision-likelihood-20261123')
+        if: success() && (github.ref == 'refs/heads/paper/csda-unified-theory' || github.ref == 'refs/heads/paper/csda-algorithm-provenance' || github.ref == 'refs/heads/paper/csda-landscape-tables-svd-20261118' || github.ref == 'refs/heads/paper/csda-weinert-d3-svd-comparison' || github.ref == 'refs/heads/paper/csda-reml-theorem-explanations-20261119' || github.ref == 'refs/heads/paper/csda-awesomefigures-gaussian-jerk-demo' || github.ref == 'refs/heads/paper/csda-contributions-precision-likelihood-20261123' || github.ref == 'refs/heads/editorial/csda-state-of-art-positioning-20261123')
         shell: bash
         run: |
           set -euo pipefail
