@@ -1,5 +1,10 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 23, 2026: state-of-the-art and editorial positioning
+
+The abstract, Introduction, direct-SVD discussion, algorithm provenance table and conclusion now explain the **integrated** contribution more assertively while preserving every mathematical claim, equation, experiment and figure. Added historical Demmler--Reinsch (1975) and contemporary Biessy (2026, Section 6.4) **use-site** comparisons: the paper factors the original rectangular difference matrix using a retained full SVD, versus a Gram-penalty eigenbasis and possible low-rank approximation. Also added Eilers (2003) for cross-disciplinary use, Tibshirani (2014) for the distinct L1 alternative and Hamilton (2018) for HP-filter interpretation cautions. The audit and reproduction gate are in [notes/STATE_OF_ART_POSITIONING_20261123.md](notes/STATE_OF_ART_POSITIONING_20261123.md). The new citations have not yet passed a source-matched PDF build, and no benchmark, journal submission, or merge occurred.
+
+
 ## November 23, 2026: explicit paper contributions and novelty boundaries
 
 The abstract, Introduction and conclusion now foreground **six concrete
