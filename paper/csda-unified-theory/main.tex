@@ -8,11 +8,9 @@
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
 \usepackage{xcolor,listings}
 \usepackage[expansion=false]{microtype}
-% Elsevier CAS v2.4 prefers Charis text + STIX mathematics. The legacy
-% "charis.sty" test in its class is not available in current TeX Live,
-% where the supported text package is charissil.sty (the same font family).
-% Load Charis SIL explicitly after the class; the class supplies STIX math.
-\usepackage{charissil}
+% CAS v2.4 natively selects STIX for both text and mathematics when
+% stix.sty exists but its older optional Charis style is unavailable.
+% The dedicated CI requires stix.sty to prevent fallback to CMR.
 % VS Code Light+ inspired Python syntax: publication-safe, no shell-escape.
 \definecolor{codeBlue}{HTML}{0000FF}
 \definecolor{codeRed}{HTML}{A31515}
