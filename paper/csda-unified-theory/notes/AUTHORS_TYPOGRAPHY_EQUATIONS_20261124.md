@@ -28,7 +28,7 @@ it separately prefers Inconsolata for typewriter text.
 The compiled PDF had to be rebuilt with the correct font dependencies.
 The CSDA workflow now installs `texlive-fonts-extra` in addition
 to its prior TeX packages and checks:
-`kpsewhich stix.sty`, `kpsewhich charis.sty`,
+`kpsewhich stix.sty`, `kpsewhich charissil.sty`,
 `kpsewhich inconsolata.sty`.
 This deliberately preserves the **upstream CAS class** rather than
 overriding it with an arbitrary body font. Before accepting the new
@@ -89,3 +89,7 @@ balanced equation environments, and unique equation labels.
 
 **No journal submission.** Maintain a separate PR and do not merge
 without an explicit approval for this new PR.
+
+## Font package compatibility correction
+
+On Ubuntu's current TeX Live distribution, the standard maintained Charis SIL LaTeX package is `charissil.sty`, while the CAS class's legacy optional test looks for `charis.sty`. Installing the complete font bundle did not satisfy that legacy test. The manuscript therefore loads `\usepackage{charissil}` explicitly after the official CAS class, which provides the intended Charis SIL text family, while the class loads STIX for mathematics. CI verifies `charissil.sty`, `stix.sty` and `inconsolata.sty`. The underlying CAS class file is unmodified.
