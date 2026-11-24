@@ -1,4 +1,4 @@
-# CSDA typography, author metadata and equation numbering — 2026-11-24
+**Final font compatibility decision (2026-11-24):** The current CAS v2.4 class provides an official STIX-only text/math path if the legacy `charis.sty` style is absent. Both Charis style files (`charis.sty`, `charissil.sty`) proved unavailable in the tested Ubuntu TeX package set; the build now requires `stix.sty` and uses CAS's own STIX text/math rather than Computer Modern or a custom font override. This supersedes earlier notes about explicitly loading Charis.\n\n# CSDA typography, author metadata and equation numbering — 2026-11-24
 
 ## Source of truth and scope
 
