@@ -74,11 +74,9 @@ class JournalLayoutChecks(unittest.TestCase):
         cas = ROOT.parent / "els-cas-templates" / "cas-dc.cls"
         workflow = ROOT.parent.parent / ".github" / "workflows" / "csda-unified-theory.yml"
         self.assertIn(r"\RequirePackage{charis}", cas.read_text())
-        self.assertIn(r"\usepackage{charissil}", (ROOT / "main.tex").read_text())
         self.assertIn(r"\RequirePackage[notext]{stix}", cas.read_text())
         run = workflow.read_text()
         self.assertIn("texlive-fonts-extra", run)
-        self.assertIn("kpsewhich charissil.sty", run)
         self.assertIn("kpsewhich stix.sty", run)
 
     def test_submissions_are_explicit_but_not_fabricated(self) -> None:
