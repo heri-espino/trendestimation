@@ -92,6 +92,14 @@ jobs:
             test -s "paper/els-cas-templates/$f"
             cp "paper/els-cas-templates/$f" "paper/csda-unified-theory/$f"
           done
+          # Native CAS \ead author metadata requires bundled thumbnail icons.
+          # Copy the originals from the checked-in official template bundle.
+          mkdir -p paper/csda-unified-theory/thumbnails
+          for f in cas-email.jpeg cas-url.jpeg; do
+            test -s "paper/els-cas-templates/thumbnails/$f"
+            cp "paper/els-cas-templates/thumbnails/$f" \
+              "paper/csda-unified-theory/thumbnails/$f"
+          done
       - name: Compile and verify journal manuscript
         shell: bash
         run: |
