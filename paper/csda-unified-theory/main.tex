@@ -127,16 +127,38 @@ Penalized least squares \sep smoothness index \sep spectral decomposition
 \maketitle
 
 \input{sections/introduction}
+
+% I. Mathematical and statistical foundations.
+\section{Finite-difference PLS and smoothness parameterization}
+\label{sec:foundations}
 \input{sections/reading_guide}
 \input{sections/model}
 \input{sections/smoothness}
+
+% II. Criteria to select an interpretable smoothing level.
 \input{sections/criteria}
+
+% III. Numerical methods realizing all requested criterion diagnostics.
 \input{sections/algorithms}
+
+% IV. Complete workload, finite precision and operational selection.
+\section{Complete-workload complexity and algorithm selection}
+\label{sec:decision}
 \input{sections/complexity}
 \input{sections/stability}
 \input{sections/policy}
+
+% V. One compact, reproducible example after the theory.
 \input{sections/software}
+
+% VI. Implications and open questions.
 \input{sections/conclusion}
+
+% Supporting derivations and algorithmic history belong after the argument.
+\appendix
+\input{sections/appendix_likelihood_proofs}
+\input{sections/algorithm_provenance}
+
 \input{sections/declarations}
 \bibliographystyle{cas-model2-names}
 % References are reused without duplicating/diverging the existing BibTeX source.
