@@ -11,6 +11,7 @@ on:
       - paper/csda-awesomefigures-gaussian-jerk-demo
       - paper/csda-contributions-precision-likelihood-20261123
       - editorial/csda-state-of-art-positioning-20261123
+      - editorial/csda-authors-font-equations-20261124
     paths:
       - ".github/workflows/csda-unified-theory.yml"
       - "paper/csda-unified-theory/main.tex"
@@ -45,7 +46,7 @@ concurrency:
 jobs:
   verify-and-compile:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     steps:
       - name: Check out exact source branch
         uses: actions/checkout@v4
@@ -82,7 +83,12 @@ jobs:
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
-            texlive-fonts-recommended texlive-pictures lmodern latexmk poppler-utils
+            texlive-fonts-recommended texlive-fonts-extra texlive-pictures lmodern latexmk poppler-utils
+          # CAS v2.4 uses Charis text and STIX mathematics when both exist;
+          # this prevents its Computer Modern fallback used in the prior PDF.
+          kpsewhich charis.sty
+          kpsewhich stix.sty
+          kpsewhich inconsolata.sty
           for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
             test -s "paper/els-cas-templates/$f"
             cp "paper/els-cas-templates/$f" "paper/csda-unified-theory/$f"
