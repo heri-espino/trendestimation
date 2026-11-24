@@ -49,7 +49,7 @@ class JournalLayoutChecks(unittest.TestCase):
         parts = [ROOT / "main.tex", *sorted(sections.glob("*.tex"))]
         all_source = "\n".join(p.read_text(encoding="utf-8") for p in parts)
         for forbidden in (
-            r"\[", r"\]", "$",
+            r"\[", r"\]", "$$",
             r"\begin{equation*}", r"\begin{align*}",
             r"\begin{gather*}", r"\begin{displaymath}",
             r"\boxed{", r"\fbox{", r"\framebox{",
