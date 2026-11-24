@@ -89,35 +89,35 @@
  country={Mexico}}
 \cortext[cor1]{Corresponding author}
 \begin{abstract}
-Finite-difference penalized least squares (PLS) offers a transparent
-trade-off between data fidelity and trend regularity, but practical
-selection of smoothness demands more than solving the fitted-trend
-linear system. We develop an integrated, smoothness-indexed
-statistical and computational framework for arbitrary difference
-orders and prescribed, potentially nonzero, reference differences.
-First, rank-normalizing the classical trace reduction by the
-$n-d$ penalized directions gives a dimensionless coordinate
-$S\in[0,1]$ with common, exact interpolation and
-constrained-polynomial endpoints across orders; we establish its
-strictly monotone penalty map. Second, a reusable SVD of the
-original rectangular difference matrix provides an explicit,
-shift-free reconstruction for nonzero references and exposes the
-conditioning implications of forming the Gram matrix. Third, an
-orthogonal Gaussian error-contrast formulation evaluates existing
-profiled restricted/marginal likelihood in these coordinates,
-enabling variance-ratio and smoothness selection under stated
-fixed-reference assumptions. Fourth, we formulate complete
-criterion-specific workloads---including leave-one-out leverages,
-GCV traces, information criteria, determinant corrections, and
-smoothness inversion---and derive end-to-end arithmetic and
-memory bounds for spectral and banded pipelines across candidate
-grids and repeated series. These results explain when spectral
-reuse may repay its setup cost and when structured direct methods
-remain preferable, with numerical admissibility included in the
-decision. A reproducible third-order example demonstrates the
-public Python workflow. The contribution is an integrated
-parameterization, set of identities, and decision framework,
-rather than a new regularizer or an unconditional speed claim.
+Finite-difference penalized least squares (PLS) is
+computationally inexpensive at a prescribed penalty,
+but selecting smoothness over many candidates may
+require substantially more than a trend solve.
+We develop a unified, smoothness-indexed framework
+for complete statistical-criterion evaluation in
+arbitrary-order PLS with a prescribed, potentially
+nonzero, difference reference.  Rank normalization
+of the established trace reduction gives a bounded
+coordinate $S_d\in[0,1]$ with exact endpoints
+and a strictly monotone penalty map.  A full
+SVD of the original rectangular difference operator
+provides shift-free fitted-trend reconstruction
+and reusable quantities for cross-validation,
+generalized cross-validation, residual information
+criteria and Gaussian error-contrast likelihood.
+We specialize the established profiled restricted
+likelihood to the fixed-reference model and connect
+its variance-ratio selection to the same smoothness
+coordinate.  Finally, we derive end-to-end arithmetic,
+storage and numerical-admissibility requirements for
+spectral and banded pipelines across candidate grids,
+criteria and repeated series, explaining when
+preparation costs can be amortized and when structured
+methods remain preferable.  A reproducible third-order
+example illustrates the implementation.  The
+contribution is an integrated statistical and
+computational decision framework, not a new
+regularizer or an unconditional speed claim.
 \end{abstract}
 \begin{keywords}
 Penalized least squares \sep smoothness index \sep spectral decomposition
