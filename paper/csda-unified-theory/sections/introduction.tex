@@ -1,164 +1,102 @@
 \section{Introduction}\label{sec:introduction}
-Finite-difference penalized least squares (PLS) is a classical approach to recovering a latent trend from noisy observations. The regularized least-squares precedent of \citet{bohlmann1899}, the better-known quadratic-difference method of \citet{whittaker1923}, the early structured actuarial computations of \citet{henderson1925}, and the statistical formulation of \citet{guerrero2007} provide the foundation. Their historical ordering follows the review of \citet{weinert2007}; it is not a claim that these original articles all developed the current arbitrary-order, fixed-nonzero-reference formulation. A fixed nonzero mean of differences permits polynomial trends beyond the homogeneous special case. Guerrero's trace-based smoothness measure \citep{guerrero2008} and the comparison of classical optimality criteria by \citet{cortes2017} are likewise established starting points.
 
-The continuous smoothing-spline formulation of
-\citet[Secs.~2--4]{reinsch1967} minimizes integrated
-squared derivatives subject to a data-fit constraint
-and exploits a banded system. It is an important
-regularization antecedent, but its continuous
-derivative penalty is \emph{not identical} to
-the finite-difference quadratic form
-$\|D_d\tau-\mu\mathbf1_r\|^2$ used here.
-Likewise the Hodrick--Prescott filter is
-the special $d=2,\mu=0$ PLS problem;
-\citet[Secs.~1--2]{corneamadeira2017} derives
-exact finite-sample filter weights and a
-structured computation, not the reusable
-SVD of $D_d$ studied below.
+Selecting a trend smoother requires more computation than fitting a
+trend at one prescribed penalty.  For a finite-difference penalized
+least-squares (PLS) estimator, the first task is a structured
+linear-system solve.  The second may require evaluating an entire
+candidate grid: leave-one-out cross-validation needs observationwise
+leverages, generalized cross-validation needs a trace, and
+Gaussian restricted likelihood needs both a quadratic form and
+log determinants.  These costs differ sharply, particularly when the
+same difference operator is reused across smoothing levels,
+statistical criteria, or observed series.  Comparing individual
+linear solves therefore does not identify the most efficient
+\emph{complete} smoothing-selection algorithm.
 
-Orthogonal penalty coordinates have an equally important historical
-lineage. \citet{demmler1975} developed the spectral basis for spline
-smoothing; \citet[Sec.~6.4]{biessy2026} explicitly invokes this
-Demmler--Reinsch perspective to eigendecompose
-$D_q^\top D_q$ in Whittaker--Henderson smoothing and to motivate
-rank reduction. Spectral diagonalization is therefore established
-prior art. Our route differs in its \emph{computational object and
-purpose}: we retain the complete positive spectrum by factoring
-the original rectangular difference operator $D_d$ with SVD,
-rather than first forming its Gram matrix or truncating the
-basis. This supports exact finite-sample statistics in the
-unweighted quadratic model, a prescribed nonzero reference
-without constructing an explicit reference polynomial, and
-reuse across smoothness targets. The nonzero reference is
-historical \citep{guerrero2007}; the full-spectrum, shift-free,
-smoothness-indexed combination is the object analyzed here.
+We consider equally spaced observations with integer difference
+order $1\le d<n$, unweighted quadratic fidelity, and a prescribed,
+possibly nonzero, reference level $\mu$ for the $d$th differences.
+Instead of specifying the scale-dependent penalty $\lambda$ directly,
+we parameterize regularization through the fraction of penalizable
+degrees of freedom removed by smoothing.  This yields a
+rank-normalized coordinate $S_d(\lambda)\in[0,1]$ with the same
+interpolation and constrained-polynomial endpoints for every order.
+An exact spectral construction then links that coordinate to
+fitted trends and statistical scores.  The computational question is
+when its reusable setup justifies its cost relative to sparse,
+banded alternatives, after including the statistical diagnostics
+and numerical-validity requirements.
 
-The method also has a broader methodological context.
-Penalized differences are useful outside actuarial graduation
-and macroeconomic detrending, including analytical chemistry
-\citep{eilers2003}; penalized B-spline coefficients provide a
-related but distinct regression formulation
-\citep{eilersmarx1996}. By contrast, $\ell_1$ trend filtering
-\citep{kim2009,tibshirani2014} promotes locally adaptive
-piecewise-polynomial behavior. Our quadratic penalty does not
-claim that adaptivity; for a fixed reference it instead provides
-a linear/affine smoother with explicitly tractable leverage,
-degrees of freedom, and Gaussian likelihood diagnostics.
-These properties make selection and numerical accounting
-particularly transparent.
+\paragraph{Historical and methodological context.}
+Penalized-difference graduation originated with
+\citet{bohlmann1899,whittaker1923,henderson1925}; the
+fixed-reference statistical formulation and trace-based smoothness
+index have antecedents in \citet{guerrero2007,guerrero2008}, with
+selection-criterion comparisons in \citet{cortes2017}.
+The continuous smoothing splines of \citet{reinsch1967} and
+penalized B-splines \citep{eilersmarx1996} belong to related,
+but not identical, quadratic-regularization models.
+The orthogonal spline-penalty construction of
+\citet{demmler1975} precedes modern spectral smoothing,
+and \citet[Sec.~6.4]{biessy2026} explicitly uses
+penalty-matrix eigendecomposition and rank reduction
+for Whittaker--Henderson smoothing.  Structured
+Whittaker--Henderson fitting and GCV also have
+efficient banded precedents, notably \citet{weinert2007}.
+These are the methodological starting points, not
+components whose invention is claimed here.
 
-There are two different computational problems. First, at a given penalty $\lambda$, solve a structured positive-definite linear system to fit the trend. Second, when selecting a smoothing level, evaluate one or several criteria over many penalties. Cross-validation requires residuals and diagonal leverages, generalized cross-validation requires effective degrees of freedom, and a Gaussian REML/marginal likelihood needs a probabilistic model, quadratic forms and log determinants. Solving one banded system quickly does not establish the cost of evaluating an entire candidate grid. Conversely, paying for a dense spectral decomposition may be worthwhile when the result is reused.
+\subsection{Contributions and scope}\label{sec:contributions}
+We contribute an integrated statistical--computational
+description of \emph{complete} finite-difference PLS selection,
+organized around three related questions:
 
-The gap addressed here is the \emph{joint} treatment of those
-operations: selecting an interpretable amount of smoothness
-while accounting for the complete statistical score, repeated
-penalties or data series, and finite-precision reliability.
-An isolated fast fit is not a complete selection algorithm,
-and a cached factorization is not necessarily an economical
-choice for every requested diagnostic.
+\begin{enumerate}[leftmargin=*,label=\textbf{\arabic*.},itemsep=3pt]
+\item \textbf{How should smoothness be represented?}
+We make explicit the rank-normalized transformation of the
+established trace measure, its monotone penalty map, and its
+degrees-of-freedom and conditional Gaussian-precision
+interpretations.  A full SVD of the original rectangular
+difference matrix yields an exact, shift-free reconstruction
+for a fixed nonzero reference and exact endpoint limits.
 
-The organizing variable in this paper is the user-facing normalized smoothness index $S\in[0,1]$. This reparameterization of the classical trace reduction is dimensionless and interpretable across orders: $S=0$ means interpolation; $S=1$ is the exactly constrained polynomial limit. A single SVD of the finite-difference operator supplies a monotone map between $S$ and the underlying penalty, fitted trends, and several candidate-scoring terms. The compact interval does not by itself guarantee globally optimal or faster numerical searches; its inversion has a cost, particularly near the endpoints.
+\item \textbf{How should smoothing be selected?}
+We formulate conditional CV, GCV, residual-based information
+criteria, and established profiled Gaussian
+REML/marginal likelihood in compatible coordinates,
+identifying the residuals, leverages, projections, variance
+profiles and determinants needed to evaluate each
+complete criterion.  The fixed-reference likelihood
+specialization estimates a historical variance ratio;
+it does not introduce a new likelihood principle
+\citep{patterson1971,wahba1985,wood2011,biessy2026}.
 
-The reference level $\mu$ is central to the formulation. The convenient assumption $\mu=0$ changes the limiting polynomial family and excludes prescribed nonzero $d$th-difference levels. While arbitrary fixed $\mu$ has already been treated by \citet{guerrero2007}, it is useful to have one numerically stable computational API handling both cases. In particular, explicitly forming a large degree-$d$ reference polynomial can lead to severe cancellation. Our shift-free singular-vector reconstruction avoids that intermediate.
-
-The numerical and statistical foundations of efficient smoothing are extensive. Crucially, \citet[Secs.~1--2]{weinert2007} factors the banded primal matrix $\alpha I+M^\top M$ by $LDL^\top$ and computes GCV through structured inverse-diagonal recurrences; it does \emph{not} use a reusable SVD of the difference matrix. His linear-time fixed-second-order method prevents any general claim that the dense SVD of $D_d$ is inherently faster. Rather, we compare the distinct reuse, accuracy, memory and criterion-completion properties of spectral and banded approaches. The choice of difference order can encode a scientific interpretation: for equally spaced position observations, third differences approximate jerk (changes in acceleration), while other orders describe other derivative structures. An unknown order can be validated as a model hyperparameter, but the fixed-$d$ theorems do not themselves prove any multi-order forecasting advantage. \citet{weinert2007} exploits Whittaker--Henderson structure for efficient GCV, \citet{craven1979,golub1979} established classical GCV for splines and ridge regression (including spectral methods), and \citet{biessy2026} supplies a modern Whittaker--Henderson statistical and computational treatment. We do not claim invention of diagonalization, the penalty, trace smoothness, cross-validation, Cholesky, or selected inversion. These historical distinctions motivate the specific contributions below.
-
-\subsection{Contributions and relation to established methods}
-\label{sec:contributions}
-We make six connected contributions that turn established PLS
-and spectral machinery into an explicit smoothness-indexed
-selection and computation pipeline. Their value lies in
-their combination, exact identities, and operational
-consequences, with the classical ingredients credited above:
-
-\begin{enumerate}[leftmargin=*,label=\textbf{C\arabic*.},itemsep=2pt]
-\item \textbf{A genuinely unit-interval smoothness coordinate.}
-Guerrero's original $n$-normalized trace index
-\citep{guerrero2007,guerrero2008} has upper limit
-$1-d/n$ for $d\geq1$, as noted by
-\citet[Sec.~2.1]{cortes2017}. We instead divide
-by the rank $r=n-d$ of $D_d$, so
-$S_d=(n-\tr H_\lambda)/r$ spans \emph{exactly}
-$[0,1]$ independently of $d$. We make the
-normalization, its interpretation as a fraction
-of penalizable degrees of freedom and its
-unique $S\leftrightarrow\lambda$ mapping
-explicit, including both analytical endpoints
-(Section~\ref{sec:smoothness}). This is a
-simple but operationally consequential
-rescaling, not a new smoother or a claim
-that the trace measure itself is new.
-
-\item \textbf{Arbitrary-order fixed-reference spectral reconstruction.}
-We derive a reusable SVD representation of
-the $(n-d)\times n$ difference matrix $D_d$,
-a shift-free fitted-trend formula for a
-prescribed nonzero difference reference
-$\mu$, and the associated numerical
-conditioning and endpoint checks
-(Sections~\ref{sec:model} and
-\ref{sec:stability}). The historical
-nonzero-$\mu$ PLS estimator itself is due
-to \citet{guerrero2007}; our focus is its
-reusable computational representation.
-
-\item \textbf{Likelihood selection of the variance ratio in
-the normalized coordinate.}
-The original PLS stochastic formulation
-identifies $\lambda$ with the observation
-variance divided by the difference-innovation
-variance \citep{guerrero2007,cortes2017}.
-We show, under an \emph{explicit} Gaussian
-model with fixed $\mu$, how the established
-REML/marginal likelihood
-\citep{patterson1971,wahba1985,wood2011,biessy2026}
-can be profiled and evaluated in the SVD
-coordinates of $D_d$ to select this ratio,
-or equivalently its $S_d$ value. We provide
-the variance-profile and determinant
-identities needed for spectral \emph{or}
-banded evaluation
-(Section~\ref{sec:gaussian-likelihood}).
-The Gaussian likelihood and REML principle
-are prior art; the contribution is their
-explicit connection to this rank-normalized
-fixed-reference PLS pipeline, not an
-assertion of statistical novelty.
-
-\item \textbf{Complete criteria rather than fit-only costs.}
-We spell out residuals, observation-specific
-leverages, effective degrees of freedom,
-quadratic forms and log determinants required
-by conditional CV, GCV, information criteria
-and Gaussian likelihood, including precisely
-which quantities can be shared across series
-and candidate smoothness levels
-(Sections~\ref{sec:criteria} and
-\ref{sec:algorithms}). Standard criteria
-and selected-inverse recurrences themselves
-are not introduced here.
-
-\item \textbf{An end-to-end computational and numerical
-decision framework.}
-For $M$ smoothing candidates and $R$ observed
-series, we derive full pipeline operation
-and memory counts for the retained-spectrum
-and banded-factorization alternatives,
-accounting separately for smoothness inversion,
-criterion evaluation and numerical admissibility
-(Sections~\ref{sec:complexity},
-\ref{sec:stability} and \ref{sec:policy}).
-These are analytical workload bounds, not
-claims of a universal algorithmic winner.
-
-\item \textbf{A reproducible implementation and illustration.}
-The Python interface exposes these choices,
-and one third-difference synthetic example
-shows Gaussian-contrast selection on an
-explicit normalized-$S$ grid
-(Section~\ref{sec:software}). It demonstrates
-the computation, not forecast accuracy or
-a comparison of smoothing methods.
+\item \textbf{Which complete numerical pipeline is appropriate?}
+We distinguish retained direct SVD from Gram
+eigendecomposition, structured Cholesky and selected
+inversion, and approximate diagnostics.  End-to-end
+arithmetic, storage and admissibility analyses expose the
+setup-versus-reuse trade-off across smoothing candidates,
+criteria and repeated series, without claiming an
+unconditional timing advantage for any algorithm.
 \end{enumerate}
 
-All principal theorems assume equally spaced observations, unweighted quadratic fidelity, integer $1\le d<n$, a fixed numeric $\mu$, and exact arithmetic. Data-derived reference means, time-series forecasting and fully measured hardware crossovers require additional statistical or empirical arguments, which are not silently incorporated into these claims.
+The contribution lies in the combination of these exact
+identities and workload decisions, not in a new PLS
+penalty, SVD algorithm, classical selection criterion,
+or numerical factorization.  We preserve the
+distinction between a conditional fixed-$\mu$ trend smoother
+and foldwise refitting of a data-estimated reference;
+likewise, retrospective smoothing scores are not
+automatically forecasting-validation scores.
+
+Section~\ref{sec:foundations} develops the estimator and
+smoothness coordinate; Section~\ref{sec:criteria} defines
+the selection criteria; Section~\ref{sec:algorithms}
+compares their numerical realizations.  The full
+computational trade-off appears in
+Section~\ref{sec:decision}; Section~\ref{sec:software}
+illustrates the implementation, and
+Section~\ref{sec:conclusion} discusses scope and
+implications.  Detailed Gaussian derivations and
+algorithm provenance are retained in appendices.
