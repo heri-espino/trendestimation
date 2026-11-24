@@ -47,12 +47,14 @@ jobs:
           if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
           $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
           if (-not (Test-Path -LiteralPath $python)) { throw "Missing existing Conda Python $python" }
-          foreach ($cmd in @('latexmk','pdflatex','bibtex')) {
+          foreach ($cmd in @('pdflatex','bibtex')) {
             if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) { throw "Missing installed tool: $cmd" }
           }
           & $python --version
-          latexmk -v | Select-Object -First 3
-          if ($LASTEXITCODE -ne 0) { throw 'TeX toolchain preflight failed' }
+          & pdflatex --version | Select-Object -First 3
+          if ($LASTEXITCODE -ne 0) { throw 'pdflatex preflight failed' }
+          & bibtex --version | Select-Object -First 2
+          if ($LASTEXITCODE -ne 0) { throw 'bibtex preflight failed' }
 
       - name: Verify exact mathematical and editorial source (no experiments)
         run: |
@@ -77,8 +79,16 @@ jobs:
           if (-not (Test-Path "$paper/thumbnails/cas-email.jpeg")) { throw 'Missing official CAS author email icon' }
           Push-Location $paper
           try {
-            & latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
-            if ($LASTEXITCODE -ne 0) { throw 'Elsevier CAS LaTeX compilation failed' }
+            # MiKTeX latexmk requires Perl; this machine has pdflatex and
+            # bibtex already, so run the full bibliography build directly.
+            & pdflatex -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+            if ($LASTEXITCODE -ne 0) { throw 'First CAS pdflatex pass failed' }
+            & bibtex main
+            if ($LASTEXITCODE -ne 0) { throw 'CAS BibTeX pass failed' }
+            foreach ($pass in @(2,3,4)) {
+              & pdflatex -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+              if ($LASTEXITCODE -ne 0) { throw "CAS pdflatex pass $pass failed" }
+            }
             $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
             & $python verify_layout.py main.log
             if ($LASTEXITCODE -ne 0) { throw 'Strict two-column margin check failed' }
