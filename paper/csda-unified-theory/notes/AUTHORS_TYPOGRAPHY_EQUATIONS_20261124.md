@@ -59,9 +59,9 @@ and uses the department specifically for Daniela.
 
 ## Display equation audit and de-boxing
 
-Converted **13** formerly unnumbered `\[...\]` blocks to
+Converted **14** formerly unnumbered `\[...\]` blocks to
 `\begin{equation}\label{eq:...}...\end{equation}`:
-eight in the likelihood proof, three in the third-order matrix
+eight in the likelihood proof, one gradient derivation, three in the third-order matrix
 example, one finite-difference derivative approximation, and one
 candidate-count model. Two existing `\boxed{}` highlights were
 removed without touching the underlying expressions. The framed
