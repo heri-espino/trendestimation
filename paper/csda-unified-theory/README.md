@@ -7,7 +7,7 @@ Source-only manuscript edits identify Heriberto Espino-Montelongo as
 Cortés-Toto's complete departmental affiliation, ORCID and email.
 The earlier PDF used Computer Modern fallback rather than the full
 CAS preference for Charis text/STIX math; the dedicated workflow now
-installs and checks the fonts before recompilation. Thirteen unnumbered
+installs and checks the fonts before recompilation. Fourteen unnumbered
 display expressions are now numbered with the `equation` environment.
 Two boxed expressions and the Python listing frame were removed.
 Inline mathematics remains inline. A new regression test guards these
