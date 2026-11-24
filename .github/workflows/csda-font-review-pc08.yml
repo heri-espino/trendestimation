@@ -27,6 +27,7 @@ jobs:
         shell: powershell
     env:
       CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      CONDA_EXE: 'C:\Users\175199\AppData\Local\miniconda3\Scripts\conda.exe'
       OMP_NUM_THREADS: '1'
       OPENBLAS_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
@@ -50,7 +51,9 @@ jobs:
           foreach ($cmd in @('pdflatex','bibtex')) {
             if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) { throw "Missing installed tool: $cmd" }
           }
-          & $python --version
+          if (-not (Test-Path -LiteralPath $env:CONDA_EXE)) { throw 'Existing conda executable missing' }
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python --version
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to activate existing trendestimation Conda environment' }
           # Avoid piping TeX version output into Select-Object -First:
           # it closes the native process pipe early on Windows and
           # incorrectly yields a nonzero LASTEXITCODE.
@@ -61,11 +64,11 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
-          & $python paper/csda-unified-theory/verify_theory.py
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/csda-unified-theory/verify_theory.py
           if ($LASTEXITCODE -ne 0) { throw 'Mathematical source verification failed' }
-          & $python paper/csda-computational-costs/verify_theory.py
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python paper/csda-computational-costs/verify_theory.py
           if ($LASTEXITCODE -ne 0) { throw 'Computational-cost source verification failed' }
-          & $python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
+          & $env:CONDA_EXE run --no-capture-output -n trendestimation python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
           if ($LASTEXITCODE -ne 0) { throw 'Editorial/theory unit tests failed' }
 
       - name: Compile manuscript with bundled Elsevier CAS and author icons
@@ -91,7 +94,7 @@ jobs:
               if ($LASTEXITCODE -ne 0) { throw "CAS pdflatex pass $pass failed" }
             }
             $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
-            & $python verify_layout.py main.log
+            & $env:CONDA_EXE run --no-capture-output -n trendestimation python verify_layout.py main.log
             if ($LASTEXITCODE -ne 0) { throw 'Strict two-column margin check failed' }
             if (-not (Test-Path 'main.pdf')) { throw 'No compiled PDF' }
             if (Get-Command pdffonts -ErrorAction SilentlyContinue) {
