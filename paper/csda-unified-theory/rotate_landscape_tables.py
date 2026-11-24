@@ -14,9 +14,11 @@ from tempfile import NamedTemporaryFile
 
 from pypdf import PdfReader, PdfWriter
 
+# Match the stable descriptive captions, not their ordinal table numbers.
+# Moving tables between sections or appendices must not break orientation.
 LABELS = {
-    "table1algorithmprovenance": "algorithm provenance",
-    "table2costsofnumericalalgorithms": "algorithm costs",
+    "algorithmprovenanceandsourcesofcomputationalcomplexity": "algorithm provenance",
+    "costsofnumericalalgorithms": "algorithm costs",
 }
 
 

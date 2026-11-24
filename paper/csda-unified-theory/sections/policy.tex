@@ -1,4 +1,4 @@
-\section{A workload-aware algorithm-selection policy}\label{sec:policy}
+\subsection{Workload-aware algorithm selection}\label{sec:policy}
 The theoretical problem is to choose a complete pipeline, not a favored numerical library in isolation. For a specified tolerance $\varepsilon$, memory budget $B$, difference order $d$, number of candidates $M$, observed-series count $R$ and criterion set $\mathcal C$, we recommend
 \begin{equation}\label{eq:frontier}
 \mathcal A^\star\in
@@ -25,7 +25,7 @@ Near $S=1$, large $d$, difficult conditioning & Validated shift-free spectral or
 \end{tabularx}
 \end{table*}
 
-\subsection{Complete candidate-grid procedure}
+\subsubsection{Complete candidate-grid procedure}
 The following abstract algorithm specifies a reproducible computation rather than claiming that an optimal dispatcher is already implemented in the library.
 \begin{enumerate}[leftmargin=*]
 \item Fix $(n,d)$, the reference-mean policy, the criterion set $\mathcal C$, candidate set $\mathcal S$, numerical tolerances and memory limit. Declare whether any mean estimate is conditional or foldwise-refitted.
@@ -36,7 +36,7 @@ The following abstract algorithm specifies a reproducible computation rather tha
 \item Return a minimizer \emph{over the explicitly evaluated finite grid} for each requested criterion. The result is not automatically a certified global minimizer of the unrestricted continuous criterion.
 \end{enumerate}
 
-\subsection{What can be concluded without empirical timing}
+\subsubsection{What follows without empirical timing}
 The theory proves that structured factorization has favorable asymptotic storage and single-fit arithmetic for fixed small $d$. It also proves that once an SVD has been paid for, many scalar smoothing scores are cheap and share the same spectral basis and smoothness map. It does \emph{not} establish that SVD always beats banded Cholesky on CV grids, that a positive crossover exists in every regime, or that a faster measured fit implies faster complete criterion selection. Those are contingent questions involving operation constants and numerical admissibility.
 
 Finally, changing $d$ is a model-design decision, not merely a computational tuning parameter. Different difference orders impose different nullspaces and different smoothing trajectories. A preference inferred from computational work must not be misreported as a guarantee of better latent-trend recovery or forecasting accuracy.

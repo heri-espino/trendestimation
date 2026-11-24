@@ -1,4 +1,4 @@
-\section{Finite-difference PLS and a spectral solution}\label{sec:model}
+\subsection{Penalized least squares and a shift-free spectral solution}\label{sec:model}
 For equally spaced data $y\in\R^n$, let $1\le d<n$ and $r=n-d$. Define $D_d\in\R^{r\times n}$ by
 \begin{equation}\label{eq:difference}
 (D_dx)_i=\sum_{k=0}^d(-1)^{d-k}{d\choose k}x_{i+k}.
@@ -46,8 +46,6 @@ Its nullspace consists of sampled polynomials of degree at most $d-1$; thus $Q_d
 Repeated differences of a polynomial of degree below $d$ vanish. Conversely, if $D_dx=0$, induction on the difference order implies that $x_t$ is a polynomial in $t-1$ of degree at most $d-1$. The $d$ sequences $\binom{t-1}{k}$, $k=0,\ldots,d-1$, are independent. Rank--nullity and $x^\top Q_dx=\|D_dx\|^2$ complete the proof.
 \end{proof}
 
-\input{sections/third_difference_example}
-
 The particular polynomial $p_{\mu,t}=\mu\binom{t-1}{d}$ satisfies $D_dp_\mu=\mu\mathbf1_r$. Hence
 \begin{equation}\label{eq:affine}
 \widehat\tau_{\lambda,\mu}=p_\mu+H_\lambda(y-p_\mu).
@@ -63,27 +61,24 @@ $H_\lambda$.} Specifically, we compute the reduced SVD
 \underbrace{V^\top}_{r\times n},
 \qquad r=n-d,
 \end{equation}
-This is a full, non-truncated factorization of the original
-rectangular difference operator. The use of orthogonal
-penalty coordinates is \emph{analogous} to the
-Demmler--Reinsch construction for smoothing splines
-\citep{demmler1975}; spline penalty bases are not, in
-general, identical to those of the present discrete
-difference operator. For the \emph{same} discrete $D_d$,
-our right singular vectors span exactly the positive
-eigenspaces of $D_d^\top D_d$ used in the
-Whittaker--Henderson Gram eigendecomposition of
-\citet[Sec.~6.4]{biessy2026}, up to choices of bases
-within repeated-eigenvalue subspaces. Our route avoids
-explicit formation of $D_d^\top D_d$. The distinct numerical
-conditioning properties of these algebraically equivalent
-routes are examined in Section~\ref{sec:algorithms}.
-
 where $\Sigma=\diag(\sigma_1,\ldots,\sigma_r)$ has
-$\sigma_j>0$, $U$ is orthogonal and $V$ contains $r$
-orthonormal right singular vectors. The decomposition is
-independent of the smoothing parameter $\lambda$,
-the data $y$, and any fixed reference $\mu$.
+$\sigma_j>0$, $U$ is orthogonal, and $V$ contains $r$
+orthonormal right singular vectors.  The factorization
+depends only on $(n,d)$: its basis is independent of
+the smoothing penalty, the observations, and any
+fixed reference $\mu$.
+The use of orthogonal penalty coordinates is analogous to
+the classical Demmler--Reinsch spline construction
+\citep{demmler1975}, but their spline penalty basis need
+not coincide with that of a discrete difference operator.
+For the same discrete $D_d$, the right singular vectors
+span the positive eigenspaces of $D_d^\top D_d$, as in
+the Whittaker--Henderson Gram decomposition described by
+\citet[Sec.~6.4]{biessy2026}.  Unlike rank-truncated
+approximations, we retain the complete positive
+spectrum; Section~\ref{sec:algorithms} examines the
+algebraic equivalence and conditioning distinction.
+
 Define $\delta_j=\sigma_j^2$ and
 $w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
 The inverse smoother follows \emph{algebraically} from this

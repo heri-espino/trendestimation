@@ -1,100 +1,96 @@
 \section{Discussion and conclusions}\label{sec:conclusion}
-The principal conceptual contribution is the
-\emph{rank-normalized} smoothness coordinate
-$S_d=(n-\tr H_\lambda)/(n-d)$.
-Unlike the historical $n$-normalized trace
-index, whose exact finite-sample upper bound
-is $1-d/n$, this parameter reaches the
-same defined endpoints $S=0$ (interpolation)
-and $S=1$ (constrained polynomial fitting)
-for every $d$. Its invertible connection
-to $\lambda$ provides a bounded control
-coordinate with a clear
-degrees-of-freedom and relative-precision
-interpretation; it does not create a new
-family of smoothers.
 
-A second statistical-computational contribution
-is the explicit \emph{use of established
-profiled Gaussian REML/marginal likelihood}
-to select the historically defined
-variance ratio
-$\lambda=\sigma_\varepsilon^2/\sigma_u^2$
-and hence $S_d(\lambda)$.
-Our theorem derives its fixed-$\mu$
-penalized-coordinate representation,
-profiles the observation-noise variance,
-and connects the same criterion to a
-banded log-determinant calculation.
-The underlying Gaussian likelihood,
-variance-component interpretation,
-and REML principle were developed
-previously
-\citep{guerrero2007,patterson1971,wahba1985,wood2011,biessy2026};
-the specific value here is in stating
-their relationship to normalized
-smoothness and making the computational
-route explicit and reproducible.
+A complete smoothing-parameter search is a different
+computational problem from fitting one penalized
+least-squares trend.  The framework developed here
+makes that distinction explicit while retaining the
+statistical interpretability of finite-difference PLS.
+The rank-normalized coordinate $S_d(\lambda)$ describes
+the fraction of the $n-d$ penalizable directions removed
+by regularization.  Its exact endpoints and monotone
+inverse allow different difference orders to be described
+on a common unit interval, even though equal values of
+$S$ do not impose equal physical curvature or imply
+equal forecasting accuracy.
 
-The value of this formulation is most apparent when the
-scientific question is posed in terms of a desired fraction
-of removable trend complexity rather than a raw penalty
-whose magnitude depends on the series length and
-difference order. In that setting, spectral preparation,
-smoothness inversion, criterion selection and numerical
-validation become one reproducible decision process.
-The result is not merely a collection of independent
-closed-form expressions: it makes the setup-versus-reuse
-trade-off and the information required by each
-statistical criterion explicit.
+\paragraph{Implications for statistical selection.}
+With a prescribed numeric reference $\mu$, the direct SVD
+of the rectangular difference operator supports
+shift-free fitted-trend reconstruction, leverage and
+degrees-of-freedom diagnostics, and the scalar terms
+needed for established selection criteria.
+The same coordinates also expose an explicit Gaussian
+error-contrast likelihood: profiling the observation
+variance selects the classical observation-to-innovation
+variance ratio through $\lambda$ and hence its
+normalized smoothness value.  The linear-algebraic
+representation, not a new likelihood or prior, is the
+bridge connecting deterministic smoothing,
+probabilistic interpretation and computation.
+Conditional CV, GCV, residual information criteria,
+and likelihood are deliberately kept distinct:
+they need different diagnostics and need not select
+the same trend.
 
-The remaining contributions are an
-arbitrary-order, shift-free SVD formula
-for prescribed nonzero difference means,
-a full accounting of the quantities
-required for each statistical criterion,
-and analytical workload and numerical
-admissibility rules for complete
-spectral and banded pipelines. The
-worked third-difference matrices and
-synthetic Gaussian-contrast figure
-illustrate these ideas without claiming
-new forecasting evidence.
+\paragraph{Implications for numerical algorithms.}
+The resulting workload comparison depends on what is
+requested and what may be reused.  A retained full SVD
+pays a substantial one-time preparation and storage cost
+but reduces many subsequent projected scalar scores to
+inexpensive spectral sums.  Banded Cholesky and
+selected-inverse recurrences exploit local differences
+and remain strong alternatives for large series,
+small fixed orders and complete conditional CV.
+An asymptotic advantage for a particular component
+does not establish a wall-clock advantage for the
+full selection pipeline.  Our cost bounds and
+admissibility conditions instead identify the
+relevant dimensions---candidate count, number of
+series, selection criterion, memory and numerical
+accuracy---that should guide an empirical comparison.
 
-The algorithmic choice is more subtle than selecting the fastest linear solver. A full retained dense SVD costs more to prepare and retain than a banded factorization, but enables inexpensive evaluation of many scalar criteria after preprojection. Weinert's original $LDL^\top$ Whittaker--Henderson algorithm is a structured fixed-order, linear-time GCV alternative, not an SVD of $D_d$; there is no universal spectral speed advantage merely because several penalty values are requested. Banded Cholesky, when coupled with selected inversion, supplies complete conditional CV, GCV, information and profiled Gaussian REML/marginal-likelihood quantities with structured storage and an $O(nd^2)$ per-candidate bound. The initial cost of obtaining $\lambda$ from an $S$ request and the number of observed series materially alter that comparison. Exact ordinary CV can require more spectral work than scalar GCV; no universal SVD--Cholesky winner follows from the asymptotic bounds.
+\paragraph{Relation to other smoothing approaches.}
+The framework belongs to the quadratic
+finite-difference family, alongside established
+Whittaker--Henderson graduation
+\citep{weinert2007,biessy2026}.
+Continuous smoothing splines and penalized B-splines
+regularize related, but different, representations
+\citep{reinsch1967,eilersmarx1996}, while
+$\ell_1$ trend filtering favors locally adaptive
+piecewise-polynomial trends
+\citep{kim2009,tibshirani2014}.
+The choice among these models depends on the expected
+signal structure and scientific objective.
+In particular, a computationally well-behaved
+quadratic trend extractor does not, by itself, resolve
+the interpretational concerns about
+Hodrick--Prescott economic cycles
+\citep{hamilton2018}.
 
-The same theory also identifies a risk frontier. Large penalties and higher difference orders can create ill-conditioned normal equations, even though the matrices remain SPD mathematically. A factorization that is computationally inexpensive but fails a numerical-validity requirement does not supply a usable statistical estimator. Numerical failures must be classified by their mechanism rather than interpreted as proof that Cholesky or spectral methods are universally unsuitable.
+\paragraph{Scope and next steps.}
+The proofs concern equally spaced observations,
+unweighted quadratic fidelity, a fixed $d$ and
+prescribed numeric $\mu$, and the exact identities
+underlying the corresponding Gaussian model.
+Joint estimation of $\mu$ changes the effective
+fixed-effect space and the appropriate
+leave-one-out and likelihood calculations;
+joint order selection changes the model
+family.  Neither these extensions nor
+future-horizon forecasting accuracy follow
+from the present retrospective scores.
+The reproducible third-order example illustrates
+how the theory is used, but is not a measured
+spectral-versus-banded benchmark.  A subsequent
+matched experiment can use the complete-workload
+definitions developed here to compare realized
+runtime, numerical error and failure rates
+under identical candidate grids and tolerances.
 
-This framework complements rather than replaces other
-approaches to trend estimation. Continuous smoothing
-splines and penalized B-splines use related quadratic
-regularization in different function spaces
-\citep{reinsch1967,eilersmarx1996}; locally adaptive
-$\ell_1$ trend filters instead favor knots and
-piecewise-polynomial structure
-\citep{kim2009,tibshirani2014}. In macroeconomic
-applications, the well-known interpretational cautions
-about extracting cycles with the Hodrick--Prescott
-filter \citep{hamilton2018} are not resolved by
-reparameterizing its quadratic objective. Our
-contribution concerns exact computation and
-smoothing-parameter selection under specified
-assumptions, not a universal claim about the
-truth of an extracted economic trend.
-
-Our principal scope restriction is a prescribed numeric $\mu$. The general nonzero-reference case is scientifically relevant and computationally accessible without changing the spectrum; jointly estimating $\mu$ and $\lambda$ is an extension that changes degrees of freedom and criterion definitions and deserves a separate inferential treatment. Similarly, jointly selecting the difference order $d$ and smoothness $S$, using ensembles, or assessing future forecast horizons requires validation objectives distinct from the retrospective trend-smoothing criteria derived here. For forecasting, such selection must respect temporal order and distinguish third-difference estimated jerk from independently observed physical jerk.
-
-This paper's claimed contributions are the
-specific \emph{normalization, explicit
-fixed-reference likelihood selection,
-spectral formulas, complete-criterion
-cost derivations, numerical checks and
-reproducible implementation} detailed in
-Section~\ref{sec:contributions}. Historical
-PLS, variance-ratio modeling, REML,
-SVD, Cholesky and selected inversion
-remain credited to their sources.
-The theoretical operation counts do
-not establish measured runtime superiority,
-and the illustrative fit does not
-establish physical forecasting accuracy.
+The primary contribution is therefore a coherent
+\emph{smoothness-indexed selection and computation
+framework}: it connects interpretable control,
+exact statistical criteria and numerical
+workload decisions without conflating their
+different assumptions or costs.

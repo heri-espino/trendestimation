@@ -1,4 +1,10 @@
-\section{Complete statistical criteria}\label{sec:criteria}
+\section{Statistical criteria for smoothing selection}\label{sec:criteria}
+The smoothness coordinate of Section~\ref{sec:smoothness}
+specifies a fit; selecting that coordinate requires an
+explicit statistical objective.  We first define the
+classical retrospective prediction and residual-based
+information scores, then the Gaussian likelihood implied
+by a separate stochastic model.
 The cost of \emph{selecting} a smoothing level is not the cost of one fit. For fixed numeric $\mu$ and finite $\lambda>0$, write $e_\lambda=y-\widehat\tau_{\lambda,\mu}$, $\RSS_\lambda=e_\lambda^\top e_\lambda$, $h_i=(H_\lambda)_{ii}$, and $\nu=\tr H_\lambda$. The exact classical leave-one-out and generalized cross-validation scores are
 \begin{equation}\label{eq:cvgcv}
 \begin{aligned}

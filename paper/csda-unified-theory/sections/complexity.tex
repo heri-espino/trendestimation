@@ -1,4 +1,4 @@
-\section{Amortized time and memory complexity}\label{sec:complexity}
+\subsection{Amortized time and memory complexity}\label{sec:complexity}
 Fix a length $n$, difference order $d$, an interior smoothness grid $\mathcal S=\{s_1,\ldots,s_M\}\subset(0,1)$, $R$ independent observed series of the same length, and a criterion set $\mathcal C$ with $c=|\mathcal C|$. Let $I$ be an upper bound on the scalar function evaluations used to invert each $s_j$ to the requested tolerance. This is a \emph{workload}, not merely one linear-system solve. Its total execution time decomposes conceptually as
 \begin{equation}\label{eq:costpartition}
 T_{\mathcal A}=T_{\rm prep}+T_{\rm map}
@@ -124,7 +124,7 @@ Subtract the affine functions to obtain $(a_s-a_b)-M(b_b-b_s)$ and inspect its s
 
 This proposition does not infer a numerical $M_\star$ from the preceding big-$O$ statements. In particular the $O(nr)$ spectral CV term can reverse a scalar-GCV comparison; repeated series lower effective setup cost per series; and $S\mapsto\lambda$ inversion may dominate an otherwise inexpensive one-fit banded approach.
 
-\subsection{Special structure and hybrid mapping}
+\subsubsection{Special structure and hybrid mapping}
 For first differences the penalty is the finite path-graph Laplacian. Its positive eigenvalues have the known analytic expression
 \begin{equation}\label{eq:d1spectrum}
 \delta_j=2-2\cos\left(\frac{\pi j}{n}\right),
