@@ -92,6 +92,10 @@ jobs:
             test -s "paper/els-cas-templates/$f"
             cp "paper/els-cas-templates/$f" "paper/csda-unified-theory/$f"
           done
+          # Author email footnotes use the official CAS thumbnail asset.
+          mkdir -p paper/csda-unified-theory/thumbnails
+          cp paper/els-cas-templates/thumbnails/*.jpeg paper/csda-unified-theory/thumbnails/
+          test -s paper/csda-unified-theory/thumbnails/cas-email.jpeg
           # Native CAS \ead author metadata requires bundled thumbnail icons.
           # Copy the originals from the checked-in official template bundle.
           mkdir -p paper/csda-unified-theory/thumbnails
@@ -113,6 +117,12 @@ jobs:
           test -s main.pdf
           test -s main.log
           pdfinfo main.pdf | head -20
+          pdffonts main.pdf > font_inventory.txt
+          cat font_inventory.txt
+          if ! grep -iq "STIX" font_inventory.txt; then
+            echo "CAS STIX fonts not embedded in final PDF"
+            exit 1
+          fi
           if grep -Eq "Citation .* undefined|There were undefined references" main.log; then
             echo "Unresolved references or citations in final PDF"
             exit 1
@@ -126,7 +136,7 @@ jobs:
             ../csda-computational-costs/references.bib \
             ../els-cas-templates/cas-dc.cls \
             ../els-cas-templates/cas-common.sty \
-            ../els-cas-templates/cas-model2-names.bst main.pdf main.log \
+            ../els-cas-templates/cas-model2-names.bst ../els-cas-templates/thumbnails/*.jpeg main.pdf main.log font_inventory.txt \
             > unified_source_sha256.txt
           git rev-parse HEAD > unified_source_commit.txt
       - name: Upload compiled paper, source and build provenance
@@ -141,6 +151,7 @@ jobs:
             paper/csda-unified-theory/algorithmic_references.bib
             paper/csda-unified-theory/COMPLEXITY_REFERENCE_LEDGER.md
             paper/csda-unified-theory/sections/
+            paper/csda-unified-theory/thumbnails/
             paper/csda-unified-theory/figures/
             paper/csda-unified-theory/README.md
             paper/csda-unified-theory/AGENTS.md
@@ -155,6 +166,7 @@ jobs:
             paper/csda-unified-theory/notes/CONTRIBUTION_PRIORITY_AUDIT_20261123.md
             paper/csda-unified-theory/main.pdf
             paper/csda-unified-theory/main.log
+            paper/csda-unified-theory/font_inventory.txt
             paper/csda-unified-theory/unified_source_sha256.txt
             paper/csda-unified-theory/unified_source_commit.txt
           if-no-files-found: warn
