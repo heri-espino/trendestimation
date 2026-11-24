@@ -14,13 +14,13 @@ $A_\lambda=I+\lambda Q_d$, and
 $H_\lambda=A_\lambda^{-1}$.
 The normal equations are obtained by differentiating
 the two squared norms in \eqref{eq:pls}:
-\[
+\begin{equation}\label{eq:pls-objective-gradients}
 \begin{aligned}
 \nabla_\tau\|y-\tau\|^2&=2(\tau-y),\\
 \nabla_\tau\|D_d\tau-\mu\mathbf1_r\|^2
 &=2D_d^\top(D_d\tau-\mu\mathbf1_r).
 \end{aligned}
-\]
+\end{equation}
 Setting the sum of the first gradient and
 $\lambda$ times the second gradient to zero,
 then collecting the terms containing $\tau$,

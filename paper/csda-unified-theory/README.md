@@ -1,5 +1,25 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+**Final font compatibility decision (2026-11-24):** The current CAS v2.4 class provides an official STIX-only text/math path if the legacy `charis.sty` style is absent. Both Charis style files (`charis.sty`, `charissil.sty`) proved unavailable in the tested Ubuntu TeX package set; the build now requires `stix.sty` and uses CAS's own STIX text/math rather than Computer Modern or a custom font override. This supersedes earlier notes about explicitly loading Charis.\n\n
+## November 24, 2026: official fonts, author IDs and display numbering
+
+Source-only manuscript edits identify Heriberto Espino-Montelongo as
+**corresponding author**, with ORCID and email, and give Daniela
+Cortés-Toto's complete departmental affiliation, ORCID and email.
+The earlier PDF used Computer Modern fallback rather than the full
+CAS preference for Charis text/STIX math; the dedicated workflow now
+installs and checks the fonts before recompilation. Fourteen unnumbered
+display expressions are now numbered with the `equation` environment.
+Two boxed expressions and the Python listing frame were removed.
+Inline mathematics remains inline. A new regression test guards these
+requirements while preserving proofs and numerical experiments.
+
+See [notes/AUTHORS_TYPOGRAPHY_EQUATIONS_20261124.md](notes/AUTHORS_TYPOGRAPHY_EQUATIONS_20261124.md)
+for verification, author-provided metadata and remaining PDF QA. A
+new PR requires separate approval before merging; no journal submission
+is implied.
+
+
 ## November 23, 2026: VS Code Light+ code, hard margins and author disclosures
 
 The canonical CSDA source now uses a syntax-colored, bounded Python listing

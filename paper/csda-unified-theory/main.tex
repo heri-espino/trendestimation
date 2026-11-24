@@ -8,6 +8,9 @@
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
 \usepackage{xcolor,listings}
 \usepackage[expansion=false]{microtype}
+% CAS v2.4 natively selects STIX for both text and mathematics when
+% stix.sty exists but its older optional Charis style is unavailable.
+% The dedicated CI requires stix.sty to prevent fallback to CMR.
 % VS Code Light+ inspired Python syntax: publication-safe, no shell-escape.
 \definecolor{codeBlue}{HTML}{0000FF}
 \definecolor{codeRed}{HTML}{A31515}
@@ -24,10 +27,8 @@
  emph={TrendSmoother,select_lambda,linspace,len,fit},
  emphstyle=\color{codePurple},
  backgroundcolor=\color{white},
- frame=single,
- rulecolor=\color{codeEdge},
- framerule=0.35pt,
- framesep=4pt,
+ frame=none,
+ framesep=0pt,
  xleftmargin=0pt,
  xrightmargin=0pt,
  linewidth=\linewidth,
@@ -72,11 +73,21 @@
 \shorttitle{Algorithms for smoothness-indexed penalized least squares}
 \shortauthors{Espino-Montelongo and Cort\'es-Toto}
 \title[mode=title]{Spectral and structured algorithms for smoothness-indexed penalized least-squares trend estimation}
-% Provisional author ordering, affiliations, declarations: coauthor review required.
-\author[1]{Heriberto Espino-Montelongo}
-\author[1]{Daniela Cort\'es-Toto}
+% Author identities, ORCID identifiers and corresponding-author status supplied
+% directly by the corresponding author (2026-11-24).
+\author[1]{Heriberto Espino-Montelongo}[orcid=0009-0009-1230-2931]
+\cormark[1]
+\ead{heriberto.espinomo@udlap.mx}
+\author[2]{Daniela Cort\'es-Toto}[orcid=0000-0003-0893-6455]
+\ead{daniela.cortes@udlap.mx}
 \affiliation[1]{organization={Universidad de las Am\'ericas Puebla},
- city={San Andr\'es Cholula},state={Puebla},country={Mexico}}
+ city={San Andr\'es Cholula},state={Puebla},postcode={72810},
+ country={Mexico}}
+\affiliation[2]{organization={Departamento de Actuar\'ia, F\'isica y Matem\'aticas},
+ addressline={Universidad de las Am\'ericas Puebla},
+ city={San Andr\'es Cholula},state={Puebla},postcode={72810},
+ country={Mexico}}
+\cortext[cor1]{Corresponding author}
 \begin{abstract}
 Finite-difference penalized least squares (PLS) offers a transparent
 trade-off between data fidelity and trend regularity, but practical

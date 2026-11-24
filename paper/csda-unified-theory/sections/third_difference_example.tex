@@ -9,7 +9,7 @@ its Gram matrix is symmetric and positive semidefinite:
 \begingroup
 \small
 \setlength{\arraycolsep}{3.5pt}
-\[
+\begin{equation}\label{eq:third-order-matrices}
 \underbrace{D_3}_{3\times 6}=
 \begin{pmatrix}
 -1&3&-3&1&0&0\\
@@ -26,7 +26,7 @@ its Gram matrix is symmetric and positive semidefinite:
 0&-1&6&-12&10&-3\\
 0&0&-1&3&-3&1
 \end{pmatrix}.
-\]
+\end{equation}
 \endgroup
 \caption{Exact third-order finite-difference operator and its Gram
 matrix for six equally spaced observations. For general $n$,
@@ -36,10 +36,10 @@ $n-3$ and a three-dimensional polynomial nullspace.}
 \label{fig:d3-matrices}
 \end{figure*}
 The associated penalized normal matrix and smoother are
-\[
+\begin{equation}\label{eq:third-order-normal-matrix}
 A_\lambda=I_6+\lambda Q_3,\qquad
 H_\lambda=A_\lambda^{-1}.
-\]
+\end{equation}
 Although $Q_3$ is singular (rank three), $A_\lambda$
 is positive definite for every finite $\lambda\geq0$:
 $v^\top A_\lambda v=\|v\|^2+\lambda\|D_3v\|^2>0$
@@ -48,9 +48,9 @@ This makes banded Cholesky a natural, inexpensive choice for
 \emph{one} specified penalty, without explicitly computing
 $H_\lambda$. In contrast $H_\lambda$ is generally dense:
 for this exact example at $\lambda=1$,
-\[
+\begin{equation}\label{eq:third-order-distant-leverage}
 (H_1)_{1,6}=\frac{11}{195}\neq0,
-\]
+\end{equation}
 although $(Q_3)_{1,6}=0$. The reduced SVD instead
 factorizes the smaller $3\times6$ matrix $D_3$ once
 to obtain its positive singular spectrum and reusable
