@@ -40,7 +40,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: csda-unified-theory-build-${{ github.ref }}
+  group: csda-unified-theory-charis-stix-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
