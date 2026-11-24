@@ -51,10 +51,11 @@ jobs:
             if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) { throw "Missing installed tool: $cmd" }
           }
           & $python --version
-          & pdflatex --version | Select-Object -First 3
-          if ($LASTEXITCODE -ne 0) { throw 'pdflatex preflight failed' }
-          & bibtex --version | Select-Object -First 2
-          if ($LASTEXITCODE -ne 0) { throw 'bibtex preflight failed' }
+          # Avoid piping TeX version output into Select-Object -First:
+          # it closes the native process pipe early on Windows and
+          # incorrectly yields a nonzero LASTEXITCODE.
+          Write-Host "pdflatex: $((Get-Command pdflatex).Source)"
+          Write-Host "bibtex: $((Get-Command bibtex).Source)"
 
       - name: Verify exact mathematical and editorial source (no experiments)
         run: |
