@@ -83,7 +83,7 @@ class ManuscriptArchitectureTests(unittest.TestCase):
         self.assertIn(r"\label{app:likelihood-proofs}", proofs)
         self.assertIn(r"\begin{proof}[Proof of Theorem", proofs)
         self.assertIn(r"\begin{proof}[Proof of Proposition", proofs)
-        self.assertEqual(proofs.count(r"\begin{proof}"), 0)
+        self.assertEqual(proofs.count(r"\begin{proof}["), 2)
         self.assertEqual(proofs.count(r"\end{proof}"), 2)
         self.assertIn(r"\label{eq:logdet-spectral-proof}", proofs)
         self.assertIn(r"\label{eq:reml-profile-step}", proofs)
