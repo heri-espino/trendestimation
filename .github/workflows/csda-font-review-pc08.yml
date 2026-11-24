@@ -1,0 +1,132 @@
+name: CSDA author-metadata/font TeX smoke — PC08
+
+# Scope: source-only CSDA manuscript validation. Do not run experiments,
+# install packages, alter other papers, merge or submit to a journal.
+on:
+  push:
+    branches:
+      - editorial/csda-authors-font-equations-20261124
+    paths:
+      - .github/workflows/csda-font-review-pc08.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manuscript-compile-pc08
+  cancel-in-progress: false
+
+jobs:
+  cas-pc08-smoke:
+    name: Source-matched CSDA TeX smoke on designated Windows PC08
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: powershell
+    env:
+      CONDA_ENV_DIR: 'C:\Users\175199\AppData\Local\miniconda3\envs\trendestimation'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - name: Check out exact editorial branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Require designated runner and existing tools
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "Host: $env:RUNNER_NAME; SHA: $env:GITHUB_SHA"
+          if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Not the authorized Windows research runner' }
+          if ($env:GITHUB_REF_NAME -ne 'editorial/csda-authors-font-equations-20261124') { throw 'Incorrect source branch' }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
+          $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+          if (-not (Test-Path -LiteralPath $python)) { throw "Missing existing Conda Python $python" }
+          foreach ($cmd in @('latexmk','pdflatex','bibtex')) {
+            if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) { throw "Missing installed tool: $cmd" }
+          }
+          & $python --version
+          latexmk -v | Select-Object -First 3
+          if ($LASTEXITCODE -ne 0) { throw 'TeX toolchain preflight failed' }
+
+      - name: Verify exact mathematical and editorial source (no experiments)
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+          & $python paper/csda-unified-theory/verify_theory.py
+          if ($LASTEXITCODE -ne 0) { throw 'Mathematical source verification failed' }
+          & $python paper/csda-computational-costs/verify_theory.py
+          if ($LASTEXITCODE -ne 0) { throw 'Computational-cost source verification failed' }
+          & $python -m unittest discover -s paper/csda-unified-theory/tests -p 'test_*.py' -v
+          if ($LASTEXITCODE -ne 0) { throw 'Editorial/theory unit tests failed' }
+
+      - name: Compile manuscript with bundled Elsevier CAS and author icons
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $paper = 'paper/csda-unified-theory'
+          foreach ($f in @('cas-dc.cls', 'cas-common.sty', 'cas-model2-names.bst')) {
+            Copy-Item -LiteralPath "paper/els-cas-templates/$f" -Destination "$paper/$f" -Force
+          }
+          New-Item -ItemType Directory -Path "$paper/thumbnails" -Force | Out-Null
+          Copy-Item -Path "paper/els-cas-templates/thumbnails/*.jpeg" -Destination "$paper/thumbnails/" -Force
+          if (-not (Test-Path "$paper/thumbnails/cas-email.jpeg")) { throw 'Missing official CAS author email icon' }
+          Push-Location $paper
+          try {
+            & latexmk -pdf -interaction=nonstopmode -file-line-error -halt-on-error main.tex
+            if ($LASTEXITCODE -ne 0) { throw 'Elsevier CAS LaTeX compilation failed' }
+            $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
+            & $python verify_layout.py main.log
+            if ($LASTEXITCODE -ne 0) { throw 'Strict two-column margin check failed' }
+            if (-not (Test-Path 'main.pdf')) { throw 'No compiled PDF' }
+            if (Get-Command pdffonts -ErrorAction SilentlyContinue) {
+              & pdffonts main.pdf | Out-File font_inventory_pc08.txt -Encoding utf8
+              Get-Content font_inventory_pc08.txt
+            }
+            $files = @('main.tex','main.pdf','main.log','sections/declarations.tex')
+            foreach ($f in $files) {
+              $hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $f).Hash
+              "$hash  $f" | Out-File -FilePath pc08_source_hashes.txt -Append -Encoding ascii
+            }
+            "source_git_sha=$env:GITHUB_SHA" | Out-File -FilePath pc08_source_hashes.txt -Append -Encoding ascii
+          } finally {
+            Pop-Location
+          }
+
+      - name: Upload TeX-only review artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csda-author-fonts-pc08-${{ github.run_id }}
+          path: |
+            paper/csda-unified-theory/main.pdf
+            paper/csda-unified-theory/main.log
+            paper/csda-unified-theory/main.tex
+            paper/csda-unified-theory/sections/declarations.tex
+            paper/csda-unified-theory/font_inventory_pc08.txt
+            paper/csda-unified-theory/pc08_source_hashes.txt
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Archive verified PDF and hashes in an isolated results branch
+        if: success()
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $branch = "results/csda-fonts-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create results branch' }
+          git add -f paper/csda-unified-theory/main.pdf paper/csda-unified-theory/main.log paper/csda-unified-theory/pc08_source_hashes.txt
+          if (Test-Path paper/csda-unified-theory/font_inventory_pc08.txt) {
+            git add -f paper/csda-unified-theory/font_inventory_pc08.txt
+          }
+          git commit -m "paper(csda): archive Windows source-matched font and author PDF"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not commit verified PDF' }
+          git push origin "HEAD:refs/heads/$branch"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not publish separate results branch' }
+          Write-Host "Archived source-specific result: $branch"
