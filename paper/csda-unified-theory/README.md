@@ -1,5 +1,28 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 24, 2026 — unified scientific narrative
+
+The paper now develops one scientific argument across **seven sections**:
+problem and three central contributions; finite-difference PLS,
+reusable shift-free SVD and normalized smoothness; statistical
+criteria and Gaussian selection; spectral and structured methods;
+complete workloads plus numerical admissibility; the third-order
+matrix and synthetic Python example; and discussion. Long-form
+Gaussian proofs and detailed historical algorithm provenance
+remain in appendices. This is an editorial architecture
+revision, **not** a change to the estimator, proofs, all 64
+numbered equations, experiments, figures, author metadata or
+journal disclosures. The earlier excessively long historical
+opening, duplicated roadmap and mid-algorithm historical detour
+have been consolidated.
+
+Full change map and reproduction:
+[notes/NARRATIVE_ARCHITECTURE_20261124.md](notes/NARRATIVE_ARCHITECTURE_20261124.md).
+The dedicated CI plus a visual source-matched PDF audit are
+required before approving the new PR. No merger or journal
+submission is implied.
+
+
 **Final font compatibility decision (2026-11-24):** The current CAS v2.4 class provides an official STIX-only text/math path if the legacy `charis.sty` style is absent. Both Charis style files (`charis.sty`, `charissil.sty`) proved unavailable in the tested Ubuntu TeX package set; the build now requires `stix.sty` and uses CAS's own STIX text/math rather than Computer Modern or a custom font override. This supersedes earlier notes about explicitly loading Charis.\n\n
 ## November 24, 2026: official fonts, author IDs and display numbering
 
