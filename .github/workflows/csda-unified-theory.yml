@@ -84,9 +84,9 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra texlive-pictures lmodern latexmk poppler-utils
-          # CAS v2.4 uses Charis text and STIX mathematics when both exist;
-          # this prevents its Computer Modern fallback used in the prior PDF.
-          kpsewhich charis.sty
+          # CAS v2.4 expects Charis text and STIX mathematics; Charis SIL is
+          # supplied via charissil.sty because legacy charis.sty is absent.
+          kpsewhich charissil.sty
           kpsewhich stix.sty
           kpsewhich inconsolata.sty
           for f in cas-dc.cls cas-common.sty cas-model2-names.bst; do
