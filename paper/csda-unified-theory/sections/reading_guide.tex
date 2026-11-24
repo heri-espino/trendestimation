@@ -1,54 +1,25 @@
-\section{Notation and roadmap of the derivations}
-\label{sec:guide}
-The same trend estimator can be described in three
-mathematically equivalent ways. We use these descriptions
-for different purposes rather than treating them as
-different statistical models.
+\paragraph{Notation and assumptions.}
+Write $n$ for the number of equally spaced observations,
+$d\in\{1,\ldots,n-1\}$ for the difference order,
+and $r=n-d$ for the penalized rank.  The observed
+series is $y$, its fitted trend is $\widehat\tau$,
+the prescribed order-$d$ reference is $\mu$,
+and $\lambda\geq0$ is the quadratic penalty
+weight.  We distinguish the difference operator
+$D_d$, its Gram penalty $Q_d=D_d^\top D_d$,
+the normal matrix $A_\lambda=I+\lambda Q_d$,
+and the smoother $H_\lambda=A_\lambda^{-1}$.
+The matrix $A_\lambda$ is banded while
+$H_\lambda$ is generally dense.
 
-\begin{description}[leftmargin=1.3em,style=nextline,itemsep=2pt]
-\item[$D_d$ (differences):]
-The $(n-d)\times n$ matrix that converts an
-$n$-point trend into its order-$d$ forward
-differences. The integer $d$ is the
-\emph{difference order} and $r=n-d$ is
-the number of penalized directions.
-\item[$Q_d=D_d^\top D_d$ (penalty):]
-The symmetric $n\times n$ matrix measuring
-the quadratic roughness $\|D_d\tau\|^2$.
-Its $d$ zero eigenvalues correspond to
-unpenalized polynomials.
-\item[$A_\lambda=I+\lambda Q_d$ (normal matrix):]
-The symmetric positive-definite matrix in
-the linear system defining the PLS solution
-for a \emph{given} penalty $\lambda$.
-\item[$H_\lambda=A_\lambda^{-1}$ (smoother):]
-The linear part of the map from observations
-to fitted trend when the difference reference
-$\mu$ is fixed; it is generally dense even
-though $A_\lambda$ is banded.
-\item[$U,\Sigma,V$ (SVD of $D_d$):]
-A factorization of the \emph{fixed}
-difference operator, with positive singular
-values $\sigma_j$. The corresponding
-penalty eigenvalues are $\delta_j=\sigma_j^2$.
-The same basis is reusable for all $\lambda$.
-\item[$S$ (normalized smoothness) and $\nu$ (degrees of freedom):]
-$\nu=\tr(H_\lambda)$ measures the
-smoother's effective flexibility,
-while $S=(n-\nu)/(n-d)$ rescales the
-loss of flexibility to the interval $[0,1]$.
-\end{description}
-
-Our logic is: formulate the PLS objective;
-derive its linear system; diagonalize the
-\emph{difference operator}; characterize
-the smoothness coordinate; calculate
-cross-validation or likelihood criteria;
-then compare the cost of doing this for
-many smoothing candidates. In particular,
-a \emph{likelihood} introduces a stochastic
-model that the deterministic PLS equations
-alone do not imply. Except where stated
-otherwise, the reference $\mu$ is a
-\emph{prescribed number} rather than a
-data-estimated parameter.
+For the positive singular values $\sigma_j$ of
+$D_d$, write $\delta_j=\sigma_j^2$;
+$\nu_d(\lambda)=\tr(H_\lambda)$ is the effective
+degrees of freedom and
+$S_d(\lambda)=(n-\nu_d(\lambda))/r$
+is the normalized trace reduction.  We first
+derive the deterministic estimator, then interpret
+the selected penalty under explicitly stated
+stochastic assumptions.  Unless specified otherwise,
+$\mu$ is a fixed numeric reference rather than
+an estimate computed from the observed series.
