@@ -86,77 +86,9 @@ smoothing-parameter likelihood
 \citep{patterson1971,wahba1985,wood2011,biessy2026}.
 \end{theorem}
 
-\begin{proof}
-First use $D_dW=0$, $D_dp_\mu=\mu\mathbf1_r$,
-$D_dV=U\Sigma$, and \eqref{eq:likelihood-decomposition}:
-\begin{equation}\label{eq:likelihood-difference-innovation}
-D_d\tau-\mu\mathbf1_r=U\Sigma\theta.
-\end{equation}
-Because $U$ is orthogonal and
-$\operatorname{Var}(\theta)=
-\sigma_u^2\Sigma^{-2}$, the covariance of
-$U\Sigma\theta$ is $\sigma_u^2I_r$.
-This establishes the difference-innovation interpretation.
+The contrast decomposition and profiling argument are proved
+in Appendix~\ref{app:likelihood-proofs}.
 
-Next multiply the observation equation by $V^\top$.
-Since $V^\top W=0$ and $V^\top V=I_r$,
-\begin{equation}\label{eq:contrast-observation-projection}
-z=\theta+V^\top\varepsilon.
-\end{equation}
-Orthogonal projection of isotropic Gaussian
-noise gives $V^\top\varepsilon\sim
-N_r(0,\sigma_\varepsilon^2I_r)$.
-The two summands are independent, so
-\begin{equation}\label{eq:contrast-covariance-step}
-\operatorname{Var}(z)=
-\sigma_u^2\Sigma^{-2}
-+\sigma_\varepsilon^2I_r
-=\sigma_\varepsilon^2
-\operatorname{diag}(c_1,\ldots,c_r).
-\end{equation}
-Consequently the $z_j$ are independent
-Gaussian contrasts. The normalized negative
-twice log likelihood is
-\begin{equation}\label{eq:reml-logdensity}
-\begin{aligned}
--2\ell_R={}&
-r\log(2\pi\sigma_\varepsilon^2)
-+\sum_{j=1}^r\log c_j\\
-&+\frac1{\sigma_\varepsilon^2}
-\sum_{j=1}^r\frac{z_j^2}{c_j}.
-\end{aligned}
-\end{equation}
-Let $J_\lambda=\sum_jz_j^2/c_j$.
-For fixed $\lambda$, differentiating
-$r\log\sigma_\varepsilon^2+
-J_\lambda/\sigma_\varepsilon^2$
-with respect to $\sigma_\varepsilon^2$
-gives $r/\sigma_\varepsilon^2
--J_\lambda/(\sigma_\varepsilon^2)^2=0$.
-Since $z\ne0$, $J_\lambda>0$, and the
-minimizer is
-\begin{equation}\label{eq:reml-profile-step}
-\widehat{\sigma}_\varepsilon^2(\lambda)
-=\frac{J_\lambda}{r}.
-\end{equation}
-Substitution into \eqref{eq:reml-logdensity}
-gives \eqref{eq:ml} plus
-$r[1+\log(2\pi)]$, which does not depend on
-$\lambda$.
-
-Finally, $z$ is a full-rank orthonormal set
-of contrasts orthogonal to the fixed-effect
-design matrix $W$. The remaining coordinates
-$W^\top(y-p_\mu)$ contain $\beta$ and are
-discarded by restricted likelihood. Equivalently,
-integrating the joint Gaussian density over
-the unknown $\beta$ with respect to Lebesgue
-measure removes those $d$ coordinates.
-The resulting density is proportional to the
-density of $z$, with a factor independent
-of $\lambda$. This is the REML construction
-for the stated model.
-\end{proof}
 
 \paragraph{Selecting the historical variance ratio.}
 The PLS weight has the variance-component meaning
@@ -263,54 +195,9 @@ can be computed using structured Cholesky
 factorizations, without forming a dense
 inverse or using an SVD at every candidate.
 \end{proposition}
-\begin{proof}
-Write $\tau=p_\mu+Wb+Vt$ with
-$t\in\R^r$. Orthogonality separates
-the PLS objective into
-\begin{equation}\label{eq:orthogonal-objective}
-\|W^\top(y-p_\mu)-b\|^2+
-\sum_{j=1}^r\left[
-(z_j-t_j)^2+\lambda\delta_jt_j^2\right].
-\end{equation}
-The first term is minimized by
-$b=W^\top(y-p_\mu)$ and contributes
-zero. For the $j$th remaining term,
-differentiation gives
-\begin{equation}\label{eq:orthogonal-first-order-condition}
--2(z_j-t_j)+2\lambda\delta_jt_j=0,
-\quad
-\widehat t_j=\frac{z_j}{1+\lambda\delta_j}.
-\end{equation}
-The corresponding \emph{minimized}
-quadratic is
-\begin{equation}\label{eq:orthogonal-minimum}
-(z_j-\widehat t_j)^2+
-\lambda\delta_j\widehat t_j^2
-=\frac{\lambda\delta_j}{1+\lambda\delta_j}
-z_j^2=\frac{z_j^2}{c_j}.
-\end{equation}
-Summing proves \eqref{eq:quadraticidentity}.
-Furthermore, $B_d=U\Sigma^2U^\top$
-has $r$ positive eigenvalues $\delta_j$,
-whereas $A_\lambda$ has those
-$r$ eigenvalues transformed into
-$1+\lambda\delta_j$ plus $d$ unit
-eigenvalues. Hence
-\begin{equation}\label{eq:logdet-spectral-proof}
-\begin{aligned}
-&\log\det A_\lambda-r\log\lambda-\log\det B_d\\
-&=\sum_{j=1}^r\log\!\left(
-\frac{1+\lambda\delta_j}{\lambda\delta_j}
-\right)
-=\sum_{j=1}^r\log c_j,
-\end{aligned}
-\end{equation}
-proving \eqref{eq:detidentity}.
-Both $A_\lambda$ and $B_d$ are SPD
-and banded, so their log determinants
-follow from the log diagonals of
-their banded Cholesky factors.
-\end{proof}
+The orthogonal quadratic minimization and log-determinant
+argument are given in Appendix~\ref{app:likelihood-proofs}.
+
 
 \paragraph{Precisely what is prior art?}
 The contrast/restricted-likelihood principle
