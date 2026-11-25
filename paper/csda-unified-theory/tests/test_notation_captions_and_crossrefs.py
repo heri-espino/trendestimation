@@ -66,11 +66,12 @@ class CaptionAndNotationTests(unittest.TestCase):
         algorithms = self.contents["algorithms.tex"]
         provenance = self.contents["algorithm_provenance.tex"]
         policy = self.contents["policy.tex"]
+        self.assertIn(r"\newcommand{\CSDAlocalcaptionstyle}", self.main)
         self.assertIn(r"\begin{figure*}", example)
         self.assertIn(r"\caption{Reduced singular-value decomposition", example)
-        self.assertIn(r"{\sffamily\footnotesize", software)
-        self.assertIn(r"{\sffamily\footnotesize \caption{", algorithms)
-        self.assertIn(r"{\sffamily\footnotesize \caption{", provenance)
+        self.assertIn(r"{\CSDAlocalcaptionstyle", software)
+        self.assertIn(r"{\CSDAlocalcaptionstyle \caption{", algorithms)
+        self.assertIn(r"{\CSDAlocalcaptionstyle \caption{", provenance)
         self.assertIn(r"\begin{table*}", policy)
         # The CAS figure*/table* environments apply \sffamily\small;
         # Helvetica is the common scalable sans family for all captions.
