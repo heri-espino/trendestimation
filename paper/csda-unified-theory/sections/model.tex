@@ -6,12 +6,17 @@ For equally spaced data $y\in\R^n$, let $1\le d<n$ and $r=n-d$. Define $D_d\in\R
 At a fixed reference level $\mu\in\R$ of the $d$th differences, estimate
 \begin{equation}\label{eq:pls}
 \widehat\tau_{\lambda,\mu}=
-\arg\min_{\tau\in\R^n}\{
+\operatorname*{arg\,min}_{\tau\in\R^n}\{
 \|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf1_r\|_2^2\}.
 \end{equation}
-Set $Q_d=D_d^\top D_d$,
-$A_\lambda=I+\lambda Q_d$, and
-$H_\lambda=A_\lambda^{-1}$.
+Define the linear smoothing operator
+$H_\lambda=(I+\lambda D_d^\top D_d)^{-1}$.
+For the associated normal equations, write
+$Q_d=D_d^\top D_d$ and
+$A_\lambda=I+\lambda Q_d$;
+thus $H_\lambda=A_\lambda^{-1}$.
+For fixed $\mu$, the complete estimator is affine
+in $y$, with $H_\lambda$ as its linear part.
 The normal equations are obtained by differentiating
 the two squared norms in \eqref{eq:pls}:
 \begin{equation}\label{eq:pls-objective-gradients}
@@ -79,8 +84,8 @@ approximations, we retain the complete positive
 spectrum; Section~\ref{sec:algorithms} examines the
 algebraic equivalence and conditioning distinction.
 
-Define $\delta_j=\sigma_j^2$ and
-$w_j(\lambda)=\lambda\delta_j/(1+\lambda\delta_j)$.
+Define $\rho_j=\sigma_j^2$ and
+$w_j(\lambda)=\lambda\rho_j/(1+\lambda\rho_j)$.
 The inverse smoother follows \emph{algebraically} from this
 single factorization:
 \begin{equation}\label{eq:svd-generated-smoother}
