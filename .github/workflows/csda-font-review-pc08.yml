@@ -1,4 +1,4 @@
-name: CSDA author-metadata/font TeX smoke — PC08
+name: CSDA numerical SVD and typography verification — PC08
 
 # Scope: source-only CSDA manuscript validation. Do not run experiments,
 # install packages, alter other papers, merge or submit to a journal.
@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - editorial/csda-authors-font-equations-20261124
+      - editorial/csda-svd-numerical-typography-20261125
     paths:
       - .github/workflows/csda-font-review-pc08.yml
   workflow_dispatch:
@@ -43,8 +44,9 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           Write-Host "Host: $env:RUNNER_NAME; SHA: $env:GITHUB_SHA"
+          Write-Host 'Validating source-matched CSDA numerical SVD + typography without any benchmark reruns.'
           if ($env:RUNNER_NAME -ne 'PCAG103A-08') { throw 'Not the authorized Windows research runner' }
-          if ($env:GITHUB_REF_NAME -ne 'editorial/csda-authors-font-equations-20261124') { throw 'Incorrect source branch' }
+          if ($env:GITHUB_REF_NAME -notin @('editorial/csda-authors-font-equations-20261124','editorial/csda-svd-numerical-typography-20261125')) { throw 'Incorrect source branch' }
           if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'Source SHA mismatch' }
           $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
           if (-not (Test-Path -LiteralPath $python)) { throw "Missing existing Conda Python $python" }
@@ -60,7 +62,7 @@ jobs:
           Write-Host "pdflatex: $((Get-Command pdflatex).Source)"
           Write-Host "bibtex: $((Get-Command bibtex).Source)"
 
-      - name: Verify exact mathematical and editorial source (no experiments)
+      - name: Verify exact numerical SVD, theory and editorial source (no experiments)
         run: |
           $ErrorActionPreference = 'Stop'
           $python = Join-Path $env:CONDA_ENV_DIR 'python.exe'
@@ -101,7 +103,7 @@ jobs:
               & pdffonts main.pdf | Out-File font_inventory_pc08.txt -Encoding utf8
               Get-Content font_inventory_pc08.txt
             }
-            $files = @('main.tex','main.pdf','main.log','sections/declarations.tex')
+            $files = @('main.tex','main.pdf','main.log','sections/declarations.tex','sections/third_difference_example.tex','sections/model.tex','sections/reading_guide.tex','tests/test_d3_numeric_svd.py','notes/SVD_NUMERICAL_TYPOGRAPHY_AUDIT_20261125.md')
             foreach ($f in $files) {
               $hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $f).Hash
               "$hash  $f" | Out-File -FilePath pc08_source_hashes.txt -Append -Encoding ascii
@@ -111,16 +113,21 @@ jobs:
             Pop-Location
           }
 
-      - name: Upload TeX-only review artifact
+      - name: Upload source-matched TeX review artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: csda-author-fonts-pc08-${{ github.run_id }}
+          name: csda-numeric-svd-pc08-${{ github.run_id }}
           path: |
             paper/csda-unified-theory/main.pdf
             paper/csda-unified-theory/main.log
             paper/csda-unified-theory/main.tex
             paper/csda-unified-theory/sections/declarations.tex
+            paper/csda-unified-theory/sections/third_difference_example.tex
+            paper/csda-unified-theory/sections/model.tex
+            paper/csda-unified-theory/sections/reading_guide.tex
+            paper/csda-unified-theory/tests/test_d3_numeric_svd.py
+            paper/csda-unified-theory/notes/SVD_NUMERICAL_TYPOGRAPHY_AUDIT_20261125.md
             paper/csda-unified-theory/font_inventory_pc08.txt
             paper/csda-unified-theory/pc08_source_hashes.txt
           if-no-files-found: warn
@@ -130,7 +137,7 @@ jobs:
         if: success()
         run: |
           $ErrorActionPreference = 'Stop'
-          $branch = "results/csda-fonts-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
+          $branch = "results/csda-svd-pc08-$env:GITHUB_RUN_ID-a$env:GITHUB_RUN_ATTEMPT"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -c $branch
@@ -139,7 +146,7 @@ jobs:
           if (Test-Path paper/csda-unified-theory/font_inventory_pc08.txt) {
             git add -f paper/csda-unified-theory/font_inventory_pc08.txt
           }
-          git commit -m "paper(csda): archive Windows source-matched font and author PDF"
+          git commit -m "paper(csda): archive Windows SVD and typography PDF"
           if ($LASTEXITCODE -ne 0) { throw 'Could not commit verified PDF' }
           git push origin "HEAD:refs/heads/$branch"
           if ($LASTEXITCODE -ne 0) { throw 'Could not publish separate results branch' }

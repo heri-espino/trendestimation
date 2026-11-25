@@ -1,5 +1,26 @@
 # Unified CSDA theoretical manuscript: Paper A + Paper B
 
+## November 25, 2026 — numerical SVD, symbols, captions and references
+
+The six-point example now computes the complete reduced SVD of
+the original third-difference matrix and displays the exact
+$H_1$ and a nonzero-$\mu$ affine reconstruction. Numeric
+regression tests independently verify direct/spectral
+equivalence. The manuscript consistently denotes
+backward differences by $\nabla$ and positive penalty
+eigenvalues by $\rho_j=\sigma_j^2$, uses
+\texttt{mathds} for the real numbers, and defines
+$H_\lambda$ before the normal matrix $A_\lambda$.
+The CAS caption styles are made consistent using
+scalable sans-serif fonts; all five figures and tables
+have narrative citations.
+
+See [the detailed source and numeric audit](notes/SVD_NUMERICAL_TYPOGRAPHY_AUDIT_20261125.md)
+and the dedicated tests. No existing scientific result
+or empirical experiment was changed; the next step is
+the source-matched PDF build and typographical review.
+
+
 ## November 24, 2026 — unified scientific narrative
 
 The paper now develops one scientific argument across **seven sections**:

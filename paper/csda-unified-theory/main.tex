@@ -7,7 +7,24 @@
 \usepackage{graphicx,booktabs,tabularx,enumitem,url,capt-of}
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
 \usepackage{xcolor,listings}
+% Journal-compatible, scalable caption type and double-stroke real-number symbol.
+\usepackage[scaled=0.95]{helvet}
+\usepackage{dsfont}
 \usepackage[expansion=false]{microtype}
+% Match CAS's native small, bold-label Helvetica captions also in the
+% rotating-package table floats and the in-column captionof figure.
+% A local group surrounds each use, preserving the original CAS caption
+% formatter for native figure*/table* floats.
+\makeatletter
+\newcommand{\CSDAlocalcaptionstyle}{%
+  \long\def\@makecaption##1##2{%
+    \par\smallskip\noindent
+    {\sffamily\small\bfseries ##1:}~{\sffamily\small ##2}%
+    \par\smallskip
+  }%
+}
+\makeatother
+
 % CAS v2.4 natively selects STIX for both text and mathematics when
 % stix.sty exists but its older optional Charis style is unavailable.
 % The dedicated CI requires stix.sty to prevent fallback to CMR.
@@ -52,7 +69,7 @@
 \pretolerance=150
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
-\newcommand{\R}{\mathbb R}
+\newcommand{\R}{\mathds{R}}
 \newcommand{\tr}{\operatorname{tr}}
 \newcommand{\diag}{\operatorname{diag}}
 \newcommand{\RSS}{\operatorname{RSS}}

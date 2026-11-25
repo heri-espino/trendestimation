@@ -19,7 +19,7 @@ Whittaker--Henderson smoothing is derived by
 
 Let $D_d=U\Sigma V^\top$ be the reduced SVD from
 \eqref{eq:svd-target}, with $r=n-d$,
-$\delta_j=\sigma_j^2>0$, and let
+$\rho_j=\sigma_j^2>0$, and let
 $W\in\R^{n\times d}$ have orthonormal columns
 spanning $\ker(D_d)$. Thus $W^\top V=0$,
 $V^\top V=I_r$, and the columns of $[W,V]$
@@ -65,7 +65,7 @@ eliminate $\beta$ and have independent coordinates
 \begin{equation}\label{eq:contrast-variance}
 z_j\sim N\left(0,\sigma_\varepsilon^2
 c_j(\lambda)\right),\qquad
-c_j(\lambda)=1+\frac{1}{\lambda\delta_j}.
+c_j(\lambda)=1+\frac{1}{\lambda\rho_j}.
 \end{equation}
 For any observed $z\ne0$, profiling out
 $\sigma_\varepsilon^2$ yields

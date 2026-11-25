@@ -5,27 +5,27 @@ An exact SPD factorization exists for all finite $\lambda$, but finite-precision
 \begin{proposition}[Conditioning of the primal system]\label{prop:conditioning}
 For $1\le d<n$ and finite $\lambda\ge0$,
 \begin{equation}\label{eq:kappa}
-\kappa_2(A_\lambda)=1+\lambda\delta_{\max}
+\kappa_2(A_\lambda)=1+\lambda\rho_{\max}
 \le 1+\lambda4^d,
 \end{equation}
-where $\delta_{\max}$ is the largest positive eigenvalue of $D_d^\top D_d$.
+where $\rho_{\max}$ is the largest positive eigenvalue of $D_d^\top D_d$.
 \end{proposition}
 \begin{proof}
-By Lemma~\ref{lem:kernel}, $A_\lambda$ has $d$ eigenvalues equal to one and remaining eigenvalues $1+\lambda\delta_j$. The ratio of its largest and smallest eigenvalues is $1+\lambda\delta_{\max}$. Each forward-difference stencil has absolute coefficient sum $2^d$, so $\|D_d\|_\infty\le2^d$ and $\|D_d\|_1\le2^d$. Consequently $\|D_d\|_2\le\sqrt{\|D_d\|_1\|D_d\|_\infty}\le2^d$, yielding $\delta_{\max}=\|D_d\|_2^2\le4^d$.
+By Lemma~\ref{lem:kernel}, $A_\lambda$ has $d$ eigenvalues equal to one and remaining eigenvalues $1+\lambda\rho_j$. The ratio of its largest and smallest eigenvalues is $1+\lambda\rho_{\max}$. Each forward-difference stencil has absolute coefficient sum $2^d$, so $\|D_d\|_\infty\le2^d$ and $\|D_d\|_1\le2^d$. Consequently $\|D_d\|_2\le\sqrt{\|D_d\|_1\|D_d\|_\infty}\le2^d$, yielding $\rho_{\max}=\|D_d\|_2^2\le4^d$.
 \end{proof}
 
 The condition bound becomes demanding near $S=1$, for which $\lambda$ diverges. Proposition~\ref{prop:svd-vs-gram} distinguishes the exact equivalence of SVD and eigendecomposition from the conditioning cost of forming the Gram matrix explicitly. This motivates comparing shifted SVD, shift-free SVD, Gram-matrix eigendecomposition, banded primal factorization, dual banded systems, and suitably scaled least-squares or QR formulations. The theoretical asymptotic cost alone cannot certify their accuracy.
 
 The positive eigenvalues also enter the inverse smoothness map.
 For a target $s\in(0,1)$, implicit differentiation of
-$S_d(\lambda)=s$ in \eqref{eq:S}, holding the other $\delta_k$
+$S_d(\lambda)=s$ in \eqref{eq:S}, holding the other $\rho_k$
 fixed, gives
 \begin{equation}\label{eq:sensitivity-svd-eigh}
 \begin{aligned}
-\frac{\partial\lambda}{\partial\delta_j}\bigg|_s
-&=-\frac{\lambda}{G(1+\lambda\delta_j)^2},\\
+\frac{\partial\lambda}{\partial\rho_j}\bigg|_s
+&=-\frac{\lambda}{G(1+\lambda\rho_j)^2},\\
 G&=\sum_{k=1}^{r}
-\frac{\delta_k}{(1+\lambda\delta_k)^2}>0.
+\frac{\rho_k}{(1+\lambda\rho_k)^2}>0.
 \end{aligned}
 \end{equation}
 The denominator is strictly positive. This identity identifies a

@@ -36,6 +36,7 @@ trend = solver.fit(
 \noindent\begin{minipage}{\columnwidth}
 \centering
 \includegraphics[width=0.98\linewidth]{figures/gaussian_jerk_demo.pdf}
+{\CSDAlocalcaptionstyle
 \captionof{figure}{Illustrative third-order PLS trend selected by
 profiled Gaussian contrast. \emph{Top:} Gaussian-noisy positions,
 known cubic-plus-sinusoidal true trend, and selected fit.
@@ -46,7 +47,8 @@ $\mu=1.8h^3$ is fixed from the known baseline, not estimated.
 versus normalized smoothness $S$. The marker identifies the
 minimum on the 91-point grid $S\in[0.02,0.98]$.
 This is a synthetic in-sample illustration, not a forecast.}
-\label{fig:gaussian-jerk-demo}
+\label{fig:gaussian-jerk-demo}}
+
 \end{minipage}
 
 Figure~\ref{fig:gaussian-jerk-demo} shows what the code returns:
