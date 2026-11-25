@@ -1,58 +1,110 @@
-\subsection{Worked example: third differences and the matrices being factorized}
+\subsection{Worked example: a numerical SVD and an exact smoother}
 \label{sec:d3-example}
-Consider $d=3$ and $n=6$. Our forward-difference sign convention
-gives $\Delta^3 x_t=x_{t+3}-3x_{t+2}+3x_{t+1}-x_t$.
-Here the rectangular difference matrix has $r=n-d=3$ rows;
-its Gram matrix is symmetric and positive semidefinite:
-\begin{figure*}[t]
-\centering
-\begingroup
-\small
-\setlength{\arraycolsep}{3.5pt}
+Consider six equally spaced observations and order $d=3$.
+With the backward-difference convention evaluated at the
+right endpoint, the same signed stencil as in
+\eqref{eq:difference} is
+$\nabla^3 x_{t+3}=x_{t+3}-3x_{t+2}+3x_{t+1}-x_t$.
+The full row-rank operator is
 \begin{equation}\label{eq:third-order-matrices}
-\underbrace{D_3}_{3\times 6}=
+D_3=
 \begin{pmatrix}
 -1&3&-3&1&0&0\\
 0&-1&3&-3&1&0\\
 0&0&-1&3&-3&1
-\end{pmatrix}
-\qquad
-\underbrace{Q_3=D_3^\top D_3}_{6\times 6}=
-\begin{pmatrix}
-1&-3&3&-1&0&0\\
--3&10&-12&6&-1&0\\
-3&-12&19&-15&6&-1\\
--1&6&-15&19&-12&3\\
-0&-1&6&-12&10&-3\\
-0&0&-1&3&-3&1
 \end{pmatrix}.
 \end{equation}
+Its Gram matrix $Q_3=D_3^\top D_3$ has rank three
+and a three-dimensional quadratic-polynomial nullspace,
+but neither Gram construction nor an inverse is needed
+to compute the reduced SVD $D_3=U\Sigma V^\top$.
+Figure~\ref{fig:d3-matrices} gives a concrete
+numerical factorization and the exact smoothing operator
+at $\lambda=1$.
+
+\begin{figure*}[t]
+\centering
+\begingroup
+\small
+\setlength{\arraycolsep}{3pt}
+\begin{equation}\label{eq:d3-numerical-svd}
+\begin{aligned}
+U&\approx
+\begin{pmatrix}
+-0.5339&-0.7071&0.4637\\
+ 0.6557& 0.0000&0.7550\\
+-0.5339& 0.7071&0.4637
+\end{pmatrix},
+&
+\Sigma&\approx\diag(6.6652,\,3.7417,\,1.2553),\\[4pt]
+V^\top&\approx
+\begin{pmatrix}
+ 0.0801&-0.3387& 0.6155&-0.6155& 0.3387&-0.0801\\
+ 0.1890&-0.5669& 0.3780& 0.3780&-0.5669& 0.1890\\
+-0.3694& 0.5067& 0.3268&-0.3268&-0.5067& 0.3694
+\end{pmatrix}.
+\end{aligned}
+\end{equation}
+\begin{equation}\label{eq:d3-numerical-h}
+\begin{aligned}
+H_1
+&=(I_6+D_3^\top D_3)^{-1}
+=I_6-V\diag\!\left(\frac{\sigma_j^2}{1+\sigma_j^2}\right)_{j=1}^{3}V^\top\\
+&=\frac1{195}
+\begin{pmatrix}
+171&47&-8&-18&-8&11\\
+47&84&59&19&-6&-8\\
+-8&59&84&59&19&-18\\
+-18&19&59&84&59&-8\\
+-8&-6&19&59&84&47\\
+11&-8&-18&-8&47&171
+\end{pmatrix}.
+\end{aligned}
+\end{equation}
 \endgroup
-\caption{Exact third-order finite-difference operator and its Gram
-matrix for six equally spaced observations. For general $n$,
-$D_3$ has four nonzero diagonals, while $Q_3$ has half-bandwidth
-three (at most seven nonzero diagonals). The Gram matrix has rank
-$n-3$ and a three-dimensional polynomial nullspace.}
+\caption{Reduced singular-value decomposition of the
+$3\times6$ third-difference operator, and its exact
+$6\times6$ smoother for $\lambda=1$. The displayed $U$,
+$\Sigma$, and $V^\top$ entries are rounded to four
+decimal places; the entries of $H_1$ are exact. Singular
+vector signs are conventional, not uniquely determined.}
 \label{fig:d3-matrices}
 \end{figure*}
-The associated penalized normal matrix and smoother are
-\begin{equation}\label{eq:third-order-normal-matrix}
-A_\lambda=I_6+\lambda Q_3,\qquad
-H_\lambda=A_\lambda^{-1}.
-\end{equation}
-Although $Q_3$ is singular (rank three), $A_\lambda$
-is positive definite for every finite $\lambda\geq0$:
-$v^\top A_\lambda v=\|v\|^2+\lambda\|D_3v\|^2>0$
-for every $v\neq0$.
-This makes banded Cholesky a natural, inexpensive choice for
-\emph{one} specified penalty, without explicitly computing
-$H_\lambda$. In contrast $H_\lambda$ is generally dense:
-for this exact example at $\lambda=1$,
+
+The inverse is dense even though $Q_3$ has
+half-bandwidth three (at most seven nonzero diagonals
+in the general $n$ case): for example,
 \begin{equation}\label{eq:third-order-distant-leverage}
-(H_1)_{1,6}=\frac{11}{195}\neq0,
+(H_1)_{1,6}=\frac{11}{195}\neq0.
 \end{equation}
-although $(Q_3)_{1,6}=0$. The reduced SVD instead
-factorizes the smaller $3\times6$ matrix $D_3$ once
-to obtain its positive singular spectrum and reusable
-right singular vectors; it does \emph{not} diagonalize
-the dense $H_\lambda$ for each penalty.
+This is why a banded factorization of
+$A_\lambda=I+\lambda Q_3$ is preferable to
+explicitly forming $H_\lambda$ for a single known
+penalty, whereas the retained SVD provides reusable
+spectral coordinates for many penalties.
+
+To verify the full \emph{nonzero-reference} formula,
+take $y=(0,2,0,1,3,2)^\top$, $\mu=1$, and
+$\lambda=1$. Directly solving the normal system,
+or using the shift-free SVD formula
+\eqref{eq:shiftfree}, gives the same result:
+\begin{equation}\label{eq:third-order-normal-matrix}
+\begin{aligned}
+\widehat\tau_{1,1}
+&=H_1(y+D_3^\top\mathbf1_3)\\
+&=y-V\!\left[
+w\odot(V^\top y)-(w\oslash\sigma)
+\odot(U^\top\mathbf1_3)\right]\\
+&=\frac1{195}
+(14,238,243,238,308,519)^\top.
+\end{aligned}
+\end{equation}
+Numerically, both full-precision constructions
+agree to within $2\times10^{-14}$ in maximum
+absolute component error (the rounded SVD values
+printed in Figure~\ref{fig:d3-matrices} are for
+inspection only). The deterministic
+\texttt{tests/test\_d3\_numeric\_svd.py} regression
+test computes the factorization afresh and verifies
+the exact inverse, its positive spectrum,
+and the nonzero-reference reconstruction.
