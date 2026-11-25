@@ -3,8 +3,11 @@
 For equally spaced samples $x(t_i)$ with spacing $h>0$,
 the operator $D_d$ approximates an order-$d$ temporal derivative:
 \begin{equation}\label{eq:difference-derivative-approximation}
-\frac{\Delta^d x(t)}{h^d}\approx x^{(d)}(t+dh/2).
+\frac{\nabla^d x(t+dh)}{h^d}\approx x^{(d)}(t+dh/2).
 \end{equation}
+Here $\nabla^d x(t+dh)$ is the $d$th backward difference
+at the rightmost sample $t+dh$ (equal to the forward
+$d$th difference across the same stencil).
 The approximation is centered at the middle of the $d$-step
 stencil and has second-order accuracy for sufficiently
 smooth underlying functions at an interior location.
@@ -19,7 +22,7 @@ j\!\left(t+\tfrac32h\right)
 \frac{x(t+3h)-3x(t+2h)+3x(t+h)-x(t)}{h^3}.
 \end{equation}
 If position $x(t)$ is cubic with constant physical jerk $j$,
-then $\Delta^3 x=jh^3$ \emph{exactly}. Consequently
+then $\nabla^3 x(t+3h)=jh^3$ \emph{exactly}. Consequently
 $\mu=0$ in the third-difference penalty favors a
 quadratic (constant-acceleration) limiting trend, whereas
 a prescribed nonzero $\mu=jh^3$ favors a cubic
@@ -28,8 +31,8 @@ from the affine constraint $D_3\tau=\mu\mathbf1$,
 not from a new physical forecasting mechanism.
 
 The differential interpretation requires correct sampling
-units. If $y$ is recorded position, $\Delta^3 y$ is in
-position units, and only $\Delta^3 y/h^3$ has jerk units.
+units. If $y$ is recorded position, $\nabla^3 y$ is in
+position units, and only $\nabla^3 y/h^3$ has jerk units.
 Taking finite differences of noisy positions can strongly
 amplify measurement noise; the jerk of a fitted trend is an
 \emph{estimated} derivative rather than an independent
