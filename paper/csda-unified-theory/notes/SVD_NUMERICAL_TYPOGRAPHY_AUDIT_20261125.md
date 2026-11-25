@@ -53,8 +53,10 @@ figures/tables.
   native CAS `\\sffamily\\small` captions. The
   `\\captionof{figure}` and the rotating-table
   captions now explicitly use the same local font family
-  and size; the CAS `figure*`/`table*` environments
-  already request this family/size. Figure/table body
+  and size (the locally applied `\\footnotesize` produces
+  the same 8.52-pt embedded caption size as the
+  CAS `figure*`/`table*` `\\small` setting).
+  Native CAS captions already request this family/size. Figure/table body
   formatting and original source labels are preserved.
 - All **five** floating labels have a corresponding
   contextual `\\ref{fig:...}` or `\\ref{tab:...}`
