@@ -92,10 +92,10 @@ class ManuscriptArchitectureTests(unittest.TestCase):
         sources = [MAIN.read_text(encoding="utf-8")]
         sources += [x.read_text(encoding="utf-8") for x in sorted(SECTIONS.glob("*.tex"))]
         s = "\n".join(sources)
-        self.assertEqual(s.count(r"\begin{equation}"), 64)
-        self.assertEqual(s.count(r"\end{equation}"), 64)
+        self.assertEqual(s.count(r"\begin{equation}"), 66)
+        self.assertEqual(s.count(r"\end{equation}"), 66)
         labels = re.findall(r"\\label\{(eq:[^}]+)\}", s)
-        self.assertEqual(len(labels), 64)
+        self.assertEqual(len(labels), 66)
         self.assertEqual(len(labels), len(set(labels)))
 
     def test_submission_integrity(self) -> None:
