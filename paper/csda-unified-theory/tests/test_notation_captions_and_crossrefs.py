@@ -68,9 +68,9 @@ class CaptionAndNotationTests(unittest.TestCase):
         policy = self.contents["policy.tex"]
         self.assertIn(r"\begin{figure*}", example)
         self.assertIn(r"\caption{Reduced singular-value decomposition", example)
-        self.assertIn(r"{\sffamily\small", software)
-        self.assertIn(r"{\sffamily\small \caption{", algorithms)
-        self.assertIn(r"{\sffamily\small \caption{", provenance)
+        self.assertIn(r"{\sffamily\footnotesize", software)
+        self.assertIn(r"{\sffamily\footnotesize \caption{", algorithms)
+        self.assertIn(r"{\sffamily\footnotesize \caption{", provenance)
         self.assertIn(r"\begin{table*}", policy)
         # The CAS figure*/table* environments apply \sffamily\small;
         # Helvetica is the common scalable sans family for all captions.
