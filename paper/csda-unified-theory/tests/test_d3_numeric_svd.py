@@ -81,7 +81,7 @@ class D3NumericSvdTests(unittest.TestCase):
                     )
                     if lam == mu == 1:
                         np.testing.assert_allclose(
-                            direct, [14, 238, 243, 238, 308, 519],
+                            direct, np.array([14, 238, 243, 238, 308, 519]) / 195,
                             atol=2e-12, rtol=0,
                         )
 
