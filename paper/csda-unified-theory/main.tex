@@ -7,6 +7,9 @@
 \usepackage{graphicx,booktabs,tabularx,enumitem,url,capt-of}
 \usepackage{rotating} % full-width sideways float pages for legible algorithm tables
 \usepackage{xcolor,listings}
+% Journal-compatible, scalable caption type and double-stroke real-number symbol.
+\usepackage[scaled=0.95]{helvet}
+\usepackage{dsfont}
 \usepackage[expansion=false]{microtype}
 % CAS v2.4 natively selects STIX for both text and mathematics when
 % stix.sty exists but its older optional Charis style is unavailable.
@@ -52,7 +55,7 @@
 \pretolerance=150
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
-\newcommand{\R}{\mathbb R}
+\newcommand{\R}{\mathds{R}}
 \newcommand{\tr}{\operatorname{tr}}
 \newcommand{\diag}{\operatorname{diag}}
 \newcommand{\RSS}{\operatorname{RSS}}
