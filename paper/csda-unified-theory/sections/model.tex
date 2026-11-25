@@ -5,9 +5,14 @@ For equally spaced data $y\in\R^n$, let $1\le d<n$ and $r=n-d$. Define $D_d\in\R
 \end{equation}
 At a fixed reference level $\mu\in\R$ of the $d$th differences, estimate
 \begin{equation}\label{eq:pls}
-\widehat\tau_{\lambda,\mu}=
-\operatorname*{arg\,min}_{\tau\in\R^n}\{
-\|y-\tau\|_2^2+\lambda\|D_d\tau-\mu\mathbf1_r\|_2^2\}.
+\begin{aligned}
+\widehat\tau_{\lambda,\mu}
+&=\operatorname{arg\,min}_{\tau\in\R^n}
+\mathcal P_{\lambda,\mu}(\tau),\\
+\mathcal P_{\lambda,\mu}(\tau)
+&=\|y-\tau\|_2^2\\
+&\quad+\lambda\|D_d\tau-\mu\mathbf1_r\|_2^2.
+\end{aligned}
 \end{equation}
 Define the linear smoothing operator
 $H_\lambda=(I+\lambda D_d^\top D_d)^{-1}$.
