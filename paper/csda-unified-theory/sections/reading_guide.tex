@@ -5,15 +5,17 @@ and $r=n-d$ for the penalized rank.  The observed
 series is $y$, its fitted trend is $\widehat\tau$,
 the prescribed order-$d$ reference is $\mu$,
 and $\lambda\geq0$ is the quadratic penalty
-weight.  We distinguish the difference operator
-$D_d$, its Gram penalty $Q_d=D_d^\top D_d$,
-the normal matrix $A_\lambda=I+\lambda Q_d$,
-and the smoother $H_\lambda=A_\lambda^{-1}$.
-The matrix $A_\lambda$ is banded while
-$H_\lambda$ is generally dense.
+weight.  The smoothing operator is defined directly by
+$H_\lambda=(I+\lambda D_d^\top D_d)^{-1}$.
+We subsequently denote its Gram penalty by
+$Q_d=D_d^\top D_d$ and its \\emph{normal matrix}
+by $A_\lambda=I+\lambda Q_d$, so that
+$H_\lambda=A_\lambda^{-1}$.
+The normal matrix is banded, whereas its inverse
+is generally dense.
 
 For the positive singular values $\sigma_j$ of
-$D_d$, write $\delta_j=\sigma_j^2$;
+$D_d$, write $\rho_j=\sigma_j^2$;
 $\nu_d(\lambda)=\tr(H_\lambda)$ is the effective
 degrees of freedom and
 $S_d(\lambda)=(n-\nu_d(\lambda))/r$
