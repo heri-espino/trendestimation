@@ -89,37 +89,37 @@ the PLS objective into
 \begin{equation}\label{eq:orthogonal-objective}
 \|W^\top(y-p_\mu)-b\|^2+
 \sum_{j=1}^r\left[
-(z_j-t_j)^2+\lambda\delta_jt_j^2\right].
+(z_j-t_j)^2+\lambda\rho_jt_j^2\right].
 \end{equation}
 The first term is minimized by
 $b=W^\top(y-p_\mu)$ and contributes
 zero. For the $j$th remaining term,
 differentiation gives
 \begin{equation}\label{eq:orthogonal-first-order-condition}
--2(z_j-t_j)+2\lambda\delta_jt_j=0,
+-2(z_j-t_j)+2\lambda\rho_jt_j=0,
 \quad
-\widehat t_j=\frac{z_j}{1+\lambda\delta_j}.
+\widehat t_j=\frac{z_j}{1+\lambda\rho_j}.
 \end{equation}
 The corresponding \emph{minimized}
 quadratic is
 \begin{equation}\label{eq:orthogonal-minimum}
 (z_j-\widehat t_j)^2+
-\lambda\delta_j\widehat t_j^2
-=\frac{\lambda\delta_j}{1+\lambda\delta_j}
+\lambda\rho_j\widehat t_j^2
+=\frac{\lambda\rho_j}{1+\lambda\rho_j}
 z_j^2=\frac{z_j^2}{c_j}.
 \end{equation}
 Summing proves \eqref{eq:quadraticidentity}.
 Furthermore, $B_d=U\Sigma^2U^\top$
-has $r$ positive eigenvalues $\delta_j$,
+has $r$ positive eigenvalues $\rho_j$,
 whereas $A_\lambda$ has those
 $r$ eigenvalues transformed into
-$1+\lambda\delta_j$ plus $d$ unit
+$1+\lambda\rho_j$ plus $d$ unit
 eigenvalues. Hence
 \begin{equation}\label{eq:logdet-spectral-proof}
 \begin{aligned}
 &\log\det A_\lambda-r\log\lambda-\log\det B_d\\
 &=\sum_{j=1}^r\log\!\left(
-\frac{1+\lambda\delta_j}{\lambda\delta_j}
+\frac{1+\lambda\rho_j}{\lambda\rho_j}
 \right)
 =\sum_{j=1}^r\log c_j,
 \end{aligned}
