@@ -37,7 +37,7 @@ class CaptionAndNotationTests(unittest.TestCase):
             model.index(r"H_\lambda=(I+\lambda D_d^\top D_d)^{-1}"),
             model.index(r"A_\lambda=I+\lambda Q_d"),
         )
-        self.assertIn(r"\operatorname*{arg\,min}_{\tau\in\R^n}", model)
+        self.assertIn(r"\operatorname{arg\,min}_{\tau\in\R^n}", model)
 
     def test_nabla_and_spectral_rho_not_delta(self):
         self.assertNotIn(r"\Delta", self.all_source)
