@@ -40,17 +40,17 @@ spectral basis across candidate penalties.
 
 \begin{proposition}[Spectral equivalence and Gram conditioning]
 \label{prop:svd-vs-gram}
-Let $D_d\in\mathbb R^{r\times n}$ have full row rank $r=n-d\geq1$,
+Let $D_d\in\R^{r\times n}$ have full row rank $r=n-d\geq1$,
 and let its positive singular values be
 $\sigma_1\geq\cdots\geq\sigma_r>0$. Then $Q_d=D_d^\top D_d$
-has positive eigenvalues $\delta_j=\sigma_j^2$ and $d$ zero
+has positive eigenvalues $\rho_j=\sigma_j^2$ and $d$ zero
 eigenvalues. With $\kappa_+(B)$ denoting the ratio of the largest
 to smallest \emph{positive} singular values (or, for a
 positive-semidefinite matrix, positive eigenvalues),
 \begin{equation}\label{eq:gram-conditioning}
 \begin{aligned}
 \kappa_+(Q_d)
-&=\frac{\delta_1}{\delta_r}\\
+&=\frac{\rho_1}{\rho_r}\\
 &=\left(\frac{\sigma_1}{\sigma_r}\right)^2
 =\kappa_+(D_d)^2.
 \end{aligned}
@@ -61,7 +61,7 @@ exact smoothing operator
 \begin{aligned}
 H_\lambda &=V B_\lambda V^\top,\\
 B_\lambda&=\operatorname{diag}(h_1,\ldots,h_r,1,\ldots,1),\\
-h_j&=(1+\lambda\delta_j)^{-1},
+h_j&=(1+\lambda\rho_j)^{-1},
 \quad \lambda\geq0.
 \end{aligned}
 \end{equation}
@@ -110,7 +110,7 @@ it is therefore false that the eigenvectors of $H_\lambda$
 intrinsically change with $\lambda$. Such a route is nevertheless
 unattractive for our reusable spectral engine:
 it starts from a dense, penalty-specific matrix, and recovering
-$\delta_j=(h_j^{-1}-1)/\lambda_0$ from $h_j\approx1$ can lose
+$\rho_j=(h_j^{-1}-1)/\lambda_0$ from $h_j\approx1$ can lose
 relative accuracy through subtraction. The direct SVD of $D_d$
 delivers $\sigma_j$ before that penalty-dependent transformation.
 
