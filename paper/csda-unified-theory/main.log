@@ -1,20 +1,20 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex 2026.11.25)  25 NOV 2026 06:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.10.22)  25 NOV 2026 00:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**main.tex
-(./main.tex
+**./main.tex
+(main.tex
 LaTeX2e <2025-11-01>
-L3 programming layer <2026-01-19>
-(./cas-dc.cls
+L3 programming layer <2025-12-24>
+(cas-dc.cls
 Document Class: cas-dc 2024/05/04, 2.4: Formatting class for CAS double column 
 articles
 \c@blind=\count275
 \@bls=\dimen148
-(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/fleqn.clo
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fleqn.clo
 File: fleqn.clo 2016/12/29 v1.2b Standard LaTeX option (flush left equations)
 \mathindent=\skip49
 Applying: [2015/01/01] Make \[ robust on input line 50.
@@ -24,7 +24,7 @@ Applying: [2015/01/01] Make \] robust on input line 74.
 LaTeX Info: Redefining \] on input line 75.
 Already applied: [0000/00/00] Make \] robust on input line 83.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
 File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count276
@@ -39,48 +39,50 @@ File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip51
 \bibindent=\dimen149
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.de
+f
 File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen150
 \Gin@req@width=\dimen151
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip52
 
 For additional information on amsmath, use the `?' option.
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks18
 \ex@=\dimen152
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen153
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count284
@@ -131,36 +133,35 @@ LaTeX Info: Redefining \Relbar on input line 970.
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2026-01-19 L3 programming layer (loader) 
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2025-12-24 L3 programming layer (loader) 
 
-(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
+ftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count296
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty
 Package: xparse 2025-10-09 L3 Experimental document command parser
 )
-(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count297
-)
-(/usr/share/texlive/texmf-dist/tex/latex/preprint/balance.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/preprint\balance.sty
 Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen161
-)
-(/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.st
+y
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen162
 \lightrulewidth=\dimen163
@@ -180,10 +181,10 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count301
 \@thisrulewidth=\dimen174
 )
-(/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
 
-(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \col@sep=\dimen175
 \ar@mcellbox=\box55
@@ -197,49 +198,46 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \c@nlinenum=\count302
 \TeXr@lab=\toks24
 )
-(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \multirow@colwidth=\skip57
 \multirow@cntb=\count303
 \multirow@dima=\skip58
 \bigstrutjot=\dimen178
-)
-(/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
-Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
-
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.st
+y
+Package: colortbl 2026/05/01 v1.0l Color table columns (DPC)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
 Package: color 2025/01/14 v1.3e Standard LaTeX Color (DPC)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 149.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))
 \everycr=\toks25
 \minrowclearance=\skip59
 \rownum=\count304
-)
-(/usr/share/texlive/texmf-dist/tex/latex/tools/dcolumn.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\dcolumn.sty
 Package: dcolumn 2025/10/21 v1.06 decimal alignment package (DPC)
-)
-(/usr/share/texlive/texmf-dist/tex/latex/sttools/stfloats.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty
 Package: stfloats 2025/06/18 v3.4 Improve float mechanism and baselineskip sett
 ings
 \@dblbotnum=\count305
 \c@dblbotnumber=\count306
-)
-(/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty
-(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex
 \xs_counta=\count307
 \xs_countb=\count308
 )
 Package: xstring 2023/08/22 v1.86 String manipulations (CT)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty
 Package: footmisc 2025/05/09 v7.0b a miscellany of footnote facilities
 \FN@temptoken=\toks26
 \footnotemargin=\dimen179
@@ -251,17 +249,17 @@ Package footmisc Info: Declaring symbol style lamport-robust on input line 577.
 Package footmisc Info: Declaring symbol style lamport* on input line 597.
 Package footmisc Info: Declaring symbol style lamport*-robust on input line 618
 .
-)
-(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 274.
 LaTeX Info: Redefining \color on input line 762.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
 Package xcolor Info: Model `RGB' extended on input line 1365.
@@ -271,60 +269,66 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-)
-(/usr/share/texlive/texmf-dist/tex/latex/xcolor/svgnam.def
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\svgnam.def
 File: svgnam.def 2024/09/29 v3.02 Predefined colors according to SVG 1.1 (UK)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def
 File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
-)
-(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.st
+y
 Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
-
-(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 )
-(/usr/share/texlive/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
 
-(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 
-(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count309
 )
-(/usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
@@ -332,17 +336,16 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 \Hy@linkcounter=\count310
 \Hy@pagecounter=\count311
 
-(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
-(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count312
-
-(/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -357,17 +360,18 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4462.
 \c@Hy@tempcnt=\count313
 
-(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4801.
 \XeTeXLinkMargin=\dimen181
 
-(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
@@ -387,23 +391,24 @@ Package hyperref Info: PDF/A mode OFF on input line 6108.
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
-(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
 \Fld@listcount=\count318
 \c@bookmark@seq@number=\count319
 
-(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 84.
 )
 \Hy@SectionHShift=\skip60
-)
-(./cas-common.sty
+) (cas-common.sty
 \l_stm_title_before_dim=\dimen184
 \l_stm_title_after_dim=\dimen185
 \g_ead_int=\count320
@@ -431,10 +436,10 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \g_stm_augr_int=\count333
 \g_stm_aaugr_int=\count334
 
-(/usr/share/texlive/texmf-dist/tex/latex/moreverb/moreverb.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/moreverb\moreverb.sty
 Package: moreverb 2008/06/03 v2.3a `more' verbatim facilities
 
-(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty
 Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks28
 \verbatim@line=\toks29
@@ -472,7 +477,7 @@ Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
 \l_fig_abovefig_skip=\skip67
 \l_fig_belowfig_skip=\skip68
 
-(/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty
 \wrapoverhang=\dimen199
 \WF@size=\dimen256
 \c@WF@wrappedlines=\count345
@@ -496,13 +501,13 @@ Package: wrapfig 2003/01/31  v 3.6
 \@sep=\skip69
 \@@sep=\skip70
 )
-(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 )
-(/usr/share/texlive/texmf-dist/tex/latex/stix/stix.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\stix.sty
 Package: stix 2018/04/17 v1.1.3-latex STIX fonts support package
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty
 Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
 LaTeX Font Info:    Changing ? sub-encoding to TS1/0 on input line 75.
 )
@@ -610,28 +615,28 @@ LaTeX Info: Redefining \cdots on input line 1522.
 LaTeX Font Info:    Redeclaring math symbol \mathsterling on input line 1978.
 LaTeX Info: Redefining \not on input line 2144.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/inconsolata.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\inconsolat
+a.sty
 Package: inconsolata 2019/05/17 v1.12
 
 `inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
-(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2025/11/04 v2.10 package option processing (HA)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
 
-(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
-(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
 \XKV@toks=\toks32
 \XKV@tempa@toks=\toks33
-\XKV@tempb@toks=\toks34
 )
 \XKV@depth=\count350
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 \zifour@ocount=\count351
 )
-(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2020/01/02 v5.9 Page Geometry
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
 
-(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
 \Gm@cnth=\count352
@@ -645,32 +650,33 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layoutheight=\dimen269
 \Gm@layouthoffset=\dimen270
 \Gm@layoutvoffset=\dimen271
-\Gm@dimlist=\toks35
-))
-(/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
+\Gm@dimlist=\toks34
+
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip71
 \bibsep=\skip72
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count355
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amscls/amsthm.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
-\thm@style=\toks36
-\thm@bodyfont=\toks37
-\thm@headfont=\toks38
-\thm@notefont=\toks39
-\thm@headpunct=\toks40
+\thm@style=\toks35
+\thm@bodyfont=\toks36
+\thm@headfont=\toks37
+\thm@notefont=\toks38
+\thm@headpunct=\toks39
 \thm@preskip=\skip73
 \thm@postskip=\skip74
 \thm@headsep=\skip75
-\dth@everypar=\toks41
+\dth@everypar=\toks40
 LaTeX Info: Redefining \qed on input line 273.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mathtools.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.st
+y
 Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
-
-(/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
 Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
 \calc@Acount=\count356
 \calc@Bcount=\count357
@@ -683,7 +689,7 @@ LaTeX Info: Redefining \addtolength on input line 87.
 \calc@Ccount=\count358
 \calc@Cskip=\skip78
 )
-(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mhsetup.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty
 Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
 )
 \g_MT_multlinerow_int=\count359
@@ -697,8 +703,7 @@ Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
 \l_MT_below_shortintertext_sep=\dimen280
 \xmathstrut@box=\box66
 \xmathstrut@dim=\dimen281
-)
-(/usr/share/texlive/texmf-dist/tex/latex/tools/tabularx.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
 \TX@col@width=\dimen282
 \TX@old@table=\dimen283
@@ -706,36 +711,35 @@ Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
 \TX@target=\dimen285
 \TX@delta=\dimen286
 \TX@cols=\count360
-\TX@ftn=\toks42
+\TX@ftn=\toks41
 )
-(/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip80
 \enit@outerparindent=\dimen287
-\enit@toks=\toks43
+\enit@toks=\toks42
 \enit@inbox=\box67
 \enit@count@id=\count361
 \enitdp@description=\count362
-)
-(/usr/share/texlive/texmf-dist/tex/latex/capt-of/capt-of.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/capt-of\capt-of.sty
 Package: capt-of 2009/12/29 v0.2 standard captions outside of floats
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/rotating.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
 Package: rotating 2025/01/14 v2.16e rotated objects in LaTeX
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
 \c@r@tfl@t=\count363
 \rotFPtop=\skip81
 \rotFPbot=\skip82
 \rot@float@box=\box68
-\rot@mess@toks=\toks44
+\rot@mess@toks=\toks43
 )
-(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
 \lst@mode=\count364
 \lst@gtempboxa=\box69
-\lst@token=\toks45
+\lst@token=\toks44
 \lst@length=\count365
 \lst@currlwidth=\dimen288
 \lst@column=\count366
@@ -746,16 +750,15 @@ Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 \lst@lineno=\count369
 \lst@maxwidth=\dimen291
 
-(/usr/share/texlive/texmf-dist/tex/latex/listings/lstpatch.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
-)
-(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
 \c@lstnumber=\count370
 \lst@skipnumbers=\count371
 \lst@framebox=\box70
-)
-(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+) (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cf
+g
 File: listings.cfg 2025/11/14 1.11b listings configuration
 ))
 Package: listings 2025/11/14 1.11b (Carsten Heinz)
@@ -766,29 +769,32 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/helvet.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\helvet.sty
 Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
 )
-(/usr/share/texlive/texmf-dist/tex/latex/doublestroke/dsfont.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/doublestroke\dsfont.st
+y
 Package: dsfont 1995/08/01 v0.1 Double stroke roman fonts
 )
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty
-Package: microtype 2025/07/09 v3.2b Micro-typographical refinements (RS)
-\MT@toks=\toks46
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype.st
+y
+Package: microtype 2026/03/01 v3.2d Micro-typographical refinements (RS)
+\MT@toks=\toks45
 \MT@tempbox=\box71
 \MT@count=\count372
-LaTeX Info: Redefining \noprotrusionifhmode on input line 1087.
-LaTeX Info: Redefining \leftprotrusion on input line 1088.
-\MT@prot@toks=\toks47
-LaTeX Info: Redefining \rightprotrusion on input line 1107.
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1084.
+LaTeX Info: Redefining \leftprotrusion on input line 1085.
+\MT@prot@toks=\toks46
+LaTeX Info: Redefining \rightprotrusion on input line 1104.
 LaTeX Info: Redefining \textls on input line 1449.
 \MT@outer@kern=\dimen292
 LaTeX Info: Redefining \microtypecontext on input line 2053.
 LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
 \MT@listname@count=\count373
 
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype-pdftex.def
-File: microtype-pdftex.def 2025/07/09 v3.2b Definitions specific to pdftex (RS)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype-pd
+ftex.def
+File: microtype-pdftex.def 2026/03/01 v3.2d Definitions specific to pdftex (RS)
 
 LaTeX Info: Redefining \lsstyle on input line 944.
 LaTeX Info: Redefining \lslig on input line 944.
@@ -796,8 +802,9 @@ LaTeX Info: Redefining \lslig on input line 944.
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.cfg
-File: microtype.cfg 2025/07/09 v3.2b microtype main configuration file (RS)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype.cf
+g
+File: microtype.cfg 2026/03/01 v3.2d microtype main configuration file (RS)
 )
 LaTeX Info: Redefining \microtypesetup on input line 3065.
 )
@@ -805,10 +812,10 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 71.
 \c@theorem=\count374
 LaTeX Font Info:    Trying to load font information for T1+stix on input line 8
 6.
-
-(/usr/share/texlive/texmf-dist/tex/latex/stix/t1stix.fd
+ (C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\t1stix.fd
 File: t1stix.fd 2015/04/17 v1.1.2-latex STIX T1 font definitions
-) (./main.aux)
+)
+(main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 86.
@@ -833,7 +840,7 @@ LaTeX Font Info:    Checking defaults for LS1/stix/m/n on input line 86.
 LaTeX Font Info:    Trying to load font information for LS1+stix on input line 
 86.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls1stix.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stix.fd
 File: ls1stix.fd 2015/04/17 v1.1.2-latex STIX LS1 font definitions
 )
 LaTeX Font Info:    ... okay on input line 86.
@@ -841,43 +848,45 @@ LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 86.
 LaTeX Font Info:    Trying to load font information for LS2+stix on input line 
 86.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls2stix.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stix.fd
 File: ls2stix.fd 2015/04/17 v1.1.2-latex STIX LS2 font definitions
 )
 LaTeX Font Info:    ... okay on input line 86.
 
-(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
+kii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count375
 \scratchdimen=\dimen293
 \scratchbox=\box72
 \nofMPsegments=\count376
 \nofMParguments=\count377
-\everyMPshowfont=\toks48
+\everyMPshowfont=\toks47
 \MPscratchCnt=\count378
 \MPscratchDim=\dimen294
 \MPnumerator=\count379
 \makeMPintoPDFobject=\count380
-\everyMPtoPDFconversion=\toks49
-) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+\everyMPtoPDFconversion=\toks48
+)
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
+base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
-(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.
+cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 LaTeX Info: Command `\dddot' is already robust on input line 86.
 LaTeX Info: Command `\ddddot' is already robust on input line 86.
 Package hyperref Info: Link coloring ON on input line 86.
-
-(./main.out) (./main.out)
+ (main.out) (main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
 
-(/usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 )
@@ -930,7 +939,7 @@ Package microtype Info: No font expansion.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-ptm.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 \verbatim@out=\write4
@@ -939,65 +948,65 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 LaTeX Font Info:    Trying to load font information for LS1+stixscr on input li
 ne 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls1stixscr.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixscr.fd
 File: ls1stixscr.fd 2015/04/17 v1.1.2-latex STIX script LS1 font definitions
 )
 LaTeX Font Info:    Trying to load font information for LS2+stixex on input lin
 e 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls2stixex.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixex.fd
 File: ls2stixex.fd 2015/04/17 v1.1.2-latex STIX extentions LS2 font definitions
 
 )
 LaTeX Font Info:    Trying to load font information for U+msa on input line 144
 .
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 144
 .
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for LS1+stixfrak on input l
 ine 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls1stixfrak.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixfrak.fd
 File: ls1stixfrak.fd 2015/04/17 v1.1.2-latex STIX fraktur LS1 font definitions
 )
 LaTeX Font Info:    Trying to load font information for LS1+stixbb on input lin
 e 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls1stixbb.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixbb.fd
 File: ls1stixbb.fd 2015/04/17 v1.1.2-latex STIX blackboard LS1 font definitions
 
 )
 LaTeX Font Info:    Trying to load font information for LS2+stixcal on input li
 ne 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls2stixcal.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixcal.fd
 File: ls2stixcal.fd 2015/04/17 v1.1.2-latex STIX calligraphic LS2 font definiti
 ons
 )
 LaTeX Font Info:    Trying to load font information for LS1+stixsf on input lin
 e 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls1stixsf.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls1stixsf.fd
 File: ls1stixsf.fd 2015/04/17 v1.1.2-latex STIX sans-serif LS1 font definitions
 
 )
 LaTeX Font Info:    Trying to load font information for LS2+stixtt on input lin
 e 144.
 
-(/usr/share/texlive/texmf-dist/tex/latex/stix/ls2stixtt.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/stix\ls2stixtt.fd
 File: ls2stixtt.fd 2015/04/17 v1.1.2-latex STIX typewriter LS2 font definitions
 
 )
@@ -1005,21 +1014,21 @@ Overfull \hbox (123.62721pt too wide) detected at line 144
 []
  []
 
-(./main.abs)
+(main.abs)
 
 Package hyperref Warning: Ignoring empty anchor on input line 144.
 
 
 Package hyperref Warning: Ignoring empty anchor on input line 144.
 
-<thumbnails/cas-email.jpeg, id=4, 225.84375pt x 225.84375pt>
+<thumbnails/cas-email.jpeg, id=3, 225.84375pt x 225.84375pt>
 File: thumbnails/cas-email.jpeg Graphic file (type jpg)
 <use thumbnails/cas-email.jpeg>
 Package pdftex.def Info: thumbnails/cas-email.jpeg  used on input line 144.
 (pdftex.def)             Requested size: 7.99838pt x 8.0pt.
 LaTeX Font Info:    Trying to load font information for T1+zi4 on input line 14
 4.
-(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
@@ -1032,7 +1041,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 Package hyperref Warning: Ignoring empty anchor on input line 144.
 
-(./sections/introduction.tex
+(sections/introduction.tex
 Underfull \hbox (badness 10000) in paragraph at lines 31--48
  []\T1/stix/m/it/11 Historical and method-olog-i-cal con-text.[] \T1/stix/m/n/1
 0 Penalized-
@@ -1073,7 +1082,7 @@ olog-i-cal
 
 LaTeX Font Info:    Trying to load font information for T1+phv on input line 73
 .
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1phv.fd
 File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
@@ -1082,19 +1091,21 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `phv' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf
--dist/fonts/enc/dvips/stix/stix-t1.enc}
+
+[1{C:/Users/175199/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/1
+75199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc}
 
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}{/usr/sh
-are/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc} <./thumbnails/cas-email.jpe
-g>]) (./sections/reading_guide.tex) (./sections/model.tex
+{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4-t
+1-0.enc}{C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.
+enc} <./thumbnails/cas-email.jpeg>]) (sections/reading_guide.tex) (sections/mod
+el.tex
 LaTeX Font Info:    Freeze math alphabet allocation in version normal.
 (Font)              Allocated math groups: 14 (local: 2) on input line 2.
 LaTeX Font Info:    Trying to load font information for U+dsrom on input line 2
 .
 
-(/usr/share/texlive/texmf-dist/tex/latex/doublestroke/Udsrom.fd
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/doublestroke\udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 )
 Package microtype Info: Fixing zero \fontdimen 6 for font `U/dsrom/m/n/10'
@@ -1400,7 +1411,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 149.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 149.
- (./sections/order_interpretation.tex
+ (sections/order_interpretation.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 3.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1485,7 +1496,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 72.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 74.
-)) (./sections/smoothness.tex
+)) (sections/smoothness.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 2.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1672,8 +1683,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 151.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 154.
-
-[4]
+ [4]
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 155.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1754,7 +1764,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 188.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 188.
-) (./sections/criteria.tex
+) (sections/criteria.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 8.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1873,7 +1883,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 79.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 81.
- (./sections/gaussian_likelihood.tex
+ (sections/gaussian_likelihood.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 6.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -2137,7 +2147,7 @@ Underfull \hbox (badness 2564) in paragraph at lines 261--157
 \T1/stix/m/n/10 This avoids ex-plic-itly con-struct-ing and sub-tract-ing the
  []
 
-(./sections/algorithms.tex
+(sections/algorithms.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 13.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -2571,7 +2581,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 304.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 305.
-) (./sections/complexity.tex
+) (sections/complexity.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 2.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -2824,7 +2834,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 138.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 138.
-) (./sections/stability.tex
+) (sections/stability.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 3.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -2920,7 +2930,7 @@ LaTeX Font Info:    Nested math: keeping math alphabet allocation in version no
 rmal on input line 60.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 60.
-) (./sections/policy.tex
+) (sections/policy.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 2.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -3031,7 +3041,7 @@ Underfull \hbox (badness 1092) in paragraph at lines 46--167
 
  []
 
-(./sections/software.tex (./sections/third_difference_example.tex
+(sections/software.tex (sections/third_difference_example.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 3.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -3333,7 +3343,8 @@ Underfull \hbox (badness 5417) in paragraph at lines 101--9
 
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 9.
-[14] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+[14]
+(C:\Users\175199\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
@@ -3592,7 +3603,7 @@ LaTeX Font Info: \kern \lst@width \kern \lst@width \kern \lst@width No math alp
 habet change to frozen version normal on input line 33.
 LaTeX Font Info: \kern \lst@width \kern \lst@width \kern \lst@width No math alp
 habet change to frozen version normal on input line 33.
-<figures/gaussian_jerk_demo.pdf, id=480, 251.07785pt x 308.96175pt>
+<figures/gaussian_jerk_demo.pdf, id=476, 251.07785pt x 308.96175pt>
 File: figures/gaussian_jerk_demo.pdf Graphic file (type pdf)
 <use figures/gaussian_jerk_demo.pdf>
 Package pdftex.def Info: figures/gaussian_jerk_demo.pdf  used on input line 38.
@@ -3614,10 +3625,10 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 62.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 63.
- [15 <./figures/gaussian_jerk_demo.pdf>]
+[15 <./figures/gaussian_jerk_demo.pdf>]
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 66.
-) (./sections/conclusion.tex
+) (sections/conclusion.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 8.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -3646,7 +3657,7 @@ Underfull \hbox (badness 6542) in paragraph at lines 91--173
 []\T1/stix/m/n/10 The pri-mary con-tri-bu-tion is there-fore a co-her-ent
  []
 
-(./sections/appendix_likelihood_proofs.tex
+(sections/appendix_likelihood_proofs.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 12.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -3791,7 +3802,7 @@ ine 128.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 128.
 )
-(./sections/algorithm_provenance.tex
+(sections/algorithm_provenance.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 15.
 
@@ -3863,7 +3874,7 @@ Underfull \hbox (badness 1043) in paragraph at lines 125--178
 ][] ([][]1923[][]); doc-u-
  []
 
-(./sections/declarations.tex
+(sections/declarations.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 8.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -3885,7 +3896,7 @@ ine 15.
 [18]
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 41.
-) (./main.bbl
+) (main.bbl
 Underfull \hbox (badness 1005) in paragraph at lines 40--1
 []\T1/stix/m/n/10 OpenAI Chat-GPT was used to as-sist with lit-er-a-ture
  []
@@ -3996,45 +4007,48 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 183.
  [20
 
-] (./main.aux)
+] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
-L3 programming layer <2026-01-19>
+L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 22679 strings out of 469514
- 348741 string characters out of 5470071
- 1040357 words of memory out of 5000000
- 50682 multiletter control sequences out of 15000+600000
+ 22686 strings out of 467871
+ 356199 string characters out of 5417891
+ 1045021 words of memory out of 5000000
+ 50911 multiletter control sequences out of 15000+600000
  761127 words of font info for 216 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 90i,17n,100p,1085b,1532s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4
-b.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/inconsolata/Inconsolata
--zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/STIXGeneral-Bo
-ld.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/STIXGeneral-BoldI
-talic.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/STIXGeneral-It
-alic.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/STIXGeneral-Reg
-ular.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/doublestroke/dsrom10
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/doublestroke/dsrom8.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/stix/stix-mathbb.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/stix/stix-mathex.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/stix/stix-mathfrak.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/stix/stix-mathit.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/stix/stix-mathrm-bold.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/stix/stix-mathrm.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/stix/stix-mathscr.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/
-stix-mathsf.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (20 pages, 492631 bytes).
+ 1141 hyphenation exceptions out of 8191
+ 90i,17n,100p,1087b,1532s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/inconsolata
+/Inconsolata-zi4b.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/inconsolata/Inconsolata-zi4r.pfb><C:/Users/175199/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/stix/STIXGeneral-Bold.pfb><C:/Users/175199/AppData
+/Local/Programs/MiKTeX/fonts/type1/public/stix/STIXGeneral-BoldItalic.pfb><C:/U
+sers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/STIXGeneral-I
+talic.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/sti
+x/STIXGeneral-Regular.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/doublestroke/dsrom10.pfb><C:/Users/175199/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/doublestroke/dsrom8.pfb><C:/Users/175199/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/stix/stix-mathbb.pfb><C:/Users/175199/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathcal.pfb><C:/Users/175
+199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathex.pfb><C:/U
+sers/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/stix-mathfrak
+.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/stix/sti
+x-mathit.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+stix/stix-mathrm-bold.pfb><C:/Users/175199/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/stix/stix-mathrm.pfb><C:/Users/175199/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/stix/stix-mathscr.pfb><C:/Users/175199/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/stix/stix-mathsf.pfb><C:/Users/175199/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/175199/AppData
+/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/175199/App
+Data/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on main.pdf (20 pages, 608266 bytes).
 PDF statistics:
- 1025 PDF objects out of 1200 (max. 8388607)
- 820 compressed objects within 9 object streams
+ 1015 PDF objects out of 1200 (max. 8388607)
  237 named destinations out of 1000 (max. 500000)
  14347 words of extra memory for PDF output out of 14400 (max. 10000000)
 
